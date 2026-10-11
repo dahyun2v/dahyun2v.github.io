@@ -1,0 +1,1252 @@
+{
+ "schema": "officer-relations-v0.1",
+ "status": "시험값 — 역사 참고 기본 관계(사용자 방향 2026-10-07). 수치·효과 미확정, 밸런스는 관찰만",
+ "source": "docs/work-integration/20261007/social/PROPOSAL.md v0.2 · bonds-v0.1.json",
+ "range": [
+  0,
+  100
+ ],
+ "defaultValue": 30,
+ "tiers": [
+  {
+   "id": "COLD",
+   "name": "서먹",
+   "min": 0
+  },
+  {
+   "id": "NORMAL",
+   "name": "보통",
+   "min": 20
+  },
+  {
+   "id": "TRUST",
+   "name": "신뢰",
+   "min": 50
+  },
+  {
+   "id": "CLOSE",
+   "name": "친우",
+   "min": 75
+  },
+  {
+   "id": "BOUND",
+   "name": "결의",
+   "min": 90
+  }
+ ],
+ "rivalAt": 15,
+ "kindNames": {
+  "SWORN": "의형제",
+  "BLOOD": "혈연",
+  "SPOUSE": "부부",
+  "LORD": "주종",
+  "MENTOR": "사제",
+  "FRIEND": "친우",
+  "RIVAL": "불화"
+ },
+ "boundNames": {
+  "SWORN": "의형제",
+  "BLOOD": "골육",
+  "SPOUSE": "부부",
+  "LORD": "심복",
+  "MENTOR": "사제",
+  "FRIEND": "맹우"
+ },
+ "gains": {
+  "jointAttack": {
+   "value": 4,
+   "text": "같은 차례에 같은 적을 함께 친 두 부대장"
+  },
+  "sameCityMonth": {
+   "value": 2,
+   "text": "같은 성에 한 달 머문 장수 쌍(태수 포함)"
+  },
+  "nearbyMonth": {
+   "value": 1,
+   "text": "한 달 동안 2칸 안에서 차례를 보낸 같은 세력 부대장 쌍"
+  },
+  "jobComplete": {
+   "value": 3,
+   "text": "성 작업 완료 때 태수와 그 성 장수 쌍"
+  },
+  "victoryWithLord": {
+   "value": 2,
+   "text": "군주 세력 장수가 부대를 이기게 하면 군주와 그 장수"
+  },
+  "feast": {
+   "value": 8,
+   "costPrestige": 20,
+   "text": "주점 술자리 — 함께한 모든 쌍(성마다 월 1회, 2~3명)"
+  },
+  "visit": {
+   "values": [
+    5,
+    10,
+    15
+   ],
+   "text": "저택 대화 — 군주와 그 장수(장수마다 월 1회, 선택지에 따라)"
+  },
+  "defeatedBy": {
+   "value": -20,
+   "text": "적끼리 한쪽이 다른 쪽을 패주·포로로 만들면"
+  }
+ },
+ "effects": {
+  "TRUST": {
+   "battle": "같은 세력 2칸 안에 신뢰 이상 짝이 있으면 차례마다 첫 사기 하락 무시",
+   "domestic": "같은 성 근무 쌍마다 그 성 생산 +5%(최대 +15%)"
+  },
+  "CLOSE": {
+   "battle": "협공: 같은 차례에 친우 이상 짝이 먼저 친 적을 치면 주는 피해 +15%",
+   "domestic": "같은 성 근무 쌍마다 생산 +10%(최대 +20%)"
+  },
+  "BOUND": {
+   "battle": "결의 세트(아래) · 짝이 패주해도 사기 판정 없음",
+   "domestic": "태수와 결의 짝이 같은 성이면 치안 한 단계 위"
+  },
+  "RIVAL": {
+   "battle": "서로 상대 부대를 칠 때 주는 피해 +10%",
+   "domestic": "같은 성에 두면 그 성 생산 −5%"
+  }
+ },
+ "boundSet": {
+  "text": "결의로 이어진 같은 세력 부대장들이 출진 중(지도 어디든)인 수",
+  "tiers": {
+   "2": "주는 피해 +5%",
+   "3": "사기 판정 가중 −10%",
+   "4": "고유 전법 게이지 충전 +25%"
+  }
+ },
+ "social": {
+  "feastPerCityPerMonth": 1,
+  "visitPerOfficerPerMonth": 1,
+  "aiFeast": "AI 세력도 매달 수도에서 주요 장수 2~3명과 술자리(같은 규칙)"
+ },
+ "pairs": [
+  {
+   "a": "G05",
+   "b": "G18",
+   "aName": "유비",
+   "bName": "관우",
+   "kind": "SWORN",
+   "value": 95,
+   "ref": "도원결의"
+  },
+  {
+   "a": "G05",
+   "b": "G19",
+   "aName": "유비",
+   "bName": "장비",
+   "kind": "SWORN",
+   "value": 95,
+   "ref": "도원결의"
+  },
+  {
+   "a": "G18",
+   "b": "G19",
+   "aName": "관우",
+   "bName": "장비",
+   "kind": "SWORN",
+   "value": 95,
+   "ref": "도원결의"
+  },
+  {
+   "a": "G20",
+   "b": "G27",
+   "aName": "손책",
+   "bName": "주유",
+   "kind": "SWORN",
+   "value": 88,
+   "ref": "손책·주유 단금지교"
+  },
+  {
+   "a": "G12",
+   "b": "G44",
+   "aName": "마등",
+   "bName": "한수",
+   "kind": "SWORN",
+   "value": 70,
+   "ref": "마등·한수 의형제(뒤에 반목)"
+  },
+  {
+   "a": "G12",
+   "b": "G13",
+   "aName": "마등",
+   "bName": "마초",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "부자"
+  },
+  {
+   "a": "G20",
+   "b": "G66",
+   "aName": "손책",
+   "bName": "손견",
+   "kind": "BLOOD",
+   "value": 90,
+   "ref": "부자"
+  },
+  {
+   "a": "G08",
+   "b": "G66",
+   "aName": "손권",
+   "bName": "손견",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "부자"
+  },
+  {
+   "a": "G08",
+   "b": "G20",
+   "aName": "손권",
+   "bName": "손책",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "형제"
+  },
+  {
+   "a": "G13",
+   "b": "G80",
+   "aName": "마초",
+   "bName": "마대",
+   "kind": "BLOOD",
+   "value": 78,
+   "ref": "종형제"
+  },
+  {
+   "a": "G07",
+   "b": "G33",
+   "aName": "조조",
+   "bName": "하후돈",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "종친"
+  },
+  {
+   "a": "G07",
+   "b": "G51",
+   "aName": "조조",
+   "bName": "하후연",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "종친"
+  },
+  {
+   "a": "G33",
+   "b": "G51",
+   "aName": "하후돈",
+   "bName": "하후연",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "종형제"
+  },
+  {
+   "a": "G07",
+   "b": "G34",
+   "aName": "조조",
+   "bName": "조인",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "종제"
+  },
+  {
+   "a": "G16",
+   "b": "G90",
+   "aName": "장로",
+   "bName": "장위",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "형제"
+  },
+  {
+   "a": "G11",
+   "b": "G84",
+   "aName": "동탁",
+   "bName": "이유",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "사위·모주"
+  },
+  {
+   "a": "G44",
+   "b": "G82",
+   "aName": "한수",
+   "bName": "염행",
+   "kind": "BLOOD",
+   "value": 78,
+   "ref": "사위"
+  },
+  {
+   "a": "G09",
+   "b": "G10",
+   "aName": "원소",
+   "bName": "원술",
+   "kind": "RIVAL",
+   "value": 15,
+   "ref": "형제지만 반목"
+  },
+  {
+   "a": "G01",
+   "b": "G26",
+   "aName": "여포",
+   "bName": "초선",
+   "kind": "SPOUSE",
+   "value": 90,
+   "ref": "여포·초선"
+  },
+  {
+   "a": "G17",
+   "b": "G93",
+   "aName": "맹획",
+   "bName": "축융부인",
+   "kind": "SPOUSE",
+   "value": 95,
+   "ref": "맹획·축융"
+  },
+  {
+   "a": "G03",
+   "b": "G05",
+   "aName": "제갈량",
+   "bName": "유비",
+   "kind": "LORD",
+   "value": 95,
+   "ref": "수어지교"
+  },
+  {
+   "a": "G02",
+   "b": "G05",
+   "aName": "조운",
+   "bName": "유비",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "조운의 충의"
+  },
+  {
+   "a": "G05",
+   "b": "G21",
+   "aName": "유비",
+   "bName": "방통",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "봉추"
+  },
+  {
+   "a": "G05",
+   "b": "G43",
+   "aName": "유비",
+   "bName": "법정",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "법정 중용"
+  },
+  {
+   "a": "G05",
+   "b": "G65",
+   "aName": "유비",
+   "bName": "미축",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "미축의 헌신"
+  },
+  {
+   "a": "G05",
+   "b": "G06",
+   "aName": "유비",
+   "bName": "황충",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "노장 중용"
+  },
+  {
+   "a": "G05",
+   "b": "G42",
+   "aName": "유비",
+   "bName": "위연",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "위연 발탁"
+  },
+  {
+   "a": "G05",
+   "b": "G60",
+   "aName": "유비",
+   "bName": "마량",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "백미"
+  },
+  {
+   "a": "G04",
+   "b": "G07",
+   "aName": "순욱",
+   "bName": "조조",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "왕좌지재"
+  },
+  {
+   "a": "G07",
+   "b": "G22",
+   "aName": "조조",
+   "bName": "곽가",
+   "kind": "LORD",
+   "value": 92,
+   "ref": "곽가 총애"
+  },
+  {
+   "a": "G07",
+   "b": "G25",
+   "aName": "조조",
+   "bName": "허저",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "호치"
+  },
+  {
+   "a": "G07",
+   "b": "G56",
+   "aName": "조조",
+   "bName": "전위",
+   "kind": "LORD",
+   "value": 90,
+   "ref": "전위 호위"
+  },
+  {
+   "a": "G07",
+   "b": "G24",
+   "aName": "조조",
+   "bName": "장료",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "장료 귀순"
+  },
+  {
+   "a": "G07",
+   "b": "G52",
+   "aName": "조조",
+   "bName": "서황",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "서황"
+  },
+  {
+   "a": "G07",
+   "b": "G53",
+   "aName": "조조",
+   "bName": "우금",
+   "kind": "LORD",
+   "value": 75,
+   "ref": "우금"
+  },
+  {
+   "a": "G07",
+   "b": "G54",
+   "aName": "조조",
+   "bName": "악진",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "악진"
+  },
+  {
+   "a": "G07",
+   "b": "G55",
+   "aName": "조조",
+   "bName": "이전",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "이전"
+  },
+  {
+   "a": "G07",
+   "b": "G57",
+   "aName": "조조",
+   "bName": "정욱",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "정욱"
+  },
+  {
+   "a": "G07",
+   "b": "G58",
+   "aName": "조조",
+   "bName": "만총",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "만총"
+  },
+  {
+   "a": "G07",
+   "b": "G36",
+   "aName": "조조",
+   "bName": "순유",
+   "kind": "LORD",
+   "value": 78,
+   "ref": "순유"
+  },
+  {
+   "a": "G07",
+   "b": "G35",
+   "aName": "조조",
+   "bName": "가후",
+   "kind": "LORD",
+   "value": 62,
+   "ref": "가후 귀순"
+  },
+  {
+   "a": "G07",
+   "b": "G23",
+   "aName": "조조",
+   "bName": "사마의",
+   "kind": "RIVAL",
+   "value": 40,
+   "ref": "사마의 경계"
+  },
+  {
+   "a": "G07",
+   "b": "G76",
+   "aName": "조조",
+   "bName": "허유",
+   "kind": "FRIEND",
+   "value": 65,
+   "ref": "허유는 어릴 적 친구"
+  },
+  {
+   "a": "G08",
+   "b": "G41",
+   "aName": "손권",
+   "bName": "노숙",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "노숙 탑상책"
+  },
+  {
+   "a": "G08",
+   "b": "G40",
+   "aName": "손권",
+   "bName": "여몽",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "여몽"
+  },
+  {
+   "a": "G08",
+   "b": "G28",
+   "aName": "손권",
+   "bName": "육손",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "육손"
+  },
+  {
+   "a": "G08",
+   "b": "G29",
+   "aName": "손권",
+   "bName": "감녕",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "감녕"
+  },
+  {
+   "a": "G08",
+   "b": "G67",
+   "aName": "손권",
+   "bName": "장소",
+   "kind": "LORD",
+   "value": 62,
+   "ref": "장소 직언"
+  },
+  {
+   "a": "G08",
+   "b": "G71",
+   "aName": "손권",
+   "bName": "주태",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "주태 구출"
+  },
+  {
+   "a": "G20",
+   "b": "G30",
+   "aName": "손책",
+   "bName": "태사자",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "신정 일기토 뒤 귀순"
+  },
+  {
+   "a": "G20",
+   "b": "G29",
+   "aName": "손책",
+   "bName": "감녕",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "감녕"
+  },
+  {
+   "a": "G27",
+   "b": "G50",
+   "aName": "주유",
+   "bName": "황개",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "고육계"
+  },
+  {
+   "a": "G27",
+   "b": "G41",
+   "aName": "주유",
+   "bName": "노숙",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "노숙 천거"
+  },
+  {
+   "a": "G66",
+   "b": "G69",
+   "aName": "손견",
+   "bName": "정보",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "구신"
+  },
+  {
+   "a": "G66",
+   "b": "G70",
+   "aName": "손견",
+   "bName": "한당",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "구신"
+  },
+  {
+   "a": "G50",
+   "b": "G66",
+   "aName": "황개",
+   "bName": "손견",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "구신"
+  },
+  {
+   "a": "G69",
+   "b": "G70",
+   "aName": "정보",
+   "bName": "한당",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "손견 구신"
+  },
+  {
+   "a": "G50",
+   "b": "G69",
+   "aName": "황개",
+   "bName": "정보",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "손견 구신"
+  },
+  {
+   "a": "G01",
+   "b": "G31",
+   "aName": "여포",
+   "bName": "진궁",
+   "kind": "LORD",
+   "value": 68,
+   "ref": "진궁(불화 있음)"
+  },
+  {
+   "a": "G01",
+   "b": "G32",
+   "aName": "여포",
+   "bName": "고순",
+   "kind": "LORD",
+   "value": 75,
+   "ref": "고순(직언)"
+  },
+  {
+   "a": "G01",
+   "b": "G24",
+   "aName": "여포",
+   "bName": "장료",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "장료 옛 주군"
+  },
+  {
+   "a": "G01",
+   "b": "G78",
+   "aName": "여포",
+   "bName": "장패",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "장패"
+  },
+  {
+   "a": "G01",
+   "b": "G79",
+   "aName": "여포",
+   "bName": "후성",
+   "kind": "RIVAL",
+   "value": 35,
+   "ref": "후성 배반"
+  },
+  {
+   "a": "G01",
+   "b": "G77",
+   "aName": "여포",
+   "bName": "진등",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "진등 내통"
+  },
+  {
+   "a": "G01",
+   "b": "G11",
+   "aName": "여포",
+   "bName": "동탁",
+   "kind": "RIVAL",
+   "value": 10,
+   "ref": "동탁 살해"
+  },
+  {
+   "a": "G11",
+   "b": "G26",
+   "aName": "동탁",
+   "bName": "초선",
+   "kind": "RIVAL",
+   "value": 25,
+   "ref": "연환계"
+  },
+  {
+   "a": "G11",
+   "b": "G46",
+   "aName": "동탁",
+   "bName": "이각",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "이각"
+  },
+  {
+   "a": "G11",
+   "b": "G83",
+   "aName": "동탁",
+   "bName": "곽사",
+   "kind": "LORD",
+   "value": 68,
+   "ref": "곽사"
+  },
+  {
+   "a": "G11",
+   "b": "G85",
+   "aName": "동탁",
+   "bName": "서영",
+   "kind": "LORD",
+   "value": 65,
+   "ref": "서영"
+  },
+  {
+   "a": "G46",
+   "b": "G83",
+   "aName": "이각",
+   "bName": "곽사",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "함께 장안 장악(뒤에 다툼)"
+  },
+  {
+   "a": "G09",
+   "b": "G73",
+   "aName": "원소",
+   "bName": "안량",
+   "kind": "LORD",
+   "value": 78,
+   "ref": "안량"
+  },
+  {
+   "a": "G09",
+   "b": "G74",
+   "aName": "원소",
+   "bName": "문추",
+   "kind": "LORD",
+   "value": 78,
+   "ref": "문추"
+  },
+  {
+   "a": "G09",
+   "b": "G37",
+   "aName": "원소",
+   "bName": "장합",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "장합"
+  },
+  {
+   "a": "G09",
+   "b": "G75",
+   "aName": "원소",
+   "bName": "국의",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "국의"
+  },
+  {
+   "a": "G09",
+   "b": "G38",
+   "aName": "원소",
+   "bName": "전풍",
+   "kind": "RIVAL",
+   "value": 35,
+   "ref": "전풍 불신"
+  },
+  {
+   "a": "G09",
+   "b": "G39",
+   "aName": "원소",
+   "bName": "저수",
+   "kind": "LORD",
+   "value": 45,
+   "ref": "저수"
+  },
+  {
+   "a": "G09",
+   "b": "G76",
+   "aName": "원소",
+   "bName": "허유",
+   "kind": "LORD",
+   "value": 48,
+   "ref": "허유(뒤에 이탈)"
+  },
+  {
+   "a": "G73",
+   "b": "G74",
+   "aName": "안량",
+   "bName": "문추",
+   "kind": "FRIEND",
+   "value": 75,
+   "ref": "하북 쌍벽"
+  },
+  {
+   "a": "G10",
+   "b": "G49",
+   "aName": "원술",
+   "bName": "기령",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "기령"
+  },
+  {
+   "a": "G10",
+   "b": "G99",
+   "aName": "원술",
+   "bName": "장훈",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "장훈"
+  },
+  {
+   "a": "G10",
+   "b": "G100",
+   "aName": "원술",
+   "bName": "유훈",
+   "kind": "LORD",
+   "value": 66,
+   "ref": "유훈"
+  },
+  {
+   "a": "G10",
+   "b": "G98",
+   "aName": "원술",
+   "bName": "염상",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "염상"
+  },
+  {
+   "a": "G05",
+   "b": "G14",
+   "aName": "유비",
+   "bName": "공손찬",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "노식 문하 동문"
+  },
+  {
+   "a": "G02",
+   "b": "G14",
+   "aName": "조운",
+   "bName": "공손찬",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "조운 옛 주군"
+  },
+  {
+   "a": "G14",
+   "b": "G96",
+   "aName": "공손찬",
+   "bName": "전예",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "전예"
+  },
+  {
+   "a": "G14",
+   "b": "G97",
+   "aName": "공손찬",
+   "bName": "관정",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "관정"
+  },
+  {
+   "a": "G05",
+   "b": "G96",
+   "aName": "유비",
+   "bName": "전예",
+   "kind": "FRIEND",
+   "value": 70,
+   "ref": "전예 이별"
+  },
+  {
+   "a": "G15",
+   "b": "G47",
+   "aName": "유장",
+   "bName": "장임",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "장임"
+  },
+  {
+   "a": "G15",
+   "b": "G87",
+   "aName": "유장",
+   "bName": "황권",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "황권"
+  },
+  {
+   "a": "G15",
+   "b": "G88",
+   "aName": "유장",
+   "bName": "엄안",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "엄안"
+  },
+  {
+   "a": "G15",
+   "b": "G89",
+   "aName": "유장",
+   "bName": "유파",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "유파"
+  },
+  {
+   "a": "G15",
+   "b": "G86",
+   "aName": "유장",
+   "bName": "장송",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "장송 내통"
+  },
+  {
+   "a": "G15",
+   "b": "G43",
+   "aName": "유장",
+   "bName": "법정",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "법정 불우"
+  },
+  {
+   "a": "G43",
+   "b": "G86",
+   "aName": "법정",
+   "bName": "장송",
+   "kind": "FRIEND",
+   "value": 85,
+   "ref": "함께 유비를 맞이함"
+  },
+  {
+   "a": "G16",
+   "b": "G48",
+   "aName": "장로",
+   "bName": "염포",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "염포"
+  },
+  {
+   "a": "G16",
+   "b": "G91",
+   "aName": "장로",
+   "bName": "양앙",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "양앙"
+  },
+  {
+   "a": "G16",
+   "b": "G92",
+   "aName": "장로",
+   "bName": "양송",
+   "kind": "LORD",
+   "value": 50,
+   "ref": "양송"
+  },
+  {
+   "a": "G17",
+   "b": "G94",
+   "aName": "맹획",
+   "bName": "옹개",
+   "kind": "LORD",
+   "value": 58,
+   "ref": "옹개"
+  },
+  {
+   "a": "G17",
+   "b": "G95",
+   "aName": "맹획",
+   "bName": "고정",
+   "kind": "LORD",
+   "value": 58,
+   "ref": "고정"
+  },
+  {
+   "a": "G12",
+   "b": "G45",
+   "aName": "마등",
+   "bName": "방덕",
+   "kind": "LORD",
+   "value": 65,
+   "ref": "방덕"
+  },
+  {
+   "a": "G13",
+   "b": "G45",
+   "aName": "마초",
+   "bName": "방덕",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "방덕"
+  },
+  {
+   "a": "G13",
+   "b": "G81",
+   "aName": "마초",
+   "bName": "성공영",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "성공영"
+  },
+  {
+   "a": "G13",
+   "b": "G82",
+   "aName": "마초",
+   "bName": "염행",
+   "kind": "RIVAL",
+   "value": 15,
+   "ref": "염행이 마초를 찌름"
+  },
+  {
+   "a": "G03",
+   "b": "G59",
+   "aName": "제갈량",
+   "bName": "강유",
+   "kind": "MENTOR",
+   "value": 85,
+   "ref": "강유 후계"
+  },
+  {
+   "a": "G03",
+   "b": "G61",
+   "aName": "제갈량",
+   "bName": "마속",
+   "kind": "MENTOR",
+   "value": 80,
+   "ref": "마속"
+  },
+  {
+   "a": "G03",
+   "b": "G60",
+   "aName": "제갈량",
+   "bName": "마량",
+   "kind": "FRIEND",
+   "value": 76,
+   "ref": "마량"
+  },
+  {
+   "a": "G03",
+   "b": "G62",
+   "aName": "제갈량",
+   "bName": "장완",
+   "kind": "MENTOR",
+   "value": 80,
+   "ref": "장완"
+  },
+  {
+   "a": "G03",
+   "b": "G63",
+   "aName": "제갈량",
+   "bName": "비의",
+   "kind": "MENTOR",
+   "value": 76,
+   "ref": "비의"
+  },
+  {
+   "a": "G03",
+   "b": "G42",
+   "aName": "제갈량",
+   "bName": "위연",
+   "kind": "RIVAL",
+   "value": 25,
+   "ref": "위연 불화"
+  },
+  {
+   "a": "G03",
+   "b": "G64",
+   "aName": "제갈량",
+   "bName": "이엄",
+   "kind": "RIVAL",
+   "value": 40,
+   "ref": "이엄"
+  },
+  {
+   "a": "G03",
+   "b": "G21",
+   "aName": "제갈량",
+   "bName": "방통",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "와룡·봉추"
+  },
+  {
+   "a": "G40",
+   "b": "G41",
+   "aName": "여몽",
+   "bName": "노숙",
+   "kind": "MENTOR",
+   "value": 80,
+   "ref": "괄목상대"
+  },
+  {
+   "a": "G18",
+   "b": "G40",
+   "aName": "관우",
+   "bName": "여몽",
+   "kind": "RIVAL",
+   "value": 10,
+   "ref": "형주 함락"
+  },
+  {
+   "a": "G18",
+   "b": "G28",
+   "aName": "관우",
+   "bName": "육손",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "형주 함락"
+  },
+  {
+   "a": "G29",
+   "b": "G72",
+   "aName": "감녕",
+   "bName": "능통",
+   "kind": "RIVAL",
+   "value": 15,
+   "ref": "부친의 원수(뒤에 화해)"
+  },
+  {
+   "a": "G24",
+   "b": "G55",
+   "aName": "장료",
+   "bName": "이전",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "불화(합비에서 화해)"
+  },
+  {
+   "a": "G24",
+   "b": "G54",
+   "aName": "장료",
+   "bName": "악진",
+   "kind": "RIVAL",
+   "value": 36,
+   "ref": "불화"
+  },
+  {
+   "a": "G06",
+   "b": "G42",
+   "aName": "황충",
+   "bName": "위연",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "한중 동료"
+  },
+  {
+   "a": "G06",
+   "b": "G88",
+   "aName": "황충",
+   "bName": "엄안",
+   "kind": "FRIEND",
+   "value": 62,
+   "ref": "노장"
+  },
+  {
+   "a": "G31",
+   "b": "G32",
+   "aName": "진궁",
+   "bName": "고순",
+   "kind": "FRIEND",
+   "value": 70,
+   "ref": "여포의 두 기둥"
+  },
+  {
+   "a": "G04",
+   "b": "G36",
+   "aName": "순욱",
+   "bName": "순유",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "숙질"
+  },
+  {
+   "a": "G04",
+   "b": "G22",
+   "aName": "순욱",
+   "bName": "곽가",
+   "kind": "FRIEND",
+   "value": 80,
+   "ref": "곽가 천거"
+  },
+  {
+   "a": "G04",
+   "b": "G57",
+   "aName": "순욱",
+   "bName": "정욱",
+   "kind": "FRIEND",
+   "value": 60,
+   "ref": "정욱"
+  },
+  {
+   "a": "G22",
+   "b": "G35",
+   "aName": "곽가",
+   "bName": "가후",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "책사 동료"
+  },
+  {
+   "a": "G25",
+   "b": "G56",
+   "aName": "허저",
+   "bName": "전위",
+   "kind": "FRIEND",
+   "value": 70,
+   "ref": "호위 동료"
+  }
+ ]
+}

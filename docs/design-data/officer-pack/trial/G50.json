@@ -1,0 +1,114 @@
+{
+  "id": "G50",
+  "name": "황개",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 80,
+    "무용": 75,
+    "지략": 85,
+    "정무": 77,
+    "감화": 81
+  },
+  "sub": {
+    "전열 유지": 78,
+    "기동": 69,
+    "전환": 83,
+    "수습": 64,
+    "힘": 65,
+    "기술": 71,
+    "막아내기": 66,
+    "되받기": 86,
+    "군재": 84,
+    "응변": 72,
+    "속이기": 92,
+    "통찰": 85,
+    "행정": 79,
+    "병참": 61,
+    "인사": 62,
+    "제도": 55,
+    "민정": 84,
+    "설득": 74,
+    "포섭": 79,
+    "결집": 87,
+    "중재": 56
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "책사",
+  "style": "명사",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "받아치고 묶는다",
+    "text": "반격하면 대상 1턴 속박(다음 차례 이동 불가), 황개는 1턴 동안 받는 피해 −15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지략",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "STATUS_APPLY",
+        "when": "ON_COUNTER",
+        "target": "TARGET",
+        "value": 0,
+        "duration": 1,
+        "condition": null,
+        "status": "ROOTED"
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_COUNTER",
+        "target": "SELF",
+        "value": 15,
+        "duration": 1,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · Brace를 풀어 유인하고 들어온 적을 치는 전법은 '스스로 약해 보이고 반격 강화'로, 추격 대신 그 자리에 다시 버티는 특기는 '반격 뒤 방어 +, 들어온 적은 문을 닫아 속박'으로 살렸다. 적이 미끼를 무시하면 행동을 잃는 약점 유지.",
+    "formerName": "닫은 뒤에는 가른다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "일부러 틈 보이기",
+      "text": "문을 반쯤 연다: 1턴 동안 받는 피해 +10%, 대신 반격 피해 +40%. 적이 오지 않으면 헛수고다.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -10,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 40,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "반쯤 열린 문"
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "id": "G03",
+  "name": "제갈량",
+  "faction": "F02",
+  "status": "CLAUDE_TRIAL_PLACEHOLDER — GPT 장수 파이프라인 정식 pack 도착 시 교체",
+  "source": {
+    "room": "FIRST3 시험 기록",
+    "method": "first3-initial-state-v1 → officer-pack 시험 변환 (make-trial-packs.py)",
+    "date": "2026-10-03"
+  },
+  "stats": {
+    "지휘": 87,
+    "무용": 40,
+    "지략": 98,
+    "정무": 93,
+    "감화": 89
+  },
+  "sub": {
+    "전열 유지": 89,
+    "기동": 77,
+    "전환": 84,
+    "수습": 98,
+    "힘": 28,
+    "기술": 32,
+    "막아내기": 66,
+    "되받기": 34,
+    "군재": 99,
+    "응변": 94,
+    "속이기": 100,
+    "통찰": 99,
+    "행정": 95,
+    "병참": 98,
+    "인사": 86,
+    "제도": 89,
+    "민정": 90,
+    "설득": 92,
+    "포섭": 86,
+    "결집": 94,
+    "중재": 92
+  },
+  "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "책사",
+  "style": "문관",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:문관",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "대열을 다잡는 군령",
+    "text": "내 차례 시작에 자신과 2칸 안 아군 모두 전열 한 단계 회복. 태수일 때 도시 과학 +25%, 생산 +15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ROUND_START",
+        "target": "ALL_ALLIES_IN_BATTLE",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 25,
+        "duration": 0,
+        "condition": null,
+        "resource": "SCIENCE"
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 15,
+        "duration": 0,
+        "condition": null,
+        "resource": "PRODUCTION"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04(사용자 지시 \"특기/전법은 너가 한번 다시 만들어볼래\") · 두 부대 행동을 잇는 실행사슬(순서 앞당김 → '먼저 걸고 이어 움직여 친다' 이동+고양)과 실패한 행동 뒤 재정비로 메우는 의도(→ 차례 시작 2칸 전열 회복, 전열 유지 97) 유지. 정무 99는 태수 산출로. 직접 충돌 보정 없음(약점 유지).",
+    "formerName": "빈 책임을 메우다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "진군 군령",
+      "text": "2칸 안 아군 1부대를 지정하면 그 부대와 주변 2칸 안 아군 모두 이번 차례 이동 +1칸, 1턴 고양(공격 +10%). 아직 움직이지 않은 부대에 먼저 걸어야 이어진다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 1,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "INSPIRED"
+        }
+      ],
+      "formerName": "이어지는 군령"
+    },
+    {
+      "kind": "trait",
+      "name": "숲의 매복",
+      "text": "숲에서 공격할 때 주는 피해 +15%.",
+      "rarity": "RARE",
+      "classTag": "책략",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "TERRAIN:FOREST"
+        }
+      ]
+    },
+    {
+      "kind": "tactic",
+      "name": "불 공격",
+      "text": "숲에 있는 적 1부대를 1차례 혼란(다음 차례 공격 불가).",
+      "rarity": "EPIC",
+      "classTag": "책략",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": "TERRAIN:FOREST",
+          "status": "CONFUSED"
+        }
+      ],
+      "cost": 25,
+      "formerName": "화공"
+    },
+    {
+      "kind": "trait",
+      "name": "군대 농사",
+      "text": "태수일 때 도시 식량 +15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 15,
+          "duration": 0,
+          "condition": null,
+          "resource": "FOOD"
+        }
+      ],
+      "formerName": "둔전"
+    },
+    {
+      "kind": "trait",
+      "name": "인망 높이기",
+      "text": "태수일 때 도시 인망 산출 +20%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 20,
+          "duration": 0,
+          "condition": null,
+          "resource": "FAME"
+        }
+      ],
+      "formerName": "상업 장려"
+    },
+    {
+      "kind": "trait",
+      "name": "응급 처치",
+      "text": "잃는 병력의 전사 비율 −20%p(그만큼 부상병으로).",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CASUALTY_SHIFT",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "민심 달래기",
+      "text": "점령 처리 기간 1턴 단축.",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "회유의 달인"
+    },
+    {
+      "kind": "tactic",
+      "name": "격려",
+      "text": "2칸 안 아군 사기 한 단계 회복.",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 20
+    },
+    {
+      "kind": "trait",
+      "name": "방어 대형",
+      "text": "공격받을 때 받는 피해 −15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "방진"
+    },
+    {
+      "kind": "trait",
+      "name": "장창 버티기",
+      "text": "장병일 때 반격 피해 +25%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "TROOP:BT02"
+        }
+      ]
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "G34",
+  "name": "조인",
+  "faction": "F01",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 89,
+    "무용": 88,
+    "지략": 78,
+    "정무": 64,
+    "감화": 74
+  },
+  "sub": {
+    "전열 유지": 93,
+    "기동": 82,
+    "전환": 86,
+    "수습": 90,
+    "힘": 82,
+    "기술": 88,
+    "막아내기": 91,
+    "되받기": 89,
+    "군재": 79,
+    "응변": 80,
+    "속이기": 60,
+    "통찰": 78,
+    "행정": 71,
+    "병참": 62,
+    "인사": 64,
+    "제도": 58,
+    "민정": 54,
+    "설득": 72,
+    "포섭": 67,
+    "결집": 91,
+    "중재": 59
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "맹장",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:맹장",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "성을 지키는 장수",
+    "text": "조인이 성(중심·성문)을 지키는 동안 맞닿은 아군은 받는 피해 −20%, 내 차례 시작마다 사기 한 단계 회복. 성을 비우면 꺼진다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "감화"
+    ],
+    "effects": [
+      {
+        "op": "DEFENSE_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 20,
+        "duration": 0,
+        "condition": "DEFENDING_CITY"
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "ROUND_START",
+        "target": "ADJACENT_ALLIES",
+        "value": 10,
+        "duration": 0,
+        "condition": "DEFENDING_CITY"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · Anchor를 비우고 고립 아군의 Contact를 넘겨받는 구출과 Anchor에 남는 선택을 '성 밖 구출 공격(포위한 적을 측면에서)'과 '성을 지킬 때만 켜지는 연결 오라'로 갈라, 둘 다 완벽히 못 하는 약점을 살림(우금 구출 모티프).",
+    "formerName": "남아야 이어지는 때"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "포위 끊기 출격",
+      "text": "나가서 포위를 끊는다: 맞닿은 적 하나를 피해 +30%로 공격(측면·후방에서 치면 +15% 더)하고, 그 적 주변 2칸 아군은 사기 한 단계 회복.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 15,
+          "duration": 0,
+          "condition": "FLANK"
+        },
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "성 밖의 연결"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK"
+  ]
+}

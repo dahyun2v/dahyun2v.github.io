@@ -1,0 +1,304 @@
+{
+  "schema": "first3-growth-trial-pool-v1",
+  "version": 1,
+  "poolVersion": "first3-growth-trial-pool-v1",
+  "sourceType": "PROVIDED_FIXTURE",
+  "fixture": true,
+  "status": "trial_pool_not_runtime_connected",
+  "updated": "2026-09-20",
+  "scenarioId": "FIRST3-fixed-v1",
+  "firstUseCharacter": {
+    "characterId": "G03",
+    "displayName": "제갈량",
+    "coreTraitId": "UT-G03",
+    "selectionReason": "The current representative character scene and growth-draft fixture both use G03. This pool does not add or replace a roster member."
+  },
+  "sourceRefs": {
+    "nextCycle": "../work-integration/20260920/round-04/NEXT-CYCLE.md",
+    "masterSpec": "../MASTER-SPEC.md",
+    "brainstormIntegration": "../work-integration/20260920/round-04/BRAINSTORM-INTEGRATION.md",
+    "traitsAudit": "../work-integration/20260920/round-04/traits-brainstorm.md",
+    "growthContract": "../work-integration/20260920/round-04/growth-brainstorm.md",
+    "existingFirst3State": "first3-initial-state-v1.json",
+    "publicPoolHistory": "../chat-migration/20260920/6aae8915-8340-83e9-9d60-f386466a2742/page-002.md"
+  },
+  "poolPolicy": {
+    "coreGuarantee": "UT-G03 is initialized at rank 1 without a draft and remains owner-only.",
+    "publicCount": 6,
+    "otherCharacterCoreExcluded": true,
+    "uniqueCapabilityReplicationForbidden": true,
+    "effectAvailability": "A trait is not executable unless effectContract.implementationStatus is SUPPORTED_API_ADAPTER_PENDING or IMPLEMENTED. This fixture contains no IMPLEMENTED effect.",
+    "eventIdempotency": "Any effect bridge must consume one authoritative sourceEventId and deduplicate by sourceEffectId/sourceEventId/targetRef/applicationStage.",
+    "balanceStatus": "All rarity, stage and the one flat discount amount are trial inputs, not final balance."
+  },
+  "traits": [
+    {
+      "traitId": "UT-G03",
+      "displayName": "와룡의 미로",
+      "ownershipType": "CORE",
+      "ownerCharacterId": "G03",
+      "rarity": "LEGENDARY",
+      "rankMax": 5,
+      "stageTags": [
+        "EARLY",
+        "MID",
+        "LATE"
+      ],
+      "affinityTags": [
+        "PLAN",
+        "CONTROL"
+      ],
+      "roleTags": [
+        "STRATEGIST",
+        "CONTROL"
+      ],
+      "situationTags": [
+        "DEFENSE",
+        "HOLD"
+      ],
+      "experienceTags": [
+        "PREPARE",
+        "CONTROL"
+      ],
+      "prerequisiteTraitIds": [],
+      "sourceStatus": "EXISTING_FIRST3_ID_EFFECT_UNDER_RECONCILIATION",
+      "effectContract": {
+        "implementationStatus": "UNSUPPORTED",
+        "latestCapabilityCandidate": "HERO_ZHUGELIANG_CONTINGENCY",
+        "reasonCode": "PREPARED_OPTION_STORAGE_AND_CONSUMPTION_NOT_IMPLEMENTED",
+        "notes": "The existing UT-G03 ID guarantees G03 core ownership. The old initial-state effect text and the latest contingency candidate are not asserted as runtime behavior by this pool."
+      }
+    },
+    {
+      "traitId": "C05",
+      "displayName": "진수",
+      "ownershipType": "PUBLIC",
+      "rarity": "COMMON",
+      "rankMax": 5,
+      "stageTags": [
+        "EARLY",
+        "MID",
+        "LATE"
+      ],
+      "affinityTags": [
+        "HOLD",
+        "PROTECT"
+      ],
+      "roleTags": [
+        "HOLD",
+        "REARGUARD"
+      ],
+      "situationTags": [
+        "DEFENSE",
+        "HOLD"
+      ],
+      "experienceTags": [
+        "GUARD"
+      ],
+      "prerequisiteTraitIds": [],
+      "sourceStatus": "EXISTING_PUBLIC_POOL_V0_1",
+      "effectContract": {
+        "implementationStatus": "UNSUPPORTED",
+        "reasonCode": "POSITION_HELD_EVENT_AND_TRAIT_EVALUATOR_MISSING",
+        "notes": "No damage-reduction percentage from the historical draft is activated by this fixture."
+      }
+    },
+    {
+      "traitId": "C14",
+      "displayName": "추격",
+      "ownershipType": "PUBLIC",
+      "rarity": "COMMON",
+      "rankMax": 5,
+      "stageTags": [
+        "EARLY",
+        "MID",
+        "LATE"
+      ],
+      "affinityTags": [
+        "RAID",
+        "BREAKTHROUGH"
+      ],
+      "roleTags": [
+        "RAID",
+        "BREAKTHROUGH"
+      ],
+      "situationTags": [
+        "PURSUIT",
+        "OPEN_FIELD"
+      ],
+      "experienceTags": [
+        "PURSUIT",
+        "RETREAT"
+      ],
+      "prerequisiteTraitIds": [],
+      "sourceStatus": "EXISTING_PUBLIC_POOL_V0_1",
+      "effectContract": {
+        "implementationStatus": "UNSUPPORTED",
+        "reasonCode": "PURSUIT_MOVEMENT_MODIFIER_HOOK_MISSING",
+        "notes": "The public RETREAT_STARTED event may be observed later, but this fixture does not change common MOVE speed or path legality."
+      }
+    },
+    {
+      "traitId": "C21",
+      "displayName": "선견",
+      "ownershipType": "PUBLIC",
+      "rarity": "RARE",
+      "rankMax": 5,
+      "stageTags": [
+        "MID",
+        "LATE"
+      ],
+      "affinityTags": [
+        "PLAN",
+        "CONTROL"
+      ],
+      "roleTags": [
+        "STRATEGIST",
+        "CONTROL"
+      ],
+      "situationTags": [
+        "DEFENSE",
+        "CONTROL"
+      ],
+      "experienceTags": [
+        "PREPARE",
+        "CONTROL"
+      ],
+      "prerequisiteTraitIds": [],
+      "sourceStatus": "EXISTING_PUBLIC_POOL_V0_1",
+      "effectContract": {
+        "implementationStatus": "UNSUPPORTED",
+        "reasonCode": "TACTIC_RESULT_MODIFIER_ADAPTER_MISSING",
+        "notes": "The historical percentage and duration values are not activated."
+      }
+    },
+    {
+      "traitId": "C25",
+      "displayName": "호응",
+      "ownershipType": "PUBLIC",
+      "rarity": "RARE",
+      "rankMax": 5,
+      "stageTags": [
+        "EARLY",
+        "MID",
+        "LATE"
+      ],
+      "affinityTags": [
+        "COHESION",
+        "CONTROL"
+      ],
+      "roleTags": [
+        "COHESION",
+        "STRATEGIST"
+      ],
+      "situationTags": [
+        "DEFENSE",
+        "ESCORT"
+      ],
+      "experienceTags": [
+        "COORDINATE",
+        "SUPPORT"
+      ],
+      "prerequisiteTraitIds": [],
+      "sourceStatus": "EXISTING_PUBLIC_POOL_V0_1",
+      "effectContract": {
+        "implementationStatus": "UNSUPPORTED",
+        "reasonCode": "SAME_TARGET_SUPPORT_EFFECT_NEEDS_NON_PERCENT_REWRITE",
+        "notes": "The historical same-target attack percentage is not enabled. A later contract must create a visible choice or bounded support result."
+      }
+    },
+    {
+      "traitId": "TRIAL_PUBLIC_FIELD_REFIT_V1",
+      "displayName": "전열정비",
+      "ownershipType": "PUBLIC",
+      "rarity": "RARE",
+      "rankMax": 5,
+      "stageTags": [
+        "EARLY",
+        "MID",
+        "LATE"
+      ],
+      "affinityTags": [
+        "SUPPORT",
+        "LOGISTICS"
+      ],
+      "roleTags": [
+        "REARGUARD",
+        "LOGISTICS"
+      ],
+      "situationTags": [
+        "DEFENSE",
+        "ESCORT"
+      ],
+      "experienceTags": [
+        "DAMAGE_TAKEN",
+        "SUPPORT"
+      ],
+      "prerequisiteTraitIds": [],
+      "sourceStatus": "NEW_TRIAL_ID_UNIQUE_IN_WORKSPACE_AT_CREATION",
+      "effectContract": {
+        "implementationStatus": "SUPPORTED_API_ADAPTER_PENDING",
+        "sourceEffectId": "TRIAL_EFFECT_FIELD_REFIT_V1",
+        "triggerEventName": "DAMAGE_TAKEN",
+        "sourceEventIdRequired": true,
+        "triggerTiming": "PRIOR_TICK_ONLY",
+        "eligibleActionIds": [
+          "TREAT_RALLY"
+        ],
+        "producedModifier": {
+          "api": "action-lifecycle fixed discount token",
+          "type": "fixed",
+          "amountTrial": 2,
+          "holdAt": "DecisionCommit",
+          "consumeAt": "ExecutionCommit",
+          "releaseOnPreExecutionCancel": true
+        },
+        "adapterRequirement": "Only pass this tokenId to quoteAction and decisionCommit for TREAT_RALLY by the same actor. The current lifecycle API does not enforce eligibleActionIds itself.",
+        "dedupeKeyFields": [
+          "sourceEffectId",
+          "sourceEventId",
+          "targetRef",
+          "applicationStage"
+        ],
+        "balanceStatus": "TRIAL_FLAT_AMOUNT_NOT_FINAL"
+      }
+    },
+    {
+      "traitId": "TRIAL_PUBLIC_LINKED_RESPONSE_V1",
+      "displayName": "연계대응",
+      "ownershipType": "PUBLIC",
+      "rarity": "HEROIC",
+      "rankMax": 5,
+      "stageTags": [
+        "MID",
+        "LATE"
+      ],
+      "affinityTags": [
+        "PLAN",
+        "COHESION"
+      ],
+      "roleTags": [
+        "STRATEGIST",
+        "COHESION"
+      ],
+      "situationTags": [
+        "DEFENSE",
+        "ESCORT"
+      ],
+      "experienceTags": [
+        "PREPARE",
+        "COORDINATE"
+      ],
+      "prerequisiteTraitIds": [
+        "C21",
+        "C25"
+      ],
+      "sourceStatus": "NEW_TRIAL_ID_UNIQUE_IN_WORKSPACE_AT_CREATION",
+      "effectContract": {
+        "implementationStatus": "UNSUPPORTED",
+        "reasonCode": "PREREQUISITE_ELIGIBILITY_SUPPORTED_EFFECT_HOOK_UNDEFINED",
+        "notes": "growth-draft can gate this candidate by C21 plus C25. No automatic response, opportunity token or combat modifier is enabled."
+      }
+    }
+  ]
+}

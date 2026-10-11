@@ -1,0 +1,125 @@
+{
+  "id": "G47",
+  "name": "장임",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 81,
+    "무용": 77,
+    "지략": 79,
+    "정무": 53,
+    "감화": 65
+  },
+  "sub": {
+    "전열 유지": 78,
+    "기동": 75,
+    "전환": 84,
+    "수습": 77,
+    "힘": 70,
+    "기술": 81,
+    "막아내기": 76,
+    "되받기": 79,
+    "군재": 84,
+    "응변": 73,
+    "속이기": 85,
+    "통찰": 66,
+    "행정": 58,
+    "병참": 55,
+    "인사": 51,
+    "제도": 48,
+    "민정": 54,
+    "설득": 47,
+    "포섭": 43,
+    "결집": 81,
+    "중재": 50
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+  },
+  "role": "장군",
+  "style": "책사",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:책사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "버티는 문턱",
+    "text": "장임을 공격한 적은 전열 판정(가중 15)을 받는다. 내 전열이 정돈돼 있으면 받는 피해 −20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "무용"
+    ],
+    "effects": [
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ON_DEFEND",
+        "target": "TARGET",
+        "value": -15,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "SELF_ORDERED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 후방 1칸 물러나 Brace하는 전법은 '이동 후 전열 회복+강한 방어+맞닿은 적 둔화'로, 문턱을 넘는 적에 대한 선행 반응은 공격해 온 적의 전열 판정으로 살렸다. 전열 유지(90)를 SELF_ORDERED로 연결. 후방이 막히면 물러설 자리가 없다는 약점은 그대로.",
+    "formerName": "문턱을 넘는 순간"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "선을 다시 긋는다",
+      "text": "물러선 자리에 선을 다시 긋는다: 내 전열 한 단계 회복, 1턴 동안 받는 피해 −25%, 맞닿은 적 모두 1턴 둔화(다음 차례 이동 −2칸).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 25,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "SLOWED"
+        }
+      ],
+      "formerName": "다음 문턱"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

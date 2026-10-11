@@ -1,0 +1,129 @@
+{
+  "id": "G29",
+  "name": "감녕",
+  "faction": "F03",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 86,
+    "무용": 88,
+    "지략": 78,
+    "정무": 47,
+    "감화": 67
+  },
+  "sub": {
+    "전열 유지": 81,
+    "기동": 94,
+    "전환": 85,
+    "수습": 74,
+    "힘": 85,
+    "기술": 91,
+    "막아내기": 80,
+    "되받기": 84,
+    "군재": 76,
+    "응변": 78,
+    "속이기": 82,
+    "통찰": 79,
+    "행정": 47,
+    "병참": 58,
+    "인사": 66,
+    "제도": 39,
+    "민정": 35,
+    "설득": 70,
+    "포섭": 75,
+    "결집": 86,
+    "중재": 36
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "다칠수록 곁이 강해진다",
+    "text": "감녕의 병력이 절반 아래면 맞닿은 아군이 주는 피해 +20%. 감녕이 적 부대를 쓰러뜨리면 맞닿은 아군은 전열 한 단계 회복.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "기병"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 20,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      },
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ON_KILL",
+        "target": "ADJACENT_ALLIES",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 측후면으로 들어가 치는 기습(×1.4)과 반응 포기 대가는 피해 +40%·FLANK 시 주변 동료 고양·반격 −50%로 살림. 합류한 동료의 Regroup 보정은 감녕이 목숨값을 치른 뒤(병력 절반 아래) 곁 동료의 피해 증가와 처치 시 전열 회복으로 살림(감녕 자신은 받지 않음).",
+    "formerName": "함께 들어온 몫"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "목숨 건 기습",
+      "text": "인접한 적 1부대를 기습한다(피해 +40%). 측면·후방에서 쳤다면 대상 주변 2칸 안 아군이 1턴 고양되고, 대신 감녕은 다음 적 차례까지 반격 피해 −50%.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 40,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 0,
+          "duration": 1,
+          "condition": "FLANK",
+          "status": "INSPIRED"
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -50,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "먼저 낸 목숨값"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK",
+    "FORMATION"
+  ]
+}

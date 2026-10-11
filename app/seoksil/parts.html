@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>석실 부품 시트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Song+Myung&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="/app/seoksil/tokens.css">
+<link rel="stylesheet" href="/app/seoksil/parts.css">
+<style>
+/* 시트 페이지 전용 배치(게임 화면에는 쓰지 않음) */
+body.ss{overflow-y:auto}
+.sheet{position:relative;max-width:1320px;margin:0 auto;padding:40px 32px 120px;display:grid;gap:48px}
+.sheet header{display:grid;gap:8px}
+.sheet header p{margin:0;color:var(--ss-ink-2);max-width:68ch}
+.sheet h2{font:700 20px/1.3 var(--ss-serif);letter-spacing:.08em;margin:0 0 16px;display:flex;align-items:baseline;gap:12px}
+.sheet h2 small{font:600 12px var(--ss-sans);letter-spacing:.1em;color:var(--ss-ink-3)}
+.bar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 0;background:linear-gradient(180deg,var(--ss-dark) 70%,rgba(18,16,9,0))}
+.bar .ss-btn[aria-pressed="true"]{box-shadow:inset 0 1px 0 rgba(211,154,82,.7),inset 0 -1px 0 rgba(0,0,0,.6);color:var(--ss-lamp)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;align-items:start}
+.cell{display:grid;gap:10px;align-content:start}
+.cell > .ss-label{color:var(--ss-ink-3)}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sw{display:grid;gap:6px;font-size:12px;color:var(--ss-ink-2)}
+.sw i{display:block;height:56px;border:1px solid rgba(216,204,178,.08)}
+.sw code{font:500 11px ui-monospace,Consolas,monospace;color:var(--ss-ink-3)}
+.lines{display:grid;gap:18px;max-width:640px}
+.lines div{display:grid;grid-template-columns:160px 1fr;align-items:center;gap:16px;font-size:13px;color:var(--ss-ink-2)}
+.lines hr{border:0;margin:0}
+.lines hr.carve{height:0;border-top:1.2px solid #3B3530;box-shadow:0 1px 0 rgba(207,198,181,.35)}
+.carve{height:0;border-top:1.2px solid #3B3530;box-shadow:0 1px 0 rgba(207,198,181,.35)}
+.stage-demo{height:360px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:40px}
+.stage-demo .ss-panel{position:relative;z-index:6;cursor:pointer}
+.type-demo{display:grid;gap:14px}
+.niches{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.niches figure{margin:0;display:grid;justify-items:center}
+.seals{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+.decide-demo{max-width:560px}
+.state-note{font-size:13px;color:var(--ss-ink-3)}
+</style>
+</head>
+<body class="ss">
+<main class="sheet" id="sheet" data-state="normal">
+  <header>
+    <span class="ss-label">석실 · 부장품 부품 열 C01–C10 · B1 뼈대</span>
+    <h1 class="ss-scene-title">석실 부품 시트</h1>
+    <p>모든 화면이 이 부품만으로 짓는다. 위 상태 단추를 누르면 전 부품이 같은 상태로 바뀐다. 개별 부품을 눌러도 고름이 켜진다. 그림 부품(A1)은 "그림 부품" 단추로 켜고 끈다 — 꺼져 있으면 CSS로 그린 대체 모양이다.</p>
+  </header>
+
+  <nav class="bar" aria-label="상태">
+    <button class="ss-btn" data-set="normal" aria-pressed="true">보통</button>
+    <button class="ss-btn" data-set="picked" aria-pressed="false">고름</button>
+    <button class="ss-btn" data-set="able" aria-pressed="false">가능</button>
+    <button class="ss-btn" data-set="off" aria-pressed="false">불가</button>
+    <button class="ss-btn" data-set="lost" aria-pressed="false">잃음</button>
+    <span style="flex:1"></span>
+    <button class="ss-btn" id="art-toggle" aria-pressed="false">그림 부품</button>
+  </nav>
+
+  <section>
+    <h2>색 <small>벽 = 지금(따뜻함) · 천장 = 하늘(차가움) · 돌 = 기억(온도 없음) · 주사 = 한 화면 한 곳</small></h2>
+    <div class="swatches" id="swatches"></div>
+  </section>
+
+  <section>
+    <h2>선 <small>세 굵기 · 두 성질</small></h2>
+    <div class="lines">
+      <div><span>테두리 2.5px</span><hr style="border-top:2.5px solid #463B31"></div>
+      <div><span>구조 1px</span><hr style="border-top:1px solid var(--ss-line-tin)"></div>
+      <div><span>장식 0.5px</span><hr style="border-top:.5px solid var(--ss-line-tin-hi)"></div>
+      <div><span>철선 — 지금·UI</span><hr style="border-top:1.5px solid var(--ss-plaster);border-radius:2px"></div>
+      <div><span>새김 — 기억</span><hr class="carve"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>글자 <small>제목 Noto Serif KR · 일하는 글자 Pretendard</small></h2>
+    <div class="type-demo">
+      <p class="ss-scene-title">평정을 열다</p>
+      <p class="ss-name">제갈량<small>諸葛亮</small></p>
+      <p style="margin:0;max-width:60ch">군사 한마디: 북쪽 성 가까이에 적 기병 <span class="ss-num">1,200</span>이 와 있습니다.</p>
+      <p class="ss-stat" style="margin:0">지휘 82 · 무용 64 · 지략 97</p>
+      <p class="ss-label" style="margin:0">꼬리표 · 관직 · 장소</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>C09 등불 · 빛 웅덩이 <small>고른 판 쪽으로 등불이 옮겨 간다(0.15초) · 숨 쉬기 8초</small></h2>
+    <div class="ss-stage stage-demo" id="lamp-demo">
+      <i class="ss-lamp" style="--lamp-size:520px"></i>
+      <div class="ss-panel" data-lamp><span class="ss-label">허창</span><p style="margin:4px 0 0">식량 12,400</p></div>
+      <div class="ss-panel" data-lamp><span class="ss-label">완</span><p style="margin:4px 0 0">식량 3,100</p></div>
+      <div class="ss-panel" data-lamp><span class="ss-label">여남</span><p style="margin:4px 0 0">식량 7,850</p></div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="cell">
+      <span class="ss-label">C02 칠기 판 · 정보</span>
+      <div class="ss-panel" data-part><b>낙양</b><p style="margin:6px 0 0;color:var(--ss-ink-2)">인구 48,000 · 치안 보통</p></div>
+    </div>
+    <div class="cell">
+      <span class="ss-label">C01 청동 안쪽 테</span>
+      <div class="ss-frame" data-part style="height:180px;display:grid;place-items:center;background:#16120E"><span class="ss-reason">초상 · 지도 미리보기 자리</span></div>
+    </div>
+    <div class="cell">
+      <span class="ss-label">C06 일반 버튼</span>
+      <div class="ss-row"><button class="ss-btn" data-part>출진 <span class="ss-key">M</span></button><button class="ss-btn" data-part>머무름</button><button class="ss-btn ss-btn--quiet" data-part>취소</button></div>
+      <div class="ss-stack"><button class="ss-btn" disabled>성 공격</button><span class="ss-reason">성까지 두 칸 남음 — 다음 차례에 닿습니다</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>C03 목간 행 <small>장수 명부·메뉴·진행 중 목록 · 높이 64px · 행 사이 4px</small></h2>
+    <ol class="ss-slips" style="--slip-cols:180px 1fr 120px 120px 120px;max-width:920px">
+      <li><button class="ss-slip" data-part><b>제갈량</b><span>군사 · 허창</span><span class="ss-num">지휘 82</span><span class="ss-num">무용 64</span><span class="ss-num">지략 97</span></button></li>
+      <li><button class="ss-slip" data-part><b>관우</b><span>부대장 · 완</span><span class="ss-num">지휘 95</span><span class="ss-num">무용 97</span><span class="ss-num">지략 75</span></button></li>
+      <li><button class="ss-slip" data-part><b>방통</b><span>태수 · 여남</span><span class="ss-num">지휘 70</span><span class="ss-num">무용 48</span><span class="ss-num">지략 96</span></button></li>
+      <li><button class="ss-slip is-off" disabled><b>장비</b><span>중상 — 2차례 뒤 회복</span><span class="ss-num">지휘 88</span><span class="ss-num">무용 98</span><span class="ss-num">지략 30</span></button></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>C05 초상 감실 <small>모든 장수 같은 판형 · 얼굴만 촛불 · 오른쪽 아래 빈 받침 · 이름은 HTML 이름패</small></h2>
+    <div class="niches" id="niches"></div>
+  </section>
+
+  <section>
+    <h2>C07 인장 <small>확정 = 아래·크게·주사 · 경고 = 위·작게·주사 아님 · 누르면 자국이 남는다</small></h2>
+    <div class="seals">
+      <button class="ss-seal" id="seal-demo" aria-label="결의 — 인장을 찍는다"></button>
+      <span id="seal-out" class="ss-reason">← 누르면 판에 자국이 남는다</span>
+      <button class="ss-seal-warn" title="처리할 일 — 포로 처분">3</button>
+      <button class="ss-seal-warn" title="처리할 일 — 외교 제안">外</button>
+      <button class="ss-seal" disabled style="--seal:64px" aria-label="불가"></button>
+    </div>
+  </section>
+
+  <section class="decide-demo">
+    <h2>C04 결정 판 <small>규 머리 + 칠기 몸통 · 효과 → 비용 → 조건 → 영구 여부</small></h2>
+    <div class="ss-decide" data-part>
+      <div class="ss-gui"><span class="ss-label" style="color:var(--ss-ochre)">평정 안건 · 관우 제안</span></div>
+      <div class="ss-panel ss-panel--decide">
+        <dl class="ss-decide__rows">
+          <div><dt>효과</dt><dd>관우 군이 완을 친다 — 수비가 얇다</dd></div>
+          <div><dt>비용</dt><dd><span class="ss-num">2</span>차례 · 군량 <span class="ss-num">1,400</span></dd></div>
+          <div><dt>조건</dt><dd>마감: 다음 평정 전(<span class="ss-num">2</span>차례)</dd></div>
+          <div><dt>위험</dt><dd>원소군 기병이 북쪽에서 내려올 수 있다</dd></div>
+        </dl>
+        <hr class="ss-rule" style="margin:16px 0">
+        <div class="ss-row" style="justify-content:space-between"><span class="ss-irreversible">결의는 되돌릴 수 없음</span><div class="ss-row"><button class="ss-btn">보류</button><button class="ss-seal" style="--seal:64px" aria-label="결의"></button></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="cell">
+      <span class="ss-label">C08 와당 · 세력</span>
+      <div class="ss-row"><span class="ss-wadang" style="--fc:#A5553A">魏</span><span class="ss-wadang" style="--fc:#5F7D6A">蜀</span><span class="ss-wadang" style="--fc:#6F7F8C">吳</span><span class="ss-wadang" style="--d:56px">袁</span></div>
+    </div>
+    <div class="cell">
+      <span class="ss-label">C10 천장 띠</span><i class="ss-band ss-band--sky"></i>
+      <span class="ss-label">C10 돌 띠</span><i class="ss-band ss-band--stone"></i>
+    </div>
+    <div class="cell">
+      <span class="ss-label">C09 잃음 — 검은 천</span>
+      <div class="ss-panel is-lost"><b>양양</b><p style="margin:6px 0 0;color:var(--ss-ink-2)">함락 — 손권군에게 넘어감</p></div>
+    </div>
+  </section>
+  <p class="state-note">수치·색은 시험값이다(bible v1). 판정: 원본·50% 축소·흑백 세 가지로 본다.</p>
+</main>
+<script type="module">
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+// 색 견본
+const SW=[['석실 어둠','--ss-dark'],['흑칠 판','--ss-lacquer'],['칠 반사','--ss-lacquer-hi'],['등불','--ss-lamp'],['회벽','--ss-plaster'],['바랜 토황','--ss-ochre'],['바랜 토홍','--ss-rust'],['바랜 석록','--ss-malachite'],
+ ['칠흑','--ss-pitch'],['주석','--ss-tin'],['옥','--ss-jade'],['금점(점만)','--ss-gold-dot'],['짙은 돌','--ss-stone-deep'],['돌','--ss-stone'],['새김 빛','--ss-carve'],['주사(한 곳)','--ss-cinnabar']];
+const cs=getComputedStyle(document.documentElement);
+$('#swatches').innerHTML=SW.map(([n,v])=>`<div class="sw"><i style="background:var(${v})"></i><span>${n}</span><code>${cs.getPropertyValue(v).trim()}</code></div>`).join('');
+// 감실 — 기존 장수 그림 재사용(동양인화·새로 그리기 없음)
+const N=[['G05','유비','劉備'],['G07','조조','曹操'],['G08','손권','孫權'],['G03','제갈량','諸葛亮']];
+$('#niches').innerHTML=N.map(([id,n,h],i)=>`<figure><button class="ss-niche${i===1?' is-picked':''}" data-part data-niche style="--w:${i===1?220:180}px" aria-label="${n}"><span class="ss-niche__hatch"><span class="ss-niche__window"><img src="/assets/officer-art/cutout/${id}.${['G05','G07','G08'].includes(id)?'png':'webp'}" alt=""></span></span><span class="ss-niche__plinth" aria-hidden="true"></span></button><figcaption class="ss-nameplate"><b>${n}</b><small>${h}</small></figcaption></figure>`).join('');
+// 상태 단추 — 모든 부품에 같은 상태 클래스를 준다
+const STATES={picked:'is-picked',able:'is-able',off:'is-off',lost:'is-lost'};
+$$('.bar [data-set]').forEach(b=>b.onclick=()=>{
+ $$('.bar [data-set]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+ $$('[data-part]').forEach(el=>{Object.values(STATES).forEach(c=>el.classList.remove(c));if(STATES[b.dataset.set])el.classList.add(STATES[b.dataset.set]);});
+});
+// 개별 고름
+$$('[data-part]').forEach(el=>el.addEventListener('click',()=>{if(el.classList.contains('is-off'))return;el.classList.toggle('is-picked');}));
+// 등불이 고른 판 쪽으로
+const demo=$('#lamp-demo');
+$$('[data-lamp]').forEach(p=>p.onclick=()=>{const r=demo.getBoundingClientRect(),q=p.getBoundingClientRect();demo.style.setProperty('--lamp-x',`${q.left-r.left+q.width/2}px`);demo.style.setProperty('--lamp-y',`${q.top-r.top+q.height/2}px`);$$('[data-lamp]').forEach(x=>x.classList.toggle('is-picked',x===p));});
+// 인장 누름 → 자국
+$('#seal-demo').onclick=e=>{const b=e.currentTarget;b.classList.add('is-pressed');setTimeout(()=>b.classList.remove('is-pressed'),250);$('#seal-out').innerHTML='<i class="ss-seal-mark is-new"></i>';};
+// 그림 부품 켜기/끄기 — A1 채택분이 /assets/seoksil/a1/ 에 들어오면 여기서 확인
+// 그림 부품(A1) 켜기/끄기 — /app/seoksil/art-a1.css 를 붙였다 뗀다. ?art=0 이면 꺼진 채로 연다
+const artLink=Object.assign(document.createElement('link'),{rel:'stylesheet',href:'/app/seoksil/art-a1.css'});
+const setArt=on=>{$('#art-toggle').setAttribute('aria-pressed',String(on));on?document.head.append(artLink):artLink.remove();};
+setArt(new URLSearchParams(location.search).get('art')!=='0');
+$('#art-toggle').onclick=()=>setArt($('#art-toggle').getAttribute('aria-pressed')!=='true');
+</script>
+</body></html>

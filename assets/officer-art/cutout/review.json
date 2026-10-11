@@ -1,0 +1,133 @@
+{
+ "note": "검토 보기 전용(?art=review). 채택 아님 — adopted.json 과 무관. tools/design/officer-review-cut.py 가 만든다",
+ "officers": {
+  "G01": [
+   "review-G01.webp"
+  ],
+  "G02": [
+   "review-G02.webp"
+  ],
+  "G03": [
+   "review-G03.webp"
+  ],
+  "G05": [
+   "review-G05.webp"
+  ],
+  "G07": [
+   "review-G07.webp"
+  ],
+  "G12": [
+   "review-G12.webp"
+  ],
+  "G13": [
+   "review-G13.webp"
+  ],
+  "G14": [
+   "review-G14.webp"
+  ],
+  "G15": [
+   "review-G15.webp"
+  ],
+  "G16": [
+   "review-G16.webp"
+  ],
+  "G19": [
+   "review-G19-n1.webp",
+   "review-G19-n2.webp",
+   "review-G19-n3.webp",
+   "review-G19-n4.webp",
+   "review-G19-n5.webp",
+   "review-G19-n6.webp",
+   "review-G19-n7.webp",
+   "review-G19-n8.webp"
+  ],
+  "G22": [
+   "review-G22.webp"
+  ],
+  "G24": [
+   "review-G24-n1.webp",
+   "review-G24-n2.webp",
+   "review-G24-n3.webp",
+   "review-G24-n4.webp",
+   "review-G24-n5.webp",
+   "review-G24-n6.webp",
+   "review-G24-n7.webp",
+   "review-G24-n8.webp"
+  ],
+  "G28": [
+   "review-G28.webp"
+  ],
+  "G29": [
+   "review-G29.webp"
+  ],
+  "G30": [
+   "review-G30.webp"
+  ],
+  "G31": [
+   "review-G31.webp"
+  ],
+  "G32": [
+   "review-G32.webp"
+  ],
+  "G37": [
+   "review-G37.webp"
+  ],
+  "G38": [
+   "review-G38.webp"
+  ],
+  "G45": [
+   "review-G45.webp"
+  ],
+  "G46": [
+   "review-G46.webp"
+  ],
+  "G50": [
+   "review-G50.webp"
+  ],
+  "G51": [
+   "review-G51.webp"
+  ],
+  "G55": [
+   "review-G55.webp"
+  ],
+  "G59": [
+   "review-G59.webp"
+  ],
+  "G62": [
+   "review-G62.webp"
+  ],
+  "G63": [
+   "review-G63.webp"
+  ],
+  "G72": [
+   "review-G72.webp"
+  ],
+  "G74": [
+   "review-G74.webp"
+  ],
+  "G81": [
+   "review-G81.webp"
+  ],
+  "G83": [
+   "review-G83.webp"
+  ],
+  "G85": [
+   "review-G85.webp"
+  ],
+  "G91": [
+   "review-G91.webp"
+  ],
+  "G94": [
+   "review-G94.webp"
+  ],
+  "G95": [
+   "review-G95.webp"
+  ],
+  "G97": [
+   "review-G97.webp"
+  ],
+  "G98": [
+   "review-G98.webp"
+  ]
+ }
+}

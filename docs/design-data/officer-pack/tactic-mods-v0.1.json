@@ -1,0 +1,270 @@
+{
+  "schema": "tactic-mods-v0.1",
+  "status": "TRIAL — Claude 2026-10-04. 사용자 \"다반영해\"(REF-COMPETITIVE ② 전법 변형·진화, ③ 고유 전법 게이지). 더하기 전에 바꾸기 — 장착한 전법을 바꾸는 특기(패스 오브 엑자일 보조 젬·디아블로4 강화 갈래·도타 아가님·데드락 주입·뱀파이어 서바이버즈 진화·오버워치 궁극기). 수치 시험값.",
+  "modifierSlot": "장착 전법마다 변형 칸 1개. 변형 특기는 특기 Draft 에 나오고(장착 전법 중 대상 태그가 맞는 것이 있을 때만), 고를 때 묶을 전법을 정한다. 묶인 전법 재사용 대기 +1(변형의 값). 다시 묶기 = 그 장수 경험치 1레벨분 소모(데드락 주입).",
+  "modifiers": [
+    {
+      "id": "MOD-01",
+      "name": "양날 공격",
+      "rarity": "RARE",
+      "targetTag": "DAMAGE",
+      "text": "이 피해형 전법이 대상 옆 적 1부대에도 50% 피해.",
+      "rule": "SPLASH_ADJ",
+      "params": {
+        "ratio": 50
+      },
+      "ref": "PoE 분할 보조 젬"
+    },
+    {
+      "id": "MOD-02",
+      "name": "전법 뒤 이어 공격",
+      "rarity": "EPIC",
+      "targetTag": "DAMAGE",
+      "text": "이 전법 뒤 이번 차례 다음 일반 공격 피해 +20%.",
+      "rule": "SPELLBLADE",
+      "params": {
+        "bonus": 20
+      },
+      "ref": "롤 주문검",
+      "formerName": "연환"
+    },
+    {
+      "id": "MOD-03",
+      "name": "기회를 노린다",
+      "rarity": "EPIC",
+      "targetTag": "DAMAGE",
+      "text": "2칸 안 적이 패주하면 이 전법이 그 적에게 자동으로 나간다(재사용 대기 소모).",
+      "rule": "CAST_ON_ROUT",
+      "params": {
+        "range": 2
+      },
+      "ref": "PoE '조건 시 시전'"
+    },
+    {
+      "id": "MOD-04",
+      "name": "불길 확산",
+      "rarity": "RARE",
+      "targetTag": "FIRE",
+      "text": "화계 번짐 +1칸.",
+      "rule": "FIRE_SPREAD",
+      "params": {
+        "extra": 1
+      },
+      "ref": "디아블로4 강화 갈래"
+    },
+    {
+      "id": "MOD-05",
+      "name": "긴 사거리",
+      "rarity": "UNCOMMON",
+      "targetTag": "RANGE1+",
+      "text": "이 전법 사거리 +1(사거리 1 이상 전법만).",
+      "rule": "RANGE_PLUS",
+      "params": {
+        "extra": 1
+      },
+      "ref": "도타 아가님 조각"
+    },
+    {
+      "id": "MOD-06",
+      "name": "두 번 친다",
+      "rarity": "LEGENDARY",
+      "targetTag": "CHARGE",
+      "text": "돌격형 전법이 두 번 타격(두 번째 50%). 대가: 재사용 대기 +1 더(총 +2).",
+      "rule": "DOUBLE_HIT",
+      "params": {
+        "second": 50,
+        "extraCooldown": 1
+      },
+      "cost": "대기 +2",
+      "ref": "도타 아가님 홀"
+    },
+    {
+      "id": "MOD-07",
+      "name": "되갚는 호령",
+      "rarity": "RARE",
+      "targetTag": "CONTROL",
+      "text": "통제형 전법(도발·위보·밀기·자리 바꾸기)이 성공하면 재사용 대기 −1.",
+      "rule": "REFUND_ON_SUCCESS",
+      "params": {
+        "refund": 1
+      },
+      "ref": "오버워치2 작은 퍽(조건부 환급)"
+    },
+    {
+      "id": "MOD-08",
+      "name": "넓은 결집",
+      "rarity": "UNCOMMON",
+      "targetTag": "RALLY",
+      "text": "결집 범위 +1칸.",
+      "rule": "RALLY_RANGE",
+      "params": {
+        "extra": 1
+      },
+      "ref": "디아블로4 위상"
+    }
+  ],
+  "forks": {
+    "text": "공용 전법이 2단계가 되는 Draft 에서 둘 중 하나를 고른다(디아블로4 강화 갈래·도타 면모). 고른 쪽은 되돌릴 수 없다.",
+    "list": [
+      {
+        "tactic": "CTA-12",
+        "name": "불 지르기",
+        "a": {
+          "name": "번지는 불",
+          "text": "번짐 +1칸"
+        },
+        "b": {
+          "name": "오래 타는 불",
+          "text": "불이 2차례 지속"
+        }
+      },
+      {
+        "tactic": "CTA-05",
+        "name": "결집",
+        "a": {
+          "name": "큰 북",
+          "text": "범위 +1칸"
+        },
+        "b": {
+          "name": "대열 정비",
+          "text": "사기와 함께 전열 한 단계 회복"
+        }
+      },
+      {
+        "tactic": "CTA-04",
+        "name": "도발",
+        "a": {
+          "name": "분노 유도",
+          "text": "대상 다음 공격 피해 −20%"
+        },
+        "b": {
+          "name": "함성",
+          "text": "2칸 안 적 모두 이쪽을 보게"
+        }
+      },
+      {
+        "tactic": "CTA-01",
+        "name": "밀어붙이기",
+        "a": {
+          "name": "멀리 밀기",
+          "text": "2칸 밀기"
+        },
+        "b": {
+          "name": "밀고 들어가기",
+          "text": "민 뒤 그 칸으로 진입"
+        }
+      },
+      {
+        "tactic": "CTA-09",
+        "name": "기세 싸움",
+        "a": {
+          "name": "기세 꺾기",
+          "text": "이기면 상대 전열도 흐트러짐"
+        },
+        "b": {
+          "name": "물러설 줄 앎",
+          "text": "져도 사기 판정 없음"
+        }
+      },
+      {
+        "tactic": "CTA-07",
+        "name": "관통 사격",
+        "a": {
+          "name": "꿰뚫기",
+          "text": "뒤 2부대까지"
+        },
+        "b": {
+          "name": "제압 사격",
+          "text": "첫 대상 다음 차례 반격 불가"
+        }
+      }
+    ]
+  },
+  "evolutions": {
+    "text": "최대 단계(5) 전법 + 지정 특기 보유 → 다음 전법 Draft 에 진화 전법(신화)이 보장(뱀파이어 서바이버즈 진화). 진화하면 원래 전법을 대체. 대가 필수.",
+    "list": [
+      {
+        "id": "EVO-01",
+        "from": "CTA-12",
+        "needsTrait": "TR-WIND",
+        "name": "적벽의 불",
+        "text": "화계가 바람 방향(이 부대 정면)으로 3칸 번지고 불이 2차례 지속. 대가: 맞닿은 아군 칸도 탄다.",
+        "cost": "아군 칸도 탐",
+        "ref": "적벽대전"
+      },
+      {
+        "id": "EVO-02",
+        "from": "CHARGE",
+        "needsTrait": "TC-C01d",
+        "name": "길을 쓸어버리는 돌격",
+        "text": "돌격이 지나간 길의 모든 적 부대 전열 판정(가중 15). 대가: 이 부대 병력 −10%.",
+        "cost": "자기 병력 −10%",
+        "ref": "관우·장비 '만인지적'",
+        "formerName": "만인적(萬人敵)"
+      },
+      {
+        "id": "EVO-03",
+        "from": "CTA-05",
+        "needsTrait": "TC-C04c",
+        "name": "강을 등진 진",
+        "text": "2칸 안 아군 이번 차례 패주 불가·주는 피해 +15%. 대가: 다음 차례 그 아군 모두 이동 불가.",
+        "cost": "다음 차례 이동 불가",
+        "ref": "한신 배수진",
+        "formerName": "배수진"
+      },
+      {
+        "id": "EVO-04",
+        "from": "CTA-13",
+        "needsTrait": "TC-C02d",
+        "name": "돌 미로 진",
+        "text": "숲 칸 3개를 미로로 — 들어온 적은 2차례 이동 불가. 대가: 이 부대도 그 차례 이동 불가.",
+        "cost": "자기 이동 불가",
+        "ref": "제갈량 팔진도",
+        "formerName": "팔진도"
+      }
+    ],
+    "extraTraits": [
+      {
+        "id": "TR-WIND",
+        "kind": "trait",
+        "name": "바람을 읽는 자",
+        "rarity": "RARE",
+        "classTag": "지략",
+        "text": "강 칸·평지에서 시야 +1, 화계 재사용 대기 −1.",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "WIND_READER",
+            "params": {
+              "vision": 1,
+              "fireCooldown": 1
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ],
+        "ref": "제갈량 동남풍"
+      }
+    ]
+  },
+  "signature": {
+    "text": "장수마다 고유 전법(pack 의 classTag '고유' 대표 전법)을 '고유 전법'으로 지정 — 게이지가 가득 차야 쓴다(오버워치 궁극기·하데스2 주술). 장착 3칸과 별도.",
+    "gauge": {
+      "max": 100,
+      "perTurn": 10,
+      "perDamage": "주고받은 피해 10당 +1",
+      "onOtherTactic": 15,
+      "onNearbyEnemyRout": 20,
+      "onNearbyAllyBreak": 25,
+      "nearbyRange": 2,
+      "selfCharge": "고유 전법으로는 충전 안 됨",
+      "afterUse": "0으로",
+      "visibleToEnemy": true,
+      "crisisMultiplier": 1.5
+    },
+    "tier": "칭호 1개마다 고유 전법 효과 +10%(최대 +50%) — 롤 6/11/16 궁극기 성장"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "id": "G44",
+  "name": "한수",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 72,
+    "무용": 62,
+    "지략": 68,
+    "정무": 56,
+    "감화": 68
+  },
+  "sub": {
+    "전열 유지": 65,
+    "기동": 78,
+    "전환": 73,
+    "수습": 80,
+    "힘": 65,
+    "기술": 62,
+    "막아내기": 60,
+    "되받기": 63,
+    "군재": 72,
+    "응변": 72,
+    "속이기": 64,
+    "통찰": 53,
+    "행정": 53,
+    "병참": 58,
+    "인사": 69,
+    "제도": 48,
+    "민정": 54,
+    "설득": 76,
+    "포섭": 79,
+    "결집": 63,
+    "중재": 48
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "책사",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:책사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "물러날 길을 안다",
+    "text": "병력이 절반 아래면 이동 +2칸. 한수가 관여한 점령 처리는 1턴 짧고, 태수일 때 도시 인망 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "MOVE_MOD",
+        "when": "PASSIVE",
+        "target": "SELF",
+        "value": 2,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      },
+      {
+        "op": "OCCUPATION_SPEED",
+        "when": "PASSIVE",
+        "target": "SELF",
+        "value": 1,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 20,
+        "duration": 0,
+        "condition": null,
+        "resource": "FAME"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 지원 중계·경로단절 복구는 지도 전투에 없어, '같은 뜻이 아니어도 서로 응답'은 적과의 상호 휴전(양쪽 혼란, 대가 유지)으로, '대화의 퇴로'는 불리할 때 빠지는 이동과 회유·인망으로 옮겼다.",
+    "formerName": "대화의 퇴로"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "말로 묶기",
+      "text": "2칸 안 적 1부대와 말을 섞는다: 대상은 1턴 혼란(다음 차례 공격 불가), 대신 한수도 1턴 혼란.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "CONFUSED"
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "CONFUSED"
+        }
+      ],
+      "formerName": "아직 닿는 사람"
+    }
+  ]
+}

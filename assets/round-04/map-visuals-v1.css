@@ -1,0 +1,20 @@
+/* ROUND-04 visual contract. Apply these classes after runtime has resolved terrain and sight; CSS must not infer gameplay rules. */
+:root{
+  --tile-plain:#a9b864; --tile-forest:#2d6546; --tile-hill:#92794e; --tile-mountain:#68747e;
+  --tile-water:#3e7895; --tile-desert:#bb8050; --tile-tropical:#39704d; --tile-snow:#dce8ef;
+  --tile-line:#24313b; --selection:#ffd46a; --path:#ffe9a6; --vision:#9ce0d4; --memory:#a9b6ba;
+}
+.map-tile{stroke:var(--tile-line);stroke-width:1.25;paint-order:stroke;}
+.terrain-plain{fill:var(--tile-plain)}.terrain-forest{fill:var(--tile-forest)}.terrain-hill{fill:var(--tile-hill)}
+.terrain-mountain{fill:var(--tile-mountain)}.terrain-water{fill:var(--tile-water)}.terrain-desert{fill:var(--tile-desert)}
+.terrain-tropical{fill:var(--tile-tropical)}.terrain-snow{fill:var(--tile-snow)}
+/* Forest and mountain stay visually distinct. Only an explicit LOS result may add .los-blocker. */
+.terrain-forest .terrain-mark{fill:none;stroke:#b5d37b;stroke-width:1.3;opacity:.62}.terrain-mountain .terrain-mark{fill:none;stroke:#e4ebeb;stroke-width:1.2;opacity:.72}
+.los-blocker{stroke:#f3d08b;stroke-width:2.25;stroke-dasharray:4 2}.los-clear{stroke:var(--vision);stroke-width:2.5}.los-unknown{stroke:#a9b6ba;stroke-width:2;stroke-dasharray:3 3}
+.sight-hidden{filter:brightness(.38) saturate(.45)}.sight-remembered{filter:brightness(.62) saturate(.68)}
+.unit-marker{filter:drop-shadow(0 1px 1px #111b)}.unit-marker.is-selected{filter:drop-shadow(0 0 4px var(--selection))}.unit-marker.is-routed{opacity:.9}
+.selection-ring{fill:none;stroke:var(--selection);stroke-width:3;pointer-events:none}.movement-path{fill:none;stroke:var(--path);stroke-width:4;stroke-dasharray:6 4;pointer-events:none}
+.city-marker{filter:drop-shadow(0 1px 1px #111b)}.city-marker.is-selected{filter:drop-shadow(0 0 4px var(--selection))}
+/* .own-stamina is for the player faction only. Do not render stamina, troop count, HP, morale, cooldown, or route intent for hidden enemies. */
+.own-stamina{fill:#f4c95d;stroke:#4b3920;stroke-width:1.5}.hidden-enemy-detail{display:none}
+@media (max-width:720px){.unit-marker{transform-box:fill-box;transform-origin:center;transform:scale(.86)}.city-marker{transform-box:fill-box;transform-origin:center;transform:scale(.9)}}

@@ -1,0 +1,136 @@
+{
+  "id": "G28",
+  "name": "육손",
+  "faction": "F03",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 94,
+    "무용": 69,
+    "지략": 94,
+    "정무": 81,
+    "감화": 77
+  },
+  "sub": {
+    "전열 유지": 94,
+    "기동": 81,
+    "전환": 96,
+    "수습": 82,
+    "힘": 49,
+    "기술": 60,
+    "막아내기": 61,
+    "되받기": 88,
+    "군재": 94,
+    "응변": 92,
+    "속이기": 79,
+    "통찰": 95,
+    "행정": 83,
+    "병참": 78,
+    "인사": 76,
+    "제도": 73,
+    "민정": 86,
+    "설득": 80,
+    "포섭": 64,
+    "결집": 82,
+    "중재": 67
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "장군",
+  "style": "책사",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:책사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "이긴 뒤 진을 굳힌다",
+    "text": "적 부대를 쓰러뜨리면 더 쫓지 않고 진을 굳힌다: 자신은 전열 한 단계 회복·다음 적 차례까지 받는 피해 −20%, 맞닿은 아군도 받는 피해 −15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지략",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ON_KILL",
+        "target": "SELF",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_KILL",
+        "target": "SELF",
+        "value": 20,
+        "duration": 1,
+        "condition": null
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_KILL",
+        "target": "ADJACENT_ALLIES",
+        "value": 15,
+        "duration": 1,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 이릉의 '작은 시험 → 조건 고착 → 동시 투입'을 가벼운 시험 공격(원래 피해 50%는 전법 피해 하한에 맞춰 +20%), 전열 흔들기, 속박으로 옮김. '추격을 포기하면 Brace 유지'라는 추격 상한은 처치 뒤 진 굳히기(전열 회복·방어)로 살림.",
+    "formerName": "승리의 상한"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "묶어 두기 계책",
+      "text": "2칸 안의 적 1부대를 건드리면(피해 +20%) 대상은 전열 판정(가중 10)을 받고 다음 차례 이동할 수 없다. 묶인 적에 아군이 겹쳐 들어간다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": -10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        }
+      ],
+      "formerName": "잠금을 시험하다"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

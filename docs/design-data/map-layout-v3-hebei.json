@@ -1,0 +1,5872 @@
+{
+ "purpose": "FIRST3 시험 지도 v3 — 하북(기주 + 유주 남부) 실제 지리 조각. 세력은 조조·유비·손권 유지(사용자 선택), 수도 3 + 중립 작은 성 5. 전체 지도의 일부로 만든다(사용자 지시).",
+ "projection": {
+  "type": "equirectangular",
+  "refLatitude": 38,
+  "kmPerHexX": 18.0,
+  "globalOriginLonLat": [
+   73.0,
+   54.0
+  ],
+  "sliceOriginGlobalOffset": [
+   199,
+   97
+  ],
+  "note": "전체 offset(x,y) = 조각 offset + sliceOriginGlobalOffset. 본편 전체 지도도 같은 투영·칸 크기로 이어 붙인다."
+ },
+ "coordinates": "tiles[].at = axial [q, r] (조각 기준). xy = 조각 offset.",
+ "width": 20,
+ "height": 32,
+ "bounds": {
+  "lon": [
+   113.9,
+   117.9
+  ],
+  "lat": [
+   36.0,
+   40.4
+  ]
+ },
+ "cities": [
+  {
+   "id": "west",
+   "label": "업",
+   "hanja": "鄴",
+   "kind": "major",
+   "ownerFactionId": "F01",
+   "at": [
+    -12,
+    29
+   ],
+   "xy": [
+    2,
+    29
+   ],
+   "lonLat": [
+    114.35,
+    36.3
+   ]
+  },
+  {
+   "id": "east",
+   "label": "계",
+   "hanja": "薊",
+   "kind": "major",
+   "ownerFactionId": "F02",
+   "at": [
+    11,
+    3
+   ],
+   "xy": [
+    12,
+    3
+   ],
+   "lonLat": [
+    116.4,
+    39.9
+   ]
+  },
+  {
+   "id": "south",
+   "label": "남피",
+   "hanja": "南皮",
+   "kind": "major",
+   "ownerFactionId": "F03",
+   "at": [
+    5,
+    17
+   ],
+   "xy": [
+    13,
+    17
+   ],
+   "lonLat": [
+    116.7,
+    38.0
+   ]
+  },
+  {
+   "id": "yijing",
+   "label": "역경",
+   "hanja": "易京",
+   "kind": "minor",
+   "ownerFactionId": null,
+   "at": [
+    5,
+    10
+   ],
+   "xy": [
+    10,
+    10
+   ],
+   "lonLat": [
+    116.05,
+    39.0
+   ],
+   "wanderers": [
+    "G14",
+    "G37"
+   ]
+  },
+  {
+   "id": "zhongshan",
+   "label": "중산",
+   "hanja": "中山(盧奴)",
+   "kind": "minor",
+   "ownerFactionId": null,
+   "at": [
+    -1,
+    13
+   ],
+   "xy": [
+    5,
+    13
+   ],
+   "lonLat": [
+    114.99,
+    38.52
+   ],
+   "wanderers": [
+    "G01",
+    "G32"
+   ]
+  },
+  {
+   "id": "xindu",
+   "label": "신도",
+   "hanja": "信都",
+   "kind": "minor",
+   "ownerFactionId": null,
+   "at": [
+    -3,
+    20
+   ],
+   "xy": [
+    7,
+    20
+   ],
+   "lonLat": [
+    115.55,
+    37.62
+   ],
+   "wanderers": [
+    "G09"
+   ]
+  },
+  {
+   "id": "julu",
+   "label": "거록",
+   "hanja": "鉅鹿",
+   "kind": "minor",
+   "ownerFactionId": null,
+   "at": [
+    -8,
+    24
+   ],
+   "xy": [
+    4,
+    24
+   ],
+   "lonLat": [
+    114.9,
+    37.05
+   ],
+   "wanderers": [
+    "G38",
+    "G39"
+   ]
+  },
+  {
+   "id": "pingyuan",
+   "label": "평원",
+   "hanja": "平原",
+   "kind": "minor",
+   "ownerFactionId": null,
+   "at": [
+    1,
+    23
+   ],
+   "xy": [
+    12,
+    23
+   ],
+   "lonLat": [
+    116.43,
+    37.17
+   ],
+   "wanderers": [
+    "G31",
+    "G35"
+   ]
+  }
+ ],
+ "wanderersNote": "작은 성 재야(사용자 선택 \"작은 성에 재야로\") — 하북 연고로 Claude 시험 배치. 성 주인이 등용할 수 있다.",
+ "places": [
+  {
+   "label": "성소",
+   "note": "항산(恒山)",
+   "at": [
+    -2,
+    11
+   ]
+  },
+  {
+   "label": "은거지",
+   "note": "서산",
+   "at": [
+    6,
+    4
+   ]
+  },
+  {
+   "label": "옛 진지",
+   "note": "관도 북쪽 나루",
+   "at": [
+    -6,
+    29
+   ]
+  },
+  {
+   "label": "군마 산지",
+   "note": "대군(代郡) 고원 입구",
+   "at": [
+    4,
+    2
+   ]
+  }
+ ],
+ "tiles": [
+  {
+   "at": [
+    0,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    1,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    3,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    4,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    5,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    6,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    7,
+    0
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    8,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    9,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    10,
+    0
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    11,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    12,
+    0
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    13,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    14,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    15,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    16,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    17,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    18,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    19,
+    0
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    1,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    3,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    4,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    5,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    6,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    7,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    8,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    9,
+    1
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    10,
+    1
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    1
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    12,
+    1
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    1
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    1
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    15,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    16,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    17,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    18,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    19,
+    1
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -1,
+    2
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    0,
+    2
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    1,
+    2
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    2
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    3,
+    2
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    4,
+    2
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    5,
+    2
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    6,
+    2
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    7,
+    2
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    8,
+    2
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    9,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    15,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    16,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    17,
+    2
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    18,
+    2
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    3
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    3
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    1,
+    3
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    3
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    3,
+    3
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    4,
+    3
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    5,
+    3
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    6,
+    3
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    7,
+    3
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    8,
+    3
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    9,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    15,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    16,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    17,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    18,
+    3
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    4
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -1,
+    4
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    4
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    1,
+    4
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    4
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    3,
+    4
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    4,
+    4
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    5,
+    4
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    6,
+    4
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    7,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    4
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    15,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    16,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    17,
+    4
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    5
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -1,
+    5
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    5
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    1,
+    5
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    5
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    3,
+    5
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    4,
+    5
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    5,
+    5
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    6,
+    5
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    7,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    15,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    16,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    17,
+    5
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    6
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -2,
+    6
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -1,
+    6
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    6
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    1,
+    6
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    6
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    3,
+    6
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    4,
+    6
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    5,
+    6
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    6,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    6
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    10,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    15,
+    6
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    16,
+    6
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    7
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -2,
+    7
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -1,
+    7
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    7
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    1,
+    7
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    7
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    3,
+    7
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    4,
+    7
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    5,
+    7
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    6,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    7
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    11,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    15,
+    7
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    16,
+    7
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -4,
+    8
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -3,
+    8
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -2,
+    8
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -1,
+    8
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    8
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    1,
+    8
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    8
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    3,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    8
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    15,
+    8
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -4,
+    9
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -3,
+    9
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -2,
+    9
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -1,
+    9
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    0,
+    9
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    1,
+    9
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    2,
+    9
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    3,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    14,
+    9
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    15,
+    9
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -5,
+    10
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -4,
+    10
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -3,
+    10
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -2,
+    10
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -1,
+    10
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    0,
+    10
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    1,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    10
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    10
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    14,
+    10
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -5,
+    11
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -4,
+    11
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -3,
+    11
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -2,
+    11
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -1,
+    11
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    0,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    11
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    3,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    11
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    13,
+    11
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    14,
+    11
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -6,
+    12
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -5,
+    12
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -4,
+    12
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -3,
+    12
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -2,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    12
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    12
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    13,
+    12
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -6,
+    13
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -5,
+    13
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -4,
+    13
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -3,
+    13
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -2,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    13
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    1,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    13
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    13
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    13,
+    13
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -7,
+    14
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -6,
+    14
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -5,
+    14
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -4,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    14
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    9,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    14
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    14
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    12,
+    14
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -7,
+    15
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -6,
+    15
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -5,
+    15
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -4,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    15
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    4,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    15
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    12,
+    15
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -8,
+    16
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -7,
+    16
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -6,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    16
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    16
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    11,
+    16
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -8,
+    17
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -7,
+    17
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -6,
+    17
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -5,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    17
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    2,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    17
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    11,
+    17
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -9,
+    18
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -8,
+    18
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -7,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    18
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -1,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    18
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    18
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -9,
+    19
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -8,
+    19
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -7,
+    19
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -6,
+    19
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -5,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    19
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    3,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    10,
+    19
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    20
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -9,
+    20
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -8,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    20
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -5,
+    20
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -4,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    20
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    5,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    20
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    21
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -9,
+    21
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -8,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    21
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -4,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    21
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -1,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    21
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    4,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    9,
+    21
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -11,
+    22
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -10,
+    22
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -9,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    22
+   ],
+   "type": "water"
+  },
+  {
+   "at": [
+    -5,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    22
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    22
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -11,
+    23
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -10,
+    23
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -9,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    23
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    4,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    8,
+    23
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -12,
+    24
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -11,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -9,
+    24
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -8,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    24
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    4,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    24
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -12,
+    25
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -11,
+    25
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -10,
+    25
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -9,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    25
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    1,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    7,
+    25
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -13,
+    26
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -12,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -11,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -9,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    26
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -4,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    26
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -13,
+    27
+   ],
+   "type": "mountain"
+  },
+  {
+   "at": [
+    -12,
+    27
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -11,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -9,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    27
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -5,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    27
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -3,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    6,
+    27
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -14,
+    28
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -13,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -12,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -11,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -9,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    28
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -2,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    28
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -14,
+    29
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -13,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -12,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -11,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -9,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    29
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    1,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    5,
+    29
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -15,
+    30
+   ],
+   "type": "hill"
+  },
+  {
+   "at": [
+    -14,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -13,
+    30
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -12,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -11,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -9,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    30
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -15,
+    31
+   ],
+   "type": "forest"
+  },
+  {
+   "at": [
+    -14,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -13,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -12,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -11,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -10,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -9,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -8,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -7,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -6,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -5,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -4,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -3,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -2,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    -1,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    0,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    1,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    2,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    3,
+    31
+   ],
+   "type": "plain"
+  },
+  {
+   "at": [
+    4,
+    31
+   ],
+   "type": "plain"
+  }
+ ],
+ "roads": [
+  [
+   [
+    -12,
+    28
+   ],
+   [
+    -12,
+    29
+   ]
+  ],
+  [
+   [
+    -12,
+    28
+   ],
+   [
+    -11,
+    27
+   ]
+  ],
+  [
+   [
+    -12,
+    29
+   ],
+   [
+    -11,
+    28
+   ]
+  ],
+  [
+   [
+    -11,
+    27
+   ],
+   [
+    -10,
+    26
+   ]
+  ],
+  [
+   [
+    -11,
+    28
+   ],
+   [
+    -10,
+    28
+   ]
+  ],
+  [
+   [
+    -10,
+    26
+   ],
+   [
+    -9,
+    25
+   ]
+  ],
+  [
+   [
+    -10,
+    28
+   ],
+   [
+    -9,
+    27
+   ]
+  ],
+  [
+   [
+    -9,
+    25
+   ],
+   [
+    -8,
+    24
+   ]
+  ],
+  [
+   [
+    -9,
+    27
+   ],
+   [
+    -8,
+    26
+   ]
+  ],
+  [
+   [
+    -8,
+    20
+   ],
+   [
+    -8,
+    21
+   ]
+  ],
+  [
+   [
+    -8,
+    20
+   ],
+   [
+    -7,
+    19
+   ]
+  ],
+  [
+   [
+    -8,
+    21
+   ],
+   [
+    -8,
+    22
+   ]
+  ],
+  [
+   [
+    -8,
+    22
+   ],
+   [
+    -8,
+    23
+   ]
+  ],
+  [
+   [
+    -8,
+    23
+   ],
+   [
+    -8,
+    24
+   ]
+  ],
+  [
+   [
+    -8,
+    24
+   ],
+   [
+    -7,
+    23
+   ]
+  ],
+  [
+   [
+    -8,
+    26
+   ],
+   [
+    -7,
+    26
+   ]
+  ],
+  [
+   [
+    -7,
+    19
+   ],
+   [
+    -6,
+    18
+   ]
+  ],
+  [
+   [
+    -7,
+    23
+   ],
+   [
+    -6,
+    23
+   ]
+  ],
+  [
+   [
+    -7,
+    26
+   ],
+   [
+    -6,
+    25
+   ]
+  ],
+  [
+   [
+    -6,
+    18
+   ],
+   [
+    -5,
+    17
+   ]
+  ],
+  [
+   [
+    -6,
+    23
+   ],
+   [
+    -5,
+    22
+   ]
+  ],
+  [
+   [
+    -6,
+    25
+   ],
+   [
+    -5,
+    24
+   ]
+  ],
+  [
+   [
+    -5,
+    17
+   ],
+   [
+    -4,
+    16
+   ]
+  ],
+  [
+   [
+    -5,
+    22
+   ],
+   [
+    -4,
+    21
+   ]
+  ],
+  [
+   [
+    -5,
+    24
+   ],
+   [
+    -4,
+    23
+   ]
+  ],
+  [
+   [
+    -4,
+    16
+   ],
+   [
+    -3,
+    15
+   ]
+  ],
+  [
+   [
+    -4,
+    21
+   ],
+   [
+    -3,
+    20
+   ]
+  ],
+  [
+   [
+    -4,
+    23
+   ],
+   [
+    -3,
+    23
+   ]
+  ],
+  [
+   [
+    -3,
+    15
+   ],
+   [
+    -3,
+    16
+   ]
+  ],
+  [
+   [
+    -3,
+    15
+   ],
+   [
+    -2,
+    14
+   ]
+  ],
+  [
+   [
+    -3,
+    16
+   ],
+   [
+    -3,
+    17
+   ]
+  ],
+  [
+   [
+    -3,
+    17
+   ],
+   [
+    -3,
+    18
+   ]
+  ],
+  [
+   [
+    -3,
+    18
+   ],
+   [
+    -3,
+    19
+   ]
+  ],
+  [
+   [
+    -3,
+    19
+   ],
+   [
+    -3,
+    20
+   ]
+  ],
+  [
+   [
+    -3,
+    20
+   ],
+   [
+    -3,
+    21
+   ]
+  ],
+  [
+   [
+    -3,
+    20
+   ],
+   [
+    -2,
+    19
+   ]
+  ],
+  [
+   [
+    -3,
+    21
+   ],
+   [
+    -3,
+    22
+   ]
+  ],
+  [
+   [
+    -3,
+    22
+   ],
+   [
+    -3,
+    23
+   ]
+  ],
+  [
+   [
+    -3,
+    23
+   ],
+   [
+    -2,
+    23
+   ]
+  ],
+  [
+   [
+    -2,
+    14
+   ],
+   [
+    -1,
+    13
+   ]
+  ],
+  [
+   [
+    -2,
+    19
+   ],
+   [
+    -1,
+    18
+   ]
+  ],
+  [
+   [
+    -2,
+    23
+   ],
+   [
+    -1,
+    23
+   ]
+  ],
+  [
+   [
+    -1,
+    13
+   ],
+   [
+    0,
+    12
+   ]
+  ],
+  [
+   [
+    -1,
+    18
+   ],
+   [
+    0,
+    18
+   ]
+  ],
+  [
+   [
+    -1,
+    23
+   ],
+   [
+    0,
+    23
+   ]
+  ],
+  [
+   [
+    0,
+    12
+   ],
+   [
+    1,
+    11
+   ]
+  ],
+  [
+   [
+    0,
+    18
+   ],
+   [
+    1,
+    18
+   ]
+  ],
+  [
+   [
+    0,
+    23
+   ],
+   [
+    1,
+    23
+   ]
+  ],
+  [
+   [
+    1,
+    11
+   ],
+   [
+    2,
+    10
+   ]
+  ],
+  [
+   [
+    1,
+    18
+   ],
+   [
+    2,
+    17
+   ]
+  ],
+  [
+   [
+    1,
+    21
+   ],
+   [
+    1,
+    22
+   ]
+  ],
+  [
+   [
+    1,
+    21
+   ],
+   [
+    2,
+    20
+   ]
+  ],
+  [
+   [
+    1,
+    22
+   ],
+   [
+    1,
+    23
+   ]
+  ],
+  [
+   [
+    2,
+    10
+   ],
+   [
+    3,
+    10
+   ]
+  ],
+  [
+   [
+    2,
+    17
+   ],
+   [
+    3,
+    17
+   ]
+  ],
+  [
+   [
+    2,
+    20
+   ],
+   [
+    3,
+    19
+   ]
+  ],
+  [
+   [
+    3,
+    10
+   ],
+   [
+    4,
+    10
+   ]
+  ],
+  [
+   [
+    3,
+    17
+   ],
+   [
+    4,
+    17
+   ]
+  ],
+  [
+   [
+    3,
+    19
+   ],
+   [
+    4,
+    18
+   ]
+  ],
+  [
+   [
+    4,
+    10
+   ],
+   [
+    5,
+    10
+   ]
+  ],
+  [
+   [
+    4,
+    17
+   ],
+   [
+    5,
+    17
+   ]
+  ],
+  [
+   [
+    4,
+    18
+   ],
+   [
+    5,
+    17
+   ]
+  ],
+  [
+   [
+    5,
+    9
+   ],
+   [
+    5,
+    10
+   ]
+  ],
+  [
+   [
+    5,
+    9
+   ],
+   [
+    6,
+    8
+   ]
+  ],
+  [
+   [
+    5,
+    10
+   ],
+   [
+    6,
+    10
+   ]
+  ],
+  [
+   [
+    5,
+    16
+   ],
+   [
+    5,
+    17
+   ]
+  ],
+  [
+   [
+    5,
+    16
+   ],
+   [
+    6,
+    15
+   ]
+  ],
+  [
+   [
+    6,
+    8
+   ],
+   [
+    7,
+    7
+   ]
+  ],
+  [
+   [
+    6,
+    10
+   ],
+   [
+    7,
+    10
+   ]
+  ],
+  [
+   [
+    6,
+    15
+   ],
+   [
+    7,
+    14
+   ]
+  ],
+  [
+   [
+    7,
+    7
+   ],
+   [
+    8,
+    6
+   ]
+  ],
+  [
+   [
+    7,
+    10
+   ],
+   [
+    7,
+    11
+   ]
+  ],
+  [
+   [
+    7,
+    11
+   ],
+   [
+    8,
+    11
+   ]
+  ],
+  [
+   [
+    7,
+    14
+   ],
+   [
+    8,
+    13
+   ]
+  ],
+  [
+   [
+    8,
+    6
+   ],
+   [
+    9,
+    5
+   ]
+  ],
+  [
+   [
+    8,
+    11
+   ],
+   [
+    9,
+    11
+   ]
+  ],
+  [
+   [
+    8,
+    13
+   ],
+   [
+    9,
+    12
+   ]
+  ],
+  [
+   [
+    9,
+    5
+   ],
+   [
+    10,
+    4
+   ]
+  ],
+  [
+   [
+    9,
+    11
+   ],
+   [
+    9,
+    12
+   ]
+  ],
+  [
+   [
+    10,
+    4
+   ],
+   [
+    11,
+    3
+   ]
+  ]
+ ],
+ "riverEdges": [
+  "-1,15|-1,16",
+  "-1,15|-2,16",
+  "-1,16|0,15",
+  "-1,19|-1,20",
+  "-1,20|-2,20",
+  "-1,20|-2,21",
+  "-1,20|0,19",
+  "-1,21|-2,21",
+  "-1,24|-1,25",
+  "-1,24|0,24",
+  "-1,25|-2,25",
+  "-10,26|-9,26",
+  "-10,27|-10,28",
+  "-10,27|-11,28",
+  "-10,27|-9,26",
+  "-10,27|-9,27",
+  "-10,30|-9,30",
+  "-10,31|-9,30",
+  "-10,31|-9,31",
+  "-11,27|-11,28",
+  "-12,27|-12,28",
+  "-12,28|-13,28",
+  "-13,28|-13,29",
+  "-13,28|-14,29",
+  "-14,28|-14,29",
+  "-2,15|-2,16",
+  "-2,16|-3,16",
+  "-2,21|-2,22",
+  "-2,21|-3,22",
+  "-2,25|-2,26",
+  "-2,25|-3,26",
+  "-3,16|-4,17",
+  "-3,21|-4,22",
+  "-3,25|-3,26",
+  "-3,26|-4,26",
+  "-4,16|-4,17",
+  "-4,21|-4,22",
+  "-4,22|-5,22",
+  "-4,22|-5,23",
+  "-4,23|-5,23",
+  "-4,26|-4,27",
+  "-4,27|-5,27",
+  "-5,16|-5,17",
+  "-5,16|-6,17",
+  "-5,23|-5,24",
+  "-5,23|-6,24",
+  "-5,27|-5,28",
+  "-5,27|-6,28",
+  "-6,15|-7,16",
+  "-6,16|-6,17",
+  "-6,16|-7,16",
+  "-6,16|-7,17",
+  "-6,23|-6,24",
+  "-6,24|-7,24",
+  "-6,24|-7,25",
+  "-6,25|-7,25",
+  "-6,27|-6,28",
+  "-6,28|-7,28",
+  "-7,15|-7,16",
+  "-7,15|-8,16",
+  "-7,25|-7,26",
+  "-7,25|-8,26",
+  "-7,28|-7,29",
+  "-7,29|-8,29",
+  "-8,25|-8,26",
+  "-8,25|-9,26",
+  "-8,29|-8,30",
+  "-8,29|-9,30",
+  "-9,25|-9,26",
+  "-9,29|-9,30",
+  "0,15|0,16",
+  "0,16|1,15",
+  "0,19|0,20",
+  "0,20|1,19",
+  "0,23|0,24",
+  "0,24|1,23",
+  "1,15|1,16",
+  "1,16|2,15",
+  "1,18|2,18",
+  "1,19|1,20",
+  "1,19|2,18",
+  "1,19|2,19",
+  "1,23|1,24",
+  "1,23|2,23",
+  "10,13|10,14",
+  "10,13|11,13",
+  "10,13|9,14",
+  "10,19|9,20",
+  "10,5|9,5",
+  "10,6|10,7",
+  "10,6|9,7",
+  "10,7|11,6",
+  "10,7|11,7",
+  "10,8|11,7",
+  "10,8|11,8",
+  "10,9|11,8",
+  "11,12|11,13",
+  "11,8|11,9",
+  "11,9|12,8",
+  "12,10|13,9",
+  "12,8|12,9",
+  "12,9|13,8",
+  "12,9|13,9",
+  "2,15|2,16",
+  "2,15|3,15",
+  "2,17|2,18",
+  "2,18|3,17",
+  "2,22|2,23",
+  "2,22|3,22",
+  "2,8|3,7",
+  "2,8|3,8",
+  "2,9|3,8",
+  "3,14|3,15",
+  "3,14|4,14",
+  "3,17|3,18",
+  "3,18|4,17",
+  "3,21|3,22",
+  "3,22|4,21",
+  "3,8|3,9",
+  "3,9|4,8",
+  "4,10|5,9",
+  "4,11|5,10",
+  "4,13|4,14",
+  "4,14|5,13",
+  "4,16|5,16",
+  "4,17|4,18",
+  "4,17|5,16",
+  "4,21|4,22",
+  "4,22|5,21",
+  "4,8|4,9",
+  "4,9|5,8",
+  "4,9|5,9",
+  "5,10|5,11",
+  "5,11|6,10",
+  "5,13|5,14",
+  "5,14|6,13",
+  "5,15|5,16",
+  "5,21|5,22",
+  "5,21|6,21",
+  "6,10|6,11",
+  "6,11|7,10",
+  "6,11|7,11",
+  "6,12|7,11",
+  "6,13|6,14",
+  "6,13|7,13",
+  "6,15|6,16",
+  "6,16|7,15",
+  "6,20|6,21",
+  "6,20|7,20",
+  "7,11|7,12",
+  "7,12|7,13",
+  "7,12|8,11",
+  "7,12|8,12",
+  "7,14|8,14",
+  "7,15|7,16",
+  "7,15|8,14",
+  "7,15|8,15",
+  "7,19|7,20",
+  "7,20|8,19",
+  "7,4|8,4",
+  "7,5|8,4",
+  "8,11|8,12",
+  "8,12|9,11",
+  "8,13|8,14",
+  "8,14|9,13",
+  "8,19|8,20",
+  "8,20|9,19",
+  "8,2|8,3",
+  "8,3|8,4",
+  "8,3|9,2",
+  "8,3|9,3",
+  "8,4|8,5",
+  "8,5|9,4",
+  "8,6|9,6",
+  "8,7|9,6",
+  "9,13|9,14",
+  "9,19|9,20",
+  "9,4|9,5",
+  "9,5|9,6",
+  "9,6|9,7"
+ ],
+ "bridges": [
+  "-11,27|-12,28",
+  "-3,16|-3,17",
+  "-3,21|-3,22",
+  "-4,16|-5,17",
+  "10,4|9,5",
+  "4,10|5,10",
+  "4,17|5,17",
+  "5,16|6,15"
+ ],
+ "rivers": {
+  "황하": [
+   [
+    115.05,
+    36.0
+   ],
+   [
+    115.55,
+    36.45
+   ],
+   [
+    116.1,
+    36.85
+   ],
+   [
+    116.75,
+    37.3
+   ],
+   [
+    117.4,
+    37.55
+   ],
+   [
+    118.0,
+    37.7
+   ]
+  ],
+  "장수": [
+   [
+    114.0,
+    36.42
+   ],
+   [
+    114.45,
+    36.45
+   ],
+   [
+    114.85,
+    36.75
+   ],
+   [
+    115.3,
+    37.15
+   ],
+   [
+    115.85,
+    37.55
+   ],
+   [
+    116.3,
+    37.85
+   ],
+   [
+    116.9,
+    38.3
+   ],
+   [
+    117.6,
+    38.7
+   ]
+  ],
+  "호타하": [
+   [
+    113.9,
+    38.2
+   ],
+   [
+    114.55,
+    38.12
+   ],
+   [
+    115.1,
+    38.1
+   ],
+   [
+    115.7,
+    38.2
+   ],
+   [
+    116.3,
+    38.45
+   ],
+   [
+    116.95,
+    38.7
+   ]
+  ],
+  "역수": [
+   [
+    115.2,
+    39.32
+   ],
+   [
+    115.65,
+    39.12
+   ],
+   [
+    116.25,
+    38.85
+   ],
+   [
+    116.75,
+    38.7
+   ]
+  ],
+  "누수": [
+   [
+    115.85,
+    40.05
+   ],
+   [
+    116.15,
+    39.75
+   ],
+   [
+    116.6,
+    39.45
+   ],
+   [
+    117.1,
+    39.2
+   ],
+   [
+    117.55,
+    39.05
+   ]
+  ]
+ },
+ "distances": {
+  "west-yijing": 19,
+  "west-zhongshan": 16,
+  "west-xindu": 9,
+  "east-west": 26,
+  "east-south": 14,
+  "east-yijing": 7,
+  "east-zhongshan": 12,
+  "east-xindu": 17,
+  "east-julu": 21,
+  "east-pingyuan": 20,
+  "south-west": 17,
+  "south-yijing": 7,
+  "south-zhongshan": 10,
+  "south-xindu": 8,
+  "yijing-zhongshan": 6,
+  "xindu-yijing": 10,
+  "xindu-zhongshan": 7,
+  "julu-west": 5,
+  "julu-south": 13,
+  "julu-yijing": 14,
+  "julu-zhongshan": 11,
+  "julu-xindu": 5,
+  "julu-pingyuan": 9,
+  "pingyuan-west": 13,
+  "pingyuan-south": 6,
+  "pingyuan-yijing": 13,
+  "pingyuan-zhongshan": 12,
+  "pingyuan-xindu": 7
+ }
+}

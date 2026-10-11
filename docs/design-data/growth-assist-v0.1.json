@@ -1,0 +1,21 @@
+{
+ "schema": "growth-assist-v0.1",
+ "status": "시험값 — 정본 51 v1.2 §22.1(신규 Ability 체감 보정: 짧고 명시적인 기간, 숨은 영구 보정 금지, UI 표시)·§22.2(Contextual Pool — 관계 읽기)·§22.3/22.5(Bad-Luck Protection: Soft·Hard Pity, '좋은 후보·선택권이 먼저, Pity 는 보완'). 정본은 기간·배율·Pity 수치를 Parameter Register 로 비워 둠 → Claude 시험값. 로드맵 '장수 성장 보강'(확정 방향)",
+ "newAbilityBoost": {
+  "turns": 3,
+  "chanceMultiplier": 1.5,
+  "maxBonusPct": 25,
+  "text": "새로 얻은 확률형 특기·전법(발동 확률이 있는 것)은 얻은 뒤 3차례 동안 발동 확률 ×1.5(최대 +25%p). 확정 발동이면 해당 없음. 장수 창·전투 기록에 '새 능력 — n차례 동안 발동 확률 올림' 표시. 3차례 뒤 원래대로(숨은 영구 보정 없음)"
+ },
+ "pity": {
+  "soft": {"drafts": 3, "minRarity": "RARE", "weightMultiplier": 2, "text": "같은 장수가 3번 연속 Draft 에서 희귀 이상을 한 장도 못 봤으면, 다음 Draft 의 희귀 이상 후보 가중치 ×2"},
+  "hard": {"drafts": 6, "minRarity": "EPIC", "text": "6번 연속 영웅 이상을 못 봤으면, 다음 Draft 3장 중 1장은 영웅 이상(그 장수가 받을 수 있는 후보가 있을 때만 — 없으면 보장하지 않음)"},
+  "resetText": "기준 등급 이상을 '봤으면'(고르지 않아도) 카운터 초기화. 다시 뽑기로 본 후보도 '본 것'으로 셈",
+  "scope": "레벨업 특기 Draft·전법 Draft 각각 따로 셈",
+  "ui": "Draft 창에 '불운 보정 — 희귀 이상이 나오기 쉬움'·'보장 — 영웅 이상 1장' 표시"
+ },
+ "relationContext": {
+  "weight": 15,
+  "text": "후보 가중치에 관계 항목 추가: 그 장수와 친우·결의(C38)인 장수가 가진 특기·전법과 같은 계열(같은 태그) 후보 +15 — 정본 §22.2 '관계'. 기존 affinity·role·trace·situation 과 같은 상하한 안에서"
+ }
+}

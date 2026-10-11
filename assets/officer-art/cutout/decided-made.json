@@ -1,0 +1,802 @@
+{
+ "G01": {
+  "file": "G01-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G01_reference.jpg"
+ },
+ "G02": {
+  "file": "G02-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G02_reference.jpg"
+ },
+ "G03": {
+  "file": "G03-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G03_reference.jpg"
+ },
+ "G04": {
+  "file": "G04-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G04_reference.jpg"
+ },
+ "G05": {
+  "file": "G05-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G05_reference.jpg"
+ },
+ "G06": {
+  "file": "G06-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G06_reference.jpg"
+ },
+ "G07": {
+  "file": "G07-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G07_reference.jpg"
+ },
+ "G08": {
+  "file": "G08-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G08_reference.jpg"
+ },
+ "G09": {
+  "file": "G09-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G09_reference.jpg"
+ },
+ "G10": {
+  "file": "G10-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G10_reference.jpg"
+ },
+ "G11": {
+  "file": "G11-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G11_reference.jpg"
+ },
+ "G12": {
+  "file": "G12-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G12_reference.jpg"
+ },
+ "G13": {
+  "file": "G13-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G13_reference.jpg"
+ },
+ "G14": {
+  "file": "G14-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G14_reference.jpg"
+ },
+ "G15": {
+  "file": "G15-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G15_reference.jpg"
+ },
+ "G16": {
+  "file": "G16-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G16_reference.jpg"
+ },
+ "G17": {
+  "file": "G17-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G17_reference.jpg"
+ },
+ "G18": {
+  "file": "G18-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G18_reference.jpg"
+ },
+ "G19": {
+  "file": "G19-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G19_reference.jpg"
+ },
+ "G20": {
+  "file": "G20-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G20_reference.jpg"
+ },
+ "G21": {
+  "file": "G21-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G21_reference.jpg"
+ },
+ "G22": {
+  "file": "G22-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G22_reference.jpg"
+ },
+ "G23": {
+  "file": "G23-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G23_reference.jpg"
+ },
+ "G24": {
+  "file": "G24-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G24_reference.jpg"
+ },
+ "G25": {
+  "file": "G25-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G25_reference.jpg"
+ },
+ "G26": {
+  "file": "G26-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G26_reference.jpg"
+ },
+ "G27": {
+  "file": "G27-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G27_reference.jpg"
+ },
+ "G28": {
+  "file": "G28-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G28_reference.jpg"
+ },
+ "G29": {
+  "file": "G29-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G29_reference.jpg"
+ },
+ "G30": {
+  "file": "G30-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G30_reference.jpg"
+ },
+ "G31": {
+  "file": "G31-decided.webp",
+  "size": [
+   720,
+   960
+  ],
+  "ref": "G31_reference.jpg"
+ },
+ "G32": {
+  "file": "G32-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G32_reference.jpg"
+ },
+ "G33": {
+  "file": "G33-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G33_reference.jpg"
+ },
+ "G34": {
+  "file": "G34-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G34_v3_reference.jpg"
+ },
+ "G35": {
+  "file": "G35-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G35_reference.jpg"
+ },
+ "G36": {
+  "file": "G36-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G36_reference.jpg"
+ },
+ "G37": {
+  "file": "G37-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G37_reference.jpg"
+ },
+ "G38": {
+  "file": "G38-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G38_reference.jpg"
+ },
+ "G39": {
+  "file": "G39-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G39_reference.jpg"
+ },
+ "G40": {
+  "file": "G40-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G40_reference.jpg"
+ },
+ "G41": {
+  "file": "G41-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G41_reference.jpg"
+ },
+ "G42": {
+  "file": "G42-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G42_reference.jpg"
+ },
+ "G43": {
+  "file": "G43-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G43_reference.jpg"
+ },
+ "G44": {
+  "file": "G44-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G44_reference.jpg"
+ },
+ "G45": {
+  "file": "G45-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G45_reference.jpg"
+ },
+ "G46": {
+  "file": "G46-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G46_reference.jpg"
+ },
+ "G47": {
+  "file": "G47-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G47_reference.jpg"
+ },
+ "G48": {
+  "file": "G48-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G48_reference.jpg"
+ },
+ "G49": {
+  "file": "G49-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G49_reference.jpg"
+ },
+ "G50": {
+  "file": "G50-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G50_reference.jpg"
+ },
+ "G51": {
+  "file": "G51-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G51_reference.jpg"
+ },
+ "G52": {
+  "file": "G52-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G52_reference.jpg"
+ },
+ "G53": {
+  "file": "G53-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G53_reference.jpg"
+ },
+ "G54": {
+  "file": "G54-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G54_reference.jpg"
+ },
+ "G55": {
+  "file": "G55-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G55_reference.jpg"
+ },
+ "G56": {
+  "file": "G56-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G56_reference.jpg"
+ },
+ "G57": {
+  "file": "G57-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G57_reference.jpg"
+ },
+ "G58": {
+  "file": "G58-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G58_reference.jpg"
+ },
+ "G59": {
+  "file": "G59-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G59_reference.jpg"
+ },
+ "G60": {
+  "file": "G60-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G60_reference.jpg"
+ },
+ "G61": {
+  "file": "G61-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G61_reference.jpg"
+ },
+ "G62": {
+  "file": "G62-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G62_reference.jpg"
+ },
+ "G63": {
+  "file": "G63-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G63_reference.jpg"
+ },
+ "G64": {
+  "file": "G64-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G64_reference.jpg"
+ },
+ "G65": {
+  "file": "G65-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G65_reference.jpg"
+ },
+ "G66": {
+  "file": "G66-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G66_reference.jpg"
+ },
+ "G67": {
+  "file": "G67-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G67_reference.jpg"
+ },
+ "G68": {
+  "file": "G68-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G68_reference.jpg"
+ },
+ "G69": {
+  "file": "G69-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G69_reference.jpg"
+ },
+ "G70": {
+  "file": "G70-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G70_reference.jpg"
+ },
+ "G71": {
+  "file": "G71-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G71_reference.jpg"
+ },
+ "G72": {
+  "file": "G72-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G72_reference.jpg"
+ },
+ "G73": {
+  "file": "G73-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G73_reference.jpg"
+ },
+ "G74": {
+  "file": "G74-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G74_reference.jpg"
+ },
+ "G75": {
+  "file": "G75-decided.webp",
+  "size": [
+   800,
+   960
+  ],
+  "ref": "G75_reference.jpg"
+ },
+ "G76": {
+  "file": "G76-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G76_reference.jpg"
+ },
+ "G77": {
+  "file": "G77-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G77_reference.jpg"
+ },
+ "G78": {
+  "file": "G78-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G78_reference.jpg"
+ },
+ "G79": {
+  "file": "G79-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G79_reference.jpg"
+ },
+ "G80": {
+  "file": "G80-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G80_reference.jpg"
+ },
+ "G81": {
+  "file": "G81-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G81_reference.jpg"
+ },
+ "G82": {
+  "file": "G82-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G82_reference.jpg"
+ },
+ "G83": {
+  "file": "G83-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G83_reference.jpg"
+ },
+ "G84": {
+  "file": "G84-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G84_reference.jpg"
+ },
+ "G85": {
+  "file": "G85-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G85_reference.jpg"
+ },
+ "G86": {
+  "file": "G86-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G86_reference.jpg"
+ },
+ "G87": {
+  "file": "G87-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G87_reference.jpg"
+ },
+ "G88": {
+  "file": "G88-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G88_reference.jpg"
+ },
+ "G89": {
+  "file": "G89-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G89_reference.jpg"
+ },
+ "G90": {
+  "file": "G90-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G90_reference.jpg"
+ },
+ "G91": {
+  "file": "G91-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G91_reference.jpg"
+ },
+ "G92": {
+  "file": "G92-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G92_reference.jpg"
+ },
+ "G93": {
+  "file": "G93-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G93_reference.jpg"
+ },
+ "G94": {
+  "file": "G94-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G94_reference.jpg"
+ },
+ "G95": {
+  "file": "G95-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G95_reference.jpg"
+ },
+ "G96": {
+  "file": "G96-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G96_reference.jpg"
+ },
+ "G97": {
+  "file": "G97-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G97_reference.jpg"
+ },
+ "G98": {
+  "file": "G98-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G98_reference.jpg"
+ },
+ "G99": {
+  "file": "G99-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G99_reference.jpg"
+ },
+ "G100": {
+  "file": "G100-decided.webp",
+  "size": [
+   640,
+   960
+  ],
+  "ref": "G100_reference.jpg"
+ }
+}

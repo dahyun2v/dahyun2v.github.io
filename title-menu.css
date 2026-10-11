@@ -1,0 +1,172 @@
+:root{color-scheme:light;font-family:"SG Sans","Noto Sans KR",system-ui,sans-serif;color:#36382e;background:#efe8d6}*{box-sizing:border-box}body{margin:0;min-height:100dvh}.landscape,.paper{position:fixed;inset:0;pointer-events:none}.landscape{background:#dedfce var(--title-background,none) center/contain no-repeat;filter:saturate(.42);opacity:.72}.paper{background:radial-gradient(ellipse at 50% 48%,#f7f0dfed 0%,#f2ecd7c9 24%,#e6dfc557 56%,#c5c9b433 100%),repeating-linear-gradient(11deg,#f4ebd214 0 1px,transparent 1px 4px);box-shadow:inset 0 0 90px #565e4930}.title-scene{position:relative;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto auto;padding:clamp(22px,4vw,64px)}.game-title{display:flex;gap:18px;align-items:center;justify-self:start}.game-title h1{font-family:"SG Serif","Noto Serif KR",serif;font-size:clamp(46px,6vw,86px);font-weight:500;letter-spacing:.25em;line-height:1.15;margin:7px 0}.overline{font-size:11px;letter-spacing:.4em;margin:0;color:#666a59}.subtitle{font-family:"SG Serif","Noto Serif KR",serif;font-size:13px;letter-spacing:.08em;margin:8px 0}.seal{align-self:start;margin-top:22px;width:34px;border:2px solid #a14d40;color:#a14d40;font-family:serif;font-size:16px;writing-mode:vertical-rl;padding:5px;transform:rotate(-4deg)}.title-menu{align-self:center;justify-self:center;display:flex;flex-direction:column;gap:16px;width:min(320px,86vw);margin:28px 0 52px}.title-menu button{position:relative;background:linear-gradient(90deg,transparent,#eae0bdaf 12%,#f7f1ddb8 58%,#e4debe8c 90%,transparent);color:#343c2e;border:0;border-bottom:1px solid #7b806044;font-family:"SG Serif","Noto Serif KR",serif;font-size:23px;letter-spacing:.22em;padding:13px 26px 12px;min-height:72px;cursor:pointer;clip-path:polygon(1% 3%,97% 0,100% 90%,3% 100%,0 55%);transition:background .15s,transform .15s}.title-menu button span{display:block;margin-top:5px;font:11px "SG Sans","Noto Sans KR",system-ui,sans-serif;letter-spacing:.06em;color:#6d715e}.title-menu button:hover:not(:disabled){background:linear-gradient(90deg,transparent,#d4ddbdcf 15%,#e4e6cacf 85%,transparent);transform:translateX(3px)}.title-menu button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible{outline:3px solid #945b35;outline-offset:3px}.title-menu button:focus-visible{clip-path:none;border-radius:3px}#title-status{text-align:center;min-height:24px;font-size:13px;color:#805345;margin:0}footer{display:flex;justify-content:space-between;gap:20px;font-size:11px;color:#737665;letter-spacing:.04em}dialog{max-width:min(480px,90vw);padding:28px 32px;border:1px solid #9da080;background:#f3efdf;color:#353a2e;box-shadow:0 12px 64px #28352f44}dialog::backdrop{background:#30382b77;backdrop-filter:blur(3px)}dialog h2{font-family:"SG Serif","Noto Serif KR",serif;font-weight:500;letter-spacing:.12em}dialog p,dialog li{font-size:13px;line-height:1.8}.setting{display:flex;align-items:center;gap:12px;padding:12px 0}.setting input[type=range]{width:160px}dialog button{background:#e3e6cb;border:1px solid #9b9f83;color:#363c2f;padding:10px 18px;cursor:pointer;margin:7px 8px 0 0}#settings-status{min-height:23px;color:#855647}@media(max-width:600px){.title-scene{padding:22px}.game-title h1{font-size:46px}.title-menu{gap:10px;margin:26px 0}.title-menu button{min-height:66px;font-size:21px}footer{flex-direction:column;gap:5px}dialog{padding:20px}.setting{flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){.title-menu button{transition:none;transform:none!important}}
+
+.ui-icon-defs{position:absolute;overflow:hidden;pointer-events:none}.ui-icon{width:18px;height:18px;display:inline-block;vertical-align:-3px;margin-inline-end:6px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;flex:none}.multi-map-icon{fill:none;stroke:currentColor;stroke-width:2;color:#f4d29a;pointer-events:none}.multi-unit .multi-map-icon{color:#efc64e}.multi-unit .engaged-icon{color:#f4d29a}button:disabled .ui-icon{opacity:.5}
+
+/* Seven shared menu frames. plaque-ready is enabled only after local PNG verification. */
+.title-menu a.menu-card{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;background:linear-gradient(90deg,transparent,#eae0bdaf 12%,#f7f1ddb8 58%,#e4debe8c 90%,transparent);color:#343c2e;border:0;border-bottom:1px solid #7b806044;font-family:"SG Serif","Noto Serif KR",serif;font-size:16px;letter-spacing:.05em;padding:13px 26px;min-height:72px;clip-path:polygon(1% 3%,97% 0,100% 90%,3% 100%,0 55%);transition:background .15s,transform .15s}
+.title-menu a.menu-card:hover{background:linear-gradient(90deg,transparent,#d4ddbdcf 15%,#e4e6cacf 85%,transparent);transform:translateX(3px)}
+.title-menu .menu-card:focus-visible{outline:3px solid #945b35;outline-offset:3px;clip-path:none;border-radius:3px}
+.title-menu.plaque-ready .menu-card{isolation:isolate;clip-path:none;border:0;background:transparent;color:#f8eed3;text-shadow:0 1px 2px #000;font-weight:600;padding:16px 28px;min-height:80px;transition:filter .15s,transform .15s}
+.title-menu.plaque-ready .menu-card::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--title-menu-plaque) center/104% 165% no-repeat;pointer-events:none}
+.title-menu.plaque-ready .menu-card span{color:#e5d7b3;text-shadow:0 1px 2px #000}
+.title-menu.plaque-ready .menu-card:hover:not(:disabled){background:transparent;filter:brightness(1.16);transform:translateX(3px)}
+.title-menu.plaque-ready .menu-card:focus-visible{outline:3px solid #d9ad63;outline-offset:3px;filter:brightness(1.1)}
+.title-menu.plaque-ready .menu-card:disabled{opacity:.48;filter:grayscale(.65);cursor:default}
+@media(max-width:600px){.title-menu a.menu-card{min-height:66px;font-size:14px}.title-menu.plaque-ready .menu-card{min-height:76px;padding:14px 24px}}
+@media(prefers-reduced-motion:reduce){.title-menu .menu-card{transition:none;transform:none!important}}
+
+.title-menu.plaque-ready{width:min(400px,86vw);gap:8px;margin:20px 0 24px}
+.dev-links{justify-self:center;margin:-36px 0 28px;font-size:12px;color:#6b6a5c;text-align:center}
+.dev-links summary{cursor:pointer;opacity:.75}.dev-links summary:hover{opacity:1}
+.dev-links[open]{display:flex;flex-direction:column;gap:6px;align-items:center}
+.dev-links .dev-link{font:inherit;font-size:12px;color:#55544a;background:#f3ecdacc;border:1px solid #b9b096;border-radius:4px;padding:4px 10px;cursor:pointer;text-decoration:none}
+.dev-links .dev-link:hover{background:#fff8ee}
+
+
+/* ── UI v3 첫 화면(2026-10-08): 키아트 위 어두운 칠 판 — 청록산수는 sg-theme=qinglu 일 때만 ── */
+html.theme-v3{color-scheme:dark;background:#0b0e10;color:#e8e3d7}
+html.theme-v3 body{background:#0b0e10}
+html.theme-v3 .landscape{background:#0b0e10 url(/assets/ui-v3/title/key-art.webp) 62% center/cover no-repeat;filter:none;opacity:1;animation:v3TitleDrift 40s ease-in-out infinite alternate}
+html.theme-v3 .paper{background:linear-gradient(90deg,rgba(8,10,11,.92) 0%,rgba(8,10,11,.72) 30%,rgba(8,10,11,.12) 62%,rgba(8,10,11,.28) 100%),radial-gradient(ellipse at 60% 40%,transparent 50%,rgba(4,6,7,.6) 100%);box-shadow:none}
+@keyframes v3TitleDrift{from{transform:scale(1.04) translateX(0)}to{transform:scale(1.08) translateX(-1.2%)}}
+html.theme-v3 .title-scene{grid-template-rows:auto auto 1fr auto auto;padding:clamp(28px,5vw,72px) clamp(24px,6vw,96px)}
+html.theme-v3 .game-title{gap:20px;align-items:flex-start}
+html.theme-v3 .seal{margin-top:8px;width:44px;padding:6px 4px;border:0;background:#a3453d;color:#f6ebe2;font:900 18px "Noto Serif KR",serif;letter-spacing:.1em;transform:none;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25),0 0 0 1px rgba(163,69,61,.5)}
+html.theme-v3 .overline{font:500 12px "Noto Serif KR",serif;letter-spacing:.32em;color:#b48f5f}
+html.theme-v3 .game-title h1{margin:10px 0 4px;font:900 clamp(56px,7vw,104px) "Noto Serif KR","SG Serif",serif;letter-spacing:.3em;color:#efe9dc;text-shadow:0 6px 24px rgba(0,0,0,.6)}
+html.theme-v3 .subtitle{font:500 14px "Noto Serif KR",serif;letter-spacing:.16em;color:#bdb6a6}
+html.theme-v3 .title-menu,html.theme-v3 .title-menu.plaque-ready{justify-self:start;align-self:start;width:min(380px,86vw);gap:10px;margin:44px 0 24px}
+html.theme-v3 .title-menu.plaque-ready .menu-card,html.theme-v3 .title-menu button{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:68px;padding:12px 22px;clip-path:none;border:1px solid rgba(232,227,215,.14);border-left:2px solid rgba(180,143,95,.7);border-radius:2px;background:linear-gradient(180deg,rgba(23,29,32,.92),rgba(13,17,19,.92));color:#ece6d8;font:700 20px "Noto Serif KR",serif;letter-spacing:.3em;text-align:left;text-shadow:none;box-shadow:0 10px 26px rgba(0,0,0,.35);filter:none;transition:border-color .15s,transform .15s,background .15s}
+html.theme-v3 .title-menu.plaque-ready .menu-card::before{display:none}
+html.theme-v3 .title-menu.plaque-ready .menu-card span,html.theme-v3 .title-menu button span{margin-top:4px;font:500 11.5px Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.06em;color:#a8a294;text-shadow:none}
+html.theme-v3 .title-menu .menu-card .ui-icon{display:none}
+html.theme-v3 .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3 .title-menu button:hover:not(:disabled){border-color:rgba(174,188,174,.6);border-left-color:#aebcae;background:linear-gradient(180deg,rgba(30,38,41,.95),rgba(16,21,23,.95));transform:translateX(4px);filter:none}
+html.theme-v3 .title-menu.plaque-ready #new-game{border-color:#c0564c;border-left:2px solid #f0c9c2;background:linear-gradient(180deg,#8e3a33,#65271f);color:#f6ebe2}
+html.theme-v3 .title-menu.plaque-ready #new-game span{color:#f1cfc8}
+html.theme-v3 .title-menu.plaque-ready #new-game:hover:not(:disabled){background:linear-gradient(180deg,#9c423a,#712c24);border-color:#f0c9c2}
+html.theme-v3 .title-menu.plaque-ready .menu-card:disabled{opacity:.42;filter:none}
+html.theme-v3 .title-menu .menu-card:focus-visible{outline:2px solid #aebcae;outline-offset:3px}
+html.theme-v3 .dev-links{justify-self:start;margin:0 0 20px;color:#8c8679}
+html.theme-v3 .dev-links .dev-link{background:rgba(17,22,25,.85);border-color:rgba(232,227,215,.18);color:#c9c3b5}
+html.theme-v3 .dev-links .dev-link:hover{background:#1d2528}
+html.theme-v3 #title-status,html.theme-v3 #bgm-status{text-align:left;color:#bdb6a6}
+html.theme-v3 footer{color:#7f7a6e}
+html.theme-v3 dialog{background:#12171a;color:#e8e3d7;border:1px solid rgba(232,227,215,.18);border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+html.theme-v3 dialog::backdrop{background:rgba(4,6,7,.7)}
+html.theme-v3 dialog h2{font:700 22px "Noto Serif KR",serif;letter-spacing:.2em}
+html.theme-v3 dialog button{background:#1b2326;color:#e8e3d7;border:1px solid rgba(232,227,215,.22);border-radius:2px;padding:7px 14px;cursor:pointer}
+@media(prefers-reduced-motion:reduce){html.theme-v3 .landscape{animation:none}}
+@media(max-width:600px){html.theme-v3 .paper{background:linear-gradient(180deg,rgba(8,10,11,.88),rgba(8,10,11,.6) 60%,rgba(8,10,11,.85))}html.theme-v3 .title-menu,html.theme-v3 .title-menu.plaque-ready{justify-self:stretch;width:100%}}
+
+.v3-try{justify-self:start;margin:-8px 0 22px;font-size:13px;color:#7a6a4f;text-decoration:none;border-bottom:1px solid currentColor}
+html.theme-v3 .v3-try{display:inline-flex;align-items:baseline;gap:10px;width:min(380px,86vw);padding:10px 22px;border:1px dashed rgba(174,188,174,.45);border-radius:2px;color:#cfdccc;font:600 14px "Noto Serif KR",serif;letter-spacing:.12em}
+html.theme-v3 .v3-try small{font:500 11px Pretendard,sans-serif;letter-spacing:.04em;color:#9aa69a}
+html.theme-v3 .v3-try:hover{border-style:solid;background:rgba(174,188,174,.08)}
+
+/* 흑묵 그래픽 노블 처음 화면(2026-10-10, 기준 그림 page-title): 위 가운데 제목 · 오른쪽 붓질 메뉴 · 흑묵 키 아트. ?skin=v3 로 이전 모습 */
+html.theme-v3.ink .landscape{background-image:url(/assets/ui-v3/title-ink/key-art.webp),url(/assets/ui-v3/title/key-art.webp);background-position:38% center,62% center}
+html.theme-v3.ink .paper{background:linear-gradient(270deg,rgba(13,12,11,.9) 0%,rgba(13,12,11,.62) 30%,rgba(13,12,11,.06) 60%,rgba(13,12,11,.2) 100%),linear-gradient(180deg,rgba(13,12,11,.55),transparent 28%),radial-gradient(ellipse at 45% 45%,transparent 55%,rgba(8,7,6,.6) 100%)}
+html.theme-v3.ink .title-scene{justify-items:end}
+html.theme-v3.ink .game-title{justify-self:center;text-align:center;flex-direction:column;align-items:center;gap:8px}
+html.theme-v3.ink .seal{display:none}
+html.theme-v3.ink .overline{color:#d1c7bb}
+html.theme-v3.ink .game-title h1{color:#e6dccb;text-shadow:0 4px 0 rgba(13,12,11,.6),0 10px 30px rgba(0,0,0,.7)}
+html.theme-v3.ink .subtitle{color:#cdbfa8}
+html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{justify-self:end;margin:36px 0 18px}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button{border:0;border-radius:0;background:url(/assets/ui-v3/ink/stroke-ink.png) center/100% 100% no-repeat;box-shadow:none;color:#e6dccb;padding:14px 34px;font-family:"Noto Serif KR",serif;letter-spacing:.14em}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){border:0;background:url(/assets/ui-v3/ink/stroke-ink.png) center/100% 100% no-repeat;filter:brightness(1.35);transform:translateX(-4px)}
+html.theme-v3.ink .title-menu.plaque-ready #new-game,html.theme-v3.ink .title-menu.plaque-ready #new-game:hover:not(:disabled){border:0;background:url(/assets/ui-v3/ink/stroke-rust.png) center/100% 100% no-repeat;color:#f6ece0}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card span,html.theme-v3.ink .title-menu button span{color:#bdb19e}
+html.theme-v3.ink .title-menu.plaque-ready #new-game span{color:#f1d9cf}
+html.theme-v3.ink .v3-try,html.theme-v3.ink .dev-links{justify-self:end}
+html.theme-v3.ink .v3-try{border:1px dashed rgba(230,220,203,.3);color:#d1c7bb}
+html.theme-v3.ink .title-scene{padding-top:clamp(10px,2.2vh,24px)}
+html.theme-v3.ink .overline{display:none}
+html.theme-v3.ink .game-title h1{margin:0;font-size:clamp(40px,4.6vw,66px);letter-spacing:.36em;padding-left:.36em}
+html.theme-v3.ink .subtitle{margin:0;font-size:12px;letter-spacing:.3em}
+html.theme-v3.ink .landscape{animation:none;transform:none;background-position:center bottom,62% center}
+/* 처음 화면 판 = 그림(기준 page-title · 닷토리 title 키트, 2026-10-10): 제목 깃발 판(title-banner 1300×284) · 메뉴 띠(title-menu-red/teal 900×186: 고리 = 가로 5~18.7%) */
+html.theme-v3.ink .game-title{width:min(46vw,640px);aspect-ratio:1300/284;justify-content:center;gap:0;padding:0 12%;background:url(/assets/ui-v3/hud/title-banner.png) center/100% 100% no-repeat;filter:drop-shadow(0 14px 22px rgba(0,0,0,.6))}
+html.theme-v3.ink .game-title h1{margin:0;font-size:clamp(26px,3.6vw,54px);line-height:1;letter-spacing:.4em;padding-left:.4em;text-shadow:0 3px 0 rgba(13,12,11,.7)}
+html.theme-v3.ink .game-title .overline{margin:0 0 4px;font-size:clamp(9px,.8vw,12px);white-space:nowrap}
+html.theme-v3.ink .game-title .subtitle{margin:4px 0 0;font-size:clamp(9px,.85vw,13px);white-space:nowrap}
+html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{display:flex;flex-direction:column;gap:10px;width:min(31vw,430px)}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button,html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){position:relative;width:100%;min-height:0;aspect-ratio:900/186;padding:0 24% 0 23%;border:0;border-left:0;background:url(/assets/ui-v3/hud/title-menu-teal.png) center/100% 100% no-repeat;align-items:flex-start;justify-content:center;font-size:clamp(14px,1.3vw,19px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.55))}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd),html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd):hover:not(:disabled),html.theme-v3.ink .title-menu.plaque-ready #new-game,html.theme-v3.ink .title-menu.plaque-ready #new-game:hover:not(:disabled){background:url(/assets/ui-v3/hud/title-menu-red.png) center/100% 100% no-repeat}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){filter:brightness(1.25) drop-shadow(0 8px 12px rgba(0,0,0,.55));transform:translateX(-5px)}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card::before{content:"";display:block;position:absolute;left:6.6%;top:22%;width:10.6%;height:auto;aspect-ratio:1;z-index:0;background:center/66% no-repeat}
+html.theme-v3.ink .title-menu #new-game::before{background-image:url(/assets/ui-v3/hud/icons/cmd-attack.png)}
+html.theme-v3.ink .title-menu #continue-game::before{background-image:url(/assets/ui-v3/hud/icons/b-book.png)}
+html.theme-v3.ink .title-menu #settings::before{background-image:url(/assets/ui-v3/hud/icons/b-gear.png)}
+html.theme-v3.ink .title-menu #guide::before{background-image:url(/assets/ui-v3/hud/icons/b-treaty.png)}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card span,html.theme-v3.ink .title-menu button span{margin-top:2px;font-size:clamp(9px,.78vw,11.5px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+html.theme-v3.ink .v3-try{width:auto;align-self:start;padding:5px 14px;font-size:12px;letter-spacing:.08em;opacity:.8}
+html.theme-v3.ink .v3-try small{font-size:10.5px}
+/* 처음 화면 밝기·크기(기준 page-title): 그림을 어둡게 누르던 막을 걷는다 — 붉은 하늘과 해가 보이게. 메뉴 쪽만 살짝. 제목 깃발 판은 화면 폭의 44% */
+html.theme-v3.ink .paper{background:linear-gradient(270deg,rgba(13,12,11,.42) 0%,rgba(13,12,11,.18) 26%,rgba(13,12,11,0) 46%),linear-gradient(180deg,rgba(13,12,11,.18),transparent 16%),linear-gradient(0deg,rgba(13,12,11,.3),transparent 18%)}
+html.theme-v3.ink .game-title{width:min(44vw,760px)}
+html.theme-v3.ink :is(.v3-try,.dev-links summary,#bgm-status,#title-status,footer span){text-shadow:0 1px 2px #000,0 0 8px #000,0 0 14px rgba(0,0,0,.9)}
+html.theme-v3.ink :is(.v3-try,.dev-links summary,#bgm-status:not(:empty)){padding:3px 10px;background:linear-gradient(270deg,rgba(13,12,11,.72),rgba(13,12,11,.5) 70%,rgba(13,12,11,0))}
+/* 글꼴 벌(world 와 같은 이름): 제목·메뉴 글자 */
+html[data-font="F2"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Hahmlet','Noto Serif KR',serif!important;font-weight:800!important}
+html[data-font="F3"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Song Myung','Noto Serif KR',serif!important;font-weight:400!important}
+html[data-font="F4"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Yeon Sung','Noto Serif KR',serif!important;font-weight:400!important}
+html[data-font="F5"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Black Han Sans','Noto Sans KR',sans-serif!important;font-weight:400!important}
+html[data-font="F6"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'East Sea Dokdo','Noto Serif KR',serif!important;font-weight:400!important}
+html:is([data-font="F7"],[data-font="F8"],[data-font="F9"]).theme-v3.ink :is(.title-menu .menu-card,.title-menu button){font-family:'Hahmlet','Noto Serif KR',serif!important;font-weight:800!important}
+html[data-font="F7"].theme-v3.ink .game-title h1{font-family:'Nanum Brush Script','Hahmlet',serif!important;font-weight:400!important;font-size:clamp(34px,5vw,76px)}
+html[data-font="F8"].theme-v3.ink .game-title h1{font-family:'Yeon Sung','Hahmlet',serif!important;font-weight:400!important}
+html[data-font="F9"].theme-v3.ink .game-title h1{font-family:'Song Myung','Hahmlet',serif!important;font-weight:400!important}
+/* 시안 비율 맞춤(page-title): 메뉴 띠 = 가로 76.5~97(폭 20.5) · 세로 26부터 한 줄 9, 간격 11 */
+html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{position:fixed;right:3vw;top:26vh;width:max(20.5vw,250px);margin:0;gap:max(6px,calc(11vh - max(20.5vw,250px)*.2067))}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button{font-size:clamp(13px,1.15vw,18px)}
+html.theme-v3.ink :is(.v3-try,.dev-links){position:fixed;right:3vw;margin:0}
+html.theme-v3.ink .v3-try{bottom:9vh}
+html.theme-v3.ink .dev-links{bottom:5.5vh}
+/* F4 제목 — world 와 같은 처리: 크게(글자 꼴만) · 굵게(같은 색 테두리) · 가운데 */
+html[data-font="F4"].theme-v3.ink .game-title h1{font-size-adjust:.553;-webkit-text-stroke:.03em currentColor;paint-order:stroke fill;letter-spacing:.16em;padding-left:.16em}
+html[data-font="F4"].theme-v3.ink :is(.title-menu .menu-card,.title-menu button){font-size-adjust:.5;-webkit-text-stroke:.016em currentColor;paint-order:stroke fill}
+
+/* 첫 화면 배경 = 기준 시안(page-title) 그림 그대로에서 UI만 지운 판(2026-10-10 사용자 "뒤에 붙이는 그림은 시안 것 그대로") — 16:9 로 화면을 덮는다 */
+html.theme-v3.ink .landscape{background-image:url(/assets/ui-v3/scenes/plate-title.webp);background-position:50% 50%;background-size:cover;animation:none}
+
+/* 메뉴 띠 두께(Codex 반박 리뷰 2026-10-11 "메뉴 띠가 시안보다 얇고 간격이 넓다") — 시안 띠 상자는 4.25:1(세로 8.3%), 한 줄 간격 11.3%.
+   가운데만 눌러 도톰하게 만든 그림(title-menu-*-b.png, 615×186)으로 바꾸고, 고리 안 아이콘 · 글 자리를 그 그림에 맞춘다 */
+html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{--bw:max(20.5vw,250px);--bh:calc(var(--bw)*.3024);width:var(--bw);top:25.4vh;gap:max(2px,calc(11.3vh - var(--bh)))}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button,html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){aspect-ratio:615/186;padding:0 27% 7% 31%;background-image:url(/assets/ui-v3/hud/title-menu-teal-b.png);font-size:clamp(14px,1.28vw,20px)}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd),html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd):hover:not(:disabled),html.theme-v3.ink .title-menu.plaque-ready #new-game,html.theme-v3.ink .title-menu.plaque-ready #new-game:hover:not(:disabled){background-image:url(/assets/ui-v3/hud/title-menu-red-b.png)}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card::before{left:7.3%;top:10.5%;width:19.6%;background-size:58%}
+html.theme-v3.ink .title-menu.plaque-ready .menu-card span,html.theme-v3.ink .title-menu button span{font-size:clamp(9px,.74vw,11.5px)}
+/* 왼쪽 아래 작은 띠(시안의 둥근 아이콘 + 한 줄): 상태 한 줄(BGM 안내 · 저장 상태)을 여기에 둔다 — 오른쪽 메뉴 위에 떠 있던 것을 옮김 */
+html.theme-v3.ink #bgm-status:not(:empty){position:fixed;left:2.2vw;bottom:5.2vh;margin:0;min-height:max(4.4vh,30px);display:flex;align-items:center;padding:0 2.2em 0 calc(max(4.4vh,30px) + 1em);background:url(/assets/ui-v3/ink/stroke-ink.png) center/100% 100% no-repeat;color:#e6dccb;font-size:clamp(10px,.82vw,13px);letter-spacing:.06em;text-align:left;white-space:nowrap}
+html.theme-v3.ink #bgm-status:not(:empty)::before{content:"";position:absolute;left:-.2em;top:50%;width:max(5.6vh,38px);aspect-ratio:1;translate:0 -50%;border-radius:50%;background:url(/assets/ui-v3/hud/icons/mode-terrain.png) center/58% no-repeat,url(/assets/ui-v3/hud/btn-round.png) center/100% 100% no-repeat}
+html.theme-v3.ink footer{position:fixed;right:3vw;bottom:1.6vh;margin:0;display:flex;gap:1.2em;font-size:11px;opacity:.75}
+html.theme-v3.ink #title-status:not(:empty){position:fixed;left:2.2vw;bottom:11.5vh;margin:0}
+
+/* 왼쪽 아래 띠에 시안의 가는 테두리(2차 반박 리뷰 2026-10-11) */
+html.theme-v3.ink #bgm-status:not(:empty){outline:1px solid rgba(230,220,203,.55);outline-offset:-3px;box-shadow:0 0 0 1px rgba(13,12,11,.9),0 6px 12px rgba(0,0,0,.5)}
+/* 메뉴 간격(4차 반박 리뷰: 아래로 갈수록 벌어짐) — 줄 높이 기준으로 고정 */
+html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{gap:0}
+/* 꺼진 메뉴(저장이 없을 때의 이어하기)도 띠는 보이게 — 시안은 네 띠가 모두 또렷하다 */
+html.theme-v3.ink .title-menu.plaque-ready .menu-card:disabled{opacity:.8;filter:grayscale(.9) brightness(.72) drop-shadow(0 8px 12px rgba(0,0,0,.55))}
+/* 메뉴 아이콘 · 순서(5차 반박 리뷰): 시안 = 칼(시작) · 투구(이어하기) · 두루마리(안내) · 톱니(설정). 안내와 설정의 보이는 순서를 바꾸고 색도 붉은 · 청록 번갈아 맞춘다 */
+html.theme-v3.ink .title-menu #continue-game::before{background-image:url(/assets/ui-v3/hud/icons/b-helmet.png)}
+html.theme-v3.ink .title-menu #guide{order:3}
+html.theme-v3.ink .title-menu #settings{order:4}
+html.theme-v3.ink .title-menu.plaque-ready #guide,html.theme-v3.ink .title-menu.plaque-ready #guide:hover:not(:disabled){background-image:url(/assets/ui-v3/hud/title-menu-red-b.png)}
+html.theme-v3.ink .title-menu.plaque-ready #settings,html.theme-v3.ink .title-menu.plaque-ready #settings:hover:not(:disabled){background-image:url(/assets/ui-v3/hud/title-menu-teal-b.png)}
+/* 메뉴 아이콘 모양(6차 반박 리뷰): 안내 = 말아 묶은 두루마리(죽간), 이어하기 = 정면 투구(GPT 새 그림 icons/b-helm-front.png — 없으면 옆모습 투구) */
+html.theme-v3.ink .title-menu #guide::before{background-image:url(/assets/ui-v3/hud/icons/res-science.png)}
+html.theme-v3.ink .title-menu #continue-game::before{background-image:url(/assets/ui-v3/hud/icons/b-helm-front.png),url(/assets/ui-v3/hud/icons/b-helmet.png);background-size:66%,0}
+/* 왼쪽 아래 띠 폭(7차 반박 리뷰: 21% → 시안 14%쯤) — 글을 두 줄로 접는다 */
+html.theme-v3.ink #bgm-status:not(:empty){max-width:15vw;white-space:normal;line-height:1.25;padding-top:.35vh;padding-bottom:.35vh;padding-right:1.6em;font-size:clamp(9px,.74vw,12px)}
+/* 메뉴 네 줄의 간격(시안을 1% 눈금으로 다시 잼 = 줄마다 11.0%, 첫 줄 24.5%) */
+html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{gap:0}
+html.theme-v3.ink .title-menu>*+*{margin-top:calc(11vh - var(--bh))}
+html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{top:24.9vh}
+/* 환경설정 톱니가 시안보다 작다(19차) */
+html.theme-v3.ink .title-menu.plaque-ready #settings::before,html.theme-v3.ink .title-menu #settings::before{background-size:88%}
+/* 20차: 톱니 높이 4.0 → 시안 5.5% */
+html.theme-v3.ink .title-menu.plaque-ready #settings::before,html.theme-v3.ink .title-menu #settings::before{scale:1.36}
+/* 21차: 톱니를 키우면서 고리 가운데보다 1.2% 아래로 내려감 → 위로 */
+html.theme-v3.ink .title-menu.plaque-ready #settings::before,html.theme-v3.ink .title-menu #settings::before{translate:0 -30%}

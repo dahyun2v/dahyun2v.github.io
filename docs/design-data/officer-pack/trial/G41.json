@@ -1,0 +1,122 @@
+{
+  "id": "G41",
+  "name": "노숙",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 78,
+    "무용": 65,
+    "지략": 84,
+    "정무": 77,
+    "감화": 90
+  },
+  "sub": {
+    "전열 유지": 78,
+    "기동": 70,
+    "전환": 74,
+    "수습": 75,
+    "힘": 64,
+    "기술": 76,
+    "막아내기": 59,
+    "되받기": 58,
+    "군재": 84,
+    "응변": 83,
+    "속이기": 60,
+    "통찰": 87,
+    "행정": 72,
+    "병참": 79,
+    "인사": 85,
+    "제도": 65,
+    "민정": 73,
+    "설득": 91,
+    "포섭": 88,
+    "결집": 82,
+    "중재": 94
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "명사",
+  "style": "책사",
+  "primaryClass": "TRIAL:명사",
+  "secondaryClass": "TRIAL:책사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "서로 돕는 진영",
+    "text": "10일 정산 때 맞닿은 아군마다 부상병 40명 복귀·사기 한 단계 회복. 태수일 때 도시 식량 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "HEAL_TROOPS",
+        "when": "TURN_SETTLE",
+        "target": "ADJACENT_ALLIES",
+        "value": 40,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "TURN_SETTLE",
+        "target": "ADJACENT_ALLIES",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 20,
+        "duration": 0,
+        "condition": null,
+        "resource": "FOOD"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 피해 분담·Brace 유지 연결은 지도 전투에 없어, '내 몫을 덜어 동맹을 지킨다'는 맞닿은 아군 방어+자기 노출(약점 유지)로, '서로 버틴다'는 정산 회복과 곳간(식량)으로 옮겼다.",
+    "formerName": "서로 설 수 있어야"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "대신 맞아 준다",
+      "text": "1턴 동안 맞닿은 아군이 받는 피해 −20%, 대신 노숙 부대가 받는 피해 +10%.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 20,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -10,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "먼저 내놓는 몫"
+    }
+  ]
+}

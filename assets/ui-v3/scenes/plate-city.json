@@ -1,0 +1,66 @@
+{
+ "note": "기준 시안 page-city-v2 의 그림(UI만 지운 판)에서 건물 자리. anchor = 표지의 흰 선이 닿는 곳(그림 크기 대비 0~1). 앞 다섯은 시안의 표지 자리를 잰 값, 주점·저택·성문은 그림에서 고른 자리",
+ "image": "plate-city.webp",
+ "size": [
+  1672,
+  941
+ ],
+ "buildings": [
+  {
+   "id": "office",
+   "anchor": [
+    0.485,
+    0.262
+   ]
+  },
+  {
+   "id": "granary",
+   "anchor": [
+    0.298,
+    0.422
+   ]
+  },
+  {
+   "id": "barracks",
+   "anchor": [
+    0.652,
+    0.455
+   ]
+  },
+  {
+   "id": "market",
+   "anchor": [
+    0.275,
+    0.615
+   ]
+  },
+  {
+   "id": "workshop",
+   "anchor": [
+    0.605,
+    0.642
+   ]
+  },
+  {
+   "id": "tavern",
+   "anchor": [
+    0.725,
+    0.585
+   ]
+  },
+  {
+   "id": "residence",
+   "anchor": [
+    0.168,
+    0.425
+   ]
+  },
+  {
+   "id": "gate",
+   "anchor": [
+    0.553,
+    0.835
+   ]
+  }
+ ]
+}

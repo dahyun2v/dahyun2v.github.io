@@ -1,0 +1,585 @@
+{
+  "schema": "provisional-officer-art-v1",
+  "status": "PROVISIONAL_NOT_ADOPTION",
+  "directive": "사용자 2026-10-04 \"일러는 일단 1차로 확정한거 반영하셈\" → \"일단 old로넣어\"",
+  "note": "50장수 비교 묶음의 Old(기존 최종/후보) 520×780 JPG. 채택 목록 adopted.json 을 바꾸지 않는다. 게임 화면은 adopted 우선, 없으면 이 목록. Old 후보가 여럿인 5명(G09·G29·G30·G31·G32)은 1번을 쓴다(사용자 2026-10-04 \"일단 1로해 어차피바뀔거라\").",
+  "multiOldCandidates": {
+    "G09": [
+      "G09_원소/G09_원소_old_1.jpg",
+      "G09_원소/G09_원소_old_2.jpg",
+      "G09_원소/G09_원소_old_3.jpg"
+    ],
+    "G29": [
+      "G29_감녕/G29_감녕_old_1.jpg",
+      "G29_감녕/G29_감녕_old_2.jpg",
+      "G29_감녕/G29_감녕_old_3.jpg"
+    ],
+    "G30": [
+      "G30_태사자/G30_태사자_old_1.jpg",
+      "G30_태사자/G30_태사자_old_2.jpg",
+      "G30_태사자/G30_태사자_old_3.jpg"
+    ],
+    "G31": [
+      "G31_진궁/G31_진궁_old_1.jpg",
+      "G31_진궁/G31_진궁_old_2.jpg",
+      "G31_진궁/G31_진궁_old_3.jpg"
+    ],
+    "G32": [
+      "G32_고순/G32_고순_old_1.jpg",
+      "G32_고순/G32_고순_old_2.jpg",
+      "G32_고순/G32_고순_old_3.jpg"
+    ]
+  },
+  "officers": [
+    {
+      "officerId": "G01",
+      "name": "여포",
+      "version": "old",
+      "path": "/assets/officer-art/old/G01-9ebf81d06f0f.jpg",
+      "sha256": "9ebf81d06f0fc1105cfaea7861b71a11c03094ab7dfc5344698b42313ada4890",
+      "bytes": 72397,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G01_여포/G01_여포_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G02",
+      "name": "조운",
+      "version": "old",
+      "path": "/assets/officer-art/old/G02-1d6bce1c7ed9.jpg",
+      "sha256": "1d6bce1c7ed96988d189b873ff85562244f948ebbeed49bbbdc4704c10885323",
+      "bytes": 66058,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G02_조운/G02_조운_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G03",
+      "name": "제갈량",
+      "version": "old",
+      "path": "/assets/officer-art/old/G03-b83aac49adae.jpg",
+      "sha256": "b83aac49adae41b746a7ed15f185006bb87327be5c68fa47cb67b2dd8203d300",
+      "bytes": 69797,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G03_제갈량/G03_제갈량_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G04",
+      "name": "순욱",
+      "version": "old",
+      "path": "/assets/officer-art/old/G04-bdf39d476a8c.jpg",
+      "sha256": "bdf39d476a8c6860b48822b336cfdf0e1ee0eaaebdf0bcd79061b357f3e4d353",
+      "bytes": 36792,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G04_순욱/G04_순욱_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G05",
+      "name": "유비",
+      "version": "old",
+      "path": "/assets/officer-art/old/G05-5df75baab27e.jpg",
+      "sha256": "5df75baab27e2673412c45bf1e7f4a02ffd43b0f88b2b414d9ac54f1a31a10ca",
+      "bytes": 61888,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G05_유비/G05_유비_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G06",
+      "name": "황충",
+      "version": "old",
+      "path": "/assets/officer-art/old/G06-df9051fc601a.jpg",
+      "sha256": "df9051fc601a76dbcb8091e26072949e5d83747da8aabf33a279cf341c184ae0",
+      "bytes": 87088,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G06_황충/G06_황충_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G07",
+      "name": "조조",
+      "version": "old",
+      "path": "/assets/officer-art/old/G07-7e266bcae82e.jpg",
+      "sha256": "7e266bcae82e1a6fe94ff25debec18234c02846318d92eeb3eafb148883b0e0d",
+      "bytes": 52644,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G07_조조/G07_조조_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G08",
+      "name": "손권",
+      "version": "old",
+      "path": "/assets/officer-art/old/G08-50a6539c9e69.jpg",
+      "sha256": "50a6539c9e69d5058cbfa32348d668c3cb4763fbbabb2a00b289c79cab6b2835",
+      "bytes": 58610,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G08_손권/G08_손권_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G09",
+      "name": "원소",
+      "version": "old",
+      "path": "/assets/officer-art/old/G09-049774b34ad4.jpg",
+      "sha256": "049774b34ad4c1fa72bc8d457ddd9655b6d7c8f07fbb6678ce6033d8a54377b1",
+      "bytes": 81646,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G09_원소/G09_원소_old_1.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": "USER_SAID_1_FOR_NOW"
+    },
+    {
+      "officerId": "G10",
+      "name": "원술",
+      "version": "old",
+      "path": "/assets/officer-art/old/G10-da4faa513045.jpg",
+      "sha256": "da4faa5130456de94c646b6961c9b73f58703cba6de52fe1ef73cdf704c6c39b",
+      "bytes": 64382,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G10_원술/G10_원술_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G11",
+      "name": "동탁",
+      "version": "old",
+      "path": "/assets/officer-art/old/G11-ca9b66268c25.jpg",
+      "sha256": "ca9b66268c2582860a28f07c9f6f6e610789619439128fde9855ae9e806b5f24",
+      "bytes": 50189,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G11_동탁/G11_동탁_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G12",
+      "name": "마등",
+      "version": "old",
+      "path": "/assets/officer-art/old/G12-723359ec463f.jpg",
+      "sha256": "723359ec463fe34b2e5a7b78b3b22f8636925b5ac31abf9a0ba62fe55792b2a8",
+      "bytes": 68828,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G12_마등/G12_마등_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G13",
+      "name": "마초",
+      "version": "old",
+      "path": "/assets/officer-art/old/G13-2f3984db42ff.jpg",
+      "sha256": "2f3984db42ff1b10de90e9666f04d85ba5c7abcec3e8e47851819c60c80c89f7",
+      "bytes": 61064,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G13_마초/G13_마초_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G14",
+      "name": "공손찬",
+      "version": "old",
+      "path": "/assets/officer-art/old/G14-c4344d278ca2.jpg",
+      "sha256": "c4344d278ca2c111100dc22c63a9e3126ca4acba3b7811965b37ae9cf63187d2",
+      "bytes": 58470,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G14_공손찬/G14_공손찬_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G15",
+      "name": "유장",
+      "version": "old",
+      "path": "/assets/officer-art/old/G15-5951d8b4e34d.jpg",
+      "sha256": "5951d8b4e34d06bdd201654ce55d048cf65dccf4d502b91fb05e5d030e679d5b",
+      "bytes": 59882,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G15_유장/G15_유장_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G16",
+      "name": "장로",
+      "version": "old",
+      "path": "/assets/officer-art/old/G16-3a67bda728ad.jpg",
+      "sha256": "3a67bda728adaaf7d54b50c841c6d0f354f935044cfcfb454063cc174f08c6f3",
+      "bytes": 34578,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G16_장로/G16_장로_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G17",
+      "name": "맹획",
+      "version": "old",
+      "path": "/assets/officer-art/old/G17-b92e0855419c.jpg",
+      "sha256": "b92e0855419c83fb644c95654c67079ddc3fbfcfae1c78da6344a552f693df8a",
+      "bytes": 45849,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G17_맹획/G17_맹획_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G18",
+      "name": "관우",
+      "version": "old",
+      "path": "/assets/officer-art/old/G18-2550d03e239a.jpg",
+      "sha256": "2550d03e239abc81a0885631ef4c301911ab922963c5fc9f76338cd5b8a50276",
+      "bytes": 42884,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G18_관우/G18_관우_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G19",
+      "name": "장비",
+      "version": "old",
+      "path": "/assets/officer-art/old/G19-5fa154315bd2.jpg",
+      "sha256": "5fa154315bd271e22dea0d68c07b7155b344739be650e1be2a1eef5bcef5dd4b",
+      "bytes": 52933,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G19_장비/G19_장비_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G20",
+      "name": "손책",
+      "version": "old",
+      "path": "/assets/officer-art/old/G20-41d4c17cf95a.jpg",
+      "sha256": "41d4c17cf95a3f3f05f3ec97cac3ec4aabe827712da35dd0070d94eb8495fb47",
+      "bytes": 47162,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G20_손책/G20_손책_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G21",
+      "name": "방통",
+      "version": "old",
+      "path": "/assets/officer-art/old/G21-5125a845b381.jpg",
+      "sha256": "5125a845b381bc8c296b04734790899b952c330e0c5cd3265c405c6153bdc62d",
+      "bytes": 46534,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G21_방통/G21_방통_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G22",
+      "name": "곽가",
+      "version": "old",
+      "path": "/assets/officer-art/old/G22-679b97274ceb.jpg",
+      "sha256": "679b97274cebd9298b94e8c5d83ddc33cd0f7472516f44e5f84b2eea38b5e3d6",
+      "bytes": 43746,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G22_곽가/G22_곽가_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G23",
+      "name": "사마의",
+      "version": "old",
+      "path": "/assets/officer-art/old/G23-e88a47c5be82.jpg",
+      "sha256": "e88a47c5be8247b8917d577de849ce54c408d3ac45f9a54713ebdea22ebfe3a1",
+      "bytes": 33982,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G23_사마의/G23_사마의_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G24",
+      "name": "장료",
+      "version": "old",
+      "path": "/assets/officer-art/old/G24-e59f411ea8e1.jpg",
+      "sha256": "e59f411ea8e18e75b4001c8a99e17b05f894d05b8750fd6d26bbb92862118553",
+      "bytes": 48710,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G24_장료/G24_장료_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G25",
+      "name": "허저",
+      "version": "old",
+      "path": "/assets/officer-art/old/G25-703d1f42bc4a.jpg",
+      "sha256": "703d1f42bc4a7e4c2fd6d899783371ddef628334433fbce8dd27e9274bde4d2c",
+      "bytes": 45376,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G25_허저/G25_허저_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G26",
+      "name": "초선",
+      "version": "old",
+      "path": "/assets/officer-art/old/G26-6859d3f58236.jpg",
+      "sha256": "6859d3f5823616cb913d1b3555122888ef640128d7156427e11418ebc06e99a0",
+      "bytes": 43417,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G26_초선/G26_초선_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G27",
+      "name": "주유",
+      "version": "old",
+      "path": "/assets/officer-art/old/G27-fa690b03593a.jpg",
+      "sha256": "fa690b03593ab0bb5e1bf182998ad58d669a61aeabe9aea52bd1a2c813e22ca3",
+      "bytes": 61199,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G27_주유/G27_주유_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G28",
+      "name": "육손",
+      "version": "old",
+      "path": "/assets/officer-art/old/G28-b6aa70dc919e.jpg",
+      "sha256": "b6aa70dc919ebaef97032b51649c1ab5e351e1350421e3882372dfe3fdebe605",
+      "bytes": 67678,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G28_육손/G28_육손_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G29",
+      "name": "감녕",
+      "version": "old",
+      "path": "/assets/officer-art/old/G29-0fb4b4269535.jpg",
+      "sha256": "0fb4b426953565c47eb71ae3cb5cbbeb2c3073bdc1108524dbd69163e4060fee",
+      "bytes": 73196,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G29_감녕/G29_감녕_old_1.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": "USER_SAID_1_FOR_NOW"
+    },
+    {
+      "officerId": "G30",
+      "name": "태사자",
+      "version": "old",
+      "path": "/assets/officer-art/old/G30-24e85c2570f3.jpg",
+      "sha256": "24e85c2570f3ab3fa98d76c38e401ceb178c600c96523a41836430425deb022e",
+      "bytes": 80387,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G30_태사자/G30_태사자_old_1.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": "USER_SAID_1_FOR_NOW"
+    },
+    {
+      "officerId": "G31",
+      "name": "진궁",
+      "version": "old",
+      "path": "/assets/officer-art/old/G31-21f40170e0e1.jpg",
+      "sha256": "21f40170e0e1a3d1a45f3ed3f7cca1324cfc370b56e669ad53911f5daa3b7037",
+      "bytes": 59351,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G31_진궁/G31_진궁_old_1.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": "USER_SAID_1_FOR_NOW"
+    },
+    {
+      "officerId": "G32",
+      "name": "고순",
+      "version": "old",
+      "path": "/assets/officer-art/old/G32-7abfd13b29be.jpg",
+      "sha256": "7abfd13b29be559daf5b172ab4f473b220af3a046de9554849b9b42485618d7e",
+      "bytes": 48770,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G32_고순/G32_고순_old_1.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": "USER_SAID_1_FOR_NOW"
+    },
+    {
+      "officerId": "G33",
+      "name": "하후돈",
+      "version": "old",
+      "path": "/assets/officer-art/old/G33-5edb5b0179b0.jpg",
+      "sha256": "5edb5b0179b00748375f19d375b03f57325b928742a689d9fb26447b5ffc64af",
+      "bytes": 74335,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G33_하후돈/G33_하후돈_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G34",
+      "name": "조인",
+      "version": "old",
+      "path": "/assets/officer-art/old/G34-74fd8b0310b0.jpg",
+      "sha256": "74fd8b0310b0c3fbd1955a5dc1f265405e7908379349b2b8b596433614582ebc",
+      "bytes": 70235,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G34_조인/G34_조인_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G35",
+      "name": "가후",
+      "version": "old",
+      "path": "/assets/officer-art/old/G35-d7a7a877edef.jpg",
+      "sha256": "d7a7a877edeff6f446b7b47d5d2e9281cb150cefa26ea90cd7e0199be2163f92",
+      "bytes": 48992,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G35_가후/G35_가후_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G36",
+      "name": "순유",
+      "version": "old",
+      "path": "/assets/officer-art/old/G36-adf36cbd79de.jpg",
+      "sha256": "adf36cbd79de321a5d433f3b7033858e58b7fe675beb155d9baf2635fd76a251",
+      "bytes": 40927,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G36_순유/G36_순유_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G37",
+      "name": "장합",
+      "version": "old",
+      "path": "/assets/officer-art/old/G37-3cb3363446b4.jpg",
+      "sha256": "3cb3363446b40613e4d793490a320ef5df640e7534840ade6d2fb3a8c1d6fc0a",
+      "bytes": 37974,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G37_장합/G37_장합_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G38",
+      "name": "전풍",
+      "version": "old",
+      "path": "/assets/officer-art/old/G38-2c08f9bbae7d.jpg",
+      "sha256": "2c08f9bbae7d0eeb37a9970eb8fdd11683f190ca0de52114f4a1768718c6a612",
+      "bytes": 45075,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G38_전풍/G38_전풍_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G39",
+      "name": "저수",
+      "version": "old",
+      "path": "/assets/officer-art/old/G39-aaafc8279b43.jpg",
+      "sha256": "aaafc8279b43c19affb1347da504c95923d4d84270001103695d40d07a4eb7da",
+      "bytes": 33528,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G39_저수/G39_저수_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G40",
+      "name": "여몽",
+      "version": "old",
+      "path": "/assets/officer-art/old/G40-7d73c9f1de36.jpg",
+      "sha256": "7d73c9f1de362d2372f6c1f054a27d98deb96e8678335fbba6e8827a163ceb79",
+      "bytes": 50166,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G40_여몽/G40_여몽_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G41",
+      "name": "노숙",
+      "version": "old",
+      "path": "/assets/officer-art/old/G41-e68f3ed6294b.jpg",
+      "sha256": "e68f3ed6294b3b5d8c4938eb355d076db8128f558a362fca4a40f5197a34e2cd",
+      "bytes": 43345,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G41_노숙/G41_노숙_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G42",
+      "name": "위연",
+      "version": "old",
+      "path": "/assets/officer-art/old/G42-1bca1b8465ee.jpg",
+      "sha256": "1bca1b8465ee7e77f046c44d39e8a467bed76dc28030da7d8e2591b7e690073d",
+      "bytes": 42633,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G42_위연/G42_위연_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G43",
+      "name": "법정",
+      "version": "old",
+      "path": "/assets/officer-art/old/G43-79fafcdfa337.jpg",
+      "sha256": "79fafcdfa3373ff4e4bced0d140ba14081ab868b97d8dd0eb8e9f4160eea3a87",
+      "bytes": 31908,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G43_법정/G43_법정_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G44",
+      "name": "한수",
+      "version": "old",
+      "path": "/assets/officer-art/old/G44-20eb207a641b.jpg",
+      "sha256": "20eb207a641ba5d52dd24a79590c40759a89ec07eeef615f936d6f15fe3543cb",
+      "bytes": 57743,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G44_한수/G44_한수_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G45",
+      "name": "방덕",
+      "version": "old",
+      "path": "/assets/officer-art/old/G45-c1cbf1ffdd1b.jpg",
+      "sha256": "c1cbf1ffdd1b02ed8e4a334550a914dadb0ee9b7e4d01b9f255d97f695281ec0",
+      "bytes": 75149,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G45_방덕/G45_방덕_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G46",
+      "name": "이각",
+      "version": "old",
+      "path": "/assets/officer-art/old/G46-9a806ddb7103.jpg",
+      "sha256": "9a806ddb710341c4c21262aacd1724a62c2ee0d2703715897287feedb719b603",
+      "bytes": 44311,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G46_이각/G46_이각_old.jpg",
+      "alsoAdopted": true,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G47",
+      "name": "장임",
+      "version": "old",
+      "path": "/assets/officer-art/old/G47-9e915788485a.jpg",
+      "sha256": "9e915788485a3f929eb854af6d4a400bf9fd45a886441082cd2c78dd0edb67cb",
+      "bytes": 39715,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G47_장임/G47_장임_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G48",
+      "name": "염포",
+      "version": "old",
+      "path": "/assets/officer-art/old/G48-ba5e7a56b65d.jpg",
+      "sha256": "ba5e7a56b65d61751ed20fe4b330d049798d2b249da5f43cf5f3b7529ee7e5d6",
+      "bytes": 41026,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G48_염포/G48_염포_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G49",
+      "name": "기령",
+      "version": "old",
+      "path": "/assets/officer-art/old/G49-1cc5bae445cb.jpg",
+      "sha256": "1cc5bae445cbf271242e723248063ab91ab0f679713dfdf1bcd4cf68096d90bf",
+      "bytes": 40882,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G49_기령/G49_기령_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    },
+    {
+      "officerId": "G50",
+      "name": "황개",
+      "version": "old",
+      "path": "/assets/officer-art/old/G50-9a6f87158d83.jpg",
+      "sha256": "9a6f87158d83f1c55f1e7836d5beb7165f7b053aa3324aabba3a5dc5f8f4fdfb",
+      "bytes": 55363,
+      "source": "~/Downloads/50장수_Old_V1_V2_V3_JPG_전체.zip :: G50_황개/G50_황개_old.jpg",
+      "alsoAdopted": false,
+      "provisionalChoice": false
+    }
+  ]
+}

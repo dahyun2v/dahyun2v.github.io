@@ -1,0 +1,589 @@
+{
+  "schema": "common-tactics-v0.1",
+  "status": "TRIAL — Claude 2026-10-04. 사용자 \"전법은 전투만\", \"특기랑 전법은 시뮬레이션게임이랑 알피지게임 레퍼런스 잘 찾아봐\" → 위치·대형으로 콤보가 나는 공용 전투 전법(REF-COMBAT.md). 전법 = 주 행동 1회·재사용 대기 1~3·사거리 0~2(정본 51 v1.2). 등급 = 규칙 깊이, 전설·신화는 cost 필수. weightTags 는 칭호 가중(C25 tacticWeighting). 수치 시험값.",
+  "tactics": [
+    {
+      "id": "CTA-01",
+      "kind": "tactic",
+      "name": "밀어붙이기",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 2,
+      "text": "인접 적을 1칸 밀어낸다. 밀 칸이 막혔으면 대신 전열 판정(가중 10).",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SHOVE",
+          "params": {
+            "push": 1,
+            "blockedFormation": 10
+          },
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "파이어 엠블렘 밀기·인투 더 브리치 충돌",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-02",
+      "kind": "tactic",
+      "name": "자리 바꾸기",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "range": 1,
+      "cooldown": 2,
+      "text": "인접 아군과 자리를 바꾼다(흔들린 아군을 뒤로 빼기).",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SWAP",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "ALLY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "파이어 엠블렘 자리 바꾸기",
+      "weightTags": [
+        "지휘",
+        "DEFENSE"
+      ]
+    },
+    {
+      "id": "CTA-03",
+      "kind": "tactic",
+      "name": "전열 깨기",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 2,
+      "text": "공격. 정돈된 상대는 흐트러지고 다음 차례까지 반격하지 못한다.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "RULE",
+          "rule": "SHATTER_LINE",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "파이어 엠블렘 엔게이지 브레이크",
+      "weightTags": [
+        "무용",
+        "CHARGE"
+      ]
+    },
+    {
+      "id": "CTA-04",
+      "kind": "tactic",
+      "name": "도발",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "range": 1,
+      "cooldown": 2,
+      "text": "대상이 이쪽을 바라보게 돌린다 — 다른 아군에게 옆구리가 열린다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "TAUNT",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "배틀 브라더스·택틱스 오우거 도발",
+      "weightTags": [
+        "감화",
+        "FLANK"
+      ]
+    },
+    {
+      "id": "CTA-05",
+      "kind": "tactic",
+      "name": "결집",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "range": 0,
+      "cooldown": 3,
+      "text": "2칸 안 아군 사기 한 단계 회복(패주 → 동요, 동요 → 안정).",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "배틀 브라더스 결집",
+      "weightTags": [
+        "감화",
+        "COMEBACK"
+      ]
+    },
+    {
+      "id": "CTA-06",
+      "kind": "tactic",
+      "name": "경계 사격",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 2,
+      "text": "궁병: 다음 내 차례까지 정면 2칸 안에 처음 들어오는 적을 쏜다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "OVERWATCH",
+          "params": {
+            "range": 2
+          },
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "XCOM2 경계",
+      "weightTags": [
+        "지휘",
+        "DEFENSE"
+      ]
+    },
+    {
+      "id": "CTA-07",
+      "kind": "tactic",
+      "name": "관통 사격",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "range": 2,
+      "cooldown": 2,
+      "text": "궁병 사격이 대상 뒤 부대에도 절반 피해.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "RULE",
+          "rule": "PIERCE",
+          "params": {
+            "ratio": 50
+          },
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "삼국지11 관시",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-08",
+      "kind": "tactic",
+      "name": "둘이 함께 치기",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "range": 1,
+      "cooldown": 3,
+      "text": "대상과 맞닿은 아군 한 부대가 함께 공격(그 아군은 행동을 쓰지 않음).",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "DUAL_STRIKE",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "XCOM 유대·삼국지14 연계",
+      "weightTags": [
+        "지휘",
+        "FLANK"
+      ],
+      "formerName": "쌍격"
+    },
+    {
+      "id": "CTA-09",
+      "kind": "tactic",
+      "name": "기세 싸움",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "range": 1,
+      "cooldown": 3,
+      "text": "맞닿은 적 1부대와 지휘 비교 — 이기면 대상 사기 한 단계 하락, 지면 이 부대 사기 판정(가중 10).",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "MORALE_CONTEST",
+          "params": {
+            "stat": "지휘",
+            "loseWeight": 10
+          },
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "토탈워 사기 판정 · 다키스트 던전 스트레스(부대 대 부대 — 일기토 없음)",
+      "weightTags": [
+        "지휘"
+      ],
+      "note": "2026-10-04: 사용자 결정 \"일기토는 없다\"(작업기준 :216)에 따라 일대일 결투(DUEL)를 부대 기세 싸움으로 바꿈. 옛 이름 일기토는 formerName."
+    },
+    {
+      "id": "CTA-10",
+      "kind": "tactic",
+      "name": "거짓 소문",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "지략 대결. 이기면 대상은 다음 차례 이동하지 못한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "FALSE_ORDERS",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "삼국지 시리즈 위보",
+      "weightTags": [
+        "지략"
+      ],
+      "formerName": "위보(僞報)"
+    },
+    {
+      "id": "CTA-11",
+      "kind": "tactic",
+      "name": "말뚝 박고 버티기",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "다음 내 차례까지 측면·돌격 보너스를 받지 않는다. 대가: 다음 차례 이동 불가.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "STAKES",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "토탈워 말뚝",
+      "weightTags": [
+        "지휘",
+        "DEFENSE"
+      ],
+      "cost": "다음 차례 이동 불가",
+      "formerName": "말뚝 박기"
+    },
+    {
+      "id": "CTA-12",
+      "kind": "tactic",
+      "name": "불 지르기",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "숲·풀 칸에 불. 그 칸과 맞닿은 숲으로 한 번 번지고, 불 칸의 부대는 병력 손실 + 전열 판정.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "FIRE_ATTACK",
+          "params": {
+            "spread": 1,
+            "formation": 10
+          },
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "삼국지 화계·트라이앵글 스트래티지 불",
+      "weightTags": [
+        "지략"
+      ],
+      "formerName": "화계"
+    },
+    {
+      "id": "CTA-13",
+      "kind": "tactic",
+      "name": "매복",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "range": 0,
+      "cooldown": 3,
+      "text": "숲에 있으면 숨는다 — 첫 공격까지 적 시야에 안 보이고, 그 첫 공격은 후방 공격.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "AMBUSH",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "삼국지8R 매복",
+      "weightTags": [
+        "지략",
+        "FLANK"
+      ]
+    },
+    {
+      "id": "CTA-14",
+      "kind": "tactic",
+      "name": "후퇴로 꾀어내기",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "추격 없이 2칸 물러난다. 따라온 적이 아군 2부대 이상에 닿으면 측면 판정 + 흐트러짐.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "FEIGNED_RETREAT",
+          "params": {
+            "back": 2
+          },
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "노부나가 시마즈 낚시 매복",
+      "weightTags": [
+        "지휘",
+        "FLANK"
+      ],
+      "formerName": "낚시 매복(釣り野伏せ)"
+    },
+    {
+      "id": "CTA-15",
+      "kind": "tactic",
+      "name": "성 안 내통",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "성 태수와 지략 대결. 이기면 그 성 1턴 동안 성 사격·내구 회복 없음. 대가: 지면 이 부대 사기 한 단계 하락.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "INSIDE_AGENT",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "삼국지·노부나가 조략",
+      "weightTags": [
+        "지략",
+        "SIEGE"
+      ],
+      "cost": "실패 시 자기 사기 하락",
+      "formerName": "내응(內應)"
+    },
+    {
+      "id": "CTA-16",
+      "kind": "tactic",
+      "name": "강물 터뜨리기",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "강 칸 하나와 이웃 강 칸을 2턴 동안 건널 수 없게. 그 칸 부대는 전열 판정. 대가: 이 부대도 다음 차례 이동 −2.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "FLOOD",
+          "params": {
+            "turns": 2
+          },
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "삼국지 수공",
+      "weightTags": [
+        "지략"
+      ],
+      "cost": "다음 차례 이동 −2",
+      "formerName": "수공(水攻)"
+    },
+    {
+      "id": "CTA-17",
+      "kind": "tactic",
+      "name": "앞뒤로 몰아치기",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "range": 2,
+      "cooldown": 3,
+      "text": "대상 뒤에 아군이 있으면 그 아군이 후방 공격하고 대상을 이쪽으로 1칸 민다. 대가: 그 아군은 이번 차례 행동 종료.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "WOODPECKER",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "노부나가 다케다 딱따구리",
+      "weightTags": [
+        "지휘",
+        "FLANK"
+      ],
+      "cost": "협력 아군 행동 종료",
+      "formerName": "딱따구리 전법(啄木鳥)"
+    },
+    {
+      "id": "CTA-18",
+      "kind": "tactic",
+      "name": "적 전법 따라 하기",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "range": 0,
+      "cooldown": 3,
+      "text": "마지막으로 이 부대를 맞힌 적 전법을 그대로 한 번 쓴다. 대가: 쓰고 나면 그 전법 재사용 대기가 이 전법에도 걸림.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "MIRROR",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "발라트로 청사진·청마도사",
+      "weightTags": [
+        "지략",
+        "LEARN"
+      ],
+      "cost": "대기 공유",
+      "formerName": "거울 장군"
+    },
+    {
+      "id": "CTA-19",
+      "kind": "tactic",
+      "name": "몰아쳐 한 번 더",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 3,
+      "text": "공격. 이 공격으로 패주시키면 이번 차례 행동 한 번 더(턴당 1회). 대가: 패주시키지 못하면 이 부대 전열 흐트러짐.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "RULE",
+          "rule": "GALEFORCE",
+          "params": {},
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "파이어 엠블렘 질풍·XCOM 연쇄",
+      "weightTags": [
+        "무용",
+        "CHARGE"
+      ],
+      "cost": "실패 시 자기 흐트러짐",
+      "formerName": "질풍"
+    }
+  ],
+  "rules": {
+    "SHOVE": "인접 적을 1칸 밀어낸다. 밀 칸이 막혔으면 대신 전열 판정(가중 10).",
+    "SWAP": "인접 아군과 자리를 바꾼다(흔들린 아군을 뒤로 빼기).",
+    "SHATTER_LINE": "공격. 정돈된 상대는 흐트러지고 다음 차례까지 반격하지 못한다.",
+    "TAUNT": "대상이 이쪽을 바라보게 돌린다 — 다른 아군에게 옆구리가 열린다.",
+    "OVERWATCH": "궁병: 다음 내 차례까지 정면 2칸 안에 처음 들어오는 적을 쏜다.",
+    "PIERCE": "궁병 사격이 대상 뒤 부대에도 절반 피해.",
+    "DUAL_STRIKE": "대상과 맞닿은 아군 한 부대가 함께 공격(그 아군은 행동을 쓰지 않음).",
+    "FALSE_ORDERS": "지략 대결. 이기면 대상은 다음 차례 이동하지 못한다.",
+    "STAKES": "다음 내 차례까지 측면·돌격 보너스를 받지 않는다. 대가: 다음 차례 이동 불가.",
+    "FIRE_ATTACK": "숲·풀 칸에 불. 그 칸과 맞닿은 숲으로 한 번 번지고, 불 칸의 부대는 병력 손실 + 전열 판정.",
+    "AMBUSH": "숲에 있으면 숨는다 — 첫 공격까지 적 시야에 안 보이고, 그 첫 공격은 후방 공격.",
+    "FEIGNED_RETREAT": "추격 없이 2칸 물러난다. 따라온 적이 아군 2부대 이상에 닿으면 측면 판정 + 흐트러짐.",
+    "INSIDE_AGENT": "성 태수와 지략 대결. 이기면 그 성 1턴 동안 성 사격·내구 회복 없음. 대가: 지면 이 부대 사기 한 단계 하락.",
+    "FLOOD": "강 칸 하나와 이웃 강 칸을 2턴 동안 건널 수 없게. 그 칸 부대는 전열 판정. 대가: 이 부대도 다음 차례 이동 −2.",
+    "WOODPECKER": "대상 뒤에 아군이 있으면 그 아군이 후방 공격하고 대상을 이쪽으로 1칸 민다. 대가: 그 아군은 이번 차례 행동 종료.",
+    "MIRROR": "마지막으로 이 부대를 맞힌 적 전법을 그대로 한 번 쓴다. 대가: 쓰고 나면 그 전법 재사용 대기가 이 전법에도 걸림.",
+    "GALEFORCE": "공격. 이 공격으로 패주시키면 이번 차례 행동 한 번 더(턴당 1회). 대가: 패주시키지 못하면 이 부대 전열 흐트러짐.",
+    "MORALE_CONTEST": "맞닿은 적 1부대와 지휘 비교(장수 큰 능력치). 이기면 대상 사기 한 단계 하락, 지면 이 부대 사기 판정(가중 10). 무력·개인전 계산 없음."
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "id": "G39",
+  "name": "저수",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 66,
+    "무용": 40,
+    "지략": 88,
+    "정무": 76,
+    "감화": 63
+  },
+  "sub": {
+    "전열 유지": 64,
+    "기동": 58,
+    "전환": 68,
+    "수습": 63,
+    "힘": 34,
+    "기술": 41,
+    "막아내기": 46,
+    "되받기": 37,
+    "군재": 90,
+    "응변": 78,
+    "속이기": 63,
+    "통찰": 92,
+    "행정": 68,
+    "병참": 82,
+    "인사": 80,
+    "제도": 67,
+    "민정": 70,
+    "설득": 64,
+    "포섭": 58,
+    "결집": 65,
+    "중재": 56
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "책사",
+  "style": "문관",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:문관",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "예비대를 댄다",
+    "text": "내 차례 시작에 맞닿은 아군 전열 한 단계 회복(흐트러진 곳에 예비를 댄다). 병력이 절반 아래면 잃는 병력 중 전사 비율 −20%p.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ROUND_START",
+        "target": "ADJACENT_ALLIES",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CASUALTY_SHIFT",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 아군 Formation이 악화되면 예비가 옆으로 붙던 의도를 '인접 전열 회복' 특기와 '부상병 복귀 + 이동 +2' 전법으로, 막혀도 원래 Brace는 남기던 '전부 잃지 않음'은 열세 시 전사 비율 감소로 옮김.",
+    "formerName": "전부 잃지는 않는다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "예비대 투입",
+      "text": "2칸 안 아군 하나를 예비로 돌린다: 부상병 60명 즉시 복귀, 이번 차례와 다음 차례 이동 +2칸(무너지는 곳으로 달려간다).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 60,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 2,
+          "duration": 2,
+          "condition": null
+        }
+      ],
+      "formerName": "아직 남긴 한 군"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

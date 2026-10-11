@@ -1,0 +1,1009 @@
+{
+ "version": 1,
+ "note": "장수 음성 시험 묶음. 유비·조조·손권 = Gemini 음성 그대로, 나머지 장수 = pool 가운데 하나(장수 ID 로 정함). 대사는 아직 세 사람 것을 빌려 쓴다. AI 로 만든 음성.",
+ "slots": {
+  "select": "부대를 고름",
+  "move": "이동 명령",
+  "attack": "공격",
+  "tactic": "전법 사용",
+  "victory": "전투 승리",
+  "retreat": "패주·후퇴",
+  "levelup": "레벨업",
+  "recruit": "장수를 맞아들임"
+ },
+ "officers": {
+  "G05": "G05",
+  "G07": "G07",
+  "G08": "G08"
+ },
+ "pool": [
+  "nam04_G05",
+  "nam04_G07",
+  "nam04_G08",
+  "nam06_G05",
+  "nam06_G07",
+  "nam06_G08",
+  "nam17_G05",
+  "nam17_G07",
+  "nam17_G08",
+  "seol_G05",
+  "el_G05",
+  "seol_G07",
+  "el_G07",
+  "seol_G08",
+  "el_G08"
+ ],
+ "femalePool": [
+  "yeo02_G05",
+  "yeo02_G07",
+  "yeo02_G08"
+ ],
+ "packs": {
+  "G05": {
+   "voice": "유비 — Gemini 음성",
+   "lineset": "G05",
+   "lines": {
+    "select": {
+     "file": "G05/select.ogg",
+     "text": "말씀하시오.",
+     "seconds": 2.29
+    },
+    "move": {
+     "file": "G05/move.ogg",
+     "text": "가세. 백성이 기다리고 있소.",
+     "seconds": 2.38
+    },
+    "attack": {
+     "file": "G05/attack.ogg",
+     "text": "물러설 곳이 없소. 나아가세!",
+     "seconds": 2.26
+    },
+    "tactic": {
+     "file": "G05/tactic.ogg",
+     "text": "모두, 나와 함께 버텨 주시오!",
+     "seconds": 3.49
+    },
+    "victory": {
+     "file": "G05/victory.ogg",
+     "text": "모두 무사하오? 잘 싸워 주었소.",
+     "seconds": 5.14
+    },
+    "retreat": {
+     "file": "G05/retreat.ogg",
+     "text": "살아야 다시 일어서오. 물러나세.",
+     "seconds": 3.59
+    },
+    "levelup": {
+     "file": "G05/levelup.ogg",
+     "text": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+     "seconds": 3.8
+    },
+    "recruit": {
+     "file": "G05/recruit.ogg",
+     "text": "어서 오시오. 함께 갑시다.",
+     "seconds": 2.18
+    }
+   }
+  },
+  "G07": {
+   "voice": "조조 — Gemini 음성",
+   "lineset": "G07",
+   "lines": {
+    "select": {
+     "file": "G07/select.ogg",
+     "text": "말하라.",
+     "seconds": 0.86
+    },
+    "move": {
+     "file": "G07/move.ogg",
+     "text": "지체하지 마라. 간다.",
+     "seconds": 2.01
+    },
+    "attack": {
+     "file": "G07/attack.ogg",
+     "text": "쳐라! 망설이는 자부터 벤다.",
+     "seconds": 3.52
+    },
+    "tactic": {
+     "file": "G07/tactic.ogg",
+     "text": "전군, 일제히 몰아쳐라!",
+     "seconds": 2.96
+    },
+    "victory": {
+     "file": "G07/victory.ogg",
+     "text": "이긴 싸움이다. 다음을 준비하라.",
+     "seconds": 4.25
+    },
+    "retreat": {
+     "file": "G07/retreat.ogg",
+     "text": "물러난다. 이 빚은 반드시 갚는다.",
+     "seconds": 4.24
+    },
+    "levelup": {
+     "file": "G07/levelup.ogg",
+     "text": "그래, 이 감각. 낯설지 않군.",
+     "seconds": 3.54
+    },
+    "recruit": {
+     "file": "G07/recruit.ogg",
+     "text": "재주가 있으면 족하다. 내 곁에 서라.",
+     "seconds": 3.55
+    }
+   }
+  },
+  "G08": {
+   "voice": "손권 — Gemini 음성",
+   "lineset": "G08",
+   "lines": {
+    "select": {
+     "file": "G08/select.ogg",
+     "text": "말해 보라.",
+     "seconds": 0.56
+    },
+    "move": {
+     "file": "G08/move.ogg",
+     "text": "물길을 따라 간다. 서둘러라.",
+     "seconds": 2.27
+    },
+    "attack": {
+     "file": "G08/attack.ogg",
+     "text": "지금이다, 몰아쳐라!",
+     "seconds": 1.67
+    },
+    "tactic": {
+     "file": "G08/tactic.ogg",
+     "text": "강동의 힘을 보여 줘라!",
+     "seconds": 1.66
+    },
+    "victory": {
+     "file": "G08/victory.ogg",
+     "text": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+     "seconds": 4.78
+    },
+    "retreat": {
+     "file": "G08/retreat.ogg",
+     "text": "분하지만 물러난다. 배를 돌려라.",
+     "seconds": 3.74
+    },
+    "levelup": {
+     "file": "G08/levelup.ogg",
+     "text": "이 느낌, 꿈에서 본 것 같군.",
+     "seconds": 3.61
+    },
+    "recruit": {
+     "file": "G08/recruit.ogg",
+     "text": "잘 왔다. 강동은 사람을 귀히 여긴다.",
+     "seconds": 3.12
+    }
+   }
+  },
+  "nam04_G05": {
+   "voice": "남 04 · 30대 · 깊은 저음 · 호탕 (큰 체격) — Seed-VC",
+   "lineset": "G05",
+   "lines": {
+    "select": {
+     "file": "nam04_G05/select.ogg",
+     "text": "말씀하시오.",
+     "seconds": 2.28
+    },
+    "move": {
+     "file": "nam04_G05/move.ogg",
+     "text": "가세. 백성이 기다리고 있소.",
+     "seconds": 2.35
+    },
+    "attack": {
+     "file": "nam04_G05/attack.ogg",
+     "text": "물러설 곳이 없소. 나아가세!",
+     "seconds": 2.24
+    },
+    "tactic": {
+     "file": "nam04_G05/tactic.ogg",
+     "text": "모두, 나와 함께 버텨 주시오!",
+     "seconds": 3.44
+    },
+    "victory": {
+     "file": "nam04_G05/victory.ogg",
+     "text": "모두 무사하오? 잘 싸워 주었소.",
+     "seconds": 5.12
+    },
+    "retreat": {
+     "file": "nam04_G05/retreat.ogg",
+     "text": "살아야 다시 일어서오. 물러나세.",
+     "seconds": 3.34
+    },
+    "levelup": {
+     "file": "nam04_G05/levelup.ogg",
+     "text": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+     "seconds": 3.72
+    },
+    "recruit": {
+     "file": "nam04_G05/recruit.ogg",
+     "text": "어서 오시오. 함께 갑시다.",
+     "seconds": 2.17
+    }
+   }
+  },
+  "nam04_G07": {
+   "voice": "남 04 · 30대 · 깊은 저음 · 호탕 (큰 체격) — Seed-VC",
+   "lineset": "G07",
+   "lines": {
+    "select": {
+     "file": "nam04_G07/select.ogg",
+     "text": "말하라.",
+     "seconds": 0.83
+    },
+    "move": {
+     "file": "nam04_G07/move.ogg",
+     "text": "지체하지 마라. 간다.",
+     "seconds": 1.98
+    },
+    "attack": {
+     "file": "nam04_G07/attack.ogg",
+     "text": "쳐라! 망설이는 자부터 벤다.",
+     "seconds": 3.39
+    },
+    "tactic": {
+     "file": "nam04_G07/tactic.ogg",
+     "text": "전군, 일제히 몰아쳐라!",
+     "seconds": 2.94
+    },
+    "victory": {
+     "file": "nam04_G07/victory.ogg",
+     "text": "이긴 싸움이다. 다음을 준비하라.",
+     "seconds": 4.21
+    },
+    "retreat": {
+     "file": "nam04_G07/retreat.ogg",
+     "text": "물러난다. 이 빚은 반드시 갚는다.",
+     "seconds": 3.93
+    },
+    "levelup": {
+     "file": "nam04_G07/levelup.ogg",
+     "text": "그래, 이 감각. 낯설지 않군.",
+     "seconds": 3.54
+    },
+    "recruit": {
+     "file": "nam04_G07/recruit.ogg",
+     "text": "재주가 있으면 족하다. 내 곁에 서라.",
+     "seconds": 3.53
+    }
+   }
+  },
+  "nam04_G08": {
+   "voice": "남 04 · 30대 · 깊은 저음 · 호탕 (큰 체격) — Seed-VC",
+   "lineset": "G08",
+   "lines": {
+    "select": {
+     "file": "nam04_G08/select.ogg",
+     "text": "말해 보라.",
+     "seconds": 0.57
+    },
+    "move": {
+     "file": "nam04_G08/move.ogg",
+     "text": "물길을 따라 간다. 서둘러라.",
+     "seconds": 2.26
+    },
+    "attack": {
+     "file": "nam04_G08/attack.ogg",
+     "text": "지금이다, 몰아쳐라!",
+     "seconds": 1.66
+    },
+    "tactic": {
+     "file": "nam04_G08/tactic.ogg",
+     "text": "강동의 힘을 보여 줘라!",
+     "seconds": 1.63
+    },
+    "victory": {
+     "file": "nam04_G08/victory.ogg",
+     "text": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+     "seconds": 4.49
+    },
+    "retreat": {
+     "file": "nam04_G08/retreat.ogg",
+     "text": "분하지만 물러난다. 배를 돌려라.",
+     "seconds": 3.71
+    },
+    "levelup": {
+     "file": "nam04_G08/levelup.ogg",
+     "text": "이 느낌, 꿈에서 본 것 같군.",
+     "seconds": 3.57
+    },
+    "recruit": {
+     "file": "nam04_G08/recruit.ogg",
+     "text": "잘 왔다. 강동은 사람을 귀히 여긴다.",
+     "seconds": 3.11
+    }
+   }
+  },
+  "nam06_G05": {
+   "voice": "남 06 · 30대 · 높은 편 · 비음 · 약삭빠름 (작은 체격) — Seed-VC",
+   "lineset": "G05",
+   "lines": {
+    "select": {
+     "file": "nam06_G05/select.ogg",
+     "text": "말씀하시오.",
+     "seconds": 2.32
+    },
+    "move": {
+     "file": "nam06_G05/move.ogg",
+     "text": "가세. 백성이 기다리고 있소.",
+     "seconds": 2.36
+    },
+    "attack": {
+     "file": "nam06_G05/attack.ogg",
+     "text": "물러설 곳이 없소. 나아가세!",
+     "seconds": 2.25
+    },
+    "tactic": {
+     "file": "nam06_G05/tactic.ogg",
+     "text": "모두, 나와 함께 버텨 주시오!",
+     "seconds": 3.45
+    },
+    "victory": {
+     "file": "nam06_G05/victory.ogg",
+     "text": "모두 무사하오? 잘 싸워 주었소.",
+     "seconds": 5.14
+    },
+    "retreat": {
+     "file": "nam06_G05/retreat.ogg",
+     "text": "살아야 다시 일어서오. 물러나세.",
+     "seconds": 3.52
+    },
+    "levelup": {
+     "file": "nam06_G05/levelup.ogg",
+     "text": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+     "seconds": 3.79
+    },
+    "recruit": {
+     "file": "nam06_G05/recruit.ogg",
+     "text": "어서 오시오. 함께 갑시다.",
+     "seconds": 2.17
+    }
+   }
+  },
+  "nam06_G07": {
+   "voice": "남 06 · 30대 · 높은 편 · 비음 · 약삭빠름 (작은 체격) — Seed-VC",
+   "lineset": "G07",
+   "lines": {
+    "select": {
+     "file": "nam06_G07/select.ogg",
+     "text": "말하라.",
+     "seconds": 0.84
+    },
+    "move": {
+     "file": "nam06_G07/move.ogg",
+     "text": "지체하지 마라. 간다.",
+     "seconds": 1.97
+    },
+    "attack": {
+     "file": "nam06_G07/attack.ogg",
+     "text": "쳐라! 망설이는 자부터 벤다.",
+     "seconds": 3.46
+    },
+    "tactic": {
+     "file": "nam06_G07/tactic.ogg",
+     "text": "전군, 일제히 몰아쳐라!",
+     "seconds": 2.94
+    },
+    "victory": {
+     "file": "nam06_G07/victory.ogg",
+     "text": "이긴 싸움이다. 다음을 준비하라.",
+     "seconds": 4.21
+    },
+    "retreat": {
+     "file": "nam06_G07/retreat.ogg",
+     "text": "물러난다. 이 빚은 반드시 갚는다.",
+     "seconds": 3.98
+    },
+    "levelup": {
+     "file": "nam06_G07/levelup.ogg",
+     "text": "그래, 이 감각. 낯설지 않군.",
+     "seconds": 3.48
+    },
+    "recruit": {
+     "file": "nam06_G07/recruit.ogg",
+     "text": "재주가 있으면 족하다. 내 곁에 서라.",
+     "seconds": 3.54
+    }
+   }
+  },
+  "nam06_G08": {
+   "voice": "남 06 · 30대 · 높은 편 · 비음 · 약삭빠름 (작은 체격) — Seed-VC",
+   "lineset": "G08",
+   "lines": {
+    "select": {
+     "file": "nam06_G08/select.ogg",
+     "text": "말해 보라.",
+     "seconds": 0.57
+    },
+    "move": {
+     "file": "nam06_G08/move.ogg",
+     "text": "물길을 따라 간다. 서둘러라.",
+     "seconds": 2.27
+    },
+    "attack": {
+     "file": "nam06_G08/attack.ogg",
+     "text": "지금이다, 몰아쳐라!",
+     "seconds": 1.66
+    },
+    "tactic": {
+     "file": "nam06_G08/tactic.ogg",
+     "text": "강동의 힘을 보여 줘라!",
+     "seconds": 1.64
+    },
+    "victory": {
+     "file": "nam06_G08/victory.ogg",
+     "text": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+     "seconds": 4.77
+    },
+    "retreat": {
+     "file": "nam06_G08/retreat.ogg",
+     "text": "분하지만 물러난다. 배를 돌려라.",
+     "seconds": 3.72
+    },
+    "levelup": {
+     "file": "nam06_G08/levelup.ogg",
+     "text": "이 느낌, 꿈에서 본 것 같군.",
+     "seconds": 3.57
+    },
+    "recruit": {
+     "file": "nam06_G08/recruit.ogg",
+     "text": "잘 왔다. 강동은 사람을 귀히 여긴다.",
+     "seconds": 3.11
+    }
+   }
+  },
+  "nam17_G05": {
+   "voice": "남 17 · 60대 · 낮고 갈라지는 · 노련 (보통 체격) — Seed-VC",
+   "lineset": "G05",
+   "lines": {
+    "select": {
+     "file": "nam17_G05/select.ogg",
+     "text": "말씀하시오.",
+     "seconds": 2.28
+    },
+    "move": {
+     "file": "nam17_G05/move.ogg",
+     "text": "가세. 백성이 기다리고 있소.",
+     "seconds": 2.36
+    },
+    "attack": {
+     "file": "nam17_G05/attack.ogg",
+     "text": "물러설 곳이 없소. 나아가세!",
+     "seconds": 2.25
+    },
+    "tactic": {
+     "file": "nam17_G05/tactic.ogg",
+     "text": "모두, 나와 함께 버텨 주시오!",
+     "seconds": 3.44
+    },
+    "victory": {
+     "file": "nam17_G05/victory.ogg",
+     "text": "모두 무사하오? 잘 싸워 주었소.",
+     "seconds": 5.13
+    },
+    "retreat": {
+     "file": "nam17_G05/retreat.ogg",
+     "text": "살아야 다시 일어서오. 물러나세.",
+     "seconds": 3.52
+    },
+    "levelup": {
+     "file": "nam17_G05/levelup.ogg",
+     "text": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+     "seconds": 3.76
+    },
+    "recruit": {
+     "file": "nam17_G05/recruit.ogg",
+     "text": "어서 오시오. 함께 갑시다.",
+     "seconds": 2.16
+    }
+   }
+  },
+  "nam17_G07": {
+   "voice": "남 17 · 60대 · 낮고 갈라지는 · 노련 (보통 체격) — Seed-VC",
+   "lineset": "G07",
+   "lines": {
+    "select": {
+     "file": "nam17_G07/select.ogg",
+     "text": "말하라.",
+     "seconds": 0.85
+    },
+    "move": {
+     "file": "nam17_G07/move.ogg",
+     "text": "지체하지 마라. 간다.",
+     "seconds": 2.37
+    },
+    "attack": {
+     "file": "nam17_G07/attack.ogg",
+     "text": "쳐라! 망설이는 자부터 벤다.",
+     "seconds": 3.49
+    },
+    "tactic": {
+     "file": "nam17_G07/tactic.ogg",
+     "text": "전군, 일제히 몰아쳐라!",
+     "seconds": 2.95
+    },
+    "victory": {
+     "file": "nam17_G07/victory.ogg",
+     "text": "이긴 싸움이다. 다음을 준비하라.",
+     "seconds": 4.25
+    },
+    "retreat": {
+     "file": "nam17_G07/retreat.ogg",
+     "text": "물러난다. 이 빚은 반드시 갚는다.",
+     "seconds": 3.94
+    },
+    "levelup": {
+     "file": "nam17_G07/levelup.ogg",
+     "text": "그래, 이 감각. 낯설지 않군.",
+     "seconds": 3.5
+    },
+    "recruit": {
+     "file": "nam17_G07/recruit.ogg",
+     "text": "재주가 있으면 족하다. 내 곁에 서라.",
+     "seconds": 3.55
+    }
+   }
+  },
+  "nam17_G08": {
+   "voice": "남 17 · 60대 · 낮고 갈라지는 · 노련 (보통 체격) — Seed-VC",
+   "lineset": "G08",
+   "lines": {
+    "select": {
+     "file": "nam17_G08/select.ogg",
+     "text": "말해 보라.",
+     "seconds": 0.56
+    },
+    "move": {
+     "file": "nam17_G08/move.ogg",
+     "text": "물길을 따라 간다. 서둘러라.",
+     "seconds": 2.37
+    },
+    "attack": {
+     "file": "nam17_G08/attack.ogg",
+     "text": "지금이다, 몰아쳐라!",
+     "seconds": 1.67
+    },
+    "tactic": {
+     "file": "nam17_G08/tactic.ogg",
+     "text": "강동의 힘을 보여 줘라!",
+     "seconds": 1.89
+    },
+    "victory": {
+     "file": "nam17_G08/victory.ogg",
+     "text": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+     "seconds": 4.76
+    },
+    "retreat": {
+     "file": "nam17_G08/retreat.ogg",
+     "text": "분하지만 물러난다. 배를 돌려라.",
+     "seconds": 3.72
+    },
+    "levelup": {
+     "file": "nam17_G08/levelup.ogg",
+     "text": "이 느낌, 꿈에서 본 것 같군.",
+     "seconds": 3.57
+    },
+    "recruit": {
+     "file": "nam17_G08/recruit.ogg",
+     "text": "잘 왔다. 강동은 사람을 귀히 여긴다.",
+     "seconds": 3.11
+    }
+   }
+  },
+  "yeo02_G05": {
+   "voice": "여 02 · 20대 · 낮고 단단함 · 무인 (보통 체격) — Seed-VC",
+   "lineset": "G05",
+   "lines": {
+    "select": {
+     "file": "yeo02_G05/select.ogg",
+     "text": "말씀하시오.",
+     "seconds": 2.29
+    },
+    "move": {
+     "file": "yeo02_G05/move.ogg",
+     "text": "가세. 백성이 기다리고 있소.",
+     "seconds": 2.36
+    },
+    "attack": {
+     "file": "yeo02_G05/attack.ogg",
+     "text": "물러설 곳이 없소. 나아가세!",
+     "seconds": 2.25
+    },
+    "tactic": {
+     "file": "yeo02_G05/tactic.ogg",
+     "text": "모두, 나와 함께 버텨 주시오!",
+     "seconds": 3.44
+    },
+    "victory": {
+     "file": "yeo02_G05/victory.ogg",
+     "text": "모두 무사하오? 잘 싸워 주었소.",
+     "seconds": 5.15
+    },
+    "retreat": {
+     "file": "yeo02_G05/retreat.ogg",
+     "text": "살아야 다시 일어서오. 물러나세.",
+     "seconds": 3.51
+    },
+    "levelup": {
+     "file": "yeo02_G05/levelup.ogg",
+     "text": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+     "seconds": 3.76
+    },
+    "recruit": {
+     "file": "yeo02_G05/recruit.ogg",
+     "text": "어서 오시오. 함께 갑시다.",
+     "seconds": 2.15
+    }
+   }
+  },
+  "yeo02_G07": {
+   "voice": "여 02 · 20대 · 낮고 단단함 · 무인 (보통 체격) — Seed-VC",
+   "lineset": "G07",
+   "lines": {
+    "select": {
+     "file": "yeo02_G07/select.ogg",
+     "text": "말하라.",
+     "seconds": 0.82
+    },
+    "move": {
+     "file": "yeo02_G07/move.ogg",
+     "text": "지체하지 마라. 간다.",
+     "seconds": 1.98
+    },
+    "attack": {
+     "file": "yeo02_G07/attack.ogg",
+     "text": "쳐라! 망설이는 자부터 벤다.",
+     "seconds": 3.46
+    },
+    "tactic": {
+     "file": "yeo02_G07/tactic.ogg",
+     "text": "전군, 일제히 몰아쳐라!",
+     "seconds": 2.95
+    },
+    "victory": {
+     "file": "yeo02_G07/victory.ogg",
+     "text": "이긴 싸움이다. 다음을 준비하라.",
+     "seconds": 4.21
+    },
+    "retreat": {
+     "file": "yeo02_G07/retreat.ogg",
+     "text": "물러난다. 이 빚은 반드시 갚는다.",
+     "seconds": 3.93
+    },
+    "levelup": {
+     "file": "yeo02_G07/levelup.ogg",
+     "text": "그래, 이 감각. 낯설지 않군.",
+     "seconds": 3.57
+    },
+    "recruit": {
+     "file": "yeo02_G07/recruit.ogg",
+     "text": "재주가 있으면 족하다. 내 곁에 서라.",
+     "seconds": 3.54
+    }
+   }
+  },
+  "yeo02_G08": {
+   "voice": "여 02 · 20대 · 낮고 단단함 · 무인 (보통 체격) — Seed-VC",
+   "lineset": "G08",
+   "lines": {
+    "select": {
+     "file": "yeo02_G08/select.ogg",
+     "text": "말해 보라.",
+     "seconds": 0.57
+    },
+    "move": {
+     "file": "yeo02_G08/move.ogg",
+     "text": "물길을 따라 간다. 서둘러라.",
+     "seconds": 2.26
+    },
+    "attack": {
+     "file": "yeo02_G08/attack.ogg",
+     "text": "지금이다, 몰아쳐라!",
+     "seconds": 1.67
+    },
+    "tactic": {
+     "file": "yeo02_G08/tactic.ogg",
+     "text": "강동의 힘을 보여 줘라!",
+     "seconds": 1.64
+    },
+    "victory": {
+     "file": "yeo02_G08/victory.ogg",
+     "text": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+     "seconds": 4.51
+    },
+    "retreat": {
+     "file": "yeo02_G08/retreat.ogg",
+     "text": "분하지만 물러난다. 배를 돌려라.",
+     "seconds": 3.73
+    },
+    "levelup": {
+     "file": "yeo02_G08/levelup.ogg",
+     "text": "이 느낌, 꿈에서 본 것 같군.",
+     "seconds": 3.58
+    },
+    "recruit": {
+     "file": "yeo02_G08/recruit.ogg",
+     "text": "잘 왔다. 강동은 사람을 귀히 여긴다.",
+     "seconds": 3.11
+    }
+   }
+  },
+  "seol_G05": {
+   "voice": "글로 설계한 유비 목소리 — Seed-VC",
+   "lineset": "G05",
+   "lines": {
+    "select": {
+     "file": "seol_G05/select.ogg",
+     "text": "말씀하시오.",
+     "seconds": 2.3
+    },
+    "move": {
+     "file": "seol_G05/move.ogg",
+     "text": "가세. 백성이 기다리고 있소.",
+     "seconds": 2.36
+    },
+    "attack": {
+     "file": "seol_G05/attack.ogg",
+     "text": "물러설 곳이 없소. 나아가세!",
+     "seconds": 2.23
+    },
+    "tactic": {
+     "file": "seol_G05/tactic.ogg",
+     "text": "모두, 나와 함께 버텨 주시오!",
+     "seconds": 3.44
+    },
+    "victory": {
+     "file": "seol_G05/victory.ogg",
+     "text": "모두 무사하오? 잘 싸워 주었소.",
+     "seconds": 5.1
+    },
+    "retreat": {
+     "file": "seol_G05/retreat.ogg",
+     "text": "살아야 다시 일어서오. 물러나세.",
+     "seconds": 3.5
+    },
+    "levelup": {
+     "file": "seol_G05/levelup.ogg",
+     "text": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+     "seconds": 3.75
+    },
+    "recruit": {
+     "file": "seol_G05/recruit.ogg",
+     "text": "어서 오시오. 함께 갑시다.",
+     "seconds": 2.16
+    }
+   }
+  },
+  "el_G05": {
+   "voice": "ElevenLabs 기본 목소리로 바꿈",
+   "lineset": "G05",
+   "lines": {
+    "select": {
+     "file": "el_G05/select.ogg",
+     "text": "말씀하시오.",
+     "seconds": 2.31
+    },
+    "move": {
+     "file": "el_G05/move.ogg",
+     "text": "가세. 백성이 기다리고 있소.",
+     "seconds": 2.38
+    },
+    "attack": {
+     "file": "el_G05/attack.ogg",
+     "text": "물러설 곳이 없소. 나아가세!",
+     "seconds": 2.25
+    },
+    "tactic": {
+     "file": "el_G05/tactic.ogg",
+     "text": "모두, 나와 함께 버텨 주시오!",
+     "seconds": 3.5
+    },
+    "victory": {
+     "file": "el_G05/victory.ogg",
+     "text": "모두 무사하오? 잘 싸워 주었소.",
+     "seconds": 5.17
+    },
+    "retreat": {
+     "file": "el_G05/retreat.ogg",
+     "text": "살아야 다시 일어서오. 물러나세.",
+     "seconds": 3.59
+    },
+    "levelup": {
+     "file": "el_G05/levelup.ogg",
+     "text": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+     "seconds": 3.82
+    },
+    "recruit": {
+     "file": "el_G05/recruit.ogg",
+     "text": "어서 오시오. 함께 갑시다.",
+     "seconds": 2.19
+    }
+   }
+  },
+  "seol_G07": {
+   "voice": "글로 설계한 조조 목소리 — Seed-VC",
+   "lineset": "G07",
+   "lines": {
+    "select": {
+     "file": "seol_G07/select.ogg",
+     "text": "말하라.",
+     "seconds": 1.08
+    },
+    "move": {
+     "file": "seol_G07/move.ogg",
+     "text": "지체하지 마라. 간다.",
+     "seconds": 2.0
+    },
+    "attack": {
+     "file": "seol_G07/attack.ogg",
+     "text": "쳐라! 망설이는 자부터 벤다.",
+     "seconds": 3.45
+    },
+    "tactic": {
+     "file": "seol_G07/tactic.ogg",
+     "text": "전군, 일제히 몰아쳐라!",
+     "seconds": 2.94
+    },
+    "victory": {
+     "file": "seol_G07/victory.ogg",
+     "text": "이긴 싸움이다. 다음을 준비하라.",
+     "seconds": 4.19
+    },
+    "retreat": {
+     "file": "seol_G07/retreat.ogg",
+     "text": "물러난다. 이 빚은 반드시 갚는다.",
+     "seconds": 3.94
+    },
+    "levelup": {
+     "file": "seol_G07/levelup.ogg",
+     "text": "그래, 이 감각. 낯설지 않군.",
+     "seconds": 3.55
+    },
+    "recruit": {
+     "file": "seol_G07/recruit.ogg",
+     "text": "재주가 있으면 족하다. 내 곁에 서라.",
+     "seconds": 3.53
+    }
+   }
+  },
+  "el_G07": {
+   "voice": "ElevenLabs 기본 목소리로 바꿈",
+   "lineset": "G07",
+   "lines": {
+    "select": {
+     "file": "el_G07/select.ogg",
+     "text": "말하라.",
+     "seconds": 0.85
+    },
+    "move": {
+     "file": "el_G07/move.ogg",
+     "text": "지체하지 마라. 간다.",
+     "seconds": 2.0
+    },
+    "attack": {
+     "file": "el_G07/attack.ogg",
+     "text": "쳐라! 망설이는 자부터 벤다.",
+     "seconds": 3.41
+    },
+    "tactic": {
+     "file": "el_G07/tactic.ogg",
+     "text": "전군, 일제히 몰아쳐라!",
+     "seconds": 2.95
+    },
+    "victory": {
+     "file": "el_G07/victory.ogg",
+     "text": "이긴 싸움이다. 다음을 준비하라.",
+     "seconds": 4.25
+    },
+    "retreat": {
+     "file": "el_G07/retreat.ogg",
+     "text": "물러난다. 이 빚은 반드시 갚는다.",
+     "seconds": 4.02
+    },
+    "levelup": {
+     "file": "el_G07/levelup.ogg",
+     "text": "그래, 이 감각. 낯설지 않군.",
+     "seconds": 3.52
+    },
+    "recruit": {
+     "file": "el_G07/recruit.ogg",
+     "text": "재주가 있으면 족하다. 내 곁에 서라.",
+     "seconds": 3.56
+    }
+   }
+  },
+  "seol_G08": {
+   "voice": "글로 설계한 손권 목소리 — Seed-VC",
+   "lineset": "G08",
+   "lines": {
+    "select": {
+     "file": "seol_G08/select.ogg",
+     "text": "말해 보라.",
+     "seconds": 0.58
+    },
+    "move": {
+     "file": "seol_G08/move.ogg",
+     "text": "물길을 따라 간다. 서둘러라.",
+     "seconds": 2.28
+    },
+    "attack": {
+     "file": "seol_G08/attack.ogg",
+     "text": "지금이다, 몰아쳐라!",
+     "seconds": 1.67
+    },
+    "tactic": {
+     "file": "seol_G08/tactic.ogg",
+     "text": "강동의 힘을 보여 줘라!",
+     "seconds": 1.65
+    },
+    "victory": {
+     "file": "seol_G08/victory.ogg",
+     "text": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+     "seconds": 4.57
+    },
+    "retreat": {
+     "file": "seol_G08/retreat.ogg",
+     "text": "분하지만 물러난다. 배를 돌려라.",
+     "seconds": 3.75
+    },
+    "levelup": {
+     "file": "seol_G08/levelup.ogg",
+     "text": "이 느낌, 꿈에서 본 것 같군.",
+     "seconds": 3.57
+    },
+    "recruit": {
+     "file": "seol_G08/recruit.ogg",
+     "text": "잘 왔다. 강동은 사람을 귀히 여긴다.",
+     "seconds": 3.11
+    }
+   }
+  },
+  "el_G08": {
+   "voice": "ElevenLabs 기본 목소리로 바꿈",
+   "lineset": "G08",
+   "lines": {
+    "select": {
+     "file": "el_G08/select.ogg",
+     "text": "말해 보라.",
+     "seconds": 0.55
+    },
+    "move": {
+     "file": "el_G08/move.ogg",
+     "text": "물길을 따라 간다. 서둘러라.",
+     "seconds": 2.26
+    },
+    "attack": {
+     "file": "el_G08/attack.ogg",
+     "text": "지금이다, 몰아쳐라!",
+     "seconds": 1.67
+    },
+    "tactic": {
+     "file": "el_G08/tactic.ogg",
+     "text": "강동의 힘을 보여 줘라!",
+     "seconds": 1.66
+    },
+    "victory": {
+     "file": "el_G08/victory.ogg",
+     "text": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+     "seconds": 4.76
+    },
+    "retreat": {
+     "file": "el_G08/retreat.ogg",
+     "text": "분하지만 물러난다. 배를 돌려라.",
+     "seconds": 3.73
+    },
+    "levelup": {
+     "file": "el_G08/levelup.ogg",
+     "text": "이 느낌, 꿈에서 본 것 같군.",
+     "seconds": 3.57
+    },
+    "recruit": {
+     "file": "el_G08/recruit.ogg",
+     "text": "잘 왔다. 강동은 사람을 귀히 여긴다.",
+     "seconds": 3.12
+    }
+   }
+  }
+ }
+}

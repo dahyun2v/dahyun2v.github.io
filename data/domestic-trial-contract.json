@@ -1,0 +1,10 @@
+{
+  "id": "EXISTING-FOOD-TRIAL-v1",
+  "status": "APPROVED_TRIAL",
+  "source": "docs/design-data/city-economy-v1.json: center.food=4, citizen_food=2, turn_days=10",
+  "days": 10,
+  "food": 4,
+  "citizenFood": 2,
+  "scope": "user-approved isolated food trial; excludes worked tiles, military consumption/transport, growth, bonuses and facilities; not canonical economy",
+  "approval": "Sentinel_7c1a258cbc808191be43ba50481dcffa"
+}

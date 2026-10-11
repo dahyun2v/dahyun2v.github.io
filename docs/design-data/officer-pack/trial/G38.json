@@ -1,0 +1,113 @@
+{
+  "id": "G38",
+  "name": "전풍",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 58,
+    "무용": 35,
+    "지략": 88,
+    "정무": 69,
+    "감화": 58
+  },
+  "sub": {
+    "전열 유지": 57,
+    "기동": 54,
+    "전환": 61,
+    "수습": 58,
+    "힘": 32,
+    "기술": 35,
+    "막아내기": 39,
+    "되받기": 30,
+    "군재": 90,
+    "응변": 85,
+    "속이기": 72,
+    "통찰": 91,
+    "행정": 71,
+    "병참": 69,
+    "인사": 67,
+    "제도": 65,
+    "민정": 66,
+    "설득": 55,
+    "포섭": 58,
+    "결집": 72,
+    "중재": 46
+  },
+  "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "책사",
+  "style": "문관",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:문관",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "때를 아는 진언",
+    "text": "열리면 재촉한다: 내 차례 시작에 맞닿은 아군 이번 차례 이동 +1칸. 닫히면 멈춰 선다: 상대 병력이 더 많을 때 받는 피해 −20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지략",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "MOVE_MOD",
+        "when": "ROUND_START",
+        "target": "ADJACENT_ALLIES",
+        "value": 1,
+        "duration": 1,
+        "condition": null
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "OUTNUMBERED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 준비된 공격을 취소시키고 방어·정비로 돌리던 '멈춤'을 인접 아군 일괄 방어 태세로 살림. 원 특기(실패한 이탈을 Reaction으로 재시도)는 반응 자원이 없어 옮길 수 없어, 이름의 '말(재촉)과 몸(버팀)'을 두 조건 효과로 새로 만듦.",
+    "formerName": "말과 몸을 함께"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "멈춰 서서 막기",
+      "text": "진격을 멈춰 세운다: 맞닿은 아군 모두 이번 턴 받는 피해 −15%, 반격 피해 +20%(주 행동을 쓰지 않은 방어 태세).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 15,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 20,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "지금은 그 길이 아니다"
+    }
+  ]
+}

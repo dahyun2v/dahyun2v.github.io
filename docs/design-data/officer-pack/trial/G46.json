@@ -1,0 +1,139 @@
+{
+  "id": "G46",
+  "name": "이각",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "luoyang"
+  },
+  "stats": {
+    "지휘": 73,
+    "무용": 62,
+    "지략": 67,
+    "정무": 40,
+    "감화": 51
+  },
+  "sub": {
+    "전열 유지": 67,
+    "기동": 70,
+    "전환": 64,
+    "수습": 79,
+    "힘": 61,
+    "기술": 65,
+    "막아내기": 58,
+    "되받기": 66,
+    "군재": 68,
+    "응변": 70,
+    "속이기": 74,
+    "통찰": 52,
+    "행정": 45,
+    "병참": 52,
+    "인사": 58,
+    "제도": 36,
+    "민정": 25,
+    "설득": 45,
+    "포섭": 68,
+    "결집": 54,
+    "중재": 40
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "책사",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:책사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "약탈한 성",
+    "text": "성을 함락하면 부상병 80명 복귀, 맞닿은 아군 2턴 고양(공격 +10%). 대신 태수일 때 도시 인망 −15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "감화"
+    ],
+    "effects": [
+      {
+        "op": "HEAL_TROOPS",
+        "when": "ON_CAPTURE_CITY",
+        "target": "SELF",
+        "value": 80,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "STATUS_APPLY",
+        "when": "ON_CAPTURE_CITY",
+        "target": "ADJACENT_ALLIES",
+        "value": 0,
+        "duration": 2,
+        "condition": null,
+        "status": "INSPIRED"
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": -15,
+        "duration": 0,
+        "condition": null,
+        "resource": "FAME"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · Formation 악화를 붙드는 전법은 FORMATION_DELTA 회복으로, 이동 포기 대가(이각·대상 모두)는 속박으로 그대로 살렸다. 지연 악화 정산 특기는 전리품으로 묶되 민심(인망)을 잃는 부채로 옮겨 '남을 이유는 별개'를 남겼다.",
+    "formerName": "풀리기 전의 매듭"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "다시 묶는 대열",
+      "text": "맞닿은 아군의 전열을 한 단계 다시 묶는다(붕괴 → 흐트러짐 포함). 대신 이각과 그 아군 모두 다음 차례 이동 불가(1턴 속박).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        }
+      ],
+      "formerName": "해산 전에 묶는다"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

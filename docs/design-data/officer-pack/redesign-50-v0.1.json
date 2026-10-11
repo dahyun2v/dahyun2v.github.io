@@ -1,0 +1,3998 @@
+{
+ "version": "0.1",
+ "status": "Claude 재설계(사용자 지시 2026-10-04 \"특기/전법은 너가 한번 다시 만들어볼래? 살릴건 살리고 새로만들건 새로만들고\"). 원 패키지(50명_게임능력_전법_특기_설계_v0.2)의 이름·대사·의도를 살려 지도 전투(정본 20 v3.4)·EFFECT-OPS v0.3 로 다시 씀. 시험값.",
+ "spec": "scratchpad REDESIGN-SPEC (요약: 고유 특기 전설 1~3효과, 대표 전법 영웅/전설·재사용 대기 1~3·사거리 0~2, 병종 적성 BT01~BT04, 전술 개념 어휘 FLANK·REAR·CHARGE·TARGET_DISORDERED·SELF_ORDERED·FORMATION_DELTA)",
+ "officers": {
+  "G01": {
+   "id": "G01",
+   "name": "여포",
+   "memorableLine": "한 번의 충돌로 닫힌 판을 다시 연다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "결과로 다시 건다",
+    "text": "전열이 흐트러진 적을 공격하면 주는 피해 +25%. 적 부대를 쓰러뜨리면 맞닿은 적 모두 사기 판정(가중 15), 다음 차례 이동 +2칸.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 25,
+      "duration": 0,
+      "condition": "TARGET_DISORDERED"
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_KILL",
+      "target": "ADJACENT_ENEMIES",
+      "value": -15,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_KILL",
+      "target": "SELF",
+      "value": 2,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "판을 가르는 일격",
+    "text": "인접한 적 1부대를 피해 +45%로 공격하고 대상에게 전열 판정(가중 20)을 일으킨다. 대신 이번 턴 동안 이 부대가 받는 피해 +15%.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 45,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": -20,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": -15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "강한 일격(원 ×1.35)+사용 뒤 노출 대가, '연 틈으로 다시 들어간다'를 살림. 밀기·빈칸 진입은 지도에 없어 '전열 판정으로 틈을 열고 → 흐트러진 적 추가 피해·쓰러뜨리면 재진격 이동'으로 옮김(원 카드의 Formation 악화 판정 유지)."
+   },
+   "pendingConcepts": [
+    "FORMATION",
+    "TARGET_DISORDERED"
+   ]
+  },
+  "G02": {
+   "id": "G02",
+   "name": "조운",
+   "memorableLine": "구한 사람을 내 곁이 아니라 제자리로 돌려보낸다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "돌려놓고 물러난다",
+    "text": "상대 병력이 더 많을 때 받는 피해 −25%(교전 이탈 추격 포함). 이 부대가 잃는 병력의 전사 비율 −15%p(30% → 15%).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 25,
+      "duration": 0,
+      "condition": "OUTNUMBERED"
+     },
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 15,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "돌아오지 않은 한 사람",
+    "text": "2칸 안 아군 1부대의 사기를 한 단계 회복시키고 부상병 40명을 복귀시킨다. 그 부대는 이번 차례 이동 +2칸으로 빠져나올 수 있다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 40,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 2,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "적에 묶인 아군을 구해 제자리로 돌려보내고 추격 없이 물러나는 의도 유지. 위치 교대·Contact 인수·추격 차단은 지도에 없어 대상 사기·부상병·이동 보정과, 수적 열세 때 피해(추격 포함)·전사 감소로 옮김. 공격 대신 구조에 행동을 쓰는 약점 유지."
+   },
+   "pendingConcepts": []
+  },
+  "G03": {
+   "id": "G03",
+   "name": "제갈량",
+   "memorableLine": "계획을 사람과 순서가 이어지는 실제 행동으로 만든다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "빈 책임을 메우다",
+    "text": "내 차례 시작에 자신과 2칸 안 아군 모두 전열 한 단계 회복. 태수일 때 도시 과학 +25%, 생산 +15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ROUND_START",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 25,
+      "duration": 0,
+      "condition": null,
+      "resource": "SCIENCE"
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 15,
+      "duration": 0,
+      "condition": null,
+      "resource": "PRODUCTION"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "이어지는 군령",
+    "text": "2칸 안 아군 1부대를 지정하면 그 부대와 주변 2칸 안 아군 모두 이번 차례 이동 +1칸, 1턴 고양(공격 +10%). 아직 움직이지 않은 부대에 먼저 걸어야 이어진다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 1,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "INSPIRED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "두 부대 행동을 잇는 실행사슬(순서 앞당김 → '먼저 걸고 이어 움직여 친다' 이동+고양)과 실패한 행동 뒤 재정비로 메우는 의도(→ 차례 시작 2칸 전열 회복, 전열 유지 97) 유지. 정무 99는 태수 산출로. 직접 충돌 보정 없음(약점 유지)."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G04": {
+   "id": "G04",
+   "name": "순욱",
+   "memorableLine": "전부가 아니라 지금 무너지면 안 되는 하나를 고른다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "사직의 마지막 선",
+    "text": "성을 지킬 때 자신과 맞닿은 아군이 받는 피해 −15%. 태수일 때 도시 식량 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "정무",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 15,
+      "duration": 0,
+      "condition": "DEFENDING_CITY"
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 15,
+      "duration": 0,
+      "condition": "DEFENDING_CITY"
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 20,
+      "duration": 0,
+      "condition": null,
+      "resource": "FOOD"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "한 기둥을 세우다",
+    "text": "2칸 안 아군 1부대를 기둥으로 세운다: 전열 한 단계 회복, 다음 내 차례까지 받는 피해 −25%, 잃는 병력의 전사 비율 −15%p. 한 번에 한 부대만 지킨다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 25,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "무너지면 안 되는 한 부대만 골라 붕괴를 막는 기둥(Formation 붕괴 방지 → 전열 회복+피해·전사 감소, 단일 대상 약점 유지)을 살림. 특기의 '보호 대상 정비 입력'은 지도에 없어 '마지막 선'을 성 수비·후방 보급(허창)으로 옮김."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G05": {
+   "id": "G05",
+   "name": "유비",
+   "memorableLine": "실패한 사람에게도 다음 책임을 다시 맡긴다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "실패를 묻지 않는다",
+    "text": "내 차례 시작에 자신과 2칸 안 아군 모두 사기 한 단계 회복(패주 → 동요, 동요 → 안정). 병력이 절반 아래면 내 차례 시작에 부상병 30명 복귀.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ROUND_START",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ROUND_START",
+      "target": "SELF",
+      "value": 30,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "남은 사람의 다음 자리",
+    "text": "2칸 안 아군 1부대의 사기를 한 단계 회복시키고 2턴 고양(공격 +10%)을 준다 — 무너졌던 부대에게 다시 앞을 맡긴다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 2,
+      "condition": null,
+      "status": "INSPIRED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "새로",
+    "tactic": "살림",
+    "why": "실패한 부대에게 다음 역할을 다시 맡기는 의도 유지. 행동 순서 교환·추격 인수는 지도에 없어 전법은 사기 회복+고양으로, 특기는 '패해도 사람이 다시 모인다'(2칸 사기 회복·궁지 때 병력 복귀)로 새로 만듦. 공격 대신 사람을 붙드는 약점 유지."
+   },
+   "pendingConcepts": []
+  },
+  "G06": {
+   "id": "G06",
+   "name": "황충",
+   "memorableLine": "닫히는 기회라면 노장도 가장 먼저 들어간다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "몸으로 낸 방향",
+    "text": "이번 차례 첫 공격 피해 +20%, 그 공격 때 맞닿은 아군 모두 1턴 고양(공격 +10%) — 노장이 먼저 들어가면 뒤가 따른다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "궁병"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "BATTLE_START",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "BATTLE_START",
+      "target": "ADJACENT_ALLIES",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "INSPIRED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "선착의 함성",
+    "text": "인접한 적 1부대를 피해 +30%로 공격하고 대상을 즉시 동요시킨다. 이번 차례 이동한 뒤(돌격) 쓰면 피해 +15% 더.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 30,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 15,
+      "duration": 0,
+      "condition": "CHARGE"
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "DEMORALIZED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "아군의 첫 공격을 내가 먼저 열고 뒤가 따르는 선착 의도 유지. 'Round 아군 첫 공격'·이동 뒤 Brace 권한은 지도에 없어 '내 첫 공격 강화+맞닿은 아군 고양'으로, 원 근접 선두공격(이동 뒤)은 돌격(CHARGE) 추가 피해로 옮김. 첫 공격을 놓치면 평범(약점 유지)."
+   },
+   "pendingConcepts": [
+    "CHARGE"
+   ]
+  },
+  "G07": {
+   "id": "G07",
+   "name": "조조",
+   "memorableLine": "새 정보가 오면 사람과 계획의 값을 다시 매긴다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "틀린 배열의 값",
+    "text": "측면·후방에서 공격하면 주는 피해 +20%, 대상은 사기 판정(가중 15). 이 장수가 관여한 점령 처리 1턴 단축.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "FLANK"
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_ATTACK",
+      "target": "TARGET",
+      "value": -15,
+      "duration": 0,
+      "condition": "FLANK"
+     },
+     {
+      "op": "OCCUPATION_SPEED",
+      "when": "PASSIVE",
+      "target": "CITY",
+      "value": 1,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "판을 다시 매기다",
+    "text": "자신과 2칸 안 아군 모두 이번 차례 이동 +2칸, 다음 내 차례까지 받는 피해 −15%(교전 이탈 추격 포함) — 붙은 적에게서 빠져 다른 면으로 다시 배치한다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 2,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "같은 정면 대신 다른 접근면을 택할 때의 값(→ 측면·후방 공격 보정)과 새 정보에 맞춰 부대를 다시 놓는 재배치(순서 교환·목적지 재선택 → 2칸 아군 이동+추격 피해 감소) 유지. 사람의 값을 다시 매기는 면은 점령 처리 단축으로. 재배치에 주 행동을 쓰는 약점 유지."
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ]
+  },
+  "G08": {
+   "id": "G08",
+   "name": "손권",
+   "memorableLine": "내 답을 복제시키지 않고 전문가가 움직일 범위를 준다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "맡긴 뒤에 본다",
+    "text": "맞닿은 아군 이동 +1칸, 맞닿은 아군 장수가 얻는 경험치 +25% — 곁의 장수에게 움직일 범위를 주고 키운다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 1,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "XP_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 25,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "인장을 맡기다",
+    "text": "2칸 안 아군 1부대에게 이번·다음 차례 첫 공격 피해 +20%와 2턴 동안 경험치 +30%를 맡긴다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "INITIATIVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 40,
+      "duration": 2,
+      "condition": null
+     },
+     {
+      "op": "XP_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 30,
+      "duration": 2,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "권한을 남의 손에 맡겨 실제로 작동시키는 의도 유지: 맡긴 부대 공격 +20%(원 독립공세 ×1.20)+성장. 모드 선택·지원 대상 순환은 지도에 없어 특기는 '곁의 장수에게 움직일 범위(이동)와 성장(경험치)'으로 바꿈. 본인 직접 전투 보정 없음(약점 유지)."
+   },
+   "pendingConcepts": []
+  },
+  "G09": {
+   "id": "G09",
+   "name": "원소",
+   "memorableLine": "서로 다른 이름을 살려 큰 진형 하나에 세운다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "마지막 판단의 자리",
+    "text": "원소의 전열이 정돈되어 있으면 맞닿은 아군 반격 피해 +20%, 받는 피해 −10%. 태수일 때 도시 인망 +25%. 원소가 곁을 떠나거나 전열이 흐트러지면 진형 보정이 사라진다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "COUNTER_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 0,
+      "condition": "SELF_ORDERED"
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": "SELF_ORDERED"
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 25,
+      "duration": 0,
+      "condition": null,
+      "resource": "FAME"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "이름마다 한 몫",
+    "text": "자신과 2칸 안 아군 모두 전열 한 단계 회복, 사기 한 단계 회복 — 서로 다른 부대를 한 진형으로 다시 세운다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "여러 부대에 몫을 나눠 큰 진형 하나로 세우는 의도(FormationCheck 보정 → 2칸 아군 전열·사기 회복)와 '중심이 지켜질 때만 연합 보정'(정돈된 원소 곁 아군만 보정, 떠나거나 흐트러지면 상실) 약점 유지. 명문의 이름은 태수 인망으로."
+   },
+   "pendingConcepts": [
+    "FORMATION",
+    "SELF_ORDERED"
+   ]
+  },
+  "G10": {
+   "id": "G10",
+   "name": "원술",
+   "memorableLine": "큰 몫을 먼저 내주고 다음 선택을 내 이름 아래 묶는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "내가 준 자리",
+    "text": "맞닿은 아군이 잃는 병력의 전사 비율 −10%p. 태수일 때 도시 생산 +25%, 대신 식량 −15%(씀씀이가 크다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 25,
+      "duration": 0,
+      "condition": null,
+      "resource": "PRODUCTION"
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": -15,
+      "duration": 0,
+      "condition": null,
+      "resource": "FOOD"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "큰 이름의 하사",
+    "text": "인접한 아군 1부대에 부상병 50명을 즉시 복귀시키고 다음 내 차례까지 받는 피해 −20%를 준다. 대신 원술은 다음 차례 이동 −2칸(큰 지원 뒤 공백).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 1,
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 50,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 20,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "SLOWED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "큰 몫을 먼저 내주고 곁에 묶는 의도와 '큰 지원 뒤 공백·과도한 약속' 약점 유지. 강화공격/추가 Reaction 선택과 정비권은 지도에 없어 하사 = 부상병 복귀+피해 감소, 대가 = 원술 둔화로, 특기는 곁에 있을 때만 받는 혜택(전사 감소)과 사치 운영(생산↑·식량↓)으로 옮김."
+   },
+   "pendingConcepts": []
+  },
+  "G11": {
+   "id": "G11",
+   "name": "동탁",
+   "memorableLine": "크게 나눠 준 몫의 대가로 남아 싸울 것을 요구한다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "후한 손의 무게",
+    "text": "적 부대를 쓰러뜨리면 맞닿은 아군마다 부상병 40명이 돌아오고, 동탁 곁에 붙어 싸우는 아군은 반격 피해 +15%. 대신 동탁은 측면·후방에서 공격받으면 받는 피해 +15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_KILL",
+      "target": "ADJACENT_ALLIES",
+      "value": 40,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 15,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": -15,
+      "duration": 0,
+      "condition": "FLANK"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "연회의 끝은 전장",
+    "text": "맞닿은 아군 모두 사기 한 단계 회복, 2턴 동안 받는 피해 −20%. 대신 그 아군들은 다음 차례 움직이지 못한다(남아 싸워야 한다).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 2,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     }
+    ]
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "Brace 완료·Reaction 예약은 없어 '곁에 남은 아군 보호·사기, 대가로 묶어 둠(ROOTED)'과 '나눠 준 몫(부상병 복귀)'으로 옮김. 원 약점 '밀집해 측후면 취약'은 FLANK 받는 피해 +15%로 살림."
+   }
+  },
+  "G12": {
+   "id": "G12",
+   "name": "마등",
+   "memorableLine": "내가 통과한 길에 동행자 한 사람의 몫을 남긴다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "한 자리의 옆자리",
+    "text": "마등과 맞닿은 아군은 내 차례 시작마다 전열 한 단계 회복, 그 차례 첫 공격 피해 +15%. 태수일 때 도시 생산 +15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ROUND_START",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "INITIATIVE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 30,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 15,
+      "duration": 0,
+      "condition": null,
+      "resource": "PRODUCTION"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "함께 닿는 길",
+    "text": "자신 또는 맞닿은 아군 1부대가 2턴 동안 이동 +2칸, 받는 피해 −15%. 동행자는 한 부대뿐이다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 2,
+      "duration": 2,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 15,
+      "duration": 2,
+      "condition": null
+     }
+    ]
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "원 특기 '동행자에게 마등과 같은 Formation 보정'을 전열 회복(FORMATION_DELTA)으로 살리고 첫 공격 보정을 더함. 지형비용 면제는 없어 '한 동행자 이동+보호'로 옮김. 전군이 아닌 한 부대만 돕는 약점 유지."
+   }
+  },
+  "G13": {
+   "id": "G13",
+   "name": "마초",
+   "memorableLine": "내가 먼저 나서되 동료의 다음 선택까지 공짜로 얻지는 않는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "앞서 달리는 이름",
+    "text": "이번 차례 첫 공격 피해 +25%, 그 대상은 사기 판정(가중 20). 아군을 강화하지는 않는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "BATTLE_START",
+      "target": "SELF",
+      "value": 25,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "BATTLE_START",
+      "target": "TARGET",
+      "value": -20,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "이름을 건 선봉",
+    "text": "적 1부대에 피해 +35% 돌격, 측면·후방에서 치면 +55%. 대가로 이번 턴 마초가 받는 피해 +15%(반격 포함).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 35,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 20,
+      "duration": 0,
+      "condition": "FLANK"
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": -15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ],
+   "keep": {
+    "trait": "새로",
+    "tactic": "살림",
+    "why": "전법은 원 '측면 진입 직접공격 ×1.20'을 FLANK 추가 피해로 살리고 몸을 거는 대가를 붙임. 특기의 '후방 합류 시 보정'은 아군 위치 조건이 없어 '자기만의 첫 돌입 보상'으로 새로 만들고 이름을 바꿈(명성이 동료를 공짜로 움직이지 않는다는 의도 유지)."
+   }
+  },
+  "G14": {
+   "id": "G14",
+   "name": "공손찬",
+   "memorableLine": "보인 움직임에 빨리 닿되 보이지 않은 판까지 안다고 하지 않는다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "도착을 증명하다",
+    "text": "반격하면 그 반격과 다음 차례 공격의 피해 +20%, 다음 차례 이동 +2칸. 쫓아갈지 돌아갈지는 직접 고른다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_COUNTER",
+      "target": "SELF",
+      "value": 20,
+      "duration": 2,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_COUNTER",
+      "target": "SELF",
+      "value": 2,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "백마의 응답",
+    "text": "2칸 안의 적 1부대에 말 위에서 활을 쏘아 피해 +30%, 대상은 다음 차례 이동 −2칸.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 30,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "SLOWED"
+     }
+    ]
+   },
+   "pendingConcepts": [],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "Reaction 예약 요격은 없어 '보인 적의 진로를 끊는 백마 기사(騎射)'로, 반격 후 추격/복귀 양자택일은 '반격 뒤 피해·이동 보너스'로 옮김. 과추격·고립 약점은 플레이 선택으로 남김."
+   }
+  },
+  "G15": {
+   "id": "G15",
+   "name": "유장",
+   "memorableLine": "나의 자리를 지키는 것과 사람들의 삶을 지키는 것을 가른다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "아직 이어지는 일",
+    "text": "10일 정산 때 맞닿은 아군마다 부상병 30명이 돌아온다. 태수일 때 도시 식량 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "정무",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "TURN_SETTLE",
+      "target": "ADJACENT_ALLIES",
+      "value": 30,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 20,
+      "duration": 0,
+      "condition": null,
+      "resource": "FOOD"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "사람이 남는 물러섬",
+    "text": "2칸 안 아군 1부대(자신 포함)의 다친 병사를 거둔다: 부상병 50 즉시 복귀, 사기 한 단계 회복, 2턴 동안 잃는 병력의 전사 비율 −15%p.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 50,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 15,
+      "duration": 2,
+      "condition": null
+     }
+    ]
+   },
+   "pendingConcepts": [],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "질서후퇴는 '전열 회복+추격 피해·전사 감소'로 살림(Brace 이월은 없음). 정비 보존 특기는 '정산 때 곁의 부상병 복귀'로 옮김. 직접 공세가 약한 약점 유지(공격 효과 없음)."
+   },
+   "claudeReview": [
+    "Claude 검토: 순욱 전법과 효과 조합이 같아 교체(부상병 수습 + 사기 + 전사 비율)"
+   ]
+  },
+  "G16": {
+   "id": "G16",
+   "name": "장로",
+   "memorableLine": "내 권력이 끝나도 다음 사람이 쓸 것은 남긴다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "봉인한 채 넘긴다",
+    "text": "병력이 절반 아래면 잃는 병력 중 전사 비율 −20%p. 맞닿은 아군 장수의 경험치 +20%, 태수일 때 도시 인망 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     },
+     {
+      "op": "XP_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 20,
+      "duration": 0,
+      "condition": null,
+      "resource": "FAME"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "불태우지 않은 창고",
+    "text": "2칸 안 아군 1부대를 골라, 그 부대 둘레 2칸 안 아군마다 부상병 40명 복귀. 장로가 자기 성(중심·성문)에 있으면 그 아군들 사기도 한 단계 회복.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 40,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 0,
+      "condition": "DEFENDING_CITY"
+     }
+    ]
+   },
+   "pendingConcepts": [],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "보급거점·재고 판정은 없어 창고를 '부상병 복귀'로, 봉인 인계를 '질 때 사람을 남김+다음 사람(곁 장수) 성장+인망'으로 옮김. 거점 의존 약점은 '자기 성에서만 사기 회복'으로 약하게 유지."
+   }
+  },
+  "G17": {
+   "id": "G17",
+   "name": "맹획",
+   "memorableLine": "한 번 졌다고 판단까지 넘기지는 않는다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "다시 일어서는 왕",
+    "text": "병력이 절반 아래면 내 차례 시작마다 사기 한 단계 회복(패주 → 동요), 주는 피해 +25%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ROUND_START",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 25,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "다시 시험할 자리",
+    "text": "진을 다시 짜고 적을 기다린다: 내 전열 한 단계 회복, 이번 턴 받는 피해 −15%, 반격 피해 +40%. 적이 오지 않으면 한 턴을 버린다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 40,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ],
+   "keep": {
+    "trait": "새로",
+    "tactic": "살림",
+    "why": "진입면 예측·밀어내기(Reaction)는 없어 전법을 '진을 다시 짜고(전열 회복) 기다렸다 되받는 자리'로 옮김. 특기의 Regroup 이전은 없어 '져도 다시 일어서는' 회복+역습으로 새로 만들고 이름을 바꿈(패배로 판단을 넘기지 않음)."
+   }
+  },
+  "G18": {
+   "id": "G18",
+   "name": "관우",
+   "memorableLine": "갚을 은혜와 돌아갈 귀속은 다르게 지킨다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "봉해 둔 보상",
+    "text": "공격할 때 주는 피해 +15%. 적 부대를 쓰러뜨리면 사기 한 단계 회복, 다음 차례 이동 +2칸(받은 것은 봉해 두고 돌아간다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 15,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_KILL",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_KILL",
+      "target": "SELF",
+      "value": 2,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "맡은 한 점",
+    "text": "적 1부대에 피해 +50% 공격, 대상은 다음 차례 움직이지 못한다. 맡은 끝을 직접 닫는다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 50,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     }
+    ]
+   },
+   "pendingConcepts": [],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "목표 선언·Contact 유지를 '큰 일격+대상 속박'으로, 처치 뒤 추격 대신 귀환 보상을 '처치 시 사기 회복·이동'으로 옮김. 주변 지원 효과가 없는 약점 유지."
+   }
+  },
+  "G19": {
+   "id": "G19",
+   "name": "장비",
+   "memorableLine": "내 앞을 막아 뒤의 사람이 움직이게 한다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "뒤가 움직일 때",
+    "text": "적이 더 많을 때 받는 피해 −25%. 장비와 맞닿은 아군은 이동 +1칸(그가 막는 동안 뒤가 빠진다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 25,
+      "duration": 0,
+      "condition": "OUTNUMBERED"
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 1,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "장판의 고함",
+    "text": "다리 위에서 고함친다: 맞닿은 적 모두 즉시 동요하고 전열 판정(가중 15). 대가로 장비는 다음 차례 움직이지 못한다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": 0,
+      "duration": 0,
+      "condition": null,
+      "status": "DEMORALIZED"
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": -15,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     }
+    ]
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "접점에서 적 추격 판정 −12와 Brace를 '맞닿은 적 피해 약화(추격 포함)+자리 고정'으로 옮김. 아군 이탈 후 막아내기 보정은 '곁 아군 이동 +1·수적 열세 방어'로. 호령으로 광역 공포(사기)를 만들지 않는다는 원 제약 유지."
+   },
+   "claudeReview": [
+    "Claude 검토: 음수 DAMAGE_MOD 전법은 엔진이 공격 전법으로 처리하므로 장판 고함(확정 동요 + 전열 판정)으로 교체"
+   ]
+  },
+  "G20": {
+   "id": "G20",
+   "name": "손책",
+   "memorableLine": "이긴 자리에서 다음 사람이 움직일 판을 연다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "열어 두는 몫",
+    "text": "적 부대를 쓰러뜨리면 맞닿은 아군이 2턴 고양(공격 +10%). 성을 함락하면 둘레 2칸 안 아군(자신 포함)이 2턴 동안 이동 +2칸.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_KILL",
+      "target": "ADJACENT_ALLIES",
+      "value": 0,
+      "duration": 2,
+      "condition": null,
+      "status": "INSPIRED"
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_CAPTURE_CITY",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 2,
+      "duration": 2,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "먼저 닿은 땅",
+    "text": "적 1부대에 피해 +35% 공격, 이번 차례 이동한 뒤 쓰면 대상 전열 판정(가중 15). 그 적 둘레 2칸 안 아군(손책 포함)은 이번 턴 받는 피해 −15%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 35,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": -15,
+      "duration": 0,
+      "condition": "CHARGE"
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "pendingConcepts": [
+    "FORMATION",
+    "CHARGE"
+   ],
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "'빈칸으로 이동 후 공격해 Formation 악화→합류점'을 돌격(CHARGE) 시 전열 판정+주변 아군 방어로 살림. 점유 역할 위임은 '이긴 뒤 아군이 움직일 판(고양·이동)'으로. 뒤의 정착 공백(점령 보너스 없음) 약점 유지."
+   }
+  },
+  "G21": {
+   "id": "G21",
+   "name": "방통",
+   "memorableLine": "한 길처럼 보이는 판에 서로 다른 대가의 두 길을 낸다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "승전 뒤의 물음",
+    "text": "성을 함락하면 점령 처리 1턴 단축, 맞닿은 아군은 전열 한 단계 회복·부상병 60명씩 복귀. 이긴 뒤에야 다음 길을 묻는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "OCCUPATION_SPEED",
+      "when": "ON_CAPTURE_CITY",
+      "target": "CITY",
+      "value": 1,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_CAPTURE_CITY",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_CAPTURE_CITY",
+      "target": "ADJACENT_ALLIES",
+      "value": 60,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "상중하의 갈림길",
+    "text": "맞닿은 아군은 이번 턴 주는 피해 +20%·이동 +1칸, 대신 받는 피해 +10%. 세게 밀지 돌아 들어갈지는 아군이 고르고, 대가는 함께 진다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 1,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": -10,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "강행(피해 ×1.3)/우회(측면 이동) 갈림길을 피해 +20%·이동 +1과 공동 대가(받는 피해 +10%)로 옮김 — 선택 UI가 없어 둘 다 주고 아군이 행동으로 고른다. 승전 뒤 정비(Brace 재구성)는 성 함락 때 전열 회복·부상병 복귀로, 익주 공략의 '승리의 정치비용'은 점령 단축으로 살림."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G22": {
+   "id": "G22",
+   "name": "곽가",
+   "memorableLine": "조금 풀어 둔 뒤 회복할 틈이 닫히기 전에 끝낸다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "급해지는 순간",
+    "text": "내 차례 시작에 곽가와 맞닿은 아군은 이번 턴 이동 +2칸(곽가 자신도). 짐을 버리고 가볍게, 적이 틈을 메우기 전에 닿는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ROUND_START",
+      "target": "SELF",
+      "value": 2,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ROUND_START",
+      "target": "ADJACENT_ALLIES",
+      "value": 2,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "놓아둔 한 틈",
+    "text": "2칸 안의 적 1부대는 이번 턴 받는 피해 +20%(방어 태세를 벗긴 만큼), 다음 차례 이동 −2칸. 틈은 이번 턴에만 열린다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": -20,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "SLOWED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "적 준비(Brace) 해제는 '받는 피해 +20%'(방어 태세 −20%를 상쇄하는 크기)로, 회복창은 1턴 한정과 둔화로 옮김. 아군 행동 순서를 앞당기는 특기는 행동 순서가 없어 '이동 +2'로 바꾸고 오환 원정의 경병속행을 담음."
+   },
+   "pendingConcepts": []
+  },
+  "G23": {
+   "id": "G23",
+   "name": "사마의",
+   "memorableLine": "작은 싸움을 내주고 상대가 지켜야 할 곳을 건드린다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "작은 이익은 남긴다",
+    "text": "잃는 병력의 전사 비율 −15%p(작은 싸움을 내줘도 군은 남긴다). 전열이 정돈된 채 반격하면 대상은 전열 판정(가중 15).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 15,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_COUNTER",
+      "target": "TARGET",
+      "value": -15,
+      "duration": 0,
+      "condition": "SELF_ORDERED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "답을 늦춘 포위",
+    "text": "공격하지 않고 둘러싼다: 맞닿은 적 모두 다음 차례 이동 불가, 이번 턴 반격 피해 −20%. 사마의가 묶고 아군이 친다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": -20,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "'추격 이익을 포기하면 다음 전열 판정 +10'은 추격이 자동이라 포기 선택이 없어서, 맞아 주되 병력은 남기고(전사 비율 감소) 정돈된 진에 부딪친 적의 전열을 흔드는 효과로 옮김. 경계하며 진입면을 점유해 퇴로를 좁히는 전법은 맞닿은 적 속박과 반격 약화로 옮기고, 공격을 미루는 대가는 유지."
+   },
+   "pendingConcepts": [
+    "FORMATION",
+    "SELF_ORDERED"
+   ]
+  },
+  "G24": {
+   "id": "G24",
+   "name": "장료",
+   "memorableLine": "돌파는 앞에서 끝나지 않고 남은 사람의 회수로 이어진다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "돌아오는 진문",
+    "text": "적이 더 많을 때 주는 피해 +20%. 공격하면 대상 주변 2칸 안 아군의 사기가 한 단계 회복된다(포위 속에 남은 사람을 데리고 나온다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "OUTNUMBERED"
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_ATTACK",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "진문의 돌격",
+    "text": "인접한 적 1부대에 돌격한다(피해 +25%, 이번 차례 이동한 뒤면 +45%). 북소리에 맞닿은 적 모두 전열 판정(가중 10).",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 25,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 20,
+      "duration": 0,
+      "condition": "CHARGE"
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": -10,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "전법은 원 카드의 공통 Charge를 CHARGE 조건으로 살리고, 옛 시험 pack의 '진문을 떠는 북'(사기 피해)을 맞닿은 적 전체 전열 흔들기로 옮김. 특기의 '돌파 뒤 고립 아군 회수'는 공격할 때 주변 아군 사기 회복으로, 합비 800 결사대는 열세일 때 피해 증가로 살림."
+   },
+   "pendingConcepts": [
+    "CHARGE",
+    "FORMATION"
+   ]
+  },
+  "G25": {
+   "id": "G25",
+   "name": "허저",
+   "memorableLine": "누가 먼저 나가고 어디부터 못 들어오는지 몸으로 정한다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "여기서부터는 내가",
+    "text": "정면에서 공격받으면 받는 피해 −20%, 측면·후방에서 받으면 오히려 +10%. 허저가 반격한 적은 1턴 둔화(다음 차례 이동 −2칸).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "보병"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": -30,
+      "duration": 0,
+      "condition": "FLANK"
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_COUNTER",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "SLOWED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "마지막 통로",
+    "text": "맞닿은 아군은 이번 턴 받는 피해 −25%(물러날 때 받는 추격 포함), 허저는 반격 피해 +30%. 동료를 뒤로 빼고 접점을 몸으로 받는다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 25,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 30,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "아군이 뒤로 빠지고 허저가 접점을 넘겨받아 Brace하는 전법은 아군 받는 피해(추격 포함) 감소와 허저 반격 강화로 옮김. 반응 대상을 바꾸는 특기는 '반격당한 적 둔화'(어디부터 못 들어오는지)로 바꾸고, 약점 '측후면 동시 위협'은 FLANK 조건 페널티로 남김."
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ]
+  },
+  "G26": {
+   "id": "G26",
+   "name": "초선",
+   "memorableLine": "같은 말을 들었다고 믿는 둘 사이에 다른 선택을 남긴다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "말하지 않은 사이",
+    "text": "내 차례 시작에 맞닿은 적들은 이번 턴 받는 피해 +15%. 초선을 공격한 적은 사기 판정(가중 10).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ROUND_START",
+      "target": "ADJACENT_ENEMIES",
+      "value": -15,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_DEFEND",
+      "target": "TARGET",
+      "value": -10,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "서로 다른 약속",
+    "text": "맞닿은 적이 모두 각자 사기 판정(가중 20)을 해서 누구는 버티고 누구는 흔들린다. 대신 초선은 다음 차례 이동할 수 없다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": -20,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "서로 지원하는 적 쌍에게 서로 다른 선택을 남기는 전법은 맞닿은 적 각자의 사기 판정으로 옮기고, 자기 이동 불가 대가와 '고립된 적에는 가치 낮음'을 유지함(지배·강제 공격 없음). 연계를 포기할 때 1칸 이동하는 예외는 규칙 변경이라 빼고, 적 사이에 노출된 동안 버티는 효과로 바꿈."
+   },
+   "pendingConcepts": []
+  },
+  "G27": {
+   "id": "G27",
+   "name": "주유",
+   "memorableLine": "각자 준비한 힘이 같은 순간에 닿게 한다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "어긋난 음을 짚다",
+    "text": "공격받으면 곧바로 전열 한 단계 회복. 전열이 흐트러진(박자가 어긋난) 적을 치면 주는 피해 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "TARGET_DISORDERED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "한 박자에 맞춘다",
+    "text": "2칸 안의 아군 1부대를 지정하면 그 부대와 주변 2칸 안 아군은 이번 턴 첫 공격 피해 +25%. 측면·후방에서 치면 피해 +15%가 더해진다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "INITIATIVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 50,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 15,
+      "duration": 1,
+      "condition": "FLANK"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "준비한 두 부대가 서로 다른 진입면에서 같은 순간에 치게 하는 전법은 첫 공격 +25%와 FLANK +15%로 살림. 예약이 취소돼도 준비를 보존하던 특기는 예약 개념이 없어서, 어긋난 박자를 바로잡고(자기 전열 회복) 적의 어긋남을 짚는(TARGET_DISORDERED) 효과로 바꿈(曲有誤 周郞顧). 옛 시험 pack의 화선·불씨는 원 카드가 화공 공로를 황개로 분리해서 쓰지 않음."
+   },
+   "pendingConcepts": [
+    "FORMATION",
+    "TARGET_DISORDERED",
+    "FLANK"
+   ]
+  },
+  "G28": {
+   "id": "G28",
+   "name": "육손",
+   "memorableLine": "한 번 건드려 본 뒤에야 크게 겹친다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "승리의 상한",
+    "text": "적 부대를 쓰러뜨리면 더 쫓지 않고 진을 굳힌다: 자신은 전열 한 단계 회복·다음 적 차례까지 받는 피해 −20%, 맞닿은 아군도 받는 피해 −15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_KILL",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_KILL",
+      "target": "SELF",
+      "value": 20,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_KILL",
+      "target": "ADJACENT_ALLIES",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "잠금을 시험하다",
+    "text": "2칸 안의 적 1부대를 건드리면(피해 +20%) 대상은 전열 판정(가중 10)을 받고 다음 차례 이동할 수 없다. 묶인 적에 아군이 겹쳐 들어간다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 20,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": -10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "이릉의 '작은 시험 → 조건 고착 → 동시 투입'을 가벼운 시험 공격(원래 피해 50%는 전법 피해 하한에 맞춰 +20%), 전열 흔들기, 속박으로 옮김. '추격을 포기하면 Brace 유지'라는 추격 상한은 처치 뒤 진 굳히기(전열 회복·방어)로 살림."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G29": {
+   "id": "G29",
+   "name": "감녕",
+   "memorableLine": "적의 얇은 곳과 동료의 망설임을 함께 찢는다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "함께 들어온 몫",
+    "text": "감녕의 병력이 절반 아래면 맞닿은 아군이 주는 피해 +20%. 감녕이 적 부대를 쓰러뜨리면 맞닿은 아군은 전열 한 단계 회복.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_KILL",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "먼저 낸 목숨값",
+    "text": "인접한 적 1부대를 기습한다(피해 +40%). 측면·후방에서 쳤다면 대상 주변 2칸 안 아군이 1턴 고양되고, 대신 감녕은 다음 적 차례까지 반격 피해 −50%.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 40,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 0,
+      "duration": 1,
+      "condition": "FLANK",
+      "status": "INSPIRED"
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": -50,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "측후면으로 들어가 치는 기습(×1.4)과 반응 포기 대가는 피해 +40%·FLANK 시 주변 동료 고양·반격 −50%로 살림. 합류한 동료의 Regroup 보정은 감녕이 목숨값을 치른 뒤(병력 절반 아래) 곁 동료의 피해 증가와 처치 시 전열 회복으로 살림(감녕 자신은 받지 않음)."
+   },
+   "pendingConcepts": [
+    "FLANK",
+    "FORMATION"
+   ]
+  },
+  "G30": {
+   "id": "G30",
+   "name": "태사자",
+   "memorableLine": "돌아오겠다는 약속 때문에 더 멀리 건넌다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "익숙해진 틈",
+    "text": "공격하면 다음 차례 이동 +1칸. 궁병일 때 반격 피해 +30%(붙어 오는 추격자를 쏘아 넘긴다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "궁병"
+    ],
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 1,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_COUNTER",
+      "target": "SELF",
+      "value": 30,
+      "duration": 0,
+      "condition": "TROOP:BT03"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "기한 있는 왕복",
+    "text": "2칸 안의 적 1부대를 치고(피해 +30%) 다음 내 차례가 끝날 때까지 받는 피해 −20%(교전 이탈 추격 포함). 건너가 치고 기한 안에 돌아온다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 30,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 20,
+      "duration": 2,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "귀환점을 남기고 건넜다 돌아오면 Brace를 복원하던 전법은 치고 나서 귀환할 때까지(추격 포함) 받는 피해 감소로 살림. 같은 적과 대치한 뒤 추격을 견제하며 빠지던 특기는 치고 빠지는 이동 +1과 궁병 반격 강화(북해에서 추격자를 쏘아 넘긴 일화)로 옮김."
+   },
+   "pendingConcepts": []
+  },
+  "G31": {
+   "id": "G31",
+   "name": "진궁",
+   "memorableLine": "빈 지휘자리에 다음 사람을 세우고 실행까지 요구한다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "실행까지 묻는다",
+    "text": "진궁이 공격받으면 맞닿은 아군이 2턴 고양(공격 +10%) — 하나를 치면 다른 하나가 받아친다. 맞닿은 아군은 측면·후방에서 공격받을 때 받는 피해 −20%(둘을 함께 우회하지 못하게 접점을 지킨다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_DEFEND",
+      "target": "ADJACENT_ALLIES",
+      "value": 0,
+      "duration": 2,
+      "condition": null,
+      "status": "INSPIRED"
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 0,
+      "condition": "FLANK"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "빈 중심의 새 진형",
+    "text": "2칸 안 아군 하나를 새 중심으로 세운다: 그 부대의 이번 차례 첫 공격 피해 +20%, 그 부대 주변 2칸 아군은 이번 턴 받는 피해 −10%. 대가로 진궁은 다음 차례 이동 −2칸(둔화).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "INITIATIVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 40,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "SLOWED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "공격역·Brace역 분리와 '두 부대 동시 우회 차단'을 공격역 선제 +20%·주변 수비 −10%와 측면 피해 −20%(FLANK)로 옮김. 위치교환·Contact 인계는 지도에 없어 빼고, 기동력 소비 약점은 자기 둔화로 남김."
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ],
+   "notes": "FLANK 오라는 '맞닿은 아군이 받는 공격' 기준(받는 측)으로 판정해야 한다."
+  },
+  "G32": {
+   "id": "G32",
+   "name": "고순",
+   "memorableLine": "경고가 무시되어도 망가진 대열은 내 손으로 세운다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "기준은 남는다",
+    "text": "내 차례 시작에 자기 전열 한 단계 회복(망가진 대열도 내 손으로 다시 세운다). 전열이 정돈돼 있으면 반격 피해 +25%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "보병"
+    ],
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ROUND_START",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_COUNTER",
+      "target": "SELF",
+      "value": 25,
+      "duration": 0,
+      "condition": "SELF_ORDERED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "함락이 아닌 정렬",
+    "text": "맞닿은 아군 하나의 전열을 한 단계 회복시키고 자기 버팀을 넘겨준다(그 부대 이번 턴 받는 피해 −20%). 대신 고순은 이번 턴 받는 피해 +20%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 20,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": -20,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "자기 Brace를 포기하고 인접 아군 Formation 1단계 복구(사기 회복 없음)라는 원 효과를 전열 회복 + 방어 이전으로 거의 그대로 살림. '이동 후에도 Regroup' 특례는 차례 시작 자기 전열 회복과 정돈 시 반격 강화로. 상시 무패화는 피함."
+   },
+   "pendingConcepts": [
+    "FORMATION",
+    "SELF_ORDERED"
+   ]
+  },
+  "G33": {
+   "id": "G33",
+   "name": "하후돈",
+   "memorableLine": "내가 먼저 버티되 다음 사람에게 자리를 넘긴다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "내가 없어도 선 자리",
+    "text": "하후돈이 먼저 공격받으면 맞닿은 아군은 그 턴 동안 받는 피해 −15%(먼저 맞고 자리를 넘긴다). 태수일 때 도시 식량 +20%(몸소 흙을 져 둑을 쌓았다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "ADJACENT_ALLIES",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 20,
+      "duration": 0,
+      "condition": null,
+      "resource": "FOOD"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "빈자리에 먼저 선다",
+    "text": "빈틈에 몸을 세운다: 맞닿은 적은 모두 다음 차례 이동 불가(하후돈에게 붙잡힘), 맞닿은 아군은 전열 한 단계 회복. 하후돈 자신은 아무 보호도 받지 않는다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "자리교환으로 적 Contact를 떠맡고 아군에게 정비할 틈을 주던 의도를 '맞닿은 적 속박 + 아군 전열 회복'으로, 떠난 뒤에도 남는 Brace는 '먼저 맞으면 옆 아군 방어'로. 위험한 자리로 가는 약점은 자기 보호 없음으로 유지. 한호의 공은 넣지 않음."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G34": {
+   "id": "G34",
+   "name": "조인",
+   "memorableLine": "성이 아니라 다음 연결을 지킨다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "남아야 이어지는 때",
+    "text": "조인이 성(중심·성문)을 지키는 동안 맞닿은 아군은 받는 피해 −20%, 내 차례 시작마다 사기 한 단계 회복. 성을 비우면 꺼진다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 0,
+      "condition": "DEFENDING_CITY"
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ROUND_START",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": "DEFENDING_CITY"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "성 밖의 연결",
+    "text": "나가서 포위를 끊는다: 맞닿은 적 하나를 피해 +30%로 공격(측면·후방에서 치면 +15% 더)하고, 그 적 주변 2칸 아군은 사기 한 단계 회복.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 30,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 15,
+      "duration": 0,
+      "condition": "FLANK"
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "Anchor를 비우고 고립 아군의 Contact를 넘겨받는 구출과 Anchor에 남는 선택을 '성 밖 구출 공격(포위한 적을 측면에서)'과 '성을 지킬 때만 켜지는 연결 오라'로 갈라, 둘 다 완벽히 못 하는 약점을 살림(우금 구출 모티프)."
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ]
+  },
+  "G35": {
+   "id": "G35",
+   "name": "가후",
+   "memorableLine": "같은 적이라도 돌아서는 이유가 달라지면 답을 바꾼다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "대답을 바꿀 권리",
+    "text": "병력이 절반 아래로 줄면 답을 바꾼다: 내 차례 시작에 이번 차례 이동 +2칸, 공격·추격을 받으면 그 적은 다음 차례 공격하지 못한다(혼란).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ROUND_START",
+      "target": "SELF",
+      "value": 2,
+      "duration": 1,
+      "condition": "HP_BELOW:50"
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_DEFEND",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": "HP_BELOW:50",
+      "status": "CONFUSED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "방금 바뀐 조건",
+    "text": "2칸 안 적 1부대에게 조건을 바꿔 알린다: 다음 차례 공격하지 못하고(혼란 1턴), 즉시 전열 판정(가중 15).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "CONFUSED"
+     },
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": -15,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "아군의 Contact 해제·추격 1건 취소(최소 개입 이탈 보조)를 이동 +3·추격 피해 감소로, 실패한 이탈의 전환은 '열세일 때 이동 +2·추격자 혼란'으로 옮김(장수 추격 고사). 정면 전투 약점은 그대로."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ],
+   "claudeReview": [
+    "Claude 검토: 마등 전법(아군 이동+방어)과 겹쳐 가후다운 적 교란으로 교체"
+   ]
+  },
+  "G36": {
+   "id": "G36",
+   "name": "순유",
+   "memorableLine": "무엇을 바꿀지 말하고 실행자의 자리를 남긴다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "공은 실행자에게",
+    "text": "맞닿은 아군이 전열이 흐트러진 적을 공격하면 피해 +15%. 맞닿은 아군 장수의 경험치 +25% — 공은 실행한 사람에게 돌린다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 15,
+      "duration": 0,
+      "condition": "TARGET_DISORDERED"
+     },
+     {
+      "op": "XP_MOD",
+      "when": "PASSIVE",
+      "target": "ADJACENT_ALLIES",
+      "value": 25,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "전제 하나를 꺾는다",
+    "text": "2칸 안 적 하나의 버팀을 꺾는다: 전열 판정(가중 25), 이번 턴 받는 피해 +15%. 순유는 공격하지 않는다 — 실행은 다른 아군이 한다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": -25,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": -15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "피해 0 시험공격으로 적 Brace를 벗기고 실행자가 이어 치는 두 사람 연계(백마 분산·오소)를 '전열 판정 + 받는 피해 증가' 전법과 '흐트러진 적을 치는 인접 아군 강화·경험치' 특기로 나눠 살림. 두 사람 행동이 드는 비싼 연계라는 약점 유지."
+   },
+   "pendingConcepts": [
+    "FORMATION",
+    "TARGET_DISORDERED"
+   ],
+   "notes": "TARGET_DISORDERED 오라는 맞닿은 아군의 공격 대상 기준으로 판정해야 한다."
+  },
+  "G37": {
+   "id": "G37",
+   "name": "장합",
+   "memorableLine": "높은 자리를 때리기보다 그 자리를 버티게 하는 길을 끊는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "길이 막히면 바꾼다",
+    "text": "공격받으면 다음 내 차례 이동 +2칸(막힌 길은 버리고 돈다). 후방에서 공격하면 대상이 사기 판정(가중 20) — 버티게 하는 길을 뒤에서 끊는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 2,
+      "duration": 2,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_ATTACK",
+      "target": "TARGET",
+      "value": -20,
+      "duration": 0,
+      "condition": "REAR"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "버티는 길을 끊다",
+    "text": "2칸 안 적 하나의 물길·보급로를 끊는다: 즉시 동요, 다음 차례 이동 −2칸(둔화). 장합은 공격하지 않는다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null,
+      "status": "DEMORALIZED"
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "SLOWED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "길목을 점유해 적 Regroup·보급을 끊던 의도를 원거리 '동요 + 둔화'로(가정 급수 차단), 길목이 우회되면 이탈하던 특기는 '공격받으면 이동 +2'로. 기동장의 보급로(후방) 타격을 REAR 로 더함."
+   },
+   "pendingConcepts": [
+    "REAR"
+   ]
+  },
+  "G38": {
+   "id": "G38",
+   "name": "전풍",
+   "memorableLine": "열릴 때 재촉하고 닫히면 같은 군주를 다시 멈춘다.",
+   "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "말과 몸을 함께",
+    "text": "열리면 재촉한다: 내 차례 시작에 맞닿은 아군 이번 차례 이동 +1칸. 닫히면 멈춰 선다: 상대 병력이 더 많을 때 받는 피해 −20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ROUND_START",
+      "target": "ADJACENT_ALLIES",
+      "value": 1,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "OUTNUMBERED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "지금은 그 길이 아니다",
+    "text": "진격을 멈춰 세운다: 맞닿은 아군 모두 이번 턴 받는 피해 −15%, 반격 피해 +20%(주 행동을 쓰지 않은 방어 태세).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "준비된 공격을 취소시키고 방어·정비로 돌리던 '멈춤'을 인접 아군 일괄 방어 태세로 살림. 원 특기(실패한 이탈을 Reaction으로 재시도)는 반응 자원이 없어 옮길 수 없어, 이름의 '말(재촉)과 몸(버팀)'을 두 조건 효과로 새로 만듦."
+   }
+  },
+  "G39": {
+   "id": "G39",
+   "name": "저수",
+   "memorableLine": "더 멀리 가기 위해 한 번에 전부를 걸지 않는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "전부 잃지는 않는다",
+    "text": "내 차례 시작에 맞닿은 아군 전열 한 단계 회복(흐트러진 곳에 예비를 댄다). 병력이 절반 아래면 잃는 병력 중 전사 비율 −20%p.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ROUND_START",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "아직 남긴 한 군",
+    "text": "2칸 안 아군 하나를 예비로 돌린다: 부상병 60명 즉시 복귀, 이번 차례와 다음 차례 이동 +2칸(무너지는 곳으로 달려간다).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 60,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 2,
+      "duration": 2,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "아군 Formation이 악화되면 예비가 옆으로 붙던 의도를 '인접 전열 회복' 특기와 '부상병 복귀 + 이동 +2' 전법으로, 막혀도 원래 Brace는 남기던 '전부 잃지 않음'은 열세 시 전사 비율 감소로 옮김."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G40": {
+   "id": "G40",
+   "name": "여몽",
+   "memorableLine": "사람을 얻으려면 그 사람이 일할 기반도 남긴다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "남겨 둔 기반",
+    "text": "성을 함락하면 맞닿은 적 부대가 모두 사기 판정(가중 20) — 가족이 무사하다는 소식에 적이 흩어진다. 그 성의 점령 처리 1턴 단축(백성의 삿갓 하나도 건드리지 않는다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_CAPTURE_CITY",
+      "target": "ADJACENT_ENEMIES",
+      "value": -20,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "OCCUPATION_SPEED",
+      "when": "ON_CAPTURE_CITY",
+      "target": "CITY",
+      "value": 1,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "맡길 기반을 돌려준다",
+    "text": "맞닿은 아군 하나에게 자기 기반을 넘긴다: 부상병 40명 복귀, 2턴 고양(공격 +10%). 대신 여몽은 이번 턴 받는 피해 +15%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 1,
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 40,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 2,
+      "condition": null,
+      "status": "INSPIRED"
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": -15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "새로",
+    "tactic": "살림",
+    "why": "자기 준비를 인접 아군에게 넘기고 자신은 보호를 잃는 원 전법을 병력 반환·고양 + 자기 방어 감소로 살림. 원 특기(이전받은 공격 Preparation→Brace 변환)는 지도에 준비 상태가 없어 옮길 수 없어, 한 줄 대사를 형주 점령(관우군 와해·민심 보존)으로 새로 만듦."
+   }
+  },
+  "G41": {
+   "id": "G41",
+   "name": "노숙",
+   "memorableLine": "상대의 독립성을 남겨야 함께 버틸 힘도 남는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "서로 설 수 있어야",
+    "text": "10일 정산 때 맞닿은 아군마다 부상병 40명 복귀·사기 한 단계 회복. 태수일 때 도시 식량 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "TURN_SETTLE",
+      "target": "ADJACENT_ALLIES",
+      "value": 40,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "TURN_SETTLE",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 20,
+      "duration": 0,
+      "condition": null,
+      "resource": "FOOD"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "먼저 내놓는 몫",
+    "text": "1턴 동안 맞닿은 아군이 받는 피해 −20%, 대신 노숙 부대가 받는 피해 +10%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 20,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": -10,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "피해 분담·Brace 유지 연결은 지도 전투에 없어, '내 몫을 덜어 동맹을 지킨다'는 맞닿은 아군 방어+자기 노출(약점 유지)로, '서로 버틴다'는 정산 회복과 곳간(식량)으로 옮겼다."
+   },
+   "pendingConcepts": []
+  },
+  "G42": {
+   "id": "G42",
+   "name": "위연",
+   "memorableLine": "갈 길과 합류할 곳을 함께 받아야 내 임무가 된다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "끝낼 몫은 내게",
+    "text": "측면·후방에서 공격하면 주는 피해 +30%. 적 부대를 쓰러뜨리면 다음 차례 이동 +2칸.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_ATTACK",
+      "target": "SELF",
+      "value": 30,
+      "duration": 0,
+      "condition": "FLANK"
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_KILL",
+      "target": "SELF",
+      "value": 2,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "떼어 맡긴 길",
+    "text": "공격 대신 샛길을 잡는다: 다음 차례 이동 +3칸, 2턴 동안 고양(공격 +10%).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 0,
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 3,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 2,
+      "condition": null,
+      "status": "INSPIRED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "합류칸 도착 뒤 측면 공격 ×1.30을 FLANK 조건 +30%로 그대로 살리고, 우회 경로(추격 예외는 RULE이라 제외)는 다음 차례 큰 이동+고양으로 옮겼다. 지원 없는 고립 위험은 혼자 멀리 나가는 구조로 남는다."
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ]
+  },
+  "G43": {
+   "id": "G43",
+   "name": "법정",
+   "memorableLine": "좋은 계책보다 그 계책을 실제로 쓰게 할 방법을 찾는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "듣는 사람의 문",
+    "text": "법정이 공격받으면 공격한 적은 1턴 동안 받는 피해 +20%, 법정과 맞닿은 아군은 1턴 고양(공격 +10%).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "TARGET",
+      "value": -20,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_DEFEND",
+      "target": "ADJACENT_ALLIES",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "INSPIRED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "말이 닿지 않는 자리",
+    "text": "2칸 안 적 1부대에 신호를 올린다: 대상은 즉시 동요(공격 −20%), 그 적 주변 2칸 안 아군은 1턴 동안 주는 피해 +15%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null,
+      "status": "DEMORALIZED"
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "이름만 살림",
+    "why": "'자신을 친 적을 아군의 다음 표적으로'(입력 +12)는 공격자 받는 피해 +20%로 살렸다. 몸으로 막아서는 차폐는 피해 전가라 지도에 없어, 정군산식 신호로 아군이 계책을 실행하게 바꿨다. 약한 직접 전투는 능력치로 남는다."
+   },
+   "pendingConcepts": []
+  },
+  "G44": {
+   "id": "G44",
+   "name": "한수",
+   "memorableLine": "같은 뜻이 아니어도 이번에는 서로 응답하게 한다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "대화의 퇴로",
+    "text": "병력이 절반 아래면 이동 +2칸. 한수가 관여한 점령 처리는 1턴 짧고, 태수일 때 도시 인망 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "감화",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 2,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     },
+     {
+      "op": "OCCUPATION_SPEED",
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 1,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 20,
+      "duration": 0,
+      "condition": null,
+      "resource": "FAME"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "아직 닿는 사람",
+    "text": "2칸 안 적 1부대와 말을 섞는다: 대상은 1턴 혼란(다음 차례 공격 불가), 대신 한수도 1턴 혼란.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 3,
+    "range": 2,
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "CONFUSED"
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "CONFUSED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "이름만 살림",
+    "why": "지원 중계·경로단절 복구는 지도 전투에 없어, '같은 뜻이 아니어도 서로 응답'은 적과의 상호 휴전(양쪽 혼란, 대가 유지)으로, '대화의 퇴로'는 불리할 때 빠지는 이동과 회유·인망으로 옮겼다."
+   },
+   "pendingConcepts": []
+  },
+  "G45": {
+   "id": "G45",
+   "name": "방덕",
+   "memorableLine": "길과 병기는 바꿔도 지금 맡은 끝은 남에게 넘기지 않는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "남이 정할 끝은 없다",
+    "text": "병력이 절반 아래면 반격 피해 +30%, 내 차례 시작마다 사기 한 단계 회복.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_COUNTER",
+      "target": "SELF",
+      "value": 30,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     },
+     {
+      "op": "MORALE_DELTA",
+      "when": "ROUND_START",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": "HP_BELOW:50"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "수단을 바꿔 끝낸다",
+    "text": "병기를 바꿔 든다(사거리 2): 적 1부대에 피해 +30% 공격, 측면·후방에서 치면 +20% 더, 대상 1턴 속박(다음 차례 이동 불가).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 2,
+    "effects": [
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 30,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DAMAGE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 20,
+      "duration": 0,
+      "condition": "FLANK"
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "'다른 접근면 또는 다른 공격 방식'을 2칸 공격(활)과 FLANK 추가 피해로 살렸고, 공격+이탈 연속은 RULE이라 대상을 묶어 끝을 쥐는 효과로 바꿨다. 실패 뒤 Brace 보존은 꺾여도 무너지지 않고 되받는 특기로 옮겼다(접촉에 남는 약점 유지)."
+   },
+   "pendingConcepts": [
+    "FLANK"
+   ]
+  },
+  "G46": {
+   "id": "G46",
+   "name": "이각",
+   "memorableLine": "다시 묶는 데 강하지만 묶인 사람들이 남을 이유는 별개다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "uniqueTrait": {
+    "name": "풀리기 전의 매듭",
+    "text": "성을 함락하면 부상병 80명 복귀, 맞닿은 아군 2턴 고양(공격 +10%). 대신 태수일 때 도시 인망 −15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "HEAL_TROOPS",
+      "when": "ON_CAPTURE_CITY",
+      "target": "SELF",
+      "value": 80,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_CAPTURE_CITY",
+      "target": "ADJACENT_ALLIES",
+      "value": 0,
+      "duration": 2,
+      "condition": null,
+      "status": "INSPIRED"
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": -15,
+      "duration": 0,
+      "condition": null,
+      "resource": "FAME"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "해산 전에 묶는다",
+    "text": "맞닿은 아군의 전열을 한 단계 다시 묶는다(붕괴 → 흐트러짐 포함). 대신 이각과 그 아군 모두 다음 차례 이동 불가(1턴 속박).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "Formation 악화를 붙드는 전법은 FORMATION_DELTA 회복으로, 이동 포기 대가(이각·대상 모두)는 속박으로 그대로 살렸다. 지연 악화 정산 특기는 전리품으로 묶되 민심(인망)을 잃는 부채로 옮겨 '남을 이유는 별개'를 남겼다."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G47": {
+   "id": "G47",
+   "name": "장임",
+   "memorableLine": "자리는 물려도 소속의 선은 넘기지 않는다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "문턱을 넘는 순간",
+    "text": "장임을 공격한 적은 전열 판정(가중 15)을 받는다. 내 전열이 정돈돼 있으면 받는 피해 −20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_DEFEND",
+      "target": "TARGET",
+      "value": -15,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "SELF_ORDERED"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "다음 문턱",
+    "text": "물러선 자리에 선을 다시 긋는다: 내 전열 한 단계 회복, 1턴 동안 받는 피해 −25%, 맞닿은 적 모두 1턴 둔화(다음 차례 이동 −2칸).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "FORMATION_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 25,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ENEMIES",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "SLOWED"
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "후방 1칸 물러나 Brace하는 전법은 '이동 후 전열 회복+강한 방어+맞닿은 적 둔화'로, 문턱을 넘는 적에 대한 선행 반응은 공격해 온 적의 전열 판정으로 살렸다. 전열 유지(90)를 SELF_ORDERED로 연결. 후방이 막히면 물러설 자리가 없다는 약점은 그대로."
+   },
+   "pendingConcepts": [
+    "FORMATION"
+   ]
+  },
+  "G48": {
+   "id": "G48",
+   "name": "염포",
+   "memorableLine": "결정을 미루는 한 번으로 결정 뒤의 조건을 바꾼다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "받기 전에 남긴 것",
+    "text": "적이 더 많을 때 받는 피해 −20%. 태수일 때 도시 생산 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_DEFEND",
+      "target": "SELF",
+      "value": 20,
+      "duration": 0,
+      "condition": "OUTNUMBERED"
+     },
+     {
+      "op": "CITY_OUTPUT_MOD",
+      "when": "TURN_SETTLE",
+      "target": "CITY",
+      "value": 20,
+      "duration": 0,
+      "condition": null,
+      "resource": "PRODUCTION"
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "아직 찍지 않은 인장",
+    "text": "결정을 한 번 미룬다: 염포 주변 2칸 안 아군이 1턴 동안 이동 +1칸, 그 사이 첫 공격 피해 +20%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 1,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "INITIATIVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ALL_ALLIES_IN_BATTLE",
+      "value": 40,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "행동 순서 늦추기는 Round가 없어, '미루고 1칸 옮긴 뒤 더 좋은 조건으로 결정'을 아군 이동 +1과 다음 첫 공격 강화로 살렸다(염포가 이번 행동을 쓰는 대가). 준비 유지/포기 선택 특기는 불리할 때 전부 걸지 않는 수비와 봉한 창고(생산)로 옮겼다."
+   },
+   "pendingConcepts": []
+  },
+  "G49": {
+   "id": "G49",
+   "name": "기령",
+   "memorableLine": "멈춘 이유와 데려온 사람까지 보고해야 임무가 끝난다.",
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+   },
+   "uniqueTrait": {
+    "name": "끝난 일의 경계",
+    "text": "잃는 병력 중 전사 비율 −15%p(30% → 15%). 10일 정산 때 이 부대 부상병 60명 복귀.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "CASUALTY_SHIFT",
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 15,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "HEAL_TROOPS",
+      "when": "TURN_SETTLE",
+      "target": "SELF",
+      "value": 60,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "공개된 선에서 거둔다",
+    "text": "공격을 멈추고 거둔다: 기령과 맞닿은 아군 모두 사기 한 단계 회복, 기령과 그 아군 1턴 동안 이동 +2칸.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "MORALE_DELTA",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 10,
+      "duration": 0,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "ADJACENT_ALLIES",
+      "value": 2,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "MOVE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 2,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "이름만 살림",
+    "tactic": "살림",
+    "why": "공격 취소·후방 이동·인접 아군 동행을 '함께 빠질 이동+사기 회복'으로 살렸다(전과 포기 대가 유지). 퇴각준비→정비준비 변환은 지도에 없어 '데려온 사람까지 살려 돌아온다'를 전사 감소·정산 회복으로 옮겼다."
+   },
+   "pendingConcepts": []
+  },
+  "G50": {
+   "id": "G50",
+   "name": "황개",
+   "memorableLine": "문을 열어 둘 때부터 언제 닫을지 정한다.",
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "uniqueTrait": {
+    "name": "닫은 뒤에는 가른다",
+    "text": "반격하면 대상 1턴 속박(다음 차례 이동 불가), 황개는 1턴 동안 받는 피해 −15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "STATUS_APPLY",
+      "when": "ON_COUNTER",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 1,
+      "condition": null,
+      "status": "ROOTED"
+     },
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_COUNTER",
+      "target": "SELF",
+      "value": 15,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "반쯤 열린 문",
+    "text": "문을 반쯤 연다: 1턴 동안 받는 피해 +10%, 대신 반격 피해 +40%. 적이 오지 않으면 헛수고다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "cooldown": 2,
+    "range": 0,
+    "effects": [
+     {
+      "op": "DEFENSE_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": -10,
+      "duration": 1,
+      "condition": null
+     },
+     {
+      "op": "COUNTER_MOD",
+      "when": "ON_TACTIC_USE",
+      "target": "SELF",
+      "value": 40,
+      "duration": 1,
+      "condition": null
+     }
+    ]
+   },
+   "keep": {
+    "trait": "살림",
+    "tactic": "살림",
+    "why": "Brace를 풀어 유인하고 들어온 적을 치는 전법은 '스스로 약해 보이고 반격 강화'로, 추격 대신 그 자리에 다시 버티는 특기는 '반격 뒤 방어 +, 들어온 적은 문을 닫아 속박'으로 살렸다. 적이 미끼를 무시하면 행동을 잃는 약점 유지."
+   },
+   "pendingConcepts": []
+  }
+ }
+}

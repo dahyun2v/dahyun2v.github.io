@@ -1,0 +1,118 @@
+{
+  "id": "G23",
+  "name": "사마의",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 90,
+    "무용": 57,
+    "지략": 94,
+    "정무": 82,
+    "감화": 74
+  },
+  "sub": {
+    "전열 유지": 92,
+    "기동": 84,
+    "전환": 89,
+    "수습": 78,
+    "힘": 49,
+    "기술": 57,
+    "막아내기": 65,
+    "되받기": 58,
+    "군재": 94,
+    "응변": 90,
+    "속이기": 96,
+    "통찰": 93,
+    "행정": 85,
+    "병참": 88,
+    "인사": 73,
+    "제도": 75,
+    "민정": 75,
+    "설득": 81,
+    "포섭": 67,
+    "결집": 76,
+    "중재": 62
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+  },
+  "role": "책사",
+  "style": "장군",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "군을 아낀다",
+    "text": "잃는 병력의 전사 비율 −15%p(작은 싸움을 내줘도 군은 남긴다). 전열이 정돈된 채 반격하면 대상은 전열 판정(가중 15).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "지략"
+    ],
+    "effects": [
+      {
+        "op": "CASUALTY_SHIFT",
+        "when": "PASSIVE",
+        "target": "SELF",
+        "value": 15,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ON_COUNTER",
+        "target": "TARGET",
+        "value": -15,
+        "duration": 0,
+        "condition": "SELF_ORDERED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · '추격 이익을 포기하면 다음 전열 판정 +10'은 추격이 자동이라 포기 선택이 없어서, 맞아 주되 병력은 남기고(전사 비율 감소) 정돈된 진에 부딪친 적의 전열을 흔드는 효과로 옮김. 경계하며 진입면을 점유해 퇴로를 좁히는 전법은 맞닿은 적 속박과 반격 약화로 옮기고, 공격을 미루는 대가는 유지.",
+    "formerName": "작은 이익은 남긴다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "포위해서 묶기",
+      "text": "공격하지 않고 둘러싼다: 맞닿은 적 모두 다음 차례 이동 불가, 이번 턴 반격 피해 −20%. 사마의가 묶고 아군이 친다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 0,
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": -20,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "답을 늦춘 포위"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION",
+    "SELF_ORDERED"
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "id": "G01",
+  "name": "여포",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "jiangling"
+  },
+  "stats": {
+    "지휘": 79,
+    "무용": 99,
+    "지략": 53,
+    "정무": 37,
+    "감화": 63
+  },
+  "sub": {
+    "전열 유지": 67,
+    "기동": 94,
+    "전환": 79,
+    "수습": 46,
+    "힘": 100,
+    "기술": 98,
+    "막아내기": 86,
+    "되받기": 88,
+    "군재": 48,
+    "응변": 66,
+    "속이기": 54,
+    "통찰": 42,
+    "행정": 38,
+    "병참": 43,
+    "인사": 39,
+    "제도": 31,
+    "민정": 40,
+    "설득": 70,
+    "포섭": 56,
+    "결집": 47,
+    "중재": 75
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "흐트러진 적을 몰아친다",
+    "text": "전열이 흐트러진 적을 공격하면 주는 피해 +25%. 적 부대를 쓰러뜨리면 맞닿은 적 모두 사기 판정(가중 15), 다음 차례 이동 +2칸.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "기병"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 25,
+        "duration": 0,
+        "condition": "TARGET_DISORDERED"
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "ON_KILL",
+        "target": "ADJACENT_ENEMIES",
+        "value": -15,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "MOVE_MOD",
+        "when": "ON_KILL",
+        "target": "SELF",
+        "value": 2,
+        "duration": 1,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 강한 일격(원 ×1.35)+사용 뒤 노출 대가, '연 틈으로 다시 들어간다'를 살림. 밀기·빈칸 진입은 지도에 없어 '전열 판정으로 틈을 열고 → 흐트러진 적 추가 피해·쓰러뜨리면 재진격 이동'으로 옮김(원 카드의 Formation 악화 판정 유지).",
+    "formerName": "결과로 다시 건다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "강타로 진을 깬다",
+      "text": "인접한 적 1부대를 피해 +45%로 공격하고 대상에게 전열 판정(가중 20)을 일으킨다. 대신 이번 턴 동안 이 부대가 받는 피해 +15%.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 45,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": -20,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -15,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "판을 가르는 일격"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION",
+    "TARGET_DISORDERED"
+  ]
+}

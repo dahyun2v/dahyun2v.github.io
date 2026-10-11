@@ -1,0 +1,4802 @@
+{
+ "version": "trial-51-100-v0.1",
+ "status": "TRIAL — 능력치·소속 후보·기억 한 줄은 사용자 패킷 그대로, 병종 적성은 Claude 시험값, 고유 특기·전법은 redesign-51-100-v0.2. 배치는 사용자 결정 대기(startLocation 없음).",
+ "source": {
+  "packet": "docs/user-input/20261005 (SHA256 226e5811…/1cbafe78…)",
+  "redesign": "redesign-51-100-v0.2.json",
+  "script": "make-trial-51-100.py"
+ },
+ "officers": [
+  {
+   "id": "G51",
+   "name": "하후연",
+   "hanja": "夏侯淵",
+   "factionCandidate": "F01",
+   "memoryLine": "먼저 도착하되, 뒤에서 올 군량까지 자기 책임으로 여기는 장수.",
+   "stats": {
+    "지휘": 87,
+    "무용": 82,
+    "지략": 81,
+    "정무": 73,
+    "감화": 69
+   },
+   "sub": {
+    "전열 유지": 80,
+    "기동": 95,
+    "전환": 84,
+    "수습": 73,
+    "힘": 78,
+    "기술": 86,
+    "막아내기": 74,
+    "되받기": 80,
+    "군재": 85,
+    "응변": 83,
+    "속이기": 76,
+    "통찰": 72,
+    "행정": 66,
+    "병참": 87,
+    "인사": 76,
+    "제도": 56,
+    "민정": 48,
+    "설득": 68,
+    "포섭": 71,
+    "결집": 77,
+    "중재": 44
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "DELEGATOR",
+   "primaryClass": "솔연(率然)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "달려와서 친다",
+    "origin": "급습(急襲)·신속(神速)",
+    "formerName": "뒤따르는 군량",
+    "text": "이번 차례 3칸 이상 이동한 뒤 공격하면 반격을 받지 않는다. 대가: 그 다음 차례 이동 −1(군량이 따라오기를 기다린다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_FORCED_MARCH_STRIKE",
+      "params": {
+       "minMove": 3
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "연달아 쏘는 화살",
+    "origin": "묘재연전(妙才連箭)",
+    "formerName": "지체 없는 합류",
+    "text": "두 번 쏜다(각 ×0.6). 맞힌 대상이 적 지휘관(능력 합 최고 장수) 부대면 전법 하나 재사용 대기 +1.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_CHAIN_ARROWS",
+      "params": {
+       "hits": 2,
+       "ratio": 60
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G52",
+   "name": "서황",
+   "hanja": "徐晃",
+   "factionCandidate": "F01",
+   "memoryLine": "이길 자리를 먼저 만들고, 열리면 상대가 다시 닫을 틈 없이 밀고 들어간다.",
+   "stats": {
+    "지휘": 91,
+    "무용": 88,
+    "지략": 87,
+    "정무": 67,
+    "감화": 73
+   },
+   "sub": {
+    "전열 유지": 92,
+    "기동": 82,
+    "전환": 87,
+    "수습": 83,
+    "힘": 82,
+    "기술": 89,
+    "막아내기": 88,
+    "되받기": 91,
+    "군재": 90,
+    "응변": 85,
+    "속이기": 87,
+    "통찰": 90,
+    "행정": 68,
+    "병참": 74,
+    "인사": 65,
+    "제도": 58,
+    "민정": 66,
+    "설득": 81,
+    "포섭": 75,
+    "결집": 80,
+    "중재": 52
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "BREAKER",
+   "primaryClass": "백택(白澤)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "자리 잡고 노린다",
+    "origin": "침착(沈着)·선위불가승(先爲不可勝)",
+    "formerName": "먼저 불패를 세우다",
+    "text": "이동 없이 차례를 끝내면 다음 공격 피해 +20%, 그동안 혼란·거짓 소문에 걸리지 않는다. 움직이면 준비가 사라진다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘",
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SET_AND_WAIT",
+      "params": {
+       "bonus": 20
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "길게 몰아쳐 들어간다",
+    "origin": "장구직입(長驅直入)",
+    "formerName": "포위의 틈을 꿰다",
+    "text": "공격 — 대상 전열이 흐트러졌으면 1칸 밀고 그 칸으로 들어간다. 이 전법을 쓸 때마다 이번 판 공격 피해 +5%(최대 3번).",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_DRIVE_DEEP",
+      "params": {
+       "stack": 5,
+       "max": 3
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G53",
+   "name": "우금",
+   "hanja": "于禁",
+   "factionCandidate": "F01",
+   "memoryLine": "무너진 자리에서도 대오부터 다시 세우지만, 그 법이 사람의 마음까지 묶어주지는 않는다.",
+   "stats": {
+    "지휘": 89,
+    "무용": 79,
+    "지략": 74,
+    "정무": 72,
+    "감화": 61
+   },
+   "sub": {
+    "전열 유지": 94,
+    "기동": 72,
+    "전환": 85,
+    "수습": 92,
+    "힘": 75,
+    "기술": 78,
+    "막아내기": 85,
+    "되받기": 77,
+    "군재": 76,
+    "응변": 78,
+    "속이기": 54,
+    "통찰": 70,
+    "행정": 78,
+    "병참": 69,
+    "인사": 64,
+    "제도": 72,
+    "민정": 47,
+    "설득": 55,
+    "포섭": 49,
+    "결집": 71,
+    "중재": 38
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "archetype": "ENFORCER",
+   "primaryClass": "여와(女媧)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "엄한 군율",
+    "origin": "의중(毅重)·규율(規律)",
+    "formerName": "해명보다 진지",
+    "text": "맞닿은 아군은 혼란·거짓 소문에 걸리지 않고, 재정비하면 전열이 한 단계 더 회복된다. 대가: 그 아군들은 사기 회복 효과를 받지 않는다(법은 마음까지 묶지 못한다).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STRICT_LAW",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "흔들림 없이 세운다",
+    "origin": "확호부동(確乎不動)",
+    "formerName": "흩어진 기를 세우다",
+    "text": "2칸 안 아군 상태이상 해제 + 전열 한 단계 회복. 대가: 이 부대는 이번 차례 이동할 수 없다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_UNSHAKEN",
+      "params": {
+       "range": 2
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G54",
+   "name": "악진",
+   "hanja": "樂進",
+   "factionCandidate": "F01",
+   "memoryLine": "앞장설 때와 남아서 지킬 때를 구분하는, 작은 몸의 첫 번째 발.",
+   "stats": {
+    "지휘": 83,
+    "무용": 88,
+    "지략": 65,
+    "정무": 43,
+    "감화": 68
+   },
+   "sub": {
+    "전열 유지": 82,
+    "기동": 84,
+    "전환": 75,
+    "수습": 64,
+    "힘": 76,
+    "기술": 92,
+    "막아내기": 72,
+    "되받기": 69,
+    "군재": 69,
+    "응변": 63,
+    "속이기": 41,
+    "통찰": 61,
+    "행정": 44,
+    "병참": 52,
+    "인사": 48,
+    "제도": 35,
+    "민정": 39,
+    "설득": 57,
+    "포섭": 75,
+    "결집": 78,
+    "중재": 40
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "BREAKER",
+   "primaryClass": "형천(刑天)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "가장 먼저 성벽에 오른다",
+    "origin": "선등(先登)·공성(攻城)",
+    "formerName": "첫 발자국",
+    "text": "성을 공격하면 내구 피해 +30%, 그 차례 성 사격을 받지 않는다. 대가: 다음 적 차례까지 받는 피해 +15%(먼저 오른 자는 드러난다).",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_FIRST_ON_WALL",
+      "params": {
+       "siege": 30,
+       "cost": 15
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "먼저 올라가 친다",
+    "origin": "임전선등(臨戰先登)",
+    "formerName": "동문의 첫 사람",
+    "text": "성 공격 피해 ×1.5 + 성 수비 부대 사기 판정(가중 15). 대가: 다음 차례 이 부대는 공격할 수 없다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STORM_THE_WALL",
+      "params": {
+       "siege": 1.5,
+       "morale": 15
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G55",
+   "name": "이전",
+   "hanja": "李典",
+   "factionCandidate": "F01",
+   "memoryLine": "싫어하는 동료라도, 그가 빠질 함정까지 외면하지는 않는다.",
+   "stats": {
+    "지휘": 81,
+    "무용": 67,
+    "지략": 86,
+    "정무": 77,
+    "감화": 76
+   },
+   "sub": {
+    "전열 유지": 80,
+    "기동": 75,
+    "전환": 85,
+    "수습": 84,
+    "힘": 61,
+    "기술": 68,
+    "막아내기": 74,
+    "되받기": 71,
+    "군재": 82,
+    "응변": 85,
+    "속이기": 57,
+    "통찰": 91,
+    "행정": 78,
+    "병참": 84,
+    "인사": 71,
+    "제도": 58,
+    "민정": 72,
+    "설득": 79,
+    "포섭": 75,
+    "결집": 78,
+    "중재": 82
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "PROTECTOR",
+   "primaryClass": "금강(金剛)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "함정을 먼저 본다",
+    "origin": "신중(愼重)·박망파 경고",
+    "formerName": "남겨 둔 예비",
+    "text": "2칸 안 아군은 매복·후퇴로 꾀어내기의 측면·후방 판정을 받지 않는다. 2칸 안 숨은 적이 보인다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SEE_THE_TRAP",
+      "params": {
+       "range": 2
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "원한을 접고 함께 싸운다",
+    "origin": "망극(忘隙)·장자지풍(長者之風)",
+    "formerName": "돌아올 자리를 남기다",
+    "text": "2칸 안 아군 모두 1차례 주는 피해 +12%·받는 피해 −10%. 사이가 나쁜(원수) 아군이 있으면 그 관계를 1차례 무시한다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_ELDER_GRACE",
+      "params": {
+       "atk": 12,
+       "def": 10
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G56",
+   "name": "전위",
+   "hanja": "典韋",
+   "factionCandidate": "F01",
+   "memoryLine": "다른 사람이 지나갈 문을, 자기 몸으로 끝까지 막는 사람.",
+   "stats": {
+    "지휘": 68,
+    "무용": 94,
+    "지략": 47,
+    "정무": 31,
+    "감화": 67
+   },
+   "sub": {
+    "전열 유지": 80,
+    "기동": 72,
+    "전환": 70,
+    "수습": 58,
+    "힘": 97,
+    "기술": 91,
+    "막아내기": 95,
+    "되받기": 90,
+    "군재": 39,
+    "응변": 62,
+    "속이기": 33,
+    "통찰": 48,
+    "행정": 35,
+    "병참": 42,
+    "인사": 38,
+    "제도": 24,
+    "민정": 32,
+    "설득": 45,
+    "포섭": 46,
+    "결집": 83,
+    "중재": 29
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "PROTECTOR",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "주군 대신 맞는다",
+    "origin": "고지악래(古之惡來)",
+    "formerName": "문턱의 몸",
+    "text": "2칸 안 아군 장수 부대(군주 우선)가 공격받으면 이 부대가 대신 받고 공격자에게 반격한다(차례 1회). 대가: 대신 받은 피해는 줄지 않는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_TAKE_THE_BLOW",
+      "params": {
+       "range": 2
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "문 앞에 선 거인",
+    "origin": "인왕립(仁王立ち)",
+    "formerName": "한 걸음도 들이지 마라",
+    "text": "정면에 맞닿은 적 모두 1차례 이동 불가 + 이 부대 받는 피해 −30%(1차례). 대가: 이 부대도 이동할 수 없다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_GATE_GIANT",
+      "params": {
+       "reduce": 30
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G57",
+   "name": "정욱",
+   "hanja": "程昱",
+   "factionCandidate": "F01",
+   "memoryLine": "규칙을 끝까지 밀어붙이는 사람인 동시에, 그 규칙이 생긴 이유가 사라졌는지도 묻는다.",
+   "stats": {
+    "지휘": 76,
+    "무용": 38,
+    "지략": 92,
+    "정무": 81,
+    "감화": 77
+   },
+   "sub": {
+    "전열 유지": 75,
+    "기동": 59,
+    "전환": 68,
+    "수습": 65,
+    "힘": 36,
+    "기술": 34,
+    "막아내기": 42,
+    "되받기": 37,
+    "군재": 89,
+    "응변": 93,
+    "속이기": 88,
+    "통찰": 94,
+    "행정": 77,
+    "병참": 58,
+    "인사": 74,
+    "제도": 82,
+    "민정": 72,
+    "설득": 94,
+    "포섭": 73,
+    "결집": 78,
+    "중재": 43
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "REMONSTRATOR",
+   "primaryClass": "신루(蜃樓)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "작은 성의 배짱",
+    "origin": "견성 수비",
+    "formerName": "작아서 남는 성",
+    "text": "병력이 적보다 적을수록 성·방어 태세에서 받는 피해가 준다(상대의 절반 이하면 −30%).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SMALL_FORT",
+      "params": {
+       "max": 30
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "사방에 숨긴 병사",
+    "origin": "십면매복(十面埋伏)",
+    "formerName": "동쪽의 거짓 깃발",
+    "text": "2칸 안 적 모두 사기 판정(가중 10). 이미 상태이상인 적은 2차례 부상병이 돌아오지 않는다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_TEN_SIDES",
+      "params": {
+       "range": 2,
+       "morale": 10
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G58",
+   "name": "만총",
+   "hanja": "滿寵",
+   "factionCandidate": "F01",
+   "memoryLine": "지켜야 할 것은 성벽의 이름이 아니라, 그 안의 기능이 살아남을 자리다.",
+   "stats": {
+    "지휘": 87,
+    "무용": 60,
+    "지략": 90,
+    "정무": 85,
+    "감화": 72
+   },
+   "sub": {
+    "전열 유지": 88,
+    "기동": 72,
+    "전환": 87,
+    "수습": 73,
+    "힘": 49,
+    "기술": 54,
+    "막아내기": 67,
+    "되받기": 71,
+    "군재": 92,
+    "응변": 88,
+    "속이기": 75,
+    "통찰": 94,
+    "행정": 88,
+    "병참": 81,
+    "인사": 65,
+    "제도": 70,
+    "민정": 79,
+    "설득": 86,
+    "포섭": 67,
+    "결집": 80,
+    "중재": 42
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "PRESERVER",
+   "primaryClass": "치우(蚩尤)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "물러나 다시 진을 친다",
+    "origin": "합비신성(合肥新城)",
+    "formerName": "성은 옮겨도 임무는 남는다",
+    "text": "적과 떨어지는 쪽으로 이동하면 다음 차례 시작까지 전열 판정을 받지 않는다(차례 1회).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_NEW_FORT",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "버티며 되받는다",
+    "origin": "어책(禦策)·진액방거(鎭扼防拒)",
+    "formerName": "새 성에서 기다리다",
+    "text": "다음 적 차례까지 이 부대를 공격한 적마다 강화 효과 1개 제거 + 반격 피해 +35%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_HOLD_AND_STRIP",
+      "params": {
+       "counter": 35
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G59",
+   "name": "강유",
+   "hanja": "姜維",
+   "factionCandidate": "F02",
+   "memoryLine": "끝난 판에서도 다음 수를 찾지만, 그 다음 수의 값은 자기만 치르지 않는다.",
+   "stats": {
+    "지휘": 90,
+    "무용": 84,
+    "지략": 89,
+    "정무": 66,
+    "감화": 78
+   },
+   "sub": {
+    "전열 유지": 89,
+    "기동": 88,
+    "전환": 87,
+    "수습": 82,
+    "힘": 81,
+    "기술": 88,
+    "막아내기": 83,
+    "되받기": 86,
+    "군재": 91,
+    "응변": 87,
+    "속이기": 78,
+    "통찰": 86,
+    "행정": 65,
+    "병참": 59,
+    "인사": 60,
+    "제도": 55,
+    "민정": 52,
+    "설득": 75,
+    "포섭": 86,
+    "결집": 87,
+    "중재": 49
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "HIGH",
+    "BT04": "MEDIUM"
+   },
+   "archetype": "GAMBITER",
+   "primaryClass": "과보(夸父)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "번갈아 쓰는 칼과 꾀",
+    "origin": "의담웅심(義膽雄心)",
+    "formerName": "다시 북으로",
+    "text": "홀수 턴에는 공격하면 대상 사기 판정(가중 10), 짝수 턴에는 지략 전법 사거리 +1·지략 대결 +10.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SWORD_AND_PLAN",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "다시 북으로",
+    "origin": "북벌·연기(燃己)",
+    "formerName": "남은 판의 반격",
+    "text": "병력이 절반 아래일 때만 — 피해 ×1.6 + 2칸 안 아군 사기 한 단계 회복. 대가: 이번 판 남은 동안 이 부대 부상병이 돌아오지 않는다.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_NORTH_AGAIN",
+      "params": {
+       "ratio": 160
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G60",
+   "name": "마량",
+   "hanja": "馬良",
+   "factionCandidate": "F02",
+   "memoryLine": "낯선 사람에게도 맡을 이름과 자리를 주어, 함께할 이유를 만든다.",
+   "stats": {
+    "지휘": 49,
+    "무용": 34,
+    "지략": 73,
+    "정무": 81,
+    "감화": 88
+   },
+   "sub": {
+    "전열 유지": 47,
+    "기동": 54,
+    "전환": 53,
+    "수습": 58,
+    "힘": 29,
+    "기술": 33,
+    "막아내기": 42,
+    "되받기": 28,
+    "군재": 66,
+    "응변": 75,
+    "속이기": 47,
+    "통찰": 80,
+    "행정": 79,
+    "병참": 57,
+    "인사": 83,
+    "제도": 70,
+    "민정": 78,
+    "설득": 91,
+    "포섭": 90,
+    "결집": 77,
+    "중재": 86
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "COHESION-SEEKER",
+   "primaryClass": "포뢰(蒲牢)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "낯선 이에게 자리를",
+    "origin": "납만(納蠻)·백미(白眉)",
+    "formerName": "서로의 보증",
+    "text": "재야·포로·이민족 장수 등용 인망 비용 −30%, 등용한 장수 첫 레벨업 후보 +1장.",
+    "rarity": "EPIC",
+    "classTag": [
+     "감화",
+     "정무"
+    ],
+    "domestic": true,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_WELCOME_STRANGERS",
+      "params": {
+       "cost": 30
+      },
+      "when": "PASSIVE",
+      "target": "CITY",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "마음을 얻는 사신",
+    "origin": "협목(協穆)",
+    "formerName": "오계에 건넨 인장",
+    "text": "2칸 안 아군 1부대 사기 두 단계 회복 + 1차례 도발·거짓 소문에 걸리지 않는다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_ENVOY_OF_HEARTS",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G61",
+   "name": "마속",
+   "hanja": "馬謖",
+   "factionCandidate": "F02",
+   "memoryLine": "그럴듯한 계획은 빠르게 세우지만, 땅과 사람의 반론이 붙어야 비로소 쓸 수 있다.",
+   "stats": {
+    "지휘": 46,
+    "무용": 45,
+    "지략": 78,
+    "정무": 62,
+    "감화": 72
+   },
+   "sub": {
+    "전열 유지": 37,
+    "기동": 52,
+    "전환": 35,
+    "수습": 39,
+    "힘": 41,
+    "기술": 46,
+    "막아내기": 43,
+    "되받기": 40,
+    "군재": 83,
+    "응변": 45,
+    "속이기": 60,
+    "통찰": 56,
+    "행정": 64,
+    "병참": 43,
+    "인사": 61,
+    "제도": 58,
+    "민정": 71,
+    "설득": 84,
+    "포섭": 70,
+    "결집": 53,
+    "중재": 60
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "VERIFIER",
+   "primaryClass": "해치(獬豸)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "마음을 치는 계책",
+    "origin": "심전(心戰)·공심위상(攻心爲上)",
+    "formerName": "곁에 둔 반론",
+    "text": "지략 전법이 대상 사기 판정(가중 10)도 함께 일으킨다. 대가: 언덕·산에 있으면 받는 피해 +15%(가정의 산).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STRIKE_THE_HEART",
+      "params": {
+       "morale": 10,
+       "cost": 15
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "소문 퍼뜨리기",
+    "origin": "산요(散謠)",
+    "formerName": "성을 치기 전에",
+    "text": "2칸 안 적 중 병력이 가장 많은 부대에 계략 피해 + 2차례 받는 피해 +10%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SPREAD_RUMOR",
+      "params": {
+       "bonus": 10
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G62",
+   "name": "장완",
+   "hanja": "蔣琬",
+   "factionCandidate": "F02",
+   "memoryLine": "빈자리를 혼자 흉내 내지 않고, 다음 사람이 일할 수 있게 남겨 둔다.",
+   "stats": {
+    "지휘": 75,
+    "무용": 30,
+    "지략": 83,
+    "정무": 93,
+    "감화": 88
+   },
+   "sub": {
+    "전열 유지": 68,
+    "기동": 54,
+    "전환": 70,
+    "수습": 73,
+    "힘": 27,
+    "기술": 25,
+    "막아내기": 36,
+    "되받기": 24,
+    "군재": 80,
+    "응변": 86,
+    "속이기": 39,
+    "통찰": 84,
+    "행정": 94,
+    "병참": 93,
+    "인사": 90,
+    "제도": 82,
+    "민정": 86,
+    "설득": 83,
+    "포섭": 72,
+    "결집": 90,
+    "중재": 92
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "DELEGATOR",
+   "primaryClass": "솔연(率然)",
+   "secondaryClass": "후토(后土)",
+   "uniqueTrait": {
+    "name": "흔들림 없는 얼굴",
+    "origin": "자약(自若)·명경(明鏡)",
+    "formerName": "평소와 같은 얼굴",
+    "text": "맞닿은 아군은 주변 아군이 패주해도 사기 판정을 받지 않고, 거짓 소문에 걸리지 않는다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_CALM_FACE",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "다음 사람에게 넘긴다",
+    "origin": "축발(蓄發)",
+    "formerName": "다음 사람의 몫",
+    "text": "이 부대의 남은 행동을 2칸 안 아군 1부대에게 넘긴다 — 그 부대 이번 차례 이동 +2, 다음 공격 피해 +15%. 이 부대는 행동을 마친다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_HAND_OVER",
+      "params": {
+       "move": 2,
+       "bonus": 15
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G63",
+   "name": "비의",
+   "hanja": "費禕",
+   "factionCandidate": "F02",
+   "memoryLine": "칼을 든 두 사람 사이에 앉아, 둘 다 다음 일을 하게 만드는 사람.",
+   "stats": {
+    "지휘": 77,
+    "무용": 33,
+    "지략": 88,
+    "정무": 89,
+    "감화": 91
+   },
+   "sub": {
+    "전열 유지": 73,
+    "기동": 70,
+    "전환": 80,
+    "수습": 82,
+    "힘": 30,
+    "기술": 32,
+    "막아내기": 43,
+    "되받기": 29,
+    "군재": 80,
+    "응변": 91,
+    "속이기": 76,
+    "통찰": 87,
+    "행정": 93,
+    "병참": 80,
+    "인사": 84,
+    "제도": 82,
+    "민정": 88,
+    "설득": 92,
+    "포섭": 78,
+    "결집": 82,
+    "중재": 95
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "MEDIATOR",
+   "primaryClass": "여와(女媧)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "다툼을 말린다",
+    "origin": "화충(和衷)",
+    "formerName": "칼 사이의 자리",
+    "text": "맞닿은 아군이 2부대 이상이면 차례 시작에 그중 전열이 가장 나쁜 부대 한 단계 회복.",
+    "rarity": "EPIC",
+    "classTag": [
+     "감화",
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_MEDIATE",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "두 사람을 함께 일으킨다",
+    "origin": "안여(晏如)",
+    "formerName": "두 사람의 다음 수",
+    "text": "서로 다른 아군 2부대의 전열을 한 단계씩 회복.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_RAISE_TWO",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G64",
+   "name": "이엄",
+   "hanja": "李嚴",
+   "factionCandidate": "F02",
+   "memoryLine": "일을 해낼 몫부터 정확히 나누지만, 자기 몫이 사라지는 순간 말이 꼬이는 책임자.",
+   "stats": {
+    "지휘": 83,
+    "무용": 67,
+    "지략": 78,
+    "정무": 85,
+    "감화": 57
+   },
+   "sub": {
+    "전열 유지": 84,
+    "기동": 76,
+    "전환": 80,
+    "수습": 72,
+    "힘": 67,
+    "기술": 65,
+    "막아내기": 68,
+    "되받기": 61,
+    "군재": 80,
+    "응변": 76,
+    "속이기": 58,
+    "통찰": 71,
+    "행정": 88,
+    "병참": 78,
+    "인사": 75,
+    "제도": 81,
+    "민정": 84,
+    "설득": 68,
+    "포섭": 62,
+    "결집": 67,
+    "중재": 43
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "NEGOTIATOR",
+   "primaryClass": "건목(建木)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "군량을 재촉한다",
+    "origin": "독량(督糧)",
+    "formerName": "관할 안의 정돈",
+    "text": "태수일 때 그 성 3칸 안에서 차례를 시작한 아군 부대 부상병 20 복귀. 대가: 그 성 식량 −5%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무"
+    ],
+    "domestic": true,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_PRESS_SUPPLY",
+      "params": {
+       "heal": 20
+      },
+      "when": "PASSIVE",
+      "target": "CITY",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "방비를 넘긴다",
+    "origin": "방비 인계",
+    "formerName": "방비를 넘겨라",
+    "text": "자기 방어 태세를 풀고 맞닿은 아군 1부대에 다음 피격 −30% + 반격 +20%를 준다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_PASS_THE_GUARD",
+      "params": {
+       "reduce": 30,
+       "counter": 20
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G65",
+   "name": "미축",
+   "hanja": "糜竺",
+   "factionCandidate": "F02",
+   "memoryLine": "남은 것을 지키기보다, 다시 시작할 사람에게 자기 몫을 먼저 비우는 후원자.",
+   "stats": {
+    "지휘": 44,
+    "무용": 61,
+    "지략": 63,
+    "정무": 75,
+    "감화": 84
+   },
+   "sub": {
+    "전열 유지": 48,
+    "기동": 59,
+    "전환": 55,
+    "수습": 63,
+    "힘": 52,
+    "기술": 69,
+    "막아내기": 56,
+    "되받기": 49,
+    "군재": 48,
+    "응변": 67,
+    "속이기": 35,
+    "통찰": 72,
+    "행정": 66,
+    "병참": 87,
+    "인사": 62,
+    "제도": 46,
+    "민정": 70,
+    "설득": 77,
+    "포섭": 81,
+    "결집": 88,
+    "중재": 66
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "LOW",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "archetype": "PROTECTOR",
+   "primaryClass": "건목(建木)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "재기의 밑천",
+    "origin": "자원(資援)·부호(富豪)",
+    "formerName": "다시 일어설 밑천",
+    "text": "태수일 때 그 성 생산 +15%. 아군 성이 함락되면 세력 식량 +30·생산 +10을 즉시 보탠다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무"
+    ],
+    "domestic": true,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SEED_MONEY",
+      "params": {
+       "prod": 15
+      },
+      "when": "PASSIVE",
+      "target": "CITY",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "내 몫까지 가져가라",
+    "origin": "거고(巨賈)",
+    "formerName": "내 몫까지 가져가라",
+    "text": "자기 전열을 한 단계 낮추고 맞닿은 아군 1부대 전열을 정돈으로 + 부상병 30 복귀.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_TAKE_MY_SHARE",
+      "params": {
+       "heal": 30
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G66",
+   "name": "손견",
+   "hanja": "孫堅",
+   "factionCandidate": "F03",
+   "memoryLine": "앞에서는 먼저 올라가고, 뒤가 무너지면 흩어진 사람부터 다시 모으는 개척자.",
+   "stats": {
+    "지휘": 91,
+    "무용": 88,
+    "지략": 80,
+    "정무": 62,
+    "감화": 81
+   },
+   "sub": {
+    "전열 유지": 89,
+    "기동": 85,
+    "전환": 85,
+    "수습": 91,
+    "힘": 86,
+    "기술": 90,
+    "막아내기": 79,
+    "되받기": 82,
+    "군재": 81,
+    "응변": 87,
+    "속이기": 75,
+    "통찰": 75,
+    "행정": 58,
+    "병참": 65,
+    "인사": 73,
+    "제도": 38,
+    "민정": 66,
+    "설득": 80,
+    "포섭": 82,
+    "결집": 86,
+    "중재": 47
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "EXEMPLAR",
+   "primaryClass": "형천(刑天)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "범의 넋",
+    "origin": "영혼(英魂)·강동지호(江東之虎)",
+    "formerName": "흩어진 깃발을 다시",
+    "text": "차례 시작에 이 부대가 잃은 병력 비율만큼 2칸 안 아군 1부대 부상병 복귀(최대 40).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_TIGER_SOUL",
+      "params": {
+       "max": 40
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "범의 발톱",
+    "origin": "맹호조아(猛虎爪牙)",
+    "formerName": "선두를 열어라",
+    "text": "맞닿은 적 2부대 공격(각 ×0.7) + 둘 다 1차례 이 부대만 노린다. 대가: 이 부대 전열 흐트러짐.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_TIGER_CLAWS",
+      "params": {
+       "ratio": 70
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G67",
+   "name": "장소",
+   "hanja": "張昭",
+   "factionCandidate": "F03",
+   "memoryLine": "군주가 듣기 싫어해도 말을 끝내고, 혼자 남아서라도 그 말의 값을 감당하는 원로.",
+   "stats": {
+    "지휘": 65,
+    "무용": 31,
+    "지략": 81,
+    "정무": 94,
+    "감화": 86
+   },
+   "sub": {
+    "전열 유지": 69,
+    "기동": 43,
+    "전환": 55,
+    "수습": 77,
+    "힘": 29,
+    "기술": 30,
+    "막아내기": 42,
+    "되받기": 26,
+    "군재": 69,
+    "응변": 75,
+    "속이기": 36,
+    "통찰": 91,
+    "행정": 94,
+    "병참": 76,
+    "인사": 89,
+    "제도": 91,
+    "민정": 88,
+    "설득": 87,
+    "포섭": 69,
+    "결집": 90,
+    "중재": 57
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "REMONSTRATOR",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "곧은 말",
+    "origin": "간지(諫止)·직간(直諫)",
+    "formerName": "말을 거두지 않는다",
+    "text": "2칸 안 아군은 도발·거짓 소문에 걸리지 않는다. 태수일 때 그 성 내정 명령의 인망 대가 −30%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STRAIGHT_WORDS",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "정색하고 막는다",
+    "origin": "정색의 제동",
+    "formerName": "정색의 제동",
+    "text": "2칸 안 적 1부대 다음 공격 피해 −25%. 그 적이 군주 부대면 1차례 전법도 쓸 수 없다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STERN_HALT",
+      "params": {
+       "reduce": 25
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G68",
+   "name": "장굉",
+   "hanja": "張紘",
+   "factionCandidate": "F03",
+   "memoryLine": "사람도 성도 너무 조이지 않는다. 움직일 한 면을 남겨 선택을 바꾸는 사람.",
+   "stats": {
+    "지휘": 60,
+    "무용": 29,
+    "지략": 86,
+    "정무": 88,
+    "감화": 84
+   },
+   "sub": {
+    "전열 유지": 58,
+    "기동": 52,
+    "전환": 75,
+    "수습": 68,
+    "힘": 25,
+    "기술": 27,
+    "막아내기": 39,
+    "되받기": 24,
+    "군재": 82,
+    "응변": 84,
+    "속이기": 62,
+    "통찰": 90,
+    "행정": 89,
+    "병참": 71,
+    "인사": 83,
+    "제도": 82,
+    "민정": 85,
+    "설득": 91,
+    "포섭": 75,
+    "결집": 66,
+    "중재": 81
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "MITIGATOR",
+   "primaryClass": "해치(獬豸)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "성을 쌓는 선비",
+    "origin": "축성(築城)",
+    "formerName": "남겨둔 출구",
+    "text": "태수일 때 성 내구 최대 +20·회복 ×2, 시설 공사 비용 −10%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무"
+    ],
+    "domestic": true,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SCHOLAR_BUILDER",
+      "params": {
+       "dur": 20
+      },
+      "when": "PASSIVE",
+      "target": "CITY",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "한 면을 열어 둔다",
+    "origin": "위사필궐(圍師必闕)",
+    "formerName": "한 면을 열어두다",
+    "text": "공격 +20%. 대상에게 물러날 칸이 있으면 사기 판정(가중 15) — 도망치게 만든다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_LEAVE_A_GAP",
+      "params": {
+       "bonus": 20,
+       "morale": 15
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G69",
+   "name": "정보",
+   "hanja": "程普",
+   "factionCandidate": "F03",
+   "memoryLine": "먼저 왔다고 늘 먼저 나서지는 않는다. 남이 연 싸움을 끝까지 이어주는 노장.",
+   "stats": {
+    "지휘": 86,
+    "무용": 84,
+    "지략": 76,
+    "정무": 64,
+    "감화": 79
+   },
+   "sub": {
+    "전열 유지": 86,
+    "기동": 77,
+    "전환": 81,
+    "수습": 78,
+    "힘": 78,
+    "기술": 87,
+    "막아내기": 82,
+    "되받기": 76,
+    "군재": 75,
+    "응변": 81,
+    "속이기": 48,
+    "통찰": 74,
+    "행정": 63,
+    "병참": 69,
+    "인사": 75,
+    "제도": 42,
+    "민정": 66,
+    "설득": 75,
+    "포섭": 73,
+    "결집": 82,
+    "중재": 72
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "archetype": "COHESION-SEEKER",
+   "primaryClass": "솔연(率然)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "노장의 버팀목",
+    "origin": "주석(柱石)",
+    "formerName": "이어 선 전열",
+    "text": "맞닿은 아군 사기 판정 가중 −10. 그 아군이 공격받으면 이 부대가 반격에 가담한다(×0.4, 차례 1회).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_PILLAR_ELDER",
+      "params": {
+       "ratio": 40
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "불화살 비",
+    "origin": "여화(癘火)",
+    "formerName": "둘째 북소리",
+    "text": "대상과 옆 적 1부대에 불(번짐 없음). 대가: 이 부대 병력 −3%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_FIRE_RAIN",
+      "params": {
+       "cost": 3
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G70",
+   "name": "한당",
+   "hanja": "韓當",
+   "factionCandidate": "F03",
+   "memoryLine": "명령이 바뀌어도 맡은 면은 비우지 않고, 쓰러진 동료의 목소리는 놓치지 않는 사람.",
+   "stats": {
+    "지휘": 82,
+    "무용": 85,
+    "지략": 64,
+    "정무": 54,
+    "감화": 73
+   },
+   "sub": {
+    "전열 유지": 87,
+    "기동": 72,
+    "전환": 74,
+    "수습": 73,
+    "힘": 87,
+    "기술": 84,
+    "막아내기": 82,
+    "되받기": 80,
+    "군재": 65,
+    "응변": 70,
+    "속이기": 32,
+    "통찰": 60,
+    "행정": 53,
+    "병참": 62,
+    "인사": 57,
+    "제도": 34,
+    "민정": 56,
+    "설득": 54,
+    "포섭": 53,
+    "결집": 83,
+    "중재": 65
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "LOYALIST",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "맡은 자리 지키기",
+    "origin": "3대 충절",
+    "formerName": "맡은 면",
+    "text": "같은 칸·같은 정면을 유지한 차례마다 받는 피해 −5%(최대 −20%). 움직이면 처음부터.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_HOLD_THE_POST",
+      "params": {
+       "per": 5,
+       "max": 20
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "위급할 때 길을 연다",
+    "origin": "해번(解煩)",
+    "formerName": "받은 힘을 돌려준다",
+    "text": "2칸 안 아군 1부대와 맞닿은 적 모두 사기 판정 + 그 아군은 1차례 교전 이탈 추격을 받지 않는다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_CLEAR_THE_WAY",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G71",
+   "name": "주태",
+   "hanja": "周泰",
+   "factionCandidate": "F03",
+   "memoryLine": "내 몸에 남은 일로 말한다. 오늘도 한 사람이 버틸 자리를 먼저 만든다.",
+   "stats": {
+    "지휘": 74,
+    "무용": 89,
+    "지략": 57,
+    "정무": 41,
+    "감화": 72
+   },
+   "sub": {
+    "전열 유지": 82,
+    "기동": 70,
+    "전환": 76,
+    "수습": 67,
+    "힘": 84,
+    "기술": 80,
+    "막아내기": 94,
+    "되받기": 86,
+    "군재": 55,
+    "응변": 71,
+    "속이기": 27,
+    "통찰": 54,
+    "행정": 40,
+    "병참": 47,
+    "인사": 45,
+    "제도": 26,
+    "민정": 44,
+    "설득": 43,
+    "포섭": 48,
+    "결집": 83,
+    "중재": 57
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "PROTECTOR",
+   "primaryClass": "금강(金剛)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "몸에 새긴 상처",
+    "origin": "불굴(不屈)",
+    "formerName": "아직 여기 있다",
+    "text": "소멸할 피해를 받으면 상처 1개를 얻고 병력 5%로 버틴다(상처 3개면 더는 못 버틴다). 상처마다 받는 피해 −5%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "무용",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SCARS",
+      "params": {
+       "max": 3,
+       "per": 5
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "주군 대신 피를 흘린다",
+    "origin": "육신철벽(肉身鐵壁)",
+    "formerName": "내 뒤의 한 사람",
+    "text": "2칸 안 아군(군주 우선) 1부대가 받는 피해의 50%를 2차례 대신 받는다. 대가: 그동안 이 부대 받는 피해 +10%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_BLOOD_SHIELD",
+      "params": {
+       "share": 50,
+       "cost": 10
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G72",
+   "name": "능통",
+   "hanja": "凌統",
+   "factionCandidate": "F03",
+   "memoryLine": "내 분노보다 지금 돌아와야 할 사람을 먼저 고른다. 다 돌아왔는지는 끝까지 확인한다.",
+   "stats": {
+    "지휘": 83,
+    "무용": 89,
+    "지략": 74,
+    "정무": 57,
+    "감화": 79
+   },
+   "sub": {
+    "전열 유지": 80,
+    "기동": 91,
+    "전환": 89,
+    "수습": 64,
+    "힘": 83,
+    "기술": 91,
+    "막아내기": 87,
+    "되받기": 86,
+    "군재": 69,
+    "응변": 82,
+    "속이기": 40,
+    "통찰": 66,
+    "행정": 53,
+    "병참": 58,
+    "인사": 71,
+    "제도": 30,
+    "민정": 51,
+    "설득": 61,
+    "포섭": 86,
+    "결집": 85,
+    "중재": 38
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "PROTECTOR",
+   "primaryClass": "비렴(飛廉)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "퇴로를 연다",
+    "origin": "혈로(血路)",
+    "formerName": "원한보다 먼저",
+    "text": "2칸 안 아군이 패주하면 그 아군과 맞닿은 적 1부대를 즉시 1회 공격한다(×0.5, 차례 1회).",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_OPEN_THE_RETREAT",
+      "params": {
+       "ratio": 50
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "결사대 삼백",
+    "origin": "사사삼백(死士三百)",
+    "formerName": "돌아올 길을 친다",
+    "text": "공격 +25% + 대상은 1차례 이 부대만 노린다. 대가: 다음 차례 이동 −1.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_THREE_HUNDRED",
+      "params": {
+       "bonus": 25
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G73",
+   "name": "안량",
+   "hanja": "顏良",
+   "factionCandidate": "F04",
+   "memoryLine": "정면에 서 있는 한, 상대가 먼저 눈을 돌리게 만드는 선봉.",
+   "stats": {
+    "지휘": 72,
+    "무용": 91,
+    "지략": 47,
+    "정무": 30,
+    "감화": 60
+   },
+   "sub": {
+    "전열 유지": 84,
+    "기동": 65,
+    "전환": 52,
+    "수습": 55,
+    "힘": 92,
+    "기술": 93,
+    "막아내기": 86,
+    "되받기": 88,
+    "군재": 52,
+    "응변": 37,
+    "속이기": 24,
+    "통찰": 43,
+    "행정": 30,
+    "병참": 43,
+    "인사": 36,
+    "제도": 18,
+    "민정": 29,
+    "설득": 41,
+    "포섭": 46,
+    "결집": 78,
+    "중재": 32
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "ATTRITOR",
+   "primaryClass": "과보(夸父)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "같은 적을 거듭 친다",
+    "origin": "용관삼군(勇冠三軍)",
+    "formerName": "내 앞의 한 사람",
+    "text": "같은 적을 2차례 연속 공격하면 두 번째부터 피해 +20%·대상 반격 −50%. 대가: 대상을 바꾼 차례에는 피해 −10%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SAME_FOE",
+      "params": {
+       "bonus": 20
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "삼군에서 으뜸가는 일격",
+    "origin": "용관삼군(勇冠三軍)",
+    "formerName": "정면을 받아라",
+    "text": "공격 뒤 같은 대상을 한 번 더(×0.6) + 대상 1차례 공격 불가. 대가: 다음 적 차례까지 측면·후방 피해 +15%(방심).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_FIRST_OF_ARMIES",
+      "params": {
+       "ratio": 60,
+       "cost": 15
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G74",
+   "name": "문추",
+   "hanja": "文醜",
+   "factionCandidate": "F04",
+   "memoryLine": "한 번 달리기 시작하면 놓치고 싶지 않다. 어디서 추격을 끊을지가 힘의 값이다.",
+   "stats": {
+    "지휘": 73,
+    "무용": 90,
+    "지략": 51,
+    "정무": 28,
+    "감화": 58
+   },
+   "sub": {
+    "전열 유지": 65,
+    "기동": 92,
+    "전환": 73,
+    "수습": 46,
+    "힘": 89,
+    "기술": 92,
+    "막아내기": 76,
+    "되받기": 91,
+    "군재": 56,
+    "응변": 54,
+    "속이기": 29,
+    "통찰": 40,
+    "행정": 27,
+    "병참": 40,
+    "인사": 34,
+    "제도": 17,
+    "민정": 26,
+    "설득": 39,
+    "포섭": 44,
+    "결집": 77,
+    "중재": 30
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "GAMBITER",
+   "primaryClass": "비렴(飛廉)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "도망치는 적을 쫓는다",
+    "origin": "효장(驍將)",
+    "formerName": "멀어지는 등",
+    "text": "직전 차례에 움직인 적을 공격하면 피해 +20%, 대상이 물러나면 1칸 따라간다(차례 1회). 대가: 쫓아간 다음 차례 전열 흐트러짐.",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_CHASE",
+      "params": {
+       "bonus": 20
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "칼끝 먼저 들이민다",
+    "origin": "등봉함진(登鋒陷陣)",
+    "formerName": "놓치기 전에",
+    "text": "피해 ×1.4 + 대상 1차례 공격 불가. 대가: 이 부대 2차례 부상병이 돌아오지 않고 받는 피해 +10%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_BLADE_FIRST",
+      "params": {
+       "ratio": 140
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G75",
+   "name": "국의",
+   "hanja": "麴義",
+   "factionCandidate": "F04",
+   "memoryLine": "말발굽이 가까워져도 먼저 일어나지 않는다. 모두가 같은 순간을 맞히게 한다.",
+   "stats": {
+    "지휘": 86,
+    "무용": 68,
+    "지략": 86,
+    "정무": 39,
+    "감화": 56
+   },
+   "sub": {
+    "전열 유지": 94,
+    "기동": 77,
+    "전환": 89,
+    "수습": 60,
+    "힘": 62,
+    "기술": 69,
+    "막아내기": 73,
+    "되받기": 90,
+    "군재": 91,
+    "응변": 79,
+    "속이기": 68,
+    "통찰": 84,
+    "행정": 38,
+    "병참": 44,
+    "인사": 59,
+    "제도": 24,
+    "민정": 31,
+    "설득": 42,
+    "포섭": 36,
+    "결집": 78,
+    "중재": 33
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "SENTINEL",
+   "primaryClass": "치우(蚩尤)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "기병을 기다린다",
+    "origin": "계교(界橋)·선등(先登)",
+    "formerName": "가까워진 말발굽",
+    "text": "궁병일 때 기병이 맞닿게 들어오면 먼저 쏜다. 기병 돌격 보너스를 받지 않는다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘",
+     "궁병"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_AWAIT_CAVALRY",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "일제히 일어나 쏜다",
+    "origin": "선등사사(先登死士)",
+    "formerName": "방패 아래의 한 순간",
+    "text": "2칸 안 적 기병 모두 사격(×0.8) + 1차례 돌격 불가. 대가: 이 부대 다음 차례 이동 불가.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_RISE_AND_SHOOT",
+      "params": {
+       "ratio": 80
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G76",
+   "name": "허유",
+   "hanja": "許攸",
+   "factionCandidate": "F04",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 57,
+    "무용": 31,
+    "지략": 88,
+    "정무": 60,
+    "감화": 66
+   },
+   "sub": {
+    "전열 유지": 48,
+    "기동": 61,
+    "전환": 67,
+    "수습": 52,
+    "힘": 27,
+    "기술": 35,
+    "막아내기": 30,
+    "되받기": 33,
+    "군재": 89,
+    "응변": 84,
+    "속이기": 78,
+    "통찰": 92,
+    "행정": 57,
+    "병참": 76,
+    "인사": 59,
+    "제도": 43,
+    "민정": 46,
+    "설득": 86,
+    "포섭": 65,
+    "결집": 45,
+    "중재": 42
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "VERIFIER",
+   "primaryClass": "솔연(率然)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "제 공을 앞세운다",
+    "origin": "시재(恃才)·고만(高慢)",
+    "formerName": "남은 며칠",
+    "text": "지략 전법 지략 대결 +15. 대가: 이 장수와 같은 부대·같은 성 장수가 얻는 경험치 −20%(공을 독차지한다).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_BOAST",
+      "params": {
+       "contest": 15
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "적 군량고를 알린다",
+    "origin": "오소(烏巢) 첩보",
+    "formerName": "오소의 빈문",
+    "text": "가장 가까운 적 성 1곳과 그 3칸 안 숨은 적 부대를 드러내고, 그 성 수비 부대는 2차례 받는 피해 +20%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_REVEAL_DEPOT",
+      "params": {
+       "bonus": 20
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G77",
+   "name": "진등",
+   "hanja": "陳登",
+   "factionCandidate": "F05",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 83,
+    "무용": 53,
+    "지략": 86,
+    "정무": 85,
+    "감화": 80
+   },
+   "sub": {
+    "전열 유지": 84,
+    "기동": 78,
+    "전환": 85,
+    "수습": 79,
+    "힘": 46,
+    "기술": 54,
+    "막아내기": 60,
+    "되받기": 63,
+    "군재": 88,
+    "응변": 85,
+    "속이기": 89,
+    "통찰": 86,
+    "행정": 84,
+    "병참": 85,
+    "인사": 76,
+    "제도": 70,
+    "민정": 89,
+    "설득": 84,
+    "포섭": 81,
+    "결집": 79,
+    "중재": 64
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "PRESERVER",
+   "primaryClass": "후토(后土)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "물길을 다스린다",
+    "origin": "광릉 수리·둔전",
+    "formerName": "물길을 본 사람",
+    "text": "태수일 때 그 성 식량 +20%, 강과 맞닿은 성이면 +10% 더.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무"
+    ],
+    "domestic": true,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_WATERWORKS",
+      "params": {
+       "food": 20
+      },
+      "when": "PASSIVE",
+      "target": "CITY",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "흙탕물에서 고기 잡기",
+    "origin": "혼수모어(混水摸魚)",
+    "formerName": "허군의 밤불",
+    "text": "2칸 안 적 2부대 혼란 판정 + 걸린 대상은 1차례 이동 −2.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_MUDDY_WATERS",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G78",
+   "name": "장패",
+   "hanja": "臧霸",
+   "factionCandidate": "F05",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 85,
+    "무용": 74,
+    "지략": 77,
+    "정무": 62,
+    "감화": 84
+   },
+   "sub": {
+    "전열 유지": 86,
+    "기동": 88,
+    "전환": 81,
+    "수습": 83,
+    "힘": 77,
+    "기술": 76,
+    "막아내기": 74,
+    "되받기": 72,
+    "군재": 77,
+    "응변": 82,
+    "속이기": 60,
+    "통찰": 79,
+    "행정": 63,
+    "병참": 65,
+    "인사": 68,
+    "제도": 49,
+    "민정": 59,
+    "설득": 79,
+    "포섭": 85,
+    "결집": 88,
+    "중재": 75
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+   },
+   "archetype": "PROTECTOR",
+   "primaryClass": "금강(金剛)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "태산의 무리",
+    "origin": "산전(山戰)·위압(威壓)",
+    "formerName": "맡은 사람",
+    "text": "언덕·산에서 받는 피해 −20%·주는 피해 +10%. 태수일 때 그 성 치안이 나빠질 원인 1개를 무시한다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_TAISHAN_BAND",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "퇴로를 끊는다",
+    "origin": "피실격허(避實擊虛)",
+    "formerName": "물가를 끊는 추격",
+    "text": "맞닿은 적 중 지휘가 가장 낮은 부대에 피해 +30% + 그 적은 1차례 교전 이탈 불가.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_CUT_RETREAT",
+      "params": {
+       "bonus": 30
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G79",
+   "name": "후성",
+   "hanja": "侯成",
+   "factionCandidate": "F05",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 68,
+    "무용": 66,
+    "지략": 52,
+    "정무": 47,
+    "감화": 71
+   },
+   "sub": {
+    "전열 유지": 64,
+    "기동": 77,
+    "전환": 68,
+    "수습": 79,
+    "힘": 65,
+    "기술": 69,
+    "막아내기": 61,
+    "되받기": 64,
+    "군재": 49,
+    "응변": 63,
+    "속이기": 37,
+    "통찰": 48,
+    "행정": 53,
+    "병참": 62,
+    "인사": 44,
+    "제도": 31,
+    "민정": 43,
+    "설득": 46,
+    "포섭": 57,
+    "결집": 81,
+    "중재": 61
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "archetype": "COHESION-SEEKER",
+   "primaryClass": "여와(女媧)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "잔치로 다시 모은다",
+    "origin": "헌양(獻釀)",
+    "formerName": "돌아온 자리",
+    "text": "재정비하면 맞닿은 아군도 사기 한 단계 회복. 대가: 그 차례 이 부대는 다음 적 공격에 받는 피해 +10%(취했다).",
+    "rarity": "EPIC",
+    "classTag": [
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_FEAST",
+      "params": {
+       "cost": 10
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "말을 훔친다",
+    "origin": "적토마 탈취",
+    "formerName": "네 몫을 남기다",
+    "text": "맞닿은 적 기병 부대 다음 차례 이동 −3 + 이 부대 2차례 이동 +1.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STEAL_HORSES",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G80",
+   "name": "마대",
+   "hanja": "馬岱",
+   "factionCandidate": "F06",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 76,
+    "무용": 81,
+    "지략": 67,
+    "정무": 43,
+    "감화": 61
+   },
+   "sub": {
+    "전열 유지": 73,
+    "기동": 83,
+    "전환": 85,
+    "수습": 64,
+    "힘": 75,
+    "기술": 86,
+    "막아내기": 72,
+    "되받기": 78,
+    "군재": 62,
+    "응변": 71,
+    "속이기": 73,
+    "통찰": 69,
+    "행정": 46,
+    "병참": 54,
+    "인사": 42,
+    "제도": 29,
+    "민정": 39,
+    "설득": 48,
+    "포섭": 51,
+    "결집": 70,
+    "중재": 56
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "LOYALIST",
+   "primaryClass": "비렴(飛廉)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "숨어 있다 벤다",
+    "origin": "잠습(潛襲)",
+    "formerName": "이어받은 일",
+    "text": "적 시야 밖에서 시작한 첫 공격은 반격을 받지 않고 피해 +20%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_HIDDEN_BLADE",
+      "params": {
+       "bonus": 20
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "내가 베겠다",
+    "origin": "오감살여(吾敢殺汝)·밀계주역(密計誅逆)",
+    "formerName": "뒤를 맡긴 칼",
+    "text": "피해 ×1.5. 대상이 동요 이하이거나 이번 판 아군을 배신·이탈한 장수면 즉시 패주.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_I_WILL_SLAY",
+      "params": {
+       "ratio": 150
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G81",
+   "name": "성공영",
+   "hanja": "成公英",
+   "factionCandidate": "F06",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 79,
+    "무용": 79,
+    "지략": 78,
+    "정무": 56,
+    "감화": 79
+   },
+   "sub": {
+    "전열 유지": 82,
+    "기동": 85,
+    "전환": 88,
+    "수습": 70,
+    "힘": 66,
+    "기술": 87,
+    "막아내기": 67,
+    "되받기": 84,
+    "군재": 77,
+    "응변": 83,
+    "속이기": 81,
+    "통찰": 73,
+    "행정": 52,
+    "병참": 67,
+    "인사": 55,
+    "제도": 35,
+    "민정": 48,
+    "설득": 72,
+    "포섭": 75,
+    "결집": 85,
+    "중재": 57
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "COHESION-SEEKER",
+   "primaryClass": "치우(蚩尤)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "끝까지 남는 사람",
+    "origin": "위략 성공영",
+    "formerName": "마지막 남은 깃발",
+    "text": "군주·주장 부대가 패주하거나 성을 잃을 때 사기 판정을 받지 않고, 그 부대 쪽으로 가는 이동 +2.",
+    "rarity": "EPIC",
+    "classTag": [
+     "감화",
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_LAST_TO_LEAVE",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "강족을 부른다",
+    "origin": "친강(親羌)",
+    "formerName": "돌아서는 발굽",
+    "text": "자기 성에서 3칸 넘게 떨어져 병력이 절반 아래일 때 — 2차례 강족 기병 100이 합류(끝나면 떠난다).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_CALL_THE_QIANG",
+      "params": {
+       "troops": 100
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G82",
+   "name": "염행",
+   "hanja": "閻行",
+   "factionCandidate": "F06",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 75,
+    "무용": 87,
+    "지략": 70,
+    "정무": 45,
+    "감화": 57
+   },
+   "sub": {
+    "전열 유지": 71,
+    "기동": 81,
+    "전환": 84,
+    "수습": 62,
+    "힘": 89,
+    "기술": 92,
+    "막아내기": 81,
+    "되받기": 85,
+    "군재": 63,
+    "응변": 80,
+    "속이기": 61,
+    "통찰": 76,
+    "행정": 48,
+    "병참": 57,
+    "인사": 41,
+    "제도": 28,
+    "민정": 44,
+    "설득": 61,
+    "포섭": 47,
+    "결집": 66,
+    "중재": 39
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "DISENGAGER",
+   "primaryClass": "형천(刑天)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "부러져도 친다",
+    "origin": "부러진 자루",
+    "formerName": "부러진 자루",
+    "text": "전열이 흐트러지거나 무너져도 주는 피해가 줄지 않고 오히려 +15%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_BROKEN_SHAFT",
+      "params": {
+       "bonus": 15
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "자루로 내리친다",
+    "origin": "전략 염행",
+    "formerName": "남은 손의 일격",
+    "text": "공격 — 대상 장수 무용이 85 이상이면 사기 두 단계 하락. 대가: 이 부대 전열 한 단계 악화.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SHAFT_STRIKE",
+      "params": {
+       "might": 85
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G83",
+   "name": "곽사",
+   "hanja": "郭汜",
+   "factionCandidate": "F07",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 75,
+    "무용": 78,
+    "지략": 61,
+    "정무": 29,
+    "감화": 46
+   },
+   "sub": {
+    "전열 유지": 76,
+    "기동": 72,
+    "전환": 67,
+    "수습": 56,
+    "힘": 81,
+    "기술": 78,
+    "막아내기": 71,
+    "되받기": 75,
+    "군재": 62,
+    "응변": 70,
+    "속이기": 60,
+    "통찰": 48,
+    "행정": 31,
+    "병참": 47,
+    "인사": 35,
+    "제도": 22,
+    "민정": 20,
+    "설득": 41,
+    "포섭": 52,
+    "결집": 64,
+    "중재": 36
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "GAMBITER",
+   "primaryClass": "과보(夸父)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "누구도 믿지 않는다",
+    "origin": "탐패(貪狽)",
+    "formerName": "한 지붕 두 칼",
+    "text": "2칸 안에 아군이 없으면 주는 피해 +15%·받는 피해 −10%, 아군과 붙어 있으면 둘 다 −5%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_TRUST_NO_ONE",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "사방을 거둬들인다",
+    "origin": "폭렴사방(暴斂四方)",
+    "formerName": "서로를 겨누다",
+    "text": "두 번 공격(각 ×0.6). 대상이 패주하면 식량 +10.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_EXTORT",
+      "params": {
+       "ratio": 60
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G84",
+   "name": "이유",
+   "hanja": "李儒",
+   "factionCandidate": "F07",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 51,
+    "무용": 24,
+    "지략": 87,
+    "정무": 75,
+    "감화": 58
+   },
+   "sub": {
+    "전열 유지": 45,
+    "기동": 43,
+    "전환": 57,
+    "수습": 48,
+    "힘": 20,
+    "기술": 27,
+    "막아내기": 25,
+    "되받기": 22,
+    "군재": 83,
+    "응변": 88,
+    "속이기": 86,
+    "통찰": 89,
+    "행정": 86,
+    "병참": 62,
+    "인사": 77,
+    "제도": 74,
+    "민정": 40,
+    "설득": 81,
+    "포섭": 55,
+    "결집": 32,
+    "중재": 49
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "ENFORCER",
+   "primaryClass": "솔연(率然)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "독은 늦게 퍼진다",
+    "origin": "짐독(酖毒)",
+    "formerName": "집행의 다음 줄",
+    "text": "이 장수가 건 상태이상이 풀릴 때 대상 병력 −5%(독이 남는다).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_LINGERING_POISON",
+      "params": {
+       "loss": 5
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "성을 불태운다",
+    "origin": "분성(焚城)",
+    "formerName": "봉인된 명령",
+    "text": "2칸 안 칸 3곳에 불 + 그 칸 적 사기 판정. 대가: 그 칸이 아군 성 3칸 안이면 그 성 인망 −10(백성의 원망).",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_BURN_THE_CITY",
+      "params": {
+       "tiles": 3
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G85",
+   "name": "서영",
+   "hanja": "徐榮",
+   "factionCandidate": "F07",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 86,
+    "무용": 72,
+    "지략": 80,
+    "정무": 49,
+    "감화": 54
+   },
+   "sub": {
+    "전열 유지": 89,
+    "기동": 78,
+    "전환": 82,
+    "수습": 86,
+    "힘": 73,
+    "기술": 74,
+    "막아내기": 78,
+    "되받기": 67,
+    "군재": 84,
+    "응변": 79,
+    "속이기": 52,
+    "통찰": 85,
+    "행정": 49,
+    "병참": 64,
+    "인사": 63,
+    "제도": 30,
+    "민정": 29,
+    "설득": 47,
+    "포섭": 45,
+    "결집": 65,
+    "중재": 38
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "PRESERVER",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "쫓되 멀리 가지 않는다",
+    "origin": "장구(長驅)",
+    "formerName": "산조까지 가지 않는다",
+    "text": "패주하는 적을 공격하면 피해 +30%. 적을 패주시키면 그 차례 더 쫓지 않고 전열 한 단계 회복.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘",
+     "기병"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_PURSUE_WISELY",
+      "params": {
+       "bonus": 30
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "하늘을 흔드는 돌격",
+    "origin": "진천동지(震天動地)",
+    "formerName": "변수의 저지선",
+    "text": "공격 + 맞닿은 적 모두 1차례 이동 −2.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_HEAVEN_SHAKER",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G86",
+   "name": "장송",
+   "hanja": "張松",
+   "factionCandidate": "F08",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 49,
+    "무용": 25,
+    "지략": 87,
+    "정무": 77,
+    "감화": 75
+   },
+   "sub": {
+    "전열 유지": 39,
+    "기동": 57,
+    "전환": 58,
+    "수습": 43,
+    "힘": 21,
+    "기술": 24,
+    "막아내기": 29,
+    "되받기": 20,
+    "군재": 87,
+    "응변": 83,
+    "속이기": 79,
+    "통찰": 90,
+    "행정": 79,
+    "병참": 86,
+    "인사": 79,
+    "제도": 56,
+    "민정": 65,
+    "설득": 86,
+    "포섭": 74,
+    "결집": 47,
+    "중재": 54
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "BROKER",
+   "primaryClass": "건목(建木)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "한 번 보면 외운다",
+    "origin": "과목불망(過目不忘)·강식(強識)",
+    "formerName": "길과 창고",
+    "text": "2칸 안에서 쓰인 적 전법은 이 장수가 다음 레벨업 때 배울 후보가 된다(고유 제외). 적 고유 특기 내용을 언제나 볼 수 있다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_PHOTO_MEMORY",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "서천 지도를 바친다",
+    "origin": "헌도(獻圖)",
+    "formerName": "천부의 샛길",
+    "text": "1턴 동안 아군 전체가 가장 가까운 적 성 주변 5칸을 보고, 그 성 공격 시 내구 피해 +20%. 대가: 이 부대 사기 한 단계 하락.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_PRESENT_MAP",
+      "params": {
+       "vision": 5,
+       "siege": 20
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G87",
+   "name": "황권",
+   "hanja": "黃權",
+   "factionCandidate": "F08",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 81,
+    "무용": 48,
+    "지략": 89,
+    "정무": 74,
+    "감화": 82
+   },
+   "sub": {
+    "전열 유지": 86,
+    "기동": 66,
+    "전환": 84,
+    "수습": 82,
+    "힘": 41,
+    "기술": 46,
+    "막아내기": 58,
+    "되받기": 45,
+    "군재": 89,
+    "응변": 82,
+    "속이기": 55,
+    "통찰": 95,
+    "행정": 77,
+    "병참": 80,
+    "인사": 68,
+    "제도": 62,
+    "민정": 72,
+    "설득": 78,
+    "포섭": 70,
+    "결집": 83,
+    "중재": 79
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "HEDGER",
+   "primaryClass": "비휴(貔貅)",
+   "secondaryClass": "여와(女媧)",
+   "uniqueTrait": {
+    "name": "소문에 흔들리지 않는다",
+    "origin": "규율(規律)·간파(看破)",
+    "formerName": "소문에는 상복을 입지 않는다",
+    "text": "이 부대와 맞닿은 아군 1부대는 거짓 소문·사기 판정을 일으키는 적 전법에 걸리지 않는다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_DEAF_TO_RUMOR",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "퇴로를 먼저 연다",
+    "origin": "이릉 후위",
+    "formerName": "진군보다 퇴로",
+    "text": "2칸 안 아군 모두 1차례 교전 이탈 추격을 받지 않고 이동 +1.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_RETREAT_FIRST",
+      "params": {
+       "range": 2
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G88",
+   "name": "엄안",
+   "hanja": "嚴顏",
+   "factionCandidate": "F08",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 76,
+    "무용": 72,
+    "지략": 65,
+    "정무": 57,
+    "감화": 79
+   },
+   "sub": {
+    "전열 유지": 86,
+    "기동": 54,
+    "전환": 62,
+    "수습": 79,
+    "힘": 65,
+    "기술": 73,
+    "막아내기": 80,
+    "되받기": 71,
+    "군재": 65,
+    "응변": 64,
+    "속이기": 38,
+    "통찰": 75,
+    "행정": 58,
+    "병참": 61,
+    "인사": 47,
+    "제도": 43,
+    "민정": 66,
+    "설득": 76,
+    "포섭": 54,
+    "결집": 87,
+    "중재": 60
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "MEDIUM"
+   },
+   "archetype": "DIGNITY DEFENDER",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "항복하지 않는 노장",
+    "origin": "단두장군(斷頭將軍)",
+    "formerName": "빼앗기지 않는 자세",
+    "text": "포로가 되지 않는다. 성을 지키는 동안 사기가 패주까지 떨어지지 않는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+     "지휘",
+     "궁병"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_NO_SURRENDER",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "밝은 달의 활",
+    "origin": "교월궁(皎月弓)",
+    "formerName": "단두장군",
+    "text": "사격 — 성 위의 적에게도 쏠 수 있고, 이 부대 받는 피해 −20%(1차례).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_MOONLIT_BOW",
+      "params": {
+       "reduce": 20
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G89",
+   "name": "유파",
+   "hanja": "劉巴",
+   "factionCandidate": "F08",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 47,
+    "무용": 29,
+    "지략": 82,
+    "정무": 92,
+    "감화": 48
+   },
+   "sub": {
+    "전열 유지": 49,
+    "기동": 35,
+    "전환": 45,
+    "수습": 61,
+    "힘": 23,
+    "기술": 28,
+    "막아내기": 36,
+    "되받기": 24,
+    "군재": 66,
+    "응변": 84,
+    "속이기": 62,
+    "통찰": 87,
+    "행정": 93,
+    "병참": 85,
+    "인사": 74,
+    "제도": 94,
+    "민정": 80,
+    "설득": 64,
+    "포섭": 31,
+    "결집": 38,
+    "중재": 46
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "BUILDER",
+   "primaryClass": "후토(后土)",
+   "secondaryClass": "여와(女媧)",
+   "uniqueTrait": {
+    "name": "돈을 찍어 낸다",
+    "origin": "주폐(鑄幣)·직백전(直百錢)",
+    "formerName": "사교 없는 공무",
+    "text": "세력 생산 +10%, 성 작업을 인망으로 대신 치를 때 비용 −30%. 대가: 이 장수가 태수인 성 치안이 나빠질 원인 +1(물가).",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무"
+    ],
+    "domestic": true,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_MINT",
+      "params": {
+       "prod": 10
+      },
+      "when": "PASSIVE",
+      "target": "CITY",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "병력을 고르게 나눈다",
+    "origin": "장부대로 재정렬",
+    "formerName": "장부대로 재정렬",
+    "text": "2칸 안 아군 중 병력이 가장 많은 부대에서 가장 적은 부대로 병력 10%를 옮긴다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_REBALANCE",
+      "params": {
+       "ratio": 10
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G90",
+   "name": "장위",
+   "hanja": "張衛",
+   "factionCandidate": "F09",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 75,
+    "무용": 68,
+    "지략": 59,
+    "정무": 46,
+    "감화": 65
+   },
+   "sub": {
+    "전열 유지": 83,
+    "기동": 41,
+    "전환": 45,
+    "수습": 60,
+    "힘": 68,
+    "기술": 62,
+    "막아내기": 78,
+    "되받기": 67,
+    "군재": 70,
+    "응변": 42,
+    "속이기": 39,
+    "통찰": 55,
+    "행정": 47,
+    "병참": 57,
+    "인사": 43,
+    "제도": 35,
+    "민정": 44,
+    "설득": 57,
+    "포섭": 42,
+    "결집": 74,
+    "중재": 38
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "archetype": "RESISTER",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "산채의 쌀",
+    "origin": "미도(米道)",
+    "formerName": "거듭 건 빗장",
+    "text": "언덕·산에 있으면 차례 시작에 부상병 20 복귀, 받는 피해 −10%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_MOUNTAIN_RICE",
+      "params": {
+       "heal": 20
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "관문 사이를 잇는 진",
+    "origin": "양평관(陽平關)",
+    "formerName": "양평의 연결진",
+    "text": "2칸 안에서 성문·방어 태세인 아군 모두 다음 적 차례 받는 피해 −20%.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_LINKED_GATES",
+      "params": {
+       "reduce": 20
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G91",
+   "name": "양앙",
+   "hanja": "楊昂",
+   "factionCandidate": "F09",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 69,
+    "무용": 70,
+    "지략": 54,
+    "정무": 38,
+    "감화": 51
+   },
+   "sub": {
+    "전열 유지": 65,
+    "기동": 73,
+    "전환": 58,
+    "수습": 44,
+    "힘": 72,
+    "기술": 70,
+    "막아내기": 61,
+    "되받기": 58,
+    "군재": 55,
+    "응변": 53,
+    "속이기": 48,
+    "통찰": 43,
+    "행정": 36,
+    "병참": 52,
+    "인사": 38,
+    "제도": 25,
+    "민정": 31,
+    "설득": 45,
+    "포섭": 42,
+    "결집": 63,
+    "중재": 29
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "archetype": "BREAKER",
+   "primaryClass": "비렴(飛廉)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "야습",
+    "origin": "연의 양앙",
+    "formerName": "늦게 온 압력",
+    "text": "적 시야 밖에서 시작한 첫 공격 피해 +25%. 대가: 적이 물러나면(후퇴로 꾀어내기 포함) 반드시 따라간다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_NIGHT_ASSAULT",
+      "params": {
+       "bonus": 25
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "합류해 덮친다",
+    "origin": "합류 강습",
+    "formerName": "합류 강습",
+    "text": "2칸 안 아군이 이번 차례 공격한 적을 공격 — 피해 +30%. 대가: 이 부대 전열 흐트러짐.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_JOIN_THE_ASSAULT",
+      "params": {
+       "bonus": 30
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G92",
+   "name": "양송",
+   "hanja": "楊松",
+   "factionCandidate": "F09",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 33,
+    "무용": 22,
+    "지략": 72,
+    "정무": 62,
+    "감화": 55
+   },
+   "sub": {
+    "전열 유지": 31,
+    "기동": 38,
+    "전환": 42,
+    "수습": 23,
+    "힘": 18,
+    "기술": 21,
+    "막아내기": 29,
+    "되받기": 17,
+    "군재": 46,
+    "응변": 69,
+    "속이기": 91,
+    "통찰": 67,
+    "행정": 71,
+    "병참": 40,
+    "인사": 60,
+    "제도": 46,
+    "민정": 28,
+    "설득": 82,
+    "포섭": 55,
+    "결집": 24,
+    "중재": 34
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "MISDIRECTOR",
+   "primaryClass": "신루(蜃樓)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "매수의 창구",
+    "origin": "연의 양송",
+    "formerName": "두 번 읽는 보고",
+    "text": "적 장수 등용·귀순 비용 −30%. 대가: 이 장수는 적의 뇌물 전법에 반드시 걸린다.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_BRIBE_BROKER",
+      "params": {
+       "cost": 30
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "성문을 열어 준다",
+    "origin": "내통(內通)",
+    "formerName": "뒤집힌 전황",
+    "text": "2칸 안 적 성 내구도 −30% 즉시. 대가: 세력 인망 −15, 이 부대 사기 한 단계 하락.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_OPEN_THE_GATE",
+      "params": {
+       "dur": 30,
+       "fame": 15
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G93",
+   "name": "축융부인",
+   "hanja": "祝融夫人",
+   "factionCandidate": "F10",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 75,
+    "무용": 86,
+    "지략": 67,
+    "정무": 37,
+    "감화": 68
+   },
+   "sub": {
+    "전열 유지": 67,
+    "기동": 84,
+    "전환": 80,
+    "수습": 54,
+    "힘": 77,
+    "기술": 92,
+    "막아내기": 74,
+    "되받기": 83,
+    "군재": 59,
+    "응변": 74,
+    "속이기": 81,
+    "통찰": 64,
+    "행정": 31,
+    "병참": 44,
+    "인사": 37,
+    "제도": 22,
+    "민정": 40,
+    "설득": 58,
+    "포섭": 47,
+    "결집": 79,
+    "중재": 55
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+   },
+   "archetype": "MISDIRECTOR",
+   "primaryClass": "치우(蚩尤)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "되돌아오는 비도",
+    "origin": "비도(飛刀)",
+    "formerName": "되돌아오는 칼",
+    "text": "반격할 때 2칸 안 다른 적 1부대에도 비도를 던진다(×0.4).",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_RETURNING_KNIVES",
+      "params": {
+       "ratio": 40
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "불꽃 칼춤",
+    "origin": "화신난인(火神亂刃)",
+    "formerName": "걸음을 꿰는 비도",
+    "text": "맞닿은 적 모두 피해 + 불 + 사기 판정. 대가: 이 부대 전열 흐트러짐.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_FLAME_DANCE",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G94",
+   "name": "옹개",
+   "hanja": "雍闓",
+   "factionCandidate": "F10",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 65,
+    "무용": 54,
+    "지략": 73,
+    "정무": 61,
+    "감화": 77
+   },
+   "sub": {
+    "전열 유지": 59,
+    "기동": 61,
+    "전환": 64,
+    "수습": 45,
+    "힘": 56,
+    "기술": 52,
+    "막아내기": 53,
+    "되받기": 41,
+    "군재": 63,
+    "응변": 65,
+    "속이기": 76,
+    "통찰": 69,
+    "행정": 62,
+    "병참": 58,
+    "인사": 68,
+    "제도": 42,
+    "민정": 47,
+    "설득": 79,
+    "포섭": 82,
+    "결집": 66,
+    "중재": 52
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+   },
+   "archetype": "BROKER",
+   "primaryClass": "솔연(率然)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "이민족을 부추긴다",
+    "origin": "친만(親蠻)·선동(扇動)",
+    "formerName": "먼 이름의 무게",
+    "text": "숲·산에서 맞닿은 아군 보병 주는 피해 +10%. 적 성 3칸 안에서 차례를 끝내면 그 성 치안 한 단계 악화.",
+    "rarity": "EPIC",
+    "classTag": [
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STIR_TRIBES",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "반란을 퍼뜨린다",
+    "origin": "선동(扇動)",
+    "formerName": "한곳으로 온 깃발",
+    "text": "2칸 안 적 1부대 혼란, 이미 혼란인 적은 1차례 더.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SPREAD_REVOLT",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G95",
+   "name": "고정",
+   "hanja": "高定",
+   "factionCandidate": "F10",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 68,
+    "무용": 73,
+    "지략": 52,
+    "정무": 41,
+    "감화": 61
+   },
+   "sub": {
+    "전열 유지": 76,
+    "기동": 59,
+    "전환": 58,
+    "수습": 43,
+    "힘": 78,
+    "기술": 68,
+    "막아내기": 73,
+    "되받기": 62,
+    "군재": 58,
+    "응변": 48,
+    "속이기": 33,
+    "통찰": 57,
+    "행정": 38,
+    "병참": 51,
+    "인사": 42,
+    "제도": 26,
+    "민정": 45,
+    "설득": 46,
+    "포섭": 48,
+    "결집": 72,
+    "중재": 35
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+   },
+   "archetype": "PRESERVER",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "대기한 자리에서 버틴다",
+    "origin": "발 딛은 자리",
+    "formerName": "발 딛은 자리",
+    "text": "직전 차례에 대기·방어 태세였으면 다음 첫 교전에서 받는 피해 −25%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_PLANTED_FEET",
+      "params": {
+       "reduce": 25
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "여기가 네 싸움터다",
+    "origin": "고정의 맹약",
+    "formerName": "여기가 네 싸움터다",
+    "text": "맞닿은 적 1부대를 2차례 묶는다(이동 불가). 대가: 이 부대도 이동할 수 없다.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_YOUR_BATTLEFIELD",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G96",
+   "name": "전예",
+   "hanja": "田豫",
+   "factionCandidate": "F11",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 86,
+    "무용": 66,
+    "지략": 90,
+    "정무": 83,
+    "감화": 79
+   },
+   "sub": {
+    "전열 유지": 84,
+    "기동": 82,
+    "전환": 91,
+    "수습": 82,
+    "힘": 62,
+    "기술": 61,
+    "막아내기": 72,
+    "되받기": 78,
+    "군재": 88,
+    "응변": 92,
+    "속이기": 89,
+    "통찰": 91,
+    "행정": 84,
+    "병참": 80,
+    "인사": 78,
+    "제도": 68,
+    "민정": 86,
+    "설득": 82,
+    "포섭": 84,
+    "결집": 76,
+    "중재": 69
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "HEDGER",
+   "primaryClass": "천구(天狗)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "달아날 길을 읽는다",
+    "origin": "성산 매복",
+    "formerName": "돌아갈 길",
+    "text": "2칸 안 적이 교전에서 빠지면 이 부대가 즉시 1회 공격한다(×0.6, 차례 1회).",
+    "rarity": "EPIC",
+    "classTag": [
+     "지략",
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_READ_THE_ESCAPE",
+      "params": {
+       "ratio": 60
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "연기를 남기고 물러난다",
+    "origin": "규략명련(規略明練)",
+    "formerName": "연기는 남겨두고",
+    "text": "2칸 물러나며 원래 칸에 연막(1차례 적 시야 차단) + 2칸 안 아군 상태이상 해제.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_SMOKE_RETREAT",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G97",
+   "name": "관정",
+   "hanja": "關靖",
+   "factionCandidate": "F11",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 48,
+    "무용": 31,
+    "지략": 52,
+    "정무": 53,
+    "감화": 65
+   },
+   "sub": {
+    "전열 유지": 56,
+    "기동": 27,
+    "전환": 32,
+    "수습": 44,
+    "힘": 28,
+    "기술": 24,
+    "막아내기": 39,
+    "되받기": 22,
+    "군재": 42,
+    "응변": 35,
+    "속이기": 45,
+    "통찰": 62,
+    "행정": 58,
+    "병참": 46,
+    "인사": 48,
+    "제도": 38,
+    "민정": 42,
+    "설득": 71,
+    "포섭": 36,
+    "결집": 70,
+    "중재": 49
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "LOW",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "archetype": "PRESERVER",
+   "primaryClass": "비희(贔屭)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "농성을 고집한다",
+    "origin": "역경(易京) 농성",
+    "formerName": "남아 있는 사람",
+    "text": "성 안에 있으면 받는 피해 −20%. 대가: 성 밖으로 나가는 이동 −2.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_STUBBORN_SIEGE",
+      "params": {
+       "reduce": 20
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "주군을 따라 돌격",
+    "origin": "관정의 순사",
+    "formerName": "그 자리에 남으시오",
+    "text": "군주 부대가 패주·소멸했거나 성이 함락된 뒤에만 — 피해 ×2, 그 뒤 이 부대 패주.",
+    "rarity": "LEGENDARY",
+    "classTag": "고유",
+    "range": 1,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_FOLLOW_THE_LORD",
+      "params": {
+       "ratio": 200
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G98",
+   "name": "염상",
+   "hanja": "閻象",
+   "factionCandidate": "F12",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 34,
+    "무용": 24,
+    "지략": 71,
+    "정무": 65,
+    "감화": 61
+   },
+   "sub": {
+    "전열 유지": 36,
+    "기동": 28,
+    "전환": 33,
+    "수습": 30,
+    "힘": 20,
+    "기술": 22,
+    "막아내기": 31,
+    "되받기": 18,
+    "군재": 42,
+    "응변": 58,
+    "속이기": 26,
+    "통찰": 83,
+    "행정": 65,
+    "병참": 39,
+    "인사": 55,
+    "제도": 73,
+    "민정": 52,
+    "설득": 78,
+    "포섭": 35,
+    "결집": 43,
+    "중재": 62
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+   },
+   "archetype": "REMONSTRATOR",
+   "primaryClass": "해치(獬豸)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "바른말은 멈추지 않는다",
+    "origin": "고간(苦諫)",
+    "formerName": "같은 저울",
+    "text": "군주와 같은 성·2칸 안이면 군주 부대 사기 판정 가중 −10. 태수일 때 그 성 인망 산출 +10%.",
+    "rarity": "EPIC",
+    "classTag": [
+     "정무",
+     "감화"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_HONEST_COUNSEL",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "문왕의 옛일을 든다",
+    "origin": "주 문왕 고사",
+    "formerName": "그 이름의 자격",
+    "text": "2칸 안 적 1부대와 지략 대결 — 이기면 그 적 2차례 공격 불가(망설임). 대가: 지면 이 부대 사기 한 단계 하락.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 3,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_KING_WEN",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G99",
+   "name": "장훈",
+   "hanja": "張勳",
+   "factionCandidate": "F12",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 71,
+    "무용": 63,
+    "지략": 53,
+    "정무": 48,
+    "감화": 59
+   },
+   "sub": {
+    "전열 유지": 72,
+    "기동": 61,
+    "전환": 78,
+    "수습": 57,
+    "힘": 64,
+    "기술": 59,
+    "막아내기": 66,
+    "되받기": 51,
+    "군재": 59,
+    "응변": 47,
+    "속이기": 33,
+    "통찰": 45,
+    "행정": 45,
+    "병참": 60,
+    "인사": 54,
+    "제도": 32,
+    "민정": 35,
+    "설득": 53,
+    "포섭": 45,
+    "결집": 66,
+    "중재": 61
+   },
+   "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "archetype": "COHESION-SEEKER",
+   "primaryClass": "솔연(率然)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "주군의 군을 끌고 간다",
+    "origin": "불굴(不屈)",
+    "formerName": "엇갈리지 않는 군기",
+    "text": "보급이 끊겨도(포위·성에서 멀어도) 사기 판정 가중 −10, 식량 부족 감산 절반.",
+    "rarity": "EPIC",
+    "classTag": [
+     "지휘"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_CARRY_THE_ARMY",
+      "params": {},
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "함께 출정한다",
+    "origin": "수정(隨征)",
+    "formerName": "합군의 차례",
+    "text": "2칸 안 아군 1부대 1차례 공격 사거리 +1(근접은 2칸 공격 가능) + 이동 +1.",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 2,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_MARCH_TOGETHER",
+      "params": {},
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  },
+  {
+   "id": "G100",
+   "name": "유훈",
+   "hanja": "劉勳",
+   "factionCandidate": "F12",
+   "memoryLine": null,
+   "stats": {
+    "지휘": 61,
+    "무용": 58,
+    "지략": 46,
+    "정무": 52,
+    "감화": 63
+   },
+   "sub": {
+    "전열 유지": 49,
+    "기동": 55,
+    "전환": 42,
+    "수습": 60,
+    "힘": 61,
+    "기술": 53,
+    "막아내기": 57,
+    "되받기": 43,
+    "군재": 48,
+    "응변": 41,
+    "속이기": 37,
+    "통찰": 35,
+    "행정": 55,
+    "병참": 41,
+    "인사": 51,
+    "제도": 30,
+    "민정": 38,
+    "설득": 55,
+    "포섭": 73,
+    "결집": 60,
+    "중재": 33
+   },
+   "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "LOW",
+    "BT03": "LOW",
+    "BT04": "LOW"
+   },
+   "archetype": "CONQUEROR",
+   "primaryClass": "포뢰(蒲牢)",
+   "secondaryClass": null,
+   "uniqueTrait": {
+    "name": "욕심이 앞선다",
+    "origin": "유훈의 탐욕",
+    "formerName": "모여드는 깃발",
+    "text": "패주한 적·성 공격 피해 +20%. 대가: 자기 성에서 3칸 넘게 떨어지면 그 성 수비 부대 받는 피해 +15%(본거지를 비운다).",
+    "rarity": "EPIC",
+    "classTag": [
+     "무용"
+    ],
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_GREED",
+      "params": {
+       "bonus": 20,
+       "cost": 15
+      },
+      "when": "PASSIVE",
+      "target": "SELF",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "signatureTactic": {
+    "kind": "tactic",
+    "name": "모두 모여라",
+    "origin": "한데 모아 외쳐라",
+    "formerName": "한데 모아 외쳐라",
+    "text": "2칸 안 아군 부대 수만큼 이번 차례 주는 피해 +8%씩(최대 +32%).",
+    "rarity": "EPIC",
+    "classTag": "고유",
+    "range": 0,
+    "cooldown": 2,
+    "effects": [
+     {
+      "op": "RULE",
+      "rule": "U_RALLY_ALL",
+      "params": {
+       "per": 8,
+       "max": 32
+      },
+      "when": "ON_TACTIC_USE",
+      "target": "TARGET",
+      "value": 0,
+      "duration": 0,
+      "condition": null
+     }
+    ]
+   },
+   "draftPool": []
+  }
+ ]
+}

@@ -1,0 +1,124 @@
+{
+  "id": "G49",
+  "name": "기령",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "hefei"
+  },
+  "stats": {
+    "지휘": 76,
+    "무용": 77,
+    "지략": 60,
+    "정무": 55,
+    "감화": 64
+  },
+  "sub": {
+    "전열 유지": 73,
+    "기동": 61,
+    "전환": 84,
+    "수습": 81,
+    "힘": 79,
+    "기술": 78,
+    "막아내기": 76,
+    "되받기": 64,
+    "군재": 58,
+    "응변": 62,
+    "속이기": 43,
+    "통찰": 65,
+    "행정": 57,
+    "병참": 65,
+    "인사": 56,
+    "제도": 47,
+    "민정": 51,
+    "설득": 62,
+    "포섭": 46,
+    "결집": 72,
+    "중재": 68
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "병사를 아낀다",
+    "text": "잃는 병력 중 전사 비율 −15%p(30% → 15%). 10일 정산 때 이 부대 부상병 60명 복귀.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "무용"
+    ],
+    "effects": [
+      {
+        "op": "CASUALTY_SHIFT",
+        "when": "PASSIVE",
+        "target": "SELF",
+        "value": 15,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "HEAL_TROOPS",
+        "when": "TURN_SETTLE",
+        "target": "SELF",
+        "value": 60,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 공격 취소·후방 이동·인접 아군 동행을 '함께 빠질 이동+사기 회복'으로 살렸다(전과 포기 대가 유지). 퇴각준비→정비준비 변환은 지도에 없어 '데려온 사람까지 살려 돌아온다'를 전사 감소·정산 회복으로 옮겼다.",
+    "formerName": "끝난 일의 경계"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "멈추고 거둔다",
+      "text": "공격을 멈추고 거둔다: 기령과 맞닿은 아군 모두 사기 한 단계 회복, 기령과 그 아군 1턴 동안 이동 +2칸.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 2,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 2,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "공개된 선에서 거둔다"
+    }
+  ]
+}

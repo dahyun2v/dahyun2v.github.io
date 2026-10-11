@@ -1,0 +1,366 @@
+{
+  "schema": "g21-growth-trait-contract-v1",
+  "version": 1,
+  "status": "TRIAL_CANONICAL_INPUT_NOT_RUNTIME_CONNECTED",
+  "updated": "2026-09-21",
+  "characterId": "G21",
+  "displayName": "방통",
+  "candidateSourceRef": "docs/design-data/map-start-v1.json#P02:G21",
+  "canonicalSourceRefs": [
+    "docs/work-integration/20260921/round-06/g21-officer-contract-v1.json#officerTemplateCore",
+    "docs/work-integration/20260921/round-06/g21-concept.md",
+    "docs/장수-특기-전법-30인.md#G21",
+    "docs/chat-migration/20260920/6aae87a1-6f7c-83e8-8676-d0067040714c/page-002.md#방통",
+    "docs/운영-3세력-시작시나리오-v1.md#장소와-실제-인물"
+  ],
+  "designBoundary": {
+    "identityVerb": "뒤집음",
+    "combatRole": "판 흔들기 / 위험한 책략 / 단기 전략전환",
+    "differenceFromG03": "G03은 준비와 질서로 유리한 조건을 만들고, G21은 이미 굳어진 교착의 조건을 흔들어 위험한 새 경로를 연다.",
+    "permanentWeaknesses": [
+      "정면 화력과 생존력이 낮다",
+      "안정적인 장기 행정과 방어 준비는 G03보다 약하다",
+      "변칙 선택은 실패·정화·재적용 저항의 대응을 받는다"
+    ],
+    "profileCandidate": "HERO",
+    "roleAffinity": {
+      "CONTROL": "CORE",
+      "BREAKTHROUGH": "GOOD",
+      "GOVERNANCE": "POOR",
+      "OTHER": "OK"
+    },
+    "forbidden": [
+      "G03 수치 하향 복제",
+      "무조건 성공하는 혼란",
+      "경로·시야·동시판정·저장 결정론 우회",
+      "역사적 유명세에 따른 영구 성장 상한"
+    ]
+  },
+  "officerTemplateContract": {
+    "schema": "first3-recruitable-officer-template-v1",
+    "materializerApi": "materializeCanonicalOfficerRecord(template, { destinationFactionId, destinationRef })",
+    "requiredRuntimeInputs": {
+      "destinationFactionId": "existing factionId",
+      "destinationRef": "CITY:<owned cityId>"
+    },
+    "runtimeOverlay": {
+      "allegianceFactionId": "$destinationFactionId",
+      "locationRef": {
+        "kind": "CITY",
+        "id": "$destinationRef without CITY: prefix"
+      },
+      "lifeState": "ALIVE",
+      "conditionState": "NORMAL",
+      "captivityState": "FREE",
+      "captorFactionId": null,
+      "travelState": "STATIONARY"
+    },
+    "staticRecord": {
+      "officerId": "G21",
+      "name": "방통",
+      "level": 1,
+      "experience": 0,
+      "baseStats": {
+        "leadership": 78,
+        "might": 39,
+        "intelligence": 94,
+        "politics": 74,
+        "charisma": 70
+      },
+      "subStats": {
+        "공격지휘": 84,
+        "방어지휘": 66,
+        "기동지휘": 86,
+        "사기유지": 76,
+        "완력": 30,
+        "치명": 32,
+        "공속": 36,
+        "체력": 58,
+        "군략": 96,
+        "모략": 100,
+        "간파": 94,
+        "회피": 86,
+        "농정": 60,
+        "행정": 76,
+        "민정": 68,
+        "병참": 90,
+        "사기회복": 68,
+        "체력회복": 58,
+        "등용": 78,
+        "친화": 76
+      },
+      "rolePrimary": "책사",
+      "roleSecondary": "문관",
+      "allowedTroops": [
+        "mystic",
+        "bow",
+        "engineer",
+        "spear"
+      ],
+      "aptitude": {
+        "mystic": "B",
+        "bow": "C",
+        "engineer": "C",
+        "spear": "C"
+      },
+      "aptitudePoints": 0,
+      "uniqueTrait": {
+        "id": "UT-G21",
+        "name": "봉추의 얽힌 수",
+        "level": 1,
+        "effect": "이미 둔화된 적에게 자신이 거는 혼란의 지속시간이 늘어난다.",
+        "growth": "조건부 혼란 지속시간 보너스",
+        "condition": "정신 교란 계열을 공유하며 혼란 상한과 정화 후 재적용 저항을 넘지 않는다.",
+        "implementationStatus": "UNSUPPORTED"
+      },
+      "acquiredTraits": [],
+      "activeTraits": [],
+      "tactics": [
+        {
+          "id": "ART-G21",
+          "name": "봉추의 미혹",
+          "command": "책략",
+          "allowed_units": [
+            "술병",
+            "궁병",
+            "공병",
+            "창병"
+          ],
+          "stat": "모략",
+          "cooldown_family": "정신 교란",
+          "burden": "보통",
+          "effect": "적 한 부대에 혼란을 시도한다.",
+          "condition": "정신 교란 계열을 공유하며 둔화·혼란 상한과 정화 후 재적용 저항을 지킨다.",
+          "implementationStatus": "UNSUPPORTED",
+          "source": "../장수-특기-전법-30인.md#G21"
+        }
+      ]
+    }
+  },
+  "growthContract": {
+    "initialLevel": 1,
+    "initialXp": 0,
+    "initialAptitudePoints": 0,
+    "coreTraitId": "UT-G21",
+    "coreTraitRank": 1,
+    "affinityTags": [
+      "DISRUPT",
+      "DEADLOCK_BREAK",
+      "DECEPTION"
+    ],
+    "profileCandidate": "HERO",
+    "roleAffinity": {
+      "CONTROL": "CORE",
+      "BREAKTHROUGH": "GOOD",
+      "GOVERNANCE": "POOR",
+      "OTHER": "OK"
+    },
+    "potentialDirection": {
+      "scale": [
+        "F",
+        "E",
+        "D",
+        "C",
+        "B",
+        "A",
+        "S",
+        "S+",
+        "SR",
+        "SSR",
+        "UR"
+      ],
+      "trialBand": "A",
+      "status": "TEST_VALUE_NOT_RUNTIME_IMPLEMENTED",
+      "seedAndRolledValueMustPersist": true,
+      "historicalFamePermanentCap": false
+    },
+    "branchCandidates": [
+      {
+        "branchId": "G21-BRANCH-CHAIN-DISRUPTION",
+        "displayName": "연환교란형",
+        "prioritySubStats": [
+          "모략",
+          "간파",
+          "군략",
+          "회피"
+        ],
+        "capabilityDirection": "선행 둔화와 상태를 연환해 교착을 흔드는 선택을 연다",
+        "status": "DESIGN_INPUT_NOT_STAT_GROWTH_IMPLEMENTED"
+      },
+      {
+        "branchId": "G21-BRANCH-ROUGH-ROAD",
+        "displayName": "험로기책형",
+        "prioritySubStats": [
+          "군략",
+          "병참",
+          "기동지휘",
+          "모략"
+        ],
+        "capabilityDirection": "지형과 불완전한 경로를 이용해 위험한 단기 전환을 연다",
+        "status": "DESIGN_INPUT_NOT_STAT_GROWTH_IMPLEMENTED"
+      }
+    ],
+    "legacyShapeGrowthProfileCandidate": {
+      "subStats": [
+        "공격지휘",
+        "기동지휘",
+        "군략",
+        "모략",
+        "간파",
+        "회피",
+        "병참",
+        "등용"
+      ],
+      "incrementTrial": 1,
+      "status": "SOURCE_RECORD_COMPLETENESS_ONLY_NOT_AUTOMATIC_GROWTH"
+    },
+    "registrationRule": "Roster add, growth profile, progress level/xp and merged pool binding must commit atomically. Recruitment grants no retroactive XP, entitlement or draft."
+  },
+  "traitPoolExtension": {
+    "schema": "growth-trait-pool-extension-v1",
+    "extensionVersion": "g21-growth-trait-extension-v1",
+    "basePoolVersionRequired": "first3-growth-trial-pool-v1",
+    "outputPoolVersion": "first3-growth-trial-pool-v1-g21-v1",
+    "mergePolicy": "ADD_ONLY_PRESERVE_BASE_TRAITS_BYTE_FOR_BYTE",
+    "forbiddenTraitIds": [
+      "UT-G03"
+    ],
+    "traits": [
+      {
+        "traitId": "UT-G21",
+        "displayName": "봉추의 얽힌 수",
+        "ownershipType": "CORE",
+        "ownerCharacterId": "G21",
+        "rarity": "HEROIC",
+        "rankMax": 5,
+        "stageTags": [
+          "EARLY",
+          "MID",
+          "LATE"
+        ],
+        "affinityTags": [
+          "DISRUPT",
+          "DEADLOCK_BREAK",
+          "DECEPTION"
+        ],
+        "roleTags": [
+          "STRATEGIST",
+          "CONTROL"
+        ],
+        "situationTags": [
+          "STALEMATE",
+          "CHOKE",
+          "ENEMY_SLOWED"
+        ],
+        "experienceTags": [
+          "DISRUPT",
+          "CONTROL",
+          "REVERSAL"
+        ],
+        "prerequisiteTraitIds": [],
+        "sourceStatus": "G21_EXISTING_UNIQUE_NAME_TRIAL_RUNTIME_CONTRACT",
+        "effectContract": {
+          "implementationStatus": "UNSUPPORTED",
+          "latestCapabilityCandidate": "HERO_PANGTONG_BREAK_DEADLOCK",
+          "reasonCode": "CONFUSION_AND_DEADLOCK_OPERATION_ADAPTER_MISSING",
+          "notes": "Ownership and draft eligibility only. No confusion duration, path exception or combat modifier is enabled."
+        }
+      },
+      {
+        "traitId": "TRIAL_PUBLIC_FALSE_OPENING_V1",
+        "displayName": "허실의 틈",
+        "ownershipType": "PUBLIC",
+        "rarity": "RARE",
+        "rankMax": 5,
+        "stageTags": [
+          "EARLY",
+          "MID",
+          "LATE"
+        ],
+        "affinityTags": [
+          "DISRUPT",
+          "DECEPTION"
+        ],
+        "roleTags": [
+          "STRATEGIST",
+          "CONTROL"
+        ],
+        "situationTags": [
+          "STALEMATE",
+          "CHOKE"
+        ],
+        "experienceTags": [
+          "DISRUPT",
+          "FEINT"
+        ],
+        "prerequisiteTraitIds": [],
+        "sourceStatus": "NEW_ROUND06_TRIAL_ID",
+        "effectContract": {
+          "implementationStatus": "UNSUPPORTED",
+          "latestCapabilityCandidate": "PUBLIC_FALSE_OPENING_CHOICE",
+          "reasonCode": "CONDITIONAL_OPERATION_CHOICE_NOT_IMPLEMENTED",
+          "notes": "Candidate weighting only. It does not create movement, attack or event choices at runtime."
+        }
+      },
+      {
+        "traitId": "TRIAL_PUBLIC_CHAIN_BREAK_V1",
+        "displayName": "연쇄절단",
+        "ownershipType": "PUBLIC",
+        "rarity": "HEROIC",
+        "rankMax": 5,
+        "stageTags": [
+          "MID",
+          "LATE"
+        ],
+        "affinityTags": [
+          "DEADLOCK_BREAK",
+          "REVERSAL"
+        ],
+        "roleTags": [
+          "STRATEGIST",
+          "CONTROL"
+        ],
+        "situationTags": [
+          "STALEMATE",
+          "ENEMY_SLOWED"
+        ],
+        "experienceTags": [
+          "CONTROL",
+          "REVERSAL"
+        ],
+        "prerequisiteTraitIds": [
+          "TRIAL_PUBLIC_FALSE_OPENING_V1"
+        ],
+        "sourceStatus": "NEW_ROUND06_TRIAL_ID",
+        "effectContract": {
+          "implementationStatus": "UNSUPPORTED",
+          "latestCapabilityCandidate": "PUBLIC_CHAIN_BREAK_OPERATION",
+          "reasonCode": "FOLLOW_UP_OPERATION_AND_COUNTERPLAY_NOT_IMPLEMENTED",
+          "notes": "Prerequisite eligibility can be evaluated by growth-draft. No follow-up operation or control effect is enabled."
+        }
+      }
+    ]
+  },
+  "validationBoundary": {
+    "confirmed": [
+      "G21 identity and existing unique/tactic names",
+      "OfficerTemplate field completeness",
+      "base pool ID non-collision",
+      "merged pool structural validity",
+      "G21 core rank 1 initialization and other-character core exclusion"
+    ],
+    "trialValues": [
+      "all baseStats and subStats",
+      "potential A direction",
+      "rarity and branch priorities",
+      "new public trait names and tags"
+    ],
+    "notImplemented": [
+      "runtime roster materializer and 10th-officer schema extension",
+      "growthTrack/progress dynamic character registration",
+      "all G21 trait and tactic effects",
+      "branch stat growth and Potential rolling",
+      "browser UI, AI use and balance"
+    ]
+  }
+}

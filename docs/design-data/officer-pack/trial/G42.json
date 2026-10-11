@@ -1,0 +1,120 @@
+{
+  "id": "G42",
+  "name": "위연",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "xiangyang"
+  },
+  "stats": {
+    "지휘": 86,
+    "무용": 88,
+    "지략": 76,
+    "정무": 60,
+    "감화": 53
+  },
+  "sub": {
+    "전열 유지": 84,
+    "기동": 88,
+    "전환": 83,
+    "수습": 73,
+    "힘": 86,
+    "기술": 90,
+    "막아내기": 83,
+    "되받기": 88,
+    "군재": 82,
+    "응변": 76,
+    "속이기": 70,
+    "통찰": 65,
+    "행정": 59,
+    "병참": 71,
+    "인사": 55,
+    "제도": 66,
+    "민정": 56,
+    "설득": 55,
+    "포섭": 46,
+    "결집": 73,
+    "중재": 28
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "뒤를 노리는 맹장",
+    "text": "측면·후방에서 공격하면 주는 피해 +30%. 적 부대를 쓰러뜨리면 다음 차례 이동 +2칸.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "무용"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 30,
+        "duration": 0,
+        "condition": "FLANK"
+      },
+      {
+        "op": "MOVE_MOD",
+        "when": "ON_KILL",
+        "target": "SELF",
+        "value": 2,
+        "duration": 1,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 합류칸 도착 뒤 측면 공격 ×1.30을 FLANK 조건 +30%로 그대로 살리고, 우회 경로(추격 예외는 RULE이라 제외)는 다음 차례 큰 이동+고양으로 옮겼다. 지원 없는 고립 위험은 혼자 멀리 나가는 구조로 남는다.",
+    "formerName": "끝낼 몫은 내게"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "샛길 잡기",
+      "text": "공격 대신 샛길을 잡는다: 다음 차례 이동 +3칸, 2턴 동안 고양(공격 +10%).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 0,
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 3,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 2,
+          "condition": null,
+          "status": "INSPIRED"
+        }
+      ],
+      "formerName": "떼어 맡긴 길"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK"
+  ]
+}

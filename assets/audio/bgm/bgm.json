@@ -1,0 +1,83 @@
+{
+ "note": "로컬 Stable Audio 3 초안 v1 을 다듬은 것. 최종 곡으로 갈아 끼울 때 같은 이름을 쓴다.",
+ "tracks": {
+  "title": {
+   "file": "title.ogg",
+   "loop": true,
+   "seconds": 55.8,
+   "source": "title-v1.wav",
+   "rms": 0.11,
+   "peak": 0.647,
+   "bytes": 866663,
+   "seamJump": 0.0277
+  },
+  "map-peace": {
+   "file": "map-peace.ogg",
+   "loop": true,
+   "seconds": 39.55,
+   "source": "map-peace-v1.wav",
+   "rms": 0.091,
+   "peak": 0.901,
+   "bytes": 609265,
+   "seamJump": 0.0445
+  },
+  "map-war": {
+   "file": "map-war.ogg",
+   "loop": true,
+   "seconds": 55.1,
+   "source": "map-war-v1.wav",
+   "rms": 0.11,
+   "peak": 0.832,
+   "bytes": 814406,
+   "seamJump": 0.0165
+  },
+  "battle": {
+   "file": "battle.ogg",
+   "loop": true,
+   "seconds": 55.35,
+   "source": "battle-v1.wav",
+   "rms": 0.109,
+   "peak": 0.676,
+   "bytes": 731499,
+   "seamJump": 0.0055
+  },
+  "city": {
+   "file": "city.ogg",
+   "loop": true,
+   "seconds": 56.8,
+   "source": "city-v1.wav",
+   "rms": 0.11,
+   "peak": 0.837,
+   "bytes": 840906,
+   "seamJump": 0.014
+  },
+  "crisis": {
+   "file": "crisis.ogg",
+   "loop": true,
+   "seconds": 40.75,
+   "source": "event-crisis-v1.wav",
+   "rms": 0.109,
+   "peak": 0.747,
+   "bytes": 545832,
+   "seamJump": 0.0188
+  },
+  "victory": {
+   "file": "victory.ogg",
+   "loop": false,
+   "seconds": 19.2,
+   "source": "victory-v1.wav",
+   "rms": 0.11,
+   "peak": 0.797,
+   "bytes": 288246
+  },
+  "defeat": {
+   "file": "defeat.ogg",
+   "loop": false,
+   "seconds": 19.85,
+   "source": "defeat-v1.wav",
+   "rms": 0.09,
+   "peak": 0.906,
+   "bytes": 273634
+  }
+ }
+}

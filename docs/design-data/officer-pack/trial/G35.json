@@ -1,0 +1,120 @@
+{
+  "id": "G35",
+  "name": "가후",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "luoyang"
+  },
+  "stats": {
+    "지휘": 57,
+    "무용": 26,
+    "지략": 95,
+    "정무": 77,
+    "감화": 82
+  },
+  "sub": {
+    "전열 유지": 59,
+    "기동": 50,
+    "전환": 55,
+    "수습": 58,
+    "힘": 22,
+    "기술": 29,
+    "막아내기": 26,
+    "되받기": 27,
+    "군재": 93,
+    "응변": 96,
+    "속이기": 95,
+    "통찰": 97,
+    "행정": 76,
+    "병참": 62,
+    "인사": 84,
+    "제도": 66,
+    "민정": 64,
+    "설득": 93,
+    "포섭": 86,
+    "결집": 59,
+    "중재": 85
+  },
+  "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+  },
+  "role": "책사",
+  "style": "명사",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "궁지에서 바뀌는 꾀",
+    "text": "병력이 절반 아래로 줄면 답을 바꾼다: 내 차례 시작에 이번 차례 이동 +2칸, 공격·추격을 받으면 그 적은 다음 차례 공격하지 못한다(혼란).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지략"
+    ],
+    "effects": [
+      {
+        "op": "MOVE_MOD",
+        "when": "ROUND_START",
+        "target": "SELF",
+        "value": 2,
+        "duration": 1,
+        "condition": "HP_BELOW:50"
+      },
+      {
+        "op": "STATUS_APPLY",
+        "when": "ON_DEFEND",
+        "target": "TARGET",
+        "value": 0,
+        "duration": 1,
+        "condition": "HP_BELOW:50",
+        "status": "CONFUSED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 아군의 Contact 해제·추격 1건 취소(최소 개입 이탈 보조)를 이동 +3·추격 피해 감소로, 실패한 이탈의 전환은 '열세일 때 이동 +2·추격자 혼란'으로 옮김(장수 추격 고사). 정면 전투 약점은 그대로.",
+    "formerName": "대답을 바꿀 권리"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "거짓 명령",
+      "text": "2칸 안 적 1부대에게 조건을 바꿔 알린다: 다음 차례 공격하지 못하고(혼란 1턴), 즉시 전열 판정(가중 15).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "CONFUSED"
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": -15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "방금 바뀐 조건"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

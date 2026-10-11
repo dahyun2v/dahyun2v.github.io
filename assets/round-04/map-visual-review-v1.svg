@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">ROUND-04 18x14 지도 심벌과 지형 가독성 검토판</title>
+  <desc id="desc">실제 지도 크기 비율에서 도시, 여섯 병종, 선택, 이동, 패주, 시야, 플레이어 기력과 숲·산의 시각적 차이를 검사하는 벡터 검토판이다.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#a9b864" stroke="#24313b" stroke-width="1.25"/></pattern>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="760" fill="#17232b"/>
+  <text x="40" y="45" fill="#f6f1de" font-family="sans-serif" font-size="24" font-weight="700">ROUND-04 · 18×14 지도 가독성 검토판</text>
+  <text x="40" y="70" fill="#b8c7ca" font-family="sans-serif" font-size="14">심벌은 화면 표기만 담당한다. 숨은 적 병력·기력·의도는 표시하지 않는다.</text>
+  <g transform="translate(40 100)">
+    <rect width="720" height="560" rx="8" fill="url(#grid)"/>
+    <!-- 18 columns x 14 rows at 40px. Region textures remain distinct even under overlays. -->
+    <path d="M0 80h200v160H0z" fill="#bb8050" opacity=".92"/><path d="M520 0h200v240H520z" fill="#68747e" opacity=".94"/>
+    <path d="M240 240h240v200H240z" fill="#2d6546" opacity=".96"/><path d="M0 440h720v120H0z" fill="#dce8ef" opacity=".94"/>
+    <path d="M40 140c60-45 92 15 150-26M55 165c55-35 90 5 135-22" fill="none" stroke="#e7c886" stroke-width="4" opacity=".7"/>
+    <path d="M282 260c8-34 25-39 35 0m14 0c8-34 25-39 35 0m14 0c8-34 25-39 35 0m14 0c8-34 25-39 35 0" fill="none" stroke="#b5d37b" stroke-width="4"/>
+    <path d="m555 170 28-70 25 70m35 0 30-90 31 90" fill="none" stroke="#e4ebeb" stroke-width="4"/>
+    <!-- Explicit blocker examples only: forest and mountain drawings alone are not blocker evidence. -->
+    <rect x="280" y="280" width="40" height="40" fill="none" stroke="#f3d08b" stroke-width="3" stroke-dasharray="5 3"/>
+    <rect x="600" y="120" width="40" height="40" fill="none" stroke="#f3d08b" stroke-width="3" stroke-dasharray="5 3"/>
+    <path d="M87 400C210 250 370 420 526 168" fill="none" stroke="#ffe9a6" stroke-width="6" stroke-dasharray="10 7"/>
+    <path d="m520 156 18 6-12 15z" fill="#ffe9a6"/>
+    <g transform="translate(120 380)"><circle r="31" fill="none" stroke="#ffd46a" stroke-width="5" filter="url(#glow)"/><use href="map-symbols-v1.svg#unit-spear" x="-27" y="-27" width="54" height="54"/></g>
+    <g transform="translate(210 330)"><use href="map-symbols-v1.svg#unit-cavalry" x="-27" y="-27" width="54" height="54"/></g>
+    <g transform="translate(330 365)"><use href="map-symbols-v1.svg#unit-archer" x="-27" y="-27" width="54" height="54"/></g>
+    <g transform="translate(420 315)"><use href="map-symbols-v1.svg#unit-engineer" x="-27" y="-27" width="54" height="54"/></g>
+    <g transform="translate(525 275)"><use href="map-symbols-v1.svg#unit-medic" x="-27" y="-27" width="54" height="54"/></g>
+    <g transform="translate(610 230)"><use href="map-symbols-v1.svg#unit-caster" x="-27" y="-27" width="54" height="54"/></g>
+    <g transform="translate(90 500)"><use href="map-symbols-v1.svg#city" x="-29" y="-29" width="58" height="58"/></g>
+    <g transform="translate(670 500)"><use href="map-symbols-v1.svg#city" x="-29" y="-29" width="58" height="58"/></g>
+    <g transform="translate(240 485)"><use href="map-symbols-v1.svg#routed" x="-18" y="-18" width="36" height="36"/></g>
+    <g transform="translate(135 345)"><use href="map-symbols-v1.svg#stamina" x="-13" y="-13" width="26" height="26"/></g>
+    <g transform="translate(664 70)"><use href="map-symbols-v1.svg#vision-visible" x="-16" y="-16" width="32" height="32"/></g>
+    <g transform="translate(690 70)"><use href="map-symbols-v1.svg#vision-remembered" x="-16" y="-16" width="32" height="32"/></g>
+    <g transform="translate(715 70)"><use href="map-symbols-v1.svg#vision-hidden" x="-16" y="-16" width="32" height="32"/></g>
+  </g>
+  <g transform="translate(800 110)" font-family="sans-serif">
+    <text fill="#f6f1de" font-size="18" font-weight="700">심벌 계약</text>
+    <text y="36" fill="#b8c7ca" font-size="14">도시 · 6병종 · 선택링</text><text y="58" fill="#b8c7ca" font-size="14">이동경로 · 패주 · 시야</text><text y="80" fill="#b8c7ca" font-size="14">기력은 아군만 표시</text>
+    <text y="122" fill="#f6f1de" font-size="18" font-weight="700">판독 기준</text>
+    <text y="156" fill="#b8c7ca" font-size="14">• 숲과 산은 다른 재질/선</text><text y="180" fill="#b8c7ca" font-size="14">• 금색 점선만 이동 경로</text><text y="204" fill="#b8c7ca" font-size="14">• 황색 점선 타일만 명시</text><text y="226" fill="#b8c7ca" font-size="14">  LOS 차단 후보 표기</text>
+    <text y="270" fill="#f6f1de" font-size="18" font-weight="700">비표시</text>
+    <text y="304" fill="#b8c7ca" font-size="14">숨은 적 병력·기력·사기</text><text y="328" fill="#b8c7ca" font-size="14">숨은 적 쿨다운·의도·경로</text>
+    <text y="382" fill="#f6f1de" font-size="18" font-weight="700">환경 참조</text>
+    <text y="416" fill="#b8c7ca" font-size="14">서량 암릉 · 촉 수관</text><text y="440" fill="#b8c7ca" font-size="14">북부 설원 · 중원 경작지</text><text y="464" fill="#b8c7ca" font-size="14">은 지형색/재질로만 표현</text>
+  </g>
+</svg>

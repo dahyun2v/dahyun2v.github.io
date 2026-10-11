@@ -1,0 +1,283 @@
+{
+  "id": "G24",
+  "name": "장료",
+  "faction": "F01",
+  "status": "CLAUDE_TRIAL_PLACEHOLDER — GPT 장수 파이프라인 정식 pack 도착 시 교체",
+  "source": {
+    "room": "FIRST3 시험 기록",
+    "method": "first3-initial-state-v1 → officer-pack 시험 변환 (make-trial-packs.py)",
+    "date": "2026-10-03"
+  },
+  "stats": {
+    "지휘": 91,
+    "무용": 87,
+    "지략": 77,
+    "정무": 60,
+    "감화": 72
+  },
+  "sub": {
+    "전열 유지": 88,
+    "기동": 94,
+    "전환": 95,
+    "수습": 87,
+    "힘": 93,
+    "기술": 85,
+    "막아내기": 82,
+    "되받기": 88,
+    "군재": 86,
+    "응변": 73,
+    "속이기": 68,
+    "통찰": 81,
+    "행정": 54,
+    "병참": 82,
+    "인사": 70,
+    "제도": 48,
+    "민정": 56,
+    "설득": 90,
+    "포섭": 70,
+    "결집": 78,
+    "중재": 90
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "맹장",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:맹장",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "적이 많을수록 강하다",
+    "text": "적이 더 많을 때 주는 피해 +20%. 공격하면 대상 주변 2칸 안 아군의 사기가 한 단계 회복된다(포위 속에 남은 사람을 데리고 나온다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "기병"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "OUTNUMBERED"
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "ON_ATTACK",
+        "target": "ALL_ALLIES_IN_BATTLE",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04(사용자 지시 \"특기/전법은 너가 한번 다시 만들어볼래\") · 전법은 원 카드의 공통 Charge를 CHARGE 조건으로 살리고, 옛 시험 pack의 '진문을 떠는 북'(사기 피해)을 맞닿은 적 전체 전열 흔들기로 옮김. 특기의 '돌파 뒤 고립 아군 회수'는 공격할 때 주변 아군 사기 회복으로, 합비 800 결사대는 열세일 때 피해 증가로 살림.",
+    "formerName": "돌아오는 진문"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "북소리 돌격",
+      "text": "인접한 적 1부대에 돌격한다(피해 +25%, 이번 차례 이동한 뒤면 +45%). 북소리에 맞닿은 적 모두 전열 판정(가중 10).",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 25,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 20,
+          "duration": 0,
+          "condition": "CHARGE"
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": -10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "진문의 돌격"
+    },
+    {
+      "kind": "trait",
+      "name": "첫 일격",
+      "text": "이번 차례 첫 공격 피해 +10%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "선수필승"
+    },
+    {
+      "kind": "trait",
+      "name": "성 지키기",
+      "text": "성(중심·성문)을 지킬 때 받는 피해 −20%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "formerName": "수성"
+    },
+    {
+      "kind": "trait",
+      "name": "돌파",
+      "text": "이번 차례 첫 공격 피해 +15%.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "FIRST_ROUND"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "빠른 말",
+      "text": "기병일 때 이동 +1칸.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        }
+      ],
+      "formerName": "질풍"
+    },
+    {
+      "kind": "tactic",
+      "name": "급습",
+      "text": "적 1부대에 피해 +30% 공격.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 20
+    },
+    {
+      "kind": "trait",
+      "name": "방어 대형",
+      "text": "공격받을 때 받는 피해 −15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "방진"
+    },
+    {
+      "kind": "trait",
+      "name": "장창 버티기",
+      "text": "장병일 때 반격 피해 +25%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "TROOP:BT02"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "물러설 곳 없다",
+      "text": "상대 병력이 더 많으면 주는 피해 +25%.",
+      "rarity": "EPIC",
+      "classTag": "맹장",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "OUTNUMBERED"
+        }
+      ],
+      "formerName": "배수진"
+    },
+    {
+      "kind": "tactic",
+      "name": "고함",
+      "text": "맞닿은 적 모두 사기 판정(가중 15).",
+      "rarity": "UNCOMMON",
+      "classTag": "맹장",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": -15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 15
+    }
+  ],
+  "pendingConcepts": [
+    "CHARGE",
+    "FORMATION"
+  ]
+}

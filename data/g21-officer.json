@@ -1,0 +1,348 @@
+{
+  "schema": "g21-minimum-canonical-officer-contract-v1",
+  "version": 1,
+  "status": "DIRECTOR_REQUESTED_TRIAL_CONTRACT_NOT_BALANCE_VALIDATED",
+  "officerId": "G21",
+  "name": "방통",
+  "courtesyName": "사원",
+  "epithet": "봉추",
+  "coreVerb": "뒤집음",
+  "sourceRefs": [
+    "docs/design-data/map-start-v1.json#P02:G21",
+    "docs/장수-특기-전법-30인.md#G21-방통",
+    "docs/work-integration/20260920/officer-concept-response.md#6-G21-방통-공식-컨셉-입력-후보",
+    "docs/work-integration/20260920/final-chat-audit/source-6aae87a1-6f7c-83e8-8676-d0067040714c.md#L4457-L4465",
+    "docs/relay/20260920/portrait-source.md#방통",
+    "https://zh.wikisource.org/zh/三國志/卷37"
+  ],
+  "candidatePreRecruitmentState": {
+    "sourceType": "EXTERNAL_NEUTRAL_CANDIDATE",
+    "allegianceFactionId": null,
+    "siteId": "P02",
+    "eventId": "E02",
+    "tileId": "12,5",
+    "locationRef": {
+      "kind": "SITE",
+      "id": "P02"
+    },
+    "worldMaterialization": "Do not add G21 to world.officers or any faction.officerIds before agreement, actual travel, arrival, next command phase, and atomic roster delta application."
+  },
+  "identityAndRole": {
+    "roles": [
+      "책사",
+      "문관"
+    ],
+    "rolePrimary": "책사",
+    "roleSecondary": "문관",
+    "roleAffinity": {
+      "CONTROL": "CORE",
+      "BREAKTHROUGH": "GOOD",
+      "GOVERNANCE": "POOR",
+      "OTHER": "OK"
+    },
+    "strategicUse": "교착상태 파괴자",
+    "uniquePlayValue": "이미 생긴 둔화·지형·행동 지연을 연환으로 엮어 적의 선택지를 무너뜨린다. 제갈량처럼 안전한 조건을 오래 준비하는 대신, 현재의 불완전한 틈을 고위험 전환 기회로 바꾼다.",
+    "deliberateCosts": [
+      "선행 둔화가 없으면 고유특기 이득이 없다.",
+      "혼란은 정신 교란 계열 상한과 정화 후 재적용 저항을 넘지 않는다.",
+      "평온한 후방 행정과 반복적인 안정 운용에는 우선도가 낮다."
+    ]
+  },
+  "trialGrowthContract": {
+    "level": 1,
+    "experience": 0,
+    "xpToNext": 60,
+    "aptitudePoints": 0,
+    "representativeTroop": "mystic",
+    "allowedTroops": [
+      "mystic",
+      "bow",
+      "engineer",
+      "spear"
+    ],
+    "aptitude": {
+      "mystic": "B",
+      "bow": "C",
+      "engineer": "C",
+      "spear": "C"
+    },
+    "growthProfilePerLevel": [
+      {
+        "substat": "공격지휘",
+        "increment": 1
+      },
+      {
+        "substat": "기동지휘",
+        "increment": 1
+      },
+      {
+        "substat": "군략",
+        "increment": 1
+      },
+      {
+        "substat": "모략",
+        "increment": 1
+      },
+      {
+        "substat": "간파",
+        "increment": 1
+      },
+      {
+        "substat": "회피",
+        "increment": 1
+      },
+      {
+        "substat": "병참",
+        "increment": 1
+      },
+      {
+        "substat": "등용",
+        "increment": 1
+      }
+    ],
+    "branchDirections": [
+      {
+        "id": "G21-BRANCH-CHAIN-DISRUPTION",
+        "name": "연환교란형",
+        "focus": [
+          "모략",
+          "간파",
+          "군략",
+          "회피"
+        ]
+      },
+      {
+        "id": "G21-BRANCH-ROUGH-ROAD",
+        "name": "험로기책형",
+        "focus": [
+          "군략",
+          "병참",
+          "기동지휘",
+          "모략"
+        ]
+      }
+    ],
+    "balanceNotice": "All numeric values and growth increments in this contract are trial inputs, not validated balance values or a completed trait implementation."
+  },
+  "officerTemplateCore": {
+    "officerId": "G21",
+    "name": "방통",
+    "level": 1,
+    "experience": 0,
+    "baseStats": {
+      "leadership": 78,
+      "might": 39,
+      "intelligence": 94,
+      "politics": 74,
+      "charisma": 70
+    },
+    "subStats": {
+      "공격지휘": 84,
+      "방어지휘": 66,
+      "기동지휘": 86,
+      "사기유지": 76,
+      "완력": 30,
+      "치명": 32,
+      "공속": 36,
+      "체력": 58,
+      "군략": 96,
+      "모략": 100,
+      "간파": 94,
+      "회피": 86,
+      "농정": 60,
+      "행정": 76,
+      "민정": 68,
+      "병참": 90,
+      "사기회복": 68,
+      "체력회복": 58,
+      "등용": 78,
+      "친화": 76
+    },
+    "rolePrimary": "책사",
+    "roleSecondary": "문관",
+    "allowedTroops": [
+      "mystic",
+      "bow",
+      "engineer",
+      "spear"
+    ],
+    "aptitude": {
+      "mystic": "B",
+      "bow": "C",
+      "engineer": "C",
+      "spear": "C"
+    },
+    "aptitudePoints": 0,
+    "uniqueTrait": {
+      "id": "UT-G21",
+      "name": "봉추의 얽힌 수",
+      "level": 1,
+      "effect": "이미 둔화된 적에게 자신이 거는 혼란의 지속시간이 늘어난다.",
+      "growth": "조건부 혼란 지속시간 보너스",
+      "condition": "정신 교란과 동일 계열을 공유한다. 둔화·혼란의 상한과 정화 후 재적용 저항을 넘지 않는다.",
+      "implementationState": "DESIGN_INPUT_NOT_FULLY_IMPLEMENTED"
+    },
+    "acquiredTraits": [],
+    "activeTraits": [],
+    "tactics": [
+      {
+        "id": "ART-G21",
+        "name": "봉추의 미혹",
+        "command": "책략",
+        "allowed_units": [
+          "술병",
+          "궁병",
+          "공병",
+          "창병"
+        ],
+        "stat": "모략",
+        "cooldown_family": "정신 교란",
+        "burden": "보통",
+        "effect": "적 한 부대에 혼란을 시도한다.",
+        "condition": "정신 교란과 동일 계열을 공유한다. 둔화·혼란의 상한과 정화 후 재적용 저항을 넘지 않는다.",
+        "source": "docs/장수-특기-전법-30인.md#G21-방통",
+        "implementationState": "DESIGN_INPUT_NOT_FULLY_IMPLEMENTED"
+      }
+    ],
+    "maxEnergyFormula": "50 + floor(체력 / 2)",
+    "initialMaxEnergy": 79
+  },
+  "rosterMaterialization": {
+    "mode": "ADD_CANONICAL_OFFICER",
+    "canonicalSourceRef": "docs/work-integration/20260921/round-06/g21-officer-contract-v1.json#officerTemplateCore",
+    "bindings": {
+      "allegianceFactionId": "proposal.factionId",
+      "locationRef": "parse(proposal.arrivalPlan.destinationRef)",
+      "lifeState": "ALIVE",
+      "conditionState": "NORMAL",
+      "captivityState": "FREE",
+      "captorFactionId": null,
+      "travelState": "STATIONARY"
+    },
+    "preconditions": [
+      "proposal.status == ROSTER_TRANSFER_PENDING",
+      "G21 is absent from world.officers",
+      "actual travel has ended at the owned destination city",
+      "the next command phase has opened",
+      "the destination faction and city are taken from the accepted proposal, not hard-coded"
+    ],
+    "forbiddenLegacyFields": [
+      "status",
+      "isRuler",
+      "isGovernor",
+      "currentArmyId",
+      "currentCityId"
+    ]
+  },
+  "canonicalOfficerRecordExampleF02East": {
+    "officerId": "G21",
+    "name": "방통",
+    "allegianceFactionId": "F02",
+    "lifeState": "ALIVE",
+    "conditionState": "NORMAL",
+    "captivityState": "FREE",
+    "captorFactionId": null,
+    "travelState": "STATIONARY",
+    "locationRef": {
+      "kind": "CITY",
+      "id": "east"
+    },
+    "level": 1,
+    "experience": 0,
+    "baseStats": {
+      "leadership": 78,
+      "might": 39,
+      "intelligence": 94,
+      "politics": 74,
+      "charisma": 70
+    },
+    "subStats": {
+      "공격지휘": 84,
+      "방어지휘": 66,
+      "기동지휘": 86,
+      "사기유지": 76,
+      "완력": 30,
+      "치명": 32,
+      "공속": 36,
+      "체력": 58,
+      "군략": 96,
+      "모략": 100,
+      "간파": 94,
+      "회피": 86,
+      "농정": 60,
+      "행정": 76,
+      "민정": 68,
+      "병참": 90,
+      "사기회복": 68,
+      "체력회복": 58,
+      "등용": 78,
+      "친화": 76
+    },
+    "rolePrimary": "책사",
+    "roleSecondary": "문관",
+    "allowedTroops": [
+      "mystic",
+      "bow",
+      "engineer",
+      "spear"
+    ],
+    "aptitude": {
+      "mystic": "B",
+      "bow": "C",
+      "engineer": "C",
+      "spear": "C"
+    },
+    "aptitudePoints": 0,
+    "uniqueTrait": {
+      "id": "UT-G21",
+      "name": "봉추의 얽힌 수",
+      "level": 1,
+      "effect": "이미 둔화된 적에게 자신이 거는 혼란의 지속시간이 늘어난다.",
+      "growth": "조건부 혼란 지속시간 보너스",
+      "condition": "정신 교란과 동일 계열을 공유한다. 둔화·혼란의 상한과 정화 후 재적용 저항을 넘지 않는다.",
+      "implementationState": "DESIGN_INPUT_NOT_FULLY_IMPLEMENTED"
+    },
+    "acquiredTraits": [],
+    "activeTraits": [],
+    "tactics": [
+      {
+        "id": "ART-G21",
+        "name": "봉추의 미혹",
+        "command": "책략",
+        "allowed_units": [
+          "술병",
+          "궁병",
+          "공병",
+          "창병"
+        ],
+        "stat": "모략",
+        "cooldown_family": "정신 교란",
+        "burden": "보통",
+        "effect": "적 한 부대에 혼란을 시도한다.",
+        "condition": "정신 교란과 동일 계열을 공유한다. 둔화·혼란의 상한과 정화 후 재적용 저항을 넘지 않는다.",
+        "source": "docs/장수-특기-전법-30인.md#G21-방통",
+        "implementationState": "DESIGN_INPUT_NOT_FULLY_IMPLEMENTED"
+      }
+    ]
+  },
+  "visualAndVoice": {
+    "visualAnchor": "둥근 얼굴, 불규칙한 머리와 수염, 약간 비스듬한 자세, 여러 겹의 죽간과 두루마리가 만드는 비대칭 고밀도 실루엣",
+    "prop": "두루마리와 죽간 묶음",
+    "contrastWithG03": "G03 제갈량은 긴 수직선·큰 여백·정적 통제, G21 방통은 둥근 비례·겹친 문서·비대칭 밀도·즉시 전환이다.",
+    "voiceDirection": "결론부터 던지고 상대가 당연시한 전제를 비튼다. 위험을 숨기지 않고 상·중·하처럼 대가가 다른 선택을 압축해 제시한다. 예언자처럼 미래를 확정하지 않는다.",
+    "sampleLinesOriginalGameFiction": [
+      "길이 막힌 게 아니라, 같은 길만 보고 계신 겁니다.",
+      "안전한 수는 이미 실패했습니다. 이제 무엇을 잃을지 정하시지요.",
+      "매듭을 풀 필요는 없습니다. 당기는 쪽을 바꾸면 되니까요."
+    ],
+    "forbiddenExpressions": [
+      "못생긴 제갈량",
+      "제갈량의 하위호환",
+      "이유 없이 미친 책사",
+      "항상 정답을 아는 예언자",
+      "광역 마법 폭격수",
+      "평온한 후방까지 완벽한 만능 행정가",
+      "외모를 조롱하는 개그 캐릭터"
+    ]
+  }
+}
