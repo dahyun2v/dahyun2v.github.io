@@ -8,6 +8,7 @@ import {TICKS_PER_TURN} from '/src/first3.mjs';
 import {cityAttackTargets,previewCityAttack,previewTactic,attackTargets,previewAttack,previewDisengage,previewApproachFire,armyActionEnded,attackRange} from '/src/campaign-combat.mjs';
 import {createCampaignCombatAudio} from '/src/campaign-combat-audio.mjs';
 import {createCampaign, view, step, serialize, deserialize, CAMPAIGN_SAVE_KEY,campaignMoveOptions,CAMPAIGN_TURN_LIMIT} from '/src/campaign-runtime.mjs';
+import {hexDistance} from '/src/map-primitives.mjs'; // 굶는 부대 안내(starvingAdvice)가 쓰는데 빠져 있어, 굶는 부대를 고르면 화면 오류가 났다(C132 · 2026-10-12 자동 플레이에서 발견)
 import {statsToOfficerPack,troopToCampaign} from '/src/campaign-adapters.mjs';
 import {saveText,loadText,settle,saveMarkerKey} from '/src/save-store.mjs';
 import {campaignSubAbility,directionToward} from '/src/campaign-abilities.mjs';
