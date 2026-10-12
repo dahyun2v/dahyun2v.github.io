@@ -477,7 +477,7 @@ function resolveUniqueCombatTactic(state,id,card,target){
  if(cancel==='REFLECT')executeCampaignRule(e.rule,{phase:'tactic',s,id:target,target:id,card,attack:hit,damage,heal:(who,n)=>healCampaignTroops(s,who,Math.round(n*(card.signatureScale??1))),retreat:()=>[],cityAttack:()=>{}});
  else if(!cancel)executeCampaignRule(e.rule,{phase:'tactic',s,id,target,card,attack:hit,damage,heal:(who,n)=>healCampaignTroops(s,who,Math.round(n*(card.signatureScale??1))),retreat:n=>combatRetreatPath(s,id,n),cityAttack:ratio=>{
   const c=s.cities[target],base=previewCityAttack(s,id,target).dealt,dealt=Math.min(c.durability,Math.round(base*ratio));c.durability-=dealt;log.dealt=dealt;log.enemyLoss=dealt;log.cityId=target;
-  if(!c.durability&&!Object.values(s.armies).some(b=>castleArmyActive(s,b)&&b.tileId===c.tileId)){s.armies[id].tileId=c.tileId;uniqueAdoptState(s,settleCampaignPayloads(s,[],[{transactionId:`C32.CAPTURE.${s.battleSequence}`,capturedCityId:target,occupierFactionId:s.armies[id].factionId,formerOwnerFactionId:c.ownerFactionId,globalTick:s.globalTick,sourceResultId:`C32.${s.battleSequence}`} ]));}
+  if(!c.durability&&!Object.values(s.armies).some(b=>castleArmyActive(s,b)&&b.tileId===c.tileId)){s.armies[id].tileId=c.tileId;s.armies[id].movementState=null;s.armies[id].currentOrder=null;uniqueAdoptState(s,settleCampaignPayloads(s,[],[{transactionId:`C32.CAPTURE.${s.battleSequence}`,capturedCityId:target,occupierFactionId:s.armies[id].factionId,formerOwnerFactionId:c.ownerFactionId,globalTick:s.globalTick,sourceResultId:`C32.${s.battleSequence}`} ]));}
  }});
  if(cancel)log.effectLines.push(cancel==='REFLECT'?'계략 반사':'전법 무효');
  if(log.hits.length&&s.armies[target])uniqueAfterAttack(s,state,id,target,log,(who,n)=>healCampaignTroops(s,who,n),damage);

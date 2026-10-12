@@ -48,6 +48,7 @@ export function labelNumber(value) {
 }
 export function readableText(value, names = {}, rules = {}) {
   return String(value ?? '')
+    .replace(/\bcatapult\b/g, '투석기')
     .replace(/\bG\d{2,3}\b/g, id => names[id] ?? '장수')
     .replace(/\b[A-Z]_[A-Z_]{3,}\b/g, id => rules[id] ?? '고유 효과')
     .replace(/[−－-]\s*[−－-](?=\d)/g, '−')

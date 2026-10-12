@@ -9,10 +9,10 @@ const f = (n) => Math.round(n * 10) / 10;
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 // 깃발판 얼굴: 머리만 잘라 둔 그림(bust/<ID>.webp — tools/design/bust-crops.py, 그림마다 잰 머리 상자)을 창(28×34)에 채운다.
 // 전신 그림을 크게 놓고 clip-path 로 자르면 그림 전체가 부대 묶음의 상자(getBoundingClientRect)에 잡혀 화면 따라가기·작은 지도 점·자동 점검 클릭이 어긋난다.
-function faceImage(src) {
+function faceImage(src, clip = 'w-face') {
   const m = /\/officer-art\/cutout\/(G\d{2,3})[-.]/.exec(String(src ?? ''));
-  if (m) return `<image href="/assets/officer-art/bust/${m[1]}.webp" x="-17" y="-17" width="34" height="34" preserveAspectRatio="xMidYMid slice" clip-path="url(#w-face)"/>`;
-  return `<image href="${esc(src)}" x="-26" y="-18" width="52" height="104" preserveAspectRatio="xMidYMin meet" clip-path="url(#w-face)"/>`;
+  if (m) return `<image href="/assets/officer-art/bust/${m[1]}.webp" x="-17" y="-17" width="34" height="34" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clip})"/>`;
+  return `<image href="${esc(src)}" x="-26" y="-18" width="52" height="104" preserveAspectRatio="xMidYMin meet" clip-path="url(#${clip})"/>`;
 }
 const parse = (id) => { const [q, r] = String(id).split(',').map(Number); return {q, r}; };
 const hexDist = (a, b) => (Math.abs(a.q - b.q) + Math.abs(a.q + a.r - b.q - b.r) + Math.abs(a.r - b.r)) / 2;
@@ -214,7 +214,7 @@ export function renderWorldMap(model, opts = {}) {
       + (city.defenseMax ? `<image href="/assets/ui-v3/hud/icons/cmd-garrison.png" x="${f(iw / 2 - 37)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t${def !== null && def < 0.5 ? ' low' : ''}" x="${f(iw / 2 - 25)}" y="10.2">${Math.round(city.defense ?? 0)}</text>` : '') + '</g>' : '';
     if (opts.compactLabels) occupied.push({x:c.x-iw/2-22,y:c.y+size*(city.kind==='minor'?1.35:1.7)-50,w:iw+44,h:city.defenseMax?108:88});
     const status = city.besieged ? '포위' : city.unrest === 'CHAOS' ? '혼란' : city.unrest === 'UNREST' ? '동요' : city.occupation && city.occupation.stage && city.occupation.stage !== 'NORMAL' ? '점령' : '';
-    plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" transform="translate(${f(c.x)} ${f(c.y + size * (city.kind === 'minor' ? 1.35 : 1.7))})" style="--fc:${fs.color}">
+    plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" transform="translate(${f(c.x)} ${f(c.y + size * (city.kind === 'minor' ? 1.35 : 1.7))}) scale(.88)" style="--fc:${fs.color}">
       ${kit?.cityPlate ? `<image class="plate-art" href="${esc(kit.cityPlate)}" x="${f(-w / 2 - 5)}" y="-13.5" width="${f(w + 10)}" height="27" preserveAspectRatio="none"/>` : ''}${(() => { const fl = kit?.cityFlag?.[KIT_TONE[city.factionId] ?? 'grey']; return fl ? `<g class="cflag" transform="translate(${f(-w / 2 - 12)} -50)"><image href="${esc(fl)}" x="-8" y="0" width="17" height="58"/>${/^F\d\d$/.test(city.factionId ?? '') ? `<image href="/assets/ui-v3/emblems/${esc(city.factionId)}.png" x="-4.6" y="9" width="10" height="10"/>` : ''}</g>` : ''; })()}
       <rect class="bg" x="${f(-w / 2)}" y="-12" width="${f(w)}" height="24"/><g class="crest" transform="translate(${f(-w / 2 + 2)} 0)"><rect x="-9" y="-9" width="18" height="18" transform="rotate(45)"/><text y="4.5">${esc(fs.glyph)}</text></g>
       <text class="name" x="${f(kit?.cityPlate ? 0 : 9)}" y="5.5">${name}</text>${def !== null ? `<rect class="def-bg" x="${f(-w / 2 + 16)}" y="14" width="${f(w - 22)}" height="3"/><rect class="def" x="${f(-w / 2 + 16)}" y="14" width="${f((w - 22) * def)}" height="3"/>` : ''}
@@ -240,12 +240,14 @@ export function renderWorldMap(model, opts = {}) {
     units.sort((a,b)=>Number(!!a.active)-Number(!!b.active));
   }
   const stack = {}, cityCenters = new Set((model.cities ?? []).map((c) => c.center));
+  // 그리는 순서: 위쪽 칸 먼저 → 아래쪽 칸, 성 안 부대는 맨 뒤. 성 안 부대는 깃발판만 있어서 옆 칸 병사 무리에 가리면 숫자만 남는다(2026-10-12)
+  if (!opts.compactLabels) units.sort((a, b) => Number(cityCenters.has(a.tileId)) - Number(cityCenters.has(b.tileId)) || C(a.tileId).y - C(b.tileId).y);
   for (const u of units) {
     const n = (stack[u.tileId] = (stack[u.tileId] ?? -1) + 1), c = C(u.tileId), x = c.x + (opts.compactLabels?0:n * size * 0.42), y = c.y + (opts.compactLabels?0:n * size * 0.16);
     const label=labelOffsets.get(u.id);
     const inCity = cityCenters.has(u.tileId), fs = FACTION[u.factionId] ?? NEUTRAL, art = inCity ? null : opts.unitArt?.[troopKey(u)];
     // 병사 무리: 세력 색 천을 두른 무리를 칸 위에 크게(시안 final-map-v2). 발끝이 칸 가운데 조금 아래에 오게 놓는다
-    const sq = inCity ? null : opts.squadArt?.[troopKey(u)]?.[KIT_TONE[u.factionId] ?? 'grey'], sqW = size * 3, sqH = sq ? sqW * sq.size[1] / sq.size[0] : 0;
+    const sq = inCity ? null : opts.squadArt?.[troopKey(u)]?.[KIT_TONE[u.factionId] ?? 'grey'], sqW = size * 3.3, sqH = sq ? sqW * sq.size[1] / sq.size[0] : 0;
     const ratio = u.maxCount ? Math.max(0, Math.min(1, (u.count ?? 0) / u.maxCount)) : 1;
     const lost = Number.isFinite(u.prevCount) && u.prevCount > u.count ? u.prevCount - u.count : 0;
     const flip = u.faceLeft ? ' scale(-1 1)' : '';
@@ -256,16 +258,15 @@ export function renderWorldMap(model, opts = {}) {
       ${u.active ? `<ellipse class="bi" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}"/><ellipse class="bi-in" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.64)}" ry="${f(size * 0.22)}"/>` : !u.enemy && u.moved ? `<ellipse class="bi done" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}" pathLength="100"/>` : ''}
       ${u.crisis ? `<ellipse class="crisis-ring" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.9)}" ry="${f(size * 0.34)}"/>` : ''}
       ${sq ? `<image class="squad big" href="${esc(sq.src)}" x="${f(-sqW / 2)}" y="${f(size * 0.62 - sqH)}" width="${f(sqW)}" height="${f(sqH)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : art ? `<image class="squad" href="${esc(art)}" x="${f(-size * 1.15)}" y="${f(-size * 1.55)}" width="${f(size * 2.3)}" height="${f(size * 2.3)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : ''}
-      ${label?`<path class="w-label-tether" d="M0 0L${f(label.dx)} ${f(label.dy+30*label.scale)}" fill="none" stroke="${fs.color}" stroke-width="1.5" pointer-events="none"/>`:""}<g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="${label?`translate(${f(label.dx)} ${f(label.dy)}) scale(${label.scale})`:`translate(${inCity ? f(size * 1.25) : 0} ${f(inCity ? -size * 0.75 : -size * (sq ? 1.95 : art ? 1.55 : 1.05))})`}">
-        <path class="pole" d="M0 18V${f(size * 1.2)}"/>
+      ${label?`<path class="w-label-tether" d="M0 0L${f(label.dx)} ${f(label.dy+30*label.scale)}" fill="none" stroke="${fs.color}" stroke-width="1.5" pointer-events="none"/>`:""}<g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="${label?`translate(${f(label.dx)} ${f(label.dy)}) scale(${label.scale})`:`translate(${inCity ? f(size * 1.3) : 0} ${f(inCity ? -size * 0.4 : -size * (sq ? 2.2 : art ? 1.55 : 1.05))})`}">
+        <path class="pole" d="M0 14V${f(inCity ? size * 0.7 : size * (sq ? 1.15 : 1))}"/>
         ${/^F\d\d$/.test(u.factionId ?? '') ? `<g class="banner" transform="translate(-1 21)"><path class="cloth" d="M0 0H-17V22L-12.5 18L-8.5 22L-4.5 18L0 22Z"/><image href="/assets/ui-v3/emblems/${esc(u.factionId)}.png" x="-15" y="1" width="13" height="13"/></g>` : ''}
-        ${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}${u.active?'<g class="w-selected"><rect x="18" y="-22" width="28" height="14" rx="2"/><text x="32" y="-12">선택</text></g>':''}<rect class="frame" x="-16" y="-19" width="32" height="38"/><path class="shield" d="M-16 -19H16V10L0 19.5L-16 10Z"/>${kit?.unitCount ? `<image class="cplate" href="${esc(kit.unitCount)}" x="-24" y="16.5" width="48" height="17" preserveAspectRatio="none"/>` : ''}
-        ${u.portrait ? faceImage(u.portrait) : `<text class="initial" y="7">${esc(String(u.name ?? '').slice(0, 1))}</text>`}
-        ${(() => { const fr = kit?.unitFrame?.[KIT_TONE[u.factionId] ?? 'red']; return fr ? `<image class="uframe" href="${esc(fr)}" x="-19.2" y="-27" width="46" height="53.3"/>` : ''; })()}
-        <g class="count" transform="translate(0 25)"><rect x="-19" y="-7" width="38" height="14"/><text y="4">${Number(u.count ?? 0).toLocaleString('ko-KR')}</text><rect class="bar-bg" x="-19" y="7" width="38" height="2.5"/><rect class="bar" x="-19" y="7" width="${f(38 * ratio)}" height="2.5"/></g>
-        <g class="troop" transform="translate(-21 -15)"><rect x="-7" y="-7" width="14" height="14" transform="rotate(45)"/><text y="4">${TROOP_GLYPH[troopKey(u)] ?? '兵'}</text></g>
+        ${u.active?'<g class="w-selected"><rect x="15" y="-24" width="28" height="14" rx="2"/><text x="29" y="-14">선택</text></g>':''}<g class="std" transform="scale(.82)">${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}<path class="frame" d="M-16 -19H16V10L0 19.5L-16 10Z"/>
+        ${u.portrait ? faceImage(u.portrait, 'w-face-shield') : `<text class="initial" y="7">${esc(String(u.name ?? '').slice(0, 1))}</text>`}
+        <g class="count" transform="translate(0 28)"><rect x="-18" y="-7" width="36" height="14" rx="1"/><text y="4.3">${Number(u.count ?? 0).toLocaleString('ko-KR')}</text><rect class="bar-bg" x="-18" y="7" width="36" height="2.5"/><rect class="bar" x="-18" y="7" width="${f(36 * ratio)}" height="2.5"/></g>
+        <g class="troop" transform="translate(-19 -19)"><rect x="-7" y="-7" width="14" height="14" transform="rotate(45)"/><text y="4">${TROOP_GLYPH[troopKey(u)] ?? '兵'}</text></g>
         ${badges.map((b, i) => `<g class="badge" transform="translate(22 ${-13 + i * 15})"><rect x="-7" y="-7" width="14" height="14"/><text y="4">${b}</text></g>`).join('')}
-        <text class="uname" y="-25">${esc(u.name)}</text>
+        </g><text class="uname" y="-23">${esc(u.name)}</text>
       </g>
       ${lost ? `<text class="dmg" y="${f(-size * 2.6)}">${u.lossLabel ? esc(u.lossLabel) + ' ' : ''}−${lost.toLocaleString('ko-KR')}</text>` : ''}
     </g>`;

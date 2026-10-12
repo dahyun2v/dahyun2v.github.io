@@ -2531,3 +2531,82 @@ body.ink-hud #victory-guide{display:none}
 
 /* C132: small in-screen overwrite confirmation. */
 #save-confirm{z-index:1500;background:#0009;display:grid;place-items:center}#save-confirm[hidden]{display:none}.save-confirm-card{width:min(440px,90vw);padding:24px;color:#eee4ca;background:#242923;border:1px solid #aa9570}.save-confirm-card h2{font-size:22px}.save-confirm-card p{line-height:1.7}.save-confirm-card>div{display:flex;gap:16px;justify-content:flex-end}
+
+/* 2026-10-12 지도 위 표지 — 사용자 "성이랑 성 이름, 부대, 부대 숫자가 맵이랑 이질적으로 보여 · 병사가 잘 안 보인다(초상화가 너무 큰 듯) · 초상화 프레임도 어색하다".
+   시안 final-map-v2 처럼: 성은 지도와 같은 종이 · 먹 빛, 부대는 병사 무리가 주인공이고 장수는 세력 색 방패꼴 깃발판(작게) + 종이 꼬리표, 성의 병력 · 내구 줄도 같은 종이. 검은 판 · 뼈색 육각 틀을 쓰지 않는다. */
+/* 성 그림은 지도 화풍으로 새로 그렸다(2026-10-12 · cities-ink) — 색 보정 없이 땅 그림자만. 앞의 흐린 채도 낮춤(ink-skin.css)도 여기서 덮는다 */
+body.ink .wmap .w-city .art{filter:drop-shadow(0 2.5px 1.2px rgba(8,6,4,.5))}
+body.ink .wmap .w-cityplate .plate-art{filter:sepia(.25) brightness(.93) drop-shadow(0 1px .6px rgba(8,6,4,.7))}
+body.ink .wmap .w-cityplate:hover .plate-art{filter:sepia(.15) brightness(1.04) drop-shadow(0 0 3px rgba(198,74,60,.85))}
+body.ink .wmap .w-cityplate .cflag{filter:drop-shadow(0 1px .6px rgba(8,6,4,.7))}
+body.ink .wmap .w-cityplate .cinfo .ci-bg{fill:#d6c9b0;stroke:#1b1714;stroke-width:.7px}
+body.ink .wmap .w-cityplate .cinfo .ci-t{fill:#1b1714}
+body.ink .wmap .w-cityplate .cinfo .ci-t.low{fill:#9c2f22}
+body.ink .wmap .w-cityplate .cinfo image{filter:brightness(0)}
+body.ink .wmap .w-cityplate .def-bg{fill:#1b1714}body.ink .wmap .w-cityplate .def{fill:#efe6d6}
+body.ink .wmap .w-cityplate .prod rect{fill:transparent;stroke:none}
+body.ink .wmap .w-cityplate .prod text{fill:#efe6d6;font-weight:700;paint-order:stroke;stroke:#0d0c0b;stroke-width:3px;stroke-linejoin:round}
+body.ink .wmap .w-cityplate .prod.idle text{fill:#ffc9a8}
+body.ink .wmap .w-unit .plate .pole{display:inline;stroke:#14100c;stroke-width:1.5px}
+body.ink .wmap .w-unit .banner{display:none}
+body.ink .wmap .w-unit .plate .frame{display:inline;fill:color-mix(in srgb,var(--fc) 82%,#14100c);stroke:#100d0a;stroke-width:1.1px;stroke-linejoin:round;filter:drop-shadow(0 1.5px .8px rgba(8,6,4,.6))}
+body.ink .wmap .w-unit.active .plate .frame{stroke:#f4ead6;stroke-width:1.5px;filter:drop-shadow(0 0 2.5px rgba(244,234,214,.9)) drop-shadow(0 1.5px .8px rgba(8,6,4,.6))}
+body.ink .wmap .w-unit.attack-target .plate .frame{stroke:#ff7a6a;stroke-width:1.8px}
+body.ink .wmap .w-unit .plate .count rect:first-child{fill:#d6c9b0;stroke:#100d0a;stroke-width:.8px}
+body.ink .wmap .w-unit .plate .count text{fill:#17120e;font-weight:800;font-size:11px}
+body.ink .wmap .w-unit .plate .bar-bg{fill:#17120e}
+body.ink .wmap .w-unit .plate .bar{fill:#4f7a5c}
+body.ink .wmap .w-unit.enemy .plate .bar{fill:#b23c2e}
+body.ink .wmap .w-unit .plate .troop rect{fill:#17120e;stroke:var(--fc);stroke-width:1.2px}
+body.ink .wmap .w-unit .bi{stroke:#efe6d6;stroke-width:2.2px;filter:drop-shadow(0 0 .6px #0b0907)}
+#map .w-unit.active .bi-in{stroke:rgba(239,230,214,.75);stroke-width:1.2px}
+#map .w-selected rect{fill:#efe6d6;stroke:#17120e;stroke-width:.8px}
+body.ink .wmap .w-terr .edge{stroke-width:1.8px;opacity:.8}
+body.ink .wmap .w-unit .squad.big,body.ink .wmap .w-unit.enemy .squad.big{filter:drop-shadow(0 0 .4px #0b0907) drop-shadow(0 2px 1px rgba(8,6,4,.55))}
+/* /2026-10-12 지도 위 표지 */
+
+/* 2026-10-12 화면 점검: 승리 조건 줄은 지도에서만 — 성 안 · 장수 명부 · 외교 · 군의 · 사건 · 성장 화면에서는 왼쪽 위의 장소 이름과 대사를 가렸다(관청 · 병영에서 글자가 겹침). */
+body.ink-hud:has(#city-stage:not([hidden]),#roster:not([hidden]),#diplo:not([hidden]),.w-council:not([hidden]),#event-modal:not([hidden]),#choice-modal:not([hidden]),#growth-modal:not([hidden]),#clash:not([hidden]),#visit-modal:not([hidden]),#officer-draft:not([hidden]),#result:not([hidden])) .ih-victory{display:none}
+
+/* 2026-10-12 화면 점검: 성 안 장소 이름은 늘 보이게 — 마름모 표지에 그림만 있어 처음 하는 사람이 관청 · 병영 · 주점을 가려내지 못했다(군사의 "병영에서 출진을 지정하십시오"를 따라갈 수 없음). 이름은 늘, 설명은 올렸을 때만. */
+body.ink .cs-spot .label{opacity:1;transform:translate(-50%,22px)}
+body.ink .cs-spot .label b{display:inline-block;font-size:clamp(14px,1.05vw,18px);font-weight:700;letter-spacing:.14em;padding:2px 9px 3px calc(9px + .14em);color:#f4ead6;background:rgba(14,11,9,.82);border:1px solid rgba(230,220,203,.38);border-radius:2px;text-shadow:none}
+body.ink .cs-spot .label small{opacity:0;transition:opacity .2s}
+body.ink .cs-spot:is(:hover,.on) .label small,body.ink .cs.alt .cs-spot .label small{opacity:1}
+
+/* C135: 그림 단추와 수치의 이름은 올리지 않아도 보이게. */
+body.ink #selection .w-lord .plate .st .stat-label{position:absolute;left:0;top:-16px;font:600 11px/14px var(--serif);font-style:normal;color:#d8cdb8;text-shadow:0 1px 1px #0b0907;white-space:nowrap}
+body.ink .cs-lord .act span{opacity:1;color:#f4ead6;background:rgba(14,11,9,.82);padding:2px 4px;border-radius:2px;font-size:12px;line-height:1.2}
+body.ink .cs-gauges li{gap:.35vw;padding-left:.7vw;padding-right:.7vw}
+body.ink .cs-gauges .gauge-label{flex:none;font:500 11px/1.2 var(--serif);color:#e6dccb;white-space:nowrap}
+body.ink .cs .cs-commands[data-fac="office"] .job-columns{position:relative;height:22px;margin:0 0 4px;color:#efe6d6;font:600 11px/22px var(--serif)}
+body.ink .cs .cs-commands[data-fac="office"] .job-columns span{position:absolute;width:11.44%;text-align:center;white-space:nowrap}
+body.ink .cs .cs-commands[data-fac="office"] .job-columns [data-k="cost"]{left:52.25%}
+body.ink .cs .cs-commands[data-fac="office"] .job-columns [data-k="done"]{left:64.8%}
+body.ink .cs .cs-commands[data-fac="office"] .job-columns [data-k="turns"]{left:77.56%}
+body.ink .cs .cs-commands[data-fac="office"] .job-columns [data-k="state"]{left:90.1%;width:7.9%}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .w-event-body .ev-scales i b{display:block;letter-spacing:.1em}
+body.ink #diplo .dq-act span{font-size:14px;left:8%;width:84%;height:auto;min-height:12.5%;line-height:1.25;letter-spacing:0;white-space:normal;word-break:keep-all;text-align:center}
+[data-dev-only][hidden]{display:none!important}
+
+/* C136: map/HUD dragging, growth labels and compact result readability. */
+body.ink :is(.viewport,#ink-hud,#hud,#mode-rail,#w-turn,#unit-menu,.w-mini){user-select:none;-webkit-user-select:none}
+body.ink :is(input,textarea,[contenteditable="true"],#rules,#rules-modal){user-select:text;-webkit-user-select:text}
+body.ink #growth-cards .draft-card::after{content:"일반";font-size:.82em;letter-spacing:0}
+body.ink #growth-cards .draft-card[data-rarity="uncommon" i]::after{content:"고급"}
+body.ink #growth-cards .draft-card[data-rarity="rare" i]::after{content:"희귀"}
+body.ink #growth-cards .draft-card[data-rarity="epic" i]::after{content:"영웅"}
+body.ink #growth-cards .draft-card[data-rarity="legendary" i]::after{content:"전설"}
+body.ink #growth-cards .draft-card[data-rarity="mythic" i]::after{content:"신화"}
+body.ink #growth-cards .draft-card .art .gi{font-size:22px}
+@media (max-width:1320px),(max-height:800px){
+  body.ink .w-result{width:100%;max-width:100vw;overflow:hidden}
+  body.ink .w-result .rs-main{box-sizing:border-box;min-width:0;width:100%;max-width:100%;overflow-x:hidden;overflow-y:auto;color:#f5eddf;background:rgba(13,12,11,.86);text-shadow:0 1px 3px #000}
+  body.ink .w-result .rs-main>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
+  body.ink .w-result .rs-chron{margin:12px 0 0}
+  body.ink .w-result .rs-band{flex-wrap:wrap;overflow:visible;gap:12px;box-sizing:border-box;width:100%;border-width:12px}
+  body.ink .w-result .rs-band li{flex:1 1 180px;min-width:0;max-width:100%}
+  body.ink .w-result .rs-deeds{box-sizing:border-box;width:100%;translate:none}
+  body.ink .w-result .rs-actions{flex-wrap:wrap;translate:none}
+  body.ink .w-result :is(.rs-sub,.rs-band p,.rs-rank small,.rs-officers small){color:#e8ddca;opacity:1}
+}

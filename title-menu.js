@@ -3,6 +3,8 @@ import {loadText,settle,saveMarkerKey} from '/src/save-store.mjs';
 import {createTitleUiAudio} from '/src/title-ui-audio.mjs';
 import {TITLE_BACKGROUND,TITLE_MENU_PLAQUE} from '/src/title-presentation.mjs';
 import {createTitleBgm} from '/src/title-bgm.mjs';
+// C135: show legacy comparison links only with ?dev=1.
+for(const link of document.querySelectorAll?.('[data-dev-only]')??[])link.hidden=new URLSearchParams(globalThis.location?.search??'').get('dev')!=='1';
 const $=s=>document.querySelector(s);
 const saveKey=CAMPAIGN_SAVE_KEY,audioKey='sangoku-round-map-audio-v1';
 const audio=createTitleUiAudio({storage:{getItem:key=>globalThis.localStorage.getItem(key)}});let navigating=false,returnFocus=null,opened=null,navigationTimer=null,pageHidden=false;

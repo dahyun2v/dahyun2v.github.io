@@ -514,11 +514,11 @@
  },
  "G24": {
   "src": "~/Downloads/dots-out-20261010/A/G24_zhangliao_face1_body2_v2.png",
-  "file": "G24-20261010-hA.webp",
-  "method": "tools/design/officer-ink-cut.py — 닷토리 새 그림(새 8안의 1번 얼굴 + 2번 중갑 전신, 먹 배경 지움)",
-  "note": "사용자 2026-10-10 \"장료는 이거로 할거야\" · 이전 그림 G24.webp 보존",
+  "file": "G24-20261012-hA.webp",
+  "method": "tools/art/birefnet-cut.py — 닷토리 새 그림(새 8안의 1번 얼굴 + 2번 중갑 전신)의 배경을 BiRefNet 으로 다시 지움",
+  "note": "사용자 2026-10-10 \"장료는 이거로 할거야\" · 이전 그림 G24.webp 보존 · 2026-10-12 사용자 \"장료는 누끼 다시 따야겠다 하얀 게 남아 있네\" → 같은 원본을 BiRefNet 으로 다시 땀(머리카락 사이 흰 얼룩 없앰). 이전 누끼 G24-20261010(-hA).webp 보존",
   "headA": {
-   "base": "G24-20261010.webp",
+   "base": "G24-20261012.webp",
    "k": 1.12,
    "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
   },

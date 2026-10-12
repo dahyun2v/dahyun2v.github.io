@@ -1,0 +1,709 @@
+{
+ "note": "G101~G200 확정본 원본(1024×1536)의 배경을 tools/art/birefnet-cut.py(BiRefNet)로 지운 것 — 2026-10-12. 장수 자료 등록 전이라 게임 화면에는 아직 나오지 않는다(source.json 에 넣지 않음).",
+ "made": {
+  "G101": {
+   "name": "조비",
+   "file": "G101.webp",
+   "size": [
+    567,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-01.zip",
+   "src_sha256": "4caade2271a468041f388cff0ed09df6fdcd7e5b739e80fccf242823567dcd0d"
+  },
+  "G105": {
+   "name": "조휴",
+   "file": "G105.webp",
+   "size": [
+    569,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-01.zip",
+   "src_sha256": "696d259909fcde0e672f90f39fc005263d1047b0cee129b639aece884ba9cf7e"
+  },
+  "G108": {
+   "name": "진군",
+   "file": "G108.webp",
+   "size": [
+    549,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-02.zip",
+   "src_sha256": "03f72d4b07a5980d52b5e16c71f5e6ab92391fbd0eb146b44b0cab87b183bc71"
+  },
+  "G109": {
+   "name": "종요",
+   "file": "G109.webp",
+   "size": [
+    636,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-02.zip",
+   "src_sha256": "f04d308af82c81d11a96aeed493b3b0a780c1cfb65b39aacf8c34668a3dbb1b8"
+  },
+  "G110": {
+   "name": "유엽",
+   "file": "G110.webp",
+   "size": [
+    532,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-02.zip",
+   "src_sha256": "f065bb19707bab5b010439643f2fd87bd64c48945f6d85319048c376380a02d7"
+  },
+  "G111": {
+   "name": "가규",
+   "file": "G111.webp",
+   "size": [
+    624,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-02.zip",
+   "src_sha256": "c8a9576b5b73563d3bba0c866081ef6ce376d964d5dd85bede9421374e27511d"
+  },
+  "G112": {
+   "name": "사마랑",
+   "file": "G112.webp",
+   "size": [
+    500,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-02.zip",
+   "src_sha256": "c390233a46e486310cabeeab87996f75779e1f8aa679489dd4dd47392c322684"
+  },
+  "G114": {
+   "name": "곽회",
+   "file": "G114.webp",
+   "size": [
+    456,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-03.zip",
+   "src_sha256": "f433b2d4ea6b34b2eca88d73282625838e890418497b958fff4c83117e8f875d"
+  },
+  "G116": {
+   "name": "양부",
+   "file": "G116.webp",
+   "size": [
+    414,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-03.zip",
+   "src_sha256": "2330ce84c3b12f00580fd3c7945bb075782d163502c38e8a58de34a8c4413f2e"
+  },
+  "G122": {
+   "name": "간옹",
+   "file": "G122.webp",
+   "size": [
+    799,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-04.zip",
+   "src_sha256": "c826141f99766b8dc6d8f33420cf63a3e47c1fceee72396cbca32eee6ca3f3b9"
+  },
+  "G123": {
+   "name": "손건",
+   "file": "G123.webp",
+   "size": [
+    706,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-04.zip",
+   "src_sha256": "09991e84522bf7eb8c0c43e4e5f839fa2f162e1cc45a637a03068c80637e5ab2"
+  },
+  "G128": {
+   "name": "곽준",
+   "file": "G128.webp",
+   "size": [
+    571,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-05.zip",
+   "src_sha256": "6b0f079978dc2679cd50e109c7ca3fcf25d2cbbfa1c614040807b898275e36fb"
+  },
+  "G136": {
+   "name": "관평",
+   "file": "G136.webp",
+   "size": [
+    629,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-06.zip",
+   "src_sha256": "3b5d8cfba3201fa93a925f66e808a5c99788b5692c83a655bed0043c7d958c8a"
+  },
+  "G137": {
+   "name": "관흥",
+   "file": "G137.webp",
+   "size": [
+    428,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-07.zip",
+   "src_sha256": "a321ed026df67457a98d74feacf6f70492d83fc3755c1376b59e1750812616c8"
+  },
+  "G138": {
+   "name": "장포",
+   "file": "G138.webp",
+   "size": [
+    684,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-07.zip",
+   "src_sha256": "991096e1add664bbb9f2814b4b47bb6d71ea23f5967cf71877932c0526eea1f6"
+  },
+  "G142": {
+   "name": "미부인",
+   "file": "G142.webp",
+   "size": [
+    671,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-07.zip",
+   "src_sha256": "156c0e843a9ec858d16099a85a2768b0786dd9bf04d6055418d6dd8a419fcef0"
+  },
+  "G144": {
+   "name": "목황후 오씨",
+   "file": "G144.webp",
+   "size": [
+    498,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-08.zip",
+   "src_sha256": "b8e6f61d15917b44848d11780c4a5ab4d8a092efc76577f6fdbed0908a75e77c"
+  },
+  "G148": {
+   "name": "서성",
+   "file": "G148.webp",
+   "size": [
+    721,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-08.zip",
+   "src_sha256": "9d4981498c3cd754b37ba39c2ed06e861911dbead21bf9fe5cfa18f42fb7da45"
+  },
+  "G149": {
+   "name": "장흠",
+   "file": "G149.webp",
+   "size": [
+    579,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-09.zip",
+   "src_sha256": "bef95e1538a8482570d32a10a5fba6c2d88bc4968d9fcc99990986b9d5800bfb"
+  },
+  "G150": {
+   "name": "동습",
+   "file": "G150.webp",
+   "size": [
+    674,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-09.zip",
+   "src_sha256": "f412541db31d0d5e0a4d77e8e536e10c453781b7b640c78a41b04b4bcfa23214"
+  },
+  "G151": {
+   "name": "진무",
+   "file": "G151.webp",
+   "size": [
+    814,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-09.zip",
+   "src_sha256": "c1c236fe265e7137f20b86f5443dffc1a09262103837781fa006fffc30df6b4a"
+  },
+  "G152": {
+   "name": "반장",
+   "file": "G152.webp",
+   "size": [
+    608,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-09.zip",
+   "src_sha256": "59092d737656e93e1a2ab1f7864a5aa736e70ebf9ec8160c55867541c816f39e"
+  },
+  "G153": {
+   "name": "정봉",
+   "file": "G153.webp",
+   "size": [
+    716,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-09.zip",
+   "src_sha256": "9f41f8a87446dc78204f61d6bc2fd14f10d37edef607f0a49884a08c9a350ebf"
+  },
+  "G155": {
+   "name": "여대",
+   "file": "G155.webp",
+   "size": [
+    515,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-10.zip",
+   "src_sha256": "c90566f404851f09f0c28e55fb249f3d31f025e697940496a0a6532fe7820344"
+  },
+  "G156": {
+   "name": "제갈근",
+   "file": "G156.webp",
+   "size": [
+    524,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-10.zip",
+   "src_sha256": "f1f8fecd1a2e6fdaf4a953925f2e50d4b036bb4f963b926eb90d7d965372fba0"
+  },
+  "G157": {
+   "name": "고옹",
+   "file": "G157.webp",
+   "size": [
+    422,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-10.zip",
+   "src_sha256": "2ac2dd60de7e0c2ece334503007c7b767c06dcb0cc5ad64e4eba6f26a5a518e3"
+  },
+  "G158": {
+   "name": "보즐",
+   "file": "G158.webp",
+   "size": [
+    768,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-10.zip",
+   "src_sha256": "79eb6a6ac5bdc4cbba9bbfffba3821bb4c556040045a8d4498ad8971b5fa0d7e"
+  },
+  "G159": {
+   "name": "감택",
+   "file": "G159.webp",
+   "size": [
+    649,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-10.zip",
+   "src_sha256": "831ddc5b3cfe473ca40f4febd9a576d44965f7ab662b387566b3b75ef7c049cf"
+  },
+  "G160": {
+   "name": "우번",
+   "file": "G160.webp",
+   "size": [
+    651,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-10.zip",
+   "src_sha256": "3789e87e716a95bccc35bf4c0ca94c0cd99f0c41473434881c0f1b7db47b1830"
+  },
+  "G161": {
+   "name": "육적",
+   "file": "G161.webp",
+   "size": [
+    641,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-11.zip",
+   "src_sha256": "4bccac1581a8fda2c423eec82d1fd10e0fe12314387ddbd1bfc97707c778a780"
+  },
+  "G162": {
+   "name": "하제",
+   "file": "G162.webp",
+   "size": [
+    829,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-11.zip",
+   "src_sha256": "2e2ac9624f64b64948658550df8f4fa1b7e5e76d142182b9653654ac751cb2b0"
+  },
+  "G163": {
+   "name": "전종",
+   "file": "G163.webp",
+   "size": [
+    643,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-11.zip",
+   "src_sha256": "3467f9c66d6513013b9d3b1d4a7b43945ce110628c54631acae30dfd81aa0516"
+  },
+  "G164": {
+   "name": "손등",
+   "file": "G164.webp",
+   "size": [
+    599,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-11.zip",
+   "src_sha256": "aba8c72010368d3ef9227894b317da4010072cd9d5f68aefce0764fb9c1c80a8"
+  },
+  "G168": {
+   "name": "보부인",
+   "file": "G168.webp",
+   "size": [
+    493,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-12.zip",
+   "src_sha256": "d9267680ef0bc436e96ee3da92137b6864facff7d10793937a970f918a40396b"
+  },
+  "G170": {
+   "name": "봉기",
+   "file": "G170.webp",
+   "size": [
+    562,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-12.zip",
+   "src_sha256": "f3f3a9727cbc5ab2de767f3b857db3d6f8c13c5b9251957413e5c2bef15ec6fd"
+  },
+  "G171": {
+   "name": "곽도",
+   "file": "G171.webp",
+   "size": [
+    779,
+    1150
+   ],
+   "variant": "R2-3",
+   "src_zip": "g101-final-12.zip",
+   "src_sha256": "79bdc1efc70546e38ab3fc7f8aac081d1cb976270bb29d1b9f5d7df176deefc3"
+  },
+  "G172": {
+   "name": "신평",
+   "file": "G172.webp",
+   "size": [
+    549,
+    1150
+   ],
+   "variant": "R2-3",
+   "src_zip": "g101-final-12.zip",
+   "src_sha256": "f81d035180eb933300c1dec9e3c208bf11ac644f931da02d4fbb0b50ef8621db"
+  },
+  "G173": {
+   "name": "순심",
+   "file": "G173.webp",
+   "size": [
+    638,
+    1150
+   ],
+   "variant": "R2-4",
+   "src_zip": "g101-final-13.zip",
+   "src_sha256": "db7964f5d305d5e0dd2dea0f776f1785d017fd7434c39245ee954d53a2a7b2b9"
+  },
+  "G174": {
+   "name": "원담",
+   "file": "G174.webp",
+   "size": [
+    709,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-13.zip",
+   "src_sha256": "0539f7e837cd5ef1a134522b793dbeb97ed54a163d4e55eefb95c7ce367ed817"
+  },
+  "G175": {
+   "name": "원상",
+   "file": "G175.webp",
+   "size": [
+    525,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-13.zip",
+   "src_sha256": "650148006ff896f9b5ce18cd8c631ee4433fc77f02e3c225769258252ad73525"
+  },
+  "G176": {
+   "name": "고간",
+   "file": "G176.webp",
+   "size": [
+    660,
+    1150
+   ],
+   "variant": "R2-4",
+   "src_zip": "g101-final-13.zip",
+   "src_sha256": "5f5a235f6b994a365deb43df5ae046065ce446a527dfe2c14040874c8fec3b5f"
+  },
+  "G177": {
+   "name": "순우경",
+   "file": "G177.webp",
+   "size": [
+    822,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-13.zip",
+   "src_sha256": "8c3dff0dad7c3efa4385b7c358ca974bb564242fa39742619de38120cc67f5b7"
+  },
+  "G178": {
+   "name": "송헌",
+   "file": "G178.webp",
+   "size": [
+    706,
+    1150
+   ],
+   "variant": "R2-3",
+   "src_zip": "g101-final-13.zip",
+   "src_sha256": "411023f9396aba36c7ef1e87094fc4c94619907957252d97888c613f801de287"
+  },
+  "G179": {
+   "name": "위속",
+   "file": "G179.webp",
+   "size": [
+    714,
+    1150
+   ],
+   "variant": "R2-4",
+   "src_zip": "g101-final-14.zip",
+   "src_sha256": "086b055f4e87cb1132f29f1da79b6ac0ec757fcd01179c08906651c517fabc88"
+  },
+  "G180": {
+   "name": "조성",
+   "file": "G180.webp",
+   "size": [
+    768,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-14.zip",
+   "src_sha256": "3332a5ac086478bff08c8a91282c807d78e5ea98b9dcb8e17febaf11327927f8"
+  },
+  "G181": {
+   "name": "화웅",
+   "file": "G181.webp",
+   "size": [
+    786,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-14.zip",
+   "src_sha256": "ab27f18888e3610c1111b585aed12157e4aef9d023b5e905ac5337a1a52e19b5"
+  },
+  "G182": {
+   "name": "호진",
+   "file": "G182.webp",
+   "size": [
+    665,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-14.zip",
+   "src_sha256": "06888ecf7103c14e246abd9fcadab9abacefb3c1a098b69267cfb802a97e4b8b"
+  },
+  "G183": {
+   "name": "번조",
+   "file": "G183.webp",
+   "size": [
+    632,
+    1150
+   ],
+   "variant": "R2-4",
+   "src_zip": "g101-final-14.zip",
+   "src_sha256": "7b28da8695cf86d5a46e2803bff35a3e41c07fef27cfdd01fb7f8bbdd330cd8e"
+  },
+  "G184": {
+   "name": "우보",
+   "file": "G184.webp",
+   "size": [
+    520,
+    1150
+   ],
+   "variant": "R2-4",
+   "src_zip": "g101-final-14.zip",
+   "src_sha256": "275a0f9fb58c27274c5a572e1ab35b0f39a71a1e701ef1cff637a0d5cf104226"
+  },
+  "G185": {
+   "name": "동백",
+   "file": "G185.webp",
+   "size": [
+    639,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-15.zip",
+   "src_sha256": "f54c4ac4f39b6800ee33d8aef838a55e04e0a36dbc11b43b98f80b6bc38f4b00"
+  },
+  "G186": {
+   "name": "유언",
+   "file": "G186.webp",
+   "size": [
+    632,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-15.zip",
+   "src_sha256": "6d38687c0a155216e62b9913718e5cd9b8c69be6e0ab4aeb6fb99e58cabc212b"
+  },
+  "G187": {
+   "name": "왕루",
+   "file": "G187.webp",
+   "size": [
+    698,
+    1150
+   ],
+   "variant": "R2-3",
+   "src_zip": "g101-final-15.zip",
+   "src_sha256": "c576e6cdef139a7a26aae6cd2c67d81c48792d3c9ddaf705fdbe354158b81291"
+  },
+  "G188": {
+   "name": "오의",
+   "file": "G188.webp",
+   "size": [
+    678,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-15.zip",
+   "src_sha256": "5d04462938ce12635f8f585b11bc00ca0bd5bc10ca1e9d02080d145ba54b55bf"
+  },
+  "G189": {
+   "name": "양임",
+   "file": "G189.webp",
+   "size": [
+    679,
+    1150
+   ],
+   "variant": "R2-3",
+   "src_zip": "g101-final-15.zip",
+   "src_sha256": "1d6a7d6038a7cc97c52d117883c64b90ed0c612fa3f5d2e57cc71f8b2283ed0d"
+  },
+  "G190": {
+   "name": "맹우",
+   "file": "G190.webp",
+   "size": [
+    661,
+    1150
+   ],
+   "variant": "R2-2",
+   "src_zip": "g101-final-15.zip",
+   "src_sha256": "f4258f461bf9aa8718db19d81aa00f8e6c53d4dc89c7bc07511ef236fcdc38c8"
+  },
+  "G191": {
+   "name": "목록대왕",
+   "file": "G191.webp",
+   "size": [
+    491,
+    1150
+   ],
+   "variant": "R2-3",
+   "src_zip": "g101-final-16.zip",
+   "src_sha256": "c496539979801b848a64b4c81e05ef7a0b33b457638e64e1c22dbf45d86501f9"
+  },
+  "G192": {
+   "name": "올돌골",
+   "file": "G192.webp",
+   "size": [
+    559,
+    1150
+   ],
+   "variant": "R2-2",
+   "src_zip": "g101-final-16.zip",
+   "src_sha256": "cc4558726c6d52f67cc754126aab33359fa4eaa11770209a4554b33a0f32de5c"
+  },
+  "G193": {
+   "name": "타사대왕",
+   "file": "G193.webp",
+   "size": [
+    562,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-16.zip",
+   "src_sha256": "55e5412ad158ce2e14e8c59027afed220a46d98ff00ffa7f969b30132a245055"
+  },
+  "G194": {
+   "name": "엄강",
+   "file": "G194.webp",
+   "size": [
+    441,
+    1150
+   ],
+   "variant": "V1",
+   "src_zip": "g101-final-16.zip",
+   "src_sha256": "6d6dc87cfad9f0b0d5f3f9c8e7719307a3e166c12ea1ae96077b897ca679b2d9"
+  },
+  "G195": {
+   "name": "전해",
+   "file": "G195.webp",
+   "size": [
+    662,
+    1150
+   ],
+   "variant": "V2",
+   "src_zip": "g101-final-16.zip",
+   "src_sha256": "fcda5e3cad91a7d1577864c1342283fa23cc784830f6d7d1c6044995f5895ec9"
+  },
+  "G197": {
+   "name": "교유",
+   "file": "G197.webp",
+   "size": [
+    733,
+    1150
+   ],
+   "variant": "R2-2",
+   "src_zip": "g101-final-17.zip",
+   "src_sha256": "a2399839d51553390baac1f3d9ee79c50c48c3fece7abbe4ab90735e69a068aa"
+  },
+  "G198": {
+   "name": "악취",
+   "file": "G198.webp",
+   "size": [
+    490,
+    1150
+   ],
+   "variant": "V4",
+   "src_zip": "g101-final-17.zip",
+   "src_sha256": "437318ae07ba2d03dde9ae950839bf14e294891adb05a1a61ca55b601c2cefae"
+  },
+  "G199": {
+   "name": "진란",
+   "file": "G199.webp",
+   "size": [
+    589,
+    1150
+   ],
+   "variant": "V3",
+   "src_zip": "g101-final-17.zip",
+   "src_sha256": "8cf288f83423047c70cfb86046283de6511ded1c352a34930aae94389831f5a4"
+  },
+  "G200": {
+   "name": "화타",
+   "file": "G200.webp",
+   "size": [
+    718,
+    1150
+   ],
+   "variant": "R2-2",
+   "src_zip": "g101-final-17.zip",
+   "src_sha256": "13294521dd3889b2b96a51edd2e99040acd3c01df20566147a70baeb926dd760"
+  }
+ }
+}
