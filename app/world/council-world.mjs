@@ -3,10 +3,11 @@
 // Claude 2026-10-10. 석실 화면(seoksil/screens/council.mjs)의 흐름(군사 고르기 → 안건 고르기 → 결의/보류 → 평정 마침)을 그대로 따른다.
 import {COUNCIL,councilCandidates} from '/src/campaign-council.mjs';
 import {campaignDate} from '/src/campaign-map-model.mjs';
+import {readableError} from '/app/world/hud-ink.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const KIND = COUNCIL.proposals.kinds;
-const GLYPH = {ATTACK_CITY: '攻', DEFEND_CITY: '守', BUILD_HUB: '補', MUSTER: '出', CITY_DEVELOP: '政', DIPLOMACY: '外', EXPLORE: '探', RECRUIT: '登'};
+const GLYPH = {ATTACK_CITY: '공격', DEFEND_CITY: '방어', BUILD_HUB: '보급', MUSTER: '출진', CITY_DEVELOP: '내정', DIPLOMACY: '외교', EXPLORE: '탐험', RECRUIT: '등용'};
 const shortDate = (turn) => campaignDate(turn).split('년 ')[1] ?? campaignDate(turn);
 const ui = new WeakMap();
 
@@ -53,10 +54,10 @@ export function renderCouncilWorld(root, state, ctx) {
   if (u.appoint) {
     const pool = c.candidates.length ? c.candidates : councilCandidates(state).slice(0, 3).map((x) => x.officerId);
     rows = pool.map((id) => { const st = o(id)?.baseStats ?? {}; const f = ctx.face?.(id);
-      return `<button class="wc-row${id === (u.pick ?? c.strategistId) ? ' is-picked' : ''}" data-pick-officer="${esc(id)}"><span class="wc-ic">師</span><span class="wc-face">${f ? `<img src="${esc(f)}" alt="">` : ''}</span><span class="wc-tx"><b>${esc(name(id))}</b><small>${id === c.strategistId ? '지금 군사' : '군사 후보'} · 지략 ${st.intelligence ?? '—'} · 지휘 ${st.leadership ?? '—'} · 정무 ${st.politics ?? '—'}</small></span></button>`; }).join('');
+      return `<button class="wc-row${id === (u.pick ?? c.strategistId) ? ' is-picked' : ''}" data-pick-officer="${esc(id)}"><span class="wc-ic">군사</span><span class="wc-face">${f ? `<img src="${esc(f)}" alt="">` : ''}</span><span class="wc-tx"><b>${esc(name(id))}</b><small>${id === c.strategistId ? '지금 군사' : '군사 후보'} · 지략 ${st.intelligence ?? '—'} · 지휘 ${st.leadership ?? '—'} · 정무 ${st.politics ?? '—'}</small></span></button>`; }).join('');
   } else {
     rows = c.proposals.map((p) => { const k = KIND[p.kind], st = p.decision, f = ctx.face?.(p.proposerId);
-      return `<button class="wc-row${p.id === u.selectedId ? ' is-picked' : ''}${st ? ' is-done' : ''}" data-proposal="${esc(p.id)}"><span class="wc-ic" data-kind="${esc(p.kind)}">${GLYPH[p.kind] ?? '議'}</span><span class="wc-face">${f ? `<img src="${esc(f)}" alt="">` : ''}</span><span class="wc-tx"><b>${esc(k?.label ?? p.kind)} <em>${esc(name(p.proposerId))}</em></b><small>${esc(p.what)}</small></span><span class="wc-st ${st === 'APPROVE' ? 'ok' : st === 'HOLD' ? 'hold' : ''}">${st === 'APPROVE' ? '결의' : st === 'HOLD' ? '보류' : ''}</span></button>`; }).join('') || '<p class="wc-none">올라온 안건이 없습니다.</p>';
+      return `<button class="wc-row${p.id === u.selectedId ? ' is-picked' : ''}${st ? ' is-done' : ''}" data-proposal="${esc(p.id)}"><span class="wc-ic" data-kind="${esc(p.kind)}">${GLYPH[p.kind] ?? '안건'}</span><span class="wc-face">${f ? `<img src="${esc(f)}" alt="">` : ''}</span><span class="wc-tx"><b>${esc(k?.label ?? p.kind)} <em>${esc(name(p.proposerId))}</em></b><small>${esc(p.what)}</small></span><span class="wc-st ${st === 'APPROVE' ? 'ok' : st === 'HOLD' ? 'hold' : ''}">${st === 'APPROVE' ? '결의' : st === 'HOLD' ? '보류' : ''}</span></button>`; }).join('') || '<p class="wc-none">올라온 안건이 없습니다.</p>';
   }
 
   // ── 가운데: 군사 보고 / 고른 안건 ──
@@ -106,7 +107,7 @@ export function renderCouncilWorld(root, state, ctx) {
 
   // ── 명령 ──
   const rerender = () => ctx.rerender();
-  const send = (cmd) => { try { ctx.dispatch(cmd); return true; } catch (e) { ctx.toast?.(String(e?.message ?? e)); return false; } };
+  const send = (cmd) => { try { ctx.dispatch(cmd); return true; } catch (e) { ctx.toast?.(readableError(e)); return false; } };
   const on = (act, fn) => root.querySelectorAll(`[data-act="${act}"]`).forEach((b) => { b.onclick = fn; });
   root.querySelectorAll('[data-proposal]').forEach((b) => { b.onclick = () => { u.selectedId = u.selectedId === b.dataset.proposal ? null : b.dataset.proposal; rerender(); }; });
   root.querySelectorAll('[data-pick-officer]').forEach((b) => { b.onclick = () => { u.pick = b.dataset.pickOfficer; rerender(); }; });

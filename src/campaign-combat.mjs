@@ -33,15 +33,16 @@ import {healCampaignTroops} from './campaign-effects.mjs';
 import {creditCampaignCombat,recordCampaignCombatCareer} from './campaign-growth.mjs';
 
 export const attackRange = (army,s=null) => ( troopToCampaign(army.troopType)==='BT03'||s&&specialTroop(s,army.troopType)&&army.troopType==='jiefan'||s&&hasCampaignRule(s,army.armyId,'REACH_2')?2:1)+(s?c33Range(s,army.armyId)+c34Range(s,army.armyId):0);
-// C104/C105: p1/p2/p3 are unapproved trial values; v35 preserves the default.
+// v3.6 default; v35 and p1/p2/p3 remain selectable comparison trials.
 const troopMatchups={
+ v36:{'BT01>BT02':1.25,'BT01>BT03':1.2,'BT02>BT01':.9,'BT02>BT03':1.15,'BT02>BT04':1.4,'BT03>BT01':1.25,'BT03>BT02':[.85,'FRONT'],'BT03>BT04':1.3,'BT04>BT01':1.2,'BT04>BT03':1.4},
  v35:{'BT02>BT04':1.4,'BT04>BT03':1.4,'BT01>BT03':1.2},
  p1:{'BT01>BT02':1.25,'BT01>BT03':1.2,'BT01>BT04':.9,'BT02>BT01':.9,'BT02>BT03':1.15,'BT02>BT04':1.4,'BT03>BT01':1.25,'BT03>BT02':[.85,'FRONT'],'BT03>BT04':1.3,'BT04>BT01':1.2,'BT04>BT02':[.8,'FRONT'],'BT04>BT03':1.4},
  p2:{'BT01>BT02':1.25,'BT01>BT03':1.2,'BT01>BT04':.9,'BT02>BT01':.9,'BT02>BT03':1.15,'BT02>BT04':1.4,'BT03>BT01':[.85,'FRONT'],'BT03>BT04':1.3,'BT04>BT01':1.2,'BT04>BT02':[.8,'FRONT'],'BT04>BT03':1.4},
  p3:{'BT01>BT02':1.25,'BT01>BT03':1.2,'BT02>BT01':.9,'BT02>BT03':1.15,'BT02>BT04':1.4,'BT03>BT01':[.85,'FRONT'],'BT03>BT04':1.3,'BT04>BT01':1.2,'BT04>BT03':1.4},
 };
 function troopMatchup(s,attacker,target,side){
- const table=troopMatchups[s.trialRules?.troopMatchup]??troopMatchups.v35,value=table[`${attacker}>${target}`]??1;
+ const table=troopMatchups[s.trialRules?.troopMatchup]??troopMatchups.v36,value=table[`${attacker}>${target}`]??1;
  return Array.isArray(value)?side===value[1]?value[0]:1:value;
 }
 function combatFollowups(s,id,target,hit,options){
@@ -163,15 +164,24 @@ export function resolvePursuit(state,armyId) {
   const p=previewDisengage(state,armyId);if(!p)return state;
   return resolveMovementShot(state,armyId,p,'PURSUIT');
 }
-// C105 trial: eligibility belongs to the start of the normal move; damage/vision
+// Eligibility belongs to the start of the normal move; damage/vision
 // belong to its arrival. No per-turn ledger or action/cooldown consumption.
+export const approachFireRate=s=>Number.isFinite(s.trialRules?.approachFire)?s.trialRules.approachFire:.3;
+// Keep only departure positions and the already evaluated engagement guard.
+// No mutable army, diplomacy or terminal objects are retained across movement.
+export function approachFireStart(s,armyId){
+ if(approachFireRate(s)<=0||!s.armies[armyId])return null;
+ const armies={[armyId]:{tileId:s.armies[armyId].tileId}};
+ for(const b of Object.values(s.armies))if(troopToCampaign(b.troopType)==='BT03')armies[b.armyId]={tileId:b.tileId,engaged:archerEngaged(s,b.armyId)};
+ return {armies,tiles:s.tiles};
+}
 function approachFirePrediction(s,armyId,start){
-  const rate=s.trialRules?.approachFire,a=s.armies[armyId],old=start.armies[armyId];
+  const rate=approachFireRate(s),a=s.armies[armyId],old=start.armies[armyId];
   if(!Number.isFinite(rate)||rate<=0||!a||!old||a.tileId===old.tileId||!castleArmyActive(s,a)||a.troopCount<=0||a.morale==='ROUTING')return null;
   let best=null;
   for(const b of Object.values(s.armies).sort((x,y)=>x.armyId.localeCompare(y.armyId,'en'))){
     const was=start.armies[b.armyId];
-    if(!was||troopToCampaign(b.troopType)!=='BT03'||!castleArmyActive(s,b)||b.troopCount<=0||b.morale==='ROUTING'||b.formation==='BROKEN'||archerEngaged(start,b.armyId)||
+    if(!was||troopToCampaign(b.troopType)!=='BT03'||!castleArmyActive(s,b)||b.troopCount<=0||b.morale==='ROUTING'||b.formation==='BROKEN'||(was.engaged??archerEngaged(start,b.armyId))||
       !diplomacyArmyHostile(s,b.armyId,armyId)||hexDistance(start.tiles[was.tileId],start.tiles[old.tileId])===1||hexDistance(s.tiles[b.tileId],s.tiles[a.tileId])!==1||
       s.knowledge[b.factionId]?.tiles[a.tileId]!=='VISIBLE'||ambushHidden(s,armyId,b.factionId)||classHidden(s,armyId,b.factionId))continue;
     const prepared=prepareAttackEffects(s,b.armyId,armyId,{first:false}),p=attackFormula(prepared,b.armyId,armyId,undefined,{reaction:true,first:false});
@@ -181,7 +191,12 @@ function approachFirePrediction(s,armyId,start){
   return best;
 }
 export function previewApproachFire(s,armyId,destinationTileId){
-  if(!Number.isFinite(s.trialRules?.approachFire)||s.trialRules.approachFire<=0||!s.armies[armyId]||!s.tiles[destinationTileId]||combatCanPostMove(s,armyId))return null;
+  if(approachFireRate(s)<=0||!s.armies[armyId]||!s.tiles[destinationTileId]||combatCanPostMove(s,armyId))return null;
+  // Reject empty arrival neighborhoods before cloning or planning the move.
+  const mover=s.armies[armyId],destinationTile=s.tiles[destinationTileId];
+  if(!Object.values(s.armies).some(b=>troopToCampaign(b.troopType)==='BT03'&&b.troopCount>0&&b.morale!=='ROUTING'&&b.formation!=='BROKEN'&&
+    hexDistance(s.tiles[b.tileId],destinationTile)===1&&hexDistance(s.tiles[b.tileId],s.tiles[mover.tileId])!==1&&
+    !archerEngaged(s,b.armyId)&&diplomacyArmyHostile(s,b.armyId,armyId)))return null;
   if(!campaignPath(s,armyId,destinationTileId))return null;
   // Departure pursuit may reduce troops, disrupt formation or route the mover.
   // Resolve it only on a clone so committed RNG/state remain untouched.

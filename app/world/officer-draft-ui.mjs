@@ -11,6 +11,10 @@
 //     주소에 ?fx=0 이거나 '움직임 줄이기' 설정이면 연출 없이 바로 뜬다. 연출 중 아무 데나 누르면 건너뛴다.
 // @ts-ignore — 서버 주소(/src/…)로 불러오는 모듈은 타입 검사가 파일을 못 찾는다
 import {createOfficerDraft, officerDraftView, lockDraftOfficer, rerollOfficerDraft, officerDraftCompanions} from '/src/campaign-officer-draft.mjs';
+// @ts-ignore — browser module URL
+import {createCampaign} from '/src/campaign-runtime.mjs';
+// @ts-ignore — browser module URL
+import {campaignOfficerGrowth} from '/src/campaign-growth.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 /** 카드 맨 위 한 줄: 왜 이 사람이 나타났는가(정본 §1.3 Weighted Fate 의 까닭을 플레이어 말로) */
@@ -25,6 +29,24 @@ const GIMMICK = {
   F03: '손권 — 찾는 일을 맡긴다 · 아래 얼굴을 눌러 맡길 사람을 정하고 다시 부른다',
 };
 const STATS = ['지휘', '무용', '지략', '정무', '감화'];
+/** 실제 출정과 같은 초기화에서 현재 가진 카드만 읽는다. 성장 후보/미보유 카드는 영입 효과로 약속하지 않는다.
+ * 계산용 새 판은 표시 자료만 만들며, 진행 중인 판·드래프트 RNG·저장소를 바꾸지 않는다.
+ * @param {{factionId:string,seed:number,companions:string[]}} input
+ */
+export function draftOfficerBriefs(input) {
+  const preview = createCampaign({...input, map: 'v3', fieldArmies: false});
+  return Object.fromEntries(input.companions.map((id) => {
+    const growth = campaignOfficerGrowth(preview, id);
+    const core = growth?.cards.find((c) => c.traitId === `${id}.unique`);
+    const signature = growth?.cards.find((c) => c.traitId === growth.signature?.traitId)
+      ?? growth?.cards.find((c) => c.kind === 'tactic');
+    return [id, {
+      trait: core ? {name: core.name, text: core.text || '효과 설명 준비 중'} : null,
+      tactic: signature ? {name: signature.name, text: signature.text || '효과 설명 준비 중'} : null,
+    }];
+  }));
+}
+
 const fxOn = () => { try { return new URLSearchParams(globalThis.location?.search ?? '').get('fx') !== '0' && !globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches; } catch { return true; } };
 const reliefOf = (/** @type {string} */ src) => src.replace(/\.\w+(\?.*)?$/, '-relief.webp');
 const bustOf = (/** @type {string} */ id) => `/assets/officer-art/bust/${id}.webp`;
@@ -46,6 +68,8 @@ export function openOfficerDraft(host, o) {
   /** @type {string|null} */ let owner = null;   // 손권: 찾는 일을 맡길 사람
   /** @type {string|null} */ let woke = null;    // 방금 깨운 사람(연출 한 번)
   let note = '';
+  let briefKey = '';
+  /** @type {ReturnType<typeof draftOfficerBriefs>} */ let briefs = {};
   const fx = fxOn();
   /** @type {Set<string>} */ let shown = new Set();   // 바로 앞 그림에 있던 카드 — 여기에 없던 카드만 '돌에서 깨어난다'
   let busy = false;                                    // 누름 · 다시 부르기 · 출정 연출이 도는 동안 다른 입력을 받지 않는다
@@ -61,17 +85,29 @@ export function openOfficerDraft(host, o) {
     const canDelegate = o.factionId === 'F03' && v.canReroll;
     if (owner && owner !== o.ruler.id && !draft.locked.includes(owner)) owner = null;
     const lockedCards = draft.locked.map((id) => v.cards.find((c) => c.officerId === id)).filter(Boolean);
+    const nextKey = draft.offers.join('|');
+    if (briefKey !== nextKey) {
+      briefs = draftOfficerBriefs({factionId: o.factionId, seed: o.seed, companions: draft.offers});
+      briefKey = nextKey;
+    }
     let entering = 0;
     const cards = v.cards.map((c) => {
-      const src = o.art(c.officerId), on = focus === c.officerId && !c.locked;
+      const src = o.art(c.officerId), on = focus === c.officerId;
+      const brief = briefs[c.officerId], trait = brief?.trait, tactic = brief?.tactic;
+      const benefitId = `od-benefit-${c.officerId}`, detailId = `od-detail-${c.officerId}`;
       names[c.officerId] = c.name;
       const fresh = fx && !c.locked && !shown.has(c.officerId);
       const stats = STATS.map((k) => `<li><span>${k}</span><i><u style="width:${Math.max(0, Math.min(100, c.stats?.[k] ?? 0))}%"></u></i><b>${c.stats?.[k] ?? '—'}</b></li>`).join('');
       const layers = fx && src ? `<i class="od-slash" aria-hidden="true"></i><img class="od-relief" src="${esc(reliefOf(src))}" alt="" aria-hidden="true" draggable="false" onerror="this.remove()"><img class="od-ink" src="${esc(src)}" alt="" aria-hidden="true" draggable="false">` : '';
-      return `<div class="od-card${c.locked ? ' locked' : ''}${on ? ' focus' : ''}${c.officerId === woke ? ' woke' : ''}${c.home ? ' home' : ''}${fresh ? ' enter' : ''}"${fresh ? ` style="--i:${entering++}"` : ''} data-id="${esc(c.officerId)}" role="button" tabindex="0" aria-pressed="${c.locked}">
+      return `<div class="od-card${c.locked ? ' locked' : ''}${on ? ' focus' : ''}${c.officerId === woke ? ' woke' : ''}${c.home ? ' home' : ''}${fresh ? ' enter' : ''}"${fresh ? ` style="--i:${entering++}"` : ''} data-id="${esc(c.officerId)}" role="button" tabindex="0" aria-pressed="${c.locked}" aria-expanded="${on}" aria-controls="${detailId}" aria-describedby="${benefitId}">
         <span class="od-why">${esc(REASON[c.reasonCode] ?? REASON.WANDER)}</span>
         <span class="od-art">${layers}${src ? `<img class="od-color" src="${esc(src)}" alt="${esc(c.name)}" draggable="false">` : `<b class="od-initial">${esc(String(c.name).slice(0, 1))}</b>`}</span>
-        <ul class="od-stats">${stats}</ul>
+        <span class="od-benefit" id="${benefitId}"><strong>${esc(trait?.name ?? '고유 특기')}</strong><span>${esc(trait?.text ?? '효과 설명 준비 중')}</span><em>눌러서 전법·능력치 보기</em></span>
+        <div class="od-details" tabindex="0" id="${detailId}"${on ? '' : ' hidden'}>
+          <p><small>고유 특기 · ${esc(trait?.name ?? '준비 중')}</small>${esc(trait?.text ?? '효과 설명 준비 중')}</p>
+          ${tactic ? `<p><small>시작 전법 · ${esc(tactic.name)}</small>${esc(tactic.text)}</p>` : '<p>시작 전법 설명 준비 중</p>'}
+          <ul class="od-stats">${stats}</ul>
+        </div>
         ${c.locked ? '' : `<button class="od-wake" data-wake="${esc(c.officerId)}"${c.lockBlocked ? ' disabled' : ''}>${c.lockBlocked === 'BUDGET' ? '그릇이 모자라다' : '깨운다'}</button>`}
         <span class="od-plate"><b>${esc(c.name)}</b><small>${esc(c.style ?? c.role ?? '')}</small><i class="od-cost" title="무게 ${c.cost} — 다섯의 무게 합이 그릇 안이어야 한다">${c.cost}</i>${c.locked ? '<em class="od-seal" aria-hidden="true">印</em>' : ''}</span>
       </div>`;
@@ -185,8 +221,9 @@ export function openOfficerDraft(host, o) {
     }
     if (a === 'confirm') { let c; try { c = officerDraftCompanions(draft); } catch { note = '그릇을 넘는다'; render(); return; } if (fx) { awaken(c); return; } close(); o.onConfirm(c); return; }
     if (a === 'back') { close(); o.onBack(); return; }
+    if (t.closest?.('.od-details')) return;
     const card = /** @type {HTMLElement|null} */ (t.closest?.('.od-card'));
-    if (card && !card.classList.contains('locked')) { const id = card.dataset.id ?? null; focus = focus === id ? null : id; render(); }
+    if (card) { const id = card.dataset.id ?? null; focus = focus === id ? null : id; render(); /** @type {HTMLElement|null} */ (root.querySelector(`[data-id="${id}"]`))?.focus(); }
   };
   const key = (/** @type {KeyboardEvent} */ e) => {
     if (fx && performance.now() < enterUntil && ['Enter', ' ', 'Escape'].includes(e.key)) { e.preventDefault(); skip(); return; }

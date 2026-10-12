@@ -35,7 +35,7 @@ export function orderSegment(s,id,to){
  const route=orderRoute(s,id,to);if(!route)return null;
  let ticks=0,end=s.armies[id].tileId;const world=campaignMovementWorld(s,id);
  for(const t of route.pathTileIds.slice(1)){
-  const cost=edgeTicks(world,s.armies[id],end,t);
+  const cost=edgeTicks(world,world.armies[id],end,t);
   if(cost===null||ticks+cost>200)break;
   if(Object.values(s.armies).some(a=>a.armyId!==id&&castleArmyActive(s,a)&&a.tileId===t))return end===s.armies[id].tileId?null:end;
   ticks+=cost;end=t;
@@ -45,7 +45,7 @@ export function orderSegment(s,id,to){
 export function queuedOrderUnit(s){return (s.orderQueue??[])[0]??null;}
 export function routeTurns(s,id,route){
  let turns=1,ticks=0;const world=campaignMovementWorld(s,id),path=route.pathTileIds;
- for(let i=1;i<path.length;i++){const cost=edgeTicks(world,s.armies[id],path[i-1],path[i]);if(ticks+cost>200){turns++;ticks=0;}ticks+=cost;}
+ for(let i=1;i<path.length;i++){const cost=edgeTicks(world,world.armies[id],path[i-1],path[i]);if(ticks+cost>200){turns++;ticks=0;}ticks+=cost;}
  return turns;
 }
 export function orderHighlights(s,ids=[]){

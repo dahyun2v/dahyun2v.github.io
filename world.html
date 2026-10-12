@@ -31,38 +31,39 @@
   <div class="w-res" id="resources"></div>
   <div class="w-alerts" id="w-alerts"><button id="crisis-pill" class="w-seal-alert" hidden></button></div>
   <div class="w-date"><strong id="turn"></strong></div>
-  <nav class="w-menu"><button class="w-icon-btn" id="save" disabled title="저장">存</button><button class="w-icon-btn" id="load-again" title="불러오기">讀</button><button class="w-icon-btn" id="rules-open" title="규칙">規</button><button class="w-icon-btn" id="mute" title="소리">聲</button><a class="w-icon-btn" href="/" title="처음 화면">歸</a></nav>
+  <nav class="w-menu"><button class="w-icon-btn" id="save" disabled title="저장">저장</button><button class="w-icon-btn" id="load-again" title="불러오기">불러</button><button class="w-icon-btn" id="rules-open" title="규칙">규칙</button><button class="w-icon-btn" id="mute" title="소리">소리</button><a class="w-icon-btn" href="/" title="처음 화면">처음</a></nav>
 </header>
 
 <nav class="w-rail" id="mode-rail" aria-label="지도 보기" hidden>
-  <button data-mode="world" class="on" title="지형 — 기본 지도"><i>世</i><small>지형</small></button>
-  <button data-mode="supply" title="보급 — 부대에서 보급 근원까지 선, 끊김은 점선"><i>補</i><small>보급</small></button>
-  <button data-mode="faction" title="세력 — 영역과 국경"><i>勢</i><small>세력</small></button>
-  <button data-mode="diplomacy" title="외교 — 전쟁·휴전·동맹"><i>外</i><small>외교</small></button>
-  <button data-mode="trace" title="탐험 — 탐험지와 옛 흔적"><i>跡</i><small>탐험</small></button>
+  <button data-mode="world" class="on" title="지형 — 기본 지도"><i>지형</i><small>지형</small></button>
+  <button data-mode="supply" title="보급 — 부대에서 보급 근원까지 선, 끊김은 점선"><i>보급</i><small>보급</small></button>
+  <button data-mode="faction" title="세력 — 영역과 국경"><i>세력</i><small>세력</small></button>
+  <button data-mode="diplomacy" title="외교 — 전쟁·휴전·동맹"><i>외교</i><small>외교</small></button>
+  <button data-mode="trace" title="탐험 — 탐험지와 옛 흔적"><i>탐험</i><small>탐험</small></button>
   <span class="sep"></span>
-  <button id="roster-open" title="소속 장수"><i>人</i><small>장수</small></button>
+  <button id="roster-open" title="소속 장수"><i>장수</i><small>장수</small></button>
 </nav>
 
 <main class="viewport w-stage" id="game" hidden><div id="map"></div></main>
 
 <div class="w-hint" id="w-hint" hidden aria-live="polite"><i></i><span></span><small>Esc 취소</small></div>
 <aside class="w-report" id="w-report" hidden>
-  <button class="w-report-tab" id="report-toggle" title="보고"><span>報告</span><b class="count"></b></button>
+  <button class="w-report-tab" id="report-toggle" title="보고"><span>보고</span><b class="count"></b></button>
   <div class="w-report-body"><h2>이번 차례</h2><p id="summary"></p><div id="turn-log"></div><button id="cancel-move" hidden>이동 취소</button></div>
 </aside>
 
-<div class="w-advisor" id="w-advisor" hidden><span class="face"></span><div class="say"><b class="who"></b><p id="status" role="status"></p></div></div>
+<div class="w-advisor" id="w-advisor" hidden><span class="face"></span><div class="say"><b class="who"></b><p id="first-sortie-guide" role="status" hidden></p><p id="status" role="status"></p></div></div>
 
+<p id="victory-guide" class="victory-guide"></p>
 <div class="w-turn" id="w-turn" hidden>
   <div class="w-dial" id="world-dial" title="세계 다이얼 — 바깥 36칸 = 한 해 36차례 · 안쪽 = 계절"><div class="dial"></div><span class="season"></span></div>
   <button class="w-end" id="end-turn"><span>다음 차례</span><small id="remaining"></small></button>
 </div>
-<button class="w-mini-toggle" id="mini-toggle" hidden title="작은 지도">略圖</button>
+<button class="w-mini-toggle" id="mini-toggle" hidden title="작은 지도">작은 지도</button>
 <div class="w-mini" id="mini" hidden></div>
 <aside id="set-tracker" class="w-sets" hidden></aside>
 
-<section id="city-stage" class="cs" hidden><div class="cs-over"></div><section class="cs-facility" aria-label="시설"></section></section>
+<section id="city-stage" class="cs" hidden><div class="cs-over"></div><section class="cs-facility" aria-label="시설"></section><p id="city-sortie-guide" class="cs-sortie-guide" role="status" hidden></p></section>
 <section id="unit-menu" class="w-dock" hidden></section>
 <aside id="city-panel" class="w-sheet" hidden></aside>
 <div id="attack-preview" class="w-tip" role="tooltip" hidden></div>
@@ -70,7 +71,7 @@
 <div id="select-box" class="w-select-box" hidden></div>
 
 <!-- 의식·창 -->
-<div id="growth-modal" class="w-modal" hidden><section class="w-card w-growth" role="dialog" aria-modal="true" aria-labelledby="growth-title"><figure id="growth-art" class="w-growth-art" aria-hidden="true"></figure><div class="w-growth-main"><h1 id="growth-title"></h1><p id="growth-status"></p><div id="growth-cards" class="w-cards"></div><div class="draft-foot"><button id="growth-reroll" class="w-btn">다시 뽑기 · 1회</button><ol id="growth-have" class="draft-have" aria-label="지금 가진 특기와 전법"></ol><button id="growth-confirm" class="draft-confirm" disabled><span>확정</span></button></div><p id="growth-error" role="status"></p></div></section></div>
+<div id="growth-modal" class="w-modal" hidden><section class="w-card w-growth" role="dialog" aria-modal="true" aria-labelledby="growth-title"><figure id="growth-art" class="w-growth-art" aria-hidden="true"></figure><div class="w-growth-main"><p id="growth-collapse" role="status" hidden></p><h1 id="growth-title"></h1><p id="growth-status"></p><div id="growth-cards" class="w-cards"></div><div class="draft-foot"><button id="growth-reroll" class="w-btn">다시 뽑기 · 1회</button><ol id="growth-have" class="draft-have" aria-label="지금 가진 특기와 전법"></ol><button id="growth-confirm" class="draft-confirm" disabled><span>확정</span></button></div><p id="growth-error" role="status"></p></div></section></div>
 <div id="trait-modal" class="w-modal" hidden><section class="w-card" role="dialog" aria-modal="true" aria-labelledby="trait-title"><h1 id="trait-title">특기 칸이 가득 찼습니다</h1><p id="trait-status"></p><div id="trait-options" class="w-cards"></div><footer class="w-card-foot"><button id="trait-back" class="w-btn ghost">뒤로</button><button id="trait-confirm" class="w-btn primary" hidden>확인</button></footer></section></div>
 <div id="officer-modal" class="w-modal" hidden><section class="w-card w-officer" role="dialog" aria-modal="true" aria-labelledby="officer-title"><h1 id="officer-title"></h1><div id="officer-content"></div><button id="officer-close" class="w-close" title="닫기">✕</button></section></div>
 <div id="visit-modal" class="w-modal w-scene" hidden><section class="w-dialogue" role="dialog" aria-modal="true" aria-labelledby="visit-name"><figure id="visit-art" class="w-dialogue-art" aria-hidden="true"></figure><figure id="visit-lord" class="w-dialogue-art lord" aria-hidden="true"></figure><i class="w-fore" aria-hidden="true"></i><div id="visit-bond" class="w-bond" aria-hidden="true"></div><div class="w-dialogue-box"><header><b id="visit-name"></b><span id="visit-rel"></span></header><p id="visit-scene" class="scene"></p><p id="visit-line" class="line"></p><div id="visit-choices" class="choices"></div></div></section></div>
@@ -96,6 +97,7 @@
 <div id="council" class="w-council" hidden></div>
 <div id="officer-draft" class="w-odraft" hidden></div>
 <div id="clash" class="w-clash" hidden></div>
+<div id="save-confirm" class="w-modal" hidden><section class="w-card save-confirm-card" role="dialog" aria-modal="true" aria-labelledby="save-confirm-title"><h2 id="save-confirm-title">이전 저장을 덮어쓸까요?</h2><p>저장 칸은 하나입니다 — 이전 저장을 덮어씁니다</p><div><button id="save-cancel" class="w-btn">취소</button><button id="save-overwrite" class="w-btn primary">덮어쓰기</button></div></section></div>
 <div id="ink-hud" hidden></div>
 <script type="module" src="/app/world/world.js"></script>
 </body></html>

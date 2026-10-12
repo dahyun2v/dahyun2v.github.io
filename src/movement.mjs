@@ -1,4 +1,5 @@
 import {boardNeighbors,tileId,movementTicks} from './map-primitives.mjs';
+import {parentTroop} from './campaign-special-troops.mjs'; // 특수 병종(투석기 등)은 부모 병종의 이동 규칙으로 — 원래 부대를 그대로 넘기는 호출(예약 이동 등)에서 '알 수 없는 병종'으로 판 전체가 멈췄다(2026-10-12)
 export const edgeKey=(a,b)=>[a,b].sort().join('|');
 const activeArmy=(s,a)=>!s.campaignTerminalWorld||s.campaignTerminalWorld.armiesById?.[a.armyId]?.disposition==='ACTIVE';
 export function buildMapRules(map,data){
@@ -10,7 +11,7 @@ export function buildMapRules(map,data){
 export function edgeTicks(s,a,fromId,toId){
   const from=s.tiles[fromId],to=s.tiles[toId];if(!from || !to)return null;
   const key=edgeKey(fromId,toId),r=s.mapRules;
-  return movementTicks({from,to,troopType:a.troopType,maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:r.roads.includes(key),river:r.riverEdges.includes(key),crossing:r.crossings[key]??'none',blocked:r.blockedEdges.includes(key)},tuning:r.tuning,tickDays:s.time.tickDays});
+  return movementTicks({from,to,troopType:parentTroop(a.troopType),maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:r.roads.includes(key),river:r.riverEdges.includes(key),crossing:r.crossings[key]??'none',blocked:r.blockedEdges.includes(key)},tuning:r.tuning,tickDays:s.time.tickDays});
 }
 // Static geometry only: no enemy or friendly occupancy is used for path search.
 export function findPath(s,armyId,destination){

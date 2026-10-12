@@ -27,7 +27,7 @@ body.ink-hud #unit-menu{position:fixed!important;left:-9999px!important}
 .ih-date{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15;margin-left:auto;padding-left:3vw;white-space:nowrap}
 .ih-date b{font-size:clamp(13px,1vw,17px);letter-spacing:.16em}.ih-date small{font-size:clamp(10px,.72vw,12px);color:#b9ae9c}
 .ih-menu{display:flex;gap:.35vw}
-.ih-menu :is(button,a){width:calc(var(--top) * .62);height:calc(var(--top) * .62);display:grid;place-items:center;text-decoration:none;font-weight:900;font-size:clamp(12px,.9vw,15px);border-radius:50%;background:url("/assets/ui-v3/hud/btn-round.png") center/100% no-repeat}
+.ih-menu :is(button,a){width:calc(var(--top) * .58);height:calc(var(--top) * .62);display:grid;place-items:center;text-decoration:none;font-weight:900;font-size:clamp(11px,.85vw,14px);border-radius:50%;background:url("/assets/ui-v3/hud/btn-round.png") center/100% no-repeat}
 
 /* 왼쪽 둥근 단추(모드·장수) */
 .ih-rail{position:absolute;left:1.1vw;top:calc(var(--top) + 3.2vh);display:flex;flex-direction:column;gap:1.1vh;pointer-events:none}
@@ -222,7 +222,6 @@ body.ink .cs .cs-nameplate{left:28px;bottom:58px}
 body.ink .cs .cs-quote{left:28px;top:64px;bottom:auto;margin:0;max-width:min(30vw,380px);padding:8px 14px;background:linear-gradient(90deg,rgba(14,13,12,.82),rgba(14,13,12,0));font-size:clamp(13px,1.05vw,16px)}
 
 /* ── 사건 창(기준 page-event) — 오른쪽 사건 판(event-panel 700×1025: 제목 띠 = 가로 15~78% · 세로 3~8.5%) · 선택 카드(event-card 360×566: 그림 창 = 가로 8~92% · 세로 5~69%, 숫자 받침 = 가운데 83.5%) ── */
-.ev-fx{display:none}
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .w-event-body{right:2.2vw;left:auto;top:10px;bottom:10px;transform:none;width:min(37vw,580px);max-height:none;padding:0 min(2.6vw,40px) 0 min(2.8vw,44px);border:0;border-image:none;background:url("/assets/ui-v3/hud/event-panel.png") center/100% 100% no-repeat;box-shadow:none;overflow:visible;display:grid;grid-template-rows:11% auto auto minmax(0,1fr) auto auto 5%;row-gap:6px;filter:drop-shadow(0 18px 28px rgba(0,0,0,.6))}
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .w-event-body h1{position:absolute;left:15.5%;top:3.2%;width:62%;height:5.2%;margin:0;display:flex;align-items:center;justify-content:center;font:700 clamp(15px,1.35vw,21px) var(--serif);letter-spacing:.2em;color:#1b1714;white-space:nowrap;overflow:hidden}
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .w-event-body :is(#event-scale,#choice-kind){grid-row:2;justify-self:start;margin:0;padding:2px 10px;background:#8f2f26;color:#f3ecdf;font:700 11px var(--serif);letter-spacing:.24em}
@@ -239,9 +238,6 @@ body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .ev-choice small{display:none}
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .ev-choice:hover:not(:disabled){transform:translateY(-4px);filter:brightness(1.15) drop-shadow(0 0 10px rgba(198,74,60,.7))}
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .ev-choice:disabled{filter:grayscale(1) brightness(.6);cursor:default}
-body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .ev-fx{grid-column:1/-1;display:flex;flex-direction:column;gap:3px;margin:4px 0 0;padding:0;list-style:none;font-size:clamp(11px,.85vw,13px);color:#cfc4b2}
-body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .ev-fx li{display:flex;gap:8px;align-items:baseline}
-body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .ev-fx i{font-style:normal;font-family:var(--serif);font-weight:700;color:#d65c4a}
 
 /* ── 명부(기준 page-roster) — 지도 그림 위에 목록 줄(roster-row 2098×331) · 큰 그림 · 능력 판(roster-detail 940×1573) · 청록 깃발 단추 ── */
 .ri-row .row-art,.ri-panel,.ri-banner{display:none}
@@ -1867,7 +1863,6 @@ body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .w-event-body .ev-scales::after{content:"";position:absolute;left:1%;right:1%;top:calc(100% + 27px);height:1px;background:linear-gradient(90deg,transparent,#8f8576 7%,#8f8576 46%,transparent 48.5%,transparent 51.5%,#8f8576 54%,#8f8576 93%,transparent);pointer-events:none}
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .w-event-body .ev-scales::before{content:"";position:absolute;left:50%;top:calc(100% + 27px);width:7px;height:7px;translate:-50% -50%;rotate:45deg;background:#cfc4b2;pointer-events:none}
 body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .choices:has(.ev-choice:nth-child(4)) .ev-choice{aspect-ratio:380/960}
-body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .w-event-body:has(.ev-scales:not([hidden])) .ev-fx{position:absolute;right:calc(100% + min(2.6vw,42px) + 1.4vw);bottom:0;width:max-content;max-width:27vw;margin:0;padding:10px 16px 10px 34px;gap:5px;background:linear-gradient(90deg,rgba(13,12,11,0),rgba(13,12,11,.84) 14%);font-size:clamp(11.5px,.9vw,14px);color:#e6dccb;text-shadow:0 1px 3px #000}
 /* 위 자원 띠(모든 화면): 시안처럼 가운데 원판을 사이에 두고 왼쪽 셋(21 · 30 · 39%) · 오른쪽 셋(55~72%)으로 — 7차에 가로로 벌렸어도 묶음이 시안(22~80%)보다 왼쪽(14~65%)에 있던 것. 날짜 · 메뉴 단추가 74%부터라 오른쪽 끝은 72% */
 .ih-res{justify-content:flex-start;gap:0;padding:0 .6vw 0 13.6vw}
 .ih-res>.ih-chip{flex:none;min-width:9vw}
@@ -2382,10 +2377,15 @@ body.ink .ri-panel{margin-left:-1.6vw}
 body.ink .cs .cs-commands[data-fac="tavern"] #city-panel :is(.feast-seats,.wanderers){margin-top:1.9vh}
 body.ink #visit-modal .scene,body.ink #visit-modal .line{left:25%;width:61%}
 body.ink .w-start{width:22vw;aspect-ratio:800/211;background-image:url("/assets/ui-v3/hud/faction-btn-start-tall.png")}
-/* 시작 단추를 키우면서 아래 작은 글 줄(이어하기 · 처음 화면 · 옛 화면)을 덮어 눌리지 않게 된 것 → 단추를 시안 자리(86~96.3%)로 올리고 단추가 글 줄 위에 오지 않게 */
-body.ink .w-select #start-go{margin-top:-1.7vh;position:relative;z-index:6}
-body.ink .w-select-foot{bottom:0;font-size:.8em;line-height:1.15;padding:0;gap:1.6vw}
-body.ink .w-select-foot>*{padding-top:0;padding-bottom:0;min-height:0}
+/* C111: 시작과 이어하기를 별도 행에 둔다. 창 높이가 낮아져도 클릭 영역을 겹치지 않는다. */
+body.ink .w-select{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto auto;justify-items:center;gap:max(4px,.6vh)}
+body.ink .w-select-head{margin:0}
+body.ink .w-select-board{height:auto;min-height:0;width:100%;margin:0;align-self:stretch}
+body.ink .w-select .w-lord{height:100%;max-width:32vw;margin-top:0}
+body.ink .w-select-dots{margin:0}
+body.ink .w-select #start-go{margin:0;position:relative;z-index:1}
+body.ink .w-select-foot{position:relative;left:auto;right:auto;bottom:auto;margin:0;z-index:1;font-size:.8em;line-height:1.15;padding:0;gap:1.6vw}
+body.ink .w-select-foot>*{padding-top:0;padding-bottom:0;min-height:32px}
 /* ── 24차 반박 리뷰(2026-10-11): 큼 0 · 중간 1 · 작음 5 ── */
 /* 명부 명단 줄의 표지: 가운데 3% 왼쪽 · 작음 · 이름 시작 3.7% 왼쪽 → 시안 자리(표지 가운데 9.7% · 이름 시작 11.8%) */
 body.ink .ri-row .rk{left:21.6%;width:5.2%}
@@ -2405,3 +2405,129 @@ body.ink .od-slots{width:40.6%}
 /* ── 25차 반박 리뷰(2026-10-11): 같다고 볼 수 있다 — 큼 0 · 중간 0 · 작음 2. 그 둘도 맞춤 ── */
 body.ink .wc-seal{top:52.8%}
 body.ink #visit-modal .w-dialogue-box header::before{top:16.5%}
+
+/* C110: choice results belong to their button; the artwork keeps its aspect ratio. */
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .choices .ev-choice{aspect-ratio:auto;max-width:min(13vw,13vh,210px);align-self:start;display:flex;flex-direction:column;overflow:visible}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .choices .ev-choice::before,
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .choices .ev-choice::after{display:none}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .ev-card-face{position:relative;display:block;width:100%;aspect-ratio:380/720;flex:none}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .ev-card-face::before{content:"";position:absolute;left:9.5%;width:80.5%;top:5.63%;height:59.3%;background:var(--art,none) var(--pos,50%) 40%/cover no-repeat;filter:contrast(1.04)}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .ev-card-face::after{content:"";position:absolute;inset:0;background:url("/assets/ui-v3/hud/event-card-red-mid.png") center/100% 100% no-repeat;pointer-events:none}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .ev-choice:nth-of-type(3n+2) .ev-card-face::after{background-image:url("/assets/ui-v3/hud/event-card-teal-mid.png")}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .ev-choice:nth-of-type(3n) .ev-card-face::after{background-image:url("/assets/ui-v3/hud/event-card-grey-mid.png")}
+body.w.ink #choice-modal[data-kind="diplo"] .ev-choice:first-child .ev-card-face::after{background-image:url("/assets/ui-v3/hud/event-card-teal-mid.png")}
+body.w.ink #choice-modal[data-kind="diplo"] .ev-choice:nth-child(2) .ev-card-face::after{background-image:url("/assets/ui-v3/hud/event-card-red-mid.png")}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .choices:has(.ev-choice:nth-child(4)) .ev-card-face{aspect-ratio:380/907}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .choices:has(.ev-choice:nth-child(4)) .ev-card-face::before{top:4.1%;height:70.5%}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .choices:has(.ev-choice:nth-child(4)) .ev-card-face::after{background-image:url("/assets/ui-v3/hud/event-card-red-tall.png")}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .choices:has(.ev-choice:nth-child(4)) .ev-choice:nth-child(3n+2) .ev-card-face::after{background-image:url("/assets/ui-v3/hud/event-card-teal-tall.png")}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .choices:has(.ev-choice:nth-child(4)) .ev-choice:nth-child(3n) .ev-card-face::after{background-image:url("/assets/ui-v3/hud/event-card-grey-tall.png")}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .choices .ev-choice small{position:static;display:block;width:100%;box-sizing:border-box;padding:8px 6px;margin:4px 0 0;background:#171a18;border:1px solid #82715b;border-radius:3px;color:#f3ecdf;font:12px/1.5 var(--serif);text-align:left;white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .ev-choice small:empty{display:none}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event:not(.no-art) .ev-choice:disabled small{color:#f3ecdf}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .ev-choice:focus-visible{outline:2px solid #eac87c;outline-offset:3px}
+.ih-readout{position:absolute;bottom:calc(100% + 6px);left:3%;width:92%;box-sizing:border-box;padding:10px 12px;background:rgba(17,23,22,.96);border:1px solid #85745c;color:#eee5d5;font:12px/1.5 var(--serif);max-height:28vh;overflow:auto;scrollbar-width:thin}
+.ih-readout[hidden]{display:none}.ih-readout p{margin:2px 0}.ih-state{display:flex;justify-content:space-between;gap:12px}.ih-readout .ih-risk{color:#f7b19d}.ih-readout summary{cursor:pointer;color:#d7c999;padding-top:4px}.ih-readout details p{border-top:1px solid #524b3d;padding-top:3px}
+.ih-leads{position:absolute;top:100%;left:10%;width:85%;padding:7px;background:#202a27;border:1px solid #89795c;color:#f3ead6;font:13px/1.4 var(--serif);cursor:pointer}.ih-leads[hidden]{display:none}
+.recruit-leads{margin:18px 0;padding:12px;border:1px solid #76674f;background:#17201e}.recruit-leads h3{margin-top:0}.recruit-leads ul{padding:0;list-style:none}.recruit-leads li{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:7px 0;border-bottom:1px solid #524b3d}.recruit-leads small{color:#cfc5b1}.recruit-leads button{margin-left:auto;padding:4px 8px;border:1px solid #92794d;background:#293a32;color:#f2e8d4;cursor:pointer}
+
+/* C112: gross output versus observed stock change, and persistent recent combat readout. */
+.ih-res .ih-chip[data-food-open]{padding:0;border:0;background:none;color:inherit;font-family:inherit;cursor:pointer}
+.ih-res .ih-chip[data-food-open] small{display:block;line-height:1.1;max-width:3.5em;white-space:normal}
+.ih-food-sheet{position:absolute;left:var(--c1);top:100%;width:min(340px,65vw);padding:16px 20px;background:#202522;border:1px solid #89795c;box-shadow:0 8px 24px #000b;color:#efe6d6;font:14px/1.6 var(--serif);pointer-events:auto;z-index:12}
+.ih-food-sheet[hidden]{display:none}.ih-food-sheet h3{margin:0 0 10px}.ih-food-sheet h4{margin:14px 0 4px;font-size:14px}.ih-food-sheet p{margin:5px 0}.ih-food-sheet .hint,.ih-food-sheet small{color:#c7bdab;font-size:12px}.ih-food-sheet [data-food-close]{float:right;font:20px/1 sans-serif;padding:2px 6px}
+.ih-notice-links{position:absolute;top:100%;left:10%;width:85%;display:grid;gap:5px}
+.ih-notice-links .ih-leads{position:static;width:100%}
+.ih-combat-history{background:#202a27;border:1px solid #89795c;color:#efe6d6;font:13px/1.5 var(--serif);box-shadow:0 5px 16px #0008}
+.ih-combat-history[hidden]{display:none}.ih-combat-history summary{padding:7px 10px;cursor:pointer}.ih-combat-history>div{max-height:min(40vh,max(100px,calc(100vh - 520px)));overflow:auto;overscroll-behavior:contain;padding:0 12px 10px}.ih-combat-history article+article{border-top:1px solid #766951;margin-top:10px;padding-top:8px}.ih-combat-history h4{margin:3px 0;color:#bbaa87;font-size:12px}.ih-combat-history p{margin:3px 0;font-size:12px}
+
+.ih-history-hint{display:block;padding:0 12px 7px;font-size:11px;color:#bbaa87}
+
+/* C116: 병영에서 실제 병력과 작업의 차이를 함께 읽는다. */
+body.ink .cs .cs-commands .barracks-readiness{padding:.65em .8em;margin:0 0 .65em;background:#101c1bd9;border-left:3px solid #72aaa4;color:#e8dfcc;font-size:clamp(12px,.8vw,15px);line-height:1.5}
+body.ink .cs .cs-commands .barracks-readiness p{margin:0}
+body.ink .cs .cs-commands .barracks-readiness p:first-child{display:flex;flex-wrap:wrap;gap:.3em 1.5em}
+body.ink .cs .cs-commands .barracks-readiness b{color:#fff3d5}
+body.ink .cs .cs-commands .barracks-guide{padding-top:.25em;color:#c7c4b5}
+body.ink .cs .cs-commands .barracks-warning{padding-top:.25em;color:#e3bd87}
+
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .option{aspect-ratio:12/1}
+
+/* C123: local food links to the existing city settlement view. */
+body.ink .cs .cs-commands #city-panel .barracks-food-link{width:auto;height:auto;min-height:0;margin:0;flex:0 0 auto;display:inline-flex;align-items:center;gap:.3em;padding:0;border:0;border-bottom:1px dotted #b6b49d;border-radius:0;background:none;color:inherit;font:inherit;line-height:inherit;cursor:pointer}
+body.ink .cs .cs-commands #city-panel .barracks-food-link:is(:hover,:focus-visible){color:#fff3d5;outline:1px solid #b6b49d;outline-offset:2px}
+
+body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="state"]{left:12%;width:76%;top:27%;height:49%;box-sizing:border-box;overflow:auto;padding:0 10px 12px 0;color:#e8dfcc}
+body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="state"] h3{color:#f0dfb8;margin:.6em 0 .35em}
+body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="state"] .cause{display:flex;justify-content:space-between;gap:1em;padding:3px 0;border-bottom:1px solid #756c5140}
+
+/* C125: 완료 효과를 업무 선택 전에 읽는다. 비용/진행/남은 턴은 기존 숫자 칸에 유지. */
+body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="jobs"] .option:not(:disabled) .job-fx{display:block;position:absolute;left:28.6%;top:62%;width:22%;margin:0;color:#244b42;font-size:.8em;font-style:normal;line-height:1.2;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="jobs"] .option:not(:disabled):has(.job-fx) small{display:none}
+
+/* C126: 요약 네 줄 밖 소식도 확인 가능. 지도 위 작은 펼침 목록. */
+.ih-turn-history{background:#202a27;border:1px solid #89795c;color:#efe6d6;font:13px/1.5 var(--serif);box-shadow:0 5px 16px #0008}
+.ih-turn-history[hidden]{display:none}.ih-turn-history>button{display:block;width:100%;padding:7px 10px;text-align:left;cursor:pointer}.ih-turn-history>button::before{content:"▸ ";}.ih-turn-history>button[aria-expanded="true"]::before{content:"▾ ";}.ih-turn-history>ol[hidden]{display:none}.ih-turn-history>ol{max-height:min(32vh,240px);overflow:auto;overscroll-behavior:contain;padding:0 12px 8px 30px;margin:0}.ih-turn-history li{padding:5px 0;border-top:1px solid #766951}
+
+/* C129: explicit turn completion and visible victory conditions. */
+.ih-victory{position:absolute;top:100%;left:100px;right:auto;margin:0;padding:5px 12px;background:#202a27ed;border-bottom:1px solid #89795c;color:#efe6d6;font:13px/1.4 var(--serif);max-width:calc(100vw - 470px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:auto}
+body.ink-hud #victory-guide{display:none}
+.ih-end-name{position:absolute;left:18%;right:5%;bottom:16%;padding:3px;background:#202a27e8;color:#efe6d6;font:18px/1.3 var(--serif)}
+.ih-end small{left:-45%;right:0;bottom:-2%;padding:5px;background:#202a27ed;letter-spacing:0;font-size:13px;line-height:1.5}
+.ih-end.ready img,#end-turn.ready{animation:c129-turn-ready 3s ease-in-out infinite}
+@keyframes c129-turn-ready{50%{filter:brightness(1.2) drop-shadow(0 0 12px #e9bc67)}}
+@media(prefers-reduced-motion:reduce){.ih-end.ready img,#end-turn.ready{animation:none;filter:brightness(1.15)}}
+.cs-sortie-guide{position:absolute;left:100px;top:90px;z-index:80;margin:0;padding:8px 14px;background:#202a27ee;border:1px solid #89795c;color:#efe6d6;font:15px/1.5 var(--serif);pointer-events:none}
+.cs-sortie-guide[hidden]{display:none}
+/* C130: 선택과 공격 대상은 장식과 구별되는 표지로 남긴다. */
+.ih-actions-left { display:flex; flex-direction:column; gap:3px; font-size:11px; line-height:1.45; }
+.ih-actions-left .spent { opacity:.48; }
+.ih-state { flex-wrap:wrap; }
+.ih-state .ih-actions-left { flex-basis:100%; }
+#map .w-city.attackable .ground { stroke:#ef684a; stroke-width:2.5; stroke-dasharray:5 3; }
+#map .w-cityplate.attackable .name { fill:#ffb090; stroke:#24120d; stroke-width:.6; paint-order:stroke; }
+#map .w-cityplate.attackable { filter:drop-shadow(0 0 3px #e85c39); cursor:crosshair; }
+#map .w-unit.active .bi-in { stroke:#fff2b5; stroke-width:3; }
+#map .w-unit.active .rglow { stroke:#fff2b5; stroke-width:2.5; }
+#map .w-selected rect { fill:#f7e4a2; stroke:#241e16; stroke-width:1; }
+#map .w-selected text { fill:#241e16; font:700 9px var(--sans); text-anchor:middle; }
+
+/* C131: small windows only; full-size composition and asset proportions stay intact. */
+@media (max-width:1320px), (max-height:800px) {
+  body.ink-hud .ih-medal{width:calc(var(--top)*1.1)}
+  body.ink-hud .ih-chip{gap:3px;font-size:12px}
+  body.ink-hud .ih-chip .ih-ico{width:20px;height:20px}
+  body.ink-hud .ih-top{--c1:22vw;--c2:34vw;--c3:42vw;--c4:55vw;--c5:68vw;--c6:78vw}
+  body.ink-hud .ih-date{max-width:18vw;padding:0;white-space:normal}
+  body.ink-hud .viewport #map{padding:140px 280px 240px;box-sizing:content-box}
+  body.ink-hud .ih-notice{width:240px;min-width:0}
+  body.ink-hud #ink-hud:not(.foe) .ih-unit{width:360px;min-width:0}
+  body.ink-hud .w-advisor{left:380px!important;max-width:calc(100vw - 570px)!important}
+  body.ink-hud>#city-panel.w-sheet{top:calc(var(--top) + 18px);right:12px;width:min(350px,calc(100vw - 48px));max-height:calc(100vh - var(--top) - 50px);background:#171e1bf2;color:#efe6d6;overflow:auto;z-index:30}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel :is(.feast-seats,.wanderers){padding-top:0;max-height:48vh;overflow:auto;overscroll-behavior:contain;margin-top:0}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel :is(.feast-seats,.wanderers)::before,
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel :is(.feast-seats,.wanderers)::after{display:none}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel :is(.feast-seats,.wanderers)>li:first-child{clip-path:inset(31% -6% -60% -6%);margin-top:0}
+  body.ink .cs:has(.cs-commands[data-fac="tavern"]) .cs-sortie-guide{display:none}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel .wanderers .wf{top:40.6%;left:14.96%;width:23.25%}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel .wanderers li>div{top:56%}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel .wanderers li .btn{top:94%;bottom:auto;height:28%}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel .feast-seat{inset:38% 0 -38% 0;height:auto}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel .city-pane[data-pane="tavern"]{top:calc(var(--top) + 60px)}
+  body.ink .cs .cs-commands[data-fac="tavern"] #city-panel .city-pane[data-pane="tavern"]>h3:first-of-type{top:calc(var(--top) + 36px);max-width:70vw;white-space:normal}
+  body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec{top:28%;height:44%}
+  body.ink .cs .cs-commands[data-fac="office"] #city-panel .city-working{position:static;display:block;margin:0 0 8px;padding:6px 8px;background:#171e1bf2;font-size:12px;line-height:1.5;color:#efe6d6;white-space:normal}
+  body.ink .cs .cs-commands[data-fac="office"] #city-panel .city-working small{display:block;color:#d6cbb8}
+  body.ink .w-result .rs-chron{order:8}
+  body.ink .w-result .rs-deeds{order:3;width:min(90vw,820px)}
+  body.ink .w-result .rs-rank,body.ink .w-result .rs-off{order:4;margin-top:8px}
+  body.ink .w-result .rs-sub{order:5}
+  body.ink .w-result .rs-actions{order:6}
+  body.ink .w-result .rs-art{display:none}
+  body.ink .w-result .rs-band{overflow-x:auto;justify-content:start}
+  body.ink .w-result .rs-band li{flex-basis:180px}
+  body.ink .w-result .rs-main{padding:16px 24px;max-height:100vh;overflow:auto}
+}
+
+/* C132: small in-screen overwrite confirmation. */
+#save-confirm{z-index:1500;background:#0009;display:grid;place-items:center}#save-confirm[hidden]{display:none}.save-confirm-card{width:min(440px,90vw);padding:24px;color:#eee4ca;background:#242923;border:1px solid #aa9570}.save-confirm-card h2{font-size:22px}.save-confirm-card p{line-height:1.7}.save-confirm-card>div{display:flex;gap:16px;justify-content:flex-end}

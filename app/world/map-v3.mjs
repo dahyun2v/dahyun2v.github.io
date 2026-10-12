@@ -190,13 +190,15 @@ export function renderWorldMap(model, opts = {}) {
 
   // 성 — 7칸 자리 + 미니어처 그림(그림 속 7칸 상자를 지도 7칸 상자에 맞춤)
   const plates = [];
+  const occupied = [];
+  const overlaps = (a, b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
   for (const city of model.cities ?? []) {
     const fs = FACTION[city.factionId] ?? NEUTRAL;
     const cells = [parse(city.center), ...(city.gates ?? []).map(parse), ...(city.walls ?? []).map(parse)];
     const rings = outlineRings(cells, layout), pts = rings.flat();
     const bx0 = Math.min(...pts.map((p) => p.x)), bx1 = Math.max(...pts.map((p) => p.x)), by0 = Math.min(...pts.map((p) => p.y));
     const art = opts.cityArt?.[city.id];
-    svg += `<g class="w-city${city.besieged ? ' besieged' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" style="--fc:${fs.color}"><path class="ground" d="${ringsPath(rings)}"/>`;
+    svg += `<g class="w-city${city.attackable?' attackable':''}${city.besieged ? ' besieged' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" style="--fc:${fs.color}"><path class="ground" d="${ringsPath(rings)}"/>`;
     if (art?.fit) { const [fx, fy, fw] = art.fit.flowerBox, k = (bx1 - bx0) / fw; svg += `<image class="art" href="${esc(art.src)}" x="${f(bx0 - fx * k)}" y="${f(by0 - fy * k)}" width="${f(art.fit.image[0] * k)}" height="${f(art.fit.image[1] * k)}"/>`; }
     else { const c = C(city.center); svg += `<g class="w-city-fallback" transform="translate(${f(c.x)} ${f(c.y)})"><path d="${hexPath({x: 0, y: 0}, size * 1.25)}"/><path class="keep" d="M-10 4V-6L0 -13L10 -6V4Z"/></g>`; }
     for (const g of city.gates ?? []) { const c = C(g), lost = (city.lostGates ?? []).includes(g); svg += `<g class="w-gate${lost ? ' lost' : ''}" transform="translate(${f(c.x)} ${f(c.y)})"><path d="M-5 4V-2a5 5 0 0 1 10 0V4"/>${lost ? '<path class="x" d="M-4 -6L4 2M4 -6L-4 2"/>' : ''}</g>`; }
@@ -210,8 +212,9 @@ export function renderWorldMap(model, opts = {}) {
     const info = city.defenseMax || Number.isFinite(city.troops) ? `<g class="cinfo" transform="translate(0 ${infoY})"><rect class="ci-bg" x="${f(-iw / 2)}" y="0" width="${f(iw)}" height="13.5" rx="1.5"/>`
       + `<image href="/assets/ui-v3/hud/icons/res-troops.png" x="${f(-iw / 2 + 3)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t" x="${f(-iw / 2 + 15)}" y="10.2">${Number.isFinite(city.troops) ? Number(city.troops).toLocaleString('ko-KR') : '?'}</text>`
       + (city.defenseMax ? `<image href="/assets/ui-v3/hud/icons/cmd-garrison.png" x="${f(iw / 2 - 37)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t${def !== null && def < 0.5 ? ' low' : ''}" x="${f(iw / 2 - 25)}" y="10.2">${Math.round(city.defense ?? 0)}</text>` : '') + '</g>' : '';
+    if (opts.compactLabels) occupied.push({x:c.x-iw/2-22,y:c.y+size*(city.kind==='minor'?1.35:1.7)-50,w:iw+44,h:city.defenseMax?108:88});
     const status = city.besieged ? '포위' : city.unrest === 'CHAOS' ? '혼란' : city.unrest === 'UNREST' ? '동요' : city.occupation && city.occupation.stage && city.occupation.stage !== 'NORMAL' ? '점령' : '';
-    plates.push(`<g class="w-cityplate${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" transform="translate(${f(c.x)} ${f(c.y + size * (city.kind === 'minor' ? 1.35 : 1.7))})" style="--fc:${fs.color}">
+    plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" transform="translate(${f(c.x)} ${f(c.y + size * (city.kind === 'minor' ? 1.35 : 1.7))})" style="--fc:${fs.color}">
       ${kit?.cityPlate ? `<image class="plate-art" href="${esc(kit.cityPlate)}" x="${f(-w / 2 - 5)}" y="-13.5" width="${f(w + 10)}" height="27" preserveAspectRatio="none"/>` : ''}${(() => { const fl = kit?.cityFlag?.[KIT_TONE[city.factionId] ?? 'grey']; return fl ? `<g class="cflag" transform="translate(${f(-w / 2 - 12)} -50)"><image href="${esc(fl)}" x="-8" y="0" width="17" height="58"/>${/^F\d\d$/.test(city.factionId ?? '') ? `<image href="/assets/ui-v3/emblems/${esc(city.factionId)}.png" x="-4.6" y="9" width="10" height="10"/>` : ''}</g>` : ''; })()}
       <rect class="bg" x="${f(-w / 2)}" y="-12" width="${f(w)}" height="24"/><g class="crest" transform="translate(${f(-w / 2 + 2)} 0)"><rect x="-9" y="-9" width="18" height="18" transform="rotate(45)"/><text y="4.5">${esc(fs.glyph)}</text></g>
       <text class="name" x="${f(kit?.cityPlate ? 0 : 9)}" y="5.5">${name}</text>${def !== null ? `<rect class="def-bg" x="${f(-w / 2 + 16)}" y="14" width="${f(w - 22)}" height="3"/><rect class="def" x="${f(-w / 2 + 16)}" y="14" width="${f((w - 22) * def)}" height="3"/>` : ''}
@@ -221,9 +224,25 @@ export function renderWorldMap(model, opts = {}) {
   svg += `<g class="w-plates">${plates.join('')}</g>`; // 성 이름판은 부대 아래(부대를 누르기 쉽게)
   // 부대 — 무리 그림(있으면) + 장수 깃발판(얼굴·병력) + 옥벽 고리
   const units = (model.units ?? []).filter((u) => u.count !== 0 || u.prevCount);
+  const labelOffsets = new Map();
+  if (opts.compactLabels) {
+    // Reserve selected banners first; keep every portrait tethered to its actual tile.
+    for (const u of [...units].sort((a,b)=>Number(!!b.active)-Number(!!a.active))) {
+      const c=C(u.tileId), scale=u.active?1:.82, w=Math.max(70,String(u.name??'').length*12+20)*scale, h=72*scale;
+      let best=null;
+      for (let row=0;row<6;row++) for (const dx of [0,-size*1.6,size*1.6,-size*3.2,size*3.2]) {
+        const dy=-size*1.5-row*h, box={x:c.x+dx-w/2,y:c.y+dy-32*scale,w,h};
+        const hits=occupied.filter(b=>overlaps(box,b)).length, score=hits*10000+Math.hypot(dx,dy+size*1.5);
+        if (!best || score<best.score) best={dx,dy,scale,box,score};
+      }
+      occupied.push(best.box);labelOffsets.set(u.id,best);
+    }
+    units.sort((a,b)=>Number(!!a.active)-Number(!!b.active));
+  }
   const stack = {}, cityCenters = new Set((model.cities ?? []).map((c) => c.center));
   for (const u of units) {
-    const n = (stack[u.tileId] = (stack[u.tileId] ?? -1) + 1), c = C(u.tileId), x = c.x + n * size * 0.42, y = c.y + n * size * 0.16;
+    const n = (stack[u.tileId] = (stack[u.tileId] ?? -1) + 1), c = C(u.tileId), x = c.x + (opts.compactLabels?0:n * size * 0.42), y = c.y + (opts.compactLabels?0:n * size * 0.16);
+    const label=labelOffsets.get(u.id);
     const inCity = cityCenters.has(u.tileId), fs = FACTION[u.factionId] ?? NEUTRAL, art = inCity ? null : opts.unitArt?.[troopKey(u)];
     // 병사 무리: 세력 색 천을 두른 무리를 칸 위에 크게(시안 final-map-v2). 발끝이 칸 가운데 조금 아래에 오게 놓는다
     const sq = inCity ? null : opts.squadArt?.[troopKey(u)]?.[KIT_TONE[u.factionId] ?? 'grey'], sqW = size * 3, sqH = sq ? sqW * sq.size[1] / sq.size[0] : 0;
@@ -237,10 +256,10 @@ export function renderWorldMap(model, opts = {}) {
       ${u.active ? `<ellipse class="bi" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}"/><ellipse class="bi-in" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.64)}" ry="${f(size * 0.22)}"/>` : !u.enemy && u.moved ? `<ellipse class="bi done" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}" pathLength="100"/>` : ''}
       ${u.crisis ? `<ellipse class="crisis-ring" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.9)}" ry="${f(size * 0.34)}"/>` : ''}
       ${sq ? `<image class="squad big" href="${esc(sq.src)}" x="${f(-sqW / 2)}" y="${f(size * 0.62 - sqH)}" width="${f(sqW)}" height="${f(sqH)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : art ? `<image class="squad" href="${esc(art)}" x="${f(-size * 1.15)}" y="${f(-size * 1.55)}" width="${f(size * 2.3)}" height="${f(size * 2.3)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : ''}
-      <g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="translate(${inCity ? f(size * 1.25) : 0} ${f(inCity ? -size * 0.75 : -size * (sq ? 1.95 : art ? 1.55 : 1.05))})">
+      ${label?`<path class="w-label-tether" d="M0 0L${f(label.dx)} ${f(label.dy+30*label.scale)}" fill="none" stroke="${fs.color}" stroke-width="1.5" pointer-events="none"/>`:""}<g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="${label?`translate(${f(label.dx)} ${f(label.dy)}) scale(${label.scale})`:`translate(${inCity ? f(size * 1.25) : 0} ${f(inCity ? -size * 0.75 : -size * (sq ? 1.95 : art ? 1.55 : 1.05))})`}">
         <path class="pole" d="M0 18V${f(size * 1.2)}"/>
         ${/^F\d\d$/.test(u.factionId ?? '') ? `<g class="banner" transform="translate(-1 21)"><path class="cloth" d="M0 0H-17V22L-12.5 18L-8.5 22L-4.5 18L0 22Z"/><image href="/assets/ui-v3/emblems/${esc(u.factionId)}.png" x="-15" y="1" width="13" height="13"/></g>` : ''}
-        ${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}<rect class="frame" x="-16" y="-19" width="32" height="38"/><path class="shield" d="M-16 -19H16V10L0 19.5L-16 10Z"/>${kit?.unitCount ? `<image class="cplate" href="${esc(kit.unitCount)}" x="-24" y="16.5" width="48" height="17" preserveAspectRatio="none"/>` : ''}
+        ${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}${u.active?'<g class="w-selected"><rect x="18" y="-22" width="28" height="14" rx="2"/><text x="32" y="-12">선택</text></g>':''}<rect class="frame" x="-16" y="-19" width="32" height="38"/><path class="shield" d="M-16 -19H16V10L0 19.5L-16 10Z"/>${kit?.unitCount ? `<image class="cplate" href="${esc(kit.unitCount)}" x="-24" y="16.5" width="48" height="17" preserveAspectRatio="none"/>` : ''}
         ${u.portrait ? faceImage(u.portrait) : `<text class="initial" y="7">${esc(String(u.name ?? '').slice(0, 1))}</text>`}
         ${(() => { const fr = kit?.unitFrame?.[KIT_TONE[u.factionId] ?? 'red']; return fr ? `<image class="uframe" href="${esc(fr)}" x="-19.2" y="-27" width="46" height="53.3"/>` : ''; })()}
         <g class="count" transform="translate(0 25)"><rect x="-19" y="-7" width="38" height="14"/><text y="4">${Number(u.count ?? 0).toLocaleString('ko-KR')}</text><rect class="bar-bg" x="-19" y="7" width="38" height="2.5"/><rect class="bar" x="-19" y="7" width="${f(38 * ratio)}" height="2.5"/></g>

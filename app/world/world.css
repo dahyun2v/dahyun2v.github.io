@@ -1070,3 +1070,16 @@ html[data-season="3"] .wmap .w-art{filter:saturate(.4) brightness(.95) contrast(
 @media (prefers-reduced-motion:reduce){.trace-seal{animation:none}}
 .wmap .w-unit .banner{display:none}
 .cs-cast,.cs-lord,.cs-under,.dp-medal,#visit-lord,.w-bond,.wmap .w-unit .plate .shield{display:none}
+
+/* C107: 드래프트의 기능 설명. 초상/석각 연출은 hud-ink.css가 맡고 이 블록은 정보판만 맡는다. */
+body.ink .od-benefit{position:absolute;left:6%;right:6%;bottom:26%;z-index:2;display:flex;flex-direction:column;gap:.35em;padding:.65em .7em;background:rgba(12,11,10,.91);border-top:1px solid #8f9f8d;color:#eee6d8;font-size:clamp(12px,.85vw,16px);line-height:1.5;text-align:left;pointer-events:none}
+body.ink .od-benefit strong{color:#e6ca95;font-size:1.06em}
+body.ink .od-benefit>span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+body.ink .od-benefit em{font-style:normal;color:#b6b2a7;font-size:.85em}
+body.ink .od-card.focus .od-benefit{visibility:hidden}
+body.ink .od-details{position:absolute;left:5.5%;right:5.5%;bottom:26%;z-index:3;max-height:67%;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:.7em .8em;background:rgba(12,11,10,.95);border:1px solid #aebcae;font-size:clamp(12px,.85vw,16px);line-height:1.5;text-align:left;cursor:auto}
+body.ink .od-details[hidden]{display:none}
+body.ink .od-details p{margin:0 0 .75em;color:#eee6d8}
+body.ink .od-details p small{display:block;margin-bottom:.25em;color:#e6ca95;font-size:1em;font-weight:700}
+body.ink .od .od-details .od-stats{position:static;display:flex;margin:.6em 0 0;padding:.55em 0 0;border-top:1px solid #756e62;background:none;box-shadow:none;gap:.25em}
+@media(max-width:1100px){body.ink .od-benefit{padding:.4em .5em}body.ink .od-benefit>span{-webkit-line-clamp:2}body.ink .od-benefit em{display:none}}

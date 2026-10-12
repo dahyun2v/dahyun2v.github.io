@@ -110,7 +110,7 @@ export function respondDiplomacy(s,id,accept){
  const p=s.c43.proposals.find(p=>p.id===id&&p.status==='PENDING');if(!p)throw new Error('답변할 외교 제안이 없습니다.');
  p.status=accept?'ACCEPTED':'REJECTED';
  if(accept){const pair=s.c43.pairs[diplomacyPair(p.from,p.to)];pair.pending={state:p.kind,at:s.turn+(data.effectiveNextTurn?1:0)};record(s,'ACCEPT',p.to,p.from,p.kind,`${armyName(s,p.to)}이 ${kindName(p.kind)}을 수락했다 — 다음 차례부터`);}
- else {addDiplomacyOpinion(s,p.from,p.to,'rejectedProposal');s.c43.cooldowns[`${p.from}|${p.to}|${p.kind}`]=s.turn+data.proposal.cooldownTurns;record(s,'REJECT',p.to,p.from,p.kind,`${armyName(s,p.to)}이 ${kindName(p.kind)}을 거절했다`);}
+ else {addDiplomacyOpinion(s,p.from,p.to,'rejectedProposal');s.c43.cooldowns[`${p.from}|${p.to}|${p.kind}`]=s.turn+data.proposal.cooldownTurns;record(s,'REJECT',p.to,p.from,p.kind,`${armyName(s,p.to)}이 ${armyName(s,p.from)}의 ${kindName(p.kind)} 요청을 거절했다`);}
  return s;
 }
 export function proposeDiplomacy(s,from,to,kind,{autoPlayer=false}={}){
