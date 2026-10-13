@@ -640,7 +640,7 @@ function leaveFacility(){
 $('#city-stage')?.addEventListener('click',e=>{
  if(e.target.closest?.('.cs-world')){closeStage();return;}
  if(e.target.closest?.('.cs-back')){leaveFacility();return;}
- const entry=e.target.closest?.(':is(.cs-roster .entry,.cs-cast .face-btn,.cs-lord .act)[data-spot]');
+ const entry=e.target.closest?.(':is(.cs-roster .entry,.cs-cast .face-btn,.cs-lord .act,.cs-lord .art,.cs-pulse .cs-job)[data-spot]');
  if(entry){const id=entry.dataset.spot,root=$('#city-stage'),s=stage.art?.spots?.[id],cam=root?.querySelector('.cs-camera');if(cam&&s)cam.style.transformOrigin=`${(s.x/stage.art.w*100).toFixed(2)}% ${(s.y/stage.art.h*100).toFixed(2)}%`;root?.querySelector(`.cs-spot[data-spot="${id}"]`)?.classList?.add('on');root?.classList?.add('focus');const city=stage.city,transition=stage.transition;setTimeout(()=>{if(stage.city!==city||stage.transition!==transition)return;root?.classList?.remove('focus');enterFacility(id);},520);return;}
  const spot=e.target.closest?.('.cs-spot[data-spot]');if(spot&&!stage.fac){enterFacility(spot.dataset.spot);}
 });

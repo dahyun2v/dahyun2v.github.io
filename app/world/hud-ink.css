@@ -2633,30 +2633,30 @@ body.ink .wmap .w-unit .plate .count.k .bar-bg{fill:#14100c;opacity:.9}
 body.ink .wmap .w-unit .plate .count.k .bar,body.ink .wmap .w-unit.enemy .plate .count.k .bar{fill:#e9c869}
 body.ink .wmap .w-unit.active .plate .count.k .kplate{stroke:#fff4d8;stroke-width:1.4px}
 /* /2026-10-13 부대 병력 숫자 */
-/* 2026-10-13 성 안 배치(시안 docs/work-integration/20261013/ui-layout/mock/city-gpt.jpg — 사용자 "성 바꾼거 좋네"). 판 그림 = city-lord-v2-*.png(593×1100) · city-bottom-v2.png(2000×134), 자리는 그림에서 잰 %. 선택자의 .cs-stage:has(.cs-fit)~ 는 앞쪽 옛 판 규칙(.cs-stage:has(.cs-fit.plate)~.cs-lord …)을 이기려는 것. Codex 는 이 묶음을 고치지 말 것 */
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2{width:min(19.6vw,calc((100vh - 200px)/1.855),350px);aspect-ratio:593/1100}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .em{left:77.5%;top:7.5%;width:13%;height:25%;object-fit:contain}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .disc{position:absolute;left:29.3%;top:5.9%;width:35.4%;aspect-ratio:1;border-radius:50%;overflow:hidden;cursor:pointer;background:radial-gradient(circle at 50% 40%,#3a342d,#141210 78%)}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .disc img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;filter:saturate(.9) contrast(1.05)}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .disc img.full{object-position:50% 4%;transform:scale(2.2);transform-origin:50% 8%}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .nm{left:25.6%;top:25.1%;width:43.4%;height:6%;font-size:clamp(13px,1.15vw,19px)}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .bar{left:7.8%;width:78.6%;height:5.5%}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .bar.b1{top:34.7%}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .bar.b2{top:42.25%}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .bar em{position:absolute;left:0;top:0;width:19.1%;height:100%;display:grid;place-items:center;font:700 clamp(10px,.84vw,13.5px) var(--serif);font-style:normal;letter-spacing:.06em;color:#1b1714}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .bar u{left:23.4%;top:33%;height:37%;width:calc(var(--v,0)*.622%);max-width:62.2%}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .bar b{right:3.4%;font-size:clamp(11px,.95vw,15px)}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats{position:absolute;left:9.6%;top:50.7%;width:76.6%;height:39%;margin:0;padding:0;list-style:none;display:grid;grid-template-rows:9.3fr 7.4fr 7.1fr 7.4fr 7.8fr}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats li{display:flex;align-items:center;gap:.5em;min-width:0;padding:0 5% 0 4.5%;font:600 clamp(11px,.95vw,15.5px) var(--serif);color:#e6dccb;white-space:nowrap}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats .ic{flex:none;width:clamp(15px,1.3vw,22px);height:auto;opacity:.92}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats .k{flex:1;min-width:0;letter-spacing:.12em;color:#cfc4b2}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats .v{font-weight:700;font-variant-numeric:tabular-nums;color:#f1e8d8}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats .d{text-decoration:none;font-weight:700;color:#8fc98a;font-variant-numeric:tabular-nums}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats li.good .v{color:#8fc98a}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats li.warn .v{color:#e2b866}
-body.ink .cs-stage:has(.cs-fit)~.cs-lord.v2 .stats li.bad .v{color:#f08a78}
+/* 2026-10-13 성 안 배치(시안 docs/work-integration/20261013/ui-layout/mock/city-gpt.jpg — 사용자 "성 바꾼거 좋네"). 판 그림 = city-lord-v3-*.png(580×1200) · city-bottom-v2.png(2000×134), 자리는 그림에서 잰 %. 선택자의 .cs-stage:has(.cs-fit)~ 는 앞쪽 옛 판 규칙(.cs-stage:has(.cs-fit.plate)~.cs-lord …)을 이기려는 것. Codex 는 이 묶음을 고치지 말 것 */
+/* 오른쪽 판 = city-lord-v3-*.png(580×1200): 이름 꼬리표 3.8~8.5% · 큰 초상 창 9.8~53.1%(안쪽 x 8.6~74.6%) · 막대 틀 54.9~59.8 / 61.4~66.5%(홈 x 27~87%) · 표 68.5~90.2%(다섯 줄). 태수 그림은 원래 크기에 가깝게(사용자 "원래대로 큰 거로") */
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3{right:1.5vw;top:8vh;width:min(21vw,34.4vh);aspect-ratio:580/1200}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .em{left:77.5%;top:7%;width:14.5%;height:27%;object-fit:contain}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .nm{left:7.8%;top:3.8%;width:51.9%;height:4.7%;font-size:clamp(13px,1.15vw,19px)}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .art{left:8.7%;top:10.2%;width:66%;height:42.5%;cursor:pointer}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .art img.face{left:0;top:0;bottom:auto;width:100%;height:100%;transform:none;object-fit:cover;object-position:50% 10%}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .bar{left:7.8%;width:81.7%;height:4.9%}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .bar.b1{top:54.9%}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .bar.b2{top:61.45%}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .bar em{position:absolute;left:0;top:0;width:19.1%;height:100%;display:grid;place-items:center;font:700 clamp(10px,.84vw,13.5px) var(--serif);font-style:normal;letter-spacing:.06em;color:#1b1714}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .bar u{left:23.9%;top:35%;height:36%;width:calc(var(--v,0)*.726%);max-width:72.6%}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .bar b{right:4.4%;font-size:clamp(11px,.95vw,15px)}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats{position:absolute;left:9%;top:68.5%;width:79.6%;height:21.7%;margin:0;padding:0;list-style:none;display:grid;grid-template-rows:repeat(5,minmax(0,1fr))}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats li{display:flex;align-items:center;gap:.5em;min-width:0;padding:0 4.5% 0 4%;font:600 clamp(10.5px,.9vw,15px) var(--serif);color:#e6dccb;white-space:nowrap}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats .ic{flex:none;width:clamp(14px,1.2vw,20px);height:auto;opacity:.92}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats .k{flex:1;min-width:0;letter-spacing:.12em;color:#cfc4b2}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats .v{font-weight:700;font-variant-numeric:tabular-nums;color:#f1e8d8}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats .d{text-decoration:none;font-weight:700;color:#8fc98a;font-variant-numeric:tabular-nums}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats li.good .v{color:#8fc98a}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats li.warn .v{color:#e2b866}
+body.ink .cs-stage:has(.cs-fit)~.cs-lord.v3 .stats li.bad .v{color:#f08a78}
 body.ink .cs-cast .face-btn .role{position:absolute;left:50%;top:93%;transform:translateX(-50%);padding:1px 10px 2px;background:#e6dccb;color:#1b1714;font:700 clamp(10px,.8vw,12.5px) var(--serif);letter-spacing:.16em;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.55);pointer-events:none}
-body.ink .cs-over:has(.cs-lord.v2) .cs-cast{gap:calc(.6vh + 16px)}
+body.ink .cs-over:has(.cs-lord.v3) .cs-cast{gap:calc(.6vh + 16px)}
 body.ink .cs-pulse.v2{left:1.6vw;right:auto;bottom:1.4vh;width:86vw;height:auto;aspect-ratio:2000/134;padding:0;background:url("/assets/ui-v3/hud/city-bottom-v2.png") center/100% 100% no-repeat}
 body.ink .cs-pulse.v2 :is(.lab,ul,.cs-gauges){display:none}
 body.ink .cs-job{position:absolute;inset:0;cursor:pointer}
@@ -2667,3 +2667,10 @@ body.ink .cs-job>i u{display:block;height:100%;background:linear-gradient(90deg,
 body.ink .cs-job span{position:absolute;left:81%;right:5%;top:50%;transform:translateY(-50%);font:600 clamp(12px,1.1vw,18px) var(--serif);letter-spacing:.08em;color:#e6dccb;white-space:nowrap}
 body.ink .cs-job.idle b,body.ink .cs-job.idle span{color:#ffc9a8}
 /* /2026-10-13 성 안 배치 */
+/* 2026-10-13 지도 발밑 빛 — 진한 펜선은 그대로 두고 성과 부대 둘레의 땅만 밝힌다(사용자 "펜선이 사라져서 월드맵 개성이 없어진 것 같아 아쉬움 … 부대랑 성 쪽만 좀 밝게"). overlay: 검은 선은 검게 남고 어두운 바탕만 올라간다. ?light=0 으로 끌 수 있다. Codex 는 이 묶음을 고치지 말 것 */
+.wmap .w-lights{display:none}
+body.ink .wmap .w-lights{display:inline;pointer-events:none}
+body.ink .wmap .w-lights ellipse{fill:url(#w-light);mix-blend-mode:overlay}
+body.ink .wmap .w-lights ellipse.unit{opacity:.85}
+body.ink.no-light .wmap .w-lights{display:none}
+/* /2026-10-13 지도 발밑 빛 */

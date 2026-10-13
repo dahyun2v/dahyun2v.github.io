@@ -71,6 +71,7 @@ function territoryOf(tiles, cities, radius = 3) {
 
 function defs(size) {
   return `<defs>
+  <radialGradient id="w-light"><stop offset="0" stop-color="#f6ecd8" stop-opacity=".92"/><stop offset=".5" stop-color="#f6ecd8" stop-opacity=".6"/><stop offset="1" stop-color="#f6ecd8" stop-opacity="0"/></radialGradient>
   <filter id="w-feather" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${f(size * 0.35)}"/></filter>
   <filter id="w-cloud" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${f(size * 0.7)}"/></filter>
   <filter id="w-paint" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${f(size * 0.55)}"/><feGaussianBlur stdDeviation="${f(size * 0.12)}"/></filter>
@@ -189,6 +190,12 @@ export function renderWorldMap(model, opts = {}) {
     svg += `</g>`;
   }
 
+  // 발밑 빛(2026-10-13, 사용자 "진한 펜선이랑 다 같이 갈 수 있는 방법 — 부대랑 성 쪽만 좀 밝게"): 성과 부대가 선 자리 둘레의 땅만 밝힌다.
+  // CSS 에서 overlay 로 섞으므로 지도의 검은 펜선은 검게 남고 들 · 숲 · 물의 바탕만 밝아진다. 성 안에 든 부대는 성의 빛으로 충분하다.
+  { const cityTiles = new Set((model.cities ?? []).map((c) => c.center));
+    const lights = [...(model.cities ?? []).map((c) => ({p: C(c.center), r: size * (c.kind === 'minor' ? 3.3 : 4.1), dy: -size * 0.25, k: 'city'})),
+      ...(model.units ?? []).filter((u) => !cityTiles.has(u.tileId)).map((u) => ({p: C(u.tileId), r: size * 2.5, dy: -size * 0.7, k: 'unit'}))];
+    svg += `<g class="w-lights">${lights.map((l) => `<ellipse class="${l.k}" cx="${f(l.p.x)}" cy="${f(l.p.y + l.dy)}" rx="${f(l.r)}" ry="${f(l.r * 0.8)}"/>`).join('')}</g>`; }
   // 성 — 7칸 자리 + 미니어처 그림(그림 속 7칸 상자를 지도 7칸 상자에 맞춤)
   const plates = [];
   const occupied = [];
