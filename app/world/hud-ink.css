@@ -2632,7 +2632,7 @@ body.ink .w-tip.forecast:is(:has(.fc-vs),:has(.fc-bar.wide))>.fc-sum:first-child
 body.ink .wmap .w-unit .plate .count.k .kplate{fill:rgba(14,12,10,.6);stroke:none;transform-box:fill-box;transform-origin:center;transform:scale(.9,.9)} /* 옅은 먹빛 바탕 — 테 없음, 숫자보다 조금 넓게(삼국지 14 식) */
 body.ink .wmap .w-unit .plate .count.k text{fill:#f6ecd2;font-weight:600;font-size:12.5px;stroke:#14100c;stroke-width:2.3px;paint-order:stroke;stroke-linejoin:round}
 body.ink .wmap .w-unit .plate .count.k .bar-bg{fill:#0e0c0a;opacity:1}
-body.ink .wmap .w-unit .plate .count.k .bar,body.ink .wmap .w-unit.enemy .plate .count.k .bar{fill:color-mix(in srgb,var(--fc) 50%,#cfc4b0)}
+body.ink .wmap .w-unit .plate .count.k .bar,body.ink .wmap .w-unit.enemy .plate .count.k .bar{fill:#d8cbb0}
 body.ink .wmap .w-unit.active .plate .count.k text{fill:#ffe59a}
 /* /2026-10-13 부대 병력 숫자 */
 /* 2026-10-13 성 안 배치(시안 docs/work-integration/20261013/ui-layout/mock/city-gpt.jpg — 사용자 "성 바꾼거 좋네"). 판 그림 = city-lord-v3-*.png(580×1200) · city-bottom-v2.png(2000×134), 자리는 그림에서 잰 %. 선택자의 .cs-stage:has(.cs-fit)~ 는 앞쪽 옛 판 규칙(.cs-stage:has(.cs-fit.plate)~.cs-lord …)을 이기려는 것. Codex 는 이 묶음을 고치지 말 것 */
