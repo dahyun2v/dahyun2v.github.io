@@ -2623,3 +2623,6 @@ body.ink #growth-cards .draft-card .art .gi{font-size:22px}
 body.ink #growth-cards .draft-card p:not(.card-use){height:26.5%}
 body.ink #growth-cards .draft-card p.card-use{top:69%;height:5%;margin:0;font-size:.72em;color:#efdbb5;line-height:1.35;overflow:hidden}
 @media(max-width:1250px){.ih-intent{font-size:10px}#campaign-advice{font-size:11px}#result .rs-reason{font-size:14px}}
+/* 2026-10-13 교전 예고 — 대상 설명 줄(맨 앞 .fc-sum)이 결과 수치(둘째 .fc-sum)와 같은 자리에 놓여 "아군 −1손책와 교전20"처럼 겹치던 것(닷토리 새 판 11회차). 설명 줄은 판 위의 머리줄로 뺀다. Codex 는 이 묶음을 고치지 말 것 */
+body.ink .w-tip.forecast:is(:has(.fc-vs),:has(.fc-bar.wide))>.fc-sum:first-child{position:absolute;left:2%;right:auto;top:auto;bottom:calc(100% + 4px);width:auto;max-width:96%;height:auto;margin:0;padding:4px 12px;display:block;box-sizing:border-box;background:linear-gradient(90deg,rgba(12,11,10,.94),rgba(12,11,10,.8));color:#efe6d6;font:600 clamp(11px,.9vw,13.5px)/1.35 var(--serif);white-space:normal;text-align:left}
+/* /2026-10-13 교전 예고 */

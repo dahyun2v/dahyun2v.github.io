@@ -1,3 +1,4 @@
+import {campaignTacticsEnabled,campaignTacticsView,campaignOperationPlan,campaignTacticalMoves} from './campaign-ai-tactics.mjs';
 import {injuryReason} from './campaign-injury.mjs';
 import {supplyEnabled,supplyLink,supplyAiMoveAllowed,supplyAiHubSite,armyFoodPerTurn} from './campaign-supply.mjs';
 import {combatMovement} from './campaign-rule-registry.mjs';
@@ -26,7 +27,7 @@ export const AI_SIEGE_STALL_TURNS=6;
 export const AI_SIEGE_REPEAT_VISITS=3;
 export const AI_SIEGE_HISTORY_LIMIT=12;
 export const AI_SIEGE_COOLDOWN_TURNS=4;
-// aiProfile supports 'legacy' (pre-C140), 'siege' (C140), 'strategy' (C141).
+// aiProfile: legacy (pre-C140), siege (C140), strategy (C141/default), tactics (C142 — opt-in only).
 export const campaignSiegeEnabled=(s,factionId)=>s.trialRules?.aiProfile?.[factionId]!=='legacy'&&s.trialRules?.aiSiege!=='legacy';
 export const campaignStrategyEnabled=(s,factionId)=>['v2','v3'].includes(s.mapId)&&campaignSiegeEnabled(s,factionId)&&s.trialRules?.aiSiege!=='siege'&&!['legacy','siege'].includes(s.trialRules?.aiProfile?.[factionId]);
 
@@ -318,7 +319,11 @@ export function campaignAiPlan(world, factionId, {remember=false,turnLimit=26}={
   const deployable=Object.values(v.ownArmies).filter(a=>castleArmyActive(world,a));
   if(!strategic&&deployable.length>=2&&defenders.length&&(!targetCity||siegeForceReady(world,(campaignSiegeEnabled(world,v.factionId)?deployed:deployable).filter(a=>a.armyId!==defenders[0].armyId),durability))){const id=defenders[0].armyId;result.candidates=result.candidates.map(c=>c.armyId===id&&!['DEFEND_DAMAGED_CITY','REPLENISH_ARMY','MUSTER_SIEGE'].includes(c.reasonCode)?{...c,type:'HOLD',destinationTileId:null,pathTileIds:[],reasonCode:'CAPITAL_GARRISON'}:c);}
   result.candidates.sort((a,b)=>(v.ownArmies[b.armyId]?.troopCount??0)-(v.ownArmies[a.armyId]?.troopCount??0)||a.armyId.localeCompare(b.armyId));
-  return diplomacyWithdrawalPlan(world,supplyAiPlan(world,v,stopAtPublicControlZone(v,explorationAiPlan(world,v,c31AiPlan(world,v,preferCampaignCover(world,v,result))))));
+  const final=diplomacyWithdrawalPlan(world,supplyAiPlan(world,v,stopAtPublicControlZone(v,explorationAiPlan(world,v,c31AiPlan(world,v,preferCampaignCover(world,v,result))))));
+  if(!campaignTacticsEnabled(world,factionId))return final;
+  const supplyWorld=strategyPublicWorld(world,v);
+  campaignOperationPlan(world,v,final,{remember,turnLimit,route:publicRoute,siegePositions:campaignSiegePositions,siegeReady:siegeForceReady,supplyWorld});
+  return campaignTacticalMoves(world,campaignTacticsView(world,factionId),final,{remember,supplyWorld});
 }
 
 export function supplyAiPlan(s,v,plan){
@@ -330,7 +335,7 @@ export function supplyAiPlan(s,v,plan){
   const reachable=campaignReachable(s,a.armyId,s.time.ticksPerTurn);
   if(!hubAssigned&&plan.goal?.targetCityId&&!['REPLENISH_ARMY','MUSTER_SIEGE','DEFEND_DAMAGED_CITY','CAPITAL_GARRISON','INTERCEPT_CITY','EXPLORE_PLACE'].includes(c.reasonCode)){
    const site=supplyAiHubSite(suppliedWorld,a.armyId,reachable,plan.goal.targetCityId);
-   if(site){hubAssigned=true;return {...c,type:'MOVE',destinationTileId:site,pathTileIds:site===a.tileId?[a.tileId]:reachable.get(site).pathTileIds};}
+   if(site){hubAssigned=true;return {...c,type:'MOVE',destinationTileId:site,pathTileIds:site===a.tileId?[a.tileId]:reachable.get(site).pathTileIds,...(campaignTacticsEnabled(s,v.factionId)?{aiSupplyOrder:true}:{})};}
   }
   if(c.type!=='MOVE')return c;
   const target=v.ownCities[c.defendCityId]?.tileId??v.knowledge.observedArmies[c.crisisTargetArmyId??c.targetArmyId]?.tileId??v.knowledge.cities[c.crisisTargetCityId??plan.goal?.targetCityId]?.tileId??v.knowledge.observedArmies[plan.goal?.targetArmyId]?.tileId??c.destinationTileId;
@@ -341,7 +346,7 @@ export function supplyAiPlan(s,v,plan){
   const proposed=reachable.get(c.destinationTileId);
   if(proposed&&allowed(c.destinationTileId,proposed))return c;
   const options=[...reachable].filter(([t,p])=>t!==a.tileId&&p.pathTileIds.every(id=>v.knowledge.tiles[id]!=='UNEXPLORED')).sort(([x,p],[y,q])=>hexDistance(s.tiles[x],s.tiles[target])-hexDistance(s.tiles[y],s.tiles[target])||p.totalTicks-q.totalTicks||x.localeCompare(y));
-  const best=options.find(([t,p])=>allowed(t,p));return {...c,type:best?'MOVE':'HOLD',destinationTileId:best?.[0]??null,pathTileIds:best?.[1].pathTileIds??[]};
+  const best=options.find(([t,p])=>allowed(t,p));return {...c,type:best?'MOVE':'HOLD',destinationTileId:best?.[0]??null,pathTileIds:best?.[1].pathTileIds??[],...(campaignTacticsEnabled(s,v.factionId)?{aiSupplyOrder:true}:{})};
  });return plan;
 }
 
