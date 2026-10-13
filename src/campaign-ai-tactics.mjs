@@ -187,6 +187,7 @@ export function campaignChooseTacticalAction(s,f,id,preferred=null,goalCityId=nu
  if(!api.attackTargets(s,id).length&&!api.cityTargets(s,id).length&&!Object.values(s.knowledge[f].observedArmies).some(b=>s.knowledge[f].tiles[b.tileId]==='VISIBLE'&&dist(s,a.tileId,b.tileId)<=2))return null;
  const w=campaignTacticsWorld(s,campaignTacticsView(s,f));if(!w)return null;
  const options=campaignTacticalActions(w,id);
+ if(preferred?.defendGate){const defense=options.find(x=>x.targetId===preferred.targetId&&x.score>=0&&(x.type!=='ATTACK'||x.p.enemyLoss>=x.p.allyLoss*1.2||x.score>=AI_FINISH_VALUE));if(defense)return actionCommand(defense);}
  // A legal castle hit was the strategic purpose of this main's arrival.
  // Field finishing must not consume that capture opportunity instead.
  const siege=goalCityId&&options.filter(x=>x.targetId===goalCityId&&w.cities[x.targetId]).sort((a,b)=>b.score-a.score)[0];
@@ -258,7 +259,7 @@ export function campaignTacticalMoves(s,v,plan,{remember=false,supplyWorld}={}){
 
 // Historical C142 movement policy, opt-in only for frozen behavior fixtures.
 // The default path above implements the C142b tempo/defense contract.
-const c142Protected=c=>['REPLENISH_ARMY','MUSTER_SIEGE','DEFEND_DAMAGED_CITY','CAPITAL_GARRISON','INTERCEPT_CITY','EXPLORE_PLACE','WITHDRAWAL'].includes(c.reasonCode)||c.reasonCode?.startsWith('C31_');
+const c142Protected=c=>!!c.defendCityId||['REPLENISH_ARMY','MUSTER_SIEGE','DEFEND_DAMAGED_CITY','CAPITAL_GARRISON','INTERCEPT_CITY','EXPLORE_PLACE','WITHDRAWAL'].includes(c.reasonCode)||c.reasonCode?.startsWith('C31_');
 function c142OperationReplay(s,v,plan,{remember,turnLimit,route,siegePositions,siegeReady,supplyWorld}){
  const target=v.knowledge.cities[plan.goal?.targetCityId]??v.knowledge.observedArmies[plan.goal?.targetArmyId];if(!target)return plan;
  const key=target.cityId??target.armyId,eligible=plan.candidates.filter(c=>!c142Protected(c)&&api.active(s,v.ownArmies[c.armyId])&&v.ownArmies[c.armyId].morale!=='ROUTING');if(eligible.length<2)return plan;

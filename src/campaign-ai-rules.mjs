@@ -19,7 +19,8 @@ export const AI_RULE_COMPOSITION_LOW=-.25;
 export const AI_RULE_COMPOSITION_HIGH=.25;
 export const AI_RULE_COALITION_TURNS=3;
 export const AI_RULE_COALITION_BONUS=20;
-export const AI_RULE_DEFAULTS=Object.freeze(Object.fromEntries(Array.from({length:12},(_,i)=>[`r${i+1}`,true])));
+// C144c: opt-in until capital protection also passes the offensive-pressure gate.
+export const AI_RULE_DEFAULTS=Object.freeze({...Object.fromEntries(Array.from({length:12},(_,i)=>[`r${i+1}`,true])),r13:false});
 let testEnabled=true;
 // Test fixtures only; production code never calls this and saves stay unchanged.
 export function configureAiRules({enabled=true}={}){testEnabled=enabled!==false;}
@@ -30,7 +31,20 @@ export function campaignAiRule(s,f,n){
  const rules=s.trialRules?.aiRules,local=rules?.[f];
  return ((local&&typeof local==='object'?local[`r${n}`]:rules?.[`r${n}`])??AI_RULE_DEFAULTS[`r${n}`])!==false;
 }
-export const campaignAiRulesEnabled=(s,f)=>Array.from({length:12},(_,i)=>i+1).some(n=>campaignAiRule(s,f,n));
+export const campaignAiRulesEnabled=(s,f)=>Array.from({length:13},(_,i)=>i+1).some(n=>campaignAiRule(s,f,n));
+
+// Public static edge costs use maneuver 50, the same neutral public quote as
+// getFactionView. No hidden commander abilities, positions or blockers enter it.
+export function campaignAiArrivalTurns(v,army,goals,{ticksPerTurn=v.time.ticksPerTurn,maxTurns=3}={}){
+ const cls=army.troopType==='cavalry'?'cavalry':army.troopType==='engineer'?'engineer':'normal',edges=new Map();
+ for(const e of v.knownEdges){const cost=e.travelTicksByClass[cls];if(e.blocked||cost===null||cost>ticksPerTurn)continue;for(const [from,to] of [[e.fromTileId,e.toTileId],[e.toTileId,e.fromTileId]]){if(!edges.has(from))edges.set(from,[]);edges.get(from).push({to,cost});}}
+ const centers=new Set(Object.values({...v.knowledge?.cities,...v.ownCities}).filter(c=>c.ownerFactionId!==army.factionId).map(c=>c.tileId));
+ const targets=new Set(goals),distance=new Map([[army.tileId,0]]),queue=new Set([army.tileId]);
+ while(queue.size){const from=[...queue].sort((a,b)=>distance.get(a)-distance.get(b)||a.localeCompare(b))[0];queue.delete(from);const time=distance.get(from);if(targets.has(from))return Math.ceil(time/ticksPerTurn);
+  for(const {to,cost} of edges.get(from)??[]){if(centers.has(to))continue;const used=time%ticksPerTurn,next=used+cost>ticksPerTurn?time+ticksPerTurn-used+cost:time+cost;if(next>maxTurns*ticksPerTurn||next>=(distance.get(to)??Infinity))continue;distance.set(to,next);queue.add(to);}
+ }
+ return Infinity;
+}
 export function campaignAiRoll(s,f,id,salt='start'){
  let h=2166136261;
  for(const c of `${s.campaignSeed??s.seed??0}|${s.turn}|${f}|${id}|${salt}`)h=Math.imul(h^c.charCodeAt(0),16777619);
@@ -110,6 +124,7 @@ export function campaignReferencePlan(s,v,plan,{remember=false,ranking=[],turnLi
   return {targetId:target.cityId??target.armyId,targetTileId:target.tileId,armyIds:selected.map(x=>x.a.armyId),power,ratio:power/Math.max(1,foes*(campaignAiRule(s,f,7)?AI_RULE_ENEMY_MARGIN:1)),stageTileId,startedTurn:prior?.startedTurn??s.turn,gatherCount:prior?.gatherCount??0,gatherTurn:prior?.gatherTurn??0,phase:prior?.phase==='ADVANCE'?'ADVANCE':'READY'};
  });
  plan.candidates=plan.candidates.map(c=>{
+  if(c.aiCityDefensePriority){note('R11_PRIORITY');return c;}
   const a=v.ownArmies[c.armyId];if(!a||!api.active(s,a)||a.morale==='ROUTING'||/WITHDRAW|CLOCK_RETREAT|C31_|EXPLORE/.test(c.reasonCode??''))return c;
   const old=m.units[a.armyId]??{},record={...old,lastTurn:s.turn};m.units[a.armyId]=record;
   const target=assigned.get(a.armyId)??primary,group=groups.find(g=>g.targetId===(target?.cityId??target?.armyId));
