@@ -1,0 +1,248 @@
+{
+ "note": "로컬 Stable Audio 3 초안 v1 을 다듬은 효과음. 갈아 끼울 때 같은 이름을 쓴다. 만든 글(프롬프트)은 docs/work-integration/20261013/audio/SFX.md.",
+ "sounds": {
+  "click": {
+   "file": "click.ogg",
+   "seconds": 0.35,
+   "source": "click-v1.wav",
+   "onset": 0.03,
+   "rms": 0.032,
+   "peak": 0.898,
+   "bytes": 8469
+  },
+  "deny": {
+   "file": "deny.ogg",
+   "seconds": 0.7,
+   "source": "deny-v1.wav",
+   "onset": 0.05,
+   "rms": 0.067,
+   "peak": 0.864,
+   "bytes": 12098
+  },
+  "paper-open": {
+   "file": "paper-open.ogg",
+   "seconds": 0.86,
+   "source": "paper-open-v1.wav",
+   "onset": 0.19,
+   "rms": 0.023,
+   "peak": 0.787,
+   "bytes": 16445
+  },
+  "paper-close": {
+   "file": "paper-close.ogg",
+   "seconds": 1.0,
+   "source": "paper-close-v1.wav",
+   "onset": 0.05,
+   "rms": 0.035,
+   "peak": 0.835,
+   "bytes": 16518
+  },
+  "brush": {
+   "file": "brush.ogg",
+   "seconds": 1.0,
+   "source": "brush-v1.wav",
+   "onset": 0.05,
+   "rms": 0.089,
+   "peak": 0.785,
+   "bytes": 16244
+  },
+  "stamp": {
+   "file": "stamp.ogg",
+   "seconds": 0.25,
+   "source": "stamp-v1.wav",
+   "onset": 0.72,
+   "rms": 0.14,
+   "peak": 0.838,
+   "bytes": 8778
+  },
+  "select": {
+   "file": "select.ogg",
+   "seconds": 0.9,
+   "source": "select-v1.wav",
+   "onset": 0.05,
+   "rms": 0.03,
+   "peak": 0.821,
+   "bytes": 16341
+  },
+  "march": {
+   "file": "march.ogg",
+   "seconds": 2.2,
+   "source": "march-v1.wav",
+   "onset": 0.01,
+   "rms": 0.053,
+   "peak": 0.89,
+   "bytes": 36604
+  },
+  "gallop": {
+   "file": "gallop.ogg",
+   "seconds": 2.35,
+   "source": "gallop-v1.wav",
+   "onset": 0.01,
+   "rms": 0.032,
+   "peak": 0.803,
+   "bytes": 42708
+  },
+  "drum-hit": {
+   "file": "drum-hit.ogg",
+   "seconds": 1.02,
+   "source": "drum-hit-v1.wav",
+   "onset": 0.09,
+   "rms": 0.139,
+   "peak": 0.841,
+   "bytes": 15164
+  },
+  "gong": {
+   "file": "gong.ogg",
+   "seconds": 1.84,
+   "source": "gong-v1.wav",
+   "onset": 0.0,
+   "rms": 0.17,
+   "peak": 0.846,
+   "bytes": 27287
+  },
+  "clash": {
+   "file": "clash.ogg",
+   "seconds": 2.19,
+   "source": "clash-v1.wav",
+   "onset": 0.07,
+   "rms": 0.043,
+   "peak": 0.8,
+   "bytes": 31573
+  },
+  "arrows": {
+   "file": "arrows.ogg",
+   "seconds": 1.32,
+   "source": "arrows-v1.wav",
+   "onset": 0.03,
+   "rms": 0.061,
+   "peak": 0.838,
+   "bytes": 18790
+  },
+  "charge": {
+   "file": "charge.ogg",
+   "seconds": 2.44,
+   "source": "charge-v1.wav",
+   "onset": 0.01,
+   "rms": 0.077,
+   "peak": 0.845,
+   "bytes": 40193
+  },
+  "siege": {
+   "file": "siege.ogg",
+   "seconds": 1.87,
+   "source": "siege-v1.wav",
+   "onset": 0.01,
+   "rms": 0.098,
+   "peak": 0.88,
+   "bytes": 33382
+  },
+  "tactic": {
+   "file": "tactic.ogg",
+   "seconds": 1.36,
+   "source": "tactic-v1.wav",
+   "onset": 0.84,
+   "rms": 0.077,
+   "peak": 0.765,
+   "bytes": 22444
+  },
+  "capture": {
+   "file": "capture.ogg",
+   "seconds": 2.7,
+   "source": "capture-v1.wav",
+   "onset": 0.01,
+   "rms": 0.156,
+   "peak": 0.842,
+   "bytes": 49581
+  },
+  "rout": {
+   "file": "rout.ogg",
+   "seconds": 2.39,
+   "source": "rout-v1.wav",
+   "onset": 0.02,
+   "rms": 0.19,
+   "peak": 0.841,
+   "bytes": 33630
+  },
+  "gate": {
+   "file": "gate.ogg",
+   "seconds": 2.4,
+   "source": "gate-v1.wav",
+   "onset": 0.01,
+   "rms": 0.084,
+   "peak": 0.844,
+   "bytes": 30725
+  },
+  "hammer": {
+   "file": "hammer.ogg",
+   "seconds": 0.85,
+   "source": "hammer-v1.wav",
+   "onset": 0.05,
+   "rms": 0.036,
+   "peak": 0.815,
+   "bytes": 14618
+  },
+  "coins": {
+   "file": "coins.ogg",
+   "seconds": 1.3,
+   "source": "coins-v1.wav",
+   "onset": 0.1,
+   "rms": 0.045,
+   "peak": 0.803,
+   "bytes": 27397
+  },
+  "muster": {
+   "file": "muster.ogg",
+   "seconds": 1.88,
+   "source": "muster-v1.wav",
+   "onset": 0.19,
+   "rms": 0.05,
+   "peak": 0.877,
+   "bytes": 34672
+  },
+  "cup": {
+   "file": "cup.ogg",
+   "seconds": 2.08,
+   "source": "cup-v1.wav",
+   "onset": 0.03,
+   "rms": 0.049,
+   "peak": 0.837,
+   "bytes": 33313
+  },
+  "levelup": {
+   "file": "levelup.ogg",
+   "seconds": 1.81,
+   "source": "levelup-v1.wav",
+   "onset": 0.0,
+   "rms": 0.06,
+   "peak": 0.84,
+   "bytes": 27423
+  },
+  "stone": {
+   "file": "stone.ogg",
+   "seconds": 2.35,
+   "source": "stone-v1.wav",
+   "onset": 0.11,
+   "rms": 0.08,
+   "peak": 0.853,
+   "bytes": 42535
+  },
+  "guqin": {
+   "file": "guqin.ogg",
+   "seconds": 2.33,
+   "source": "guqin-v1.wav",
+   "onset": 0.01,
+   "rms": 0.08,
+   "peak": 0.834,
+   "bytes": 30853
+  },
+  "warhorn": {
+   "file": "warhorn.ogg",
+   "seconds": 2.65,
+   "source": "warhorn-v1.wav",
+   "onset": 0.04,
+   "rms": 0.224,
+   "peak": 0.853,
+   "bytes": 36614
+  }
+ }
+}

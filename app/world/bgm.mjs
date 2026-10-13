@@ -1,5 +1,5 @@
 // @ts-check
-// 화면별 배경 음악 — 처음·지도(평시/전시)·교전·성·위기·승리·패배. 곡 바꿈은 교차 페이드.
+// 화면별 배경 음악 — 처음·드래프트·지도(평시/전시, 곡 둘씩)·교전·성·주점·군의·위기·승리·패배. 곡 바꿈은 교차 페이드.
 // 표시용(게임 규칙 아님). 음량·음소거는 기존 소리 설정을 그대로 따른다.
 // 곡 파일: prototype/assets/audio/bgm/{자리}.ogg (tools/art/bgm-prepare.py 가 만든다). 파일이 없거나 서버가 못 주면 조용히 침묵한다.
 
@@ -14,6 +14,12 @@ export const BGM_TRACKS = Object.freeze({
   crisis: {src: '/assets/audio/bgm/crisis.ogg', loop: true, gain: 1},
   victory: {src: '/assets/audio/bgm/victory.ogg', loop: false, gain: 1},
   defeat: {src: '/assets/audio/bgm/defeat.ogg', loop: false, gain: 1},
+  // 2026-10-13 장면을 더 잘게: 주점 · 군의(외교 포함) · 석각 드래프트 · 지도 곡의 둘째 판(두 차례마다 번갈아)
+  tavern: {src: '/assets/audio/bgm/tavern.ogg', loop: true, gain: 0.95},
+  council: {src: '/assets/audio/bgm/council.ogg', loop: true, gain: 0.95},
+  draft: {src: '/assets/audio/bgm/draft.ogg', loop: true, gain: 1},
+  'map-peace-b': {src: '/assets/audio/bgm/map-peace-b.ogg', loop: true, gain: 1},
+  'map-war-b': {src: '/assets/audio/bgm/map-war-b.ogg', loop: true, gain: 1},
 });
 
 const STEP_MS = 50;

@@ -78,6 +78,56 @@
    "rms": 0.09,
    "peak": 0.906,
    "bytes": 273634
+  },
+  "tavern": {
+   "file": "tavern.ogg",
+   "loop": true,
+   "seconds": 45.6,
+   "source": "tavern-v1.wav",
+   "rms": 0.11,
+   "peak": 0.578,
+   "bytes": 749151,
+   "seamJump": 0.0389
+  },
+  "council": {
+   "file": "council.ogg",
+   "loop": true,
+   "seconds": 46.7,
+   "source": "council-v1.wav",
+   "rms": 0.109,
+   "peak": 0.84,
+   "bytes": 613815,
+   "seamJump": 0.0029
+  },
+  "draft": {
+   "file": "draft.ogg",
+   "loop": true,
+   "seconds": 50.25,
+   "source": "draft-v1.wav",
+   "rms": 0.11,
+   "peak": 0.574,
+   "bytes": 702158,
+   "seamJump": 0.0126
+  },
+  "map-peace-b": {
+   "file": "map-peace-b.ogg",
+   "loop": true,
+   "seconds": 43.15,
+   "source": "map-peace-b-v1.wav",
+   "rms": 0.11,
+   "peak": 0.64,
+   "bytes": 624715,
+   "seamJump": 0.0165
+  },
+  "map-war-b": {
+   "file": "map-war-b.ogg",
+   "loop": true,
+   "seconds": 51.9,
+   "source": "map-war-b-v1.wav",
+   "rms": 0.109,
+   "peak": 0.621,
+   "bytes": 690005,
+   "seamJump": 0.0082
   }
  }
 }

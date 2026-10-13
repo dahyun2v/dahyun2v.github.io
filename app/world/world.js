@@ -121,6 +121,9 @@ const actionAudio=createCampaignActionAudio(),settlementAudio=createSettlementAu
 const combatAudio=createCampaignCombatAudio();
 let pilotAudio=createPilotAudio();
 const uiSfx=createUiSfx(()=>pilotAudio.settings);document.addEventListener?.('pointerdown',()=>uiSfx.unlock(),{passive:true});
+// 효과음(소리 파일) — 창 여닫이 · 단추는 스스로 듣고, 명령의 결과는 command() 가 알려 준다(2026-10-13). 배경 음악처럼 따로 불러온다: 서버를 다시 띄우기 전(sfx.mjs 를 아직 못 주는 서버)에도 화면은 그대로 뜨고 효과음만 빠진다
+let worldSfx={command(){},play(){return false;},unlock(){},attach(){},ready:0};
+import('/app/world/sfx.mjs').then(m=>{worldSfx=m.createWorldSfx(()=>pilotAudio.settings);worldSfx.attach(document);if(audioGesture)worldSfx.unlock();}).catch(()=>{});
 // 배경 음악 장치는 따로 불러온다 — 서버를 다시 띄우기 전(bgm.mjs 를 아직 못 주는 서버)에도 화면은 그대로 뜨고 음악만 빠진다
 let bgm={scene(){},gesture(){},configure(){},deactivate(){},activate(){}},bgmWanted='title';
 import('/app/world/bgm.mjs').then(m=>{bgm=m.createWorldBgm({settings:pilotAudio.settings,onStatus:(scene,st)=>{const d=document.documentElement?.dataset;if(d){d.bgm=scene??'';d.bgmState=st;}}});bgm.scene(state?bgmScene(view(state)):bgmWanted);if(audioGesture)bgm.gesture();}).catch(()=>{});
@@ -134,7 +137,7 @@ function voiceCue(request,before,combat){
  // 싸움 뒤: 적 부대가 사라졌으면 이긴 말, 내 부대가 사라졌으면 물러나는 말(교전 연출이 끝날 즈음)
  if(combat&&combat.attackerId===a&&combat.targetId){const won=!!before.armies?.[combat.targetId]&&!state.armies?.[combat.targetId],lost=!state.armies?.[a];if(won||lost)setTimeout(()=>voice.say(lead(a),lost?'retreat':'victory'),1900);}
 }
-// 화면별 배경 음악 고르기(표시용): 결말 > 위기 > 교전(마지막 전투 뒤 8초) > 성·평정 > 지도 전시(보이는 적이 내 성·부대 5칸 안) > 지도 평시
+// 화면별 배경 음악 고르기(표시용): 결말 > 위기 > 교전(마지막 전투 뒤 8초) > 군의·외교 > 성(주점은 따로) > 지도 전시(보이는 적이 내 성·부대 5칸 안) > 지도 평시. 지도 곡은 두 차례마다 둘째 곡과 번갈아 든다(2026-10-13 사용자 "배경음악이랑 효과음도 촘촘하게")
 let bgmHeat=0,bgmHeatTimer=null;
 function bgmScene(v){
  if(!state)return 'title';
@@ -145,12 +148,14 @@ function bgmScene(v){
  const now=performance.now();
  if(combatAnimating){bgmHeat=now+8000;clearTimeout(bgmHeatTimer);bgmHeatTimer=setTimeout(()=>{if(state)bgm.scene(bgmScene(view(state)));},8200);}
  if(now<bgmHeat)return 'battle';
- if(stage.city||councilOpen)return 'city';
+ const dp=$('#diplo');if(councilOpen||(dp&&!dp.hidden))return 'council';
+ if(stage.city)return stage.fac==='tavern'?'tavern':'city';
  const T=state.tiles,dist=(a,b)=>{const p=T[a],q=T[b];if(!p||!q)return 99;const dq=p.q-q.q,dr=p.r-q.r;return (Math.abs(dq)+Math.abs(dr)+Math.abs(dq+dr))/2;};
  const mine=[...Object.values(v.ownArmies??{}).map(a=>a.tileId),...Object.values(v.ownCities??{}).map(c=>c.tileId)];
  const ally=new Set((v.diplomacy?.factions??[]).filter(f=>f.state==='ALLIANCE').map(f=>f.factionId));
  const war=Object.values(v.knowledge?.observedArmies??{}).some(a=>a.factionId!==state.playerFactionId&&!ally.has(a.factionId)&&v.knowledge.tiles?.[a.tileId]==='VISIBLE'&&mine.some(t=>dist(t,a.tileId)<=5));
- return war?'map-war':'map-peace';
+ const alt=Math.floor((state.turn??0)/2)%2===1;
+ return war?(alt?'map-war-b':'map-war'):(alt?'map-peace-b':'map-peace');
 }
 // 창을 닫는 것처럼 다시 그리지 않는 동작 뒤에도 곡을 맞춘다
 document.addEventListener?.('click',()=>{if(state)queueMicrotask(()=>bgm.scene(bgmScene(view(state))));});
@@ -234,6 +239,7 @@ function command(request) {
   const combat=state.lastCombat&&state.lastCombat.sequence!==before.lastCombat?.sequence?state.lastCombat:null;
   const movers=startMotions(before,state,combat);
   try{voiceCue(request,before,combat);}catch{} // 음성은 표시용 — 여기서 틀어져도 명령 처리는 이어 간다
+  try{worldSfx.command({request,before,state,combat,visible:id=>armyVisible(state,id)||armyVisible(before,id)});}catch{} // 효과음도 표시용
   // 성 주인이 바뀌면 함락 컷인(페르소나5·림버스 붓 띠) — 내가 얻거나 잃은 성, 또는 보이는 성만
   for(const c of Object.values(state.cities)){const was=before.cities[c.cityId]?.ownerFactionId;if(was===c.ownerFactionId||!c.ownerFactionId)continue;
    if(c.ownerFactionId===state.playerFactionId||was===state.playerFactionId||view(state).knowledge.tiles[c.tileId]==='VISIBLE'){setTimeout(()=>showCutIn(`${c.name} 함락`,`${factionName(c.ownerFactionId)}군${was?` ← ${factionName(was)}군`:''}`,c.ownerFactionId),combat?1250:150);break;}}
@@ -1328,8 +1334,8 @@ for (const button of document.querySelectorAll('button[data-faction]')) {
     const factionId=button.dataset.faction,seed=newCampaignSeed(),host=$('#officer-draft');
     if(!host||!document.body.classList.contains('ink')||new URLSearchParams(location.search).get('hud')==='old'||new URLSearchParams(location.search).get('draft')==='0'){begin(factionId,seed);return;}
     const card=document.querySelector(`.w-lord[data-pick="${factionId}"]`),ruler={id:/cutout\/(G\d+)/.exec(card?.querySelector('.art')?.getAttribute('style')??'')?.[1]??'',name:card?.querySelector('.plate b')?.textContent??''};
-    unlockAudio();
-    openOfficerDraft(host,{factionId,seed,ruler,art:id=>fullArt(id)?.src,onConfirm:c=>begin(factionId,seed,c),onBack:()=>{},intro:true,sfx:name=>{try{pilotAudio.play(name==='confirm'?'select':'turn',`draft:${++soundSequence}`);}catch{}}}); // intro = '군주가 부른다' 장면부터(연출은 officer-draft-ui.mjs, ?fx=0 으로 끔)
+    unlockAudio();bgmWanted='draft';bgm.scene('draft'); // 석각 드래프트는 따로 든 곡(깨어남)
+    openOfficerDraft(host,{factionId,seed,ruler,art:id=>fullArt(id)?.src,onConfirm:c=>begin(factionId,seed,c),onBack:()=>{bgmWanted='title';bgm.scene('title');},intro:true,sfx:name=>{try{pilotAudio.play(name==='confirm'?'select':'turn',`draft:${++soundSequence}`);}catch{}}}); // intro = '군주가 부른다' 장면부터(연출은 officer-draft-ui.mjs, ?fx=0 으로 끔)
   });
 }
 $('#end-turn').addEventListener('click', e => {const b=$('#end-turn').dataset.blocker;if(b&&!e?.shiftKey){openCity(b,'jobs');$('#status').textContent='생산할 작업을 고르세요 · Shift+클릭이나 Shift+Enter 로 그냥 넘기기';return;}command({type:'END_TURN'});});
