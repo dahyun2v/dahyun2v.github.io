@@ -144,7 +144,7 @@ export function c33ApplyTactic({s,id,target,card,damage,heal,attack,cityAttack,l
  case 'WHIRLWIND':for(const b of near())strike(b.armyId);changeFormation(s,id,1,log.formationChanges);break;
  case 'RAM':cityAttack(2);break;
  case 'BRIBE':s.factions[a.factionId].prestige=Math.max(0,s.factions[a.factionId].prestige-10);if(strategy()||uniqueOwned(s,target,'U_BRIBE_BROKER'))status(target,'CONFUSED');break;
- case 'HOOK_PULL':t.tileId=c33PullTile(s,id,target);checkFormation(s,target,10,log.formationChanges);break;
+ case 'HOOK_PULL':{const to=c33PullTile(s,id,target);if(to!==t.tileId){t.tileId=to;t.currentOrder=null;t.movementState=null;}checkFormation(s,target,10,log.formationChanges);break;}
  case 'SMOKE':for(const b of [a,...near(1,true)]){b.c33??={};b.c33.smokeUntil=s.turn;}break;
  case 'EMPOWER':buff(target,'DAMAGE_MOD',30);buff(target,'DEFENSE_MOD',20);break;
  case 'PLACE_TRAP':s.c33??={};s.c33.traps??=[];s.c33.traps.push({tileId:target,factionId:a.factionId,source:id});break;

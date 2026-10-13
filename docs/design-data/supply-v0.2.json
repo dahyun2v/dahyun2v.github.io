@@ -1,0 +1,7 @@
+{
+  "schema": "supply-v0.2",
+  "status": "C145 시험값 — 사용자 군량 모델 변경 지시, 정본 확정과 별도",
+  "clock": {"fieldStockTurns": 5, "killRewardTurns": 1},
+  "cheap": {"cityBaseFood": 8, "troopFoodPerThousand": 1},
+  "inherits": "supply-v0.1.json: 거리 8/16, 거점 위치/시간/한도, 굶주림 5%/사기 15"
+}

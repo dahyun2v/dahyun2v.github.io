@@ -1,10 +1,11 @@
 import {injuryReason} from './campaign-injury.mjs';
-import {supplyEnabled,settleSupply} from './campaign-supply.mjs';
+import {campaignScenario} from './campaign-scenario.mjs';
+import {supplyEnabled,settleSupply,armyFoodPerTurn,supplyLink,supplyAiLaunchFood,foodModel,clockFood,troopFoodRate,baseCityFood} from './campaign-supply.mjs';
 import {relationsEnabled,relationSecurity,relationProduction,relationJobComplete} from './campaign-relations.mjs';
 import {c34Recovery,c34Cost,c34Security,c34Shortage} from './campaign-c34.mjs';
 import {c33Governor,c33DomesticOutput,c33MusterCost} from './campaign-rule-registry.mjs';
 import {c31Production,c31Muster} from './campaign-events.mjs';
-import {c30CityOutput,c30Settle,c30MusterDiscount} from './campaign-c29.mjs';
+import {c30CityOutput,c30Settle,c30MusterDiscount,c30MusterBonus} from './campaign-c29.mjs';
 import {c29Recovery,c29Aw} from './campaign-c29.mjs';
 import {c28RecoveryFactor,c28Enabled} from './campaign-career.mjs';
 import {domesticRule,domesticOutput,domesticFacilityCost,domesticBeforeSettlement,domesticAfterSettlement,domesticJobCompleted,domesticSecurityCauses,domesticSupport,domesticBeginGranaries,domesticFinishGranaries,runDomestic} from './campaign-rule-registry.mjs';
@@ -33,7 +34,7 @@ export function specialistOutput(s,c,raw){if(!c21Enabled(s))return [];const n=c.
 
 import {C20,C20_FACILITIES,c20Enabled,initializeCampaignPolicy,uniqueFacilityReason,activeUnique,settlePolicyRefugees} from './campaign-policy.mjs';
 import {musterReason,completeMuster,C19,c19Enabled,researchStage,cityPopulationCapacity,syncResearchCities,settleCampaignResearch} from './campaign-roster.mjs';
-import {uniqueDomestic,uniqueProgress,uniqueHoldLand,uniqueGovernor,uniqueSupply,uniqueSettlement,uniqueMusterCost} from './campaign-rule-registry.mjs';
+import {uniqueDomestic,uniqueProgress,uniqueHoldLand,uniqueGovernor,uniqueSupply,uniqueSettlement,uniqueMusterCost,uniqueMusterFactor,domesticMusterAvailable} from './campaign-rule-registry.mjs';
 import {effectModifiers} from './campaign-effects.mjs';
 import {settleOccupationCity} from './campaign-occupation.mjs';
 import {createCitySettlementState, settleCityTurn} from './city-settlement.mjs';
@@ -126,7 +127,7 @@ export function cityEconomyRates(s,c,{shortage=null,commit=false}={}) {
   const output=resource=>eligible?Math.max(0,1+effectModifiers(s,c.cityId,['TURN_SETTLE'],{cityId:c.cityId,resource,sources:[{id:c.governorId,whens:['TURN_SETTLE']}]}).CITY_OUTPUT_MOD/100):1;
   const scale=c.kind==='minor'?.5:1;
   const population=c19Enabled(s)?Math.max(0,c.population-C19.populationBase):0;
-  const foodRaw=(activeUnique(s,c,'tuntian')?C20.tuntianFood:0)+(scale*(4+2*Math.min(2,count('farm')))+C19.populationFood*population)*multiplier*output('FOOD')*(c19Enabled(s)?security:1);
+  const foodRaw=(activeUnique(s,c,'tuntian')?C20.tuntianFood:0)+(scale*(baseCityFood(s)+2*Math.min(2,count('farm')))+C19.populationFood*population)*multiplier*output('FOOD')*(c19Enabled(s)?security:1);
   const specialistFood=s.mapId==='v2'||s.mapId==='v3'?(foodRaw+(c.specialists?.logistician??0)*C21.logisticianFood)*(1+(c.specialists?.official??0)*C21.officialRate):foodRaw;
   shortage??=c.foodStock-c.reservedResources.food+((normal(s,c)||c19Enabled(s))?Math.floor(specialistFood+(c.outputCarry?.food??0)+1e-9):0)<campaignFoodNeed(s,c);
   const penalty=Math.min(security,shortage?c34Shortage(s,c):1);
@@ -153,6 +154,77 @@ export function campaignMobilization(s,factionId) {
     s.personnel.lots.filter(l=>lotFaction(s,l)===factionId).reduce((n,l)=>n+l.count,0) +
     s.personnel.transports.filter(t=>t.status==='IN_TRANSIT'&&lotFaction(s,s.personnel.lots.find(l=>l.lotId===t.sourceLotId))===factionId).reduce((n,t)=>n+t.count,0);
   return {capacity,used};
+}
+
+// C143: read-only estimates for AI decisions; settlement and costs stay above.
+export function campaignAiJobForecast(s,c,kind,{troopType=null,progress=0}={}) {
+  const rates=cityEconomyRates(s,c),cost=cityJobCost(s,c,kind,troopType);
+  const speed=round((kind==='muster'?c31Muster(s,c.ownerFactionId):1)*
+    (c29Aw(s,c.governorId,'AW_TT-V02')&&!['muster','recruit','reorganize','repair'].includes(kind)?1.15:1)*
+    uniqueProgress(s,c,rates.production*(['recruit','reorganize'].includes(kind)?1+rates.workBonus:1)));
+  const advance=c.c33?.advanceProduction??0;
+  return {cost,speed,turns:speed>0?Math.max(1,Math.ceil(Math.max(0,cost-progress-advance)/speed)):null,
+    troops:kind==='recruit'?(c33Governor(s,c,'VOLUNTEERS')&&(c.securityLevel??0)===0?650:500):0};
+}
+
+export function campaignAiFoodBudget(s,factionId,turns,extraTroops=0) {
+  const cities=Object.values(s.cities).filter(c=>c.ownerFactionId===factionId);
+  const stock=cities.reduce((n,c)=>n+Math.max(0,c.foodStock-c.reservedResources.food),0);
+  const income=cities.reduce((n,c)=>n+cityEconomyRates(s,c).food,0);
+  // C45 charges field upkeep through supply rather than campaignFoodNeed.
+  const fieldNeed=supplyEnabled(s)&&!clockFood(s)?Object.values(s.armies).filter(a=>a.factionId===factionId&&castleArmyActive(s,a)).reduce((n,a)=>n+armyFoodPerTurn(a,s),0):0;
+  const need=cities.reduce((n,c)=>n+campaignFoodNeed(s,c),0)+fieldNeed+(clockFood(s)?0:extraTroops*troopFoodRate(s)/1000);
+  return {stock,income,need,fieldNeed,turns,balance:stock+turns*income-turns*need};
+}
+
+// C143b: run the existing settlement on a disposable, public supply world.
+// Enemy stock, output, personnel and unobserved blockers cannot enter the read.
+export function campaignAiFoodForecast(s,factionId,publicWorld){
+ const ownCities=Object.values(s.cities).filter(c=>c.ownerFactionId===factionId);
+ if(!ownCities.length)return {};
+ const copy=structuredClone(s),template=ownCities[0];
+ copy.cities=Object.fromEntries(Object.values(publicWorld.cities).map(c=>[c.cityId,c.ownerFactionId===factionId?structuredClone(s.cities[c.cityId]):{...structuredClone(template),...c,governorId:null,foodStock:0,reserveTroops:0,facilities:[],currentProduction:null}]));
+ copy.armies=structuredClone(Object.fromEntries(Object.entries(s.armies).filter(([,a])=>a.factionId===factionId)));
+ // Public foreign presences preserve occupied farms and diplomacy-aware
+ // blockers. Disposable carry keeps these probes active for one settlement;
+ // neither foreign stores nor unobserved formations are read or charged.
+ for(const a of Object.values(publicWorld.armies).filter(a=>a.factionId!==factionId&&a.troopCount>0))copy.armies[a.armyId]={...structuredClone(a),hp:1,supplyInitialized:true,supplyFood:supplyAiLaunchFood(s,template,a.troopCount).full};
+ copy.tiles=structuredClone(publicWorld.tiles);
+ if(copy.supply){copy.supply.hubs=copy.supply.hubs.filter(h=>h.factionId===factionId);copy.supply.pending=Object.fromEntries(Object.entries(copy.supply.pending).filter(([,p])=>p.factionId===factionId));}
+ copy.turn++;copy.turnNumber=copy.turn;copy.globalTick+=copy.time.ticksPerTurn;copy.currentDate+=10;
+ settleCampaignEconomy(copy);
+ const result={};
+ for(const c of ownCities){
+  const expenses=new Set(['시민 유지','군량','성장 소비','지원','유지비 미지급','보관 한도 초과','보급 거점 채움','보급 거점 첫 재고']);
+  const after=copy.cities[c.cityId],income=(after.economyCauses??[]).filter(e=>e.resource==='food'&&!expenses.has(e.label)&&!/^군량\(|^출진 군량\(/.test(e.label)).reduce((n,e)=>n+e.amount,0),municipalNeed=campaignFoodNeed(copy,after);
+  const attached=Object.values(copy.armies).filter(a=>a.factionId===factionId&&castleArmyActive(copy,a)&&supplyEnabled(copy)&&!clockFood(copy)&&supplyLink(copy,a).sourceCityId===c.cityId);
+  // Forecast losses never make the budget look cheaper. DISRUPTED sources
+  // pay half; the rest is drawn from the army's carried stock by the same rule.
+  const fieldNeed=attached.reduce((n,a)=>n+armyFoodPerTurn({...a,troopCount:Math.max(a.troopCount,s.armies[a.armyId]?.troopCount??0)},copy)*(supplyLink(copy,a).state==='DISRUPTED'?.5:1),0);
+  const sourceCharge=(after.economyCauses??[]).filter(e=>e.resource==='food'&&e.amount<0&&(/^군량\(/.test(e.label)||e.label==='보급 거점 채움'||e.label==='보급 거점 첫 재고')).reduce((n,e)=>n-e.amount,0);
+  const stock=Math.max(0,c.foodStock-c.reservedResources.food),nextStock=Math.max(0,after.foodStock-after.reservedResources.food),delta=nextStock-stock;
+  const net=income-municipalNeed-fieldNeed,depletion=Math.max(0,-net,-delta);
+  result[c.cityId]={cityId:c.cityId,stock,nextStock,income,municipalNeed,fieldNeed,sourceCharge,need:municipalNeed+fieldNeed,net,delta,depletion,runway:depletion>0?nextStock/depletion:null,projectedRecruitCompleted:c.currentProduction?.kind==='recruit'&&after.currentProduction?.kind!=='recruit',armyIds:attached.map(a=>a.armyId),starvingArmyIds:attached.filter(a=>a.supplyStarving).map(a=>a.armyId)};
+ }
+ return result;
+}
+
+export function campaignAiMusterFood(s,c,troopType){
+ const bonus=(c20Enabled(s)&&c.ownerFactionId==='F03'?c.starMusterBonus??0:0)+c30MusterBonus(s,c.ownerFactionId,troopType),available=domesticMusterAvailable(s,c);
+ const base=Math.min(available,500+bonus),raw=specialTroop(s,troopType)?troopType==='wudang'?C24.wudangCount:troopType==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):troopType==='hubao'?500+bonus+C24.hubaoReserve:base:base;
+ const count=Math.min(available,Math.floor(raw*uniqueMusterFactor(s,c)));
+ return {count,...supplyAiLaunchFood(s,c,count)};
+}
+
+// Neutral setup is public. Read its recurring civilian surplus from the same
+// output/consumption functions, without sampling the current foreign city.
+export function campaignAiNeutralFood(s,factionId,cityId,turns){
+ const initial=campaignScenario(s.mapId).initialData.world.cities[cityId];
+ if(!initial||initial.kind!=='minor'||initial.ownerFactionId!==null)return {stock:0,income:0,need:0,gain:0};
+ const city={...structuredClone(initial),ownerFactionId:factionId};
+ const copy={...s,occupations:{},armies:{},personnel:{...s.personnel,formations:[],lots:[],transports:[]}};
+ const income=cityEconomyRates(copy,city).food,need=campaignFoodNeed(copy,city),stock=city.foodStock;
+ return {stock,income,need,gain:stock/turns+Math.max(0,income-need)};
 }
 
 export function selectCityJob(s,{cityId,kind,armyId=null,troopType=null,officerId=null},factionId=s.playerFactionId) {
@@ -444,7 +516,7 @@ import {C25,c25Enabled} from './campaign-career.mjs';
 import {creditCampaignGrowth,creditCampaignDomestic,CAMPAIGN_GROWTH_TRIAL} from './campaign-growth.mjs';
 
 export const securityLabel=c=>['안정','불안','혼란'][c.securityLevel??0];
-export function campaignFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(p.field+p.ready+p.wounded)*2/1000);}
+export function campaignFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(clockFood(s)?0:(p.field+p.ready+p.wounded)*troopFoodRate(s)/1000));}
 export function settleCampaignSecurity(s,c){
  const causes=[];
  if(c.plunderTurn===s.turn||c.plunderTurn===s.turn-1)causes.push('수탈');

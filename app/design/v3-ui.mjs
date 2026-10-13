@@ -49,7 +49,9 @@ export function v3MapOptions() {
     // 흑묵 그래픽 노블 지도(10-10, 바이블 v2)가 기본, ?map=paint 면 회화 지도.
     mapArt: (inkMapTrial() ? v3Asset('map/v10-ink.webp') ?? v3Asset('map/v9-ink.webp') ?? v3Asset('map/v8-ink.webp') ?? v3Asset('map/v7-ink.webp') ?? v3Asset('map/v6-ink.webp') ?? v3Asset('map/v5-ink.webp') ?? v3Asset('map/v4-ink-trial.webp') : null) ?? v3Asset('map/v3-base-v2.webp') ?? v3Asset('map/v3-base-v2.png') ?? v3Asset('map/v3-base.webp') ?? v3Asset('map/v3-base.png'),
     // 세계 그림: 땅(2577×2220) 둘레에 놀이판 밖 지형을 624px 이어 그린 한 장(tools/design/map-ring.py). 있으면 지도가 이것으로 그려지고 땅 밖 구름 바다 대신 지형이 이어진다. ?map=paint 는 옛 그림 그대로
-    mapWorld: inkMapTrial() && v3Asset('map/v11-world.webp') ? {src: v3Asset('map/v11-world.webp'), ring: 624, land: [2577, 2220]} : null,
+    // v12(2026-10-13): 성 여덟 곳을 지도 그림 안에 그려 넣은 바탕(사용자 "성이든 뭐든 지도 위에 올라가는 건 이 방법으로" — tools/design/bake-inputs.py · paste-edit.py). baked 에 적힌 성은 따로 얹는 그림을 그리지 않는다. 없으면 v11 + 얹는 성 그림
+    mapWorld: !inkMapTrial() ? null : v3Asset('map/v12-world.webp') ? {src: v3Asset('map/v12-world.webp'), ring: 624, land: [2577, 2220], baked: Object.keys(CITY_FILE)}
+      : v3Asset('map/v11-world.webp') ? {src: v3Asset('map/v11-world.webp'), ring: 624, land: [2577, 2220]} : null,
     cityArt, mode,
     unitArt: pick(Object.fromEntries(troops.map((t) => [t, t])), 'units'),
     // 병사 무리(2026-10-11, 시안 final-map-v2): 병종 × 세력 색 네 벌(tools/design/squad-sprites.py). 있으면 작은 unitArt 대신 이것을 땅 위에 그린다

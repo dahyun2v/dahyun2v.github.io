@@ -205,9 +205,10 @@ export function renderWorldMap(model, opts = {}) {
     const cells = [parse(city.center), ...(city.gates ?? []).map(parse), ...(city.walls ?? []).map(parse)];
     const rings = outlineRings(cells, layout), pts = rings.flat();
     const bx0 = Math.min(...pts.map((p) => p.x)), bx1 = Math.max(...pts.map((p) => p.x)), by0 = Math.min(...pts.map((p) => p.y));
-    const art = opts.cityArt?.[city.id];
-    svg += `<g class="w-city${city.attackable?' attackable':''}${city.besieged ? ' besieged' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" style="--fc:${fs.color}"><path class="ground" d="${ringsPath(rings)}"/>`;
-    if (art?.fit) { const [fx, fy, fw] = art.fit.flowerBox, k = (bx1 - bx0) / fw; svg += `<image class="art" href="${esc(art.src)}" x="${f(bx0 - fx * k)}" y="${f(by0 - fy * k)}" width="${f(art.fit.image[0] * k)}" height="${f(art.fit.image[1] * k)}"/>`; }
+    const art = opts.cityArt?.[city.id], baked = !!world?.baked?.includes(city.id); // baked = 성이 지도 바탕 그림 안에 그려져 있다 — 얹는 그림 없음
+    svg += `<g class="w-city${baked ? ' baked' : ''}${city.attackable?' attackable':''}${city.besieged ? ' besieged' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" style="--fc:${fs.color}"><path class="ground" d="${ringsPath(rings)}"/>`;
+    if (baked) { /* 그림은 바탕에 있다 */ }
+    else if (art?.fit) { const [fx, fy, fw] = art.fit.flowerBox, k = (bx1 - bx0) / fw; svg += `<image class="art" href="${esc(art.src)}" x="${f(bx0 - fx * k)}" y="${f(by0 - fy * k)}" width="${f(art.fit.image[0] * k)}" height="${f(art.fit.image[1] * k)}"/>`; }
     else { const c = C(city.center); svg += `<g class="w-city-fallback" transform="translate(${f(c.x)} ${f(c.y)})"><path d="${hexPath({x: 0, y: 0}, size * 1.25)}"/><path class="keep" d="M-10 4V-6L0 -13L10 -6V4Z"/></g>`; }
     for (const g of city.gates ?? []) { const c = C(g), lost = (city.lostGates ?? []).includes(g); svg += `<g class="w-gate${lost ? ' lost' : ''}" transform="translate(${f(c.x)} ${f(c.y)})"><path d="M-5 4V-2a5 5 0 0 1 10 0V4"/>${lost ? '<path class="x" d="M-4 -6L4 2M4 -6L-4 2"/>' : ''}</g>`; }
     if (city.besieged) { const c = C(city.center); svg += kit?.siegeFire ? `<image class="w-siege" href="${esc(kit.siegeFire)}" x="${f(c.x - size * 0.9)}" y="${f(c.y - size * 2.2)}" width="${f(size * 1.8)}" height="${f(size * 1.83)}"/>` : `<g class="w-smoke" transform="translate(${f(c.x)} ${f(c.y - size)})"><circle r="7"/><circle r="10" cx="8" cy="-6"/><circle r="12" cx="-6" cy="-14"/></g>`; }

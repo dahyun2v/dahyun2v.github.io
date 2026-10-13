@@ -185,7 +185,11 @@ export function validateCampaignTerminalState(state,{allowCitylessAlive=false,al
       const historicalResolved=allowSupersededOccupation&&choice.status==='RESOLVED'&&state.recordOrder.some(id=>{const r=state.recordsById[id];return r.type==='CITY_OCCUPATION'&&r.globalTick>=choice.resolvedAtTick&&r.refs.cityIds.includes(choice.cityId)&&r.details.formerOwnerFactionId===choice.factionId;});
       // Extinction releases minor castles to neutral. A later neutral capture
       // must preserve the resolved choice from before that release.
-      const historicalExtinction=allowSupersededOccupation&&choice.status==='RESOLVED'&&state.citiesById[choice.cityId]?.kind==='minor'&&!state.factionsById[choice.factionId]?.alive&&state.recordOrder.some(id=>{const r=state.recordsById[id];return r.type==='FACTION_EXTINCTION'&&r.globalTick>=choice.resolvedAtTick&&r.refs.factionIds.includes(choice.factionId)&&r.details.zeroMajorCities===true;});
+      // A pending choice cancelled by extinction is also history after the
+      // released neutral castle is captured again. Require its actual closure
+      // record, rather than accepting every cancelled choice of a dead faction.
+      const cancelledByExtinction=choice.status==='CANCELLED'&&replacement?.type==='FACTION_EXTINCTION'&&replacement.refs.factionIds.includes(choice.factionId)&&replacement.details.zeroMajorCities===true;
+      const historicalExtinction=allowSupersededOccupation&&(choice.status==='RESOLVED'||cancelledByExtinction)&&state.citiesById[choice.cityId]?.kind==='minor'&&!state.factionsById[choice.factionId]?.alive&&state.recordOrder.some(id=>{const r=state.recordsById[id];return r.type==='FACTION_EXTINCTION'&&r.globalTick>=choice.resolvedAtTick&&r.refs.factionIds.includes(choice.factionId)&&r.details.zeroMajorCities===true;});
       invariant(id(choice.cityId)&&own(state.citiesById,choice.cityId)&&(state.citiesById[choice.cityId].ownerFactionId===choice.factionId||superseded||historicalResolved||historicalExtinction||(allowSupersededOccupation&&choice.status!=='PENDING'&&state.citiesById[choice.cityId].kind==='minor'&&state.citiesById[choice.cityId].ownerFactionId===null&&!state.factionsById[choice.factionId].alive)),`INVALID_OCCUPATION_CHOICE_CITY:${choiceId}`);
       if(choice.status==='PENDING'){invariant(!pendingOccupation.has(choice.cityId),`DUPLICATE_PENDING_OCCUPATION:${choice.cityId}`);pendingOccupation.set(choice.cityId,choice);}
     }

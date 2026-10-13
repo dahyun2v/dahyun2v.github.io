@@ -1,6 +1,6 @@
 import {campaignTacticsEnabled,campaignTacticsView,campaignOperationPlan,campaignTacticalMoves} from './campaign-ai-tactics.mjs';
 import {injuryReason} from './campaign-injury.mjs';
-import {supplyEnabled,supplyLink,supplyAiMoveAllowed,supplyAiHubSite,armyFoodPerTurn} from './campaign-supply.mjs';
+import {supplyEnabled,supplyLink,supplyAiMoveAllowed,supplyAiHubSite,armyFoodPerTurn,foodModel,clockFood,troopFoodRate,supplyAiAction} from './campaign-supply.mjs';
 import {combatMovement} from './campaign-rule-registry.mjs';
 import {fatigueReason,fatigueView,recordFatigueBlock} from './campaign-fatigue.mjs';
 import {diplomacyHostile,withdrawalProtection,withdrawalDistances,diplomacyMoveReason} from './campaign-diplomacy.mjs';
@@ -14,7 +14,7 @@ import {troopToCampaign} from './campaign-adapters.mjs';
 import {c22TargetWeight} from './campaign-events.mjs';
 import {C20_FACILITIES,c20Enabled} from './campaign-policy.mjs';
 import {researchStage,musterRequirement,C19,freeCityOfficers,musterTroopOptions} from './campaign-roster.mjs';
-import {selectCityJob,cityJobReason,campaignFoodNeed,facilityTiles,cityOccupationStatus,cityEconomyRates,campaignMobilization} from './campaign-economy.mjs';
+import {selectCityJob,cityJobReason,campaignFoodNeed,facilityTiles,cityOccupationStatus,cityEconomyRates,campaignMobilization,campaignAiJobForecast,campaignAiFoodBudget,campaignAiFoodForecast,campaignAiMusterFood,campaignAiNeutralFood} from './campaign-economy.mjs';
 import {cityAttackTargets,attackRange,attackTargets} from './campaign-combat.mjs';
 import {findPath,edgeTicks} from './movement.mjs';
 import {campaignMovementWorld,castleArmyActive} from './campaign-city-footprint.mjs';
@@ -73,7 +73,7 @@ function strategyMemory(s,v,remember){
  return m;
 }
 function strategyPublicWorld(s,v){
- const probe=siegePublicWorld(s,v,Object.values(v.ownArmies)[0]);
+ const probe=siegePublicWorld(s,v,Object.values(v.ownArmies)[0]??{armyId:'AI.ECONOMY.PROBE',factionId:v.factionId,tileId:Object.values(v.ownCities)[0]?.tileId,troopType:'militia',troopCount:0,hp:0});
  // Own city geometry/state is authoritative; a remembered castle can lag.
  for(const c of Object.values(v.ownCities))probe.cities[c.cityId]=structuredClone(c);
  // Supply geometry and blockers are restricted to publicly known territory.
@@ -145,9 +145,9 @@ export function campaignStrategyTargets(s,v,candidates,{ranking=campaignKnownRan
   if(totalTurns+(remaining<=AI_LATE_TURNS&&defense>0?1:0)>remaining)continue;
   const ready=siegeForceReady(s,force,durability),chance=Math.min(1,troops/Math.max(1,defense+durability))*(ready?1:AI_UNREADY_CHANCE);
   let supplied=0;
-  for(const a of force){const {g}=routes.get(a.armyId)[0],link=supplyEnabled(s)?supplyLink(probe,a,g):null,carried=armyFoodPerTurn(a)?(a.supplyFood??0)/armyFoodPerTurn(a):0;
+  for(const a of force){const {g}=routes.get(a.armyId)[0],link=supplyEnabled(s)?supplyLink(probe,a,g):null,carried=armyFoodPerTurn(a,s)?(a.supplyFood??0)/armyFoodPerTurn(a,s):0;
    const stock=link?.source?.city?Math.max(0,link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2):(link?.source?.hub?.stock??0);
-   if(!link||link.state==='SAFE'&&stock>=armyFoodPerTurn(a)*totalTurns||carried*(link.state==='DISRUPTED'?2:1)>=totalTurns)supplied+=a.troopCount;
+   if(!link||link.state==='SAFE'&&(clockFood(s)||stock>=armyFoodPerTurn(a,s)*totalTurns)||carried*(link.state==='DISRUPTED'?2:1)>=totalTurns||clockFood(s)&&carried>0&&siege<=carried&&city.ownerFactionId===null)supplied+=a.troopCount;
   }
   const supplyRatio=supplied/Math.max(1,troops),supplyCost=1+(1-supplyRatio)*totalTurns;
   const major=strategyCityKind(s,city)==='major',hypothetical=structuredClone(ranking);
@@ -155,11 +155,17 @@ export function campaignStrategyTargets(s,v,candidates,{ranking=campaignKnownRan
   me[key]++;me.cities++;if(owner){owner[key]--;owner.cities--;}
   const nextRank=sortKnownRanking(s,hypothetical).findIndex(r=>r.factionId===v.factionId),gain=Math.max(0,ownRank-nextRank);
   const critical=major&&(self.majorCities>=2||owner?.majorCities>=1&&ranking.find(r=>r.factionId===city.ownerFactionId)?.majorCities>=2);
-  const value=(major?AI_MAJOR_CITY_VALUE:1)+gain*AI_RANK_GAIN_VALUE+(leader?.factionId===city.ownerFactionId?AI_LEADER_CITY_VALUE:0)+(critical?AI_THREE_MAJOR_VALUE:0);
+  // Neutral minor-city population 1 / stock 20 is the public scenario setup;
+  // no current enemy stock or production is read. Other holdings get no stock guess.
+  const hungry=supplyEnabled(s)&&campaignFoodEconomyEnabled(s,v.factionId)&&Object.values(v.ownArmies).some(a=>a.supplyStarving||a.supplyFood<armyFoodPerTurn(a,s)*AI_ECONOMY_SORTIE_TURNS);
+  const neutralFood=hungry&&city.ownerFactionId===null&&!major?campaignAiNeutralFood(s,v.factionId,city.cityId,AI_ECONOMY_RECRUIT_TURNS):null;
+  const foodGain=neutralFood?.gain??0;
+  const foodValue=foodGain*AI_ECONOMY_CITY_FOOD_VALUE;
+  const value=(major?AI_MAJOR_CITY_VALUE:1)+gain*AI_RANK_GAIN_VALUE+(leader?.factionId===city.ownerFactionId?AI_LEADER_CITY_VALUE:0)+(critical?AI_THREE_MAJOR_VALUE:0)+foodValue;
   const lateGain=ownRank>0?1+gain*(1-remaining/Math.max(1,turnLimit)):1;
   const deferred=s.aiSiege?.[v.factionId]?.deferred?.[city.cityId]>s.turn;
   const score=value*chance*lateGain/(1+travel+siege+supplyCost)*(deferred?AI_DEFERRED_SCORE_FACTOR:1);
-  result.push({city,score,value,chance,travelTurns:travel,siegeTurns:siege,supplyRatio,rankGain:gain,critical:!!critical,deferred,routes});
+  result.push({city,score,value,foodGain,foodValue,neutralFood,chance,travelTurns:travel,siegeTurns:siege,supplyRatio,rankGain:gain,critical:!!critical,deferred,routes});
  }
  result.sort((a,b)=>b.score-a.score||a.city.cityId.localeCompare(b.city.cityId));
  const committed=result.find(r=>r.city.cityId===memory?.targetCityId&&!r.deferred),best=result[0];
@@ -302,7 +308,7 @@ export function campaignAiPlan(world, factionId, {remember=false,turnLimit=26}={
 
       const rates=home&&cityEconomyRates(world,world.cities[home.c.cityId]);
       const mobilization=campaignMobilization(world,factionId);
-      const productive=home&&cityOccupationStatus(world,home.c)==='NORMAL'&&mobilization.used+500<=mobilization.capacity&&home.c.foodStock-home.c.reservedResources.food+rates.food>=campaignFoodNeed(world,home.c);
+      const productive=home&&cityOccupationStatus(world,home.c)==='NORMAL'&&mobilization.used+500<=mobilization.capacity&&(clockFood(world)||home.c.foodStock-home.c.reservedResources.food+rates.food>=campaignFoodNeed(world,home.c));
       if(home&&(!emptyAtHome||muster&&productive)){const movement=campaignMovementWorld(world,unit.armyId);let ticks=0,path=[unit.tileId];for(const to of home.route.pathTileIds.slice(1)){const cost=edgeTicks(movement,movement.armies[unit.armyId],path.at(-1),to);if(ticks+cost>world.time.ticksPerTurn)break;ticks+=cost;path.push(to);}
         return {...candidate,type:path.length>1?'MOVE':'HOLD',destinationTileId:path.at(-1),pathTileIds:path,reasonCode:muster?'MUSTER_SIEGE':'REPLENISH_ARMY'};
       }
@@ -328,11 +334,23 @@ export function campaignAiPlan(world, factionId, {remember=false,turnLimit=26}={
 
 export function supplyAiPlan(s,v,plan){
  if(!supplyEnabled(s))return plan;
- const suppliedWorld=campaignStrategyEnabled(s,v.factionId)?strategyPublicWorld(s,v):s;
+ const suppliedWorld=clockFood(s)||campaignStrategyEnabled(s,v.factionId)||campaignFoodEconomyEnabled(s,v.factionId)?strategyPublicWorld(s,v):s;
  let hubAssigned=false;
  plan.candidates=plan.candidates.map(c=>{
   const a=s.armies[c.armyId];if(!a||a.morale==='ROUTING'||withdrawalProtection(s,a.armyId))return c;
   const reachable=campaignReachable(s,a.armyId,s.time.ticksPerTurn);
+  if(clockFood(s)){
+   const retreat=supplyAiAction(suppliedWorld,a.armyId,reachable,{publicWorld:suppliedWorld,allowBuild:false});
+   if(retreat)return {...c,type:retreat.type==='MOVE'?'MOVE':'HOLD',destinationTileId:retreat.destinationTileId??null,pathTileIds:reachable.get(retreat.destinationTileId)?.pathTileIds??[],reasonCode:'CLOCK_RETREAT',aiSupplyOrder:true};
+   if(!hubAssigned&&!c.aiCutHub&&!['CAPITAL_GARRISON','INTERCEPT_CITY','DEFEND_DAMAGED_CITY'].includes(c.reasonCode)){
+    const hubs=(suppliedWorld.supply?.hubs??[]).filter(h=>v.knowledge.tiles[h.tileId]==='VISIBLE'&&diplomacyHostile(s,v.factionId,h.factionId)&&!Object.values(v.knowledge.observedArmies).some(b=>b.tileId===h.tileId&&b.factionId===h.factionId));
+    const foes=Object.values(v.knowledge.observedArmies).filter(b=>diplomacyHostile(s,v.factionId,b.factionId)&&supplyLink(suppliedWorld,b).state!=='SAFE');
+    const cuts=[...reachable].filter(([t])=>hubs.some(h=>h.tileId===t)||foes.some(b=>Object.values(v.knowledge.cities).some(home=>home.ownerFactionId===b.factionId&&hexDistance(s.tiles[b.tileId],s.tiles[t])+hexDistance(s.tiles[t],s.tiles[home.tileId])===hexDistance(s.tiles[b.tileId],s.tiles[home.tileId])&&hexDistance(s.tiles[t],s.tiles[b.tileId])>1)));
+    cuts.sort(([x,p],[y,q])=>Number(hubs.some(h=>h.tileId===y))-Number(hubs.some(h=>h.tileId===x))||p.totalTicks-q.totalTicks||x.localeCompare(y));
+    const cut=cuts.find(([t])=>t!==a.tileId&&supplyAiMoveAllowed(suppliedWorld,a.armyId,t));
+    if(cut){hubAssigned=true;return {...c,type:'MOVE',destinationTileId:cut[0],pathTileIds:cut[1].pathTileIds,reasonCode:'CLOCK_CUT_SUPPLY',aiCutHub:true,aiSupplyOrder:true};}
+   }
+  }
   if(!hubAssigned&&plan.goal?.targetCityId&&!['REPLENISH_ARMY','MUSTER_SIEGE','DEFEND_DAMAGED_CITY','CAPITAL_GARRISON','INTERCEPT_CITY','EXPLORE_PLACE'].includes(c.reasonCode)){
    const site=supplyAiHubSite(suppliedWorld,a.armyId,reachable,plan.goal.targetCityId);
    if(site){hubAssigned=true;return {...c,type:'MOVE',destinationTileId:site,pathTileIds:site===a.tileId?[a.tileId]:reachable.get(site).pathTileIds,...(campaignTacticsEnabled(s,v.factionId)?{aiSupplyOrder:true}:{})};}
@@ -479,11 +497,140 @@ export function siegeForceReady(s,armies,durability){
  }
  return durability<=0;
 }
+// C143 operating policy is independent of the siege/strategy/tactics switch.
+export const campaignEconomyEnabled=(s,factionId)=>['v2','v3'].includes(s.mapId)&&(s.trialRules?.aiEconomyProfile?.[factionId]??s.trialRules?.aiEconomy??(clockFood(s)?'c143b':'c141'))!=='c141';
+export const campaignFoodEconomyEnabled=(s,factionId)=>campaignEconomyEnabled(s,factionId)&&(s.trialRules?.aiEconomyProfile?.[factionId]??s.trialRules?.aiEconomy??(clockFood(s)?'c143b':'c141'))!=='c143';
+// C143b 시험값: safety/decision horizons, never food grants or discounts.
+export const AI_ECONOMY_SORTIE_TURNS=2;
+export const AI_ECONOMY_RECRUIT_TURNS=4;
+export const AI_ECONOMY_CITY_FOOD_VALUE=.5;
+// 시험값: decision horizons/weights only, never resource or rule bonuses.
+export const AI_ECONOMY_FOOD_TURNS=3;
+export const AI_ECONOMY_TURN_LIMIT=26;
+export const AI_ECONOMY_WEAK_SHARE=.75;
+export const AI_ECONOMY_THREAT_RADIUS=4;
+export const AI_ECONOMY_FOOD_VALUE=1;
+export const AI_ECONOMY_SUPPORT_PAYBACK=8;
+
+function economyContext(s,factionId){
+ const v=campaignBannerView(s,getFactionView(s,factionId)),ranking=campaignKnownRanking(s,v);
+ const own=Object.values(v.ownArmies).filter(a=>castleArmyActive(s,a));
+ const enemies=Object.values(v.knowledge.observedArmies).filter(a=>diplomacyHostile(s,factionId,a.factionId));
+ const totals=new Map();for(const a of enemies)totals.set(a.factionId,(totals.get(a.factionId)??0)+(a.troopCount??0));
+ const trailing=ranking[0]?.factionId!==factionId,field=own.reduce((n,a)=>n+a.troopCount,0);
+ const pending=Object.values(s.cities).filter(c=>c.ownerFactionId===factionId&&c.currentProduction?.kind==='recruit').reduce((n,c)=>n+campaignAiJobForecast(s,c,'recruit').troops,0);
+ const foodPolicy=campaignFoodEconomyEnabled(s,factionId),publicWorld=foodPolicy?strategyPublicWorld(s,v):null;
+ const food=foodPolicy&&!clockFood(s)?campaignAiFoodForecast(s,factionId,publicWorld):{};
+ return {v,own,enemies,trailing,field,enemyField:Math.max(0,...totals.values()),pending,foodPolicy,publicWorld,food};
+}
+function economyOfficers(s,c){return freeCityOfficers(s,c).filter(o=>!injuryReason(s,o.officerId)&&!fatigueReason(s,o.officerId)).sort((a,b)=>fatigueView(s,a.officerId).value-fatigueView(s,b.officerId).value||Number(a.officerId===c.governorId)-Number(b.officerId===c.governorId)||a.officerId.localeCompare(b.officerId));}
+
+export function campaignAiInvestment(s,c,kind,context=economyContext(s,c.ownerFactionId)){
+ const forecast=campaignAiJobForecast(s,c,kind,{progress:c.jobProgress?.[kind]??0}),remaining=AI_ECONOMY_TURN_LIMIT-s.turn+1;
+ if(cityJobReason(s,c,kind)||!forecast.turns)return {...forecast,payback:null,remaining,allowed:false};
+ const before=cityEconomyRates(s,c),tile=facilityTiles(s,c)[0];
+ const after=cityEconomyRates(s,{...c,facilities:[...c.facilities,{kind,tileId:tile}]});
+ const gain=Math.max(0,after.raw.production-before.raw.production)+AI_ECONOMY_FOOD_VALUE*Math.max(0,after.raw.food-before.raw.food);
+ // Granaries only pay through avoiding imminent overflow; a larger empty store
+ // has no return. Support facilities require a real local beneficiary.
+ let payback=gain>0?Math.ceil(forecast.cost/gain):null;
+ if(kind==='granary'&&before.food>campaignFoodNeed(s,c)&&c.foodStock+forecast.turns*(before.food-campaignFoodNeed(s,c))>=before.capacity)payback=Math.ceil(forecast.cost/(before.food-campaignFoodNeed(s,c)));
+ if(kind==='clinic'&&s.personnel.lots.some(l=>l.nodeId===c.cityId&&l.kind==='WOUNDED'&&l.count>0)||kind==='mufu'&&context.own.some(a=>hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])<=3))payback=AI_ECONOMY_SUPPORT_PAYBACK;
+ const siegePlan=kind==='workshop'&&economyOfficers(s,c).some(o=>o.allowedTroops.includes('bow'))&&Object.values(context.v.knowledge.cities).some(e=>diplomacyHostile(s,c.ownerFactionId,e.ownerFactionId)&&(s.castleKnowledge?.[c.ownerFactionId]?.[e.cityId]?.durability??0)>0&&hexDistance(s.tiles[c.tileId],s.tiles[e.tileId])<=C24.catapultCityRange);
+ // A workshop can repay +1 production or enable an actual nearby siege.
+ if(siegePlan)payback=Math.min(payback??Infinity,AI_ECONOMY_SUPPORT_PAYBACK);
+ return {...forecast,payback,remaining,siegePlan,allowed:payback!==null&&forecast.turns+payback<=remaining};
+}
+
+function economyCityDecision(s,c,context){
+ const musterReasons=[],recruitReasons=[],investments=[];
+ const occupied=cityOccupationStatus(s,c)!=='NORMAL';
+ const officers=economyOfficers(s,c),remaining=AI_ECONOMY_TURN_LIMIT-s.turn+1;
+ if(occupied){musterReasons.push('OCCUPATION');recruitReasons.push('OCCUPATION');return {cityId:c.cityId,kind:null,musterReasons,recruitReasons,investments};}
+ if((c.reserveTroops??0)<musterRequirement(s,c))musterReasons.push('RESERVE');
+ if(!officers.length)musterReasons.push('OFFICER');
+ if(cityJobReason(s,c,'muster'))musterReasons.push('MUSTER_RULE');
+ const rates=cityEconomyRates(s,c),need=campaignFoodNeed(s,c),food=c.foodStock-c.reservedResources.food;
+ // Reserve -> field has no additional upkeep. Only check the real source and
+ // opening food; existing supplyAiPlan checks each subsequent destination.
+ const probe={...(context.own[0]??{}),armyId:'AI.ECONOMY.PROBE',factionId:c.ownerFactionId,tileId:c.tileId,troopCount:1,hp:2};
+ const supplied=!supplyEnabled(s)||supplyLink(siegePublicWorld(s,context.v,probe),probe).state==='SAFE'&&food+rates.food>=need;
+ if(!supplied&&!context.foodPolicy)musterReasons.push('SOURCE_FOOD');
+ let choice=!musterReasons.length?officers.map(o=>({officerId:o.officerId,troopType:campaignAiMusterTroop(s,c,o)})).find(x=>x.troopType&&musterTroopOptions(s,c,x.officerId).some(t=>t.troopType===x.troopType&&!t.blockedReason)):null;
+ if(!musterReasons.length&&!choice)musterReasons.push('TROOP_OR_ROUTE');
+ const mobilization=campaignMobilization(s,c.ownerFactionId),recruit=campaignAiJobForecast(s,c,'recruit',{progress:c.jobProgress?.recruit??0});
+ const additional=context.pending+(c.currentProduction?.kind==='recruit'?0:recruit.troops);
+ const budget=campaignAiFoodBudget(s,c.ownerFactionId,AI_ECONOMY_FOOD_TURNS,additional);
+ const weak=context.own.some(a=>hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])<=2&&a.troopCount<(s.personnel.formations.find(f=>f.formationId===a.armyId)?.targetStrength??0)*AI_ECONOMY_WEAK_SHARE);
+ const availableSoon=freeCityOfficers(s,c).some(o=>(!injuryReason(s,o.officerId)||(o.injury?.untilTurn??Infinity)<=s.turn+(recruit.turns??0))&&(!fatigueReason(s,o.officerId)||fatigueView(s,o.officerId).restTurns<=(recruit.turns??0)));
+ const cityFood=context.food[c.cityId],defending=c.besieged||context.enemies.some(a=>hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])<=AI_ECONOMY_THREAT_RADIUS);
+ const starving=context.foodPolicy&&!clockFood(s)&&context.own.some(a=>a.supplyStarving&&supplyLink(context.publicWorld,s.armies[a.armyId]).sourceCityId===c.cityId);
+ let launch=null;
+ if(context.foodPolicy&&!clockFood(s)&&choice){
+  launch=campaignAiMusterFood(s,c,choice.troopType);
+  const remainingStock=Math.min(cityFood.stock,cityFood.nextStock)-launch.full;
+  const canSustain=remainingStock>=Math.max(0,cityFood.depletion)*AI_ECONOMY_SORTIE_TURNS;
+  if(!defending&&(!launch.canFill||!canSustain)){musterReasons.push('FOOD_SORTIE_DEFERRED');choice=null;}
+ }
+ if(context.foodPolicy&&!clockFood(s)){
+  const added=cityFood.projectedRecruitCompleted?0:recruit.troops*troopFoodRate(s)/1000;
+  const net=cityFood.net-added,depletion=Math.max(0,cityFood.depletion+added);
+  if(net<0&&cityFood.nextStock<depletion*AI_ECONOMY_RECRUIT_TURNS)recruitReasons.push('FOOD_RECRUIT_DEFERRED');
+ }else if(!clockFood(s)&&(budget.balance<0||food+rates.food<need))recruitReasons.push('FOOD_BUDGET');
+ if(!availableSoon&&!weak)recruitReasons.push('NO_USE');
+ // Do not stockpile a second batch while there is already enough to sortie.
+ if(context.foodPolicy?c.reserveTroops>0:c.reserveTroops>=musterRequirement(s,c)&&!weak)recruitReasons.push('READY_RESERVE');
+ if(mobilization.used+additional>mobilization.capacity)recruitReasons.push('MOBILIZATION');
+ if(cityJobReason(s,c,'recruit'))recruitReasons.push('RECRUIT_RULE');
+ if(!recruit.turns||recruit.turns>remaining)recruitReasons.push('DEADLINE');
+ // F3/F4: actual starvation or an unaffordable recruitment is the narrowly
+ // scoped exception to C143 commitment. Food buildings retain F5's deadline.
+ const foodFirst=context.foodPolicy&&!clockFood(s)&&(starving||cityFood.net<0);
+ const foodKinds=foodFirst?['farm','tuntian'].map(kind=>({kind,investment:campaignAiInvestment(s,c,kind,context)})).filter(x=>x.investment.allowed).sort((a,b)=>a.investment.turns-b.investment.turns||a.kind.localeCompare(b.kind)):[];
+ const foodPriority=foodKinds[0];
+ if(foodPriority&&(starving&&!defending||!choice&&recruitReasons.includes('FOOD_RECRUIT_DEFERRED'))){
+  if(starving)musterReasons.push('STARVING_FOOD_PRODUCTION');
+  investments.push({kind:foodPriority.kind,...foodPriority.investment});
+  return {cityId:c.cityId,kind:foodPriority.kind,musterReasons,recruitReasons,investments,budget,cityFood,launch,defending};
+ }
+ if(c.currentProduction&&['muster','recruit','reorganize'].includes(c.currentProduction.kind)){
+  // The old commitment cannot finish an unsafe new batch merely because no
+  // food investment can repay before the limit. Pause, retaining jobProgress.
+  const blocked=context.foodPolicy&&(c.currentProduction.kind==='muster'&&!defending&&musterReasons.includes('FOOD_SORTIE_DEFERRED')||c.currentProduction.kind==='recruit'&&recruitReasons.some(r=>['FOOD_RECRUIT_DEFERRED','READY_RESERVE'].includes(r)));
+  if(blocked)return {cityId:c.cityId,kind:null,pauseProduction:true,musterReasons,recruitReasons,investments,budget,cityFood,launch,defending};
+  musterReasons.push('COMMITTED_JOB');recruitReasons.push('COMMITTED_JOB');
+  return {cityId:c.cityId,kind:c.currentProduction.kind,musterReasons,recruitReasons,investments,budget,cityFood,launch,defending};
+ }
+ if(choice)return {cityId:c.cityId,kind:'muster',...choice,musterReasons,recruitReasons,investments,budget,cityFood,launch,defending};
+ const urgent=context.trailing||context.field<=context.enemyField||context.enemies.some(a=>hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])<=AI_ECONOMY_THREAT_RADIUS);
+ if(foodPriority&&cityFood.net<0){investments.push({kind:foodPriority.kind,...foodPriority.investment});return {cityId:c.cityId,kind:foodPriority.kind,musterReasons,recruitReasons,investments,budget,cityFood,urgent};}
+ if(!recruitReasons.length&&urgent)return {cityId:c.cityId,kind:'recruit',musterReasons,recruitReasons,investments,budget,urgent,cityFood};
+ const count=kind=>c.facilities.filter(f=>f.kind===kind).length;
+ const kinds=[];
+ if(food<need*2||budget.balance<0){if(count('farm')<2)kinds.push('farm');if(!count('granary'))kinds.push('granary');}
+ if(researchStage(s,c.ownerFactionId)>=1&&count('workshop')<C19.workshopLimit)kinds.push('workshop');
+ if(c20Enabled(s))kinds.push(...Object.keys(C20_FACILITIES).filter(kind=>C20_FACILITIES[kind].factionId===c.ownerFactionId));
+ for(const kind of kinds){const investment=campaignAiInvestment(s,c,kind,context);investments.push({kind,...investment});if(investment.allowed)return {cityId:c.cityId,kind,musterReasons,recruitReasons,investments,budget,urgent};}
+ if(c.facilities.some(f=>f.damaged)&&!cityJobReason(s,c,'repair'))return {cityId:c.cityId,kind:'repair',musterReasons,recruitReasons,investments,budget,urgent};
+ if(!recruitReasons.length)return {cityId:c.cityId,kind:'recruit',musterReasons,recruitReasons,investments,budget,urgent};
+ return {cityId:c.cityId,kind:null,musterReasons,recruitReasons,investments,budget,urgent};
+}
+
+// No state memory, RNG use, or diagnostic counters are written here.
+export function campaignAiEconomyReport(s,factionId){
+ const context=economyContext(s,factionId),cities=Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).sort((a,b)=>a.cityId.localeCompare(b.cityId)).map(c=>economyCityDecision(s,c,context));
+ const reasons={};for(const c of cities)for(const action of ['muster','recruit'])for(const reason of c[`${action}Reasons`]){const key=`${action}:${reason}`;reasons[key]=(reasons[key]??0)+1;}
+ return {factionId,profile:campaignFoodEconomyEnabled(s,factionId)?'c143b':campaignEconomyEnabled(s,factionId)?'c143':'c141',cities,reasons};
+}
 export function campaignAiCityJob(s,c){
+ if(campaignEconomyEnabled(s,c.ownerFactionId))return economyCityDecision(s,c,economyContext(s,c.ownerFactionId)).kind;
+ return campaignAiCityJobC141(s,c);
+}
+function campaignAiCityJobC141(s,c){
  if(s.mapId!=='v1'&&c.reserveTroops>=musterRequirement(s,c))for(const o of freeCityOfficers(s,c))recordFatigueBlock(s,o.officerId);
  const rates=cityEconomyRates(s,c),need=campaignFoodNeed(s,c),food=c.foodStock-c.reservedResources.food;
  const count=kind=>c.facilities.filter(f=>f.kind===kind).length;
- if(supplyEnabled(s)&&Object.values(s.armies).some(a=>a.factionId===c.ownerFactionId&&a.supplyStarving&&supplyLink(s,a).sourceCityId===c.cityId)&&food<c.population*2+Object.values(s.armies).filter(a=>a.factionId===c.ownerFactionId).reduce((n,a)=>n+armyFoodPerTurn(a),0)){
+ if(supplyEnabled(s)&&Object.values(s.armies).some(a=>a.factionId===c.ownerFactionId&&a.supplyStarving&&supplyLink(s,a).sourceCityId===c.cityId)&&food<c.population*2+Object.values(s.armies).filter(a=>a.factionId===c.ownerFactionId).reduce((n,a)=>n+armyFoodPerTurn(a,s),0)){
   if(count('farm')<2&&!cityJobReason(s,c,'farm'))return 'farm';
   if(!count('granary')&&!cityJobReason(s,c,'granary'))return 'granary';
  }
@@ -541,6 +688,20 @@ export function campaignAiMusterTroop(s,c,o){
  return choices.length?choices[Math.abs(seed+Math.floor(n/C24.aiPeriod))%choices.length].troopType:base;
 }
 export function selectCampaignAiJobs(s,factionId){
+ if(campaignEconomyEnabled(s,factionId)){
+  for(const c of Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).sort((a,b)=>a.cityId.localeCompare(b.cityId))){
+   const decision=economyCityDecision(s,c,economyContext(s,factionId));
+   if(decision.pauseProduction){c.currentProduction=null;c.productionProgress=0;continue;}
+   if(c.currentProduction&&['muster','recruit','reorganize'].includes(c.currentProduction.kind)&&(!campaignFoodEconomyEnabled(s,factionId)||decision.kind===c.currentProduction.kind))continue;
+   const {kind,officerId,troopType}=decision;
+   if(kind){
+    if(c.currentProduction?.kind===kind)continue;
+    selectCityJob(s,{cityId:c.cityId,kind,...(kind==='muster'?{officerId,troopType}:{})},factionId);
+    if(kind==='muster'&&c24Enabled(s)){s.c24AiMusters??={};s.c24AiMusters[factionId]=(s.c24AiMusters[factionId]??0)+1;}
+   }else if(!c.currentProduction){const reform=campaignAiReorganization(s,c);if(reform&&!Object.values(s.cities).some(city=>city.currentProduction?.kind==='reorganize'&&city.currentProduction.armyId===reform.armyId)){selectCityJob(s,reform,factionId);s.c23Stats??={archerBlocked:0,aiReorganizations:0};s.c23Stats.aiReorganizations++;}}
+  }
+  return;
+ }
  for(const c of Object.values(s.cities).filter(c=>c.ownerFactionId===factionId&&cityOccupationStatus(s,c)==='NORMAL').sort((a,b)=>(researchStage(s,factionId)>=1?cityEconomyRates(s,a).raw.production-cityEconomyRates(s,b).raw.production:0)||a.cityId.localeCompare(b.cityId))){
   if(c.currentProduction?.kind==='reorganize')continue;
   const reform=campaignAiReorganization(s,c);

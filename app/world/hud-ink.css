@@ -2671,6 +2671,8 @@ body.ink .cs-job.idle b,body.ink .cs-job.idle span{color:#ffc9a8}
 .wmap .w-lights{display:none}
 body.ink .wmap .w-lights{display:inline;pointer-events:none}
 body.ink .wmap .w-lights ellipse{fill:url(#w-light);mix-blend-mode:overlay}
-body.ink .wmap .w-lights ellipse.unit{opacity:.85}
+/* 성을 지도 그림 안에 그려 넣은 뒤(v12 바탕)로는 성이 이미 밝은 종이색이라 빛을 줄였다 — 사용자가 "훨씬 낫다"고 본 견본의 세기(성 .35 · 부대 .5) */
+body.ink .wmap .w-lights ellipse.city{opacity:.35}
+body.ink .wmap .w-lights ellipse.unit{opacity:.5}
 body.ink.no-light .wmap .w-lights{display:none}
 /* /2026-10-13 지도 발밑 빛 */

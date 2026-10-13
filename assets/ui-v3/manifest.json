@@ -5730,6 +5730,17 @@
       "sha256": "056338396d05594e1df511cb9a6ec04e46b7d17406e5f58223cdeb16fe90841f",
       "sourceSheet": "prototype/assets/ui-v3/hud/faction-btn-start.png",
       "prompt": "tools/design/panel-heighten.py --at 62:44:42"
+    },
+    {
+      "path": "prototype/assets/ui-v3/map/v12-world.webp",
+      "purpose": "세계 그림 v12 — v11 과 같은 그림에 성 여덟 곳(업 · 계 · 남피 · 역경 · 중산 · 신도 · 거록 · 평원)을 지도의 일부로 그려 넣음. 얹는 성 그림을 대신한다(사용자 2026-10-13 \"훨씬 낫다. 앞으로 성이든 뭐든 지도 위에 올라가는 건 이 방법으로\")",
+      "size": [
+        3825,
+        3468
+      ],
+      "sha256": "0192907646bf2e99b8dd14f92a5ff7dd06d16f631021ad0239429a54f18c3d6f",
+      "sourceSheet": "prototype/assets/ui-v3/map/v11-world.webp",
+      "prompt": "성마다 768px 지도 조각 + 분홍 자리 안내도 + 본보기를 GPT 에 주어 '같은 조각에 성을 지도의 일부로' 그리게 함(tools/design/map-city-boxes.mjs · bake-inputs.py) → tools/design/paste-edit.py 로 특징점 맞춤 뒤 타원 안만 섞어 붙임(맞춤점 850~1140, 이동 0.6px 이하)"
     }
   ],
   "sources": [

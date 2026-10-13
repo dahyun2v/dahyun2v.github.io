@@ -717,7 +717,7 @@ function renderHud(v){
  if(a){const max=state.armies[a.armyId]?.maxTroopCount??a.troopCount,sup=a.supply;
   bars.push({pct:max?a.troopCount/max*100:100,text:Number(a.troopCount).toLocaleString('ko-KR'),title:`병력 ${a.troopCount}/${max}`,tone:'red'});
   bars.push({pct:{STEADY:100,SHAKEN:50,ROUTING:12}[a.morale]??100,text:MORALE_NAME[a.morale]??'',title:'사기',tone:'bone'});
-  if(sup)bars.push({pct:sup.max?(sup.stock??0)/sup.max*100:0,text:`${food1(sup.stock??0)}/${food1(sup.max??0)}`,title:`휴대 군량 · 보급 ${SUPPLY_LABEL[sup.state]??sup.state}`,tone:'teal'});}
+  if(sup)bars.push({pct:sup.max?(sup.stock??0)/sup.max*100:0,text:`${food1(sup.stock??0)}/${food1(sup.max??0)}`,title:`휴대 군량 · 보급 ${SUPPLY_LABEL[sup.state]??sup.state}${sup.model==='clock'?(sup.draining?' · 줄어드는 중':' · 보급권 안 — 줄지 않음'):''}`,tone:'teal'});}
  renderInkHud(root,{factionId:v.factionId,factionName:FACTION_STYLE[v.factionId]?.name,factionColor:FACTION_STYLE[v.factionId]?.color,tone,turn:state.gameResult?.type==='TURN_LIMIT'?CAMPAIGN_TURN_LIMIT:v.turn,date:campaignDate(state.gameResult?.type==='TURN_LIMIT'?CAMPAIGN_TURN_LIMIT:v.turn),left:$('#turn')?.dataset?.left??'',mode:v3Mode(),summary:$('#summary')?.textContent,currentNews,allNews,unitBars:bars,commandIntent,food:foodSnapshot(v),foodChange:lastFoodChange,unitResult:lastUnitResult,facilityResults:lastFacilityResults,combatHistory:recentCombats,recruitmentCount:(v.revealedWanderers??[]).length,unitStatus:a?{id:a.armyId,actions:selectedActions(a.armyId),action:armyActionEnded(state,a.armyId)?'이번 턴 행동 완료':state.movedArmyIds.includes(a.armyId)?'이동함 · 주 행동 확인':'행동 가능',formation:FORMATION_NAME[a.formation]??'정돈'}:null,council:councilPending(state)});
 }
 // 소속 장수 역할(어게인스트 더 스톰·올드 월드 초상 목록처럼 누가 어디서 무엇을 하는지 한눈에)
@@ -1312,7 +1312,9 @@ function economyCauseDisplay(x) {
 }
 function barracksSupplyNote(v,cityId) {
  if(!v.ownCities?.[cityId])return '';
- const count=Object.values(v.ownArmies??{}).filter(a=>a.troopCount>0&&a.supply?.sourceCityId===cityId&&a.supply.state==='STARVING').length;
+ const hungry=Object.values(v.ownArmies??{}).filter(a=>a.troopCount>0&&a.supply?.sourceCityId===cityId&&a.supply.state==='STARVING'),count=hungry.length;
+ // 새 군량 규칙(C145 'clock'): 굶주림은 보급권 밖에서만 생기고 새 출진 부대는 군량을 가득 싣는다
+ if(count&&hungry[0].supply.model==='clock')return `이 성에 보급선을 댄 부대 ${count}개가 보급권 밖에서 굶주리고 있습니다 — 성 · 보급 거점에서 8칸 안으로 돌아오면 군량이 채워집니다.`;
  return count?`보급 연결 부대 ${count}개가 군량 부족 상태입니다. 추가 출진 전 보급을 확인하세요.`:'';
 }
 function musterPreparationText(t) {
@@ -1595,6 +1597,7 @@ function starvingAdvice(army,v){
  const sup=army.supply,source=v.ownCities[sup?.sourceCityId],hub=v.hubs?.find(h=>h.hubId===sup?.sourceHubId),a=v.tiles[army.tileId];
  const near=Object.values({...v.knowledge.cities,...v.ownCities}).find(c=>{const t=v.tiles[c.tileId];return a&&t&&hexDistance(a,t)<=1;});
  if(near&&near.ownerFactionId!==v.factionId)return '내 성이 아니어서 이 성에서는 군량을 받지 못합니다 — 내 성으로 이동해 복귀하세요.';
+ if(sup?.model==='clock'&&!source?.besieged)return '보급권(내 성 · 보급 거점에서 8칸) 밖에서 군량이 떨어졌습니다 — 보급권 안으로 돌아오면 다음 차례에 가득 채워집니다. 적 부대를 없애거나 성 · 적 거점을 빼앗아도 군량을 얻습니다.';
  if(sup?.linkState==='CUT'||(!source&&!hub))return '보급 연결이 끊겼습니다 — 내 성 방향으로 이동하거나 연결된 보급 거점을 이용하세요.';
  if(hub)return '보급 거점의 재고 또는 처리량이 부족합니다 — 내 성으로 이동해 복귀하거나 재고가 있는 다른 거점을 이용하세요.';
  if(source.foodStock<=0)return `${source.name}의 식량 재고가 0입니다 — 복귀하거나 식량이 있는 내 성으로 이동하세요.`;
@@ -1613,9 +1616,11 @@ function renderUnitMenu(v){
  const fm=FORMATION_NAME[army?.formation]?`<p class="warn">전열 ${FORMATION_NAME[army.formation]} — 받는 피해 +${army.formation==='BROKEN'?30:15}%${army.formation==='BROKEN'?', 반격 불가':', 반격 절반'} · 재정비로 회복</p>`:'';
  const star=army?.starAction&&!armyActionEnded(state,selectedArmyId)?starButton(army.starAction,'data-menu="star"'):'';
  // 보급(C45): 상태 한 줄 + 보급 거점 짓기
- const sup=army?.supply,supLine=sup?`<p class="supply-line" data-supply="${esc(sup.state)}" title="보급선: 내 성·보급 거점까지 지나갈 수 있는 길 — 8칸 안 안전, 16칸 안 불안(성이 절반만), 그 밖 끊김(휴대 군량만). 휴대 군량이 바닥나면 굶주림">보급선 <b>${SUPPLY_LABEL[sup.state]??esc(sup.state)}</b> · 부대가 가진 군량 ${food1(sup.stock??0)}/${food1(sup.max??0)}${supplyDuration(sup.turnsLeft)?` (${supplyDuration(sup.turnsLeft)})`:''}${sup.state!=='STARVING'&&Number.isFinite(sup.turnsLeft)&&sup.turnsLeft<1?' · 군량 바닥 — 채워지지 않으면 다음 차례 굶주림':''}${Number.isFinite(sup.distance)?` · 원천까지 ${sup.distance}칸`:''}</p>`:'';
+ // 남의 성 칸(성문 · 성벽)에 선 부대는 보급선이 닿지 않는다(엔진 supplyLink: 남의 성 칸은 길이 막힘) — 포위는 휴대 군량으로 버틴다. 까닭을 글로 알린다
+ const atOtherCity=!!state.armies[selectedArmyId]&&Object.values(state.cities).some(c=>c.ownerFactionId!==state.armies[selectedArmyId].factionId&&[c.tileId,...(c.footprint?.gates??[]),...(c.footprint?.walls??[])].includes(state.armies[selectedArmyId].tileId));
+ const sup=army?.supply,supLine=sup?`<p class="supply-line" data-supply="${esc(sup.state)}" title="${sup.model==='clock'?`보급선: 내 성 · 보급 거점까지 지나갈 수 있는 길 — 8칸 안 안전(군량이 줄지 않고 차례마다 가득 채워짐), 16칸 안 불안(차례마다 반 차례분 줄어듦), 그 밖 끊김(한 차례분 줄어듦). 적 성문에 붙은 부대는 가까워도 끊김 — 포위는 휴대 군량으로 버틴다. 휴대 군량은 ${sup.perTurn?Math.round(sup.max/sup.perTurn):5}차례분. 적 부대를 없애면 한 차례분, 성이나 적 거점을 빼앗으면 가득 얻는다. 바닥나면 굶주림(병력 손실)`:'보급선: 내 성·보급 거점까지 지나갈 수 있는 길 — 8칸 안 안전, 16칸 안 불안(성이 절반만), 그 밖 끊김(휴대 군량만). 휴대 군량이 바닥나면 굶주림'}">보급선 <b>${SUPPLY_LABEL[sup.state]??esc(sup.state)}</b> · 부대가 가진 군량 ${food1(sup.stock??0)}/${food1(sup.max??0)}${supplyDuration(sup.turnsLeft)?` (${supplyDuration(sup.turnsLeft)})`:''}${sup.model==='clock'&&sup.state!=='STARVING'?(!sup.draining?' · 보급권 안 — 줄지 않음':sup.state==='CUT'?(atOtherCity?' · 적 성에 붙어 있어 보급이 닿지 않음 — 차례마다 한 차례분씩 줄어듦':' · 차례마다 한 차례분씩 줄어듦'):sup.state==='DISRUPTED'?' · 차례마다 반 차례분씩 줄어듦':' · 줄어드는 중'):''}${sup.state!=='STARVING'&&Number.isFinite(sup.turnsLeft)&&sup.turnsLeft<1?' · 군량 바닥 — 채워지지 않으면 다음 차례 굶주림':''}${Number.isFinite(sup.distance)?` · 원천까지 ${sup.distance}칸`:''}</p>`:'';
  const hubWhy=sup&&!armyActionEnded(state,selectedArmyId)?(()=>{try{return hubBuildReason(state,state.armies[selectedArmyId]);}catch{return '';}})():null;
- const hub=hubWhy!==null?`<button data-menu="hub" ${hubWhy?'disabled':''} title="${hubWhy?esc(hubWhy)+' — ':''}이 칸에 보급 거점을 짓습니다 — 교전 없이 이번 차례를 마치면 완공, 원천에서 군량 2차례분을 옮겨 첫 재고로">${UI_ICON('build')}보급 거점</button>`:'';
+ const hub=hubWhy!==null?`<button data-menu="hub" ${hubWhy?'disabled':''} title="${hubWhy?esc(hubWhy)+' — ':''}이 칸에 보급 거점을 짓습니다 — 교전 없이 이번 차례를 마치면 완공, ${sup?.model==='clock'?'거점에서 8칸 안이 보급권이 되어 그 안의 부대는 군량이 줄지 않습니다':'원천에서 군량 2차례분을 옮겨 첫 재고로'}">${UI_ICON('build')}보급 거점</button>`:'';
  menu.innerHTML=`${unitCardHead(v,army,title)}<div class="dk-body"><div class="dk-info">${actionReadoutHtml(selectedActions())}${supLine}${supplySourceText(sup,v)?`<p class="supply-context">${esc(supplySourceText(sup,v))}</p>`:''}${sup?.state==='STARVING'?`<p class="warn">${esc(starvingAdvice(army,v))}</p>`:''}${(f=>f&&Number.isFinite(f.value)?`<p class="av-line"><span class="av-fat" title="나가 있는 동안은 효과 없음 — 돌아와서 다시 출진할 때 60 이상이면 막힘"><i style="--v:${Math.max(0,Math.min(100,f.value))}%"></i>피로 ${Math.round(f.value)}${f.levelName?` · ${esc(f.levelName)}`:''} · 재출진 때만 적용</span></p>`:'')(v.officers[army?.commanderId]?.fatigue)}${fm}${warn}</div><div class="dk-acts">${controls}${hub}${recall}${star}${tactics}${state.moveOrders?.[selectedArmyId]?`<button data-menu="cancel-order">${UI_ICON('cancel')}이동 취소</button>`:''}<button data-menu="officer">${UI_ICON('info')}장수</button><button data-menu="close" class="close" title="닫기 (Esc)">${UI_ICON('cancel')}</button></div></div>`;
  for(const [a,key] of Object.entries(ACTION_KEYS))menu.querySelector?.(`[data-menu="${a}"]`)?.insertAdjacentHTML?.('beforeend',`<kbd>${key}</kbd>`);
  [...(menu.querySelectorAll?.('[data-tactic]')??[])].slice(0,3).forEach((b,n)=>b.insertAdjacentHTML?.('beforeend',`<kbd>${n+1}</kbd>`));

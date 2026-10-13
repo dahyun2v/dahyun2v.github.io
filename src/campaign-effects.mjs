@@ -93,7 +93,7 @@ export function consumeMainAction(s,id,{attack=false}={}){if(attack&&s.armies[id
 export function effectCondition(s,source,condition,ctx={}){
   if(!condition)return true;
   if(condition==='TARGET_TITLED')return !!s.campaignGrowth?.officers[s.armies[ctx.targetId]?.commanderId]?.titles?.length;
-  if(condition==='ATTACKER_RANGED')return ['BT03','BT05'].includes(troopToCampaign(s.armies[ctx.targetId]?.troopType))||s.armies[ctx.targetId]?.troopType==='catapult';
+  if(condition==='ATTACKER_RANGED'){const attacker=s.armies[ctx.targetId];return !!attacker&&(['BT03','BT05'].includes(troopToCampaign(attacker.troopType))||attacker.troopType==='catapult');}
   if(condition==='ATTACKER_CHARGE')return !!s.armies[ctx.targetId]&&isCharge(s,ctx.targetId,source,attackDirection(s,ctx.targetId,source));
   if(condition==='TARGET_LOWER_MIGHT')return (s.officers[s.armies[source]?.commanderId]?.baseStats.strength??0)>(s.officers[s.armies[ctx.targetId]?.commanderId]?.baseStats.strength??Infinity);
   const a=s.armies[source],city=s.cities[ctx.cityId],tile=s.tiles[a?.tileId??city?.tileId];
