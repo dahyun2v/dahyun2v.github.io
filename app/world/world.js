@@ -578,13 +578,21 @@ function stageGauges(c){
   ...(Number.isFinite(raw.durability)&&raw.durabilityMax?[{ic:'cmd-garrison',label:'성 내구',pct:raw.durability/raw.durabilityMax*100,text:`${Math.round(raw.durability)}/${raw.durabilityMax}`,tone:'bone'}]:[])];
 }
 // 성 안(2026-10-13 배치): 오른쪽 판의 수치 표와 아래 띠의 '지금 하는 일' — 화면에 이미 있던 값만 다시 나눠 담는다
+// 태수 판에는 성의 값만(사용자 2026-10-14: 태수 개인 능력치는 뺀다). 막대 두 칸 = 내구 · 식량(찬 정도가 뜻이 있는 것), 목록 = 인구 · 생산 · 치안 · 예비병 · 포위
 function stageStats(c){
- const raw=state.cities[c.cityId]??{},f=c.economyForecast??{},sec=f.securityLevel??c.securityLevel??0,up=n=>Number.isFinite(n)&&n>0?`+${cityNumber(n)}`:'';
+ const f=c.economyForecast??{},sec=f.securityLevel??c.securityLevel??0,up=n=>Number.isFinite(n)&&n>0?`+${cityNumber(n)}`:'';
  return [{ic:'mode-roster',label:'인구',text:`${c.population}${c.populationCapacity?`/${c.populationCapacity}`:''}`},
-  {ic:'res-food',label:'식량',text:`${cityNumber(c.foodStock)}/${cityNumber(c.foodCapacity)}`,delta:up(f.food)},
   {ic:'res-production',label:'생산',text:up(f.production)||'0'},
   {ic:'cmd-brace',label:'치안',text:['안정','동요','혼란'][sec]??'',tone:['good','warn','bad'][sec]??''},
-  Number.isFinite(raw.durability)&&raw.durabilityMax?{ic:'cmd-garrison',label:'내구',text:`${Math.round(raw.durability)}/${raw.durabilityMax}`}:{ic:'mode-roster',label:'예비병',text:cityNumber(c.reserveTroops??0)}];
+  {ic:'res-troops',label:'예비병',text:cityNumber(c.reserveTroops??0)},
+  {ic:'cmd-garrison',label:'포위',text:c.besieged?'포위 중':'없음',tone:c.besieged?'bad':''}];
+}
+function stageLordGauges(c){
+ const raw=state.cities[c.cityId]??{},f=c.economyForecast??{},out=[];
+ if(Number.isFinite(raw.durability)&&raw.durabilityMax)out.push({label:'내구',value:raw.durability,max:raw.durabilityMax,text:`${Math.round(raw.durability)}/${raw.durabilityMax}`,tone:raw.durability<raw.durabilityMax/2?'low':''});
+ else out.push({label:'인구',value:c.population,max:c.populationCapacity||c.population||1,text:`${c.population}${c.populationCapacity?`/${c.populationCapacity}`:''}`});
+ out.push({label:'식량',value:c.foodStock,max:c.foodCapacity||1,text:`${cityNumber(c.foodStock)}/${cityNumber(c.foodCapacity)}`,hint:Number.isFinite(f.food)&&f.food?`차례마다 ${f.food>0?'+':''}${cityNumber(f.food)}`:''});
+ return out;
 }
 function stageJob(c){
  const kind=c.currentProduction?.kind,job=kind?CITY_JOBS[kind]:null;if(!job)return {name:'쉬는 중',pct:0,text:'생산을 고르세요',idle:true};
@@ -596,7 +604,7 @@ function renderStage(v){
  if(!c||!stage.art){closeStage();return;}
  const people=cityPeople(v,c),idle=!!cityProductionBadge(c)?.idle,issues=cityIssues(v,c,people,{idle});
  const over=root.querySelector('.cs-over'),la=people.office?.officerId?fullArt(people.office.officerId):null;
- if(over)over.innerHTML=overviewHtml({v,c,art:stage.art,people,issues,date:campaignDate(v.turn),facilityState:{working:c.currentProduction?.kind?CITY_JOBS[c.currentProduction.kind]?.name:null,news:stageNews(v,c),gauges:stageGauges(c),stats:stageStats(c),job:stageJob(c)},portraits:plateFaces(),emblem:emblemHtml(v.factionId),lordArt:la?.src});
+ if(over)over.innerHTML=overviewHtml({v,c,art:stage.art,people,issues,date:campaignDate(v.turn),facilityState:{working:c.currentProduction?.kind?CITY_JOBS[c.currentProduction.kind]?.name:null,news:stageNews(v,c),gauges:stageGauges(c),stats:stageStats(c),lordGauges:stageLordGauges(c),job:stageJob(c)},portraits:plateFaces(),emblem:emblemHtml(v.factionId),lordArt:la?.src});
  if(over&&la&&!la.cut){const im=over.querySelector('.cs-lord .art img');if(im){im.style.opacity='0';cutout(la.src).then(u=>{if(im.isConnected){if(u)im.src=u;im.style.opacity='';}});}} // 태수 판 그림: 배경 지운 사본(시설 장면과 같은 방식)
  root.style?.setProperty?.('--fc',FACTION_STYLE[v.factionId]?.color??'#777');
  fitStageShift();
