@@ -2547,6 +2547,17 @@ body.ink .wmap .w-cityplate .def-bg{fill:#1b1714}body.ink .wmap .w-cityplate .de
 body.ink .wmap .w-cityplate .prod rect{fill:transparent;stroke:none}
 body.ink .wmap .w-cityplate .prod text{fill:#efe6d6;font-weight:700;paint-order:stroke;stroke:#0d0c0b;stroke-width:3px;stroke-linejoin:round}
 body.ink .wmap .w-cityplate .prod.idle text{fill:#ffc9a8}
+/* 2026-10-14 성 이름표 — 종이 꼬리표 대신 어두운 먹색 띠 + 뼈색 글자 한 줄, 수치는 띠 아래 작은 글(사용자 "성 이름 표기하는 것도 좀 별로야. 코덱스가 만든 거 괜찮더라" — 솔의 시안 9.2: 크림 이름판 + 수치판 두 덩어리가 먹선보다 먼저 보였다). Codex 는 이 묶음을 고치지 말 것 */
+body.ink .wmap .w-cityplate .plate-art{display:none}
+body.ink .wmap .w-cityplate:has(.plate-art) .bg{fill:rgba(18,15,12,.8);stroke:rgba(234,223,200,.5);stroke-width:.6px;height:19px;y:-9.5px}
+body.ink .wmap .w-cityplate:hover .bg{stroke:rgba(244,234,214,.95)}
+body.ink .wmap .w-cityplate:has(.plate-art) .name{fill:#efe6d6;font-weight:600;font-size:12.5px;stroke:none}
+body.ink .wmap .w-cityplate .cinfo .ci-bg{fill:transparent;stroke:none}
+body.ink .wmap .w-cityplate .cinfo .ci-t{fill:#e6dbc2;font-weight:500;paint-order:stroke;stroke:#14100c;stroke-width:1.8px;stroke-linejoin:round}
+body.ink .wmap .w-cityplate .cinfo .ci-t.low{fill:#f0a493}
+body.ink .wmap .w-cityplate .cinfo image{filter:brightness(0) invert(.88) drop-shadow(0 0 .6px #14100c)}
+body.ink .wmap .w-cityplate .def-bg{fill:#0e0c0a}body.ink .wmap .w-cityplate .def{fill:#d8cbb0}
+/* /2026-10-14 성 이름표 */
 body.ink .wmap .w-unit .plate .pole{display:inline;stroke:#14100c;stroke-width:1.5px}
 body.ink .wmap .w-unit .banner{display:none}
 body.ink .wmap .w-unit .plate .frame{display:inline;fill:color-mix(in srgb,var(--fc) 48%,#2b251e);stroke:#100d0a;stroke-width:1.1px;stroke-linejoin:round;filter:drop-shadow(0 1.5px .8px rgba(8,6,4,.6))}
