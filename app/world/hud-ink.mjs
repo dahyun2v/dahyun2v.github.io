@@ -12,7 +12,7 @@ export function surpriseWarning(risk) {
 }
 export function productionReadout(job, previous) {
   if (!job) return {turns: null, line: '', change: ''};
-  const turns = job.gain > 0 ? Math.max(1, Math.ceil(Math.max(0, job.cost - job.progress - (job.advance ?? 0)) / job.gain)) : null;
+  const turns = Number.isFinite(job.gain)&&job.gain > 0&&Number.isFinite(job.cost)&&Number.isFinite(job.progress) ? Math.max(1, Math.ceil(Math.max(0, job.cost - job.progress - (Number.isFinite(job.advance)?job.advance:0)) / job.gain)) : null;
   const change = previous && previous.kind === job.kind && previous.gain !== job.gain
     ? `차례당 진행 ${previous.gain} → ${job.gain} — 현재 생산량·태수 효과 반영` : '';
   return {turns, line: turns === null ? '생산이 없어 진행 중단' : `${turns}차례 남음 · 차례당 진행 ${job.gain}${job.advance ? ` · 앞당긴 생산 ${job.advance}` : ''}`, change};
@@ -42,12 +42,13 @@ export function injuryReturnText(turn, injury) {
 }
 // C127: player-facing text only; identifiers and command payloads stay unchanged.
 export function labelNumber(value) {
-  if (!Number.isFinite(Number(value))) return '—';
+  if (value == null || value === '' || !Number.isFinite(Number(value))) return '—';
   const n = Math.round((Number(value) + Number.EPSILON) * 10) / 10;
   return String(Object.is(n, -0) ? 0 : n);
 }
 export function readableText(value, names = {}, rules = {}) {
   return String(value ?? '')
+    .replace(/\b(?:null|undefined|NaN)\b/g, '—') // C137: absent presentation values
     .replace(/\bcatapult\b/g, '투석기')
     .replace(/\bG\d{2,3}\b/g, id => names[id] ?? '장수')
     .replace(/\b[A-Z]_[A-Z_]{3,}\b/g, id => rules[id] ?? '고유 효과')
@@ -123,12 +124,13 @@ export function combatReadout(before, after, event, mapNames = {}) {
   const known=(v,id)=>v.ownArmies?.[id] ?? Object.values(v.knowledge?.observedArmies??{}).find(a=>a.armyId===id&&v.knowledge?.tiles?.[a.tileId]==='VISIBLE');
   const knownCity=(v,id)=>v.ownCities?.[id] ?? (v.knowledge?.tiles?.[v.knowledge?.cities?.[id]?.tileId]==='VISIBLE'?v.knowledge.cities[id]:null);
   const name=(v,id)=>{const a=known(v,id);return a?(v.officers?.[a.commanderId]?.name??mapNames[id]??'관측한 부대'):'미확인 부대';};
-  const city=knownCity(before,event.cityId)??knownCity(after,event.cityId);
+  const cityId=event.cityId??(event.kind.includes('TACTIC')?event.targetId:null);
+  const city=knownCity(before,cityId)??knownCity(after,cityId);
   const a=known(before,event.attackerId), b=known(before,event.targetId);
   if (!a&&!b&&!city) return null;
   const kind=({CITY:'성 공격',CITY_STRIKE:'성 사격',APPROACH_FIRE:'접근사격',PURSUIT:'이탈 추격',TACTIC:'전법',TACTIC_EFFECT:'전법',OVERWATCH:'대응 사격',JOINT_TACTIC:'연계 전법'})[event.kind]??'부대 교전';
   const source=event.kind==='CITY_STRIKE'?(city?.name??'미확인 성'):name(before,event.attackerId);
-  const target=event.kind==='CITY'?(city?.name??'미확인 성'):name(before,event.targetId??event.attackerId);
+  const target=city&&event.kind!=='CITY_STRIKE'?city.name:event.kind==='CITY'?'미확인 성':name(before,event.targetId??event.attackerId);
   const lines=[];
   // Exact troop changes belong only to own units. Enemy strength is never taken from raw battle units.
   for (const id of [...new Set([event.attackerId,event.targetId].filter(Boolean))]) {
@@ -144,8 +146,8 @@ export function combatReadout(before, after, event, mapNames = {}) {
     const changes=(event.formationChanges??[]).filter(f=>f.armyId===id), labels={ORDERED:'정돈',DISORDERED:'흐트러짐',BROKEN:'붕괴'};
     if(changes.length){const from=changes[0].from,to=changes.at(-1).to;if(from!==to)lines.push(`${name(before,id)} · 전열 ${labels[from]??from} → ${labels[to]??to}`);}
   }
-  if(event.kind==='CITY')lines.push(`성 내구 피해 ${Math.round(event.dealt??0)}`);
-  const nextCity=knownCity(after,event.cityId);
+  if(event.kind==='CITY'||city&&event.kind.includes('TACTIC'))lines.push(`성 내구 피해 ${labelNumber(event.dealt??event.enemyLoss??0)}`);
+  const nextCity=knownCity(after,cityId);
   if(city&&nextCity&&city.ownerFactionId!==nextCity.ownerFactionId)lines.push(nextCity.ownerFactionId===after.factionId?'성 함락 · 아군 점령':'성 함락 · 소유 세력 변경');
   if(event.tacticName&&a)lines.push(`사용 전법 · ${event.tacticName}`);
   if(a&&b){if(event.charge)lines.push('기병 돌격');if(event.side==='FLANK')lines.push('측면 공격');if(event.side==='REAR')lines.push('후방 공격');if(event.counter)lines.push('반격 발생');}
@@ -323,9 +325,9 @@ export function renderInkHud(root, d) {
   document.body.style.setProperty('--my-banner', `url("${H}faction-banner-${d.factionId}.png")`); // 깃발에 세로로 펼치는 신수(방문 말 판의 좁은 깃발)
   document.body.style.setProperty('--my-beast', `url("${H}faction-beast-${d.factionId}.png")`); // 깃발에 펼치는 큰 신수(방문 말 판)
   document.body.style.setProperty('--my-em', `url("/assets/ui-v3/emblems/${d.factionId}.png")`); // 내 세력 문장 — 방문 말 판의 깃발 · 사건 등급 줄의 넷째 표지(CSS)
-  const results=[...(d.facilityResults??[]),...(d.unitResult?[d.unitResult]:[])], allLines=[...lines,...results];
-  const turnHistory=q('.ih-turn-history');turnHistory.hidden=allLines.length<=4;turnHistory.querySelector('button').textContent=`이번 차례 전체 소식 · ${allLines.length}건`;turnHistory.querySelector('ol').innerHTML=allLines.map(t=>`<li>${esc(t)}</li>`).join('');
-  q('.ih-lines').innerHTML = (allLines.length ? allLines.slice(-4) : [d.summary ?? '조용한 차례입니다.']).map((t) => `<li><img class="ih-li" src="${H}icons/${lineIcon(t)}.png" alt=""><span>${esc(t)}</span></li>`).join('');
+  const results=[...(d.facilityResults??[]),...(d.unitResult?[d.unitResult]:[])], allLines=d.allNews??[...lines,...results], current=d.currentNews??[...lines,...results].reverse();
+  const turnHistory=q('.ih-turn-history');turnHistory.hidden=!allLines.length;turnHistory.querySelector('button').textContent=`전체 소식 · ${allLines.length}건`;turnHistory.querySelector('ol').innerHTML=allLines.map(t=>`<li>${esc(t)}</li>`).join('');
+  q('.ih-lines').innerHTML = (current.length ? current.slice(0,4) : [d.summary ?? '조용한 차례입니다.']).map((t) => `<li><img class="ih-li" src="${H}icons/${lineIcon(t)}.png" alt=""><span>${esc(t)}</span></li>`).join('');
   const leads = q('.ih-leads');
   leads.hidden = !d.recruitmentCount;
   leads.textContent = `재야 장수 ${d.recruitmentCount ?? 0}명 · 소재 확인`;
@@ -392,4 +394,35 @@ export function targetPreviewText(target,{name='',damage=0,chase=null,ranged=fal
 export function unitActionReadout({moveUsed=false,canMove=false,canMain=false,ended=false,routing=false}={}) {
   const reason=routing?'패주 중이라 명령을 내릴 수 없습니다':moveUsed?'이번 차례 이동을 이미 썼습니다':ended?'이번 차례 명령을 마쳤습니다':!canMove?'지금 이동할 수 있는 칸이 없습니다':'';
   return {move:{available:canMove&&!ended&&!routing,label:`이동 · ${moveUsed?'사용함':ended||routing?'불가':canMove?'가능':'불가'}`},main:{available:canMain&&!ended&&!routing,label:`주 행동(공격 · 방어 · 재정비 · 전법) · ${ended||routing?'불가':canMain?'가능':'사용함'}`},reason};
+}
+
+// C137: screen geometry and public notices only; never change game state.
+export function uncoveredShift(unit, viewport, panels, gap=16) {
+  const right=r=>r.right??r.left+r.width, bottom=r=>r.bottom??r.top+r.height;
+  const bounds={left:viewport.left+gap,top:viewport.top+gap,right:right(viewport)-gap,bottom:bottom(viewport)-gap};
+  const blocks=panels.filter(r=>r.width>0&&r.height>0&&right(r)>bounds.left&&r.left<bounds.right&&bottom(r)>bounds.top&&r.top<bounds.bottom)
+    .map(r=>({left:r.left-gap,top:r.top-gap,right:right(r)+gap,bottom:bottom(r)+gap}));
+  const xs=[0,bounds.left-unit.left,bounds.right-right(unit),...blocks.flatMap(r=>[r.left-right(unit),r.right-unit.left])];
+  const ys=[0,bounds.top-unit.top,bounds.bottom-bottom(unit),...blocks.flatMap(r=>[r.top-bottom(unit),r.bottom-unit.top])];
+  const candidates=[];
+  for(const x of xs)for(const y of ys){const r={left:unit.left+x,right:right(unit)+x,top:unit.top+y,bottom:bottom(unit)+y};
+    if(r.left<bounds.left||r.right>bounds.right||r.top<bounds.top||r.bottom>bounds.bottom)continue;
+    if(blocks.some(b=>r.left<b.right&&r.right>b.left&&r.top<b.bottom&&r.bottom>b.top))continue;
+    candidates.push({x,y});
+  }
+  return candidates.sort((a,b)=>a.x*a.x+a.y*a.y-b.x*b.x-b.y*b.y)[0]??null;
+}
+export function turnNews(rows, turn) {
+  const risk=line=>/굶주림|포위|붕괴|무너졌|중상|상실|빼앗|군량 0/.test(line)?1:0;
+  const sorted=rows.map((r,i)=>({...r,i})).sort((a,b)=>b.turn-a.turn||risk(b.line)-risk(a.line)||b.i-a.i);
+  return {current:sorted.filter(r=>r.turn===turn).map(r=>r.line),all:sorted.map(r=>`${r.turn}차례 · ${r.line}`)};
+}
+export function overlapSelection(units, tileId, point, rectangles, previous=null) {
+  let hits=units.filter(a=>a.tileId===tileId||rectangles.some(r=>r.id===a.armyId&&point.x>=r.left&&point.x<=r.right&&point.y>=r.top&&point.y<=r.bottom)).map(a=>a.armyId).sort();
+  const nearby=previous&&Math.hypot(point.x-previous.x,point.y-previous.y)<=8,old=previous?.key.split('|')??[];
+  // Active flags may move on redraw. Keep the group while repeated clicks still touch it.
+  if(nearby&&hits.some(id=>old.includes(id))&&old.every(id=>units.some(a=>a.armyId===id)))hits=old;
+  const key=hits.join('|'),same=nearby&&previous.key===key;
+  const index=same?(hits.indexOf(previous.id)+1)%hits.length:0;
+  return {id:hits[index]??null,key,x:point.x,y:point.y,index,count:hits.length};
 }
