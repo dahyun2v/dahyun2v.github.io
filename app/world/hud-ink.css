@@ -2690,3 +2690,64 @@ body.ink .wmap .w-lights ellipse.city{opacity:.35}
 body.ink .wmap .w-lights ellipse.unit{opacity:.5}
 body.ink.no-light .wmap .w-lights{display:none}
 /* /2026-10-13 지도 발밑 빛 */
+
+/* 2026-10-14 C146 다듬기 */
+/* 양식의 제목과 확정 줄은 고정하고 가운데만 스크롤한다. 판 그림 비율은 유지한다. */
+body.ink #rules-modal .w-rules{display:flex;flex-direction:column;overflow:hidden;max-height:calc(100dvh - 40px)}
+body.ink #rules-modal .w-rules>h1,body.ink #rules-modal #rules-close{flex:none}
+body.ink #rules-modal .w-rules>dl{min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:10px}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .city-pane[data-pane="barracks"]{display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:54%;overflow:hidden;padding:0}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-title{margin:0;padding:0 0 6px;color:#f0dfb8}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll{min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 8px 8px 0;scrollbar-width:thin}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer{padding:6px 8px;background:#151c19f5;border-top:1px solid #94866b}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel #muster-selection{margin:0 0 5px;color:#f0dfb8;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option{display:flex;align-items:center;gap:12px;aspect-ratio:auto;min-height:44px;padding:9px 16px;background:url("/assets/ui-v3/ink/stroke-rust.png") center/100% 100% no-repeat!important;color:#efe6d6;overflow:visible;font-size:13px}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option::before,body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option::after,body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option :is(.job-track,.ink-cells){display:none}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option :is(b,small){position:static;display:block;width:auto;color:inherit;white-space:normal;overflow:visible;text-overflow:clip}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option b{flex:none;font-size:16px}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option small{font-size:13px;line-height:1.35}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option:disabled{opacity:.75}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option{display:flex;align-items:center;gap:12px;aspect-ratio:auto;min-height:58px;padding:8px 12px 8px 110px;background:linear-gradient(90deg,#1d1d19f2,#10120ff2)!important;border-bottom:1px solid #cfc4b260!important;color:#efe6d6;overflow:visible;font-variant-numeric:tabular-nums}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option :is(.job-track,.ink-cells){display:none}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option :is(b,small){position:static;width:auto;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35;overflow-wrap:anywhere;color:inherit}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option b{flex:none;font-size:14px}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option small{font-size:13px;color:#cfc4b2;flex:1;text-align:right}
+/* 실제 능력 필드 이름을 쓰는 RI_STATS 라벨과 빈 카드의 설명. 장착 동작이 없으므로 +를 그리지 않는다. */
+body.ink .ri-panel .st small{font-size:clamp(11px,.8vw,14px);color:#efe6d6}
+body.ink .ri-panel .sk small{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
+body.ink .ri-panel .sk.empty small{top:34%;padding:3px 0;color:#cfc4b2;background:#0e0d0ccc}
+/* 관청 업무는 이름·효과 / 비용 / 남은 차례·완료 시점의 세 칸이다. */
+body.ink .cs .cs-commands[data-fac="office"] #city-panel .job-columns{display:none}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job{display:grid;grid-template-columns:minmax(0,1fr) 82px minmax(0,1.1fr);gap:8px;align-items:center;aspect-ratio:auto;padding:7px 10px 7px 110px;background:linear-gradient(90deg,#1d1d19f2,#10120ff2)!important;border-bottom:1px solid #cfc4b260!important;color:#efe6d6;overflow:visible;font-size:13px;font-variant-numeric:tabular-nums}
+/* C146b: 기존 얼굴·시설 그림 변수로 작은 그림을 복원한다. 고리·판 그림은 늘리지 않는다. */
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job::before,body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option::before{display:block;left:9px;top:50%;translate:0 -50%;width:38px;height:38px;border:1px solid #cfc4b280;background:var(--gface,none) 50% 3%/250% auto no-repeat,#171913;filter:none}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job::after,body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option::after{display:block;left:55px;top:50%;translate:0 -50%;width:46px;height:46px;background:var(--thumb,none) center/contain no-repeat;filter:none}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job:disabled,body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option:disabled{opacity:1;filter:none}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job[aria-pressed="true"],body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-scroll .option[aria-pressed="true"]{outline:0;box-shadow:inset 3px 0 #e6dccb!important}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job :is(b,em,small,strong){position:static;display:block;width:auto;margin:0;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4;word-break:keep-all;overflow-wrap:anywhere;letter-spacing:0}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job b{font-size:15px;color:#efe6d6}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job em{font-style:normal;font-size:13px;color:#cfc4b2}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job small{font-size:13px;color:#cfc4b2}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job strong{font-size:13px;color:#efe6d6}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job :is(.job-cost,.job-finish){text-align:right;border-left:1px solid #cfc4b240;padding-left:8px}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job .job-reason{color:#e2b866;text-align:left}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job>:is(.job-main,.job-cost,.job-finish){min-width:0}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job{grid-template-areas:"main cost finish"}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job .job-main{grid-area:main;text-align:left}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job .job-cost{grid-area:cost}
+body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job .job-finish{grid-area:finish}
+/* 핵심 상태 글과 툴팁은 생략 없이 창 안에서 읽는다. 부대 선택 판과 교전 예고의 구성은 그대로 둔다. */
+body.ink .w-tip{box-sizing:border-box;max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px);overflow:auto;overflow-wrap:anywhere;white-space:normal}
+body.ink .w-tip :is(.fc-title,.fc-sum,.fc-risk,small){white-space:normal;text-overflow:clip;overflow-wrap:anywhere}
+body.ink .w-tip.forecast:is(:has(.fc-vs),:has(.fc-bar.wide)){max-width:calc(100vw - 16px);overflow:visible}
+body.ink .w-tip.forecast:is(:has(.fc-vs),:has(.fc-bar.wide)) :is(.fc-top,.fc-sum,.fc-col b,.fc-col small){white-space:normal;text-overflow:clip;overflow-wrap:anywhere}
+body.ink-hud:has(.ih-unit:not([hidden])) .w-advisor #status{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel :is(.muster-target,.reorganize-target) label{flex-wrap:wrap;white-space:normal;min-width:0;max-width:100%}
+body.ink .cs .cs-commands[data-fac="barracks"] #city-panel select{min-width:0;max-width:100%}
+@media(max-width:1250px){
+ body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="jobs"]{height:58%;padding-right:4px}
+ body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job{grid-template-columns:minmax(0,1fr) 76px minmax(0,1.15fr);grid-template-areas:"main cost finish";gap:8px}
+ body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="jobs"] .city-working{padding:4px 8px;margin-bottom:5px;font-size:13px;line-height:1.3}
+ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .city-pane[data-pane="barracks"]{height:55%}
+}
+/* /2026-10-14 C146 */
