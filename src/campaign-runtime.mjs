@@ -1,4 +1,5 @@
 import {configureAiTactics,campaignTacticsEnabled,campaignTacticsPart,campaignTacticalOrderAllowed,campaignTacticsView,campaignTacticsWorld,campaignFocusOrder,campaignChooseTacticalAction} from './campaign-ai-tactics.mjs';
+import {campaignAiRule,campaignAiLaunch,campaignAiRecordBlocked,campaignAiExchange,campaignAiExchangeAllowed,campaignAiPosture} from './campaign-ai-rules.mjs';
 import diplomacyAxes from '../../docs/design-data/diplomacy-axes-v0.1.json' with {type:'json'};
 import {initializeCouncil,startCouncilTurn,councilCommand,closeCouncil,observeCouncil,validateCouncil} from './campaign-council.mjs';
 import {initializeInjury,validateInjury,settleInjury,injuryView,injuryRecent,injuryReason,injuryEnabled} from './campaign-injury.mjs';
@@ -46,7 +47,7 @@ import {getFactionView} from './knowledge.mjs';
 import {updateCampaignKnowledge as updateKnowledge} from './campaign-vision.mjs';
 import {tileId,hexDistance} from './map-primitives.mjs';
 import {findPath,issueOrder,moveOneTick} from './movement.mjs';
-import {selectCampaignAiJobs,campaignAiPlan,campaignAiMusterTroop,campaignSiegeEnabled,campaignStrategyEnabled,campaignAiSupplyWorld,campaignEconomyEnabled,campaignFoodEconomyEnabled} from './campaign-strategic-bridge.mjs';
+import {selectCampaignAiJobs,campaignAiPlan,campaignAiMusterTroop,campaignSiegeEnabled,campaignStrategyEnabled,campaignAiSupplyWorld,campaignEconomyEnabled,campaignFoodEconomyEnabled,campaignKnownRanking} from './campaign-strategic-bridge.mjs';
 import {attackRange,previewCityAttack,previewDisengage,previewApproachFire,cityAttackTargets,resolveOverwatch,resolveTactic,resolveCityAttack,strikeCampaignCities,recoverCampaignCities,attackTargets,previewTactic,previewAttackThreat,previewAttack,resolveAttack,resolvePursuit,resolveApproachFire,approachFireStart,armyActionEnded,allPlayerActionsEnded} from './campaign-combat.mjs';
 import {applyCampaignVision} from './campaign-vision.mjs';
 import {campaignPersonnel,settleCampaignPayloads,settleCampaignTurnEnd} from './campaign-result-bridge.mjs';
@@ -301,13 +302,22 @@ export function campaignArcherEscape(s,id){
  const distance=tile=>Math.min(...foes.map(b=>hexDistance(s.tiles[tile],s.tiles[b.tileId])));
  return [...campaignReachable(s,id,TICKS_PER_TURN)].filter(([tile])=>knowledge.tiles[tile]!=='UNEXPLORED'&&distance(tile)>1).map(([tile,route])=>({tileId:tile,route})).sort((x,y)=>x.route.totalTicks-y.route.totalTicks||distance(y.tileId)-distance(x.tileId)||x.tileId.localeCompare(y.tileId))[0]??null;
 }
+function referenceAttackAllowed(s,f,id,targetId,p){
+ if(!campaignAiRule(s,f,2)&&!campaignAiRule(s,f,6))return p.enemyLoss>=p.allyLoss*campaignShownScale(s,targetId,f)*1.2;
+ const v=campaignTacticsView(s,f),posture=campaignAiPosture(s,v,campaignKnownRanking(s,v));
+ if(!campaignAiExchangeAllowed(p,{aggressive:posture.lossWeight===1}))return false;
+ if(!campaignAiRule(s,f,2))return true;
+ const a=v.ownArmies[id],b=v.knowledge.observedArmies[targetId];if(!a||!b)return false;
+ const mine=Object.values(v.ownArmies).filter(x=>hexDistance(s.tiles[x.tileId],s.tiles[b.tileId])<=3).reduce((n,x)=>n+x.troopCount,0),enemy=Object.values(v.knowledge.observedArmies).filter(x=>hexDistance(s.tiles[x.tileId],s.tiles[a.tileId])<=3).reduce((n,x)=>n+(x.troopCount??0),0);
+ const accepted=campaignAiExchange(p)>=1.2||campaignAiLaunch(s,f,id,mine/Math.max(1,enemy),posture.startRatio);campaignAiRecordBlocked(s,f,id,!accepted);return accepted;
+}
 function run(s, incremental=false) {
   while(true){
     if(s.phase!=='AI')return s;
     const entry=s.aiQueue.shift();
     if(entry){
       if(entry.tacticsFaction){
-        const f=entry.tacticsFaction,entries=entry.entries.filter(e=>s.armies[e.candidate.armyId]?.factionId===f),focus=campaignTacticsPart(s,f,'focus'),w=focus?campaignTacticsWorld(s,campaignTacticsView(s,f)):null;
+        const f=entry.tacticsFaction,entries=entry.entries.filter(e=>s.armies[e.candidate.armyId]?.factionId===f),focus=campaignTacticsPart(s,f,'focus')||campaignAiRule(s,f,9),w=focus?campaignTacticsWorld(s,campaignTacticsView(s,f)):null;
         const order=w?campaignFocusOrder(w,entries.map(e=>e.candidate.armyId)):entries.filter(e=>canMainAction(s,e.candidate.armyId)&&!s.endedArmyIds.includes(e.candidate.armyId)).map(e=>({armyId:e.candidate.armyId,action:null}));
         s.aiQueue.unshift(...order.map(x=>({...entries.find(e=>e.candidate.armyId===x.armyId),attack:true,plannedAction:x.action})));
         continue;
@@ -319,8 +329,8 @@ function run(s, incremental=false) {
         startFactionPolicy(s,entry.factionId);for(const c of Object.values(s.cities).filter(c=>c.ownerFactionId===entry.factionId))aiStarAction(s,{cityId:c.cityId},entry.factionId);startFactionEffects(s,entry.factionId);startUniqueFaction(s,entry.factionId);startFactionMorale(s,entry.factionId);startClasses(s,entry.factionId,{heal:(id,n)=>healCampaignTroops(s,id,n)});updateKnowledge(s);startFactionEvents(s,entry.factionId,{auto:true});s=strikeCampaignCities(s,entry.factionId);updateKnowledge(s);refreshCampaignSieges(s);
         selectAiRoster(s,entry.factionId);selectCampaignAiJobs(s,entry.factionId);if(!campaignEconomyEnabled(s,entry.factionId))selectCityStartMuster(s,entry.factionId,campaignSiegeEnabled(s,entry.factionId)?campaignAiMusterTroop:null);checkDejaVuLocations(s);
         const plan=campaignAiPlan(s,entry.factionId,{remember:true,turnLimit:CAMPAIGN_TURN_LIMIT});
-        const entries=(plan?.candidates??[]).filter(c=>!s.movedArmyIds.includes(c.armyId)).map(c=>({candidate:c,faction:entry.factionId,...(supplyEnabled(s)||campaignTacticsEnabled(s,entry.factionId)?{targetCityId:plan?.goal?.targetCityId??null}:{})}));
-        s.aiQueue.unshift(...entries,...(campaignTacticsEnabled(s,entry.factionId)?[{tacticsFaction:entry.factionId,entries}]:[]));
+        const entries=(plan?.candidates??[]).filter(c=>!s.movedArmyIds.includes(c.armyId)).map(c=>({candidate:c,faction:entry.factionId,...(supplyEnabled(s)||campaignTacticsEnabled(s,entry.factionId)?{targetCityId:c.aiTargetCityId??plan?.goal?.targetCityId??null}:{})}));
+        s.aiQueue.unshift(...entries,...(campaignTacticsEnabled(s,entry.factionId)||campaignAiRule(s,entry.factionId,9)?[{tacticsFaction:entry.factionId,entries}]:[]));
         if(incremental&&s.battleSequence!==strikeSequence)return s;
         continue;
       }
@@ -329,7 +339,7 @@ function run(s, incremental=false) {
       if(withdrawalProtection(s,id)){if((!entry.attack||clockFood(s))&&!s.movedArmyIds.includes(id)){s=moveArmy(s,entry.candidate,entry.faction);s.movedArmyIds.push(id);}if(!s.endedArmyIds.includes(id))s.endedArmyIds.push(id);if(incremental)return s;continue;}
       if((!entry.attack||clockFood(s))&&!s.movedArmyIds.includes(id)&&canMainAction(s,id)){const action=supplyAiAction(s,id,campaignReachable(s,id,TICKS_PER_TURN),{foodAware:campaignFoodEconomyEnabled(s,entry.faction),publicWorld:clockFood(s)||campaignStrategyEnabled(s,entry.faction)||campaignFoodEconomyEnabled(s,entry.faction)?campaignAiSupplyWorld(s,entry.faction):null,targetCityId:entry.targetCityId,allowBuild:entry.candidate.type==='MOVE'&&!['REPLENISH_ARMY','MUSTER_SIEGE','DEFEND_DAMAGED_CITY','CAPITAL_GARRISON','INTERCEPT_CITY','EXPLORE_PLACE','OPERATION_ASSEMBLE','OPERATION_SUPPORT','OPERATION_ADVANCE','TACTICAL_CUT_HUB','TACTICAL_FLANK','TACTICAL_SCREEN','TACTICAL_RETREAT','TACTICAL_WAIT_SUPPORT'].includes(entry.candidate.reasonCode)});if(action){if(action.type==='BUILD_HUB'){beginHub(s,id);consumeMainAction(s,id);}else if(action.type==='MOVE')s=moveArmy(s,{armyId:id,...action},entry.faction);s.movedArmyIds.push(id);if(!s.endedArmyIds.includes(id))s.endedArmyIds.push(id);if(incremental)return s;continue;}}
       const engagedArcher=archerAttackReason(s,id)==='ARCHER_ENGAGED';
-      const tactical=campaignTacticsEnabled(s,entry.faction);
+      const tactical=campaignTacticsEnabled(s,entry.faction),coordinated=campaignAiRule(s,entry.faction,9);
       if(engagedArcher&&!entry.attack&&!entry.candidate.aiTacticalMove){
         s.c23Stats??={archerBlocked:0,aiReorganizations:0};s.c23Stats.archerBlocked++;
         if(!s.movedArmyIds.includes(id)){
@@ -337,7 +347,7 @@ function run(s, incremental=false) {
           if(escape)s=moveArmy(s,{armyId:id,type:'MOVE',destinationTileId:escape.tileId,pathTileIds:escape.route.pathTileIds},entry.faction);
           if(!s.movedArmyIds.includes(id))s.movedArmyIds.push(id);
         }
-        if(!tactical)s.aiQueue.unshift({...entry,attack:true});if(incremental)return s;continue;
+        if(!tactical&&!coordinated)s.aiQueue.unshift({...entry,attack:true});if(incremental)return s;continue;
       }
       if(aiStarAction(s,{armyId:id},entry.faction)){if(canMainAction(s,id))s.aiQueue.unshift(entry);if(incremental)return s;continue;}
       if((s.armies[id].morale==='SHAKEN'||s.armies[id].formation!=='ORDERED')&&!regroupReason(s,id)&&canMainAction(s,id)){changeMorale(s,id,'STEADY','재정비');changeFormation(s,id,campaignSubAbility(s,s.armies[id].commanderId,'지휘','수습')>=C12.recoveryThreshold?-2:-1);classWait(s,id,'REGROUP',{formation:(who,n)=>changeFormation(s,who,n),heal:(who,n)=>healCampaignTroops(s,who,n),rear:who=>Object.values(s.armies).some(b=>b.factionId!==s.armies[who].factionId&&b.hp>0&&hexDistance(s.tiles[b.tileId],s.tiles[s.armies[who].tileId])===1&&attackDirection(s,b.armyId,who)==='REAR')});consumeMainAction(s,id);if(incremental)return s;continue;}
@@ -350,12 +360,12 @@ function run(s, incremental=false) {
           else if(action?.type==='ATTACK')s=resolveAttack(s,id,action.targetId);
         }else{
         const targets=attackTargets(s,id).map(targetId=>({targetId,p:previewAttack(s,id,targetId)}))
-          .filter(x=>entry.candidate.reasonCode==='CAPITAL_GARRISON'||x.p.enemyLoss>=x.p.allyLoss*campaignShownScale(s,x.targetId,entry.faction)*1.2).sort((a,b)=>aiAttackPriority(s,b.targetId,b.p,entry.faction)-aiAttackPriority(s,a.targetId,a.p,entry.faction)||a.targetId.localeCompare(b.targetId));
+          .filter(x=>entry.candidate.reasonCode==='CAPITAL_GARRISON'||referenceAttackAllowed(s,entry.faction,id,x.targetId,x.p)).sort((a,b)=>aiAttackPriority(s,b.targetId,b.p,entry.faction)-aiAttackPriority(s,a.targetId,a.p,entry.faction)||a.targetId.localeCompare(b.targetId));
         const cityId=cityAttackTargets(s,id).sort((a,b)=>c22TargetWeight(s,entry.faction,s.cities[b].ownerFactionId)-c22TargetWeight(s,entry.faction,s.cities[a].ownerFactionId)||a.localeCompare(b))[0];
-        const tactics=campaignTactics(s,id).map(c=>({...c,targets:c.targets.filter(target=>commonTacticAiUseful(s,id,c,target))})).filter(c=>c.targets.length).sort((a,b)=>Number(tacticIsDamage(b))-Number(tacticIsDamage(a))||a.traitId.localeCompare(b.traitId));
+        const tactics=campaignTactics(s,id).map(c=>({...c,targets:c.targets.filter(target=>commonTacticAiUseful(s,id,c,target)&&(!campaignAiRule(s,entry.faction,6)||!tacticIsDamage(c)||!s.armies[target]||campaignAiExchange(previewTactic(s,id,c.traitId,target))>=.7))})).filter(c=>c.targets.length).sort((a,b)=>Number(tacticIsDamage(b))-Number(tacticIsDamage(a))||a.traitId.localeCompare(b.traitId));
         const damageTactics=tactics.filter(tacticIsDamage).flatMap(c=>c.targets.map(targetId=>({c,targetId,p:previewTactic(s,id,c.traitId,targetId)}))).sort((a,b)=>c22TargetWeight(s,entry.faction,s.armies[b.targetId]?.factionId)-c22TargetWeight(s,entry.faction,s.armies[a.targetId]?.factionId)||b.p.enemyLoss-a.p.enemyLoss||a.c.traitId.localeCompare(b.c.traitId)||a.targetId.localeCompare(b.targetId));
         const signature=tactics.find(c=>c.signature);
-        if(signature)s=resolveTactic(s,id,signature.traitId,signature.targets[0]);else if(damageTactics.length){const best=damageTactics[0];s=resolveTactic(s,id,best.c.traitId,best.targetId);}else if(cityId)s=resolveCityAttack(s,id,cityId);else if(targets.length)s=resolveAttack(s,id,targets[0].targetId);else if(tactics.length&&(inControlZone(s,s.armies[id])||tactics.some(c=>c33FormationCard(c))))s=resolveTactic(s,id,tactics[0].traitId,tactics[0].targets[0]);
+        if(cityId&&campaignAiRule(s,entry.faction,3))s=resolveCityAttack(s,id,cityId);else if(signature)s=resolveTactic(s,id,signature.traitId,signature.targets[0]);else if(damageTactics.length){const best=damageTactics[0];s=resolveTactic(s,id,best.c.traitId,best.targetId);}else if(cityId)s=resolveCityAttack(s,id,cityId);else if(targets.length)s=resolveAttack(s,id,targets[0].targetId);else if(tactics.length&&(inControlZone(s,s.armies[id])||tactics.some(c=>c33FormationCard(c))))s=resolveTactic(s,id,tactics[0].traitId,tactics[0].targets[0]);
         }
         if(combatCanPostMove(s,id)&&!classPostMove(s,id)){const retreat=[...campaignReachable(s,id,TICKS_PER_TURN)].sort(([,x],[,y])=>y.totalTicks-x.totalTicks);if(retreat.length){s=moveArmy(s,{armyId:id,type:'MOVE',destinationTileId:retreat[0][0]},entry.faction);if(!s.movedArmyIds.includes(id))s.movedArmyIds.push(id);}}
         if(canMainAction(s,id)&&s.armies[id].mainActionTurn===s.turn&&s.armies[id].mainActionCount>previousActions&&castleArmyActiveForAction(s,id))s.aiQueue.unshift({...entry,attack:true});
@@ -363,12 +373,12 @@ function run(s, incremental=false) {
       }else{
         // 정본 21 v0.4 §4: 교전 중인 AI 부대는 자리를 지키고 싸운다(동요 상태면 빠져서 수습).
         let hold=!['REPLENISH_ARMY','MUSTER_SIEGE'].includes(entry.candidate.reasonCode)&&(cityAttackTargets(s,id).length>0||attackTargets(s,id).length>0||s.armies[id]&&inControlZone(s,s.armies[id])&&s.armies[id].morale==='STEADY');
-        if(tactical&&(entry.candidate.aiTacticalMove||entry.candidate.type==='MOVE'&&!campaignTacticalOrderAllowed(entry.candidate)))hold=false;
+        if((tactical&&(entry.candidate.aiTacticalMove||entry.candidate.type==='MOVE'&&!campaignTacticalOrderAllowed(entry.candidate)))||entry.candidate.aiReferenceMove)hold=false;
         const rival=!entry.candidate.reasonCode?.startsWith('C31_')&&combatRule(s,id,'GRUDGE')&&combatRival(s,id);if(rival){const choices=[...campaignReachable(s,id,TICKS_PER_TURN)].filter(([to])=>combatMoveAllowed(s,id,to)).sort(([x],[y])=>hexDistance(s.tiles[x],s.tiles[rival.tileId])-hexDistance(s.tiles[y],s.tiles[rival.tileId])||x.localeCompare(y));if(choices.length){entry.candidate={...entry.candidate,type:'MOVE',destinationTileId:choices[0][0]};hold=false;}}
         if((hold||entry.candidate.type!=='MOVE')&&!s.movedArmyIds.includes(id)){const facingWorld=tactical?campaignTacticsWorld(s,campaignTacticsView(s,entry.faction)):s;const threats=Object.values(facingWorld.armies).filter(b=>diplomacyArmyHostile(facingWorld,id,b.armyId)&&hexDistance(s.tiles[b.tileId],s.tiles[s.armies[id].tileId])===1&&castleArmyActiveForAction(s,b.armyId)&&s.knowledge[s.armies[id].factionId].tiles[b.tileId]==='VISIBLE'&&!ambushHidden(s,b.armyId,s.armies[id].factionId)).map(b=>({targetId:b.armyId,p:previewAttackThreat(facingWorld,b.armyId,id)})).sort((a,b)=>b.p.enemyLoss-a.p.enemyLoss||a.targetId.localeCompare(b.targetId));if(threats.length)turnFacing(s,id,threats[0].targetId);}
         if(!hold)s=moveArmy(s,entry.candidate,entry.faction);
         if(!s.movedArmyIds.includes(id))s.movedArmyIds.push(id);
-        if(!tactical)s.aiQueue.unshift({...entry,attack:true});
+        if(!tactical&&!coordinated)s.aiQueue.unshift({...entry,attack:true});
       }
       if(incremental)return s;
       continue;

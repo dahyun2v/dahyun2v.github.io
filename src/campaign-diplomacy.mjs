@@ -4,6 +4,8 @@ import gift from '../../docs/design-data/diplomacy-gift-v0.1.json' with {type:'j
 const opinionModifiers={...axes.opinion.modifiers,gift:gift.modifier};
 import {relation} from './campaign-relations.mjs';
 import {hexDistance,boardNeighbors,tileId} from './map-primitives.mjs';
+import {getFactionView} from './knowledge.mjs';
+import {campaignAiRule,campaignAiNearWinner,AI_RULE_COALITION_TURNS,AI_RULE_COALITION_BONUS} from './campaign-ai-rules.mjs';
 import {edgeTicks} from './movement.mjs';
 // The runtime supplies existing campaign services after module initialization.
 // Keep this shared guard module independent of the combat/class import cycle.
@@ -81,11 +83,14 @@ export function diplomacyAcceptance(s,from,to,kind){
  add('trust','신용',(trust-axes.trust.start)/(kind==='TRUCE'?10:5));items.at(-1).text+=`(제안자 신용 ${trust})`;
  add('proposerCharisma','군주 감화',Math.floor((o?.baseStats.charisma??0)/r.proposerCharisma.per)*r.proposerCharisma.value);
  add('proposerMediation','군주 중재',Math.floor((o?campaignSubAbility(s,o.officerId,'감화','중재'):0)/r.proposerMediation.per)*r.proposerMediation.value);
- const mine=diplomacyStrength(s,to),other=diplomacyStrength(s,from),cities=Object.values(s.cities).filter(c=>c.ownerFactionId===to);
+ const rule10=campaignAiRule(s,to,10),known=rule10?getFactionView(s,to):null;
+ const mine=diplomacyStrength(s,to),other=rule10?Object.values(known.knowledge.observedArmies).filter(a=>a.factionId===from).reduce((n,a)=>n+(a.troopCount??0),0):diplomacyStrength(s,from),cities=Object.values(s.cities).filter(c=>c.ownerFactionId===to);
  if(other>=mine*1.2&&other>mine)add('weaker','상대가 밀리고 있음',r.weaker.value);
  if((s.c43?.history??[]).some(e=>e.type==='CAPTURE'&&e.to===to&&e.turn>=s.turn-3))add('losingCities','최근 성을 잃음',r.losingCities.value);
  if(cities.length&&cities.reduce((n,c)=>n+c.foodStock,0)<cities.reduce((n,c)=>n+cityEconomyRates(s,c).capacity,0)*.25)add('lowFood','군량 부족',r.lowFood.value);
- if(kind==='ALLIANCE'&&diplomacyCoalition(s,from,to))add('coalition','견제 연합',20);
+ const winner=rule10?campaignAiNearWinner(s,known):null;
+ if(rule10&&winner&&winner!==from&&winner!==to)add('imminentWinner','통일 직전 세력 견제',AI_RULE_COALITION_BONUS);
+ if(kind==='ALLIANCE'&&!rule10&&diplomacyCoalition(s,from,to))add('coalition','견제 연합',20);
  if(reputation(s,'threat',from)>=axes.threat.coalitionAt)add('threat','제안자 위협',-15);
  if(captures(s,to,from)||mine>=other*1.3&&mine>other)add('winning','상대가 우세함',r.winning.value);
  if((s.c43?.history??[]).some(e=>e.type==='ATTACK'&&e.from===from&&e.to===to&&e.turn>=s.turn-1))add('recentlyAttacked','최근 공격을 받음',r.recentlyAttacked.value);
@@ -157,10 +162,11 @@ export function finishDiplomacyPlayerTurn(s,{autoPlayer=false}={}){
 export function startDiplomacyAi(s,f,{autoPlayer=false}={}){
  if(!diplomacyEnabled(s))return;
  if(autoPlayer&&f===s.playerFactionId)finishDiplomacyPlayerTurn(s,{autoPlayer:true});
- const strongest=diplomacyStrongest(s),others=Object.keys(s.factions).filter(id=>id!==f&&s.factions[id].alive).sort();
- for(const to of others){const p=s.c43.pairs[diplomacyPair(f,to)];if(p.state==='ALLIANCE'&&(reputation(s,'threat',to)>=axes.threat.coalitionAt||diplomacyOpinion(s,f,to)<-20)&&!p.endingAt)endDiplomacyAlliance(s,f,to);}
+ const rule10=campaignAiRule(s,f,10),v=rule10?getFactionView(s,f):null,strongest=rule10?campaignAiNearWinner(s,v):diplomacyStrongest(s),others=Object.keys(s.factions).filter(id=>id!==f&&s.factions[id].alive).sort();
+ for(const to of others){const p=s.c43.pairs[diplomacyPair(f,to)];if(p.state==='ALLIANCE'&&(reputation(s,'threat',to)>=axes.threat.coalitionAt||diplomacyOpinion(s,f,to)<-20||rule10&&(!strongest||s.turn-p.since>=AI_RULE_COALITION_TURNS))&&!p.endingAt)endDiplomacyAlliance(s,f,to);}
  for(const kind of ['TRUCE','ALLIANCE'])for(const to of others.slice().sort((a,b)=>diplomacyAcceptance(s,f,b,kind).score-diplomacyAcceptance(s,f,a,kind).score||a.localeCompare(b))){
-  const war=diplomacyState(s,f,to)==='WAR',eligible=kind==='TRUCE'?war&&(diplomacyStrength(s,f)<diplomacyStrength(s,to)*.8||captures(s,to,f)):f!==strongest&&to!==strongest&&diplomacyHostile(s,f,strongest)&&diplomacyHostile(s,to,strongest);
+  const observed=rule10?Object.values(v.knowledge.observedArmies).filter(a=>a.factionId===to).reduce((n,a)=>n+(a.troopCount??0),0):diplomacyStrength(s,to),cooldown=rule10&&s.c43.history.some(e=>e.type==='END_NOTICE'&&diplomacyPair(e.from,e.to)===diplomacyPair(f,to)&&s.turn-e.turn<=AI_RULE_COALITION_TURNS);
+  const war=diplomacyState(s,f,to)==='WAR',coalition=!!strongest&&f!==strongest&&to!==strongest,eligible=!cooldown&&(kind==='TRUCE'?war&&(diplomacyStrength(s,f)<observed*.8||captures(s,to,f)||rule10&&coalition):coalition&&diplomacyHostile(s,f,strongest)&&diplomacyHostile(s,to,strongest));
   if(eligible&&canProposeDiplomacy(s,f,to,kind).ok){proposeDiplomacy(s,f,to,kind,{autoPlayer});return;}
  }
 }

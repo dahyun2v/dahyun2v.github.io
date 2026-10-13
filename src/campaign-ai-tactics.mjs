@@ -1,4 +1,5 @@
 import {hexDistance} from './map-primitives.mjs';
+import {campaignAiRule,campaignAiPosture,campaignAiLaunch,campaignAiExchange,AI_RULE_FOCUS_CANDIDATES,AI_RULE_FOCUS_BEAM} from './campaign-ai-rules.mjs';
 
 // C142: all constants are trial judgment weights, never game-rule modifiers.
 export const AI_OPERATION_WAIT_TURNS=2;
@@ -73,6 +74,7 @@ export function campaignTacticsWorld(s,v){
 }
 
 export function campaignOperationPlan(s,v,plan,{remember=false,turnLimit=26,route,siegePositions,siegeReady,supplyWorld}={}){
+ if(campaignAiRule(s,v.factionId,1))return plan; // C144's shared operation already ran.
  if(s.trialRules?.aiTacticsTempo==='c142')return c142OperationReplay(s,v,plan,{remember,turnLimit,route,siegePositions,siegeReady,supplyWorld});
  if(!campaignTacticsPart(s,v.factionId,'operation'))return plan;
  const target=v.knowledge.cities[plan.goal?.targetCityId]??v.knowledge.observedArmies[plan.goal?.targetArmyId];if(!target)return plan;
@@ -117,7 +119,8 @@ function scoreAction(w,x){
  const t=w.armies[x.targetId],city=w.cities[x.targetId],p=x.p,enemy=p.enemyLoss??p.dealt??0,ally=p.allyLoss??0;
  const finish=t?enemy>=t.troopCount:city&&(p.dealt??enemy)>=city.durability;
  const formation=predictedFormation(p,x.targetId),disrupt=formation&&formation!==t?.formation;
- return (finish?AI_FINISH_VALUE:0)+enemy-ally*1.2+(disrupt?AI_FORMATION_VALUE:0)+(p.formationRisk?.check?AI_FORMATION_VALUE*(1-p.formationRisk.successProbability):0)-(x.type==='TACTIC'?AI_TACTIC_RESERVE_COST:0);
+ const f=w.armies[x.armyId].factionId,view=campaignAiRule(w,f,6)?api.publicView(w,f):null,posture=view?campaignAiPosture(w,view,[]):null;
+ return (finish?AI_FINISH_VALUE:0)+enemy-ally*(posture?.lossWeight??1.2)+(disrupt?AI_FORMATION_VALUE:0)+(p.formationRisk?.check?AI_FORMATION_VALUE*(1-p.formationRisk.successProbability):0)-(x.type==='TACTIC'?AI_TACTIC_RESERVE_COST:0);
 }
 export function campaignTacticalActions(w,id){
  if(!w.armies[id]||!api.canAct(w,id)||w.endedArmyIds.includes(id))return [];
@@ -141,7 +144,13 @@ export function campaignTacticalActions(w,id){
   const loss=p.enemyLoss??0,opportunity=ranged(w.armies[id])&&enemy&&dist(w,w.armies[id].tileId,enemy.tileId)===2;
   if(!timing||formation&&formation!==enemy?.formation||loss>=(enemy?.troopCount??Infinity)||p.cityId&&(p.dealt??loss)>=(w.cities[p.cityId]?.durability??Infinity)||loss>(basic?.p.enemyLoss??0)+AI_TACTIC_RESERVE_COST||opportunity&&loss>0||(p.moraleChanges??[]).some(m=>m.to==='ROUTING'))rows.push(x);
  }
- return rows.map(x=>({...x,score:scoreAction(w,x)})).sort((a,b)=>b.score-a.score||a.type.localeCompare(b.type)||a.targetId.localeCompare(b.targetId)||String(a.traitId).localeCompare(String(b.traitId)));
+ const f=w.armies[id].factionId,unit=w.armies[id];
+ return rows.filter(x=>{
+  if(campaignTacticsEnabled(w,f)&&campaignAiRule(w,f,6)&&w.armies[x.targetId]&&(x.p.allyLoss??0)>0&&campaignAiExchange(x.p)<.7)return false;
+  if(!campaignAiRule(w,f,2)||x.type==='CITY'||!w.armies[x.targetId])return true;
+  const mine=Object.values(w.armies).filter(a=>a.factionId===f&&dist(w,a.tileId,w.armies[x.targetId].tileId)<=3).reduce((n,a)=>n+a.troopCount,0),foe=Object.values(w.armies).filter(a=>a.factionId!==f&&dist(w,a.tileId,unit.tileId)<=3).reduce((n,a)=>n+a.troopCount,0);
+  return campaignAiExchange(x.p)>=1.2||campaignAiLaunch(w,f,id,mine/Math.max(1,foe));
+ }).map(x=>({...x,score:scoreAction(w,x)})).sort((a,b)=>b.score-a.score||a.type.localeCompare(b.type)||a.targetId.localeCompare(b.targetId)||String(a.traitId).localeCompare(String(b.traitId)));
 }
 function applyPrediction(w,x){
  const next={...w,armies:structuredClone(w.armies),cities:structuredClone(w.cities),endedArmyIds:[...w.endedArmyIds,x.armyId]},p=x.p;
@@ -155,18 +164,19 @@ function applyPrediction(w,x){
  return next;
 }
 export function campaignFocusOrder(w,ids){
+ const rule9=campaignAiRule(w,w.armies[ids[0]]?.factionId,9),candidates=rule9?AI_RULE_FOCUS_CANDIDATES:AI_FOCUS_BEAM,width=rule9?AI_RULE_FOCUS_BEAM:AI_FOCUS_BEAM;
  const active=ids.filter(id=>api.canAct(w,id)&&!w.endedArmyIds.includes(id)),near=active.filter(id=>api.attackTargets(w,id).length||api.cityTargets(w,id).length).slice(0,AI_FOCUS_UNITS);
  let best={score:0,actions:[]},beam=[{board:w,left:near,actions:[],score:0}];
  // A global beam bounds the entire search, including permutations, rather
  // than branching twice at every node of a factorial tree.
  for(let depth=0;depth<near.length;depth++){
   const next=[];
-  for(const branch of beam)for(const id of branch.left)for(const x of campaignTacticalActions(branch.board,id).slice(0,AI_FOCUS_BEAM)){
+  for(const branch of beam)for(const id of branch.left)for(const x of campaignTacticalActions(branch.board,id).slice(0,candidates)){
    if(x.score<0)continue;
    const node={board:applyPrediction(branch.board,x),left:branch.left.filter(a=>a!==id),actions:[...branch.actions,x],score:branch.score+x.score};
    next.push(node);if(node.score>best.score)best=node;
   }
-  beam=next.sort((a,b)=>b.score-a.score).slice(0,AI_FOCUS_BEAM);if(!beam.length)break;
+  beam=next.sort((a,b)=>b.score-a.score).slice(0,width);if(!beam.length)break;
  }
  return [...best.actions.map(x=>({armyId:x.armyId,action:actionCommand(x)})),...active.filter(id=>!best.actions.some(x=>x.armyId===id)).map(armyId=>({armyId,action:null}))];
 }
@@ -222,7 +232,8 @@ export function campaignTacticalMoves(s,v,plan,{remember=false,supplyWorld}={}){
   const support=Object.values(v.ownArmies).filter(b=>b.armyId!==a.armyId&&b.troopCount>0&&b.morale!=='ROUTING');
   const backing=baseline.poor?support.filter(b=>dist(s,b.tileId,nearby[0].tileId)<=moveTiles(s,b)+(ranged(b)?2:1)).slice(0,AI_FOCUS_UNITS).some(b=>[...api.reachable(w,b.armyId,s.time.ticksPerTurn)].some(([to])=>dist(s,to,nearby[0].tileId)<=(ranged(b)?2:1))):false;
   const danger=baseline.lethal||parts.matchup&&baseline.poor&&!backing;
-  const retreat=parts.retreat&&danger&&(memory.badExchanges[a.armyId]?.count??0)>=AI_BAD_EXCHANGE_TURNS;
+  const localOwn=Object.values(v.ownArmies).filter(b=>dist(s,a.tileId,b.tileId)<=3).reduce((n,b)=>n+b.troopCount,0),localEnemy=foes.filter(b=>dist(s,a.tileId,b.tileId)<=3).reduce((n,b)=>n+(b.troopCount??0),0);
+  const retreat=parts.retreat&&danger&&(memory.badExchanges[a.armyId]?.count??0)>=AI_BAD_EXCHANGE_TURNS&&(!campaignAiRule(s,v.factionId,4)||localOwn/Math.max(1,localEnemy)<.8);
   if(!parts.flank&&!danger)return c;
   const options=[[a.tileId,{pathTileIds:[a.tileId],totalTicks:0}],...reach].filter(([to,path])=>!reserved.has(to)&&path.pathTileIds.every(id=>v.knowledge.tiles[id]!=='UNEXPLORED')&&(!retreat||path.pathTileIds.length<=2)&&(!archer||nearby.every(b=>dist(s,to,b.tileId)>1)));
   const promising=options.sort(([to],[other])=>Math.min(...nearby.map(b=>Math.abs(dist(s,to,b.tileId)-(archer?2:1))))-Math.min(...nearby.map(b=>Math.abs(dist(s,other,b.tileId)-(archer?2:1))))||dist(s,to,goal)-dist(s,other,goal)||to.localeCompare(other)).slice(0,AI_MOVE_OPTIONS);
