@@ -256,13 +256,13 @@ export function adoptWanderer(s,proposal){
  const destination=s.c26?.remoteProposals?.[proposal.proposalId];if(destination)o.locationRef={kind:'CITY',id:destination};
  terminalOfficer(s,o);domesticJoinedWanderer(s,o.officerId);syncCampaignAdministrativeTerminal(s);initializeCampaignGrowth(s,{...rosterPacks,...domesticTalentPacks});domesticRecruit(s,s.cities[destination??proposal.candidateSourceRef],o.officerId);c34Joined(s,s.cities[destination??proposal.candidateSourceRef],o.officerId);(s.c16Stats??={musters:0,wandererRecruitments:0}).wandererRecruitments++;
 }
-export function selectCityStartMuster(s,factionId){
+export function selectCityStartMuster(s,factionId,chooseTroop=null){
  if(!s.cityStart||s.mapId==='v1'||Object.values(s.armies).some(a=>a.factionId===factionId&&a.troopCount>0&&(!s.terminal||s.terminal.armiesById[a.armyId]?.disposition==='ACTIVE')))return;
  for(const c of Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).sort((a,b)=>a.cityId.localeCompare(b.cityId))){
   if(c.currentProduction?.kind==='muster')return;
   if(cityJobReason(s,c,'muster'))continue;
   for(const o of freeCityOfficers(s,c).sort((a,b)=>Number(a.officerId===c.governorId)-Number(b.officerId===c.governorId)||a.officerId.localeCompare(b.officerId))){
-   const troopType=o.allowedTroops.find(type=>!musterReason(s,c,o.officerId,type));
+   const troopType=chooseTroop?chooseTroop(s,c,o):o.allowedTroops.find(type=>!musterReason(s,c,o.officerId,type));
    if(troopType){selectCityJob(s,{cityId:c.cityId,kind:'muster',officerId:o.officerId,troopType},factionId);return;}
   }
  }

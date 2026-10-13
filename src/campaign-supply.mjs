@@ -1,6 +1,6 @@
 import data from '../../docs/design-data/supply-v0.1.json' with {type:'json'};
 import {boardNeighbors,tileId,hexDistance} from './map-primitives.mjs';
-import {edgeTicks} from './movement.mjs';
+import {edgeTicks,findPath} from './movement.mjs';
 import {diplomacyHostile} from './campaign-diplomacy.mjs';
 import {classifyBattleCasualties} from './military-personnel-ledger.mjs';
 
@@ -126,15 +126,25 @@ export function settleSupply(s){
  }
  s.supply.lastSettledTurn=s.turn;
 }
-export function supplyAiAction(s,id,reachable,{targetCityId=null,allowBuild=true}={}){
- if(!supplyEnabled(s))return null;const a=s.armies[id],link=supplyLink(s,a),need=armyFoodPerTurn(a);
+export function supplyAiAction(s,id,reachable,{targetCityId=null,allowBuild=true,publicWorld=null}={}){
+ if(!supplyEnabled(s))return null;const a=s.armies[id],link=supplyLink(publicWorld??s,a),need=armyFoodPerTurn(a);
  if(a.morale==='ROUTING')return null;
- if(link.state==='CUT'&&a.supplyFood<=need*2||link.state==='DISRUPTED'&&a.supplyFood<=need){
+ if(publicWorld&&a.supplyStarving||link.state==='CUT'&&a.supplyFood<=need*2||link.state==='DISRUPTED'&&a.supplyFood<=need){
+  if(publicWorld){
+   // Choose the nearest usable refill source by known-route cost. Hubs refill
+   // food only; troop replenishment remains the existing own-city rule.
+   const world=services.movement(publicWorld,id),origins=sources(publicWorld,a.factionId).filter(o=>o.hub?o.hub.linked!==false&&o.hub.stock>=need:o.city.foodStock-(o.city.reservedResources?.food??0)-o.city.population*2>=need);
+   const routes=origins.flatMap(o=>o.tiles.filter(t=>publicWorld.tiles[t]).map(t=>findPath(world,id,t))).filter(Boolean).sort((a,b)=>a.totalTicks-b.totalTicks||a.pathTileIds.at(-1).localeCompare(b.pathTileIds.at(-1)));
+   const route=routes[0];if(!route)return {type:'WAIT'};
+   let ticks=0,current=a.tileId,destination=a.tileId;
+   for(const to of route.pathTileIds.slice(1)){const cost=edgeTicks(world,world.armies[id],current,to);if(cost===null||ticks+cost>s.time.ticksPerTurn)break;ticks+=cost;current=to;if(reachable.has(to))destination=to;}
+   return destination===a.tileId?{type:'WAIT'}:{type:'MOVE',destinationTileId:destination};
+  }
   const origins=sources(s,a.factionId),distance=t=>Math.min(...origins.flatMap(o=>o.tiles.map(id=>hexDistance(s.tiles[t],s.tiles[id]))));
   const choices=[...reachable].filter(([t])=>distance(t)<distance(a.tileId)).sort(([x],[y])=>distance(x)-distance(y)||x.localeCompare(y));
   return choices.length?{type:'MOVE',destinationTileId:choices[0][0]}:{type:'WAIT'};
  }
- if(allowBuild&&targetCityId){const site=supplyAiHubSite(s,id,reachable,targetCityId);if(site===a.tileId)return {type:'BUILD_HUB'};if(site)return {type:'MOVE',destinationTileId:site};}
+ if(allowBuild&&targetCityId){const site=supplyAiHubSite(publicWorld??s,id,reachable,targetCityId);if(site===a.tileId)return {type:'BUILD_HUB'};if(site)return {type:'MOVE',destinationTileId:site};}
  return null;
 }
 export function supplyAiHubSite(s,id,reachable,targetCityId){
