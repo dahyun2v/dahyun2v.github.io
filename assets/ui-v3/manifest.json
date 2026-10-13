@@ -1009,35 +1009,6 @@
       "productionScale": 0.55
     },
     {
-      "path": "prototype/assets/ui-v3/units/engineer.png",
-      "purpose": "engineer units 미니어처",
-      "size": [
-        512,
-        512
-      ],
-      "sha256": "3be2f0d874493814e1de8ebe487ab45a90fced75c88efb2182cb1390933b5409",
-      "sourceSheet": "docs/work-integration/20261008/ui-v3/art-out/c81/units-sheet.png",
-      "prompt": "3×2 시트: 보병4·창병4·궁병4·기병3·공병4, 여섯째 빈칸. C80 업 성 참조, 위에서 45도 비스듬히·바닥0.62·왼쪽 위 빛·오른쪽 향함. 후한 찰갑·가죽·삼베·흑칠·청동·저채도. #00ff00 크로마키. 글자·세력 깃발·문장·서양 판금·망토 금지. 1차 낮은 시점을 상부 시점으로 재생성.",
-      "sourceCrop": [
-        600,
-        516,
-        1040,
-        1020
-      ],
-      "alphaBounds": [
-        150,
-        213,
-        361,
-        410
-      ],
-      "groundVerticalScale": 0.62,
-      "anchor": [
-        256,
-        410
-      ],
-      "productionScale": 0.55
-    },
-    {
       "path": "prototype/assets/ui-v3/facilities/farm.png",
       "purpose": "farm facilities 미니어처",
       "size": [
@@ -4452,17 +4423,6 @@
       "prompt": "docs/work-integration/20261010/dots-order/ORDER-SCREENS.md · B7"
     },
     {
-      "path": "prototype/assets/ui-v3/units-ink/engineer.png",
-      "purpose": "병종 무리 흑묵판 — engineer(닷토리 B7: 같은 대상·시점을 기준 지도 화풍으로 새로 그림, 옛 그림의 캔버스·발 자리에 맞춤)",
-      "size": [
-        512,
-        512
-      ],
-      "sha256": "d2f7c7bb30f1736a422ad9da59c0975052f66c165229a13618f5b3af3063978e",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-map-v2.jpg",
-      "prompt": "docs/work-integration/20261010/dots-order/ORDER-SCREENS.md · B7"
-    },
-    {
       "path": "prototype/assets/ui-v3/units-ink/militia.png",
       "purpose": "병종 무리 흑묵판 — militia(닷토리 B7: 같은 대상·시점을 기준 지도 화풍으로 새로 그림, 옛 그림의 캔버스·발 자리에 맞춤)",
       "size": [
@@ -5186,50 +5146,6 @@
       ],
       "sha256": "24f3796f0c12039f243d062c5fd2003a90affdc3288f4ebe96ddae9bf64a0fe8",
       "sourceSheet": "docs/work-integration/20261010/ingame-visual/squad-src/squad-spear-20261011.png",
-      "prompt": "GPT 새 그림(회색 바탕, 천은 자홍 열쇠) → tools/design/squad-sprites.py 가 오려 세력 색으로 칠함"
-    },
-    {
-      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-blue.webp",
-      "purpose": "지도 위 병사 무리 — 공성 · 손권 파란 천(시안 final-map-v2 의 세력 색 병사 무리)",
-      "size": [
-        520,
-        326
-      ],
-      "sha256": "c74f8f9a09c421a6a28c67d62dee5b9bad546ef457a2b6db6110ca572ae5316a",
-      "sourceSheet": "docs/work-integration/20261010/ingame-visual/squad-src/squad-engineer-20261011.png",
-      "prompt": "GPT 새 그림(회색 바탕, 천은 자홍 열쇠) → tools/design/squad-sprites.py 가 오려 세력 색으로 칠함"
-    },
-    {
-      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-green.webp",
-      "purpose": "지도 위 병사 무리 — 공성 · 유비 초록 천(시안 final-map-v2 의 세력 색 병사 무리)",
-      "size": [
-        520,
-        326
-      ],
-      "sha256": "31b402a1025fa73c5976fe173faca65d7b0fd4b8313b2d7872b0d284ba24637f",
-      "sourceSheet": "docs/work-integration/20261010/ingame-visual/squad-src/squad-engineer-20261011.png",
-      "prompt": "GPT 새 그림(회색 바탕, 천은 자홍 열쇠) → tools/design/squad-sprites.py 가 오려 세력 색으로 칠함"
-    },
-    {
-      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-grey.webp",
-      "purpose": "지도 위 병사 무리 — 공성 · 중립 회색 천(시안 final-map-v2 의 세력 색 병사 무리)",
-      "size": [
-        520,
-        326
-      ],
-      "sha256": "9a0b5f90aae2f8859f99bed898e3251e6bb246bd4c640f2c732f507662f95d42",
-      "sourceSheet": "docs/work-integration/20261010/ingame-visual/squad-src/squad-engineer-20261011.png",
-      "prompt": "GPT 새 그림(회색 바탕, 천은 자홍 열쇠) → tools/design/squad-sprites.py 가 오려 세력 색으로 칠함"
-    },
-    {
-      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-red.webp",
-      "purpose": "지도 위 병사 무리 — 공성 · 조조 붉은 천(시안 final-map-v2 의 세력 색 병사 무리)",
-      "size": [
-        520,
-        326
-      ],
-      "sha256": "5cfb0f142c81499ff051e038b6d02e626092876da9628be1e87322303b65c3a8",
-      "sourceSheet": "docs/work-integration/20261010/ingame-visual/squad-src/squad-engineer-20261011.png",
       "prompt": "GPT 새 그림(회색 바탕, 천은 자홍 열쇠) → tools/design/squad-sprites.py 가 오려 세력 색으로 칠함"
     },
     {

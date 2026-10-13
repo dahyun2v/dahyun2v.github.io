@@ -23,7 +23,7 @@ export const FACTION = {
   F03: {color: '#33709f', name: '손권', glyph: '孫'},
 };
 const NEUTRAL = {color: '#76776f', name: '중립', glyph: '中'};
-const TROOP_GLYPH = {militia: '步', spear: '槍', bow: '弓', cavalry: '騎', engineer: '工', mystic: '術'};
+const TROOP_GLYPH = {militia: '步', spear: '槍', bow: '弓', cavalry: '騎'};
 // 지도 모델의 병종 코드(campaign-adapters troopToCampaign) → 그림·글자 이름
 const TROOP_KEY = {BT01: 'militia', BT02: 'spear', BT03: 'bow', BT04: 'cavalry'};
 const troopKey = (u) => TROOP_KEY[u.troop] ?? u.troop;

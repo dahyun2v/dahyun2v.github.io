@@ -23,7 +23,7 @@ export function troopSounds(troop) {
   const t = String(troop ?? '');
   if (/BT04|caval|horse/i.test(t)) return {move: 'gallop', hit: 'charge'};
   if (/BT03|bow|archer|crossbow/i.test(t)) return {move: 'march', hit: 'arrows'};
-  if (/catapult|ram|siege|engineer/i.test(t)) return {move: 'march', hit: 'siege'};
+  if (/catapult|ram|siege/i.test(t)) return {move: 'march', hit: 'siege'};
   return {move: 'march', hit: 'clash'};
 }
 

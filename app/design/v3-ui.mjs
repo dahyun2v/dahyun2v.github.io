@@ -44,7 +44,7 @@ const pick = (map, dir) => Object.fromEntries(Object.entries(map).map(([k, f]) =
 export function v3MapOptions() {
   const cityArt = {};
   for (const [id, f] of Object.entries(CITY_FILE)) { const src = v3Asset(`cities/${f}.png`); if (src) cityArt[id] = {src, fit: CITY_FIT}; }
-  const troops = ['militia', 'spear', 'bow', 'cavalry', 'engineer'], kinds = ['farm', 'granary', 'market', 'barracks', 'workshop', 'tuntian', 'clinic', 'mufu'];
+  const troops = ['militia', 'spear', 'bow', 'cavalry'], kinds = ['farm', 'granary', 'market', 'barracks', 'workshop', 'tuntian', 'clinic', 'mufu'];
   return {
     // 흑묵 그래픽 노블 지도(10-10, 바이블 v2)가 기본, ?map=paint 면 회화 지도.
     mapArt: (inkMapTrial() ? v3Asset('map/v10-ink.webp') ?? v3Asset('map/v9-ink.webp') ?? v3Asset('map/v8-ink.webp') ?? v3Asset('map/v7-ink.webp') ?? v3Asset('map/v6-ink.webp') ?? v3Asset('map/v5-ink.webp') ?? v3Asset('map/v4-ink-trial.webp') : null) ?? v3Asset('map/v3-base-v2.webp') ?? v3Asset('map/v3-base-v2.png') ?? v3Asset('map/v3-base.webp') ?? v3Asset('map/v3-base.png'),

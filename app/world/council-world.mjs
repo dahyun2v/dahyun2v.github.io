@@ -3,7 +3,8 @@
 // Claude 2026-10-10. 석실 화면(seoksil/screens/council.mjs)의 흐름(군사 고르기 → 안건 고르기 → 결의/보류 → 평정 마침)을 그대로 따른다.
 import {COUNCIL,councilCandidates} from '/src/campaign-council.mjs';
 import {campaignDate} from '/src/campaign-map-model.mjs';
-import {readableError} from '/app/world/hud-ink.mjs';
+import {readableError,campaignHorizonText,noFieldArmyText} from '/app/world/hud-ink.mjs';
+import {CAMPAIGN_TURN_LIMIT} from '/src/campaign-runtime.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const KIND = COUNCIL.proposals.kinds;
@@ -70,7 +71,9 @@ export function renderCouncilWorld(root, state, ctx) {
       <dl class="wc-facts"><div><dt>기대</dt><dd>${esc(selected.expected)}</dd></div><div><dt>위험</dt><dd>${esc(selected.risk)}</dd></div>
       <div><dt>지키면</dt><dd>${esc(name(selected.proposerId))} 경험 +${fx.proposerExperience} · 친밀 +${fx.rulerAffinity}</dd></div><div><dt>어기면</dt><dd>군주와 친밀 ${bx.rulerAffinity}</dd></div></dl>`;
   } else {
-    const lines = open ? c.report : [c.advisorLine ?? '변경은 조용합니다.'];
+    const lines = (open ? c.report : [c.advisorLine ?? '변경은 조용합니다.']).map(l=>campaignHorizonText(l,state.turn,CAMPAIGN_TURN_LIMIT));
+    const noArmy=noFieldArmyText({ownArmies:Object.fromEntries(Object.entries(state.armies).filter(([,a])=>a.factionId===me&&a.troopCount>0)),ownCities:Object.fromEntries(Object.entries(state.cities).filter(([,c])=>c.ownerFactionId===me))});
+    if(noArmy)lines.push(noArmy);
     detail = `<h3>${open ? `군사 ${esc(strategist?.name ?? '')}의 보고` : '군사 한마디'}</h3>${lines.map((l) => `<p class="wc-line">${esc(l)}</p>`).join('') || '<p class="wc-line">보고할 것이 없습니다.</p>'}`;
   }
 

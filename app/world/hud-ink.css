@@ -2610,3 +2610,16 @@ body.ink #growth-cards .draft-card .art .gi{font-size:22px}
   body.ink .w-result .rs-actions{flex-wrap:wrap;translate:none}
   body.ink .w-result :is(.rs-sub,.rs-band p,.rs-rank small,.rs-officers small){color:#e8ddca;opacity:1}
 }
+
+/* C138: explanatory text only; existing panel and button geometry stays fixed. */
+.ih-intent{position:absolute;left:33.5%;top:12%;width:62%;margin:0;box-sizing:border-box;font:11px/1.2 var(--serif);color:#f0dfb9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ink-hud.foe .ih-intent{left:30.7%;top:32%;width:65%;color:#efe6d6;background:#171b19;padding:1px 3px}
+.ih-readout .ih-intent-full{color:#f0dfb9;overflow-wrap:anywhere}
+.ih-readout .ih-action-help{min-height:1.5em;padding-top:3px;border-top:1px solid #524b3d;color:#dfd3b9;overflow-wrap:anywhere}
+#campaign-advice{margin:3px 0 0;font:12px/1.5 var(--serif);overflow-wrap:anywhere;max-width:100%}
+#result .rs-reason{margin:0 0 6px;color:#efdbb5;font-size:16px;line-height:1.5}
+#result .rs-unused{margin:0 0 8px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+#growth-cards .card-use{color:#efdbb5;font-size:12px;line-height:1.35;margin:4px 0}
+body.ink #growth-cards .draft-card p:not(.card-use){height:26.5%}
+body.ink #growth-cards .draft-card p.card-use{top:69%;height:5%;margin:0;font-size:.72em;color:#efdbb5;line-height:1.35;overflow:hidden}
+@media(max-width:1250px){.ih-intent{font-size:10px}#campaign-advice{font-size:11px}#result .rs-reason{font-size:14px}}
