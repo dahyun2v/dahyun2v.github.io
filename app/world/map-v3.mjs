@@ -25,7 +25,8 @@ export const FACTION = {
 const NEUTRAL = {color: '#76776f', name: '중립', glyph: '中'};
 const TROOP_GLYPH = {militia: '步', spear: '槍', bow: '弓', cavalry: '騎'};
 // 지도 모델의 병종 코드(campaign-adapters troopToCampaign) → 그림·글자 이름
-const TROOP_KEY = {BT01: 'militia', BT02: 'spear', BT03: 'bow', BT04: 'cavalry'};
+// engineer · mystic: 옛 초기 자료에 남은 병종 이름(엔진에서는 근접보병 · 원거리보병으로 돈다) — 그 병종의 그림으로 그린다(공병 그림은 10-13 에 지움)
+const TROOP_KEY = {BT01: 'militia', BT02: 'spear', BT03: 'bow', BT04: 'cavalry', engineer: 'militia', mystic: 'bow'};
 const troopKey = (u) => TROOP_KEY[u.troop] ?? u.troop;
 const TERRAIN = {plain: '#5f5a47', forest: '#34432f', hill: '#6d5d42', mountain: '#47443f', water: '#24404f', unknown: '#22231f'};
 const PLACE_GLYPH = {'성소': '祠', '은거지': '隱', '옛 진지': '營', '군마 산지': '馬'};

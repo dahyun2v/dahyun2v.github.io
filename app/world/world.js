@@ -63,7 +63,8 @@ let crisisData=null,crisisSeen=new Set(),bondsData=null,hoverSide=null,dangerMod
 // 엔진 오류 코드를 플레이어 문장으로(코드는 콘솔에만)
 const ERROR_TEXT={C26_COMMAND_UNAVAILABLE:'지금은 이 내정 명령을 쓸 수 없습니다.',INVALID_C26_CITY:'우리 성에서만 쓸 수 있습니다.',INVALID_ORDER_UNITS:'이미 움직였거나 행동을 마친 부대에는 이동 명령을 줄 수 없습니다.',INVALID_ORDER_DESTINATION:'갈 수 없는 칸입니다.',INVALID_CAMPAIGN_ATTACK:'지금 공격할 수 없는 대상입니다.',INVALID_CAMPAIGN_CITY_ATTACK:'지금 이 성은 공격할 수 없습니다.',INVALID_CAMPAIGN_FACE:'이동하기 전에만 정면을 돌릴 수 있습니다.',INVALID_MUSTER_OFFICER_OR_TROOP:'출진할 장수와 병종을 확인하세요.',MUSTER_RESERVE_200_REQUIRED:'예비병이 200명 이상 있어야 출진할 수 있습니다.',INVALID_WANDERER_RECRUITMENT:'지금은 등용할 수 없습니다(이미 협의 중이거나 성의 주인이 아님).',INVALID_GARRISON:'적과 붙어 있지 않은 상태로 자기 성 중심에 있어야 주둔할 수 있습니다.',MAIN_ACTION_USED:'이번 턴 행동을 이미 썼습니다.',EVENT_PENDING:'사건 카드를 먼저 정하세요.',UNIQUE_FACILITY_LIMIT:'고유 시설은 도시당 1개입니다.',UNIQUE_FACILITY_LOCKED:'다른 세력의 고유 시설입니다.',NO_DAMAGED_FACILITY:'손상된 시설이 없습니다.',MINOR_CITY_NO_FACILITIES:'작은 성에는 지을 수 없습니다.',STAR_COOLDOWN:'재사용 대기 중입니다.',STAR_UNAVAILABLE:'패주 중이라 쓸 수 없습니다.',STAR_OCCUPIED:'점령 처리 중인 성입니다.'};
 const reasonText=code=>code?(/^MUSTER_RESERVE_(\d+)_REQUIRED$/.test(code)?`예비병 ${code.match(/\d+/)[0]}명 이상 필요`:/[가-힣]/.test(code)?code:ERROR_TEXT[code]??'조건 미충족'):'';
-const TROOP_LABEL={militia:'도검병',spear:'창병',bow:'궁병',cavalry:'기병',catapult:'투석기'};
+// engineer · mystic: 옛 초기 자료(조조 · 순욱 · 제갈량 · 주유)에 남은 이름 — 병종은 넷뿐이고 엔진에서는 각각 근접보병 · 원거리보병으로 돈다. 영문이 그대로 보이지 않게 그 이름으로 읽는다(닷토리 새 판 13회차 'engineer 영문')
+const TROOP_LABEL={militia:'도검병',spear:'창병',bow:'궁병',cavalry:'기병',catapult:'투석기',engineer:'도검병',mystic:'궁병'};
 const statLine=o=>o?.baseStats?`지휘 ${o.baseStats.leadership} · 무용 ${o.baseStats.might} · 지략 ${o.baseStats.intelligence}`:'';
 ERROR_TEXT.INVALID_CAMPAIGN_TACTIC='닿지 않습니다 — 더 다가가야 합니다';
 ERROR_TEXT.INVALID_CAMPAIGN_CITY_ATTACK='수비대가 성을 지키고 있습니다 — 먼저 수비대를 물리쳐야 합니다';
@@ -1333,7 +1334,7 @@ function refreshMusterTroops(v=view(state)){
 function refreshCityTroops(v=view(state)) {
  const army=v.ownArmies[$('#city-job-army')?.value],select=$('#city-job-troop');
  if(!select||!army)return;
- const troopName={militia:'보병',spear:'창병',bow:'궁병',cavalry:'기병'};
+ const troopName={militia:'보병',spear:'창병',bow:'궁병',cavalry:'기병',engineer:'보병',mystic:'궁병'};
  select.innerHTML=v.officers[army.commanderId].allowedTroops.map(type=>`<option value="${type}" ${type===army.troopType?'selected':''}>${troopName[type]??type}</option>`).join('');
 }
 $('#city-panel').addEventListener('change',e=>{if(e.target.id==='city-job-army')refreshCityTroops();if(e.target.id==='city-job-officer')refreshMusterTroops();});
