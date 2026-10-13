@@ -2628,11 +2628,12 @@ body.ink .w-tip.forecast:is(:has(.fc-vs),:has(.fc-bar.wide))>.fc-sum:first-child
 /* /2026-10-13 교전 예고 */
 /* 2026-10-13 부대 병력 숫자 — 코에이 삼국지 14 처럼: 초상 바로 아래에 붙은 넓은 세력색 판 + 큰 숫자 + 아래 가는 막대(사용자 "부대의 병력숫자 위치 코삼 참고해서 바꾸고"). Codex 는 이 묶음을 고치지 말 것 */
 /* 2026-10-14: 판은 먹색으로(사용자 "병력 숫자 넣는 네모칸 빨간색 말고 다른 색으로") — 세력은 아래 가는 막대의 색으로 남긴다. 붉은색은 지도에서 '칠 수 있다 · 위험'에만 */
-body.ink .wmap .w-unit .plate .count.k .kplate{fill:#17130f;stroke:#eadfc8;stroke-width:1px;stroke-linejoin:round;filter:drop-shadow(0 1.6px 1px rgba(8,6,4,.6))}
-body.ink .wmap .w-unit .plate .count.k text{fill:#f8ecc8;font-weight:800;font-size:14px;stroke:#14100c;stroke-width:2.6px;paint-order:stroke;stroke-linejoin:round}
-body.ink .wmap .w-unit .plate .count.k .bar-bg{fill:#3a332b;opacity:.95}
+/* 2026-10-14(이어서): 판 자체를 없앴다 — 숫자(두꺼운 먹 외곽선)와 가는 막대만. 삼국지 14 가 그렇게 한다(공식 소개 그림에서 확인: 작은 초상 바로 아래 흰 숫자 + 가는 막대, 판 없음). 판 자리는 투명하게 남겨 누르는 넓이는 그대로 */
+body.ink .wmap .w-unit .plate .count.k .kplate{fill:transparent;stroke:none}
+body.ink .wmap .w-unit .plate .count.k text{fill:#fff6dc;font-weight:800;font-size:15.5px;stroke:#14100c;stroke-width:3.4px;paint-order:stroke;stroke-linejoin:round}
+body.ink .wmap .w-unit .plate .count.k .bar-bg{fill:#0e0c0a;opacity:1}
 body.ink .wmap .w-unit .plate .count.k .bar,body.ink .wmap .w-unit.enemy .plate .count.k .bar{fill:color-mix(in srgb,var(--fc) 82%,#fff3d6)}
-body.ink .wmap .w-unit.active .plate .count.k .kplate{stroke:#fff4d8;stroke-width:1.4px}
+body.ink .wmap .w-unit.active .plate .count.k text{fill:#ffe59a}
 /* /2026-10-13 부대 병력 숫자 */
 /* 2026-10-13 성 안 배치(시안 docs/work-integration/20261013/ui-layout/mock/city-gpt.jpg — 사용자 "성 바꾼거 좋네"). 판 그림 = city-lord-v3-*.png(580×1200) · city-bottom-v2.png(2000×134), 자리는 그림에서 잰 %. 선택자의 .cs-stage:has(.cs-fit)~ 는 앞쪽 옛 판 규칙(.cs-stage:has(.cs-fit.plate)~.cs-lord …)을 이기려는 것. Codex 는 이 묶음을 고치지 말 것 */
 /* 오른쪽 판 = city-lord-v3-*.png(580×1200): 이름 꼬리표 3.8~8.5% · 큰 초상 창 9.8~53.1%(안쪽 x 8.6~74.6%) · 막대 틀 54.9~59.8 / 61.4~66.5%(홈 x 27~87%) · 표 68.5~90.2%(다섯 줄). 태수 그림은 원래 크기에 가깝게(사용자 "원래대로 큰 거로") */
