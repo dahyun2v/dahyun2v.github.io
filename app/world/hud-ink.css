@@ -2836,20 +2836,217 @@ body.hud-band [hidden]{display:none!important}
 @media(max-width:1250px){body.hud-band{--band-h:13.5dvh;--band-font:14px}body.hud-band .nb-identity>b,body.hud-band .nb-preview-values>b{font-size:20px}body.hud-band .nb-identity{gap:3px}body.hud-band .nb-order-row button{padding-inline:8px}body.hud-band .nb-ratings>span{min-width:34px;padding:2px 4px}body.hud-band .nb-status button{padding-inline:3px}body.hud-band .nb-preview-middle>b{font-size:16px}}
 @media(prefers-reduced-motion:reduce){body.hud-band .nb-wipe .nb-content{animation:none}}
 /* /C147 */
-/* 2026-10-14 군령 띠 판 그림 — 띠 · 죽간 단추 · 인장을 GPT 가 그린 그림으로(사용자 "굿 ㄱㄱㄱ" 뒤, 설계 s1-band/DESIGN.md 4절). 띠는 세 조각: 양 끝(매듭 · 붉은 붓 자국)은 높이에 맞춘 제 비율 그대로, 가운데(무늬 없는 면 + 끈 두 줄)만 폭에 맞춰 늘린다. Codex 는 이 묶음을 고치지 말 것 */
-body.hud-band .nb-band{--capL:calc(var(--band-h)*2.312);--capR:calc(var(--band-h)*.822);border:0;background:url(/assets/ui-v3/hud/band-left.png) left center/var(--capL) 100% no-repeat,url(/assets/ui-v3/hud/band-right.png) right center/var(--capR) 100% no-repeat,url(/assets/ui-v3/hud/band-mid.png) calc(var(--capL) - 1px) center/calc(100% - var(--capL) - var(--capR) + 2px) 100% no-repeat}
-body.hud-band .nb-band :is(.nb-order-row,.nb-more) button,body.hud-band .nb-band .nb-next{--sc:calc(48px*.595);border:0;background:url(/assets/ui-v3/hud/band-slip-l.png) left center/var(--sc) 100% no-repeat,url(/assets/ui-v3/hud/band-slip-r.png) right center/var(--sc) 100% no-repeat,url(/assets/ui-v3/hud/band-slip-m.png) calc(var(--sc) - 1px) center/calc(100% - var(--sc)*2 + 2px) 100% no-repeat;padding:0 calc(var(--sc)*.82);min-width:84px}
-body.hud-band .nb-band :is(.nb-order-row,.nb-more) button::before,body.hud-band .nb-band :is(.nb-order-row,.nb-more) button::after,body.hud-band .nb-band .nb-next::before,body.hud-band .nb-band .nb-next::after{display:none}
-body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:hover:enabled,body.hud-band .nb-band .nb-next:hover:enabled{background-color:transparent;filter:brightness(1.22)}
-body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:disabled{filter:grayscale(1) brightness(.72);opacity:.62}
-body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:is([aria-pressed="true"],.on){filter:brightness(1.32)}
+/* 2026-10-14 군령 띠 판 그림 — C149: 매듭과 죽간 제거, 인장 유지. */
 /* 실행 = 인장: 공격 · 전법을 내리면 띠에 주사 인장이 찍힌다(world.js 의 bandStamp 가 .stamp 를 붙였다 뗀다). 움직임 줄이기 설정이면 없음 */
 body.hud-band .nb-band.stamp::after{content:'';position:absolute;right:17%;top:50%;width:calc(var(--band-h)*.92);aspect-ratio:360/356;background:url(/assets/ui-v3/hud/band-seal.png) center/contain no-repeat;pointer-events:none;transform:translateY(-50%) rotate(-7deg);animation:nb-stamp .62s cubic-bezier(.2,.9,.3,1) both;z-index:3}
 @keyframes nb-stamp{0%{opacity:0;transform:translateY(-50%) rotate(-7deg) scale(1.9)}22%{opacity:1;transform:translateY(-50%) rotate(-7deg) scale(.96)}34%{transform:translateY(-50%) rotate(-7deg) scale(1)}78%{opacity:1}100%{opacity:0;transform:translateY(-50%) rotate(-7deg) scale(1)}}
 @media (prefers-reduced-motion:reduce){body.hud-band .nb-band.stamp::after{display:none}}
-/* 그림의 끈이 띠 안쪽 6~8px 를 지나간다 — 글과 단추가 끈에 걸리지 않게 안쪽으로. 오른쪽 끝 매듭(띠 높이의 약 0.33배 폭)은 가리지 않는다 */
-body.hud-band .nb-band .nb-content{padding-block:calc(var(--band-h)*.09) calc(var(--band-h)*.05);box-sizing:border-box}
-body.hud-band .nb-band :is(.ih-end,.nb-click){left:auto;right:calc(var(--band-h)*.5);width:12.5%}
-body.hud-band .nb-end-warning{left:auto;right:calc(var(--band-h)*.5);width:12.5%;text-align:right}
-@media(max-width:1250px){body.hud-band .nb-band .nb-identity{gap:1px}body.hud-band .nb-band .nb-identity>b{font-size:18px}body.hud-band .nb-band .nb-identity>span{font-size:13.5px;line-height:1.25}body.hud-band .nb-band .nb-ratings>span{padding:1px 6px}body.hud-band .nb-band .nb-ratings small{font-size:10.5px;line-height:1.1}body.hud-band .nb-band .nb-ratings b{font-size:15px;line-height:1.05}}
-/* /2026-10-14 군령 띠 판 그림 */
+/* C149: Sol reference HUD; only the command band and its map HUD are restyled. */
+body.hud-band #ink-hud{font-family:var(--serif);color:#eee4ce}
+body.hud-band .nb-band{border:0;border-top:1px solid #ac9977;background:#101211f5;font-family:var(--serif)}
+body.hud-band .nb-content{padding:0;grid-template-columns:12% 14% 1% 54.5% .5% 17% 1%;align-items:center}
+body.hud-band .nb-identity{position:relative;grid-column:2;gap:3px;z-index:2;transform:translateY(-12px)}
+body.hud-band .nb-identity>b{font:var(--title-w,400) 32px/1 var(--title,var(--disp));letter-spacing:.05em}
+body.hud-band .nb-hero{width:12vw;--band-face:calc(var(--band-h)*.7)}
+body.hud-band .nb-identity>span{font:13px/1.3 var(--serif)}
+body.hud-band .nb-ratings{gap:9px}
+body.hud-band .nb-ratings>span{flex-direction:row;gap:3px;border:0;background:none;min-width:0;padding:0}
+body.hud-band .nb-ratings small{font:11px/1.3 var(--serif)}
+body.hud-band .nb-ratings b{font:600 14px/1.3 var(--serif)}
+body.hud-band .nb-status{position:absolute;grid-column:1/-1;left:12%;bottom:6%;width:14%;gap:3px;justify-content:flex-start;z-index:2}
+body.hud-band .nb-status button{border:0;padding:0 2px;height:17px;font:11px/1.3 var(--serif);background:none}
+body.hud-band .nb-orders{grid-column:4}
+body.hud-band .nb-help{font:12px/1.3 var(--serif);margin:0 0 5px;color:#c7bea9}
+body.hud-band .nb-order-row{display:flex;gap:.6vw}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button{height:clamp(44px,7.7dvh,74px);flex:1 1 0;min-width:0;padding:0 4px;border:1px solid #978b75;background:#171a18;color:#eee4ce;font:20px/1.2 var(--serif);transform:none;filter:none;white-space:nowrap}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:is([aria-pressed="true"],.on){background:#7d2a22;border-color:#c9a08a;color:#eee4ce;transform:none;filter:none}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:disabled{opacity:.4;color:#c1b8a7;filter:none}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:hover:enabled{background-color:#332b26;filter:none}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button[aria-pressed="true"]:hover{background:#88362c}
+body.hud-band .nb-band .nb-more button{flex:1 0 110px;height:48px;font-size:15px;white-space:normal}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more,.nb-next) button::before,body.hud-band .nb-band :is(.nb-order-row,.nb-more) button::after{display:none}
+body.hud-band .nb-band .nb-next{height:48px;background:#171a18;border:1px solid #978b75;font:18px var(--serif);min-width:150px}
+body.hud-band .nb-next::before,body.hud-band .nb-next::after{display:none}
+body.hud-band .nb-hero::before,body.hud-band .nb-preview-portrait::before{content:'';position:absolute;inset:25% 0 0;background:var(--side-color,var(--fc));mask:url(/assets/ui-v3/ink/stroke-rust.png) center/100% 100% no-repeat;opacity:.7}
+body.hud-band .nb-band :is(.ih-end,.nb-click){left:auto;right:1%;width:17%;height:clamp(44px,7.7dvh,74px);top:50%;transform:translateY(-35%);background:#7d2a22;color:#eee4ce;font:30px/1.2 var(--title);clip-path:polygon(3% 5%,95% 0,100% 18%,97% 75%,100% 96%,8% 100%,0 85%,2% 40%)}
+body.hud-band .nb-band .ih-end b{font:inherit}
+body.hud-band .nb-end-warning{right:1%;width:16%;bottom:calc(50% + 32px);font:12px/1.3 var(--serif);text-align:center}
+body.hud-band .nb-advice{grid-column:2/4;padding:0 10px 0 0;font:14px/1.5 var(--serif)}
+body.hud-band .nb-bookmarks{top:10dvh;left:0;gap:8px}
+body.hud-band .nb-bookmarks>button{height:42px;min-width:82px;background:#101211e8;clip-path:none;border:0;padding:5px 13px;text-align:left;font:18px/1.3 var(--serif)}
+body.hud-band .nb-bookmarks>button::after{content:'';display:block;width:54px;height:1px;background:#ac9977;margin-top:6px}
+body.hud-band .nb-map-options{flex-direction:column;gap:4px;padding:7px}
+body.hud-band .nb-map-options button{font:15px var(--serif)}
+body.hud-band .nb-news-tab{top:8.5dvh;right:1.2%;width:22%;min-height:40px;border:0;border-block:1px solid #ac9977;text-align:left;font:19px/1.3 var(--serif);background:#101211f2;padding:8px 16px}
+body.hud-band .nb-news-tab::after{content:'';position:absolute;right:0;top:0;width:24px;height:calc(100% + 20px);background:#7d2a22;clip-path:polygon(0 0,100% 0,90% 100%,50% 85%,8% 100%)}
+body.hud-band .nb-tasks{position:fixed;right:1.2%;top:calc(8.5dvh + 40px);width:22%;box-sizing:border-box;margin:0;padding:4px 32px 8px 16px;list-style:none;background:#101211f2;border-bottom:1px solid #ac9977;pointer-events:none;font:14px/1.5 var(--serif)}
+body.hud-band .nb-tasks li{padding:12px 0;border-bottom:1px solid #615947;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+body.hud-band .nb-news-open .ih-notice{top:calc(8.5dvh + 145px);font-family:var(--serif)}
+body.hud-band .nb-news-peek{top:calc(8.5dvh + 145px)}
+body.hud-band .ih-top{height:64px;box-sizing:border-box;padding:0 1.3%;gap:12px;background:#101211ed;border-bottom:1px solid #ac9977;display:flex;flex-wrap:nowrap}
+body.hud-band .ih-topbar,body.hud-band .ih-emblem{display:none}
+body.hud-band .ih-faction{order:0}
+body.hud-band .ih-faction b{font:var(--title-w,400) 40px/1 var(--title);letter-spacing:.05em}
+body.hud-band .ih-date{position:static;order:1;display:flex;flex-direction:row;margin:0;padding:0;gap:6px;align-items:center}
+body.hud-band .ih-date b{font:18px var(--serif);letter-spacing:0}
+body.hud-band .ih-date small{display:none}
+body.hud-band .ih-res{position:static;order:2;flex:1;display:flex;gap:12px;padding:0;min-width:0}
+body.hud-band .ih-res>.ih-chip{position:static!important;translate:none;min-width:0!important;gap:4px;left:auto;top:auto;font:18px/1.3 var(--serif);flex-wrap:wrap}
+body.hud-band .nb-resource-label{font:14px/1.3 var(--serif);color:#c7bea9}
+body.hud-band .ih-chip small{font:11px/1.3 var(--serif);color:#c7bea9;max-width:none!important}
+body.hud-band .ih-chip small.down{color:#e66b55}
+body.hud-band .ih-medal{position:relative;order:3;top:auto;left:auto;width:58px;flex:none;transform:none}
+body.hud-band .ih-medal img{width:58px}
+body.hud-band .ih-turn{bottom:7%;font:12px var(--serif)}
+body.hud-band .nb-goal{top:102%;width:100px;gap:3px}
+body.hud-band .nb-goal small{font:11px var(--serif)}
+body.hud-band .ih-menu{position:static;order:4;display:flex;gap:12px;flex:none}
+body.hud-band .ih-menu :is(button,a){position:static;background:none;border:0;border-radius:0;width:auto;height:auto;font:18px var(--serif);padding:3px 0;white-space:nowrap}
+body.hud-band .ih-menu a{display:none}
+body.hud-band .ih-victory{display:block!important;position:absolute;left:auto;right:1%;top:100%;max-width:450px;white-space:normal}
+body.hud-band .ih-victory[hidden]{display:none!important}
+body.hud-band .nb-state-title{position:fixed;left:2%;top:9dvh;z-index:25;max-width:35%;pointer-events:none}
+body.hud-band .nb-state-title h1{position:relative;margin:0;padding:0 14px;color:#eee4ce;font:var(--title-w,400) 76px/1.1 var(--title);letter-spacing:.04em}
+body.hud-band .nb-state-title h1::before{content:'';position:absolute;inset:-12% -8%;z-index:-1;background:#101211;mask:url(/assets/ui-v3/ink/stroke-ink.png) center/100% 100% no-repeat}
+body.hud-band .nb-state-title p{font:16px/1.6 var(--serif);margin:14px 0 0;padding:5px 16px;background:#101211db}
+body.hud-band .nb-state-title p:empty{display:none}
+body.hud-band:has(.nb-state-title:not([hidden])) .nb-bookmarks{top:32dvh}
+body.hud-band .nb-supply{position:fixed;right:1.5%;top:26%;width:24%;max-height:58%;overflow:auto;box-sizing:border-box;background:#101211f5;border:1px solid #ac9977;padding:18px 22px;pointer-events:auto;font:16px/1.5 var(--serif);z-index:36}
+body.hud-band .nb-supply h2{font:var(--title-w,400) 40px/1.1 var(--title);margin:0 0 10px}
+body.hud-band .nb-supply h3{font:700 21px/1.4 var(--serif);margin:14px 0 8px;border-top:1px solid #615947;padding-top:10px}
+body.hud-band .nb-supply p{margin:8px 0}
+body.hud-band .nb-supply p b{float:right}
+body.hud-band .nb-supply-tag{background:#171a18;border-bottom:1px solid #ac9977;padding:4px 10px}
+body.hud-band .nb-supply-tag.warn{background:#7d2a22;color:#eee4ce}
+body.hud-band .nb-supply-gauge{display:flex;gap:6px}
+body.hud-band .nb-supply-gauge i{width:30px;height:20px;border:1px solid #8d826d;background:linear-gradient(90deg,#eee4ce var(--fill),transparent var(--fill))}
+body.hud-band .nb-supply-count{text-align:center}
+body.hud-band .nb-supply small{font:13px var(--serif);color:#bfb5a1}
+body.hud-band .nb-supply .warn{color:#ef7963}
+body.hud-band:has(.nb-supply:not([hidden])) :is(.nb-news-tab,.nb-tasks){display:none}
+body.hud-band .nb-band[data-state="forecast"]{height:20dvh;--band-face:8dvh}
+body.hud-band .nb-preview-ally{left:0;width:34%}
+body.hud-band .nb-preview-ally .nb-preview-values{margin-left:19vw}
+body.hud-band .nb-preview-enemy{left:52%;width:29%}
+body.hud-band .nb-preview-enemy .nb-preview-values{margin-left:1vw}
+body.hud-band .nb-preview-portrait{width:19vw;height:34dvh;bottom:0}
+body.hud-band .nb-preview-enemy .nb-preview-portrait{width:17vw;right:0}
+body.hud-band .nb-preview-values{position:relative;gap:4px;z-index:2}
+body.hud-band .nb-preview-values>b{font:700 28px/1.1 var(--serif)}
+body.hud-band .nb-preview-count{font:700 27px/1.2 var(--serif);font-variant-numeric:tabular-nums;white-space:nowrap}
+body.hud-band .nb-preview-count small{display:none}
+body.hud-band .nb-preview-loss{display:flex;flex-direction:column;gap:2px}
+body.hud-band .nb-preview-loss small{font:14px/1.3 var(--serif);color:#eee4ce}
+body.hud-band .nb-preview-loss strong{font:700 40px/1 var(--serif);color:#e66b55}
+body.hud-band .nb-soldiers{display:flex;gap:0;height:30px;width:13vw}
+body.hud-band .nb-soldiers img{height:30px;width:10%;object-fit:contain}
+body.hud-band .nb-soldiers .lost{opacity:.23}
+body.hud-band .nb-preview-middle{left:35%;width:16%;gap:6px}
+body.hud-band .nb-preview-middle i{font:64px/1 var(--serif);font-style:normal}
+body.hud-band .nb-preview-middle>b{font:24px/1.2 var(--serif);border-bottom:1px solid #ac9977;padding-bottom:7px}
+body.hud-band .nb-preview-mods{position:absolute;left:82%;right:1%;top:6%;height:45%;overflow:auto;border:1px solid #8d826d;padding:5px 10px;box-sizing:border-box;font:14px/1.4 var(--serif)}
+body.hud-band .nb-preview-mods p{margin:2px 0}
+body.hud-band .nb-forecast .nb-click{top:58%;height:27%;transform:none;font:26px/1.1 var(--title);display:flex;align-items:center;justify-content:center}
+body.hud-band .nb-cancel{position:absolute;left:82%;right:1%;bottom:4%;text-align:center;font:15px var(--serif)}
+body.hud-band .nb-sheet{font-family:var(--serif);border-width:1px}
+@media(max-width:1250px){
+ body.hud-band .ih-top{height:72px;gap:8px}
+ body.hud-band .ih-faction b{font-size:30px}
+ body.hud-band .ih-date b{font-size:12px}
+ body.hud-band .ih-res{gap:8px}
+ body.hud-band .ih-res>.ih-chip{font-size:13px}
+ body.hud-band .ih-menu{gap:8px;flex-wrap:wrap;max-width:185px}
+ body.hud-band .ih-menu :is(button,a){font-size:12px}
+ body.hud-band .nb-bookmarks{top:15dvh}
+ body.hud-band .nb-news-tab{top:15dvh;font-size:16px}
+ body.hud-band .nb-tasks{top:calc(15dvh + 40px);font-size:13px}
+ body.hud-band .nb-identity>b{font-size:26px}
+ body.hud-band .nb-identity>span{font-size:11px}
+ body.hud-band .nb-ratings{gap:5px}
+ body.hud-band .nb-ratings small{font-size:10px}
+ body.hud-band .nb-ratings b{font-size:12px}
+ body.hud-band .nb-status button{font-size:10px}
+ body.hud-band .nb-order-row{gap:6px}
+ body.hud-band .nb-band :is(.nb-order-row,.nb-more) button{font-size:15px;padding:0 3px}
+ body.hud-band .nb-state-title{top:13dvh}
+ body.hud-band .nb-state-title h1{font-size:54px}
+ body.hud-band .nb-state-title p{font-size:13px}
+ body.hud-band .nb-supply{padding:12px 15px;font-size:13px;width:26%}
+ body.hud-band .nb-supply h2{font-size:30px}
+ body.hud-band .nb-supply h3{font-size:17px}
+ body.hud-band .nb-preview-values>b{font-size:23px}
+ body.hud-band .nb-preview-count{font-size:22px}
+ body.hud-band .nb-preview-loss strong{font-size:30px}
+ body.hud-band .nb-preview-loss small{font-size:12px}
+ body.hud-band .nb-soldiers,body.hud-band .nb-soldiers img{height:23px}
+ body.hud-band .nb-preview-middle i{font-size:48px}
+ body.hud-band .nb-preview-middle>b{font-size:19px}
+ body.hud-band .nb-preview-mods{font-size:12px;padding:4px 6px}
+ body.hud-band .nb-forecast .nb-click{font-size:22px}
+}
+/* C149c: focus states and larger public forecast, confined to C149 HUD. */
+body.hud-band .nb-map-tabs{display:flex;flex-direction:column;gap:8px}
+body.hud-band .nb-bookmarks>[data-band-map]{display:none}
+body.hud-band .nb-map-tabs button{height:42px;min-width:82px;background:#101211e8;border:0;padding:5px 13px;text-align:left;font:18px/1.3 var(--serif)}
+body.hud-band .nb-map-tabs button::after{content:'';display:block;width:54px;height:1px;background:#ac9977;margin-top:6px}
+body.hud-band .nb-bookmarks [data-mode].on{color:#e66b55}
+body.hud-band .nb-bookmarks [data-mode].on::after{background:#e66b55}
+body.hud-band:has(.nb-band[data-state="unit"]) .nb-bookmarks{opacity:.55;transition:opacity .15s}
+body.hud-band:has(.nb-band[data-state="unit"]) .nb-bookmarks:is(:hover,:focus-within){opacity:1}
+body.hud-band:has(.nb-band[data-state="unit"]) :is(.nb-tasks,.ih-notice,.nb-news-peek){display:none!important}
+body.hud-band:has(.nb-band[data-state="forecast"]) :is(.nb-bookmarks,.nb-news-tab,.nb-tasks,.ih-notice,.nb-news-peek){display:none!important}
+/* Preserve the actual end-turn button and forwarding path, including Shift. */
+body.hud-band .nb-band .ih-end{clip-path:none;aspect-ratio:auto;border:1px solid #978b75;background:#171a18;color:#9e978b;animation:none;box-shadow:none}
+body.hud-band .nb-band .ih-end.ready{background:#7d2a22;color:#eee4ce}
+body.hud-band .nb-band[data-state="rest"] .ih-end{font:36px/1.2 var(--title);color:#eee4ce}
+body.hud-band .nb-band[data-state="rest"] .ih-end:not(.ready){background:#101211f5}
+body.hud-band .nb-band .ih-end b::after{content:' \203a'}
+body.hud-band .nb-band .ih-end:disabled{opacity:.4}
+body.hud-band .nb-band[data-state="unit"] .nb-orders{grid-column:4/7}
+body.hud-band .nb-order-row .ih-end{position:relative;inset:auto;width:auto;transform:none;font:20px/1.2 var(--serif);flex:1 1 0}
+body.hud-band .nb-order-row .ih-end b{font:inherit}
+body.hud-band .nb-order-row .ih-end:not(.ready){background:#171a18;color:#9e978b;border-color:#5b574e}
+body.hud-band .nb-band[data-state="unit"] .nb-end-warning{bottom:calc(50% + 32px);left:auto;max-width:17%}
+/* All descendants pass pointer input through while hovering an attack tile. */
+body.hud-band .nb-band[data-state="forecast"]{height:33.8dvh;--band-face:12dvh;pointer-events:none}
+body.hud-band .nb-band[data-state="forecast"] *{pointer-events:none!important}
+body.hud-band .nb-preview-portrait{height:42dvh;bottom:0}
+body.hud-band .nb-preview-enemy .nb-preview-portrait{width:20vw}
+/* Claude 10-14: 적 반신이 '전 → 후' 숫자 끝과 병사 줄 오른쪽을 가리던 것(1672 · 1180 둘 다) — 적 값 묶음을 왼쪽으로, 병사 줄을 조금 좁게 */
+body.hud-band .nb-preview-enemy .nb-preview-values{margin-left:-2.5vw}
+/* 반신 그림이 칸보다 넓어 안쪽 끝이 곧은 선으로 잘려 보이던 것 — 안쪽 가장자리를 띠 바탕으로 스며들게(시안처럼) */
+body.hud-band .nb-band[data-state="forecast"] .nb-preview-portrait.enemy{-webkit-mask-image:linear-gradient(#000 86%,transparent),linear-gradient(90deg,transparent 0,#000 14%);-webkit-mask-composite:source-in;mask-image:linear-gradient(#000 86%,transparent),linear-gradient(90deg,transparent 0,#000 14%);mask-composite:intersect}
+body.hud-band .nb-band[data-state="forecast"] .nb-preview-portrait.ally{-webkit-mask-image:linear-gradient(#000 86%,transparent),linear-gradient(270deg,transparent 0,#000 14%);-webkit-mask-composite:source-in;mask-image:linear-gradient(#000 86%,transparent),linear-gradient(270deg,transparent 0,#000 14%);mask-composite:intersect}
+body.hud-band :is(.nb-preview-ally,.nb-preview-enemy){align-items:flex-start}
+body.hud-band .nb-preview-values{margin-top:3.2dvh}
+body.hud-band .nb-preview-portrait img[data-hd="1"]{top:calc(var(--band-face)*.5 - var(--hy)*var(--band-face)/(var(--hs)*var(--ar)))}
+body.hud-band .nb-preview-count{font-size:clamp(22px,1.92vw,34px)}
+body.hud-band .nb-preview-loss strong{font-size:clamp(32px,2.88vw,50px)}
+body.hud-band .nb-soldiers{height:clamp(30px,2.52vw,45px);width:11.5vw;gap:0}
+body.hud-band .nb-soldiers img{height:100%;width:10%;object-fit:contain}
+body.hud-band .nb-preview-mods{top:6%;height:39%;overflow:hidden;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:8px;font-size:16px}
+body.hud-band .nb-preview-mods>b{font:700 19px/1.4 var(--serif)}
+body.hud-band .nb-forecast .nb-click{top:50%;height:21%;clip-path:none;border:1px solid #c9a08a}
+body.hud-band .nb-cancel{bottom:7%;height:19%;display:flex;align-items:center;justify-content:center;background:#171a18;border:1px solid #ac9977;box-sizing:border-box;font:26px/1.2 var(--title)}
+/* The original cutout is cropped using its existing head coordinates, never recolored. */
+body.hud-band .nb-supply{overflow:visible;padding:0;max-height:none}
+body.hud-band .nb-supply-body{max-height:58dvh;overflow:auto;padding:18px 22px;box-sizing:border-box;position:relative;background:#101211f5}
+body.hud-band .nb-supply-portrait{position:absolute;bottom:calc(100% - 32px);right:0;width:100%;height:24dvh;overflow:hidden;pointer-events:none;--band-face:11dvh;mask-image:linear-gradient(#000 72%,transparent)}
+body.hud-band .nb-supply-portrait img[data-hd="1"]{position:absolute;width:calc(var(--band-face)/var(--hs));height:auto;max-width:none;left:calc(50% - var(--hx)*var(--band-face)/var(--hs));top:calc(var(--band-face)*.5 - var(--hy)*var(--band-face)/(var(--hs)*var(--ar)));object-view-box:none;filter:none!important;transform:none}
+body.hud-band .nb-supply-portrait img:not([data-hd]){width:100%;height:100%;object-fit:contain;filter:none}
+@media(max-width:1250px){
+ body.hud-band .nb-map-tabs{display:none}
+ body.hud-band .nb-bookmarks>[data-band-map]{display:block}
+ body.hud-band .nb-order-row .ih-end{font-size:15px}
+ body.hud-band .nb-band[data-state="rest"] .ih-end{font-size:28px}
+ body.hud-band .nb-preview-count{font-size:clamp(22px,1.92vw,34px)}
+ body.hud-band .nb-preview-loss strong{font-size:clamp(32px,2.88vw,50px)}
+ body.hud-band .nb-soldiers{height:clamp(30px,2.52vw,45px)}
+ body.hud-band .nb-soldiers img{height:100%}
+ body.hud-band .nb-preview-mods{font-size:12px;padding:7px 8px;gap:4px}
+ body.hud-band .nb-preview-mods>b{font-size:15px}
+ body.hud-band .nb-cancel{font-size:22px}
+ body.hud-band .nb-supply-body{padding:12px 15px}
+ body.hud-band .nb-supply-portrait{height:20dvh;--band-face:9dvh}
+}
+/* /C149 */

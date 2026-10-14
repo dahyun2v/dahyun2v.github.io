@@ -5818,6 +5818,17 @@
       "sha256": "24f0a0147e1ff81bd9e1c3c1a16cc5a6383f7c954118dcd89325dcb70d6fea81",
       "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-seal-1.jpg",
       "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/soldier.png",
+      "purpose": "교전 예고 띠의 병사 줄(예상 잔존 비율만큼 진하게) 한 명",
+      "size": [
+        24,
+        60
+      ],
+      "sha256": "16e59be2723a59419fc0928f698d6e3025a23862d4349defd1d13c64fed9e9a5",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/06-forecast.png",
+      "prompt": "솔 시안 06-forecast 의 병사 줄 맨 오른쪽 한 명(545,828-569,888)을 떠서 밝기-바탕 밝기로 투명도, 아래 주사색 붓 자국 제거(scratchpad soldier-cut.py)"
     }
   ],
   "sources": [
