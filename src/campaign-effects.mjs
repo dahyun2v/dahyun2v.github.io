@@ -7,7 +7,7 @@ import {configureC30,c30Start,c30Finish,c30Joint,c30Move,c30Damage,c30TacticCard
 import {creditCampaignGrowth} from './campaign-growth.mjs';
 import {c29Record,c29TacticCard,c29Start,c29CoreCard,c29CoreFactor,c29Aw,c29TraitTriggered,c29Recovery} from './campaign-c29.mjs';
 import {C28,c28Enabled,c28Rule,c28Suppressed,c28DamageBonus,c28Expose,c28ControlGuard,c28RecoveryFactor} from './campaign-career.mjs';
-import {DOMESTIC_RULES,domesticStartFaction,COMBAT_TITLE_RULES,COMMON_TACTIC_RULES,combatTacticRule,combatTraitActive,combatMovement,combatStartFaction,combatCanPostMove,combatSurvive,combatArmyAt,combatAlly,oppositeCombatTile,combatEmptyStep} from './campaign-rule-registry.mjs';
+import {DOMESTIC_RULES,domesticStartFaction,COMBAT_TITLE_RULES,COMMON_TACTIC_RULES,combatTacticRule,combatTraitActive,combatMovement,combatStartFaction,combatCanPostMove,combatSurvive,combatRuleLine,combatArmyAt,combatAlly,oppositeCombatTile,combatEmptyStep} from './campaign-rule-registry.mjs';
 import {campaignRuleRegistered,executeCampaignRule} from './campaign-rule-registry.mjs';
 import {expandUniqueEffect,uniqueHasRule,uniqueOps,uniqueOwned,uniqueImmune,uniqueTacticTargets,uniqueTacticIsDamage,uniqueCooldownTurns,uniqueDamageLimit,uniqueStart,uniqueRange} from './campaign-rule-registry.mjs';
 import {C23,archerAttackReason} from './campaign-abilities.mjs';
@@ -43,6 +43,40 @@ export function officerEffectCards(s,id,{tactics=false}={}){
 }
 
 export const CAMPAIGN_RULES=Object.freeze(['IGNORE_ZOC','NO_PURSUIT','FIRST_STRIKE','MOVE_AFTER_ATTACK','NEVER_ROUT','NO_COUNTER_TAKEN','BREACH','CAPTURE_ALWAYS','DOUBLE_ACTION','TERRAIN_WALKER','AMBUSH','EAGLE_EYE','RECALL','REACH_2','SPLASH','OVERWATCH','LAST_STAND','COUNTER_ALL','EXTENDED_ZOC','RALLY_AURA','TERROR','ABSORB','DEFECTION','SIEGE_FROM_WALL','SIEGE_IMMUNE','GARRISON_WALL','FORCED_MARCH','BLOOD_PRICE','NO_RETREAT','DOUBLE_DRAFT','MENTOR']);
+// 기존 규칙 카드의 실제 이름. 카드가 없는 효과도 내부 ID를 글에 내보내지 않는다.
+export const CAMPAIGN_RULE_NAMES=Object.freeze({
+ IGNORE_ZOC:"적 옆을 스쳐 간다",
+ NO_PURSUIT:"추격 없이 빠지기",
+ FIRST_STRIKE:"먼저 받아친다",
+ MOVE_AFTER_ATTACK:"치고 다시 움직인다",
+ NEVER_ROUT:"절대 무너지지 않는다",
+ NO_COUNTER_TAKEN:"반격 없는 공격",
+ BREACH:"성벽 한 방",
+ CAPTURE_ALWAYS:"반드시 사로잡는다",
+ DOUBLE_ACTION:"두 번 행동",
+ TERRAIN_WALKER:"험한 길도 평지처럼",
+ AMBUSH:"보이지 않는 매복",
+ EAGLE_EYE:"천리안",
+ RECALL:"성으로 즉시 귀환",
+ REACH_2:"두 칸 너머 공격",
+ SPLASH:"한 번에 둘을 친다",
+ OVERWATCH:"다가오면 먼저 친다",
+ LAST_STAND:"한 번은 버틴다",
+ COUNTER_ALL:"화살에도 반격",
+ EXTENDED_ZOC:"넓은 포위망",
+ RALLY_AURA:"무너지지 않는 기둥",
+ TERROR:"바람 소리에도 놀란다",
+ ABSORB:"항복병 흡수",
+ DEFECTION:"적장 귀순시키기",
+ SIEGE_FROM_WALL:"사방에서 성 공격",
+ SIEGE_IMMUNE:"성 화살을 막는다",
+ GARRISON_WALL:"흔들리지 않는 성",
+ FORCED_MARCH:"밤낮 강행군",
+ BLOOD_PRICE:"목숨 건 맹공",
+ NO_RETREAT:"제자리 사수",
+ DOUBLE_DRAFT:"넓게 배운다",
+ MENTOR:"제자를 키운다",
+});
 export const EFFECT_CONDITIONS=Object.freeze(['FIRST_ROUND','DEFENDING_CITY','OUTNUMBERED','FLANK','REAR','CHARGE','TARGET_DISORDERED','SELF_ORDERED','TARGET_CITY','FROM_CITY','TARGET_RIVAL','TARGET_LOWER_MIGHT','TARGET_TITLED','ATTACKER_CHARGE','ATTACKER_RANGED']);
 export const campaignEffectValid=(e,card={})=>EFFECT_OPS.includes(e.op)&&(e.op!=='RULE'||(card.rarity==='MYTHIC'&&CAMPAIGN_RULES.includes(e.rule)||campaignRuleRegistered(e.rule)))&&(!e.condition||EFFECT_CONDITIONS.includes(e.condition)||/^(TERRAIN|TROOP|HP_BELOW):[^:]+$/.test(e.condition))&&(e.op!=='FORMATION_DELTA'||e.value===undefined||Number.isFinite(e.value));
 const implementedEffect=campaignEffectValid;
@@ -281,8 +315,11 @@ function rawTacticTargets(s,id,card){
 export function campaignTactics(s,id){const r=c29Record(s,id);return [...officerEffectCards(s,s.armies[id]?.commanderId,{tactics:true}).filter(c=>!(c33Owned(s,id,'DIVINE_CALC')&&[c.classTag].flat().includes('무용'))&&(r.equippedTacticIds??[]).includes(c.traitId)||r.c29&&c.traitId===r.representativeId).map(c=>c29TacticCard(s,id,c)),...[c30Joint(s,id)].filter(Boolean)].map(c=>c30TacticCard(s,id,{...c,cooldown:c.signature?0:c.jointArmyIds?3:c33Cooldown(s,id,{...c,cooldown:uniqueCooldownTurns(s,id,tacticCooldown(c))})})).map(c=>c31Tactic(s,id,c)).map(c=>({...c,reason:tacticIsDamage(c)?archerAttackReason(s,id):'',waiting:c.signature?Math.max(0,100-r.c29.gauge,(s.armies[id].tacticReadyTurns?.[c.traitId]??0)-s.turn):Math.max(0,(s.armies[id].tacticReadyTurns?.[c.traitId]??0)-s.turn),targets:tacticTargets(s,id,c)}));}
 
 export function ruleLine(s,id,rule,detail=''){
- const card=officerEffectCards(s,s.armies[id]?.commanderId).find(c=>c.rarity==='MYTHIC'&&c.effects?.some(e=>e.op==='RULE'&&e.rule===rule));
- return `[${card?.name??rule}]${detail?' '+detail:''}`;
+ const cards=[...officerEffectCards(s,s.armies[id]?.commanderId??id),...officerEffectCards(s,s.armies[id]?.commanderId??id,{tactics:true})].filter(c=>c.effects?.some(e=>e.op==='RULE'&&e.rule===rule));
+ const card=cards.find(c=>c.rarity==='MYTHIC')??cards[0];
+ const stored=s.armies[id]?.effectStates?.find(e=>e.op==='RULE'&&e.rule===rule&&activeState(s,e)&&e.startsTurn<=s.turn);
+ // 미등록 규칙은 시험 표기: 새 설정 이름을 만들지 않고 짧은 일반명으로 표시.
+ return `[${card?.name??stored?.name??CAMPAIGN_RULE_NAMES[rule]??'특기'}]${detail?' '+detail:''}`;
 }
 export function ambushHidden(s,id,factionId){if(c34Reveal(s,id,factionId))return false;
  if(c33Enabled(s)&&Object.values(s.armies).some(a=>a.factionId===factionId&&castleArmyActive(s,a)&&troopToCampaign(a.troopType)==='BT03'&&c33Owned(s,a.armyId,'SHOOT_INTO_FOREST')&&hexDistance(s.tiles[a.tileId],s.tiles[s.armies[id].tileId])<=2))return false;
@@ -295,11 +332,12 @@ export function recallDestination(s,id){
 export function recallReason(s,id){
  const a=s.armies[id];return !a||!hasCampaignRule(s,id,'RECALL')?'귀환 특기 없음':!castleArmyActive(s,a)||a.morale==='ROUTING'?'행동 불가':!canMainAction(s,id)?'주 행동 사용 완료':hasCampaignRule(s,id,'NO_RETREAT')&&Object.values(s.armies).some(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1)?'적과 인접하여 이동 불가':!recallDestination(s,id)?'빈 아군 성 중심 없음':'';
 }
-export function surviveRule(s,id,loss,commit=true){
+export function surviveRule(s,id,loss,commit=true,lines=null){
  loss=c34DamageLimit(s,id,loss,commit);loss=c33Limit(s,id,loss,commit);loss=uniqueDamageLimit(s,id,loss);
  if(commit&&loss>0&&s.armies[id]?.c32?.restHits>0)s.armies[id].c32.restHits--;
- loss=combatSurvive(s,id,loss,commit);
- const a=s.armies[id];if(loss>=a.troopCount&&a.lastStandKey!==`${s.turn}.${s.activeFactionId??s.playerFactionId}`&&hasCampaignRule(s,id,'LAST_STAND')){if(commit)a.lastStandKey=`${s.turn}.${s.activeFactionId??s.playerFactionId}`;return a.troopCount-1;}return loss;
+ const beforeLives=loss;loss=combatSurvive(s,id,loss,commit);
+ if(loss<beforeLives)lines?.push(combatRuleLine(s,id,'NINE_LIVES','병력 5%로 패주'));
+ const a=s.armies[id];if(loss>=a.troopCount&&a.lastStandKey!==`${s.turn}.${s.activeFactionId??s.playerFactionId}`&&hasCampaignRule(s,id,'LAST_STAND')){if(commit)a.lastStandKey=`${s.turn}.${s.activeFactionId??s.playerFactionId}`;lines?.push(ruleLine(s,id,'LAST_STAND','병력 1로 생존'));return a.troopCount-1;}return loss;
 }
 export function finishFactionRules(s,factionId){
  if(s.campaignEffects?.startedTurns[factionId]===s.turn)c34Finish(s,factionId);

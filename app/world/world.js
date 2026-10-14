@@ -251,7 +251,7 @@ function command(request,confirmed=false) {
   }
   $('#growth-error').textContent='';
   const id=`campaign:${++soundSequence}`;
-  if(state.turn>before.turn){newsArchive.push(...turnLog.map(line=>({turn:before.turn,line})));turnLog=[];settlementAudio.play(id+':settlement');playStrategicCue('START',before,state,id+':start');}
+  if(state.turn>before.turn){/* 같은 소식이 두 번 뜨던 것(닷토리 여러 판 · C148 조사): 화면이 이미 보관한 줄을 차례가 넘어갈 때 한 번 더 넣었다 — 없는 줄만 넣는다 */{const seen=new Set(newsArchive.map(r=>`${r.turn}:${r.line}`));for(const line of turnLog){const k=`${before.turn}:${line}`;if(!seen.has(k)){newsArchive.push({turn:before.turn,line});seen.add(k);}}}turnLog=[];settlementAudio.play(id+':settlement');playStrategicCue('START',before,state,id+':start');}
   if(['MOVE_UNIT','ADVANCE_ORDER'].includes(request.type)||(request.type==='ADVANCE_AI'&&Object.values(state.armies).some(a=>a.tileId!==before.armies[a.armyId]?.tileId)))playStrategicCue('MOVE',before,state,id);
   if(request.type==='END_TURN')playStrategicCue('TURN',before,state,id);
   for(const event of (state.moraleLog??[]).slice((before.moraleLog??[]).length))if(armyVisible(state,event.armyId)||armyVisible(before,event.armyId))turnLog.push(event.text);
@@ -981,7 +981,7 @@ function traitChip(c,id){const tip=[id?cardDescription(c,id):playerText(c.text),
 // 연대기 띠: 일어선 곳 · 내 세력의 사건 선택 · 얻은 성 · 위기 · 장수 칭호 · 끝
 function chronicleEntries(){
  const me=state.playerFactionId,f=state.factions[me],out=[],cn=id=>state.cityDisplayNames?.[id]??state.cities[id]?.name??id;
- out.push({turn:1,kind:'start',text:`${state.officers[f?.rulerId]?.name??factionName(me)}, ${cn(f?.capitalCityId)}에서 일어서다`});
+ out.push({turn:1,kind:'start',text:`${state.officers[f?.rulerId]?.name??factionName(me)}, ${cn(f?.startCapitalCityId??f?.capitalCityId)}에서 일어서다`});
  for(const x of state.c22?.fired??[])if(x.factionId===me){const e=C22_EVENTS.find(e=>e.eventId===x.eventId),c=e?.choices.find(c=>c.id===x.choiceId);if(e)out.push({turn:x.turn,kind:'event',text:`${e.title}${c?` — ${c.label}`:''}`});}
  for(const [id,x] of Object.entries(state.c22?.captures??{}))if(x.factionId===me&&state.cities[id]?.ownerFactionId===me)out.push({turn:x.turn,kind:'city',text:`${josa(cn(id)+'을(를)')} 얻다`});
  if(state.c31?.actorId&&state.c31.startTurn)out.push({turn:state.c31.startTurn,kind:'crisis',text:`${state.officers[state.c31.actorId]?.name??''}의 ${state.c31.name??'위기'}${state.c31.resolved?` — ${state.c31.resolved==='TIMEOUT'?'지나감':'막아냄'}`:''}`});
@@ -1003,7 +1003,7 @@ function renderResultSummary(v,won){
  $('#result-art').innerHTML=`${emblemHtml(me,'lg')}${art?`<img class="rs-ruler" src="${esc(art.src)}" data-cut="${art.cut?1:0}" alt="">`:''}<p class="rs-ruler-name">${esc(state.officers[ruler]?.name??style.name)}<small>${esc(factionName(me))}</small></p>`;
  {const im=$('#result-art .rs-ruler');if(im&&im.dataset.cut==='0'){im.style.opacity='0';cutout(im.getAttribute('src')).then(u=>{if(im.isConnected){im.src=u??im.src;im.style.opacity='';}});}}
  const count=(fid,minor)=>Object.values(state.cities).filter(c=>c.ownerFactionId===fid&&(c.kind==='minor')===minor).length;
- const ranking=(g?.ranking??Object.keys(state.factions).map(fid=>({factionId:fid,majorCities:count(fid,false),minorCities:count(fid,true),troops:Object.values(state.armies).filter(a=>a.factionId===fid).reduce((n,a)=>n+(a.troopCount??0),0)})).sort((a,b)=>b.majorCities-a.majorCities||b.minorCities-a.minorCities||b.troops-a.troops));
+ const ranking=(g?.ranking??Object.keys(state.factions).map(fid=>({factionId:fid,majorCities:count(fid,false),minorCities:count(fid,true),troops:(tb=>tb?tb.field+tb.reserve:Object.values(state.armies).filter(a=>a.factionId===fid).reduce((n,a)=>n+(a.troopCount??0),0))(view(state).gameResult?.troopBreakdownByFactionId?.[fid])})).sort((a,b)=>b.majorCities-a.majorCities||b.minorCities-a.minorCities||b.troops-a.troops));
  const maxT=Math.max(1,...ranking.map(r=>r.troops??0));
  const rank=`<ol class="rs-rank">${ranking.map((r,i)=>`<li class="${r.factionId===me?'me':''}" style="--fc:${FACTION_STYLE[r.factionId]?.color??'#777'}"><span class="rk-n">${i+1}</span>${emblemHtml(r.factionId)}<b>${esc(factionName(r.factionId))}</b><span class="rk-c"><em>${r.majorCities??r.cities??0}</em><small>큰 성</small></span><span class="rk-c"><em>${r.minorCities??0}</em><small>작은 성</small></span><span class="rk-t"><i><b style="width:${Math.round((r.troops??0)/maxT*100)}%"></b></i><small>병력 ${(r.troops??0).toLocaleString('ko-KR')}</small></span></li>`).join('')}</ol>`;
  const officers=Object.values(v.officers).filter(o=>o.growth&&o.allegianceFactionId===me).sort((a,b)=>b.growth.level-a.growth.level||a.name.localeCompare(b.name,'ko'));

@@ -81,7 +81,16 @@ export function campaignTurnLimitRanking(s){
     return {factionId:f.factionId,...(s.mapId!=='v1'?{majorCities:cities.filter(c=>c.kind==='major').length,minorCities:cities.filter(c=>c.kind==='minor').length}:{cities:cities.length}),troops:Object.values(s.armies).filter(a=>a.factionId===f.factionId&&active(s,a.armyId)).reduce((n,a)=>n+a.troopCount,0)+cities.reduce((n,c)=>n+c.reserveTroops,0)};
   }).sort((a,b)=>(b.majorCities??b.cities)-(a.majorCities??a.cities)||(b.minorCities??0)-(a.minorCities??0)||b.troops-a.troops||a.factionId.localeCompare(b.factionId));
 }
+// C148: result-only readout. Tombstones retain historical counts; woundedCount
+// and city woundedTroops describe overlapping personnel, so use city totals once.
+export function campaignTroopBreakdown(s,factionId){
+ const cities=Object.values(s.cities).filter(c=>c.ownerFactionId===factionId);
+ const field=Object.values(s.armies).filter(a=>a.factionId===factionId&&active(s,a.armyId)).reduce((n,a)=>n+a.troopCount,0);
+ const reserve=cities.reduce((n,c)=>n+(c.reserveTroops??0),0),wounded=cities.reduce((n,c)=>n+(c.woundedTroops??0),0);
+ return {field,reserve,wounded,total:field+reserve+wounded};
+}
 function validate(state) {
+  for(const f of Object.values(state?.factions??{}))if(f.startCapitalCityId!==undefined&&(typeof f.startCapitalCityId!=='string'||!state.cities[f.startCapitalCityId]))throw new Error('INVALID_CAMPAIGN_STARTING_CAPITAL');
   if(state.trialRules?.foodModel&&!['clock','upkeep','cheap'].includes(state.trialRules.foodModel))throw new Error('INVALID_FOOD_MODEL');
   if(state?.manualEndTurn!==undefined&&typeof state.manualEndTurn!=='boolean')throw new Error('INVALID_CAMPAIGN_MANUAL_END_TURN');
   if (!state || !Number.isSafeInteger(state.turn) || state.turn < 1 ||
@@ -131,6 +140,7 @@ function validate(state) {
 export function createCampaign({factionId = 'F01', seed = 190919, map:mapId = 'v3', c31=true, c37=true, c42=true, c43=true, c45=true,c46=true,council=true, companions, fieldArmies=true, manualEndTurn=false, trialRules} = {}) {
   const {map,initialData,movementData}=campaignScenario(mapId);
   const world = selectPlayerFaction(createWorldState({map, initialData, movementData, seed}), factionId);
+  for(const f of Object.values(world.factions))f.startCapitalCityId=f.capitalCityId;
   if(trialRules!==undefined)world.trialRules=structuredClone(trialRules);
   if(mapId!=='v1')world.trialRules={...world.trialRules,foodModel:world.trialRules?.foodModel??'clock'};
   normalizeCampaignTroopNames(world,mapId);
@@ -224,6 +234,11 @@ export function view(state, factionId = state.playerFactionId) {
     if (tileId(tile) !== tile.tileId) throw new Error('지도 좌표가 올바르지 않습니다.');
   }
   const result={...projected,...(c34KnownTraits(state,factionId).length?{knownUniqueTraits:c34KnownTraits(state,factionId)}:{}),...(uniqueRevealedWanderers(state,factionId).length?{revealedWanderers:uniqueRevealedWanderers(state,factionId)}:{}),...campaignEventsView(state,factionId),...(state.mapId!=='v1'?{mapId:state.mapId}:{}), ...(state.gameResult?{gameResult:structuredClone(state.gameResult)}:{}), turn: state.turn, globalTick: state.globalTick};
+  if(result.gameResult){
+   const troops=Object.fromEntries(Object.keys(state.factions).sort().map(fid=>[fid,campaignTroopBreakdown(state,fid)]));
+   result.gameResult.troopBreakdownByFactionId=troops;
+   if(state.terminal?.terminalReport)result.terminalReport={resultType:state.terminal.terminalReport.resultType,reasonCode:state.terminal.terminalReport.reasonCode,finalGlobalTick:state.terminal.terminalReport.finalGlobalTick,factionSnapshots:state.terminal.terminalReport.factionSnapshots.map(f=>({factionId:f.factionId,alive:f.alive,ownedCityIds:[...f.ownedCityIds],troopBreakdown:{...troops[f.factionId]}}))};
+  }
   if(!viewCache.has(state))viewCache.set(state,new Map());
   viewCache.get(state).set(factionId,result);return result;
 }
