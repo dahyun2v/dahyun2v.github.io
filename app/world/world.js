@@ -374,6 +374,12 @@ function scheduleRedraw(){
 }
 // AI 가 화면 밖에서 움직이면 그쪽으로 부드럽게 옮겨 보여 준다.
 function follow(armyId,instant=false,previewTile=null){
+ if(globalThis.document?.body?.classList?.contains('hud-band')&&armyId===bandFocusArmy){
+  // Claude 10-14: 예고(마우스를 대상에 올림) 중에는 카메라를 움직이지 않는다 — 움직이면 커서 밑 칸이 바뀌어 누르면 공격이 빗나간다(C157 회귀). 두 부대 구도는 '공격'을 누를 때 한 번 맞춘다(아래 action==='attack')
+  if(previewTile)return;
+  if(!bandFocusMoving)frameBandArmy(armyId,v3Mode()==='supply'?.36:.32,v3Mode()==='supply'?.49:.46);
+  return;
+ }
  const map=$('#map'),tileId=state?.armies?.[armyId]?.tileId,city=Object.values(state?.cities??{}).find(c=>c.tileId===tileId);
  const node=map.querySelector?.(`[data-unit="${armyId}"]`)??(city&&map.querySelector?.(`.w-cityplate[data-city="${city.cityId}"]`))??(tileId&&map.querySelector?.(`[data-tile="${tileId}"]`)),port=$('.viewport');
  if(!node?.getBoundingClientRect||!port?.getBoundingClientRect||!port.scrollTo)return;
@@ -407,6 +413,43 @@ function bandCameraPosition(port,map,left=port.scrollLeft,top=port.scrollTop){
  // A capital at the southern edge already uses the rendered ring. Do not force it below the band,
  // and do not uncover farther into that ring than the current camera position.
  return {left:limit(left,port.scrollLeft,box.width,port.clientWidth),top:limit(top,port.scrollTop,box.height,port.clientHeight,true)};
+}
+// C157: framing is presentation only. Restore the camera captured before selection.
+let bandFocusSnapshot=null,bandFocusArmy=null,bandFocusMode=null,bandFocusMoving=false;
+let bandFocusTimer=null,bandPreviewPointer=null;
+function frameBandArmy(armyId,x,y,previewTile=null){
+ const svg=$('#map svg'),node=$('#map').querySelector(`.w-unit[data-unit="${armyId}"]`);
+ if(!svg?.createSVGPoint||!node?.getScreenCTM)return;
+ for(let i=0;i<4;i++){
+  const plate=node.querySelector?.(':scope > .plate-top'),r=plate?.getBoundingClientRect?.();
+  const p=r?.width?{x:r.left+r.width/2,y:r.top+r.height/2}:svg.createSVGPoint().matrixTransform(node.getScreenCTM());
+  if(previewTile){
+   const foe=Object.values(state.armies).find(a=>a.armyId!==armyId&&a.tileId===previewTile),face=foe&&$('#map').querySelector(`.w-unit[data-unit="${foe.armyId}"] > .plate-top`),fr=face?.getBoundingClientRect?.();
+   const other=$('#map').querySelector(`[data-tile="${previewTile}"]`);
+   if(fr?.width){p.x=(p.x+fr.left+fr.width/2)/2;p.y=(p.y+fr.top+fr.height/2)/2;}
+   else if(other?.getBBox){const b=other.getBBox(),q=svg.createSVGPoint();q.x=b.x+b.width/2;q.y=b.y+b.height/2;const t=q.matrixTransform(other.getScreenCTM());p.x=(p.x+t.x)/2;p.y=(p.y+t.y)/2;}
+  }
+  const delta=screenScrollDelta(svg.getScreenCTM(),p.x-innerWidth*x,p.y-innerHeight*y,zoom);
+  viewport.scrollLeft+=delta.x;viewport.scrollTop+=delta.y;
+ }
+}
+function syncBandFocus(armyId,mode){
+ if(bandFocusArmy===armyId&&bandFocusMode===mode)return;
+ const entering=!bandFocusArmy&&armyId,leaving=bandFocusArmy&&!armyId;
+ bandFocusArmy=armyId;bandFocusMode=mode;bandPreviewPointer=null;
+ if(entering)bandFocusSnapshot={zoom,left:viewport.scrollLeft,top:viewport.scrollTop};
+ clearTimeout(bandFocusTimer);clearTimeout(zoomTimer);
+ if(!entering&&!leaving){if(armyId)frameBandArmy(armyId,mode==='supply'?.36:.32,mode==='supply'?.49:.46);return;}
+ const saved=bandFocusSnapshot;if(!saved)return;
+ const from=zoom,to=leaving?saved.zoom:Math.min(2.6,saved.zoom*1.35),start=performance.now();
+ bandFocusMoving=true;
+ function frame(){
+  const t=reduceMotion()?1:Math.min(1,(performance.now()-start)/350),ease=1-(1-t)**3;
+  zoom=from+(to-from)*ease;applyZoom();
+  if(leaving){viewport.scrollLeft=saved.left;viewport.scrollTop=saved.top;}
+  else frameBandArmy(armyId,mode==='supply'?.36:.32,mode==='supply'?.49:.46);
+  if(t<1)bandFocusTimer=setTimeout(frame,16);else{bandFocusMoving=false;if(leaving)bandFocusSnapshot=null;}
+ }frame();
 }
 function lockCamera(port){
  cameraMoving=true;clearTimeout(cameraTimer);let x=port.scrollLeft,y=port.scrollTop,stable=0,tries=0;
@@ -764,6 +807,7 @@ function renderHud(v){
   bars.push({pct:{STEADY:100,SHAKEN:50,ROUTING:12}[a.morale]??100,text:MORALE_NAME[a.morale]??'',title:'사기',tone:'bone'});
   if(sup)bars.push({pct:sup.max?(sup.stock??0)/sup.max*100:0,text:`${food1(sup.stock??0)}/${food1(sup.max??0)}`,title:`휴대 군량 · 보급 ${SUPPLY_LABEL[sup.state]??sup.state}${sup.model==='clock'?(sup.draining?' · 줄어드는 중':' · 보급권 안 — 줄지 않음'):''}`,tone:'teal'});}
  renderInkHud(root,{turnLimit:CAMPAIGN_TURN_LIMIT,supplyRange:supplyRules.link.range,unitTroops:a?.troopCount,unitLocation:a?(Object.values({...v.knowledge.cities,...v.ownCities}).find(c=>c.tileId===a.tileId||c.footprint?.gates?.includes(a.tileId)||c.footprint?.walls?.includes(a.tileId))?.name??({plain:'평지',forest:'숲',hill:'언덕',mountain:'산',water:'물'})[v.tiles[a.tileId]?.terrainType]??'지형'):null,foodModel:state.trialRules?.foodModel,bandSupply:a?{name:v.officers[a.commanderId]?.name??'',supply:a.supply,label:SUPPLY_LABEL[a.supply?.state]??'보급 정보 없음',source:v.ownCities[a.supply?.sourceCityId],hub:v.hubs?.find(h=>h.hubId===a.supply?.sourceHubId),context:supplySourceText(a.supply,v),blocked:a.supply?.state==='CUT'?(Object.values(v.knowledge?.cities??{}).some(c=>c.cityId!==a.supply?.sourceCityId&&c.ownerFactionId!==v.factionId&&(c.tileId===a.tileId||c.gates?.includes(a.tileId)||c.walls?.includes(a.tileId)))?'적 성에 붙어 있어 보급이 닿지 않음':'길이 끊겨 휴대 군량으로 버팀'):a.supply?.state==='STARVING'?'군량 바닥 · 굶주림 위험':''}:null,todoLines:bandTodoLines(state,v),bandSelected:selectedTacticId??(faceMode?'face':attackMode?'attack':moveMode?'move':null),garrisonWhy:a?reasonText(garrisonReason(state,a.armyId)||''):'',remaining:Object.values(v.ownArmies).filter(u=>!armyActionEnded(state,u.armyId)).length,todo:councilPending(state)+(pendingCampaignDraft(state)?1:0)+(v.pendingEvent?1:0),ratings:a?campaignUnitRatings(state,a.armyId):null,bandMeta:a?`${TROOP_NAME[troopToCampaign(a.troopType)]??a.troopType} · 병력 ${a.troopCount}`:'',bandStatus:a?{morale:{text:MORALE_NAME[a.morale],warn:a.morale!=='STEADY'},formation:{text:`전열 ${FORMATION_NAME[a.formation??'ORDERED']??'정돈'}`,warn:a.formation!=='ORDERED'},supply:{text:a.supply?.stock<=0&&a.supply?.draining?'굶주림':a.supply?.draining?`${food1(a.supply.turnsLeft)}차례분 · 줄어드는 중`:'보급권 안',warn:!!a.supply?.draining}}:null,factionId:v.factionId,factionName:FACTION_STYLE[v.factionId]?.name,factionColor:FACTION_STYLE[v.factionId]?.color,tone,turn:endedTurn(v.turn),date:campaignDate(endedTurn(v.turn)),left:$('#turn')?.dataset?.left??'',mode:v3Mode(),summary:$('#summary')?.textContent,currentNews,allNews,unitBars:bars,commandIntent,food:foodSnapshot(v),foodChange:lastFoodChange,unitResult:lastUnitResult,facilityResults:lastFacilityResults,combatHistory:recentCombats,recruitmentCount:(v.revealedWanderers??[]).length,unitStatus:a?{id:a.armyId,actions:selectedActions(a.armyId),action:armyActionEnded(state,a.armyId)?'이번 턴 행동 완료':state.movedArmyIds.includes(a.armyId)?'이동함 · 주 행동 확인':'행동 가능',formation:FORMATION_NAME[a.formation??'ORDERED']??'정돈'}:null,council:councilPending(state)});
+ syncBandFocus(a?.armyId??null,v3Mode());
 }
 // C149: reuse the same player council text already shown in the council UI.
 function bandTodoLines(s,v){
@@ -1589,7 +1633,7 @@ function placeTip(tip,e,w=320){
    const a=state.armies[selectedArmyId],own=tip.querySelector('.fc-vs')?'':`<div class="nb-city-ally"><img src="${esc(faceOf(a?.commanderId))}" alt=""><b>${esc(state.officers[a?.commanderId]?.name??'')}</b><small>병력 ${a?.troopCount??0} → ${a?.troopCount??0} · 예상 손실 0</small></div>`;
    const tile=targetTile(e.target,state.armies,state.cities),band=document.querySelector('.nb-band');
    document.dispatchEvent(new CustomEvent('ink:forecast',{detail:{html:own+tip.innerHTML}}));tip.hidden=true;
-   if(tile&&band&&band.dataset.target!==tile){band.dataset.target=tile;requestAnimationFrame(()=>follow(selectedArmyId,true,tile));}return;
+   if(tile&&band&&band.dataset.target!==tile){band.dataset.target=tile;bandPreviewPointer={x:e.clientX,y:e.clientY};requestAnimationFrame(()=>follow(selectedArmyId,true,tile));}return;
   }
   document.dispatchEvent(new CustomEvent('ink:forecast',{detail:null}));const band=document.querySelector('.nb-band');if(band)delete band.dataset.target;
  }
@@ -1727,7 +1771,7 @@ $('#unit-menu').addEventListener('click',e=>{
  if(action==='wait'){command({type:'WAIT_UNIT',armyId:selectedArmyId});return;}
  if(action==='move'){menuOpen=false;moveMode=true;render();const chase=previewDisengage(state,selectedArmyId),shot=destination?previewApproachFire(state,selectedArmyId,destination):null;$('#status').textContent='이동할 칸을 누르세요'+(chase?` · 교전 이탈 시 추격 −${chase.dealt}`:'')+(shot?` · 붙으면 접근사격 — ${state.officers[state.armies[shot.archerId].commanderId].name}, 예상 −${shot.damage}`:'');}
  if(action==='face'){menuOpen=false;moveMode=false;faceMode=true;render();$('#status').textContent='바라볼 쪽의 칸을 누르세요(Esc 취소)';return;}
- if(action==='attack'){attackMode=true;menuOpen=false;$('#unit-menu').hidden=true;$('#status').textContent='빨간 점선 공격 대상을 누르세요';renderHint();render();} // render: 아래 띠의 눌린 단추가 '이동'에 남아 있던 것(공격 모드인데)
+ if(action==='attack'){attackMode=true;menuOpen=false;$('#unit-menu').hidden=true;$('#status').textContent='빨간 점선 공격 대상을 누르세요';renderHint();render();if(document.body?.classList?.contains('hud-band')){const t=attackTargets(state,selectedArmyId)[0],tile=t&&state.armies[t]?.tileId;if(tile)frameBandArmy(selectedArmyId,.45,.34,tile);}} // 시안 06 구도: 공격을 고를 때 한 번, 고른 부대와 대상의 가운데를 화면 위쪽 가운데로 // render: 아래 띠의 눌린 단추가 '이동'에 남아 있던 것(공격 모드인데)
  if(action==='close')closeUnitMenu();
 });
 // 닿지 않는 적(부대·성)을 눌러도 공격한다 — 이번 차례에 칠 수 있는 자리까지 가서 바로 친다(문명식. 사용자 2026-10-11 "해당 타일에 공격할 수 있는 대상이 있으면 자동으로 공격")
@@ -1882,7 +1926,7 @@ function mapClick(e){
  cancelStrike();
  const prodCity=e.target.closest?.('[data-prod-city]')?.dataset.prodCity;if(prodCity&&state.cities[prodCity]?.ownerFactionId===state.playerFactionId&&openProdPop(prodCity,e))return;
  closeProdPop();
- const tileId=targetTile(e.target,state.armies,state.cities);if(!tileId)return;
+ const tileId=targetTile(e.target,state.armies,state.cities);if(!tileId){if(globalThis.document?.body?.classList?.contains('hud-band')&&menuOpen)closeUnitMenu();return;}
  // 이름표를 누르면 그 부대, 칸(병사 그림)을 누르면 그 칸의 내 부대를 차례로
  const v=view(state),own=Object.values(v.ownArmies),plateUnit=e.target.closest?.('.plate-top')?.dataset.unit;
  const selectable=[...own,...Object.values(v.knowledge?.observedArmies??{}).filter(a=>a.factionId!==state.playerFactionId&&v.knowledge.tiles[a.tileId]==='VISIBLE')];
@@ -1939,6 +1983,7 @@ function mapClick(e){
 $('#map').addEventListener('click',e=>{if(suppressPanClick){suppressPanClick=false;e.preventDefault();return;}mapClick(e);});
 $('#map').addEventListener('pointerover',function mapPointerOver(e){
  if(panGesture||inputLocked()||!selectedArmyId)return;
+ if(globalThis.document?.body?.classList?.contains('hud-band')&&bandPreviewPointer&&document.querySelector('.nb-band')?.dataset.state==='forecast'&&e.clientX===bandPreviewPointer.x&&e.clientY===bandPreviewPointer.y)return;
  const hoverTile=targetTile(e.target,state.armies,state.cities);
  let unit=e.target.closest('[data-unit]')?.dataset.unit??attackTargets(state,selectedArmyId).find(id=>state.armies[id].tileId===hoverTile);
  const tip=$('#attack-preview');
@@ -2032,7 +2077,7 @@ function centerPlayer(){
   // The tilted viewport extends past the window. Frame in actual screen coordinates.
   for(let i=0;i<4;i++){
    const p=point.matrixTransform(node.getScreenCTM()),m=svg.getScreenCTM();
-   const delta=screenScrollDelta(m,p.x-innerWidth*.34,p.y-innerHeight*.73,zoom);
+   const delta=screenScrollDelta(m,p.x-innerWidth*.36,p.y-innerHeight*.64,zoom);
    viewport.scrollLeft+=delta.x;viewport.scrollTop+=delta.y;
   }
   return;
@@ -2163,6 +2208,7 @@ export function screenScrollDelta(m,x,y,z){const det=m.a*m.d-m.b*m.c;return Math
 export function zoomScroll(left,top,x,y,from,to){return {left:(left+x)*to/from-x,top:(top+y)*to/from-y};}
 let zoomTimer=null;
 function zoomAt(value,x,y){
+ clearTimeout(bandFocusTimer);bandFocusMoving=false;
  const vb=$('#map svg')?.viewBox?.baseVal,fit=vb?.width?Math.min(viewport.clientWidth/Math.max(1,vb.width-2*mapMargin),viewport.clientHeight/Math.max(1,vb.height-2*mapMargin)):.5; // 가장 멀리 = 땅 전체가 한 화면에(땅 밖 구름 여백은 빼고 잰다)
  const cover=vb?.width?Math.max(viewport.clientWidth/vb.width,viewport.clientHeight/vb.height):.5; // 가장 멀리 보아도 그림이 화면을 다 덮게(그림 밖이 보이지 않게)
  const next=Math.max(Math.max(.5,Math.min(1,fit)),cover,Math.min(2.6,value)),from=zoom,start=performance.now(),left=viewport.scrollLeft,top=viewport.scrollTop;

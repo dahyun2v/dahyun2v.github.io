@@ -415,6 +415,7 @@ export function renderInkHud(root, d) {
   root.style.setProperty('--fc', color);
   q('.ih-faction .ih-emblem').src = `/assets/ui-v3/emblems/${d.factionId}.png`;
   q('.ih-faction b').textContent = d.factionName ?? '';
+  q('.ih-faction b').dataset.name = d.factionName ?? '';
   // 자원: 옛 위 띠 칩(값·증감·설명)을 그대로
   q('.ih-res').innerHTML = [...document.querySelectorAll('#resources .chip')].map((c) => {
     const k = c.dataset.res, b = c.querySelector('b'), dl = c.querySelector('small.d');
@@ -561,8 +562,8 @@ export function bandSupplyHtml(d){
 export function selectedUnitHtml(d){
  const a=d.bandSupply,s=a?.supply,r=d.ratings,st=d.bandStatus??{};
  const stock=s?.perTurn>0?s.stock/s.perTurn:null,max=s?.perTurn>0?s.max/s.perTurn:null;
- const rows=[['⌖','있는 곳',d.unitLocation],['♟','병력',d.unitTroops],['▥','군량',`휴대 ${labelNumber(stock)}/${labelNumber(max)} 차례분`],...['attack','defense','mobility'].map((k,i)=>[['⚔','⛨','➜'][i],['공격','방어','기동'][i],r?.[k]]),['◇','상태',`${st.morale?.text??'—'} · ${st.formation?.text??'—'}`]];
- return `<h2>선택 부대</h2><dl>${rows.map(([icon,label,value])=>`<div><dt><i aria-hidden="true">${icon}</i>${label}</dt><dd>${esc(value??'—')}</dd></div>`).join('')}</dl>`;
+ const rows=[['location','있는 곳',d.unitLocation],['troops','병력',d.unitTroops],['food','군량',`휴대 ${labelNumber(stock)}/${labelNumber(max)} 차례분`],...['attack','defense','mobility'].map((k,i)=>[k,['공격','방어','기동'][i],r?.[k]]),['status','상태',`${st.morale?.text??'—'} · ${st.formation?.text??'—'}`]];
+ return `<h2>선택 부대</h2><dl>${rows.map(([icon,label,value])=>`<div><dt><img aria-hidden="true" alt="" src="/assets/ui-v3/hud/kit-icon-${icon}.png">${label}</dt><dd>${esc(value??'—')}</dd></div>`).join('')}</dl>`;
 }
 function renderBandSupply(root,d){
  const supply=d.mode==='supply',focus=!!d.unitStatus,title=root.querySelector('.nb-state-title');

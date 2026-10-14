@@ -6687,6 +6687,204 @@
       "sha256": "2ef7284d24adf71bd10396b1883aa8265962c44fbb9e3adc12c7fa07dabe6912",
       "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
       "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-band-fine.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-band-fine",
+      "size": [
+        1672,
+        155
+      ],
+      "sha256": "fb8187e2a7fe2965c7252a046210b59e9e23c3fed5dfce0c9b6e59a3d16bd604",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-button-off.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-button-off",
+      "size": [
+        280,
+        86
+      ],
+      "sha256": "a340f1c66f28a8aa29e6581a1be3f8b27cd6357e9913daeeb2d56b6b73a3b5fe",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-button.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-button",
+      "size": [
+        224,
+        86
+      ],
+      "sha256": "d754df532560434458d4679eb14cf8050a4cae0d315827f24861bec20e19abb7",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-divider.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-divider",
+      "size": [
+        240,
+        6
+      ],
+      "sha256": "eba2ddef64949bd3654e2ee85e6aff76696b0decef5efc919a8706b2bc9ff470",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-forecast-band-fine.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-forecast-band-fine",
+      "size": [
+        1672,
+        361
+      ],
+      "sha256": "f8998400c60d4c6c9f76e42042d48db83ebc464072a3ca801be073dcc9a8c6e4",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/06-forecast.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-attack.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-attack",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "70d581a8ce71a3ea6a3654589924601823cbc2fe67c93d748ad227df1cae6ac1",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-defense.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-defense",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "6c49ae707f39618ae93fe0ec75cb3e2e08647fd82d8f0620499f7c3d744ffe23",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-food.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-food",
+      "size": [
+        26,
+        24
+      ],
+      "sha256": "352fa432c54c12a9f9717dd4e4300e5f890cb1fc04362e242018ebbcc4ce65c9",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-guard.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-guard",
+      "size": [
+        26,
+        27
+      ],
+      "sha256": "5e2d72f65626e855b7930555558089c3d484ac31cf63b8b63ea6b829d3757c5c",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-location.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-location",
+      "size": [
+        25,
+        25
+      ],
+      "sha256": "29cadb8e9e31e62c029037e9f9fac47a10168706bbf731b698e9ee74ff05e5ae",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-mobility.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-mobility",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "10ae8e55d2c318c5361acf5746d68a5168b11d717bf1734c380e0248e7061934",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-status.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-status",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "bc333e3020d38e4c1f3b7178eae0f12ef5bc5f836545ce6a1f78b2950e95ae74",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-icon-troops.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-icon-troops",
+      "size": [
+        25,
+        27
+      ],
+      "sha256": "7cf0bfc23b8a8edef6d11c58814c7005ced7961d694a03cd3061de9831ab3451",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-supply-underlay.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-supply-underlay",
+      "size": [
+        462,
+        174
+      ],
+      "sha256": "be87bc6924a38909be20c858aa6be5e55a3e5566e0575c6c32d5bb3128d10963",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/05-supply.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-title-caocao.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-title-caocao",
+      "size": [
+        87,
+        38
+      ],
+      "sha256": "985ae54c8ce62607e3e6f94096fa5e81058eb7f50e79e08cabf15c17032b6af7",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04b-map-immersive.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-title-focus.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-title-focus",
+      "size": [
+        184,
+        48
+      ],
+      "sha256": "0184fb2aa3a7b40cc49c260d5f33e3dd72077e69afae85902c14885033b6e254",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-title-forecast.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-title-forecast",
+      "size": [
+        292,
+        94
+      ],
+      "sha256": "ff96307eba0c426e832196d7928c6406d1840874e40b20238d35c70511d786fa",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/06-forecast.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-title-supply.png",
+      "purpose": "지도 화면 시안 일치(C157) - kit-title-supply",
+      "size": [
+        352,
+        73
+      ],
+      "sha256": "4fe778db2a7f5a4fe19066aef25a013aa9a0e9050040afcc7c86146de01c2fb2",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/05-supply.png",
+      "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
     }
   ],
   "sources": [
