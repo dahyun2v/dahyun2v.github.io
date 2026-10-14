@@ -51,6 +51,7 @@ function publicContext(s){
  return {v,cities,armies,enemies};
 }
 function arrivalTurns(s,v,a,destination){
+ if(!s.armies[a.armyId]||!castleArmyActive(s,s.armies[a.armyId]))return Infinity;
  const publicWorld={...s,armies:Object.fromEntries(Object.values({...v.ownArmies,...v.knowledge.observedArmies}).map(b=>[b.armyId,{...s.armies[b.armyId],...b,hp:b.hp??1,troopCount:b.troopCount??1}])),cities:Object.fromEntries(Object.values({...v.ownCities,...v.knowledge.cities}).filter(c=>s.castleKnowledge?.[v.factionId]?.[c.cityId]).map(c=>[c.cityId,{...c,...s.castleKnowledge[v.factionId][c.cityId]}]))};
  const world=campaignMovementWorld(publicWorld,a.armyId);world.tiles=Object.fromEntries(Object.entries(s.tiles).filter(([id])=>['VISIBLE','REMEMBERED'].includes(v.knowledge.tiles[id])));
  if(!world.tiles[a.tileId]||!world.tiles[destination])return Infinity;const path=findPath(world,a.armyId,destination);if(!path||path.pathTileIds.slice(1).some((to,i)=>diplomacyMoveReason(s,a.armyId,to,path.pathTileIds[i])))return Infinity;

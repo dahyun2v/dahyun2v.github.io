@@ -142,6 +142,11 @@ export function readableError(error, messages = {}) {
   if (shortage) return `인망이 ${labelNumber(Number(shortage[1]) - Number(shortage[2]))} 모자랍니다(필요 ${labelNumber(shortage[1])} · 지금 ${labelNumber(shortage[2])})`;
   if (/^DUPLICATE_ACTIVE_RECRUITMENT_TARGET(?::|$)/.test(code)) return '이미 협의 중입니다';
   if (messages[code]) return messages[code];
+  // C150: 엔진이 '코드: 한국어 까닭'으로 상세 사유를 붙인다(성 전법이 안 되는 까닭 등) — 까닭만 보인다
+  const detail = /^[A-Z][A-Z0-9_]{2,}: (.*[가-힣].*)$/s.exec(code);
+  if (detail && !/\b[A-Z][A-Z0-9_]{2,}\b/.test(detail[1])) return readableText(detail[1]);
+  const coded = /^([A-Z][A-Z0-9_]{2,}): ([A-Z][A-Z0-9_]{2,})$/.exec(code);
+  if (coded) return messages[coded[2]] ?? messages[coded[1]] ?? '지금은 할 수 없습니다.';
   if (/[가-힣]/.test(code) && !/\b[A-Z][A-Z0-9_]{2,}\b/.test(code)) return readableText(code);
   console.warn(code);
   return '지금은 할 수 없습니다.';

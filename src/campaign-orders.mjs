@@ -6,7 +6,7 @@ import {campaignMovementWorld,castleArmyActive,campaignCenterEntryAllowed} from 
 import {armyActionEnded} from './campaign-combat.mjs';
 export const orderEligible=(s,id)=>s.armies[id]?.factionId===s.playerFactionId&&castleArmyActive(s,s.armies[id])&&!armyActionEnded(s,id)&&!s.movedArmyIds.includes(id);
 export function orderRoute(s,id,to){
- if(!s.tiles[to]||!s.armies[id])return null;
+ if(!s.tiles[to]||!s.armies[id]||!castleArmyActive(s,s.armies[id]))return null;
  const known=s.knowledge[s.playerFactionId]?.tiles??{};
  if(!known[to]||known[to]==='UNEXPLORED')return null;
  const blocked=new Set(s.mapRules.blockedEdges);

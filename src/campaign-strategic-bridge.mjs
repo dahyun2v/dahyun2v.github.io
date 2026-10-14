@@ -603,6 +603,7 @@ function castleTargets(world,v,plan,options={}) {
 }
 
 function publicRoute(world,v,armyId,destination){
+  if(!world.armies[armyId]||!castleArmyActive(world,world.armies[armyId]))return null;
   // Restrict FIRST3 path search to observed geometry; hidden terrain is excluded.
   const knownCities=Object.values({...v.knowledge.cities,...v.ownCities}).filter(c=>world.castleKnowledge?.[v.factionId]?.[c.cityId]);
   const cities=Object.fromEntries(knownCities.map(c=>[c.cityId,{...c,...world.castleKnowledge[v.factionId][c.cityId]}]));

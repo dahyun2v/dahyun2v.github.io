@@ -161,6 +161,7 @@ export function settleSupply(s){
  s.supply.lastSettledTurn=s.turn;
 }
 export function supplyAiAction(s,id,reachable,{targetCityId=null,allowBuild=true,publicWorld=null,foodAware=false}={}){
+ if(!s.armies[id]||!active(s,s.armies[id]))return null;
  if(!supplyEnabled(s))return null;const a=s.armies[id],link=supplyLink(publicWorld??s,a),need=armyFoodPerTurn(a,s);
  if(a.morale==='ROUTING')return null;
  const emptySource=!clockFood(s)&&foodAware&&link.source?.city&&link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<need;

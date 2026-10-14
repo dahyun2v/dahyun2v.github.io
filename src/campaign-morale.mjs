@@ -24,6 +24,7 @@ export const inControlZone=(s,a,id=a.tileId)=>{
  return !ignore&&enemies(s,a).some(b=>b.formation!=='BROKEN'&&!combatIgnoreZone(s,a.armyId,b)&&!ambushHidden(s,b.armyId,a.factionId)&&hexDistance(s.tiles[id],s.tiles[b.tileId])<=(hasCampaignRule(s,b.armyId,'EXTENDED_ZOC')?2:1));
 };
 export function campaignPath(s,id,destination){
+ if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return null;
  if(!combatDestinationAllowed(s,id,destination)||diplomacyMoveReason(s,id,destination))return null;
  if(Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id))return campaignReachable(s,id,Infinity).get(destination)??null;
  if(movementEffect(s,id).rooted||hasCampaignRule(s,id,'NO_RETREAT')&&enemies(s,s.armies[id]).some(b=>hexDistance(s.tiles[b.tileId],s.tiles[s.armies[id].tileId])===1))return null;
@@ -36,6 +37,7 @@ export function campaignPath(s,id,destination){
 // 한 번의 탐색으로 이번 차례에 닿는 모든 칸(campaignPath 와 같은 경로·시간). 통제 구역 칸은 들어갈 수는 있지만 거쳐 갈 수 없다.
 // campaignPath 의 Dijkstra(거리 → 칸 id 순)를 그대로 따르므로 칸마다 따로 찾은 결과와 같다.
 export function campaignReachable(s,id,budget){
+ if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return new Map();
  if(combatCanPostMove(s,id))budget=Math.min(budget,s.armies[id].c27?.cantoTicks??budget);
  if(movementEffect(s,id).rooted||hasCampaignRule(s,id,'NO_RETREAT')&&enemies(s,s.armies[id]).some(b=>hexDistance(s.tiles[b.tileId],s.tiles[s.armies[id].tileId])===1))return new Map();
  const a=s.armies[id],world=campaignMovementWorld(s,id),start=a.tileId;

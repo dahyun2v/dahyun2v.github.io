@@ -332,7 +332,7 @@ function run(s, incremental=false) {
     const entry=s.aiQueue.shift();
     if(entry){
       if(entry.tacticsFaction){
-        const f=entry.tacticsFaction,entries=entry.entries.filter(e=>s.armies[e.candidate.armyId]?.factionId===f),focus=campaignTacticsPart(s,f,'focus')||campaignAiRule(s,f,9),w=focus?campaignTacticsWorld(s,campaignTacticsView(s,f)):null;
+        const f=entry.tacticsFaction,entries=entry.entries.filter(e=>s.armies[e.candidate.armyId]?.factionId===f&&castleArmyActive(s,s.armies[e.candidate.armyId])),focus=campaignTacticsPart(s,f,'focus')||campaignAiRule(s,f,9),w=focus?campaignTacticsWorld(s,campaignTacticsView(s,f)):null;
         const order=w?campaignFocusOrder(w,entries.map(e=>e.candidate.armyId)):entries.filter(e=>canMainAction(s,e.candidate.armyId)&&!s.endedArmyIds.includes(e.candidate.armyId)).map(e=>({armyId:e.candidate.armyId,action:null}));
         s.aiQueue.unshift(...order.map(x=>({...entries.find(e=>e.candidate.armyId===x.armyId),attack:true,plannedAction:x.action})));
         continue;
@@ -350,7 +350,7 @@ function run(s, incremental=false) {
         continue;
       }
       const id=entry.candidate.armyId;
-      if(s.armies[id]?.factionId!==entry.faction||injuryReason(s,s.armies[id]?.commanderId))continue;
+      if(s.armies[id]?.factionId!==entry.faction||!castleArmyActive(s,s.armies[id])||injuryReason(s,s.armies[id]?.commanderId))continue;
       if(withdrawalProtection(s,id)){if((!entry.attack||clockFood(s))&&!s.movedArmyIds.includes(id)){s=moveArmy(s,entry.candidate,entry.faction);s.movedArmyIds.push(id);}if(!s.endedArmyIds.includes(id))s.endedArmyIds.push(id);if(incremental)return s;continue;}
       if(!entry.candidate.aiCapitalDefense&&!entry.candidate.aiCityDefensePriority&&(!entry.attack||clockFood(s))&&!s.movedArmyIds.includes(id)&&canMainAction(s,id)){const action=supplyAiAction(s,id,campaignReachable(s,id,TICKS_PER_TURN),{foodAware:campaignFoodEconomyEnabled(s,entry.faction),publicWorld:clockFood(s)||campaignStrategyEnabled(s,entry.faction)||campaignFoodEconomyEnabled(s,entry.faction)?campaignAiSupplyWorld(s,entry.faction):null,targetCityId:entry.targetCityId,allowBuild:entry.candidate.type==='MOVE'&&!['REPLENISH_ARMY','MUSTER_SIEGE','DEFEND_DAMAGED_CITY','CAPITAL_GARRISON','INTERCEPT_CITY','EXPLORE_PLACE','OPERATION_ASSEMBLE','OPERATION_SUPPORT','OPERATION_ADVANCE','TACTICAL_CUT_HUB','TACTICAL_FLANK','TACTICAL_SCREEN','TACTICAL_RETREAT','TACTICAL_WAIT_SUPPORT'].includes(entry.candidate.reasonCode)});if(action){if(action.type==='BUILD_HUB'){beginHub(s,id);consumeMainAction(s,id);}else if(action.type==='MOVE')s=moveArmy(s,{armyId:id,...action},entry.faction);s.movedArmyIds.push(id);if(!s.endedArmyIds.includes(id))s.endedArmyIds.push(id);if(incremental)return s;continue;}}
       const engagedArcher=archerAttackReason(s,id)==='ARCHER_ENGAGED';

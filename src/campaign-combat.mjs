@@ -416,10 +416,42 @@ export const allPlayerActionsEnded=s=>Object.values(s.armies).filter(a=>a.factio
 
 function shownPrediction(s,id,targetId,p){if(!s.armies[targetId]||campaignShownScale(s,targetId,s.armies[id].factionId)!==2)return p;const shownTargetCount=campaignShownCount(s,targetId,s.armies[id].factionId);return {...p,shownTargetCount,shownTargetAfter:Math.max(0,shownTargetCount-(p.enemyLoss??0))};}
 export function previewTactic(s,id,traitId,targetId){return shownPrediction(s,id,targetId,previewTacticNumbers(s,id,traitId,targetId));}
+export function tacticFailureReason(s,id,traitId,targetId){
+ const a=s.armies[id];
+ if(!a||!castleArmyActive(s,a))return '패배하거나 해산된 부대는 전법을 사용할 수 없습니다.';
+ const card=campaignTactics(s,id).find(c=>c.traitId===traitId);
+ if(!card)return '장착한 전법을 확인하십시오.';
+ const diplomacy=diplomacyAttackReason(s,id,targetId);if(diplomacy)return diplomacy;
+ if(card.targets.includes(targetId)){
+  // This siege tactic uses the normal city-attack calculation. A visible
+  // city in range alone does not guarantee a legal gate/wall attack.
+  if(card.effects.some(e=>e.rule==='U_STORM_CAMP')&&s.cities[targetId]&&!cityAttackTargets(s,id).includes(targetId)){
+   return archerAttackReason(s,id)||'성벽 부수기 돌격은 일반 성 공격이 가능한 성문·공성 위치에서 사용하십시오. 성 안의 수비 부대도 확인하십시오.';
+  }
+  return '';
+ }
+ if(card.reason)return card.reason;
+ if(a.morale==='ROUTING')return '패주 중에는 전법을 사용할 수 없습니다.';
+ if(!canMainAction(s,id))return 'MAIN_ACTION_USED';
+ if(card.waiting>0)return card.signature?'고유 전법의 기세 또는 재사용 대기를 확인하십시오.':`전법 재사용까지 ${card.waiting}차례 남았습니다.`;
+ if(attackConfused(s,id))return '혼란 중에는 전법을 사용할 수 없습니다.';
+ const city=s.cities[targetId];
+ if(city){
+  if(city.ownerFactionId===a.factionId)return '아군 성에는 이 전법을 사용할 수 없습니다.';
+  if(city.durability<=0)return '이미 성벽이 무너진 성입니다.';
+  if(s.knowledge[a.factionId].tiles[city.tileId]!=='VISIBLE')return '현재 보이는 성을 지정하십시오.';
+  if(hexDistance(s.tiles[a.tileId],s.tiles[city.tileId])>(card.range??0)+(c33Card(card)?c33Range(s,id,card):0))return '성에 전법 사거리가 닿지 않습니다.';
+ }
+ return '이 전법을 사용할 수 있는 대상을 지정하십시오.';
+}
 function previewTacticNumbers(s,id,traitId,targetId){
   const reason=diplomacyAttackReason(s,id,targetId);if(reason)throw new Error(reason);
   const card=campaignTactics(s,id).find(c=>c.traitId===traitId);
-  if(!card?.targets.includes(targetId))throw new Error(card&&tacticIsDamage(card)&&archerAttackReason(s,id)||'INVALID_CAMPAIGN_TACTIC');
+  const unavailable=tacticFailureReason(s,id,traitId,targetId);
+  if(unavailable){
+   const code=card?.targets.includes(targetId)&&card.effects.some(e=>e.rule==='U_STORM_CAMP')&&s.cities[targetId]?'INVALID_CAMPAIGN_CITY_ATTACK':'INVALID_CAMPAIGN_TACTIC';
+   throw new Error(`${code}: ${unavailable}`);
+  }
   if(card.jointArmyIds||card.modifier||card.fork||card.evolution||card.signature)return resolveTactic(s,id,traitId,targetId,{skipPreview:true}).lastCombat;
   if(c33Card(card))return resolveC33Tactic(s,id,card,targetId).lastCombat;
   if((card.commonBase||card.id?.startsWith('CTA-')))return resolveProtectedCommonTactic(s,id,card,targetId).lastCombat;

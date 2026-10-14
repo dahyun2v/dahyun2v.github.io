@@ -252,7 +252,9 @@ export function triggerEffects(s,source,when,ctx={},card=null){
     }
     c29TraitTriggered(s,source,e,e.targets);
     const o=s.officers[s.armies[source]?.commanderId??source];
-    if(e.targets.length)s.campaignEffects.log.push({turn:s.turn,factionId:o?.allegianceFactionId,text:`${o?.name??source} · ${e.name}: ${when==='BATTLE_START'?'첫 공격 ':''}${e.op==='RULE'?'발동':e.op==='STATUS_APPLY'?STATUS_KO[e.status]??e.status:`${e.value>=0?'+':''}${e.op==='INITIATIVE_MOD'?e.value/2:e.value}${e.op.endsWith('_MOD')?'%':''}`}`});
+    // Registered event/query rules record their committed effect at their own
+    // hook. Merely reading a passive rule is not an activation.
+    if(e.targets.length&&(e.op!=='RULE'||CAMPAIGN_RULES.includes(e.rule)&&when!=='PASSIVE'))s.campaignEffects.log.push({turn:s.turn,factionId:o?.allegianceFactionId,text:`${o?.name??source} · ${e.name}: ${when==='BATTLE_START'?'첫 공격 ':''}${e.op==='RULE'?'발동':e.op==='STATUS_APPLY'?STATUS_KO[e.status]??e.status:`${e.value>=0?'+':''}${e.op==='INITIATIVE_MOD'?e.value/2:e.value}${e.op.endsWith('_MOD')?'%':''}`}`});
   }
   return s;
 }
