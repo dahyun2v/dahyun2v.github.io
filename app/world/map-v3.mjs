@@ -181,8 +181,9 @@ export function renderWorldMap(model, opts = {}) {
     const art = unknown ? opts.unknownSiteArt : opts.siteArt?.[p.label];
     const title = `${unknown ? '미확인 흔적' : esc(p.label)}${!unknown && p.note ? ' · ' + esc(p.note) : ''}${p.eventName ? ' — ' + esc(p.eventName) : ''}${p.layer ? ` · ${esc(p.layer)} ${esc(p.layerName ?? '')}` : ''}\n부대가 이 칸에서 교전 없이 차례를 마치면 조사`;
     svg += `<g class="w-site s-${esc(status.toLowerCase())}" data-place="${esc(p.label)}" transform="translate(${f(c.x)} ${f(c.y)})"><title>${title}</title><ellipse class="halo" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}" cy="${f(size * 0.18)}"/>${status === 'KNOWN' ? `<ellipse class="beacon" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}" cy="${f(size * 0.18)}"/>` : ''}`;
-    if (art) { const w = size * 2, h = w * 0.75; svg += `<image href="${esc(art)}" x="${f(-w / 2)}" y="${f(-h * 0.62)}" width="${f(w)}" height="${f(h)}"/>`; }
-    else svg += `<g class="mark"><rect x="-10" y="-22" width="20" height="20" transform="rotate(45 0 -12)"/><text y="-7">${unknown ? '?' : PLACE_GLYPH[p.label] ?? '跡'}</text></g>`;
+    const baked = !!world?.baked?.includes(p.label); // 2026-10-14: 탐험지가 지도 바탕 그림 안에 그려져 있다(v13) — 얹는 미니어처 없음, 모르는 곳만 '?' 표지
+    if (art && !baked) { const w = size * 2, h = w * 0.75; svg += `<image href="${esc(art)}" x="${f(-w / 2)}" y="${f(-h * 0.62)}" width="${f(w)}" height="${f(h)}"/>`; }
+    else if (!baked || unknown) svg += `<g class="mark"><rect x="-10" y="-22" width="20" height="20" transform="rotate(45 0 -12)"/><text y="-7">${unknown ? '?' : PLACE_GLYPH[p.label] ?? '跡'}</text></g>`;
     if (!unknown) svg += `<text class="name" y="${f(size * 0.78)}">${esc(p.label)}</text>`;
     // 단계 표지: 조사 중 = 査(점선 고리 돎) · 조사 끝 = 已 인장
     if (status === 'PENDING') svg += `<g class="badge pend" transform="translate(${f(size * 0.72)} ${f(-size * 0.86)})"><circle class="spin" r="9.5"/><circle r="7"/><text y="3.6">査</text></g>`;
@@ -221,11 +222,18 @@ export function renderWorldMap(model, opts = {}) {
     const info = city.defenseMax || Number.isFinite(city.troops) ? `<g class="cinfo" transform="translate(0 ${infoY})"><rect class="ci-bg" x="${f(-iw / 2)}" y="0" width="${f(iw)}" height="13.5" rx="1.5"/>`
       + `<image href="/assets/ui-v3/hud/icons/res-troops.png" x="${f(-iw / 2 + 3)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t" x="${f(-iw / 2 + 15)}" y="10.2">${Number.isFinite(city.troops) ? Number(city.troops).toLocaleString('ko-KR') : '?'}</text>`
       + (city.defenseMax ? `<image href="/assets/ui-v3/hud/icons/cmd-garrison.png" x="${f(iw / 2 - 37)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t${def !== null && def < 0.5 ? ' low' : ''}" x="${f(iw / 2 - 25)}" y="10.2">${Math.round(city.defense ?? 0)}</text>` : '') + '</g>' : '';
-    if (opts.compactLabels) occupied.push({x:c.x-iw/2-22,y:c.y+size*(city.kind==='minor'?1.35:1.7)-50,w:iw+44,h:city.defenseMax?108:88});
+    // 2026-10-14 이름표 자리(사용자 "성 이름이 성의 어느 방향에 어느 정도 붙어 있는지 · 글자 크기 · 색을 레퍼런스 보고"): 바탕에 그려 넣은 성이면
+    // 그려진 성벽 아래끝 가운데(world.cityLabelAt, 바탕 그림 px)에 띠 위쪽이 살짝 걸치게 — 솔 시안 04b 의 업 · RTK14 처럼 성에 붙인다. 아니면 예전 자리(칸 가운데 아래)
+    const labelAt = world?.cityLabelAt?.[city.id], ribH = city.kind === 'minor' ? 21 : 24;
+    const lx = labelAt ? minX - size + layout.ox - world.ring * wkx + labelAt[0] * wkx : c.x;
+    const ly = labelAt ? minY - size + layout.oy - world.ring * wky + labelAt[1] * wky + ribH * 0.32 : c.y + size * (city.kind === 'minor' ? 1.35 : 1.7);
+    const nameLen = String(city.name ?? '').length, ribW = ribH * (nameLen > 1 ? 3.55 : 2.6);
+    const ribbon = labelAt ? `<image class="rib" href="/assets/ui-v3/ink/ribbon-${nameLen > 1 ? 2 : 1}.png" x="${f(-ribW / 2)}" y="${f(-ribH / 2)}" width="${f(ribW)}" height="${f(ribH)}"/>` : '';
+    if (opts.compactLabels) occupied.push({x:lx-iw/2-22,y:ly-50,w:iw+44,h:city.defenseMax?108:88});
     const status = city.besieged ? '포위' : city.unrest === 'CHAOS' ? '혼란' : city.unrest === 'UNREST' ? '동요' : city.occupation && city.occupation.stage && city.occupation.stage !== 'NORMAL' ? '점령' : '';
-    plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" transform="translate(${f(c.x)} ${f(c.y + size * (city.kind === 'minor' ? 1.35 : 1.7))}) scale(.88)" style="--fc:${fs.color}">
+    plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" transform="translate(${f(lx)} ${f(ly)}) scale(.88)" style="--fc:${fs.color}">
       ${kit?.cityPlate ? `<image class="plate-art" href="${esc(kit.cityPlate)}" x="${f(-w / 2 - 5)}" y="-13.5" width="${f(w + 10)}" height="27" preserveAspectRatio="none"/>` : ''}${(() => { const fl = kit?.cityFlag?.[KIT_TONE[city.factionId] ?? 'grey']; return fl ? `<g class="cflag" transform="translate(${f(-w / 2 - 12)} -50)"><image href="${esc(fl)}" x="-8" y="0" width="17" height="58"/>${/^F\d\d$/.test(city.factionId ?? '') ? `<image href="/assets/ui-v3/emblems/${esc(city.factionId)}.png" x="-4.6" y="9" width="10" height="10"/>` : ''}</g>` : ''; })()}
-      <rect class="bg" x="${f(-w / 2)}" y="-12" width="${f(w)}" height="24"/><g class="crest" transform="translate(${f(-w / 2 + 2)} 0)"><rect x="-9" y="-9" width="18" height="18" transform="rotate(45)"/><text y="4.5">${esc(fs.glyph)}</text></g>
+      ${ribbon}<rect class="bg" x="${f(-w / 2)}" y="-12" width="${f(w)}" height="24"/><g class="crest" transform="translate(${f(-w / 2 + 2)} 0)"><rect x="-9" y="-9" width="18" height="18" transform="rotate(45)"/><text y="4.5">${esc(fs.glyph)}</text></g>
       <text class="name" x="${f(kit?.cityPlate ? 0 : 9)}" y="5.5">${name}</text>${def !== null ? `<rect class="def-bg" x="${f(-w / 2 + 16)}" y="14" width="${f(w - 22)}" height="3"/><rect class="def" x="${f(-w / 2 + 16)}" y="14" width="${f((w - 22) * def)}" height="3"/>` : ''}
       ${status ? `<g class="st" transform="translate(${f(w / 2 + 4)} -6)"><rect x="0" y="-9" width="34" height="17"/><text x="17" y="4">${status}</text></g>` : ''}${info}${badge}</g>`);
   }

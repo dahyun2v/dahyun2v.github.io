@@ -5829,6 +5829,39 @@
       "sha256": "16e59be2723a59419fc0928f698d6e3025a23862d4349defd1d13c64fed9e9a5",
       "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/06-forecast.png",
       "prompt": "솔 시안 06-forecast 의 병사 줄 맨 오른쪽 한 명(545,828-569,888)을 떠서 밝기-바탕 밝기로 투명도, 아래 주사색 붓 자국 제거(scratchpad soldier-cut.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/map/v13-world.webp",
+      "purpose": "세계 지도 바탕 v13 — v12(성 여덟 곳을 그려 넣음) + 탐험지 네 곳(성소 · 은거지 · 옛 진지 · 군마 산지)을 지도 그림 안에 그려 넣음",
+      "size": [
+        3825,
+        3468
+      ],
+      "sha256": "d1de4f6c0128e0a1c072c2a7007f23f323128c67ead2a159cebd8b135483d4df",
+      "sourceSheet": "prototype/assets/ui-v3/map/v12-world.png",
+      "prompt": "탐험지 자리 512 조각 + 분홍 안내도를 Codex image_gen 으로 편집(C152), paste-edit.py 로 특징점 맞춤 후 타원 안만 섞음(맞춤점 1136~1240, 어긋남 0.3px 이하). 원본 PNG 는 같은 폴더에 로컬 보관"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-1.png",
+      "purpose": "성 이름표의 먹 띠(1 글자 이름용) — 솔 시안의 붓 자국 이름표처럼",
+      "size": [
+        250,
+        96
+      ],
+      "sha256": "f377635c2de4ed50e68662afcdc4be8ede4b5c4a3a700c2a23150c2083270c8a",
+      "sourceSheet": "prototype/assets/ui-v3/ink/stroke-ink.png",
+      "prompt": "stroke-ink 가운데를 이름 길이 비율로 잘라(늘이지 않음) 양 끝을 줄마다 길이가 다른 마른 붓 결로 투명하게, 투명도 ×1.35 · 색 ×0.55 로 진하게(scratchpad make-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-2.png",
+      "purpose": "성 이름표의 먹 띠(2 글자 이름용) — 솔 시안의 붓 자국 이름표처럼",
+      "size": [
+        341,
+        96
+      ],
+      "sha256": "81111246f1690be426af2f496e9d66eddac951e0fb34ff5796dbb44a55c1f6ab",
+      "sourceSheet": "prototype/assets/ui-v3/ink/stroke-ink.png",
+      "prompt": "stroke-ink 가운데를 이름 길이 비율로 잘라(늘이지 않음) 양 끝을 줄마다 길이가 다른 마른 붓 결로 투명하게, 투명도 ×1.35 · 색 ×0.55 로 진하게(scratchpad make-ribbons.py)"
     }
   ],
   "sources": [

@@ -40,6 +40,9 @@ export const inkMapTrial = () => { try { return new URLSearchParams(globalThis.l
 const CITY_FILE = {west: 'ye', east: 'ji', south: 'nanpi', yijing: 'yijing', zhongshan: 'zhongshan', xindu: 'xindu', julu: 'julu', pingyuan: 'pingyuan'};
 const CITY_FIT = {image: [1216, 832], flowerBox: [57, 171, 1102]};
 const SITE_FILE = {'성소': 'shrine', '은거지': 'hermitage', '옛 진지': 'old-camp', '군마 산지': 'horse-ranch'};
+// 2026-10-14: 바탕 그림(v12 · v13, 3825×3468)에 그려 넣은 성의 '앞 성벽 아래끝 가운데'(px) — 성 이름표를 여기에 붙인다.
+// 그려진 성은 엔진 칸 가운데보다 20~45px 오른쪽 · 10~90px 아래에 있다(눈금 그림으로 잼: docs/work-integration/20261014/city-label/)
+const BAKED_CITY_LABEL_AT = {west: [1052, 2725], east: [2286, 947], south: [2397, 1897], yijing: [1971, 1375], zhongshan: [1405, 1586], xindu: [1603, 2080], julu: [1207, 2333], pingyuan: [2273, 2246]};
 const pick = (map, dir) => Object.fromEntries(Object.entries(map).map(([k, f]) => [k, v3Asset(`${dir}/${f}.png`)]).filter(([, v]) => v));
 export function v3MapOptions() {
   const cityArt = {};
@@ -50,7 +53,9 @@ export function v3MapOptions() {
     mapArt: (inkMapTrial() ? v3Asset('map/v10-ink.webp') ?? v3Asset('map/v9-ink.webp') ?? v3Asset('map/v8-ink.webp') ?? v3Asset('map/v7-ink.webp') ?? v3Asset('map/v6-ink.webp') ?? v3Asset('map/v5-ink.webp') ?? v3Asset('map/v4-ink-trial.webp') : null) ?? v3Asset('map/v3-base-v2.webp') ?? v3Asset('map/v3-base-v2.png') ?? v3Asset('map/v3-base.webp') ?? v3Asset('map/v3-base.png'),
     // 세계 그림: 땅(2577×2220) 둘레에 놀이판 밖 지형을 624px 이어 그린 한 장(tools/design/map-ring.py). 있으면 지도가 이것으로 그려지고 땅 밖 구름 바다 대신 지형이 이어진다. ?map=paint 는 옛 그림 그대로
     // v12(2026-10-13): 성 여덟 곳을 지도 그림 안에 그려 넣은 바탕(사용자 "성이든 뭐든 지도 위에 올라가는 건 이 방법으로" — tools/design/bake-inputs.py · paste-edit.py). baked 에 적힌 성은 따로 얹는 그림을 그리지 않는다. 없으면 v11 + 얹는 성 그림
-    mapWorld: !inkMapTrial() ? null : v3Asset('map/v12-world.webp') ? {src: v3Asset('map/v12-world.webp'), ring: 624, land: [2577, 2220], baked: Object.keys(CITY_FILE)}
+    // v13(2026-10-14): v12 + 탐험지 네 곳(성소 · 은거지 · 옛 진지 · 군마 산지)도 그려 넣음 — baked 에 탐험지 이름도 적는다(얹는 미니어처를 그리지 않는다)
+    mapWorld: !inkMapTrial() ? null : v3Asset('map/v13-world.webp') ? {src: v3Asset('map/v13-world.webp'), ring: 624, land: [2577, 2220], baked: [...Object.keys(CITY_FILE), ...Object.keys(SITE_FILE)], cityLabelAt: BAKED_CITY_LABEL_AT}
+      : v3Asset('map/v12-world.webp') ? {src: v3Asset('map/v12-world.webp'), ring: 624, land: [2577, 2220], baked: Object.keys(CITY_FILE), cityLabelAt: BAKED_CITY_LABEL_AT}
       : v3Asset('map/v11-world.webp') ? {src: v3Asset('map/v11-world.webp'), ring: 624, land: [2577, 2220]} : null,
     cityArt, mode,
     unitArt: pick(Object.fromEntries(troops.map((t) => [t, t])), 'units'),

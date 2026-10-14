@@ -2557,6 +2557,18 @@ body.ink .wmap .w-cityplate .cinfo .ci-t{fill:#e6dbc2;font-family:var(--serif);f
 body.ink .wmap .w-cityplate .cinfo .ci-t.low{fill:#f0a493}
 body.ink .wmap .w-cityplate .cinfo image{filter:brightness(0) invert(.88) drop-shadow(0 0 .6px #14100c)}
 body.ink .wmap .w-cityplate .def-bg{fill:#0e0c0a}body.ink .wmap .w-cityplate .def{fill:#d8cbb0}
+/* 10-14 저녁(사용자 "성 이름이 성의 어느 방향에 어느 정도 붙어 있는지, 글자 크기, 폰트 색깔 — 레퍼런스 보고 조정, 지금은 이질적"):
+   레퍼런스 = 솔 시안 04b(성 바로 아래 가운데, 거친 먹 붓 띠 + 뼈색 붓글씨, 띠 위쪽이 성벽 밑단에 걸침) · RTK14(성에 바로 붙임, 글자 높이 ≈ 성 폭의 1/7) · TW3K(성 위에 띄운 밝은 UI 판 — 먹 지도엔 맞지 않아 따르지 않음).
+   반듯한 반투명 네모 + 밝은 테두리(디지털 판처럼 떠 보이던 것) → 마른 붓끝 먹 띠(ink/ribbon-1 · 2.png, 늘이지 않은 고정 비율). 띠가 있으면 네모는 누르는 자리로만 남긴다. 내구 막대는 수치(성 아이콘 옆 숫자)와 겹쳐 뺀다 */
+body.ink .wmap .w-cityplate:has(.rib) .bg{fill:transparent;stroke:none}
+body.ink .wmap .w-cityplate .rib{transition:filter .15s}
+body.ink .wmap .w-cityplate:hover .rib{filter:brightness(2.2)}
+body.ink .wmap .w-cityplate:has(.rib) .name{fill:#f3ead7;font-family:var(--title);font-weight:700;font-size:15.5px;letter-spacing:.06em;paint-order:stroke;stroke:rgba(10,8,6,.7);stroke-width:1.2px;stroke-linejoin:round}
+body.ink .wmap .w-cityplate.minor:has(.rib) .name{font-size:14px}
+body.ink .wmap .w-cityplate:has(.rib) .name{transform:translateY(-1.2px)}
+body.ink .wmap .w-cityplate:has(.rib) :is(.def,.def-bg){display:none}
+body.ink .wmap .w-cityplate:has(.rib) .cinfo .ci-bg{fill:rgba(12,10,8,.5);stroke:none;rx:6.75px}
+body.ink .wmap .w-cityplate:has(.rib) .cinfo .ci-t{font-size:8.5px;stroke-width:1.1px}
 /* /2026-10-14 성 이름표 */
 body.ink .wmap .w-unit .plate .pole{display:inline;stroke:#14100c;stroke-width:1.5px}
 body.ink .wmap .w-unit .banner{display:none}
@@ -2749,6 +2761,12 @@ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel select{min-width:0;ma
  body.ink .cs .cs-commands:is([data-fac="office"],[data-fac="barracks"]) #city-panel .option.office-job{grid-template-columns:minmax(0,1fr) 76px minmax(0,1.15fr);grid-template-areas:"main cost finish";gap:8px}
  body.ink .cs .cs-commands[data-fac="office"] #city-panel .osec[data-osec="jobs"] .city-working{padding:4px 8px;margin-bottom:5px;font-size:13px;line-height:1.3}
  body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .city-pane[data-pane="barracks"]{height:55%}
+ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .muster-target{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px;margin:0 0 4px}
+ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .muster-target label{display:flex;align-items:center;gap:6px;font-size:13px;margin:0}
+ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .muster-target select{flex:1;width:100%;padding:3px;font-size:13px}
+ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .muster-info{grid-column:1/-1;margin:0;font-size:12px;line-height:1.3}
+ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer #muster-selection{margin-bottom:3px}
+ body.ink .cs .cs-commands[data-fac="barracks"] #city-panel .barracks-footer .option{min-height:38px;padding:6px 12px}
 }
 /* /2026-10-14 C146 */
 
