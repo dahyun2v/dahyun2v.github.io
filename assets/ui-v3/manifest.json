@@ -5862,6 +5862,17 @@
       "sha256": "81111246f1690be426af2f496e9d66eddac951e0fb34ff5796dbb44a55c1f6ab",
       "sourceSheet": "prototype/assets/ui-v3/ink/stroke-ink.png",
       "prompt": "stroke-ink 가운데를 이름 길이 비율로 잘라(늘이지 않음) 양 끝을 줄마다 길이가 다른 마른 붓 결로 투명하게, 투명도 ×1.35 · 색 ×0.55 로 진하게(scratchpad make-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/c153-dragon-banner.png",
+      "purpose": "C153 할 일과 선택 부대 판의 붉은 용 깃발",
+      "size": [
+        111,
+        252
+      ],
+      "sha256": "299b7d09f7d87c54f5286471ee0170eaa8296ec47dbf61b83dfa294e760dfd92",
+      "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
+      "prompt": "x1552 y39 w111 h252 polygon cloth mask; no recoloring (Codex C153)"
     }
   ],
   "sources": [

@@ -3,6 +3,7 @@
 // 층(아래→위): 땅(그린 지도 한 장, 없으면 지형 색) · 강(그림 속 강과 같은 곡선, 판정용 가는 선) · 길 · 영역 · 칸 · 안개
 //            · 이동/공격 칸 · 경로 · 클릭 칸 · 시설 · 탐험지 · 성(미니어처) · 부대(무리 그림 + 장수 깃발판) · 이름판 · 효과
 import {hexCenter, outlineRings} from '../design/city-walls.mjs';
+import supplyRules from '../../../docs/design-data/supply-v0.1.json' with {type:'json'};
 
 const SQRT3 = Math.sqrt(3), TILT = 0.62;
 const f = (n) => Math.round(n * 10) / 10;
@@ -16,6 +17,12 @@ function faceImage(src, clip = 'w-face') {
 }
 const parse = (id) => { const [q, r] = String(id).split(',').map(Number); return {q, r}; };
 const hexDist = (a, b) => (Math.abs(a.q - b.q) + Math.abs(a.q + a.r - b.q - b.r) + Math.abs(a.r - b.r)) / 2;
+
+// C153: a geometric public coverage outline; blocked routes remain in the supply readout.
+export function publicSupplyTiles(tiles, cities=[], hubs=[]){
+  const sources=[...cities.flatMap(c=>[c.tileId,...(c.footprint?.gates??[]),...(c.footprint?.walls??[])]),...hubs.map(h=>h.tileId)].filter(Boolean).map(parse);
+  return tiles.filter(t=>sources.some(s=>hexDist(t,s)<=supplyRules.link.range));
+}
 
 export const FACTION = {
   F01: {color: '#b8433c', name: '조조', glyph: '曹'},
@@ -153,6 +160,10 @@ export function renderWorldMap(model, opts = {}) {
   if (unexplored.length) svg += `<mask id="w-m-fog" maskUnits="userSpaceOnUse"><path d="${unexplored.map((t) => hexPath(hexCenter(t, layout), size * 1.15)).join('')}" fill="#fff" filter="url(#w-cloud)"/></mask><rect class="w-fog" x="0" y="0" width="${f(W)}" height="${f(H)}" mask="url(#w-m-fog)"/>`;
 
   // 이동·공격·위험 칸, 경로, 예약, 정면, 인연선, 적 의도, 보급선
+  if(opts.mode==='supply'&&opts.supplyPublic){
+    const covered=publicSupplyTiles(tiles,opts.supplyPublic.cities,opts.supplyPublic.hubs);
+    if(covered.length)svg+=`<path class="w-supply-boundary" d="${ringsPath(outlineRings(covered,layout))}"/>`;
+  }
   const hexes = (ids, cls) => (ids ?? []).map((id) => byId.has(id) || parse(id) ? `<path class="${cls}" d="${hexPath(C(id), size * 0.92)}"/>` : '').join('');
   svg += hexes(hl.danger, 'w-danger') + hexes(hl.move, 'w-move') + hexes(hl.attack, 'w-attack');
   if (hl.side?.tile) { const p = C(hl.side.tile), name = {FRONT: '정면', FLANK: '옆 +15%', REAR: '뒤 +30%'}[hl.side.side] ?? ''; svg += `<g class="w-side s-${esc(hl.side.side ?? '')}"><path d="${hexPath(p, size * 0.98)}"/>${name ? `<text x="${f(p.x)}" y="${f(p.y - size * 1.0)}">${name}</text>` : ''}</g>`; }

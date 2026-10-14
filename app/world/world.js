@@ -53,6 +53,7 @@ import {renderCouncilWorld,councilPending,councilEscape} from '/app/world/counci
 import {openOfficerDraft} from '/app/world/officer-draft-ui.mjs';
 import {showClash} from '/app/world/clash-scene.mjs';
 import {garrisonReason,musterReason} from '/src/campaign-roster.mjs';
+import supplyRules from '/docs/design-data/supply-v0.1.json' with {type:'json'};
 import {hubBuildReason} from '/src/campaign-supply.mjs';
 // 흑묵 그래픽 노블 스킨(2026-10-10, 스타일 바이블 v2) — ?skin=v3 으로 이전 겉모습
 try{if(new URLSearchParams(location.search).get('skin')!=='v3'){document.body?.classList?.add('ink');
@@ -187,7 +188,7 @@ let recordNotices=[],newsArchive=[],currentNews=[],allNews=[],overlapPick=null; 
 // 끝난 판의 차례 표기: 결과가 정해질 때 엔진의 차례는 이미 다음으로 넘어가 있다(26차례에 멸망했는데 27턴으로 보였다 — 닷토리 B15). 끝난 판은 '마친 차례'를 보여 준다
 const endedTurn=t=>state?.gameResult?Math.max(1,Math.min(t-1,CAMPAIGN_TURN_LIMIT)):t;
 let recentCombats=[],lastFoodChange=null,lastUnitResult=null,lastFacilityResults=[]; // 이번 접속의 관측 결과만. 새 판/불러오기에서 초기화.
-const START_ZOOM=1.7; // 시작 시점: 부대 얼굴·병력이 읽히는 거리(휠로 0.5~2.6). 1.35 로 넓혀 봤으나(2026-10-11) 서쪽 수도(업)는 그림 끝이라 가운데로 못 와서, 부대를 고르면 수도 이름표가 왼쪽 아래 부대 판에 가려졌다 → 되돌림
+const START_ZOOM=new URLSearchParams(location.search).get('hud')==='old'?1.7:2.1; // C153b: measured city art width; labels keep the existing 1.7 screen size.
 // 지도 위 움직임(렌더러 모델로 넘김): 행군 경로·공격 동작·바라보는 쪽·전투 효과. elapsed 로 다시 그려도 이어진다.
 let motions={},attackAnims={},facings={},fxList=[],motionSeq=0,redrawTimer=null;
 const factionName=id=>({F01:"조조군",F02:"유비군",F03:"손권군"}[id]??id);
@@ -375,7 +376,7 @@ function follow(armyId,instant=false,previewTile=null){
  if(!node?.getBoundingClientRect||!port?.getBoundingClientRect||!port.scrollTo)return;
  const r=node.getBoundingClientRect(),v=port.getBoundingClientRect(),m=90;
  // C137: measure the actual fixed panels after the selected unit HUD has rendered.
- const panels=[...(typeof document!=='undefined'?document.querySelectorAll?.('.nb-band,.nb-hero,.nb-sheet,.nb-more,.nb-bookmarks,.nb-map-options,.nb-news-tab,.nb-news-peek,.ih-top,.ih-medal,.ih-victory,.ih-rail,.ih-unit,.ih-readout,.ih-notice,.ih-notice-links,.ih-cmd,.ih-end,.ih-foe,.ih-food-sheet,.w-top,.w-rail,.w-dock,.w-report,.w-turn,.w-advisor,#city-panel')??[]:[])]
+ const panels=[...(typeof document!=='undefined'?document.querySelectorAll?.('.nb-selected,.nb-supply,.nb-supply-portrait,.nb-state-title,.nb-advisor-box,.nb-band,.nb-hero,.nb-sheet,.nb-more,.nb-bookmarks,.nb-map-options,.nb-news-tab,.nb-news-peek,.ih-top,.ih-medal,.ih-victory,.ih-rail,.ih-unit,.ih-readout,.ih-notice,.ih-notice-links,.ih-cmd,.ih-end,.ih-foe,.ih-food-sheet,.w-top,.w-rail,.w-dock,.w-report,.w-turn,.w-advisor,#city-panel')??[]:[])]
   .filter(n=>!n.hidden&&n.getClientRects?.().length&&(typeof getComputedStyle!=='function'||getComputedStyle(n).visibility!=='hidden'&&getComputedStyle(n).opacity!=='0'))
   // C149c: 교전 예고 때 띠가 화면의 1/3 로 커진다(마우스는 통과). 그 높이로 재면 지도가 마우스 밑에서 움직여 커서가 다른 칸에 놓이고 예고가 이동 경로로 바뀐다 — 예고 중에는 커진 띠를 빼고 잰다
   .filter(n=>!(previewTile&&n.matches?.('.nb-band[data-state="forecast"]'))).map(n=>n.getBoundingClientRect());
@@ -759,7 +760,7 @@ function renderHud(v){
   bars.push({pct:max?a.troopCount/max*100:100,text:Number(a.troopCount).toLocaleString('ko-KR'),title:`병력 ${a.troopCount}/${max}`,tone:'red'});
   bars.push({pct:{STEADY:100,SHAKEN:50,ROUTING:12}[a.morale]??100,text:MORALE_NAME[a.morale]??'',title:'사기',tone:'bone'});
   if(sup)bars.push({pct:sup.max?(sup.stock??0)/sup.max*100:0,text:`${food1(sup.stock??0)}/${food1(sup.max??0)}`,title:`휴대 군량 · 보급 ${SUPPLY_LABEL[sup.state]??sup.state}${sup.model==='clock'?(sup.draining?' · 줄어드는 중':' · 보급권 안 — 줄지 않음'):''}`,tone:'teal'});}
- renderInkHud(root,{foodModel:state.trialRules?.foodModel,bandSupply:a?{name:v.officers[a.commanderId]?.name??'',supply:a.supply,label:SUPPLY_LABEL[a.supply?.state]??'보급 정보 없음',source:v.ownCities[a.supply?.sourceCityId],hub:v.hubs?.find(h=>h.hubId===a.supply?.sourceHubId),context:supplySourceText(a.supply,v),blocked:a.supply?.state==='CUT'?(Object.values(v.knowledge?.cities??{}).some(c=>c.cityId!==a.supply?.sourceCityId&&c.ownerFactionId!==v.factionId&&(c.tileId===a.tileId||c.gates?.includes(a.tileId)||c.walls?.includes(a.tileId)))?'적 성에 붙어 있어 보급이 닿지 않음':'길이 끊겨 휴대 군량으로 버팀'):a.supply?.state==='STARVING'?'군량 바닥 · 굶주림 위험':''}:null,todoLines:bandTodoLines(state,v),bandSelected:selectedTacticId??(faceMode?'face':attackMode?'attack':moveMode?'move':null),garrisonWhy:a?reasonText(garrisonReason(state,a.armyId)||''):'',remaining:Object.values(v.ownArmies).filter(u=>!armyActionEnded(state,u.armyId)).length,todo:councilPending(state)+(pendingCampaignDraft(state)?1:0)+(v.pendingEvent?1:0),ratings:a?campaignUnitRatings(state,a.armyId):null,bandMeta:a?`${TROOP_NAME[troopToCampaign(a.troopType)]??a.troopType} · 병력 ${a.troopCount}`:'',bandStatus:a?{morale:{text:MORALE_NAME[a.morale],warn:a.morale!=='STEADY'},formation:{text:`전열 ${FORMATION_NAME[a.formation??'ORDERED']??'정돈'}`,warn:a.formation!=='ORDERED'},supply:{text:a.supply?.stock<=0&&a.supply?.draining?'굶주림':a.supply?.draining?`${food1(a.supply.turnsLeft)}차례분 · 줄어드는 중`:'보급권 안',warn:!!a.supply?.draining}}:null,factionId:v.factionId,factionName:FACTION_STYLE[v.factionId]?.name,factionColor:FACTION_STYLE[v.factionId]?.color,tone,turn:endedTurn(v.turn),date:campaignDate(endedTurn(v.turn)),left:$('#turn')?.dataset?.left??'',mode:v3Mode(),summary:$('#summary')?.textContent,currentNews,allNews,unitBars:bars,commandIntent,food:foodSnapshot(v),foodChange:lastFoodChange,unitResult:lastUnitResult,facilityResults:lastFacilityResults,combatHistory:recentCombats,recruitmentCount:(v.revealedWanderers??[]).length,unitStatus:a?{id:a.armyId,actions:selectedActions(a.armyId),action:armyActionEnded(state,a.armyId)?'이번 턴 행동 완료':state.movedArmyIds.includes(a.armyId)?'이동함 · 주 행동 확인':'행동 가능',formation:FORMATION_NAME[a.formation??'ORDERED']??'정돈'}:null,council:councilPending(state)});
+ renderInkHud(root,{turnLimit:CAMPAIGN_TURN_LIMIT,supplyRange:supplyRules.link.range,unitTroops:a?.troopCount,unitLocation:a?(Object.values({...v.knowledge.cities,...v.ownCities}).find(c=>c.tileId===a.tileId||c.footprint?.gates?.includes(a.tileId)||c.footprint?.walls?.includes(a.tileId))?.name??({plain:'평지',forest:'숲',hill:'언덕',mountain:'산',water:'물'})[v.tiles[a.tileId]?.terrainType]??'지형'):null,foodModel:state.trialRules?.foodModel,bandSupply:a?{name:v.officers[a.commanderId]?.name??'',supply:a.supply,label:SUPPLY_LABEL[a.supply?.state]??'보급 정보 없음',source:v.ownCities[a.supply?.sourceCityId],hub:v.hubs?.find(h=>h.hubId===a.supply?.sourceHubId),context:supplySourceText(a.supply,v),blocked:a.supply?.state==='CUT'?(Object.values(v.knowledge?.cities??{}).some(c=>c.cityId!==a.supply?.sourceCityId&&c.ownerFactionId!==v.factionId&&(c.tileId===a.tileId||c.gates?.includes(a.tileId)||c.walls?.includes(a.tileId)))?'적 성에 붙어 있어 보급이 닿지 않음':'길이 끊겨 휴대 군량으로 버팀'):a.supply?.state==='STARVING'?'군량 바닥 · 굶주림 위험':''}:null,todoLines:bandTodoLines(state,v),bandSelected:selectedTacticId??(faceMode?'face':attackMode?'attack':moveMode?'move':null),garrisonWhy:a?reasonText(garrisonReason(state,a.armyId)||''):'',remaining:Object.values(v.ownArmies).filter(u=>!armyActionEnded(state,u.armyId)).length,todo:councilPending(state)+(pendingCampaignDraft(state)?1:0)+(v.pendingEvent?1:0),ratings:a?campaignUnitRatings(state,a.armyId):null,bandMeta:a?`${TROOP_NAME[troopToCampaign(a.troopType)]??a.troopType} · 병력 ${a.troopCount}`:'',bandStatus:a?{morale:{text:MORALE_NAME[a.morale],warn:a.morale!=='STEADY'},formation:{text:`전열 ${FORMATION_NAME[a.formation??'ORDERED']??'정돈'}`,warn:a.formation!=='ORDERED'},supply:{text:a.supply?.stock<=0&&a.supply?.draining?'굶주림':a.supply?.draining?`${food1(a.supply.turnsLeft)}차례분 · 줄어드는 중`:'보급권 안',warn:!!a.supply?.draining}}:null,factionId:v.factionId,factionName:FACTION_STYLE[v.factionId]?.name,factionColor:FACTION_STYLE[v.factionId]?.color,tone,turn:endedTurn(v.turn),date:campaignDate(endedTurn(v.turn)),left:$('#turn')?.dataset?.left??'',mode:v3Mode(),summary:$('#summary')?.textContent,currentNews,allNews,unitBars:bars,commandIntent,food:foodSnapshot(v),foodChange:lastFoodChange,unitResult:lastUnitResult,facilityResults:lastFacilityResults,combatHistory:recentCombats,recruitmentCount:(v.revealedWanderers??[]).length,unitStatus:a?{id:a.armyId,actions:selectedActions(a.armyId),action:armyActionEnded(state,a.armyId)?'이번 턴 행동 완료':state.movedArmyIds.includes(a.armyId)?'이동함 · 주 행동 확인':'행동 가능',formation:FORMATION_NAME[a.formation??'ORDERED']??'정돈'}:null,council:councilPending(state)});
 }
 // C149: reuse the same player council text already shown in the council UI.
 function bandTodoLines(s,v){
@@ -2024,6 +2025,15 @@ function centerPlayer(){
  const svg=$('#map svg'),point=svg.createSVGPoint();
  // City banners sit above the center by 2.05 hex radii.
  if(capital)point.y=-30*1.7;
+ if(document.body.classList.contains('hud-band')){
+  // The tilted viewport extends past the window. Frame in actual screen coordinates.
+  for(let i=0;i<4;i++){
+   const p=point.matrixTransform(node.getScreenCTM()),m=svg.getScreenCTM();
+   const delta=screenScrollDelta(m,p.x-innerWidth*.34,p.y-innerHeight*.73,zoom);
+   viewport.scrollLeft+=delta.x;viewport.scrollTop+=delta.y;
+  }
+  return;
+ }
  const target=point.matrixTransform(node.getScreenCTM()),rect=viewport.getBoundingClientRect();
  viewport.scrollLeft+=target.x-rect.left-viewport.clientWidth/2;
  viewport.scrollTop+=target.y-rect.top-viewport.clientHeight/2;
@@ -2106,7 +2116,7 @@ function drawMap(v,hoverOnly=false){
  const margin=440; // 땅 밖으로도 화면을 옮길 수 있다 — 그 너머는 구름 바다(지도와 같이 움직이는 한 장의 세계. 사용자 2026-10-11 "월드맵은 배경이 따로 없어야 하고, 이동하면 다른 지형(안개)이 보여야 함")
  const left=viewport.scrollLeft,top=viewport.scrollTop;
  const cityBadges=Object.fromEntries(Object.values(v.ownCities??{}).map(c=>[c.cityId,cityProductionBadge(c)]).filter(([,b])=>b));
- const markup=renderWorldMap(model,{size:30,margin,cityBadges,compactLabels:globalThis.matchMedia?.("(max-width: 1320px), (max-height: 800px)").matches,...v3MapOptions(),relations:v3Relations(v)});
+ const markup=renderWorldMap(model,{size:30,margin,cityBadges,supplyPublic:new URLSearchParams(location.search).get('hud')==='old'?null:{cities:Object.values(v.ownCities??{}),hubs:(v.hubs??[]).filter(h=>h.factionId===v.factionId)},compactLabels:globalThis.matchMedia?.("(max-width: 1320px), (max-height: 800px)").matches,...v3MapOptions(),relations:v3Relations(v)});
  if(hoverOnly){
   // 예고 때문에 이름표·칸을 교체하면 pointerdown/up 의 대상이 달라져 클릭이 사라진다.
   const svg=$('#map svg'),scratch=document.createElement('div');if(!svg)return;scratch.innerHTML=markup;
@@ -2128,7 +2138,24 @@ function applyZoom(){
  const width=svg.viewBox?.baseVal?.width;
  if(width)svg.style.width=width*zoom+'px';
  svg.classList.toggle('zoom-far',zoom<.75);svg.classList.toggle('zoom-near',zoom>=1.4);
+ // Wrap visual children, retaining the original placement, data target and hit extent.
+ // The protected map renderer and label CSS remain untouched.
+ if(document.body.classList.contains('hud-band')){
+  const scale=mapLabelScale(zoom);
+  for(const label of svg.querySelectorAll('.w-unit>.plate-top,.w-cityplate,.w-site>.name')){
+   if(label.tagName.toLowerCase()==='text'){
+    const x=Number(label.getAttribute('x')??0),y=Number(label.getAttribute('y')??0);
+    label.setAttribute('transform',`translate(${x} ${y}) scale(${scale}) translate(${-x} ${-y})`);continue;
+   }
+   let art=label.querySelector(':scope>.c153-label-art');
+   // Claude 10-14: 예전 크기의 투명한 누르는 판을 따로 두지 않는다 — 줄인 표지보다 커서 이웃 칸(적이 선 칸)까지 덮어, 적을 눌러도 우리 부대가 눌렸다(공격 안 됨). 누르는 자리 = 줄인 그림 그대로
+   if(!art){art=document.createElementNS('http://www.w3.org/2000/svg','g');art.classList.add('c153-label-art');while(label.firstChild)art.append(label.firstChild);label.append(art);}
+   art.setAttribute('transform',`scale(${scale})`);
+  }
+ }
 }
+export function mapLabelScale(value){return value>1.7?1.7/value:1;}
+export function screenScrollDelta(m,x,y,z){const det=m.a*m.d-m.b*m.c;return Math.abs(det)<1e-8?{x:0,y:0}:{x:(m.d*x-m.c*y)*z/det,y:(m.a*y-m.b*x)*z/det};}
 export function zoomScroll(left,top,x,y,from,to){return {left:(left+x)*to/from-x,top:(top+y)*to/from-y};}
 let zoomTimer=null;
 function zoomAt(value,x,y){
