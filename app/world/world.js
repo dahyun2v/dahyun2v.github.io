@@ -230,16 +230,18 @@ function inkToast(text,{kind='decision'}={}){
  const row=document.createElement('div');row.className='ink-toast';row.dataset.kind=kind;row.textContent=text;
  host.append(row);while(host.children.length>3)host.firstElementChild.remove();setTimeout(()=>row.remove(),1600);
 }
-function cityCommitSeal(cityId){
+function cityCommitSeal(cityId,kind){
  if(reduceMotion())return;
- const node=document.querySelector(`#map .w-cityplate[data-city="${cityId}"]`);if(!node)return;
- const r=node.getBoundingClientRect(),seal=document.createElement('img');seal.className='ink-city-seal';seal.src='/assets/ui-v3/ui/seal-2.png';seal.alt='';seal.style.left=(r.left+r.width/2)+'px';seal.style.top=(r.top+r.height/2)+'px';document.body.append(seal);setTimeout(()=>seal.remove(),800);
+ // Claude 10-15: 성 화면(관청 · 빠른 생산 창)에서 고르면 지도 위 성 자리가 아니라 고른 줄에 찍는다 — 지도 자리는 성 화면에 가려 엉뚱한 곳(태수 그림 위)에 찍혔다
+ const job=kind&&[...document.querySelectorAll(`[data-city-job="${kind}"],[data-quick-job="${kind}"]`)].find(e=>{const b=e.getBoundingClientRect();return b.width>0&&b.height>0&&b.bottom>0&&b.top<innerHeight;});
+ const node=job??document.querySelector(`#map .w-cityplate[data-city="${cityId}"]`);if(!node)return;
+ const r=node.getBoundingClientRect(),label=job?null:(node.querySelector('.plate-art')??node.querySelector('.name'))?.getBoundingClientRect(),seal=document.createElement('img'),size=job?Math.max(64,r.height*1.15):Math.max(88,(label?.height||r.height)*1.5);seal.className='ink-city-seal';seal.src='/assets/ui-v3/ui/seal-2.png';seal.alt='';seal.style.width=seal.style.height=size+'px';seal.style.left=(job?r.right-size*.75:r.left+r.width/2)+'px';seal.style.top=(r.top+r.height/2)+'px';document.body.append(seal);setTimeout(()=>seal.remove(),800);
 }
 function decisionFeedback(request,before,after){
  const c=after.cities[request.cityId],a=before.armies[request.armyId],name=id=>after.officers[id]?.name??before.officers[id]?.name??'장수';
  if(request.type==='CITY_JOB'){
   if(request.kind==='muster'){const job=c.currentProduction;inkToast(`출진 준비 — ${name(job?.officerId??request.officerId)} · ${TROOP_LABEL[job?.troopType??request.troopType]??TROOP_NAME[job?.troopType??request.troopType]??'부대'} · ${turnCountText(musterTurns(c))} 뒤`);}
-  else {inkToast(`${c.name} · 생산 — ${CITY_JOBS[request.kind]?.name??request.kind}`);requestAnimationFrame(()=>cityCommitSeal(request.cityId));}
+  else {inkToast(`${c.name} · 생산 — ${CITY_JOBS[request.kind]?.name??request.kind}`);requestAnimationFrame(()=>cityCommitSeal(request.cityId,request.kind));}
  }else if(request.type==='CITY_GOVERNOR')inkToast(`${c.name} · 태수 — ${request.officerId?name(request.officerId):'공석'}`);
  else if(request.type==='GARRISON')inkToast(`${name(a?.commanderId)} · 주둔 완료`);
  else if(request.type==='RECALL_UNIT')inkToast(`${name(a?.commanderId)} · 귀환 완료`);
@@ -450,7 +452,7 @@ function follow(armyId,instant=false,previewTile=null){
  if(globalThis.document?.body?.classList?.contains('hud-band')&&armyId===bandFocusArmy){
   // Claude 10-14: 예고(마우스를 대상에 올림) 중에는 카메라를 움직이지 않는다 — 움직이면 커서 밑 칸이 바뀌어 누르면 공격이 빗나간다(C157 회귀). 두 부대 구도는 '공격'을 누를 때 한 번 맞춘다(아래 action==='attack')
   if(previewTile)return;
-  if(!bandFocusMoving&&!attackMode)frameBandArmy(armyId,v3Mode()==='supply'?.385:.44,v3Mode()==='supply'?.68:.54);
+  if(!bandFocusMoving&&!attackMode)frameBandContext(armyId,v3Mode());
   return;
  }
  const map=$('#map'),tileId=state?.armies?.[armyId]?.tileId,city=Object.values(state?.cities??{}).find(c=>c.tileId===tileId);
@@ -520,16 +522,33 @@ function syncBandFocus(armyId,mode){
   const t=reduceMotion()?1:Math.min(1,(performance.now()-start)/350),ease=1-(1-t)**3;
   zoom=from+(to-from)*ease;applyZoom();
   if(leaving){viewport.scrollLeft=saved.left;viewport.scrollTop=saved.top;}
-  else frameBandArmy(armyId,mode==='supply'?.385:.44,mode==='supply'?.68:.54);
+  else frameBandContext(armyId,mode);
   if(t<1)bandFocusTimer=setTimeout(frame,16);else{bandFocusMoving=false;if(leaving)bandFocusSnapshot=null;}
- }frame();
+}frame();
+}
+// C163: nearby friendly city labels are stable anchors for the baked castle art.
+// 04d: capital name centre (0.41, 0.77); 05: (0.43, 0.556), measured in target pixels.
+// Remote armies keep their own plate anchor; only public friendly cities are used.
+function frameBandContext(armyId,mode){
+ const v=view(state),a=v.ownArmies?.[armyId],at=v.tiles?.[a?.tileId];
+ const city=at&&Object.values(v.ownCities??{}).filter(c=>v.tiles[c.tileId]&&hexDistance(at,v.tiles[c.tileId])<=4).sort((a,b)=>hexDistance(at,v.tiles[a.tileId])-hexDistance(at,v.tiles[b.tileId]))[0];
+ const node=city&&$('#map').querySelector(`.w-cityplate[data-city="${city.cityId}"] .name`),svg=$('#map svg');
+ if(!node?.getBoundingClientRect){frameBandArmy(armyId,mode==='supply'?.385:.44,mode==='supply'?.48:.54);return;}
+ for(let i=0;i<4;i++){
+  const r=node.getBoundingClientRect(),delta=screenScrollDelta(svg.getScreenCTM(),r.left+r.width/2-innerWidth*(mode==='supply'?.43:.41),r.top+r.height/2-innerHeight*(mode==='supply'?.556:.77),zoom);
+  viewport.scrollLeft+=delta.x;viewport.scrollTop+=delta.y;
+ }
+ // Unit visibility takes precedence over the castle composition. A distant plate
+ // or a plate behind either upper panel falls back to the clear central map area.
+ const plate=$('#map').querySelector(`.w-unit[data-unit="${armyId}"] > .plate-top`),r=plate?.getBoundingClientRect?.();
+ if(r&&(r.left<innerWidth*.27||r.right>innerWidth*.74||r.top<innerHeight*.18||r.bottom>innerHeight*.75))frameBandArmy(armyId,.44,.46);
 }
 function frameBandAttack(armyId){
  clearTimeout(bandFocusTimer);bandFocusMoving=false;
  zoom=bandFocusSnapshot?.zoom??zoom;applyZoom();
  const target=attackTargets(state,armyId)[0]??cityAttackTargets(state,armyId)[0];
  const tile=target&&(state.armies[target]?.tileId??state.cities[target]?.tileId);
- frameBandArmy(armyId,.45,.40,tile);
+ frameBandArmy(armyId,.45,.30,tile);
 }
 function lockCamera(port){
  cameraMoving=true;clearTimeout(cameraTimer);let x=port.scrollLeft,y=port.scrollTop,stable=0,tries=0;

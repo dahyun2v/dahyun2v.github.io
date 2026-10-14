@@ -1087,19 +1087,20 @@ body.ink .od-details p small{display:block;margin-bottom:.25em;color:#e6ca95;fon
 body.ink .od .od-details .od-stats{position:static;display:flex;margin:.6em 0 0;padding:.55em 0 0;border-top:1px solid #756e62;background:none;box-shadow:none;gap:.25em}
 @media(max-width:1100px){body.ink .od-benefit{padding:.4em .5em}body.ink .od-benefit>span{-webkit-line-clamp:2}body.ink .od-benefit em{display:none}}
 /* C159: decisions, tactic cut-ins and map hit feedback. Existing art only. */
-#ink-toasts{position:fixed;top:5vh;left:50%;transform:translateX(-50%);z-index:220;display:grid;gap:4px;pointer-events:none;width:min(650px,88vw)}
-.ink-toast{padding:16px 35px;text-align:center;background:url(/assets/ui-v3/hud/kit/status-line.png) center/100% 100% no-repeat;color:#f0e4cb;font:26px/1.2 var(--title);text-shadow:0 2px 3px #111;animation:ink-toast-in .16s ease-out}
+#ink-toasts{position:fixed;top:max(74px,8dvh);left:50%;transform:translateX(-50%);z-index:220;display:grid;gap:4px;pointer-events:none;width:min(650px,88vw)}
+body.ink #ink-toasts .ink-toast{box-sizing:border-box;min-height:44px;padding:10px 28px;text-align:center;background:url(/assets/ui-v3/hud/kit/status-line.png) center/100% 100% no-repeat;color:#f0e4cb;font:20px/1.2 var(--serif);text-shadow:0 2px 3px #111;animation:ink-toast-in .16s ease-out}
 .ink-city-seal{position:fixed;width:70px;height:70px;object-fit:contain;z-index:210;pointer-events:none;animation:ink-seal-in .8s both}
 #tactic-cutin{position:fixed;left:0;top:32vh;width:100vw;height:31vh;z-index:230;overflow:visible;border:0;background:url(/assets/ui-v3/hud/kit-band-fine.png) center/100% 100% no-repeat;color:#eee4ce;cursor:pointer;isolation:isolate}
 #tactic-cutin[hidden]{display:none}
-#tactic-cutin .tactic-art{position:absolute;left:8%;bottom:0;height:51vh;max-width:43vw;object-fit:contain;object-position:center bottom;filter:drop-shadow(5px 3px 2px #12110f);animation:ink-tactic-enter .24s ease-out both;pointer-events:none}
-#tactic-cutin .tactic-title{display:block;margin-left:31%;font:clamp(30px,5vw,84px)/1.2 var(--title);text-shadow:2px 3px 0 #1b1712}
-#tactic-cutin .tactic-seal{position:absolute;right:12%;top:24%;height:48%;pointer-events:none}
+#tactic-cutin .tactic-art{position:absolute;left:2%;bottom:-12vh;width:38vw;height:70vh;max-width:46vw;object-view-box:inset(0 0 42% 0);object-fit:contain;object-position:center bottom;filter:drop-shadow(5px 3px 2px #12110f);animation:ink-tactic-enter .24s ease-out both;pointer-events:none}
+body.ink #tactic-cutin .tactic-title{position:absolute;left:35%;right:12%;top:50%;translate:0 -50%;margin:0;text-align:center;font:clamp(36px,5vw,84px)/1.2 var(--title);text-shadow:2px 3px 0 #1b1712}
+#tactic-cutin .tactic-seal{position:absolute;right:3%;top:24%;height:48%;pointer-events:none}
 #tactic-cutin small{position:absolute;bottom:12%;right:17%;font:14px var(--serif);opacity:.65}
 #tactic-cutin.short{height:23vh;top:36vh}
 #tactic-cutin.short .tactic-art{height:39vh}
 #tactic-cutin.reduced{height:15vh;top:42vh}
 #tactic-cutin.reduced .tactic-title{margin:0;font-size:38px}
+body.ink #tactic-cutin.reduced .tactic-title{left:0;right:0;margin:0;font-size:38px}
 #tactic-cutin.reduced :is(small,.tactic-seal){display:none}
 .wmap .ink-pick-ring{fill:none;stroke:#cfb997;stroke-width:1.8;opacity:0;pointer-events:none}
 .wmap .w-unit.hovered .ink-pick-ring{opacity:.45}
@@ -1121,7 +1122,7 @@ body.ink .wmap .w-cityplate .prod.muster rect{fill:#722e28;stroke:#d0ad7d}
 .wmap .prod:not(.idle) text{fill:#efe0bf;font-weight:700}
 @keyframes ink-toast-in{from{opacity:0;translate:0 -6px}to{opacity:1;translate:0 0}}
 @keyframes ink-seal-in{0%{opacity:0;transform:translate(-50%,-50%) scale(1.7) rotate(-8deg)}20%,70%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-8deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1) rotate(-8deg)}}
-@keyframes ink-tactic-enter{from{opacity:0;translate:-80px 0}to{opacity:1;translate:0 0}}
+@keyframes ink-tactic-enter{from{opacity:0;translate:-35vw 0}to{opacity:1;translate:0 0}}
 @keyframes ink-ready{0%{filter:brightness(2)}100%{filter:brightness(1)}}
 @keyframes ink-map-fx{0%{opacity:1}70%{opacity:.8}100%{opacity:0}}
 @keyframes ink-damage-pop{0%{opacity:0;scale:1.7;translate:0 4px}20%{opacity:1;scale:1.35}100%{opacity:1;scale:1;translate:0 -12px}}
