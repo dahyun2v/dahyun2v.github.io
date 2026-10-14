@@ -54,7 +54,8 @@ export function v3MapOptions() {
     // 세계 그림: 땅(2577×2220) 둘레에 놀이판 밖 지형을 624px 이어 그린 한 장(tools/design/map-ring.py). 있으면 지도가 이것으로 그려지고 땅 밖 구름 바다 대신 지형이 이어진다. ?map=paint 는 옛 그림 그대로
     // v12(2026-10-13): 성 여덟 곳을 지도 그림 안에 그려 넣은 바탕(사용자 "성이든 뭐든 지도 위에 올라가는 건 이 방법으로" — tools/design/bake-inputs.py · paste-edit.py). baked 에 적힌 성은 따로 얹는 그림을 그리지 않는다. 없으면 v11 + 얹는 성 그림
     // v13(2026-10-14): v12 + 탐험지 네 곳(성소 · 은거지 · 옛 진지 · 군마 산지)도 그려 넣음 — baked 에 탐험지 이름도 적는다(얹는 미니어처를 그리지 않는다)
-    mapWorld: !inkMapTrial() ? null : v3Asset('map/v13-world.webp') ? {src: v3Asset('map/v13-world.webp'), ring: 624, land: [2577, 2220], baked: [...Object.keys(CITY_FILE), ...Object.keys(SITE_FILE)], cityLabelAt: BAKED_CITY_LABEL_AT}
+    // v14(2026-10-14 반박 리뷰 3차 M6 '확대하면 펜선이 번짐'): v13 을 1.6배 해상도로(Lanczos + 선명, 내용 그대로 — tools/design/map-upres.py). 그림 비율이 같아 land · ring · cityLabelAt 그대로
+    mapWorld: !inkMapTrial() ? null : (v3Asset('map/v14-world.webp') ?? v3Asset('map/v13-world.webp')) ? {src: v3Asset('map/v14-world.webp') ?? v3Asset('map/v13-world.webp'), ring: 624, land: [2577, 2220], baked: [...Object.keys(CITY_FILE), ...Object.keys(SITE_FILE)], cityLabelAt: BAKED_CITY_LABEL_AT}
       : v3Asset('map/v12-world.webp') ? {src: v3Asset('map/v12-world.webp'), ring: 624, land: [2577, 2220], baked: Object.keys(CITY_FILE), cityLabelAt: BAKED_CITY_LABEL_AT}
       : v3Asset('map/v11-world.webp') ? {src: v3Asset('map/v11-world.webp'), ring: 624, land: [2577, 2220]} : null,
     cityArt, mode,

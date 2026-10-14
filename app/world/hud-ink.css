@@ -2969,6 +2969,8 @@ body.hud-band:has(.nb-supply:not([hidden])) .nb-state-title h1{left:calc(37 * va
 body.hud-band:has(.nb-supply:not([hidden])) .nb-state-title p{left:calc(78 * var(--ku));top:calc(105 * var(--ku));margin:0;width:calc(365 * var(--ku));font-size:calc(20 * var(--ku));line-height:1.35}
 body.hud-band:has(.nb-supply:not([hidden])) .nb-state-title p button{position:absolute;top:calc(68 * var(--ku));left:0;color:#eee4ce;background:#111c;padding:2px 8px}
 body.hud-band .ih-faction b[data-name="조조"]{display:block;width:calc(87 * var(--ku));height:calc(38 * var(--ku));background:url(/assets/ui-v3/hud/kit-title-caocao.png) center/contain no-repeat;color:transparent!important;-webkit-text-stroke:0; font-size-adjust:none}
+body.hud-band .ih-faction b[data-name="유비"]{display:block;width:calc(79 * var(--ku));height:calc(38 * var(--ku));background:url(/assets/ui-v3/hud/kit-title-liubei.png) center/contain no-repeat;color:transparent!important;-webkit-text-stroke:0;font-size-adjust:none}
+body.hud-band .ih-faction b[data-name="손권"]{display:block;width:calc(75 * var(--ku));height:calc(38 * var(--ku));background:url(/assets/ui-v3/hud/kit-title-sunquan.png) center/contain no-repeat;color:transparent!important;-webkit-text-stroke:0;font-size-adjust:none}
 body.hud-band .nb-top-left{width:calc(1030 * var(--ku));gap:calc(10 * var(--ku));background-size:100% auto;padding:0 calc(22 * var(--ku))}
 body.hud-band .ih-date b{font-size:calc(17 * var(--ku));white-space:nowrap}
 body.hud-band .ih-res{gap:0;flex:none;justify-content:start}
@@ -3026,7 +3028,59 @@ body.hud-band .nb-supply blockquote{top:calc(514 * var(--ku));font-size:calc(20 
 body.hud-band .nb-advisor{height:calc(110 * var(--ku));width:calc(93 * var(--ku))}
 body.hud-band .nb-advisor-box>div{padding:calc(8 * var(--ku)) calc(16 * var(--ku)) 0}
 body.hud-band .nb-advisor-box p{white-space:normal;line-height:1.3;margin:calc(9 * var(--ku)) 0 calc(3 * var(--ku));max-height:calc(53 * var(--ku));overflow:auto;font-size:calc(19 * var(--ku))}
-body.hud-band .w-supply-boundary{stroke:#fff4df;stroke-width:5;stroke-dasharray:12 7;opacity:1}
+body.hud-band .w-supply-boundary{stroke:#fff4df;stroke-width:4;stroke-dasharray:12 7;opacity:1}
+/* C158: review-3 small differences. All kit images retain their own aspect ratio. */
+body.hud-band .ih-date b{font-size:calc(20 * var(--ku));letter-spacing:calc(.3 * var(--ku))}
+body.hud-band .nb-top-left{gap:calc(16 * var(--ku));width:calc(1100 * var(--ku))}
+body.hud-band .ih-res .ih-chip{font-size:calc(18 * var(--ku));padding:0 calc(10 * var(--ku));gap:calc(5 * var(--ku))}
+body.hud-band .nb-bookmarks :is(.nb-map-tabs button,button[data-fwd],button[data-open]){font-size:calc(27 * var(--ku));margin-top:calc(-12 * var(--ku))}
+body.hud-band .nb-map-tabs button:first-child{margin-top:0}
+body.hud-band .nb-news-tab{left:calc(44 * var(--ku));font-weight:400}
+body.hud-band .nb-tasks{left:calc(21 * var(--ku));width:calc(316 * var(--ku));font-size:calc(17 * var(--ku));line-height:1.3}
+body.hud-band .nb-tasks li{gap:calc(8 * var(--ku));background:url(/assets/ui-v3/hud/kit-divider.png) bottom/100% auto no-repeat}
+body.hud-band .nb-tasks li .nb-check{filter:brightness(7) contrast(.6);opacity:1}
+body.hud-band .nb-band[data-state="rest"] .ih-end{-webkit-text-stroke:0;font-weight:400}
+body.hud-band .nb-end-warning{font:400 calc(13 * var(--ku))/1.3 var(--serif);padding:calc(9 * var(--ku));box-sizing:border-box;background:url(/assets/ui-v3/hud/kit/panel-info.png) center/contain no-repeat}
+body.hud-band .nb-band[data-state="rest"] .nb-end-warning{display:none}
+body.hud-band .w-mini-toggle{width:calc(40 * var(--ku));height:calc(40 * var(--ku));font:400 calc(11 * var(--ku))/1.1 var(--serif);background:url(/assets/ui-v3/hud/kit/btn.png) center/contain no-repeat;border:0;border-radius:0}
+body.hud-band .nb-state-title h1{left:calc(62 * var(--ku));top:calc(21 * var(--ku))}
+body.hud-band .nb-selected::after{height:calc(280 * var(--ku));width:calc(70 * var(--ku));filter:saturate(.72) brightness(.85)}
+body.hud-band .nb-selected dt img{width:calc(29 * var(--ku));height:calc(29 * var(--ku))}
+body.hud-band .nb-selected dd{font-size:calc(21 * var(--ku))}
+body.hud-band .nb-selected dl>div{min-height:calc(29 * var(--ku))}
+body.hud-band .nb-identity{top:87.2dvh}
+body.hud-band .nb-order-row button,body.hud-band .nb-order-row .ih-end{font-weight:400;-webkit-text-stroke:0}
+body.hud-band:has(.nb-band[data-state="unit"]) #attack-preview:not(.forecast){font:400 calc(17 * var(--ku))/1.3 var(--serif);background:url(/assets/ui-v3/hud/kit/panel-info.png) center/contain no-repeat;padding:calc(10 * var(--ku));border:0;color:#eee4ce}
+body.hud-band:has(.nb-band[data-state="forecast"]) .nb-state-title{filter:saturate(.75) brightness(.87)}
+body.hud-band .nb-forecast-status{left:67.9vw;font-size:calc(24 * var(--ku))!important;word-spacing:calc(6 * var(--ku));padding-left:calc(24 * var(--ku))!important}
+body.hud-band .nb-preview-middle{top:69.7dvh}
+body.hud-band .nb-preview-middle i{width:calc(100 * var(--ku));height:calc(100 * var(--ku))}
+body.hud-band .nb-preview-middle::before,body.hud-band .nb-preview-middle::after{top:calc(76 * var(--ku));width:calc(275 * var(--ku));height:calc(97.059 * var(--ku));left:calc(-55 * var(--ku));opacity:.62}
+body.hud-band .nb-preview-middle::after{left:auto;right:calc(-55 * var(--ku))}
+body.hud-band .nb-preview-middle>span{display:none}
+body.hud-band .nb-preview-count{font-size:calc(43 * var(--ku));-webkit-text-stroke:.5px currentColor}
+body.hud-band .nb-preview-loss strong{font-size:calc(57 * var(--ku));-webkit-text-stroke:.6px currentColor}
+body.hud-band .nb-preview-portrait::before{filter:brightness(.58) saturate(.58)}
+/* M3: the separator is baked into panel-mods. Show only its original outer frame;
+   the existing forecast-band texture remains visible inside, with no asset edit. */
+body.hud-band .nb-preview-mods{background:none;isolation:isolate}
+body.hud-band .nb-preview-mods::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url(/assets/ui-v3/hud/kit/panel-mods.png) center/contain no-repeat;clip-path:polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0,3% 4%,3% 96%,97% 96%,97% 4%,3% 4%)}
+body.hud-band .nb-click,body.hud-band .nb-cancel{font-weight:400;-webkit-text-stroke:0}
+body.hud-band .nb-click small{font:400 calc(12 * var(--ku))/1.1 var(--serif);margin-top:calc(4 * var(--ku))}
+body.hud-band:has(.nb-supply:not([hidden])) .nb-state-title p{font-size:calc(23 * var(--ku));line-height:1.35;font-weight:400}
+body.hud-band:has(.nb-supply:not([hidden])) .nb-state-title p button{background:url(/assets/ui-v3/hud/kit/btn.png) center/contain no-repeat;font:400 calc(12 * var(--ku))/1.2 var(--serif);padding:calc(8 * var(--ku));top:calc(79 * var(--ku))}
+body.hud-band .nb-supply-body::before{filter:brightness(.65) contrast(.92)}
+body.hud-band .nb-supply h2{font-size:calc(49 * var(--ku))}
+body.hud-band .nb-supply .nb-carry-title{font-size:calc(28 * var(--ku))}
+body.hud-band .nb-supply-source h3{font-size:calc(37 * var(--ku))}
+body.hud-band .nb-supply .nb-supply-next{padding:calc(12 * var(--ku)) 0;font-size:calc(21 * var(--ku))}
+body.hud-band .nb-supply-source{top:calc(282 * var(--ku));font-size:calc(21 * var(--ku));line-height:1.25}
+body.hud-band .nb-supply-source p{margin:calc(7 * var(--ku)) 0;padding:calc(4 * var(--ku)) 0;background-size:100% auto}
+body.hud-band .nb-supply-source small{font-size:calc(18 * var(--ku));line-height:1.35;margin-top:calc(8 * var(--ku))}
+body.hud-band .nb-supply blockquote{top:calc(504 * var(--ku));font-size:calc(20 * var(--ku))}
+body.hud-band .nb-supply-gauge i{width:calc(35 * var(--ku));height:calc(33 * var(--ku))}
+body.hud-band:has(.nb-supply:not([hidden])) .nb-advisor{height:calc(100 * var(--ku));width:calc(90 * var(--ku))}
+body.hud-band:has(.nb-supply:not([hidden])) .nb-advisor-box>div{padding-top:calc(17 * var(--ku))}
 /* /C156 */
 
 /* C155: canvas is decorative; only the bounded footprint selects a unit. */

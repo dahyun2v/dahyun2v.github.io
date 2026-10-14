@@ -6885,6 +6885,39 @@
       "sha256": "4fe778db2a7f5a4fe19066aef25a013aa9a0e9050040afcc7c86146de01c2fb2",
       "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/05-supply.png",
       "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/map/v14-world.webp",
+      "purpose": "세계 지도 바탕 v14 — v13 을 1.6배 해상도로(확대 시 펜선 번짐 줄임)",
+      "size": [
+        6120,
+        5549
+      ],
+      "sha256": "650afcb1460f07ae030f956b2ba6402790dab853a5321204b029bcd1cc87c96a",
+      "sourceSheet": "prototype/assets/ui-v3/map/v13-world.png",
+      "prompt": "tools/design/map-upres.py --scale 1.6 --radius 2.0 --percent 120 (Lanczos + UnsharpMask, 내용 그대로). 원본 PNG 는 같은 폴더에 로컬 보관"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-title-liubei.png",
+      "purpose": "지도 위 줄 세력 이름 붓글씨 - liubei",
+      "size": [
+        79,
+        38
+      ],
+      "sha256": "7505b9e0d85bf0288ab3aae10ff8a2370bdb3d05c6b0ee40254962a1e663da2e",
+      "sourceSheet": "prototype/assets/ui-v3/hud/kit-title-caocao.png",
+      "prompt": "닷토리(2026-10-14 titles.zip): 시안에서 뜬 '조조' 글자를 레퍼런스로 같은 붓 · 굵기 · 높이 38px"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-title-sunquan.png",
+      "purpose": "지도 위 줄 세력 이름 붓글씨 - sunquan",
+      "size": [
+        75,
+        38
+      ],
+      "sha256": "fcd144fc8e785fd0634179d56f44b8cf6c224269fca43180baca84e3daf1dbaf",
+      "sourceSheet": "prototype/assets/ui-v3/hud/kit-title-caocao.png",
+      "prompt": "닷토리(2026-10-14 titles.zip): 시안에서 뜬 '조조' 글자를 레퍼런스로 같은 붓 · 굵기 · 높이 38px"
     }
   ],
   "sources": [

@@ -3,8 +3,8 @@ const TYPES = {BT01:'militia', BT02:'spear', BT03:'bow', BT04:'cavalry', enginee
 const TONES = {F01:'red', F02:'green', F03:'blue'};
 const ROOT = '/assets/ui-v3/units-ink/';
 const FOOT_Y = 16; // Below the tile center, clear of the portrait/count above it.
-const SOLDIER_H = 19;
-const SPREAD = 1.25; // 10-14 R3: 병사 그림이 커진 만큼 대열 간격도 넓힌다(화면 배치만 — 대열 꼴 · 수는 그대로) // 10-14 Claude: 닷토리 진짜 그림(지도와 같은 붓) — 시작 확대 2.1 에서 화면 키 약 16px
+const SOLDIER_H = 17;
+const SPREAD = 1; // 10-14 R3: 병사 그림이 커진 만큼 대열 간격도 넓힌다(화면 배치만 — 대열 꼴 · 수는 그대로) // 10-14 Claude: 닷토리 진짜 그림(지도와 같은 붓) — 시작 확대 2.1 에서 화면 키 약 16px
 const sheets = new Map();
 export const troopKind = u => TYPES[u.troop] ?? u.troop;
 export const soldierCount = count => Number.isFinite(count) && count > 0 ? Math.max(6, Math.min(36, Math.ceil(count / 10))) : 0;
@@ -156,8 +156,8 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
     for(const {u,anchor,s,inCity} of ordered){
       const screen={x:matrix.a*s.pos.x+matrix.c*s.pos.y+matrix.e-r.left,y:matrix.b*s.pos.x+matrix.d*s.pos.y+matrix.f-r.top};
       if(screen.x< -100||screen.x>r.width+100||screen.y< -100||screen.y>r.height+100)continue;
-      // 10-14 R3: 그림이 커진 만큼 화면에 그리는 수를 줄인다 — 기병 최대 16(말이 넓다), 보병 최대 24, 성 안 12. 병력 비례는 그대로(soldierCount)
-      const cap=inCity?12:s.kind==='cavalry'?16:24, n=Math.min(cap,soldierCount(u.count)), points=formationPoints(s.kind,n,s.wedge), cs=Math.cos(s.angle),sn=Math.sin(s.angle);
+      // 10-14 R3: 그림이 커진 만큼 화면에 그리는 수를 줄인다 — 기병 최대 12(말이 넓다), 보병 최대 18, 성 안 10(닷토리 '좁게 겹치면 검은 덩어리' — 대열이 칸 하나 안에). 병력 비례는 그대로(soldierCount)
+      const cap=inCity?10:s.kind==='cavalry'?12:18, n=Math.min(cap,soldierCount(u.count)), points=formationPoints(s.kind,n,s.wedge), cs=Math.cos(s.angle),sn=Math.sin(s.angle);
       // 10-14 Claude: 평소(가만히 · 이동)엔 화면 기준 반듯한 대열 — 옆줄 = 가로, 앞뒤 = 세로(지도를 눕혀 보는 각도라 앞뒤를 줄임). 공격 중에만 대상 쪽으로 돈다
       const live=s.progress>=0&&s.progress<1, squeeze=inCity?.7:1;
       const place=p=>live?{x:s.pos.x+(p.x*cs-p.y*sn)*SPREAD,y:s.pos.y+(p.x*sn+p.y*cs)*.62*SPREAD+FOOT_Y}:{x:s.pos.x+p.y*squeeze*SPREAD,y:s.pos.y+p.x*.5*squeeze*SPREAD+FOOT_Y};
@@ -186,7 +186,7 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
     }
     for(const [id,death] of casualties){const age=now-death.start;if(age>850||reduce()){casualties.delete(id);continue;}
       // 쓰러지는 병사도 살아 있는 대열과 같은 수 · 간격 · 반듯한 배치로(10-14 R3)
-      const s=sampleTroop(death.u,death.anchor,id=>tiles.get(id),0), cap=s.kind==='cavalry'?16:24, from=Math.min(cap,death.from), to=Math.min(cap,death.to), points=formationPoints(s.kind,from);
+      const s=sampleTroop(death.u,death.anchor,id=>tiles.get(id),0), cap=s.kind==='cavalry'?12:18, from=Math.min(cap,death.from), to=Math.min(cap,death.to), points=formationPoints(s.kind,from);
       for(let i=to;i<from;i++){const p=points[i];sprite(ctx,footFor(s.kind,TONES[death.u.factionId]??'grey'),8,s.pos.x+p.y*SPREAD,s.pos.y+p.x*.5*SPREAD+FOOT_Y+age/180,SOLDIER_H,Math.cos(s.angle)<0,(1-age/850)*.85,true);}
     }
     // Erase label rectangles after drawing, keeping the original SVG labels intact.

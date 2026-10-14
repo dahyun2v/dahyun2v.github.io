@@ -377,7 +377,7 @@ function follow(armyId,instant=false,previewTile=null){
  if(globalThis.document?.body?.classList?.contains('hud-band')&&armyId===bandFocusArmy){
   // Claude 10-14: 예고(마우스를 대상에 올림) 중에는 카메라를 움직이지 않는다 — 움직이면 커서 밑 칸이 바뀌어 누르면 공격이 빗나간다(C157 회귀). 두 부대 구도는 '공격'을 누를 때 한 번 맞춘다(아래 action==='attack')
   if(previewTile)return;
-  if(!bandFocusMoving)frameBandArmy(armyId,v3Mode()==='supply'?.36:.32,v3Mode()==='supply'?.49:.46);
+  if(!bandFocusMoving&&!attackMode)frameBandArmy(armyId,v3Mode()==='supply'?.385:.44,v3Mode()==='supply'?.68:.54);
   return;
  }
  const map=$('#map'),tileId=state?.armies?.[armyId]?.tileId,city=Object.values(state?.cities??{}).find(c=>c.tileId===tileId);
@@ -439,17 +439,24 @@ function syncBandFocus(armyId,mode){
  bandFocusArmy=armyId;bandFocusMode=mode;bandPreviewPointer=null;
  if(entering)bandFocusSnapshot={zoom,left:viewport.scrollLeft,top:viewport.scrollTop};
  clearTimeout(bandFocusTimer);clearTimeout(zoomTimer);
- if(!entering&&!leaving){if(armyId)frameBandArmy(armyId,mode==='supply'?.36:.32,mode==='supply'?.49:.46);return;}
  const saved=bandFocusSnapshot;if(!saved)return;
- const from=zoom,to=leaving?saved.zoom:Math.min(2.6,saved.zoom*1.35),start=performance.now();
+ // C158: supply uses the broad pre-selection view; focus uses 04d's closer view.
+ const from=zoom,to=leaving||mode==='supply'?saved.zoom:Math.min(2.6,saved.zoom*1.35),start=performance.now();
  bandFocusMoving=true;
  function frame(){
   const t=reduceMotion()?1:Math.min(1,(performance.now()-start)/350),ease=1-(1-t)**3;
   zoom=from+(to-from)*ease;applyZoom();
   if(leaving){viewport.scrollLeft=saved.left;viewport.scrollTop=saved.top;}
-  else frameBandArmy(armyId,mode==='supply'?.36:.32,mode==='supply'?.49:.46);
+  else frameBandArmy(armyId,mode==='supply'?.385:.44,mode==='supply'?.68:.54);
   if(t<1)bandFocusTimer=setTimeout(frame,16);else{bandFocusMoving=false;if(leaving)bandFocusSnapshot=null;}
  }frame();
+}
+function frameBandAttack(armyId){
+ clearTimeout(bandFocusTimer);bandFocusMoving=false;
+ zoom=bandFocusSnapshot?.zoom??zoom;applyZoom();
+ const target=attackTargets(state,armyId)[0]??cityAttackTargets(state,armyId)[0];
+ const tile=target&&(state.armies[target]?.tileId??state.cities[target]?.tileId);
+ frameBandArmy(armyId,.45,.40,tile);
 }
 function lockCamera(port){
  cameraMoving=true;clearTimeout(cameraTimer);let x=port.scrollLeft,y=port.scrollTop,stable=0,tries=0;
@@ -1771,7 +1778,7 @@ $('#unit-menu').addEventListener('click',e=>{
  if(action==='wait'){command({type:'WAIT_UNIT',armyId:selectedArmyId});return;}
  if(action==='move'){menuOpen=false;moveMode=true;render();const chase=previewDisengage(state,selectedArmyId),shot=destination?previewApproachFire(state,selectedArmyId,destination):null;$('#status').textContent='이동할 칸을 누르세요'+(chase?` · 교전 이탈 시 추격 −${chase.dealt}`:'')+(shot?` · 붙으면 접근사격 — ${state.officers[state.armies[shot.archerId].commanderId].name}, 예상 −${shot.damage}`:'');}
  if(action==='face'){menuOpen=false;moveMode=false;faceMode=true;render();$('#status').textContent='바라볼 쪽의 칸을 누르세요(Esc 취소)';return;}
- if(action==='attack'){attackMode=true;menuOpen=false;$('#unit-menu').hidden=true;$('#status').textContent='빨간 점선 공격 대상을 누르세요';renderHint();render();if(document.body?.classList?.contains('hud-band')){const t=attackTargets(state,selectedArmyId)[0],tile=t&&state.armies[t]?.tileId;if(tile)frameBandArmy(selectedArmyId,.45,.34,tile);}} // 시안 06 구도: 공격을 고를 때 한 번, 고른 부대와 대상의 가운데를 화면 위쪽 가운데로 // render: 아래 띠의 눌린 단추가 '이동'에 남아 있던 것(공격 모드인데)
+ if(action==='attack'){attackMode=true;menuOpen=false;$('#unit-menu').hidden=true;$('#status').textContent='빨간 점선 공격 대상을 누르세요';renderHint();render();if(document.body?.classList?.contains('hud-band'))frameBandAttack(selectedArmyId);} // C158: wide 06 composition once on Attack; hover never reframes the map.
  if(action==='close')closeUnitMenu();
 });
 // 닿지 않는 적(부대·성)을 눌러도 공격한다 — 이번 차례에 칠 수 있는 자리까지 가서 바로 친다(문명식. 사용자 2026-10-11 "해당 타일에 공격할 수 있는 대상이 있으면 자동으로 공격")
