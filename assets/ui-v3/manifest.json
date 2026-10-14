@@ -5873,6 +5873,644 @@
       "sha256": "299b7d09f7d87c54f5286471ee0170eaa8296ec47dbf61b83dfa294e760dfd92",
       "sourceSheet": "docs/work-integration/20261013/sol-ideas/screens-20261014-02/final/04d-map-focus.png",
       "prompt": "x1552 y39 w111 h252 polygon cloth mask; no recoloring (Codex C153)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-1-red.png",
+      "purpose": "성 이름표 먹 띠 — 소유 세력색(red, 1 글자)",
+      "size": [
+        250,
+        96
+      ],
+      "sha256": "b3f940e9409fa72052fc0743f9cf35010ac752cc0e8b5313db9e39b1cbb2edfe",
+      "sourceSheet": "prototype/assets/ui-v3/ink/ribbon-1.png",
+      "prompt": "먹 결(밝기)을 남기고 세력색을 어둡게 입힘(scratchpad tint-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-2-red.png",
+      "purpose": "성 이름표 먹 띠 — 소유 세력색(red, 2 글자)",
+      "size": [
+        341,
+        96
+      ],
+      "sha256": "2b748e993f1dca59cd85b48a049193301670cf5fae7c19c2a6531b2db09fba64",
+      "sourceSheet": "prototype/assets/ui-v3/ink/ribbon-2.png",
+      "prompt": "먹 결(밝기)을 남기고 세력색을 어둡게 입힘(scratchpad tint-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-1-green.png",
+      "purpose": "성 이름표 먹 띠 — 소유 세력색(green, 1 글자)",
+      "size": [
+        250,
+        96
+      ],
+      "sha256": "9a8382838981fca54ca6184ad9e6ec3c2fa40bbb40e55b6197756b0c9c809036",
+      "sourceSheet": "prototype/assets/ui-v3/ink/ribbon-1.png",
+      "prompt": "먹 결(밝기)을 남기고 세력색을 어둡게 입힘(scratchpad tint-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-2-green.png",
+      "purpose": "성 이름표 먹 띠 — 소유 세력색(green, 2 글자)",
+      "size": [
+        341,
+        96
+      ],
+      "sha256": "72c1b72a66bef8a08f706dae4efb36bed10b10b49758fdfc6eb5c6d3770b25b9",
+      "sourceSheet": "prototype/assets/ui-v3/ink/ribbon-2.png",
+      "prompt": "먹 결(밝기)을 남기고 세력색을 어둡게 입힘(scratchpad tint-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-1-blue.png",
+      "purpose": "성 이름표 먹 띠 — 소유 세력색(blue, 1 글자)",
+      "size": [
+        250,
+        96
+      ],
+      "sha256": "b0154c2cadd851db7edeb3d083971cb9e3f0da7e1da081944c6bb7cddc693c7c",
+      "sourceSheet": "prototype/assets/ui-v3/ink/ribbon-1.png",
+      "prompt": "먹 결(밝기)을 남기고 세력색을 어둡게 입힘(scratchpad tint-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/ink/ribbon-2-blue.png",
+      "purpose": "성 이름표 먹 띠 — 소유 세력색(blue, 2 글자)",
+      "size": [
+        341,
+        96
+      ],
+      "sha256": "9f0841dd44cbe150ca77be2249081cc41ada0d793b2d29724f6ac38ac7319a58",
+      "sourceSheet": "prototype/assets/ui-v3/ink/ribbon-2.png",
+      "prompt": "먹 결(밝기)을 남기고 세력색을 어둡게 입힘(scratchpad tint-ribbons.py)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-foot-blue.png",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-blue.png (R2 레퍼런스판)",
+      "size": [
+        192,
+        128
+      ],
+      "sha256": "d141d4d081a4d81282b421d1c9d325aecbd63487511cb97106857663a6885633",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-foot-green.png",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-green.png (R2 레퍼런스판)",
+      "size": [
+        192,
+        128
+      ],
+      "sha256": "5e6453d71e7fd2952f927486ff5ca50af46691f9ab78d19cc9860a5ec2bf7a94",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-foot-grey.png",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-grey.png (R2 레퍼런스판)",
+      "size": [
+        192,
+        128
+      ],
+      "sha256": "5c7d79f46bce2b0b7360b2f6c8b3bfdb4652d4babf79fceae7783e72fafc7cf0",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-foot-red.png",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-red.png (R2 레퍼런스판)",
+      "size": [
+        192,
+        128
+      ],
+      "sha256": "091c35610925a43015041aa8bec10cee2b6cdc7ccf10eac035e804b5f729c1ef",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-horse-blue.png",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-blue.png (R2 레퍼런스판)",
+      "size": [
+        336,
+        128
+      ],
+      "sha256": "f4087ee2d565eaa9cb5ed4cd3a6c26b115df00c65867191ce1c7f26ec8d3515f",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-horse-green.png",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-green.png (R2 레퍼런스판)",
+      "size": [
+        336,
+        128
+      ],
+      "sha256": "805fe753503345e8da69400cc1e37fec3a900de78ef4bbf2d8ed380295969d9f",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-horse-grey.png",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-grey.png (R2 레퍼런스판)",
+      "size": [
+        336,
+        128
+      ],
+      "sha256": "95c67726e8dce5796fac3b41257e7e855bb8e061587ec9a9ee00c6de07364a71",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/bearer-horse-red.png",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-red.png (R2 레퍼런스판)",
+      "size": [
+        336,
+        128
+      ],
+      "sha256": "2a7048be6245387bb39d9d13a5c9f1ec95e2915b1db08013b5105ffdaf2329b9",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/fx-arrow.png",
+      "purpose": "지도 부대 병사 그림 - fx-arrow.png (R2 레퍼런스판)",
+      "size": [
+        40,
+        8
+      ],
+      "sha256": "1bbc3515e4f950c2cc505966493dc62ea1e736fba085eee9b736fb49f42fb358",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/fx-clash.png",
+      "purpose": "지도 부대 병사 그림 - fx-clash.png (R2 레퍼런스판)",
+      "size": [
+        96,
+        96
+      ],
+      "sha256": "14d9dd955f4c491cecd490c7020620c0acfb5e9462ba800d74948d054ce40393",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/fx-dust.png",
+      "purpose": "지도 부대 병사 그림 - fx-dust.png (R2 레퍼런스판)",
+      "size": [
+        96,
+        40
+      ],
+      "sha256": "e5bd460435fccbce912070a8cdbb75f9e184658f7835c2dbe8318508ae0a6fa1",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-bow.png",
+      "purpose": "지도 부대 병사 그림 - sheet-bow.png (R2 레퍼런스판)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "4c48c013e9dc6fda58ee5f163a7bfe232edbf0ae6c09ef35c02fee7c5aaa6a5c",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry.png",
+      "purpose": "지도 부대 병사 그림 - sheet-cavalry.png (R2 레퍼런스판)",
+      "size": [
+        1008,
+        96
+      ],
+      "sha256": "a6e2348e99159004da1c37e739d33229377ec3f830b02acd36b02c5fa619f80a",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-militia.png",
+      "purpose": "지도 부대 병사 그림 - sheet-militia.png (R2 레퍼런스판)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "9f522f521bf3d9e632a521e0429e6bf3a88ed1c0ee7df0ef97181de4eed57868",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-spear.png",
+      "purpose": "지도 부대 병사 그림 - sheet-spear (R2 레퍼런스판)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "abc3bdcdbff2e3684e893150c9e1adb30800b00123be980ef7ee7b4353ce45ce",
+      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-cavalry-mass.png",
+      "prompt": "닷토리 R2(2026-10-14 troops-r2-test.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선 + 긴 창, 9칸"
+    },
+    {
+      "path": "prototype/assets/ui-v3/emblems/neutral.png",
+      "purpose": "성 소유 표시 - neutral (중립 성 문장 / 점령 중 고리)",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "710575c8e7f27b181cd29149677c199a4e3020eb7c5d1065d801cacc854861b9",
+      "sourceSheet": "prototype/assets/ui-v3/emblems/F01.png",
+      "prompt": "닷토리 C3(2026-10-14 map-hud-C3.zip) 512 -> 128 로 줄임"
+    },
+    {
+      "path": "prototype/assets/ui-v3/emblems/occupied-ring.png",
+      "purpose": "성 소유 표시 - occupied-ring (중립 성 문장 / 점령 중 고리)",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "9b6dcb8c87cce1bb787d6f14c9cd331d9388686749f3f0220656f857ec5c2850",
+      "sourceSheet": "prototype/assets/ui-v3/emblems/F01.png",
+      "prompt": "닷토리 C3(2026-10-14 map-hud-C3.zip) 512 -> 128 로 줄임"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/advisor-box.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - advisor-box",
+      "size": [
+        472,
+        146
+      ],
+      "sha256": "fcad9584f610fd0bf36295f07ffdd5c86d99fb9f7ba0c7b9076a57b080958313",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/advisor-box.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/arrow-left.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - arrow-left",
+      "size": [
+        170,
+        60
+      ],
+      "sha256": "95ca96a788f23e214394be415e0030fcb004265191b67b8dbaf874bb68a0a8e1",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/arrow-left.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/arrow-right.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - arrow-right",
+      "size": [
+        170,
+        60
+      ],
+      "sha256": "452d3e67e05eab451a88eefd710d1427acb8fe04047629b715ef4495c6ac9fdd",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/arrow-right.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/band-forecast.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - band-forecast",
+      "size": [
+        1672,
+        361
+      ],
+      "sha256": "171918e0dfc51a3a02503ef4e80a292da7cb04e460d9aceb4576344431354828",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/band-forecast.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/band.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - band",
+      "size": [
+        1672,
+        155
+      ],
+      "sha256": "b75a303580df3d1b447221ec72bc3baf0b4dbd7071434d09f97a27a2295cfd3b",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/band.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/banner-dragon.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - banner-dragon",
+      "size": [
+        60,
+        240
+      ],
+      "sha256": "767d3f211b0a6177c0f13d9bca2bd294271727ab2d3d64cd50f288be32c01156",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/banner-dragon.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/btn-cancel.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - btn-cancel",
+      "size": [
+        284,
+        76
+      ],
+      "sha256": "ca6c966a823311151646039c17188a8f65ce6b7e43b00accf0d6fefe4ba03297",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/btn-cancel.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/btn-confirm.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - btn-confirm",
+      "size": [
+        284,
+        76
+      ],
+      "sha256": "2b17f81d1c11fdccde6671441095de921d8c0ef3effda4c40014880e305aee2b",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/btn-confirm.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/btn-off.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - btn-off",
+      "size": [
+        280,
+        86
+      ],
+      "sha256": "652d66acbc6b45eb5392f524cc4a289efdfb741f0d1171a671b16acf22bdddd1",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/btn-off.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/btn-on.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - btn-on",
+      "size": [
+        244,
+        86
+      ],
+      "sha256": "4183dc1ce519927758e8eba2e4b0501752e2f1e502c41f95f7caa884394c0e6a",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/btn-on.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/btn.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - btn",
+      "size": [
+        224,
+        86
+      ],
+      "sha256": "1cc037f642237eb99f5d1fdc670b864e8f65fbe8a0f625a4e1fbbaf4171f3263",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/btn.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/hero-brush.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - hero-brush",
+      "size": [
+        340,
+        351
+      ],
+      "sha256": "8db977d7360dfe6c50bdc0c5388b50d8fa85172dfb6206ab52e8795816a51f10",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/hero-brush.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/icon-arrow.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - icon-arrow",
+      "size": [
+        28,
+        28
+      ],
+      "sha256": "4b2c98130556d5dcfeda4e2a535a6851a81017a09f258e9e348510be6542ed00",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/icon-arrow.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/icon-check-on.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - icon-check-on",
+      "size": [
+        28,
+        28
+      ],
+      "sha256": "d5f9a6a0ed21995d5f4517588b469804ff126e9abd767c20281ce38bf3b2f2b6",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/icon-check-on.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/icon-check.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - icon-check",
+      "size": [
+        28,
+        28
+      ],
+      "sha256": "9f81528b63685c2c8c852e125a7f8f37fbfdbfb0b2264c7ffb74ee78d09dbe65",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/icon-check.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/icon-gear.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - icon-gear",
+      "size": [
+        40,
+        40
+      ],
+      "sha256": "85c0bb91172dbca63cab4beb5a1df78e30caa3fc2c78fee77b2561b10ec91410",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/icon-gear.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/next-turn.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - next-turn",
+      "size": [
+        263,
+        100
+      ],
+      "sha256": "4126e6e774ec02d1d1aedce132874460b61ac02d6c2853741295828fcb4aea45",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/next-turn.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/panel-info-tall.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - panel-info-tall",
+      "size": [
+        344,
+        264
+      ],
+      "sha256": "f14331dd75aeeb992008aba9909ea0049193c3d12adb58d56d1fc6ed66887ad7",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/panel-info-tall.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/panel-info.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - panel-info",
+      "size": [
+        384,
+        230
+      ],
+      "sha256": "af6a2782c662a9d322318e8301806827b7a95da3cc52fe3cc96f5ca33969e349",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/panel-info.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/panel-mods.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - panel-mods",
+      "size": [
+        300,
+        126
+      ],
+      "sha256": "6ebf74985543bb0650a6aec829e69a92ede3c80cfe4e2e429b15a10e7d77b478",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/panel-mods.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/panel-supply.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - panel-supply",
+      "size": [
+        409,
+        586
+      ],
+      "sha256": "078c254a67b4b69c86d4e252fe77ba551db6ffb1e43f35b56be5bd8ab4eb6d14",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/panel-supply.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/pip-on.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - pip-on",
+      "size": [
+        34,
+        32
+      ],
+      "sha256": "5fd813976ccb65b795fd60e7e534ed7d87e7a966810d2dcdd41fcadc4c85d482",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/pip-on.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/pip.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - pip",
+      "size": [
+        34,
+        32
+      ],
+      "sha256": "47609e9b2363bd777400f898a115c3bddeb14b23216afe8ca72a83bbbad485e0",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/pip.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/soldier.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - soldier",
+      "size": [
+        24,
+        60
+      ],
+      "sha256": "d3f19f37f099a0170f19aacca3bf107d3e59cf3b6a88686c636f6cfde31c1b2c",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/soldier.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/status-line.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - status-line",
+      "size": [
+        562,
+        50
+      ],
+      "sha256": "85097d951367d7106dfe430553ec376ce2e6f060ccbaedae8230f8c48faffd42",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/status-line.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/swords.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - swords",
+      "size": [
+        90,
+        90
+      ],
+      "sha256": "89a3f85c4a0b239b7df0303e37ddc4e6cd6975222961f91b9e45262b92d856dd",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/swords.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/tab-on.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - tab-on",
+      "size": [
+        112,
+        58
+      ],
+      "sha256": "b043a046f347a70ff7962223020016b6f07c5b4c0f88c20767cecc2cf8b97ca6",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/tab-on.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/tab.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - tab",
+      "size": [
+        112,
+        58
+      ],
+      "sha256": "8e1283c6365d101898e0f27f8ace5e04a24d30017240f64703d1491e5eeed375",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/tab.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/tag-ink.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - tag-ink",
+      "size": [
+        194,
+        50
+      ],
+      "sha256": "1743ec23886267837abd57e668da745e807c0d15688e2931677359aebf8fe8f3",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/tag-ink.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/tag-red.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - tag-red",
+      "size": [
+        194,
+        50
+      ],
+      "sha256": "77b23404340a37a016e3c46ac0ae9217c6a824534eafd10b7a83dec8843cb4a6",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/tag-red.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/title-black.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - title-black",
+      "size": [
+        462,
+        174
+      ],
+      "sha256": "3869b99bce0310e56f723343fb991663384bfdffd14b6cd30e718cdebc17c970",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/title-black.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/title-red-big.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - title-red-big",
+      "size": [
+        430,
+        142
+      ],
+      "sha256": "c4790a377c3ad7e605848c93353e6a896e667e2355801f568717255c85c22612",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/title-red-big.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/title-red.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - title-red",
+      "size": [
+        430,
+        112
+      ],
+      "sha256": "75dfff7f1bd3d34c7067bac2acd4a031b8a98c5cddebef78864ddef2b949e42e",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/title-red.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/topbar-left.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - topbar-left",
+      "size": [
+        762,
+        66
+      ],
+      "sha256": "52336a19fb996847510c8ef821416ac70a7daf63dd7e1f36e4a16eac29ea5d7b",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/topbar-left.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit/topbar-right.png",
+      "purpose": "지도 화면 판 키트(솔 시안과 똑같이) - topbar-right",
+      "size": [
+        390,
+        66
+      ],
+      "sha256": "c6e563a6af2dd00243249b297e39f04b814d208b845e4fd6907af70cd6f7f04d",
+      "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/topbar-right.png",
+      "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
     }
   ],
   "sources": [

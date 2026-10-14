@@ -2569,6 +2569,20 @@ body.ink .wmap .w-cityplate:has(.rib) .name{transform:translateY(-1.2px)}
 body.ink .wmap .w-cityplate:has(.rib) :is(.def,.def-bg){display:none}
 body.ink .wmap .w-cityplate:has(.rib) .cinfo .ci-bg{fill:rgba(12,10,8,.5);stroke:none;rx:6.75px}
 body.ink .wmap .w-cityplate:has(.rib) .cinfo .ci-t{font-size:8.5px;stroke-width:1.1px}
+/* 10-14 밤 성 소유 표시(사용자 "성이 딱 봐도 중립인지, 점령된 상태인지, 점령돼 있다면 누구 성인지 — 레퍼런스 보고, 솔 시안은 레퍼런스가 아님"):
+   삼국지14(이름 옆 세력색 표 + 영토를 세력색으로 칠함) · 토탈워 삼국(성 위 세력 깃발 판) · Old World(영토 경계를 세력색 점선으로) →
+   ① 이름 띠 = 소유 세력색 먹(ink/ribbon-n-red · green · blue), 중립 = 무채색 먹 ② 띠 왼쪽 끝 세력 문장 원판, 중립 = 회색 원판 '中' ③ 점령 중 = 원판 둘레 끊긴 불빛 고리
+   ④ 영토 색을 두 배로(.08 → .16), 경계는 세력색 점선 */
+body.ink .wmap .w-cityplate .seal image{filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.6))}
+body.ink .wmap .w-cityplate .seal.neutral circle{fill:#1d1c19;stroke:#8f8d84;stroke-width:1.4px}
+body.ink .wmap .w-cityplate .seal.neutral text{fill:#b8b5a8;font-family:var(--title);font-weight:700;font-size:12px;text-anchor:middle}
+body.ink .wmap .w-cityplate .seal .occ{transform-box:fill-box;transform-origin:center;animation:seal-occ 14s linear infinite}
+@keyframes seal-occ{to{transform:rotate(360deg)}}
+body.ink .wmap .w-cityplate:has(.seal) .name{transform:translate(5px,-1.2px)}
+body.ink .wmap .w-cityplate .rib.unowned{filter:saturate(0) brightness(1.15)}
+body.ink .wmap .w-cityplate:hover .rib.unowned{filter:saturate(0) brightness(2.2)}
+body.ink .wmap .w-terr path.fill{opacity:.16}
+body.ink .wmap .w-terr path.edge{stroke-dasharray:7 4;stroke-width:2.2px;opacity:.92}
 /* /2026-10-14 성 이름표 */
 body.ink .wmap .w-unit .plate .pole{display:inline;stroke:#14100c;stroke-width:1.5px}
 body.ink .wmap .w-unit .banner{display:none}
@@ -3188,3 +3202,6 @@ body.hud-band .w-supply-boundary{stroke:#fff3d8;stroke-width:3;stroke-dasharray:
 body.hud-band .nb-selected{padding-right:3vw}
 body.hud-band .nb-band[data-state="forecast"] .nb-preview-portrait.ally{width:19.4vw;height:38.4dvh}
 body.hud-band .nb-band[data-state="forecast"] .nb-preview-portrait.enemy{width:21.5vw;height:33.1dvh}
+/* C155: canvas is decorative; only the bounded footprint selects a unit. */
+.w-troops-canvas{position:fixed;display:block;pointer-events:none!important;contain:strict;z-index:3}
+.wmap .w-troops-hit{fill:transparent;stroke:none;pointer-events:all}

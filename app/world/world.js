@@ -30,6 +30,9 @@ import {xpToNextLevel} from '/src/growth-progress.mjs';
 import {pendingCampaignDraft,needsTraitResolution,tacticLoadoutReason,CAMPAIGN_RARITY_NAMES,resolveTraitSpace,CAMPAIGN_TRAIT_SLOTS,CAMPAIGN_TACTIC_SLOTS} from '/src/campaign-growth.mjs';
 
 import {renderWorldMap,animateUnits,FACTION} from '/app/world/map-v3.mjs';
+// C155: old art remains usable until the new presentation module is served.
+let troopLayer=null;
+if(new URLSearchParams(location.search).get('troops')!=='old')import('/app/world/troops.mjs').then(async m=>{await loadV3Manifest();troopLayer=m.createTroopLayer({asset:v3Asset});if(state)render();}).catch(e=>console.warn('C155 troop layer unavailable:',e.message));
 import {cutout} from '/app/world/cutout.mjs';
 import {createUiSfx} from '/app/world/ui-sfx.mjs';
 import {C22_EVENTS} from '/src/campaign-events.mjs';
@@ -318,7 +321,7 @@ function animateCombat(before,c,id){
  if(approach){const target=oldUnits.find(u=>u.id===c.targetId);if(target)target.tileId=targetTile;}
  for(const u of c.units)losses[u.unitId]={displayCount:u.preBattleCount*campaignShownScale(before,u.unitId,state.playerFactionId),oldUnit:oldUnits.find(x=>x.id===u.unitId)};
  const now=performance.now();
- attackAnims[c.attackerId]={targetTileId:targetTile,start:now,duration:520,ranged};
+ attackAnims[c.attackerId]={targetTileId:targetTile,start:now,duration:520,ranged,charge:!!c.charge};
  facings[c.attackerId]={tileId:targetTile,until:now+2300};facings[c.targetId]={tileId:fromTile,until:now+(movementShot?560:2300)};
  fxList.push({kind:ranged?'volley':attackTroop==='BT04'?'charge':'clash',from:fromTile,to:targetTile,start:now+(ranged?0:150),duration:1100});
  render();follow(c.targetId);
@@ -356,7 +359,7 @@ function overlayAnimations(model){
   const m=motions[u.id];
   if(m){const e=now-m.start;if(e<m.duration)u.motion={path:m.path,elapsed:e,duration:m.duration,hold:m.hold,key:m.key};else delete motions[u.id];}
   const a=attackAnims[u.id];
-  if(a){const e=now-a.start;if(e<a.duration)u.attack={targetTileId:a.targetTileId,elapsed:e,duration:a.duration,ranged:a.ranged};else delete attackAnims[u.id];}
+  if(a){const e=now-a.start;if(e<a.duration)u.attack={targetTileId:a.targetTileId,elapsed:e,duration:a.duration,ranged:a.ranged,charge:!!a.charge};else delete attackAnims[u.id];}
   const f=facings[u.id];
   if(f){if(now<f.until)u.faceTileId=f.tileId;else delete facings[u.id];}
  }
@@ -2116,7 +2119,7 @@ function drawMap(v,hoverOnly=false){
  const margin=440; // 땅 밖으로도 화면을 옮길 수 있다 — 그 너머는 구름 바다(지도와 같이 움직이는 한 장의 세계. 사용자 2026-10-11 "월드맵은 배경이 따로 없어야 하고, 이동하면 다른 지형(안개)이 보여야 함")
  const left=viewport.scrollLeft,top=viewport.scrollTop;
  const cityBadges=Object.fromEntries(Object.values(v.ownCities??{}).map(c=>[c.cityId,cityProductionBadge(c)]).filter(([,b])=>b));
- const markup=renderWorldMap(model,{size:30,margin,cityBadges,supplyPublic:new URLSearchParams(location.search).get('hud')==='old'?null:{cities:Object.values(v.ownCities??{}),hubs:(v.hubs??[]).filter(h=>h.factionId===v.factionId)},compactLabels:globalThis.matchMedia?.("(max-width: 1320px), (max-height: 800px)").matches,...v3MapOptions(),relations:v3Relations(v)});
+ const markup=renderWorldMap(model,{size:30,margin,cityBadges,troopFormations:!!troopLayer,supplyPublic:new URLSearchParams(location.search).get('hud')==='old'?null:{cities:Object.values(v.ownCities??{}),hubs:(v.hubs??[]).filter(h=>h.factionId===v.factionId)},compactLabels:globalThis.matchMedia?.("(max-width: 1320px), (max-height: 800px)").matches,...v3MapOptions(),relations:v3Relations(v)});
  if(hoverOnly){
   // 예고 때문에 이름표·칸을 교체하면 pointerdown/up 의 대상이 달라져 클릭이 사라진다.
   const svg=$('#map svg'),scratch=document.createElement('div');if(!svg)return;scratch.innerHTML=markup;
@@ -2126,6 +2129,7 @@ function drawMap(v,hoverOnly=false){
   return;
  }
  $('#map').innerHTML=markup;markUnknownCounts(model);applyZoom();animateUnits($('#map'));
+ troopLayer?.sync($('#map'),model);
  renderRouteFords($('#map svg'),moveMode&&destination&&selectedArmyId?orderRoute(state,selectedArmyId,destination):null);
  // 실제 여백은 그린 쪽이 정한다(세계 그림이 있으면 그 고리 너비). 여백이 바뀐 차례에는 그만큼 화면을 옮겨 같은 곳을 보게 한다
  const used=Number($('#map svg')?.dataset?.margin)||margin,offset=mapMargin?(used-mapMargin)*zoom:0;mapMargin=used;
