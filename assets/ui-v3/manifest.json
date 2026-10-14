@@ -5942,91 +5942,91 @@
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-blue.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-foot-blue.png",
       "size": [
-        192,
+        354,
         128
       ],
-      "sha256": "4611a4c1f7de70d996f906f35d359c9911a678932acd03c7a15129f13f4d5ca8",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "d72e05ca3886a39ba9973acb3b437eab69a8d9ff852f49dd5503a4a3a9f1bf34",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-green.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-green.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-foot-green.png",
       "size": [
-        192,
+        354,
         128
       ],
-      "sha256": "3652060e58966c46cd18cfb20ecdfa571770738787fd61e545552b1fac0bc5ca",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "91035c53489d752b90a3a2216c877050228857e77f853f37ad23940b4a4b79d2",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-grey.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-foot-grey.png",
       "size": [
-        192,
+        354,
         128
       ],
-      "sha256": "3e15953d06f90927516bbe21bdf30603e6924c4dccf46297e4320225062cb821",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "ccaa5d17f1b7c84a4cd66becc971fe419cdcf502d795cf85ec53f9733fb86fea",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-red.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-red.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-foot-red.png",
       "size": [
-        192,
+        354,
         128
       ],
-      "sha256": "a64c10132d7c11c477e74ea4cba23c195d300c6b022303422041f2c3ecf2b8ae",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "46abe91fd10102f743b68d489689c873d25434308d11e5672a9068cafacebc08",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-blue.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-horse-blue.png",
       "size": [
-        336,
+        438,
         128
       ],
-      "sha256": "b72e0b82d4876c0c4fa59095efd2d5c1c94f91f1c2e9b40dd89aa8455f78861d",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "d3790a6b4a65eb0498d719e136880cbda92eefabd1331f10fd29efbb269ed8f7",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-green.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-green.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-horse-green.png",
       "size": [
-        336,
+        438,
         128
       ],
-      "sha256": "22da49252cf400ddcf3037885eea81ed47fe42f17bcadcdbecca9cb927ba7ab7",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "c03069fb473d90e83ce65365042d30894a1ccf6b46f4c3126b05162bb94e5491",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-grey.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-horse-grey.png",
       "size": [
-        336,
+        438,
         128
       ],
-      "sha256": "38a190fe3da42b714782917037f45514682824f96ec3c9dac18b0b8d4e4b812d",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "f6ffe166790b53ff99e733f8d7f4bf830df0a8e6fec331868b601c480dbd59b1",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-red.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-red.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) bearer-horse-red.png",
       "size": [
-        336,
+        438,
         128
       ],
-      "sha256": "b8ac4de6837d52df4deef687012666365ce64bcf948f28f5343b8425d8cc3d82",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "bd0dce6622bbf35d32d35d6232f4ff2fee08bf50626357084d2d0d56187d505c",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out3",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/fx-arrow.png",
@@ -6514,179 +6514,179 @@
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-spear-red.png",
-      "purpose": "지도 부대 병사 그림 - 붉은 창병(R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-spear-red.png",
       "size": [
-        576,
+        1440,
         96
       ],
-      "sha256": "fecc7a1c829dbec929c8c0866b3d2373612fe8c1fba5751550f538807f31750b",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3-test.zip): 진한 먹선 · 어두운 갑옷 · 세력색 옷, 9칸"
+      "sha256": "a498ea81fd736694bebefd889260acd38cb306c8d14e86cb3417b21a650a5119",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-bow-blue.png",
-      "purpose": "지도 부대 병사 그림 - sheet-bow-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-bow-blue.png",
       "size": [
-        576,
+        909,
         96
       ],
-      "sha256": "0fcc7b31defc7d2ac820eb4521222c6dbdd6560a42d5169269c5db10a2f70f16",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "d8019816555e6754923447074603f733a608a3c0c6db505f2767f1d3e12c002d",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-bow-green.png",
-      "purpose": "지도 부대 병사 그림 - sheet-bow-green.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-bow-green.png",
       "size": [
-        576,
+        909,
         96
       ],
-      "sha256": "d09f7fcd1517ec218b153f811570206e29a632a80b2fdb2b6bbe0928bcf6a829",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "200a4c4162bc1e078c7d2eb1e9bdfd689ca64441f87a586013ab2e012badbeee",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-bow-grey.png",
-      "purpose": "지도 부대 병사 그림 - sheet-bow-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-bow-grey.png",
       "size": [
-        576,
+        909,
         96
       ],
-      "sha256": "9c81b161c7d3d49f54690649838a7afe243fadc9ab8bd14a36209b08b80f2da2",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "42739f35c5f0c3a5d5b2c6b93ea4c18a4a75d5fe3be63c5c49fe46c1c44c7451",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-bow-red.png",
-      "purpose": "지도 부대 병사 그림 - sheet-bow-red.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-bow-red.png",
       "size": [
-        576,
+        909,
         96
       ],
-      "sha256": "3de59fb2bc2c1567af1681018a5c21ec1dc5b3effd888aac4f342892dc74934b",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "277770a1b93b8e53ed7a723cd4db3b04244970072f696ecc8f3921e5d0df303d",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-blue.png",
-      "purpose": "지도 부대 병사 그림 - sheet-cavalry-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-cavalry-blue.png",
       "size": [
-        1008,
+        1593,
         96
       ],
-      "sha256": "2af3a0260ba68e604e1f4138bd14551f709bd403311e919a4a409e27f8d7780e",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "8ff0f536976703253230dffaae227150430554710600fcfdf43e1c621237b741",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-green.png",
-      "purpose": "지도 부대 병사 그림 - sheet-cavalry-green.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-cavalry-green.png",
       "size": [
-        1008,
+        1593,
         96
       ],
-      "sha256": "2082176a7ed740b8f9396a6b748f9ebff95c27cc3107d5138e0bce2e8a0287f5",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "e7d5af6d60778535a0099fc735ac325aa4e5bdc4ace6f8b41886d6414184e620",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-grey.png",
-      "purpose": "지도 부대 병사 그림 - sheet-cavalry-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-cavalry-grey.png",
       "size": [
-        1008,
+        1593,
         96
       ],
-      "sha256": "e51be24277b31435fbfa61398d584f9234b58d03a8d639a64f58a4d00663e806",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "44106300e0b5c0a9e52fd244407cede9065e849df868570c5202a0d56048d0e1",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-red.png",
-      "purpose": "지도 부대 병사 그림 - sheet-cavalry-red.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-cavalry-red.png",
       "size": [
-        1008,
+        1593,
         96
       ],
-      "sha256": "349a835e77f0950c99dfc358c82d994a1b4c2cf30eeab51b8aac6b452681ecfc",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "2f1c769bf32d9722b99b711fa59033fd889ecb321d59bfc6b1911cb3bc19976c",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-militia-blue.png",
-      "purpose": "지도 부대 병사 그림 - sheet-militia-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-militia-blue.png",
       "size": [
-        576,
+        837,
         96
       ],
-      "sha256": "e21df99be51d62d16e90c99b12709f06e90bf615be3adf5b43bf9e3f683f6994",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "5ca8ee8d8d01ca138a16ee79b4196fff045500903bef08d3e0777025d77bf657",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-militia-green.png",
-      "purpose": "지도 부대 병사 그림 - sheet-militia-green.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-militia-green.png",
       "size": [
-        576,
+        837,
         96
       ],
-      "sha256": "b52f1ba61768d5319b23a4751954fd4a86e095b826e3bec2db07f59643563684",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "65deaa9e5f93a45d6721d80e90d956d991ce326682bf3971efe6074e72ccb38c",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-militia-grey.png",
-      "purpose": "지도 부대 병사 그림 - sheet-militia-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-militia-grey.png",
       "size": [
-        576,
+        837,
         96
       ],
-      "sha256": "4b390870961b0e95886c7862c6b273aa817ab3eb6bb7fc14b4380c3d75f7d558",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "e8b306ea2998082ad4bde092fc8b88942222c8c2e917780fddd75fa8d85c8ecc",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-militia-red.png",
-      "purpose": "지도 부대 병사 그림 - sheet-militia-red.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-militia-red.png",
       "size": [
-        576,
+        837,
         96
       ],
-      "sha256": "30b8f8f3bcaca4ad2090c6602c038d26930b708e920176f3eaaa55daa33de0d2",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "54b152a401b8c164d90eb44ac74ca49e4b2e8277b9714512b2ecb8d5f3633058",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-spear-blue.png",
-      "purpose": "지도 부대 병사 그림 - sheet-spear-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-spear-blue.png",
       "size": [
-        576,
+        1440,
         96
       ],
-      "sha256": "35b5857b7062c9104e878170d1f3263ea6c83f23e0cd225e72d9168407b5802c",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "3a741be507116dcc087d2c279f52d9e4316c014aaf4802834e8da4d303d929ea",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-spear-green.png",
-      "purpose": "지도 부대 병사 그림 - sheet-spear-green.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-spear-green.png",
       "size": [
-        576,
+        1440,
         96
       ],
-      "sha256": "deb6aac1ed3db7833534e5e2f76d4939dedfdec20687f210609e17bc5b7a6229",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "5de0f2f433191874d8ac0680117d02bdbe8dcd43a4007cc53d3a9b8994ca025d",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-spear-grey.png",
-      "purpose": "지도 부대 병사 그림 - sheet-spear-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "purpose": "병사 그림 v4(성 방식 - 지도 조각에 그린 화풍) sheet-spear-grey.png",
       "size": [
-        576,
+        1440,
         96
       ],
-      "sha256": "2ef7284d24adf71bd10396b1883aa8265962c44fbb9e3adc12c7fa07dabe6912",
-      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
-      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+      "sha256": "2398bf4be85506db037b1d5cbdf46714ec6218fbba67d451de1450f700cc40f6",
+      "sourceSheet": "docs/work-integration/20261014/troop-bake/out2",
+      "prompt": "C160 지도 속 대열 화풍 -> C161/C162 초록 바탕 동작 그림 -> tools/design/sheet-from-grid.py"
     },
     {
       "path": "prototype/assets/ui-v3/hud/kit-band-fine.png",

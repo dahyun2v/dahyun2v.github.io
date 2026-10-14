@@ -1086,3 +1086,43 @@ body.ink .od-details p{margin:0 0 .75em;color:#eee6d8}
 body.ink .od-details p small{display:block;margin-bottom:.25em;color:#e6ca95;font-size:1em;font-weight:700}
 body.ink .od .od-details .od-stats{position:static;display:flex;margin:.6em 0 0;padding:.55em 0 0;border-top:1px solid #756e62;background:none;box-shadow:none;gap:.25em}
 @media(max-width:1100px){body.ink .od-benefit{padding:.4em .5em}body.ink .od-benefit>span{-webkit-line-clamp:2}body.ink .od-benefit em{display:none}}
+/* C159: decisions, tactic cut-ins and map hit feedback. Existing art only. */
+#ink-toasts{position:fixed;top:5vh;left:50%;transform:translateX(-50%);z-index:220;display:grid;gap:4px;pointer-events:none;width:min(650px,88vw)}
+.ink-toast{padding:16px 35px;text-align:center;background:url(/assets/ui-v3/hud/kit/status-line.png) center/100% 100% no-repeat;color:#f0e4cb;font:26px/1.2 var(--title);text-shadow:0 2px 3px #111;animation:ink-toast-in .16s ease-out}
+.ink-city-seal{position:fixed;width:70px;height:70px;object-fit:contain;z-index:210;pointer-events:none;animation:ink-seal-in .8s both}
+#tactic-cutin{position:fixed;left:0;top:32vh;width:100vw;height:31vh;z-index:230;overflow:visible;border:0;background:url(/assets/ui-v3/hud/kit-band-fine.png) center/100% 100% no-repeat;color:#eee4ce;cursor:pointer;isolation:isolate}
+#tactic-cutin[hidden]{display:none}
+#tactic-cutin .tactic-art{position:absolute;left:8%;bottom:0;height:51vh;max-width:43vw;object-fit:contain;object-position:center bottom;filter:drop-shadow(5px 3px 2px #12110f);animation:ink-tactic-enter .24s ease-out both;pointer-events:none}
+#tactic-cutin .tactic-title{display:block;margin-left:31%;font:clamp(30px,5vw,84px)/1.2 var(--title);text-shadow:2px 3px 0 #1b1712}
+#tactic-cutin .tactic-seal{position:absolute;right:12%;top:24%;height:48%;pointer-events:none}
+#tactic-cutin small{position:absolute;bottom:12%;right:17%;font:14px var(--serif);opacity:.65}
+#tactic-cutin.short{height:23vh;top:36vh}
+#tactic-cutin.short .tactic-art{height:39vh}
+#tactic-cutin.reduced{height:15vh;top:42vh}
+#tactic-cutin.reduced .tactic-title{margin:0;font-size:38px}
+#tactic-cutin.reduced :is(small,.tactic-seal){display:none}
+.wmap .ink-pick-ring{fill:none;stroke:#cfb997;stroke-width:1.8;opacity:0;pointer-events:none}
+.wmap .w-unit.hovered .ink-pick-ring{opacity:.45}
+.wmap .w-unit.active .ink-pick-ring{opacity:.9;stroke-width:2.4}
+#map.friendly-hover .w-hits path{cursor:pointer}
+.wmap .w-tactic-ready{pointer-events:none}
+.wmap .w-tactic-ready rect{fill:#9e3b32;stroke:#e8ceaa;stroke-width:1}
+.wmap .w-tactic-ready text{fill:#f3dfbc;font:15px var(--title);text-anchor:middle}
+.wmap .w-tactic-ready.fresh{animation:ink-ready .6s ease-out}
+.wmap .w-map-fx{pointer-events:none;animation:ink-map-fx 1.1s ease-out both}
+.wmap .tactic-ring{fill:#af3c321a;stroke:#b94d3e;stroke-width:2.5}
+.wmap .tactic-ring.inner{stroke:#e8d5b0;stroke-width:1}
+.wmap .effect-label{fill:#eed9b6;stroke:#291c15;stroke-width:3;paint-order:stroke;font:18px var(--title);text-anchor:middle}
+.wmap .dmg.ink-damage{font:700 var(--damage-size,22px) var(--title);fill:#eacdb3;stroke:#2d1713;stroke-width:3px;paint-order:stroke;transform-box:fill-box;transform-origin:center;animation:ink-damage-pop .55s ease-out both}
+.wmap .dmg.ink-damage.heavy{fill:#ee6248}
+body.ink .wmap .w-cityplate .prod.muster rect{fill:#722e28;stroke:#d0ad7d}
+.wmap .prod .muster-flag{fill:#a94939;stroke:#e4cba4;stroke-width:1.5;pointer-events:none}
+.wmap .w-map-fx.siege .effect-label{font:700 26px var(--title);fill:#ef8060;transform-box:fill-box;transform-origin:center;animation:ink-damage-pop .55s ease-out both}
+.wmap .prod:not(.idle) text{fill:#efe0bf;font-weight:700}
+@keyframes ink-toast-in{from{opacity:0;translate:0 -6px}to{opacity:1;translate:0 0}}
+@keyframes ink-seal-in{0%{opacity:0;transform:translate(-50%,-50%) scale(1.7) rotate(-8deg)}20%,70%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-8deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1) rotate(-8deg)}}
+@keyframes ink-tactic-enter{from{opacity:0;translate:-80px 0}to{opacity:1;translate:0 0}}
+@keyframes ink-ready{0%{filter:brightness(2)}100%{filter:brightness(1)}}
+@keyframes ink-map-fx{0%{opacity:1}70%{opacity:.8}100%{opacity:0}}
+@keyframes ink-damage-pop{0%{opacity:0;scale:1.7;translate:0 4px}20%{opacity:1;scale:1.35}100%{opacity:1;scale:1;translate:0 -12px}}
+@media(prefers-reduced-motion:reduce){.ink-toast,.wmap .ink-damage,.wmap .w-tactic-ready.fresh{animation:none}.ink-city-seal{display:none}#tactic-cutin .tactic-art{animation:none}}

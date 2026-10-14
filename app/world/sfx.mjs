@@ -28,9 +28,9 @@ export function troopSounds(troop) {
 }
 
 /** 명령 하나가 끝난 뒤 낼 소리들: [이름, 늦춤(ms), 크기 배율]. 순수 함수 — 테스트용으로 밖에 둔다.
- * @param {{request:any, before:any, state:any, combat:any, visible?:(armyId:string)=>boolean}} c
+ * @param {{request:any, before:any, state:any, combat:any, deferImpact?:boolean, visible?:(armyId:string)=>boolean}} c
  * @returns {[string, number, number][]} */
-export function commandSounds({request, before, state, combat, visible = () => true}) {
+export function commandSounds({request, before, state, combat, deferImpact = false, visible = () => true}) {
   /** @type {[string, number, number][]} */ const out = [];
   const type = request?.type, me = state?.playerFactionId, ai = type === 'ADVANCE_AI';
   const army = (/** @type {string|undefined} */ id) => state?.armies?.[id ?? ''] ?? before?.armies?.[id ?? ''];
@@ -39,8 +39,8 @@ export function commandSounds({request, before, state, combat, visible = () => t
     const atk = army(combat.attackerId ?? request?.armyId), seen = !ai || visible(combat.attackerId) || visible(combat.targetId);
     if (seen) {
       const k = ai ? 0.7 : 1, city = type === 'ATTACK_CITY' || !!combat.cityId || combat.kind === 'SIEGE';
-      if (type === 'USE_TACTIC' || combat.kind === 'TACTIC') out.push(['tactic', 0, k]);
-      out.push([combat.kind === 'OVERWATCH' ? 'arrows' : city ? 'siege' : troopSounds(atk?.troopType).hit, type === 'USE_TACTIC' ? 260 : 0, k]);
+      if (type === 'USE_TACTIC' || !!combat.tacticName || combat.kind === 'TACTIC') out.push(['tactic', 0, k]);
+      if(!deferImpact&&combat.kind!=='TACTIC_EFFECT')out.push([combat.kind === 'OVERWATCH' ? 'arrows' : city ? 'siege' : troopSounds(atk?.troopType).hit, type === 'USE_TACTIC' ? 260 : 0, k]);
       if ((combat.eliminatedIds ?? []).some((/** @type {string} */ id) => before?.armies?.[id]?.factionId === me)) out.push(['rout', 900, 1]);
     }
   } else if (['MOVE_UNIT', 'ADVANCE_ORDER'].includes(type)) {
@@ -127,7 +127,7 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
       last.set(name, now); lastAny = now; return true;
     } catch { return false; }
   }
-  /** 명령 하나가 끝난 뒤 world.js 가 부른다. @param {{request:any, before:any, state:any, combat:any, visible?:(armyId:string)=>boolean}} c */
+  /** 명령 하나가 끝난 뒤 world.js 가 부른다. @param {{request:any, before:any, state:any, combat:any, deferImpact?:boolean, visible?:(armyId:string)=>boolean}} c */
   function command(c) { for (const [name, delay, k] of commandSounds(c)) play(name, {delay, gain: k}); }
   /** 창 여닫이와 단추 누르기를 듣는다. @param {Document} doc */
   function attach(doc) {

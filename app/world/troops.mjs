@@ -3,8 +3,8 @@ const TYPES = {BT01:'militia', BT02:'spear', BT03:'bow', BT04:'cavalry', enginee
 const TONES = {F01:'red', F02:'green', F03:'blue'};
 const ROOT = '/assets/ui-v3/units-ink/';
 const FOOT_Y = 16; // Below the tile center, clear of the portrait/count above it.
-const SOLDIER_H = 17;
-const SPREAD = 1; // 10-14 R3: 병사 그림이 커진 만큼 대열 간격도 넓힌다(화면 배치만 — 대열 꼴 · 수는 그대로) // 10-14 Claude: 닷토리 진짜 그림(지도와 같은 붓) — 시작 확대 2.1 에서 화면 키 약 16px
+const SOLDIER_H = 15; // 10-14 v4(성 방식 병사): 지도 집의 절반쯤
+const SPREAD = 1.4; // 10-14 v4: 지도 속 대열(C160)처럼 병사 사이를 한 사람 너비쯤 띄운다 — 겹치면 검은 덩어리(닷토리 21판)
 const sheets = new Map();
 export const troopKind = u => TYPES[u.troop] ?? u.troop;
 export const soldierCount = count => Number.isFinite(count) && count > 0 ? Math.max(6, Math.min(36, Math.ceil(count / 10))) : 0;
@@ -82,12 +82,16 @@ function paperTone(img) {
   x.drawImage(img,0,0);x.globalCompositeOperation='multiply';x.fillStyle='rgb(214,198,164)';x.fillRect(0,0,c.width,c.height);
   x.globalCompositeOperation='destination-in';x.drawImage(img,0,0);return c;
 }
+// 10-14 v4: 병사 캔버스는 지도 밖 층이라 지도 그림의 색 보정(hud-ink.css .w-art)이 안 걸린다 — 세력색 병사 · 깃발병 그림에 같은 보정을 불러올 때 한 번 굽는다.
+// v4 그림은 병종마다 칸 너비가 달라(찌르기 창 · 말) 칸 너비를 '그림 너비 / 9' 로 읽는다(옛 그림도 9칸이라 그대로 맞다).
+const TONED = /^(sheet|bearer)-[a-z]+-(red|green|blue|grey)\.png$/;
+function mapTone(img){const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const x=c.getContext('2d');x.filter='saturate(.8) brightness(.955) contrast(1.23)';x.drawImage(img,0,0);return c;}
 function loadSheet(name, columns, width, height, asset) {
   const src=troopAssetPath(name,asset);
   if(sheets.has(src))return sheets.get(src);
   const item={image:null,columns,width,height,ready:false,placeholder:false}; sheets.set(src,item);
   const load = (fallback) => {
-    const img=new Image(); img.onload=()=>{item.image=fallback&&!name.startsWith('fx-')?outlinedPlaceholder(img):/^sheet-[a-z]+\.png$/.test(name)?paperTone(img):img;if(name.startsWith('bearer-'))item.width=img.naturalWidth/3;item.columns=Math.floor(img.naturalWidth/item.width);item.height=img.naturalHeight;item.ready=item.columns>=Math.min(columns,8);item.placeholder=fallback;};
+    const img=new Image(); img.onload=()=>{if(name.startsWith('sheet-'))item.width=img.naturalWidth/9;item.image=TONED.test(name)?mapTone(img):fallback&&!name.startsWith('fx-')?outlinedPlaceholder(img):/^sheet-[a-z]+\.png$/.test(name)?paperTone(img):img;if(name.startsWith('bearer-'))item.width=img.naturalWidth/3;item.columns=Math.floor(img.naturalWidth/item.width);item.height=img.naturalHeight;item.ready=item.columns>=Math.min(columns,8);item.placeholder=fallback;};
     img.onerror=()=>{if(!fallback)load(true);}; img.src=fallback?ROOT+'placeholder/'+name:src;
   }; load(src===ROOT+'placeholder/'+name); return item;
 }
@@ -119,16 +123,17 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
   const toned={};const footFor=(k,tone)=>{const key=`${k}-${tone}`;if(!(key in toned))toned[key]=asset(`units-ink/sheet-${key}.png`)?loadSheet(`sheet-${key}.png`,9,k==='cavalry'?112:64,96,asset):null;return toned[key]??foot[k];};
   const bearers={};for(const k of ['foot','horse'])for(const tone of ['red','green','blue','grey'])bearers[`${k}-${tone}`]=loadSheet(`bearer-${k}-${tone}.png`,3,k==='horse'?112:64,128,asset);
   const effects={arrow:loadSheet('fx-arrow.png',1,40,8,asset),dust:loadSheet('fx-dust.png',1,96,40,asset),clash:loadSheet('fx-clash.png',1,96,96,asset)};
-  let tiles=new Map();
+  let tiles=new Map(), freezeUntil=0, frozenTime=0, pausedTime=0;
+  const animationTime=now=>now<freezeUntil?frozenTime:now-pausedTime;
   function sync(nextRoot, model) {
-    root=nextRoot;mounted=clock();
+    root=nextRoot;mounted=animationTime(clock());
     const svg=root.querySelector('svg');
     tiles=new Map([...svg.querySelectorAll('.w-hits [data-tile]')].map(n=>{const b=n.getBBox();return [n.dataset.tile,{x:b.x+b.width/2,y:b.y+b.height/2}];}));
     const nodes=new Map([...svg.querySelectorAll('.w-unit')].map(n=>[n.dataset.unit,n]));
     units=model.units.flatMap(u=>{const node=nodes.get(u.id);if(!node?.hasAttribute('data-troop-anchor'))return [];return [{u:{...u},inCity:!!node.querySelector('.plate-top.in-city'),anchor:{x:Number(node.dataset.x),y:Number(node.dataset.y)}}];});
     for(const {u,anchor} of units){
       const count=soldierCount(u.count), old=soldierCount(u.prevCount), key=`${u.prevCount}:${u.count}`;
-      if(u.prevCount>u.count&&hits.get(u.id)?.key!==key)hits.set(u.id,{key,start:mounted});
+      if(u.prevCount>u.count&&hits.get(u.id)?.key!==key)hits.set(u.id,{key,start:clock()});
       if(old>count&&deathKeys.get(u.id)!==key){deathKeys.set(u.id,key);casualties.set(u.id,{u:{...u},anchor,from:old,to:count,start:mounted});}
       if(!u.prevCount){deathKeys.delete(u.id);hits.delete(u.id);}
     }
@@ -139,7 +144,7 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
   }
   function draw(now) {
     const cpuStart=performance.now();
-    now=clock();
+    now=animationTime(clock());
     raf=0;if(stopped)return;
     // Idle animation needs only 8 fps; retain a 60 fps camera/frame loop for scrolling.
     const svg=root?.querySelector('svg'), viewport=root?.closest('.viewport');
@@ -156,8 +161,8 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
     for(const {u,anchor,s,inCity} of ordered){
       const screen={x:matrix.a*s.pos.x+matrix.c*s.pos.y+matrix.e-r.left,y:matrix.b*s.pos.x+matrix.d*s.pos.y+matrix.f-r.top};
       if(screen.x< -100||screen.x>r.width+100||screen.y< -100||screen.y>r.height+100)continue;
-      // 10-14 R3: 그림이 커진 만큼 화면에 그리는 수를 줄인다 — 기병 최대 12(말이 넓다), 보병 최대 18, 성 안 10(닷토리 '좁게 겹치면 검은 덩어리' — 대열이 칸 하나 안에). 병력 비례는 그대로(soldierCount)
-      const cap=inCity?10:s.kind==='cavalry'?12:18, n=Math.min(cap,soldierCount(u.count)), points=formationPoints(s.kind,n,s.wedge), cs=Math.cos(s.angle),sn=Math.sin(s.angle);
+      // 10-14 v4: 화면에 그리는 수 — 기병 최대 9(말이 넓다), 보병 12, 성 안 8. 간격을 띄운 만큼 줄였다(병력 비례는 그대로). 병력 비례는 그대로(soldierCount)
+      const cap=inCity?8:s.kind==='cavalry'?9:12, n=Math.min(cap,soldierCount(u.count)), points=formationPoints(s.kind,n,s.wedge), cs=Math.cos(s.angle),sn=Math.sin(s.angle);
       // 10-14 Claude: 평소(가만히 · 이동)엔 화면 기준 반듯한 대열 — 옆줄 = 가로, 앞뒤 = 세로(지도를 눕혀 보는 각도라 앞뒤를 줄임). 공격 중에만 대상 쪽으로 돈다
       const live=s.progress>=0&&s.progress<1, squeeze=inCity?.7:1;
       const place=p=>live?{x:s.pos.x+(p.x*cs-p.y*sn)*SPREAD,y:s.pos.y+(p.x*sn+p.y*cs)*.62*SPREAD+FOOT_Y}:{x:s.pos.x+p.y*squeeze*SPREAD,y:s.pos.y+p.x*.5*squeeze*SPREAD+FOOT_Y};
@@ -165,12 +170,13 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
       {const xs=points.map(p=>place(p)),minx=Math.min(...xs.map(q=>q.x)),maxx=Math.max(...xs.map(q=>q.x)),miny=Math.min(...xs.map(q=>q.y)),maxy=Math.max(...xs.map(q=>q.y));
        const cx=(minx+maxx)/2,cy=(miny+maxy)/2+1.5,rx=(maxx-minx)/2+7,ry=(maxy-miny)/2+4;
        if(rx>0&&ry>0){ctx.save();ctx.translate(cx,cy);ctx.scale(1,ry/rx);const g=ctx.createRadialGradient(0,0,0,0,0,rx);g.addColorStop(0,'rgba(28,22,16,.30)');g.addColorStop(.7,'rgba(28,22,16,.16)');g.addColorStop(1,'rgba(28,22,16,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,rx,0,Math.PI*2);ctx.fill();ctx.restore();}}
-      const hit=Number.isFinite(u.prevCount)&&u.prevCount>u.count&&now-(hits.get(u.id)?.start??0)<250;
+      const hit=!reduce()&&Number.isFinite(u.prevCount)&&u.prevCount>u.count&&clock()-(hits.get(u.id)?.start??0)<250,hitAge=clock()-(hits.get(u.id)?.start??0),source=tiles.get(u.impactFrom),dx=anchor.x-(source?.x??anchor.x-1),dy=anchor.y-(source?.y??anchor.y),dist=Math.hypot(matrix.a*dx+matrix.c*dy,matrix.b*dx+matrix.d*dy)||1,kick=hit?5*Math.sin(Math.min(1,hitAge/250)*Math.PI):0;
       const posed=points.map((p,i)=>({...place(p),i})).sort((a,b)=>a.y-b.y);
       for(const p of posed){
         const front=points[p.i].x>0, frame=spriteFrame({moving:s.moving,progress:front||s.kind==='bow'?s.progress:-1,hit},time,p.i);
         const sway=reduce()?0:Math.sin(time/430+p.i*2.7)*.18;
-        sprite(ctx,footFor(s.kind,TONES[u.factionId]??'grey'),frame,p.x+(hit?-cs*1.4:0),p.y+sway,SOLDIER_H,cs<0,1);
+        ctx.save();if(hit&&hitAge<120)ctx.filter='brightness(0) invert(1) sepia(.4)';
+        sprite(ctx,footFor(s.kind,TONES[u.factionId]??'grey'),frame,p.x+dx/dist*kick,p.y+sway+dy/dist*kick,SOLDIER_H,cs<0,1);ctx.restore();
       }
       const nb=bearerCount(n);for(let i=0;i<nb;i++)sprite(ctx,bearers[`${s.kind==='cavalry'?'horse':'foot'}-${TONES[u.factionId]??'grey'}`],s.moving?1+Math.floor(time/160+i)%2:0,s.pos.x-14+i*11,s.pos.y+FOOT_Y+9,SOLDIER_H*1.33,cs<0,1);
       if(s.moving&&Math.floor(time/180)%4===0){const fx=effects.dust;if(fx.ready){ctx.save();ctx.globalAlpha=.24;ctx.drawImage(fx.image,s.pos.x-18,s.pos.y+FOOT_Y+3,28,8);ctx.restore();}}
@@ -186,7 +192,7 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
     }
     for(const [id,death] of casualties){const age=now-death.start;if(age>850||reduce()){casualties.delete(id);continue;}
       // 쓰러지는 병사도 살아 있는 대열과 같은 수 · 간격 · 반듯한 배치로(10-14 R3)
-      const s=sampleTroop(death.u,death.anchor,id=>tiles.get(id),0), cap=s.kind==='cavalry'?12:18, from=Math.min(cap,death.from), to=Math.min(cap,death.to), points=formationPoints(s.kind,from);
+      const s=sampleTroop(death.u,death.anchor,id=>tiles.get(id),0), cap=s.kind==='cavalry'?9:12, from=Math.min(cap,death.from), to=Math.min(cap,death.to), points=formationPoints(s.kind,from);
       for(let i=to;i<from;i++){const p=points[i];sprite(ctx,footFor(s.kind,TONES[death.u.factionId]??'grey'),8,s.pos.x+p.y*SPREAD,s.pos.y+p.x*.5*SPREAD+FOOT_Y+age/180,SOLDIER_H,Math.cos(s.angle)<0,(1-age/850)*.85,true);}
     }
     // Erase label rectangles after drawing, keeping the original SVG labels intact.
@@ -195,5 +201,5 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
     for(const b of troopLabelBoxes(svg))ctx.clearRect(b.left-r.left-1,b.top-r.top-1,b.width+2,b.height+2);
     last=now;drawMs=performance.now()-cpuStart;raf=requestAnimationFrame(draw);
   }
-  return {sync,dispose(){stopped=true;cancelAnimationFrame(raf);canvas.remove();units=[];casualties.clear();},get stats(){return {units:units.length,soldiers:units.reduce((n,x)=>n+soldierCount(x.u.count),0),lastFrame:last,drawMs,assets:[...sheets].map(([name,s])=>({name,ready:s.ready,placeholder:s.placeholder}))};}};
+  return {sync,freeze(ms){if(reduce())return;const now=clock();frozenTime=animationTime(now);const end=Math.max(freezeUntil,now+ms),added=now<freezeUntil?end-freezeUntil:end-now;pausedTime+=added;freezeUntil=end;},dispose(){stopped=true;cancelAnimationFrame(raf);canvas.remove();units=[];casualties.clear();},get stats(){return {units:units.length,soldiers:units.reduce((n,x)=>n+soldierCount(x.u.count),0),lastFrame:last,drawMs,assets:[...sheets].map(([name,s])=>({name,ready:s.ready,placeholder:s.placeholder}))};}};
 }

@@ -455,7 +455,7 @@ export function renderInkHud(root, d) {
   if (cmd) { cmd.hidden = !showCmd; root.classList.toggle('cmd', showCmd); }
   if (showCmd) {
     cmd.querySelector('.atk').disabled = !atkOld || atkOld.disabled;
-    cmd.querySelector('.tac').innerHTML = tacOld.map((b, i) => { const name = (b.childNodes.length ? [...b.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('') : b.textContent).trim() || b.textContent.trim(); return `<button class="ring r${i + 1}" data-act="tactic" data-tactic="${esc(b.dataset.tactic)}"${b.disabled ? ' disabled' : ''} title="${esc(b.title || b.textContent.trim())}">${icon('cmd-tactic', name[0] ?? '·')}<small>${esc(name.slice(0, 4))}</small></button>`; }).join('');
+    cmd.querySelector('.tac').innerHTML = tacOld.map((b, i) => { const name = (b.childNodes.length ? [...b.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('') : b.textContent).trim() || b.textContent.trim(); return `<button class="ring tactic-face r${i + 1}${b.dataset.cooldown>0?' cooling':''}" data-cooldown="${b.dataset.cooldown??0}" data-act="tactic" data-tactic="${esc(b.dataset.tactic)}"${b.disabled ? ' disabled' : ''} title="${esc(b.title || b.textContent.trim())}">${icon('cmd-tactic', name[0] ?? '·')}${tacticFaceMarkup(Number(b.dataset.cooldown??0),b.dataset.gauge===undefined?null:Number(b.dataset.gauge))}<small>${esc(name.slice(0, 4))}</small></button>`; }).join('');
   }
   if (showUnit) {
     q('.ih-unit .ih-panel').src = `${H}officer-${tone}.png`;
@@ -474,7 +474,7 @@ export function renderInkHud(root, d) {
     const warnings = [...menu.querySelectorAll('.dk-info .warn')].map(p => p.textContent);
     const supply = menu.querySelector('.supply-line')?.textContent;
     const supplyContext = menu.querySelector('.supply-context')?.textContent;
-    const tactics = [...menu.querySelectorAll('[data-tactic]')].map(b => { const label = b.cloneNode(true); label.querySelectorAll('.gi,kbd').forEach(n => n.remove()); return label.textContent.replace(/\s+/g, ' ').trim(); });
+    const tactics = [...menu.querySelectorAll('[data-tactic]')].map(b => { const label = b.cloneNode(true); label.querySelectorAll('.gi,kbd,.tactic-wait,.tactic-meter').forEach(n => n.remove()); return label.textContent.replace(/\s+/g, ' ').trim(); });
     info.innerHTML = status ? `<p class="ih-state"><b>${esc(status.action)}</b>${status.actions?`<span class="ih-actions-left"><span class="${status.actions.move.available?'':'spent'}">${esc(status.actions.move.label)}</span><span class="${status.actions.main.available?'':'spent'}">${esc(status.actions.main.label)}</span></span>`:''}<span>전열 ${esc(status.formation)}</span></p>${supply ? `<p>${esc(supply)}</p>` : ''}${supplyContext ? `<p>${esc(supplyContext)}</p>` : ''}${warnings.map(t => `<p class="ih-risk">${esc(t)}</p>`).join('')}${tactics.length ? `<details${tacticsOpen ? ' open' : ''}><summary>전법 상태 · ${tactics.length}개</summary>${tactics.map(t => `<p>${esc(t)}</p>`).join('')}</details>` : ''}` : '';
     if(status)info.insertAdjacentHTML('beforeend',`<p class="ih-intent-full">${esc(d.commandIntent??'')}</p><p class="ih-action-help" aria-live="polite"></p>`);
     const btns = [...menu.querySelectorAll('.dk-acts button')].filter((b) => !b.classList.contains('close'));
@@ -601,7 +601,7 @@ function renderCommandBand(root,d,showUnit,menu){
  let html;
  if(showUnit){
   const name=menu.querySelector('.dk-id h2')?.textContent??'',face=menu.querySelector('.dk-face img')?.src??'',r=d.ratings,st=d.bandStatus??{};
-  const button=(b,display=null)=>{const label=b.cloneNode(true);label.querySelectorAll('.gi,kbd').forEach(n=>n.remove());const reason=b.title||label.textContent.trim();label.querySelectorAll('small').forEach(n=>n.remove());return `<button data-act="${esc(b.dataset.menu??'tactic')}"${b.dataset.tactic?` data-tactic="${esc(b.dataset.tactic)}"`:''}${b.disabled?' disabled':''}${d.bandSelected===(b.dataset.tactic??b.dataset.menu)?' aria-pressed="true"':''} title="${esc(reason)}">${esc(display??label.textContent.trim())}</button>`;};
+  const button=(b,display=null)=>{const label=b.cloneNode(true);label.querySelectorAll('.gi,kbd,.tactic-wait,.tactic-meter').forEach(n=>n.remove());const reason=b.title||label.textContent.trim();label.querySelectorAll('small').forEach(n=>n.remove());return `<button${tacticFaceCopy(b)} data-act="${esc(b.dataset.menu??'tactic')}"${b.dataset.tactic?` data-tactic="${esc(b.dataset.tactic)}"`:''}${b.disabled?' disabled':''}${d.bandSelected===(b.dataset.tactic??b.dataset.menu)?' aria-pressed="true"':''} title="${esc(reason)}">${esc(display??label.textContent.trim())}${b.dataset.tactic?tacticFaceMarkup(Number(b.dataset.cooldown??0),b.dataset.gauge===undefined?null:Number(b.dataset.gauge)):''}</button>`;};
   const all=[...menu.querySelectorAll('.dk-acts button')],more=['face','garrison','wait','hub','officer','recall','star','cancel-order'];
   const fallback=(action,label,reason)=>{if(all.some(b=>b.dataset.menu===action))return;const b=document.createElement('button');b.dataset.menu=action;b.disabled=true;b.title=reason;b.textContent=label;all.push(b);};
   fallback('move','이동',d.unitStatus?.actions?.reason||'이번 차례 이동을 쓸 수 없습니다');
@@ -671,3 +671,7 @@ export function overlapSelection(units, tileId, point, rectangles, previous=null
   const index=same?(hits.indexOf(previous.id)+1)%hits.length:0;
   return {id:hits[index]??null,key,x:point.x,y:point.y,index,count:hits.length};
 }
+
+// C159: face adornments survive the hidden menu -> ink HUD bridge.
+export function tacticFaceMarkup(cooldown=0,gauge=null){return `${cooldown>0?`<span class="tactic-wait" aria-label="${cooldown}차례 대기">${cooldown}</span>`:''}${gauge===null?'':`<span class="tactic-meter" style="--tactic-gauge:${gauge}%" aria-label="고유 전법 게이지 ${gauge}/100"><i></i><em>${Math.round(gauge)}</em></span>`}`;}
+function tacticFaceCopy(b){return b.dataset.tactic?` data-cooldown="${b.dataset.cooldown??0}"${b.dataset.gauge===undefined?'':` data-gauge="${b.dataset.gauge}"`} class="tactic-face${b.dataset.cooldown>0||b.dataset.gauge!==undefined&&b.dataset.gauge<100?' cooling':''}"`:'';}

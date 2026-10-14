@@ -227,7 +227,7 @@ export function renderWorldMap(model, opts = {}) {
     svg += `</g>`;
     // 이름판(가장 위 층): 세력 마름모 + 이름 + 내구
     const c = C(city.center), name = esc(city.name), w = kit?.cityPlate ? Math.max(50, String(city.name ?? '').length * 17 + 26) : Math.max(76, String(city.name ?? '').length * 17 + 46), def = city.defenseMax ? Math.max(0, Math.min(1, (city.defense ?? 0) / city.defenseMax)) : null;
-    const b = opts.cityBadges?.[city.id], badge = b ? (() => { const t = b.idle ? '생산 선택' : `${b.name} · ${b.turns}차례`; const bw = t.length * 10 + 20; return `<g class="prod${b.idle ? ' idle' : ''}" data-city="${esc(city.id)}" data-prod-city="${esc(city.id)}" transform="translate(0 ${city.defenseMax ? 45 : 25})"><rect x="${f(-bw / 2)}" y="-9" width="${f(bw)}" height="18"/><text y="4">${esc(t)}</text></g>`; })() : '';
+    const b = opts.cityBadges?.[city.id], badge = b ? (() => { const t = b.idle ? '생산 선택' : b.kind==='muster'?`출진 ${b.turns??'—'}`:`${b.name} · ${b.turns??'—'}차례`; const bw = t.length * 10 + 20; return `<g class="prod${b.idle ? ' idle' : ''}${b.kind==='muster'?' muster':''}" data-city="${esc(city.id)}" data-prod-city="${esc(city.id)}" transform="translate(0 ${city.defenseMax ? 45 : 25})"><rect x="${f(-bw / 2)}" y="-9" width="${f(bw)}" height="18"/>${b.kind==='muster'?`<path class="muster-flag" d="M${f(-bw/2-7)} 12V-15l13 4-13 4"/>`:""}<text y="4">${esc(t)}</text></g>`; })() : '';
     // 성 기본 정보 줄(사용자 2026-10-11 "성에 총 병력수·내구도 등 기본 정보 — 코삼·문명처럼"): 병력(내 성 = 성 안 예비병, 남의 성 = 모름 '?') · 내구
     const iw = Math.max(w + 14, 78), infoY = def !== null ? 19 : 15;
     const info = city.defenseMax || Number.isFinite(city.troops) ? `<g class="cinfo" transform="translate(0 ${infoY})"><rect class="ci-bg" x="${f(-iw / 2)}" y="0" width="${f(iw)}" height="13.5" rx="1.5"/>`
@@ -289,20 +289,31 @@ export function renderWorldMap(model, opts = {}) {
     const cls = `w-unit${u.active ? ' active' : ''}${u.moved ? ' moved' : ''}${u.ready ? ' ready' : ''}${u.enemy ? ' enemy' : ''}${lost ? ' hit' : ''}${u.crisis ? ' crisis' : ''}${u.bond ? ' bonded' : ''}`;
     svg += `<g class="${cls}" data-unit="${esc(u.id)}"${opts.troopFormations?' data-troop-anchor="1"':''} data-x="${f(x)}" data-y="${f(y)}" transform="translate(${f(x)} ${f(y)})" style="--fc:${fs.color}">
       <ellipse class="shadow" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.72)}" ry="${f(size * 0.25)}"/>
+      ${!u.enemy?`<ellipse class="ink-pick-ring" cx="0" cy="10" rx="25" ry="10"/>`:""}
       ${u.active ? `<ellipse class="bi" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}"/><ellipse class="bi-in" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.64)}" ry="${f(size * 0.22)}"/>` : !u.enemy && u.moved ? `<ellipse class="bi done" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}" pathLength="100"/>` : ''}
       ${u.crisis ? `<ellipse class="crisis-ring" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.9)}" ry="${f(size * 0.34)}"/>` : ''}
       ${opts.troopFormations ? `<ellipse class="w-troops-hit" cx="0" cy="10" rx="22" ry="12"/>` : sq ? `<image class="squad big" href="${esc(sq.src)}" x="${f(-sqW / 2)}" y="${f(size * 0.62 - sqH)}" width="${f(sqW)}" height="${f(sqH)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : art ? `<image class="squad" href="${esc(art)}" x="${f(-size * 1.15)}" y="${f(-size * 1.55)}" width="${f(size * 2.3)}" height="${f(size * 2.3)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : ''}
       ${label?`<path class="w-label-tether" d="M0 0L${f(label.dx)} ${f(label.dy+30*label.scale)}" fill="none" stroke="${fs.color}" stroke-width="1.5" pointer-events="none"/>`:""}<g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="${label?`translate(${f(label.dx)} ${f(label.dy)}) scale(${label.scale})`:`translate(${inCity ? f(size * 1.3) : 0} ${f(inCity ? -size * 0.4 : -size * (sq ? 2.2 : art ? 1.55 : 1.05))})`}">
         <path class="pole" d="M0 14V${f(inCity ? size * 0.7 : size * (sq ? 1.15 : 1))}"/>
         ${/^F\d\d$/.test(u.factionId ?? '') ? `<g class="banner" transform="translate(-1 21)"><path class="cloth" d="M0 0H-17V22L-12.5 18L-8.5 22L-4.5 18L0 22Z"/><image href="/assets/ui-v3/emblems/${esc(u.factionId)}.png" x="-15" y="1" width="13" height="13"/></g>` : ''}
-        ${u.active?'<g class="w-selected"><rect x="15" y="-24" width="28" height="14" rx="2"/><text x="29" y="-14">선택</text></g>':''}<g class="std" transform="scale(.82)"><g class="count k" transform="translate(0 27)"><path class="kplate" d="M-31 0L-25 -11.5H25L31 0L25 11.5H-25Z"/><text y="3.4">${Number(u.count ?? 0).toLocaleString('ko-KR')}</text><rect class="bar-bg" x="-20" y="5.8" width="40" height="2.6"/><rect class="bar" x="-20" y="5.8" width="${f(40 * ratio)}" height="2.6"/></g>${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}<path class="frame" d="M-16 -19H16V10L0 19.5L-16 10Z"/>
+        ${u.tacticReady?`<g class="w-tactic-ready${u.tacticNew?' fresh':''}" transform="translate(29 5)"><rect x="-7" y="-8" width="16" height="17"/><text x="1" y="5">전</text></g>`:''}${u.active?'<g class="w-selected"><rect x="15" y="-24" width="28" height="14" rx="2"/><text x="29" y="-14">선택</text></g>':''}<g class="std" transform="scale(.82)"><g class="count k" transform="translate(0 27)"><path class="kplate" d="M-31 0L-25 -11.5H25L31 0L25 11.5H-25Z"/><text y="3.4">${Number(u.count ?? 0).toLocaleString('ko-KR')}</text><rect class="bar-bg" x="-20" y="5.8" width="40" height="2.6"/><rect class="bar" x="-20" y="5.8" width="${f(40 * ratio)}" height="2.6"/></g>${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}<path class="frame" d="M-16 -19H16V10L0 19.5L-16 10Z"/>
         ${u.portrait ? faceImage(u.portrait, 'w-face-shield') : `<text class="initial" y="7">${esc(String(u.name ?? '').slice(0, 1))}</text>`}
         <g class="troop" transform="translate(-19 -19)"><rect x="-7" y="-7" width="14" height="14" transform="rotate(45)"/><text y="4">${TROOP_GLYPH[troopKey(u)] ?? '兵'}</text></g>
         ${badges.map((b, i) => `<g class="badge" transform="translate(22 ${-13 + i * 15})"><rect x="-7" y="-7" width="14" height="14"/><text y="4">${b}</text></g>`).join('')}
         </g><text class="uname" y="-23">${esc(u.name)}</text>
       </g>
-      ${lost ? `<text class="dmg" y="${f(-size * 2.6)}">${u.lossLabel ? esc(u.lossLabel) + ' ' : ''}−${lost.toLocaleString('ko-KR')}</text>` : ''}
+      ${lost ? `<text class="dmg ink-damage${u.heavyLoss?' heavy':''}" style="--damage-size:${Math.min(34,19+lost/60)}px" y="${f(-size * 2.6)}">${u.lossLabel ? esc(u.lossLabel) + ' ' : ''}−${lost.toLocaleString('ko-KR')}</text>` : ''}
     </g>`;
+  }
+  // C159: existing bitmap effects on public map tiles; decorations never intercept clicks.
+  for(const fx of model.fx??[]){if(!fx.to)continue;const a=C(fx.from??fx.to),z=C(fx.to),delay=Math.max(0,fx.elapsed??0),duration=fx.duration??1100;
+   if(delay>=duration)continue;
+   const arrow=fx.kind==='volley',tactic=fx.kind==='tactic',x=arrow?(a.x+z.x)/2:z.x,y=arrow?(a.y+z.y)/2:z.y+8,angle=Math.atan2(z.y-a.y,z.x-a.x)*180/Math.PI;
+   svg+=`<g class="w-map-fx ${esc(fx.kind)}" style="animation-duration:${duration}ms;animation-delay:-${delay}ms" transform="translate(${f(x)} ${f(y)})">`;
+   if(tactic)svg+=`<ellipse class="tactic-ring" rx="29" ry="15"/><ellipse class="tactic-ring inner" rx="22" ry="10"/>`;
+   else svg+=`<image href="/assets/ui-v3/units-ink/fx-${arrow?'arrow':'clash'}.png" x="${arrow?-28:-25}" y="${arrow?-4:-25}" width="${arrow?56:50}" height="${arrow?8:50}"${arrow?` transform="rotate(${f(angle)})"`:''}/>`;
+   if(fx.label)svg+=`<text class="effect-label" y="-28">${esc(fx.label)}</text>`;
+   svg+='</g>';
   }
   return svg + '</svg>';
 }

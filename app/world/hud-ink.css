@@ -3086,3 +3086,15 @@ body.hud-band:has(.nb-supply:not([hidden])) .nb-advisor-box>div{padding-top:calc
 /* C155: canvas is decorative; only the bounded footprint selects a unit. */
 .w-troops-canvas{position:fixed;display:block;pointer-events:none!important;contain:strict;z-index:3}
 .wmap .w-troops-hit{fill:transparent;stroke:none;pointer-events:all}
+/* C159: tactic faces in the command band and legacy ink buttons. */
+.tactic-face{position:relative!important;isolation:isolate}
+.tactic-face.cooling::before{content:'';position:absolute;inset:0;background:#18151180;z-index:1;pointer-events:none}
+.tactic-wait{position:absolute;right:7px;top:3px;z-index:2;font:700 26px/1 var(--title);color:#f1debc;text-shadow:1px 2px #181310;pointer-events:none}
+.tactic-meter{position:absolute;left:7%;right:7%;bottom:2px;height:3px;background:#16130e;z-index:2;pointer-events:none}
+.tactic-meter i{display:block;height:100%;width:var(--tactic-gauge);background:#b04c39}
+.tactic-meter em{position:absolute;right:0;bottom:3px;font:11px var(--serif);font-style:normal;color:#e4cda5}
+.tactic-ready-flash::after{content:'';position:absolute;inset:-4px;background:url(/assets/ui-v3/hud/kit/hero-brush.png) center/contain no-repeat;mix-blend-mode:screen;pointer-events:none;animation:tactic-ready-sweep .6s ease-out both;z-index:3}
+@keyframes tactic-ready-sweep{0%{opacity:0;clip-path:inset(0 100% 0 0)}40%{opacity:.75;clip-path:inset(0)}100%{opacity:0;clip-path:inset(0)}}
+@media(prefers-reduced-motion:reduce){.tactic-ready-flash::after{display:none}}
+/* C159: supply route hints occupy the lower map, below its title and description. */
+body.hud-band:has(.nb-supply:not([hidden])) #attack-preview:not(.forecast){top:auto!important;bottom:18vh;left:35vw!important;max-width:30vw;white-space:normal;pointer-events:none;background:url(/assets/ui-v3/hud/kit/status-line.png) center/100% 100% no-repeat;padding:12px 20px;border:0;color:#eee4ce}
