@@ -5741,6 +5741,83 @@
       "sha256": "0192907646bf2e99b8dd14f92a5ff7dd06d16f631021ad0239429a54f18c3d6f",
       "sourceSheet": "prototype/assets/ui-v3/map/v11-world.webp",
       "prompt": "성마다 768px 지도 조각 + 분홍 자리 안내도 + 본보기를 GPT 에 주어 '같은 조각에 성을 지도의 일부로' 그리게 함(tools/design/map-city-boxes.mjs · bake-inputs.py) → tools/design/paste-edit.py 로 특징점 맞춤 뒤 타원 안만 섞어 붙임(맞춤점 850~1140, 이동 0.6px 이하)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/band-left.png",
+      "purpose": "지도 화면 아래 군령 띠 — 왼쪽 끝(끈 매듭 + 주사색 붓 자국, 장수 반신이 서는 자리). 늘리지 않는다",
+      "size": [
+        363,
+        157
+      ],
+      "sha256": "3c66afb3429dd4d1afe7e6fa6e0352f0f57e2b216a297704df7cea2401455fa4",
+      "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-strip-1.jpg",
+      "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/band-mid.png",
+      "purpose": "군령 띠 — 가운데(먹색 면 + 끈 두 줄, 무늬 없음). 화면 폭에 맞춰 가로로 늘린다",
+      "size": [
+        240,
+        157
+      ],
+      "sha256": "b5184a5bd44ef839633d1f96021474d56383859309ccfa7b46dabef07ef76cbb",
+      "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-strip-1.jpg",
+      "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/band-right.png",
+      "purpose": "군령 띠 — 오른쪽 끝(끈 매듭). 늘리지 않는다",
+      "size": [
+        129,
+        157
+      ],
+      "sha256": "f317acf372838221b66a365a9353592aedee26dbded9ec34413e92f95128ab63",
+      "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-strip-1.jpg",
+      "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/band-slip-l.png",
+      "purpose": "군령 단추(죽간 한 쪽) — 왼쪽 끝(끈 감긴 자리)",
+      "size": [
+        122,
+        205
+      ],
+      "sha256": "fd7027bbadc53c6629b5b176e220c61a13ce4013edaa602341e8a37d92228a26",
+      "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-slip-1.jpg",
+      "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/band-slip-m.png",
+      "purpose": "군령 단추 — 가운데(글자 자리, 늘려 쓴다)",
+      "size": [
+        120,
+        205
+      ],
+      "sha256": "d9a3089daeced4d58a4cbb108639ba7e35c113a3ba1ab242d8c23749a2fa3b39",
+      "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-slip-1.jpg",
+      "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/band-slip-r.png",
+      "purpose": "군령 단추 — 오른쪽 끝",
+      "size": [
+        122,
+        205
+      ],
+      "sha256": "842e30590715a1a64fbcb5be7fe6a12d546e0ba45db56a8a3fcadd9f1d24294a",
+      "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-slip-1.jpg",
+      "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/band-seal.png",
+      "purpose": "공격을 실행할 때 띠에 찍히는 인장 자국(令)",
+      "size": [
+        360,
+        356
+      ],
+      "sha256": "24f0a0147e1ff81bd9e1c3c1a16cc5a6383f7c954118dcd89325dcb70d6fea81",
+      "sourceSheet": "docs/work-integration/20261014/s1-band/art-src/band-seal-1.jpg",
+      "prompt": "GPT 방에 화풍 기준(지금 게임의 판 그림) · 자리 안내(코드 틀의 띠) · 본보기를 붙여 '같은 손 · 같은 붓으로' 새로 그리게 함 → tools/design/ui-cut.py 로 회색 바탕을 지우고 조각냄(가운데 조각은 무늬 없는 구간 — 가로로 늘려 써도 찌그러질 것이 없다)"
     }
   ],
   "sources": [

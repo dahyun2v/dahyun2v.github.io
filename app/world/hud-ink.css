@@ -2836,3 +2836,20 @@ body.hud-band [hidden]{display:none!important}
 @media(max-width:1250px){body.hud-band{--band-h:13.5dvh;--band-font:14px}body.hud-band .nb-identity>b,body.hud-band .nb-preview-values>b{font-size:20px}body.hud-band .nb-identity{gap:3px}body.hud-band .nb-order-row button{padding-inline:8px}body.hud-band .nb-ratings>span{min-width:34px;padding:2px 4px}body.hud-band .nb-status button{padding-inline:3px}body.hud-band .nb-preview-middle>b{font-size:16px}}
 @media(prefers-reduced-motion:reduce){body.hud-band .nb-wipe .nb-content{animation:none}}
 /* /C147 */
+/* 2026-10-14 군령 띠 판 그림 — 띠 · 죽간 단추 · 인장을 GPT 가 그린 그림으로(사용자 "굿 ㄱㄱㄱ" 뒤, 설계 s1-band/DESIGN.md 4절). 띠는 세 조각: 양 끝(매듭 · 붉은 붓 자국)은 높이에 맞춘 제 비율 그대로, 가운데(무늬 없는 면 + 끈 두 줄)만 폭에 맞춰 늘린다. Codex 는 이 묶음을 고치지 말 것 */
+body.hud-band .nb-band{--capL:calc(var(--band-h)*2.312);--capR:calc(var(--band-h)*.822);border:0;background:url(/assets/ui-v3/hud/band-left.png) left center/var(--capL) 100% no-repeat,url(/assets/ui-v3/hud/band-right.png) right center/var(--capR) 100% no-repeat,url(/assets/ui-v3/hud/band-mid.png) calc(var(--capL) - 1px) center/calc(100% - var(--capL) - var(--capR) + 2px) 100% no-repeat}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button,body.hud-band .nb-band .nb-next{--sc:calc(48px*.595);border:0;background:url(/assets/ui-v3/hud/band-slip-l.png) left center/var(--sc) 100% no-repeat,url(/assets/ui-v3/hud/band-slip-r.png) right center/var(--sc) 100% no-repeat,url(/assets/ui-v3/hud/band-slip-m.png) calc(var(--sc) - 1px) center/calc(100% - var(--sc)*2 + 2px) 100% no-repeat;padding:0 calc(var(--sc)*.82);min-width:84px}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button::before,body.hud-band .nb-band :is(.nb-order-row,.nb-more) button::after,body.hud-band .nb-band .nb-next::before,body.hud-band .nb-band .nb-next::after{display:none}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:hover:enabled,body.hud-band .nb-band .nb-next:hover:enabled{background-color:transparent;filter:brightness(1.22)}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:disabled{filter:grayscale(1) brightness(.72);opacity:.62}
+body.hud-band .nb-band :is(.nb-order-row,.nb-more) button:is([aria-pressed="true"],.on){filter:brightness(1.32)}
+/* 실행 = 인장: 공격 · 전법을 내리면 띠에 주사 인장이 찍힌다(world.js 의 bandStamp 가 .stamp 를 붙였다 뗀다). 움직임 줄이기 설정이면 없음 */
+body.hud-band .nb-band.stamp::after{content:'';position:absolute;right:17%;top:50%;width:calc(var(--band-h)*.92);aspect-ratio:360/356;background:url(/assets/ui-v3/hud/band-seal.png) center/contain no-repeat;pointer-events:none;transform:translateY(-50%) rotate(-7deg);animation:nb-stamp .62s cubic-bezier(.2,.9,.3,1) both;z-index:3}
+@keyframes nb-stamp{0%{opacity:0;transform:translateY(-50%) rotate(-7deg) scale(1.9)}22%{opacity:1;transform:translateY(-50%) rotate(-7deg) scale(.96)}34%{transform:translateY(-50%) rotate(-7deg) scale(1)}78%{opacity:1}100%{opacity:0;transform:translateY(-50%) rotate(-7deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){body.hud-band .nb-band.stamp::after{display:none}}
+/* 그림의 끈이 띠 안쪽 6~8px 를 지나간다 — 글과 단추가 끈에 걸리지 않게 안쪽으로. 오른쪽 끝 매듭(띠 높이의 약 0.33배 폭)은 가리지 않는다 */
+body.hud-band .nb-band .nb-content{padding-block:calc(var(--band-h)*.09) calc(var(--band-h)*.05);box-sizing:border-box}
+body.hud-band .nb-band :is(.ih-end,.nb-click){left:auto;right:calc(var(--band-h)*.5);width:12.5%}
+body.hud-band .nb-end-warning{left:auto;right:calc(var(--band-h)*.5);width:12.5%;text-align:right}
+@media(max-width:1250px){body.hud-band .nb-band .nb-identity{gap:1px}body.hud-band .nb-band .nb-identity>b{font-size:18px}body.hud-band .nb-band .nb-identity>span{font-size:13.5px;line-height:1.25}body.hud-band .nb-band .nb-ratings>span{padding:1px 6px}body.hud-band .nb-band .nb-ratings small{font-size:10.5px;line-height:1.1}body.hud-band .nb-band .nb-ratings b{font-size:15px;line-height:1.05}}
+/* /2026-10-14 군령 띠 판 그림 */

@@ -218,8 +218,11 @@ function commitFx(kind){
  else return;
  uiSfx.play(kind);host.hidden=false;host.classList?.remove('go');void host.offsetWidth;host.classList?.add('go');clearTimeout(commitFx.t);commitFx.t=setTimeout(()=>{host.hidden=true;host.innerHTML='';},kind==='tally'?900:800);
 }
+// 실행 = 인장: 공격 · 전법을 내리면 아래 군령 띠에 주사 인장이 찍힌다(모양은 hud-ink.css 의 .nb-band.stamp). 움직임 줄이기 설정이면 건너뛴다
+function bandStamp(){const b=globalThis.document?.querySelector?.('body.hud-band .nb-band');if(!b||globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches)return;b.classList.remove('stamp');void b.offsetWidth;b.classList.add('stamp');setTimeout(()=>b.classList.remove('stamp'),640);}
 function command(request,confirmed=false) {
  if(!confirmed&&!inputLocked()&&confirmRiskyAttack(request))return; // C137: before effects or engine step
+ if(['ATTACK_UNIT','ATTACK_CITY','USE_TACTIC'].includes(request?.type))bandStamp();
  setCommandIntent('');
  if(['ATTACK_UNIT','ATTACK_CITY','USE_TACTIC'].includes(request.type)&&!inputLocked())commitFx('tally');
  if(request.type==='END_TURN'&&!inputLocked())commitFx('seal');
