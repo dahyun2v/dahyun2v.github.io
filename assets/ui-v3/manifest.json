@@ -5942,124 +5942,124 @@
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-blue.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-blue.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-blue.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         192,
         128
       ],
-      "sha256": "d141d4d081a4d81282b421d1c9d325aecbd63487511cb97106857663a6885633",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "4611a4c1f7de70d996f906f35d359c9911a678932acd03c7a15129f13f4d5ca8",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-green.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-green.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-green.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         192,
         128
       ],
-      "sha256": "5e6453d71e7fd2952f927486ff5ca50af46691f9ab78d19cc9860a5ec2bf7a94",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "3652060e58966c46cd18cfb20ecdfa571770738787fd61e545552b1fac0bc5ca",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-grey.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-grey.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-grey.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         192,
         128
       ],
-      "sha256": "5c7d79f46bce2b0b7360b2f6c8b3bfdb4652d4babf79fceae7783e72fafc7cf0",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "3e15953d06f90927516bbe21bdf30603e6924c4dccf46297e4320225062cb821",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-foot-red.png",
-      "purpose": "지도 부대 병사 그림 - bearer-foot-red.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-foot-red.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         192,
         128
       ],
-      "sha256": "091c35610925a43015041aa8bec10cee2b6cdc7ccf10eac035e804b5f729c1ef",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "a64c10132d7c11c477e74ea4cba23c195d300c6b022303422041f2c3ecf2b8ae",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-blue.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-blue.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-blue.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         336,
         128
       ],
-      "sha256": "f4087ee2d565eaa9cb5ed4cd3a6c26b115df00c65867191ce1c7f26ec8d3515f",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "b72e0b82d4876c0c4fa59095efd2d5c1c94f91f1c2e9b40dd89aa8455f78861d",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-green.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-green.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-green.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         336,
         128
       ],
-      "sha256": "805fe753503345e8da69400cc1e37fec3a900de78ef4bbf2d8ed380295969d9f",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "22da49252cf400ddcf3037885eea81ed47fe42f17bcadcdbecca9cb927ba7ab7",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-grey.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-grey.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-grey.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         336,
         128
       ],
-      "sha256": "95c67726e8dce5796fac3b41257e7e855bb8e061587ec9a9ee00c6de07364a71",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "38a190fe3da42b714782917037f45514682824f96ec3c9dac18b0b8d4e4b812d",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/bearer-horse-red.png",
-      "purpose": "지도 부대 병사 그림 - bearer-horse-red.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - bearer-horse-red.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         336,
         128
       ],
-      "sha256": "2a7048be6245387bb39d9d13a5c9f1ec95e2915b1db08013b5105ffdaf2329b9",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "b8ac4de6837d52df4deef687012666365ce64bcf948f28f5343b8425d8cc3d82",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/fx-arrow.png",
-      "purpose": "지도 부대 병사 그림 - fx-arrow.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - fx-arrow.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         40,
         8
       ],
-      "sha256": "1bbc3515e4f950c2cc505966493dc62ea1e736fba085eee9b736fb49f42fb358",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "f29a159aef8325bdeec4c31d02d4848bd968ff9a9877b48b8342d8cd75d70832",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/fx-clash.png",
-      "purpose": "지도 부대 병사 그림 - fx-clash.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - fx-clash.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         96,
         96
       ],
-      "sha256": "14d9dd955f4c491cecd490c7020620c0acfb5e9462ba800d74948d054ce40393",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "17789d1e1414ea2e103abffdc3830fff58b797a960a4bc7f614a2017812353c0",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/fx-dust.png",
-      "purpose": "지도 부대 병사 그림 - fx-dust.png (R2 레퍼런스판)",
+      "purpose": "지도 부대 병사 그림 - fx-dust.png (R3, 관우 기병 돌격 시안대로)",
       "size": [
         96,
         40
       ],
-      "sha256": "e5bd460435fccbce912070a8cdbb75f9e184658f7835c2dbe8318508ae0a6fa1",
-      "sourceSheet": "docs/work-integration/20261014/troop-refs/crops/ref-khorgos-charge.png",
-      "prompt": "닷토리 R2(2026-10-14 troops-r2.zip): 건륭 전쟁 동판화 레퍼런스대로 밝은 종이색 몸 + 가는 먹선(창병 R2 와 같은 배율), 깃발병은 깃발 천만 색이 다름"
+      "sha256": "600db6c758913ff54fcf94f8933e1833a3aaadefaea4ad7e2aec732ad9fada05",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     },
     {
       "path": "prototype/assets/ui-v3/units-ink/sheet-bow.png",
@@ -6511,6 +6511,182 @@
       "sha256": "c6e563a6af2dd00243249b297e39f04b814d208b845e4fd6907af70cd6f7f04d",
       "sourceSheet": "docs/work-integration/20261014/dots-order/pack/refs/crops/topbar-right.png",
       "prompt": "닷토리 C1(2026-10-14 map-hud-C1.zip, ~/Downloads): 시안에서 요소마다 자른 기준 조각과 같은 크기 · 꼴의 빈 판, 회색 바탕을 tools/design/kit-cut.py 로 지움(크기 그대로)"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-spear-red.png",
+      "purpose": "지도 부대 병사 그림 - 붉은 창병(R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "fecc7a1c829dbec929c8c0866b3d2373612fe8c1fba5751550f538807f31750b",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3-test.zip): 진한 먹선 · 어두운 갑옷 · 세력색 옷, 9칸"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-bow-blue.png",
+      "purpose": "지도 부대 병사 그림 - sheet-bow-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "0fcc7b31defc7d2ac820eb4521222c6dbdd6560a42d5169269c5db10a2f70f16",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-bow-green.png",
+      "purpose": "지도 부대 병사 그림 - sheet-bow-green.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "d09f7fcd1517ec218b153f811570206e29a632a80b2fdb2b6bbe0928bcf6a829",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-bow-grey.png",
+      "purpose": "지도 부대 병사 그림 - sheet-bow-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "9c81b161c7d3d49f54690649838a7afe243fadc9ab8bd14a36209b08b80f2da2",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-bow-red.png",
+      "purpose": "지도 부대 병사 그림 - sheet-bow-red.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "3de59fb2bc2c1567af1681018a5c21ec1dc5b3effd888aac4f342892dc74934b",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-blue.png",
+      "purpose": "지도 부대 병사 그림 - sheet-cavalry-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        1008,
+        96
+      ],
+      "sha256": "2af3a0260ba68e604e1f4138bd14551f709bd403311e919a4a409e27f8d7780e",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-green.png",
+      "purpose": "지도 부대 병사 그림 - sheet-cavalry-green.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        1008,
+        96
+      ],
+      "sha256": "2082176a7ed740b8f9396a6b748f9ebff95c27cc3107d5138e0bce2e8a0287f5",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-grey.png",
+      "purpose": "지도 부대 병사 그림 - sheet-cavalry-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        1008,
+        96
+      ],
+      "sha256": "e51be24277b31435fbfa61398d584f9234b58d03a8d639a64f58a4d00663e806",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-cavalry-red.png",
+      "purpose": "지도 부대 병사 그림 - sheet-cavalry-red.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        1008,
+        96
+      ],
+      "sha256": "349a835e77f0950c99dfc358c82d994a1b4c2cf30eeab51b8aac6b452681ecfc",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-militia-blue.png",
+      "purpose": "지도 부대 병사 그림 - sheet-militia-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "e21df99be51d62d16e90c99b12709f06e90bf615be3adf5b43bf9e3f683f6994",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-militia-green.png",
+      "purpose": "지도 부대 병사 그림 - sheet-militia-green.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "b52f1ba61768d5319b23a4751954fd4a86e095b826e3bec2db07f59643563684",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-militia-grey.png",
+      "purpose": "지도 부대 병사 그림 - sheet-militia-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "4b390870961b0e95886c7862c6b273aa817ab3eb6bb7fc14b4380c3d75f7d558",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-militia-red.png",
+      "purpose": "지도 부대 병사 그림 - sheet-militia-red.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "30b8f8f3bcaca4ad2090c6602c038d26930b708e920176f3eaaa55daa33de0d2",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-spear-blue.png",
+      "purpose": "지도 부대 병사 그림 - sheet-spear-blue.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "35b5857b7062c9104e878170d1f3263ea6c83f23e0cd225e72d9168407b5802c",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-spear-green.png",
+      "purpose": "지도 부대 병사 그림 - sheet-spear-green.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "deb6aac1ed3db7833534e5e2f76d4939dedfdec20687f210609e17bc5b7a6229",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-spear-grey.png",
+      "purpose": "지도 부대 병사 그림 - sheet-spear-grey.png (R3, 관우 기병 돌격 시안대로)",
+      "size": [
+        576,
+        96
+      ],
+      "sha256": "2ef7284d24adf71bd10396b1883aa8265962c44fbb9e3adc12c7fa07dabe6912",
+      "sourceSheet": "docs/work-integration/20261009/art-direction/final-battle.jpg",
+      "prompt": "닷토리 R3(2026-10-14 troops-r3.zip · troops-r3-test.zip): 진한 먹선 · 어두운 갑옷과 말 · 옷만 세력색(같은 병종은 옷 색 말고 같은 화소), 깃발병은 큰 깃발 천이 세력색"
     }
   ],
   "sources": [
