@@ -31,6 +31,30 @@ import {recordCareer} from './campaign-career.mjs';
 import {uniqueEnabled,uniqueOwned,uniqueAttackOptions,uniqueFollowupRows,uniqueAfterAttack,uniqueAfterTactic,uniqueCancelTactic,uniqueChainRows,uniqueSiegeFactor,uniqueStart,uniqueScheduleRevival,uniqueDamageLimit,uniqueOrdinaryDamageFactor,uniqueDefenseExtra,uniqueGovernor,uniqueHoldLand,uniqueSpreadTactic,uniqueImmune} from './campaign-rule-registry.mjs';
 import {healCampaignTroops} from './campaign-effects.mjs';
 import {creditCampaignCombat,recordCampaignCombatCareer} from './campaign-growth.mjs';
+import {campaignMovementWorld} from './campaign-city-footprint.mjs';
+import {edgeTicks} from './movement.mjs';
+import {movementEffect,officerEffectCards} from './campaign-effects.mjs';
+
+/** C147: deterministic, own-unit-only comparison; no live opponents or RNG. */
+export function campaignUnitRatings(state, armyId) {
+ const source=state.armies[armyId];
+ if(!source||source.factionId!==state.playerFactionId)return null;
+ const own=structuredClone(source),officer=structuredClone(state.officers[own.commanderId]);
+ const growth=structuredClone(state.campaignGrowth?.officers[own.commanderId]);
+ const foe='C147-STANDARD',other='C147-OTHER',neutral='C147-NEUTRAL';
+ const standard={...structuredClone(own),armyId:foe,commanderId:neutral,factionId:other,troopType:'militia',troopCount:250,maxTroopCount:250,tileId:'1,0',morale:'STEADY',formation:'ORDERED',braced:false,movedTiles:0,effectStates:[],uniqueTrait:{}};
+ for(const k of Object.keys(standard))if(/^c\d|^effect|^class/.test(k))delete standard[k];
+ standard.effectStates=[];
+ const neutralOfficer={...structuredClone(officer),officerId:neutral,name:'표준 부대',baseStats:Object.fromEntries(Object.keys(officer.baseStats).map(k=>[k,70])),subStats:Object.fromEntries(Object.keys(officer.subStats).map(k=>[k,70])),activeTraits:[],acquiredTraits:[],tactics:[],uniqueTrait:{},c34Abilities:undefined};
+ own.tileId='0,0';own.facing=0;own.movedTiles=0;standard.facing=3;
+ const s={...state,armies:{[armyId]:own,[foe]:standard},officers:{[own.commanderId]:officer,[neutral]:neutralOfficer},cities:{},tiles:{'0,0':{tileId:'0,0',q:0,r:0,terrainType:'plain'},'1,0':{tileId:'1,0',q:1,r:0,terrainType:'plain'}},mapRules:{...state.mapRules,roads:[],riverEdges:[],blockedEdges:[],crossings:{}},campaignGrowth:{...state.campaignGrowth,officers:{...(growth?{[own.commanderId]:growth}:{})}},campaignTerminalWorld:null};
+ const options={forceSide:'FRONT'},out=attackFormula(s,armyId,foe,undefined,options),incoming=attackFormula(s,foe,armyId,250,options);
+ const baseline={...s,armies:{[armyId]:{...structuredClone(standard),armyId,commanderId:neutral,factionId:own.factionId,tileId:'0,0'},[foe]:standard}};
+ const standardLoss=attackFormula(baseline,foe,armyId,250,options).damage;
+ const moveState={...s,armies:{[armyId]:own}},move=movementEffect(moveState,armyId),world=campaignMovementWorld(moveState,armyId),cost=edgeTicks(world,world.armies[armyId],'0,0','1,0');
+ const mobility=move.rooted?0:Math.max(0,Math.min(move.max,Math.floor(state.time.ticksPerTurn/(cost??Infinity))));
+ return {attack:out.damage,defense:Math.round(standardLoss/incoming.damage*100),mobility,notes:[`표준: 병력 250 · 능력 70 · 정돈 근접보병 · 평지 정면 / 방어 100 = 표준`, `공격 상성 ×${out.multipliers.matchup} · 적성 ${out.multipliers.aptitude}% · 기동 평지 ${mobility}칸`,[...officerEffectCards(s,own.commanderId).map(c=>c.name).slice(0,2),...out.effectLines,...incoming.effectLines].filter((x,i,a)=>a.indexOf(x)===i).join(' · ')||'추가 특기 보정 없음']};
+}
 
 export const attackRange = (army,s=null) => ( troopToCampaign(army.troopType)==='BT03'||s&&specialTroop(s,army.troopType)&&army.troopType==='jiefan'||s&&hasCampaignRule(s,army.armyId,'REACH_2')?2:1)+(s?c33Range(s,army.armyId)+c34Range(s,army.armyId):0);
 // v3.6 default; v35 and p1/p2/p3 remain selectable comparison trials.

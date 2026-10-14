@@ -348,6 +348,7 @@ export function mountInkHud(root, opts = {}) {
     <nav class="ih-cmd" hidden><img class="bar" src="${H}battle-cmd.png" alt=""><span class="tac"></span><button class="atk" data-act="attack" title="공격할 적을 고릅니다">${icon('cmd-attack', '공격')}<b>공격</b></button></nav>
     <button class="ih-end" data-fwd="#end-turn" title="다음 차례 (Enter)"><img src="${H}endturn.png" alt=""><b class="ih-end-name">다음 차례</b><small></small></button>
   </div>`;
+  mountCommandBand(root);
   // 지도 눕혀 보기(기준 final-map-v2 의 비스듬한 시점): 기본으로 켠다. 끌기·확대 프레임을 재 보니 눕히지 않은 것과 같았다(tools/smoke/ink-perf.mjs). ?tilt=0 이면 끈다
   try { if (new URLSearchParams(location.search).get('tilt') !== '0') document.body.classList.add('tilt'); } catch { /* 주소를 못 읽으면 그대로 */ }
   // 적 장수 판: world.js 가 공격 예상을 띄울 때 'ink:foe' 로 알려 준다. 예상 창(#attack-preview)이 닫히면 같이 닫는다
@@ -467,6 +468,84 @@ export function renderInkHud(root, d) {
   q('.ih-end').classList.toggle('ready', !!end?.classList.contains('ready'));
   const goal=old('#victory-guide');q('.ih-victory').textContent=goal?.textContent??'';q('.ih-victory').title=goal?.title??'';
   q('.ih-end small').textContent = old('#remaining')?.textContent ?? '';
+  renderCommandBand(root,d,showUnit,menu);
+}
+
+// C147: the band forwards every order to the existing unit menu.
+function mountCommandBand(root){
+ document.body.classList.add('hud-band');
+ root.querySelector('.ih').insertAdjacentHTML('beforeend',`<nav class="nb-bookmarks" aria-label="갈피"><button data-band-map aria-expanded="false">지도 보기 ▸ <span>지형</span></button><div class="nb-map-options" hidden>${RAIL.map(([m,label])=>`<button data-mode="${m}">${label}</button>`).join('')}</div><button data-fwd="#roster-open">장수</button><button data-open="council">평정 <b class="nb-badge"></b></button></nav><button class="nb-news-tab" data-band-news aria-expanded="false">소식 0</button><p class="nb-news-peek" hidden></p><section class="nb-sheet" hidden aria-label="부대 상세 설명"><button data-band-info aria-label="설명 닫기">닫기</button><div></div></section><section class="nb-band" data-state="rest" aria-label="군령 띠"><div class="nb-content"></div></section>`);
+ root.querySelector('.nb-band').append(root.querySelector('.ih-end'));
+ root.querySelector('.nb-band').insertAdjacentHTML('beforeend','<p class="nb-end-warning"></p>');
+ const toggle=(selector,button)=>{const panel=root.querySelector(selector);panel.hidden=!panel.hidden;button?.setAttribute('aria-expanded',String(!panel.hidden));document.dispatchEvent(new CustomEvent('ink:uncover'));};
+ root.addEventListener('click',e=>{
+  if(e.target.closest('[data-band-info]'))toggle('.nb-sheet',e.target.closest('[data-band-info]'));
+  if(e.target.closest('[data-band-more]'))toggle('.nb-more',e.target.closest('[data-band-more]'));
+  if(e.target.closest('[data-band-map]'))toggle('.nb-map-options',e.target.closest('[data-band-map]'));
+  if(e.target.closest('[data-band-next]'))document.dispatchEvent(new CustomEvent('ink:next-unit'));
+  if(e.target.closest('[data-band-news]')){const open=root.classList.toggle('nb-news-open');root.querySelector('.nb-news-tab').setAttribute('aria-expanded',String(open));document.dispatchEvent(new CustomEvent('ink:uncover'));}
+  if(e.target.closest('.nb-map-options [data-mode]')){root.querySelector('.nb-map-options').hidden=true;root.querySelector('[data-band-map]').setAttribute('aria-expanded','false');}
+ });
+ const help=e=>{const b=e.target.closest?.('.nb-orders [data-act]');if(b){const line=root.querySelector('.nb-help');if(line)line.textContent=b.disabled?b.title:ACTION_MEANING[b.dataset.act]??b.title;}};
+ root.addEventListener('pointerover',help);root.addEventListener('focusin',help);
+ document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const open=['.nb-sheet','.nb-more','.nb-map-options'].map(s=>root.querySelector(s)).filter(n=>n&&!n.hidden);if(open.length||root.classList.contains('nb-news-open')){open.forEach(n=>n.hidden=true);root.classList.remove('nb-news-open');root.querySelectorAll('[aria-expanded="true"]').forEach(n=>n.setAttribute('aria-expanded','false'));e.preventDefault();e.stopImmediatePropagation();}},true);
+ document.addEventListener('ink:forecast',e=>{
+  const band=root.querySelector('.nb-band'),content=root.querySelector('.nb-content');
+  if(e.detail){setBandState(band,'forecast');content.innerHTML=bandForecastHtml(e.detail.html);
+   root.querySelector('.nb-sheet').hidden=true;}
+  else if(band.dataset.state==='forecast'){content.innerHTML=band._unitHtml??'';fitBandOrders(content);setBandState(band,band._unitState??'rest');}
+ });
+}
+// Rearrange the existing public preview; combat values and shown enemy counts stay in world.js.
+function bandForecastHtml(html){
+ const source=document.createElement('div');source.innerHTML=html;
+ const text=s=>source.querySelector(s)?.textContent.trim()??'',picture=s=>source.querySelector(s)?.getAttribute('src')??'';
+ const city=!!source.querySelector('.fc-dur'),range=s=>text(s).match(/(\d[\d,]*)\s*→\s*(\d[\d,]*)/);
+ const side=(cls,name,face,pair,loss,label='병력')=>`<section class="nb-preview-${cls}"><span class="nb-preview-portrait ${cls}">${face?`<img src="${esc(face)}" alt="${esc(name)}">`:'<span class="nb-city-mark" aria-label="성">城</span>'}</span><div class="nb-preview-values"><b>${esc(name)}</b><p class="nb-preview-count"><small>${label}</small> ${esc(pair?.[1]??'—')} <span>→</span> ${esc(pair?.[2]??'—')}</p><p class="nb-preview-loss">${city&&cls==='enemy'?'피해':'예상 손실'} ${esc(loss)}</p></div></section>`;
+ const ownPair=range(city?'.nb-city-ally small':'.fc-col.ally small'),foePair=range(city?'.fc-dur':'.fc-col.enemy small');
+ const ownLoss=city?'0':text('.fc-col.ally small span').replace(/^−/,''),foeLoss=city?([...source.querySelectorAll('.fc-sum')].map(n=>n.textContent).join(' ').match(/내구\s*−(\d+)/)?.[1]??'—'):text('.fc-col.enemy small span').replace(/^−/,'');
+ const title=text('.fc-title'),parts=title.split(' · '),kind=city?(parts.slice(0,-1).join(' · ')||'성벽 공격'):(text('.fc-dir')||title||'정면 공격'),enemyName=city?(parts.at(-1)||title):text('.fc-col.enemy b');
+ const mods=[...source.querySelectorAll('.fc-mods li')].map(n=>n.textContent.trim()).sort((a,b)=>Number(/측면|후방|돌격|상성|적성/.test(b))-Number(/측면|후방|돌격|상성|적성/.test(a)));
+ const risks=[...source.querySelectorAll('.fc-risk')].map(n=>n.textContent.trim());
+ return `<div class="nb-forecast" title="${esc([...mods,...risks].join('\n'))}">${side('ally',text(city?'.nb-city-ally b':'.fc-col.ally b'),picture(city?'.nb-city-ally img':'.fc-col.ally img'),ownPair,ownLoss)}<section class="nb-preview-middle"><b>⚔ ${esc(kind)}</b><span>${esc([text('.fc-res'),text('.fc-tag')].filter(Boolean).join(' · '))}</span>${mods.slice(0,2).map(m=>`<small>${esc(m)}</small>`).join('')}${risks.length?`<small class="nb-preview-risk" title="${esc(risks.join('\n'))}">${esc(risks[0])}</small>`:''}</section>${side('enemy',enemyName,city?'':picture('.fc-col.enemy img'),foePair,foeLoss,city?'내구':'병력')}<b class="nb-click">누르면 공격</b></div>`;
+}
+function setBandState(band,state){if(band.dataset.state===state)return;band.dataset.state=state;band.classList.remove('nb-wipe');void band.offsetWidth;band.classList.add('nb-wipe');}
+function fitBandOrders(content){
+ const row=content.querySelector('.nb-order-row'),more=content.querySelector('.nb-more');if(!row||!more)return;
+ // Keep full labels and 72px minimum buttons. Extra long orders remain reachable in More.
+ while(row.scrollWidth>row.clientWidth+1&&row.querySelectorAll('[data-act]').length>2)more.prepend(row.querySelector('[data-band-more]').previousElementSibling);
+}
+function renderCommandBand(root,d,showUnit,menu){
+ const q=s=>root.querySelector(s),band=q('.nb-band'),content=q('.nb-content');if(!band)return;
+ const goal=document.querySelector('#victory-guide'),dots=Number(goal?.textContent.match(/내 큰 성 (\d)/)?.[1]??0),left=goal?.textContent.match(/\d+차례 남음/)?.[0]??'';
+ q('.ih-medal').title=[goal?.textContent,goal?.title].filter(Boolean).join('\n');
+ let progress=q('.nb-goal');if(!progress){q('.ih-medal').insertAdjacentHTML('beforeend','<div class="nb-goal"></div>');progress=q('.nb-goal');}progress.innerHTML=`<span aria-label="내 큰 성 ${dots}/3">${[0,1,2].map(i=>`<i class="${i<dots?'filled':''}"></i>`).join('')}</span><small>${esc(left)}</small>`;
+ q('.nb-bookmarks [data-band-map] span').textContent=RAIL.find(([m])=>m===d.mode)?.[1]??'지형';q('.nb-badge').textContent=d.council||'';
+ q('.nb-end-warning').textContent=q('.ih-end small').textContent;q('.nb-end-warning').title=q('.nb-end-warning').textContent;
+ const task=d.todo??0,news=d.allNews??[],latest=news[0]??'';q('.nb-news-tab').textContent=task?`할 일 ${task}`:`소식 ${news.length}`;
+ if(band._news!==undefined&&band._news!==latest&&latest){q('.nb-news-peek').textContent=latest;q('.nb-news-peek').hidden=false;clearTimeout(band._peekTimer);band._peekTimer=setTimeout(()=>{q('.nb-news-peek').hidden=true;},2000);}band._news=latest;
+ if(band._army!==d.unitStatus?.id){q('.nb-sheet').hidden=true;band._army=d.unitStatus?.id;setBandState(band,showUnit?'unit':'rest');}
+ let html;
+ if(showUnit){
+  const name=menu.querySelector('.dk-id h2')?.textContent??'',face=menu.querySelector('.dk-face img')?.src??'',r=d.ratings,st=d.bandStatus??{};
+  const button=b=>{const label=b.cloneNode(true);label.querySelectorAll('.gi,kbd').forEach(n=>n.remove());const reason=b.title||label.textContent.trim();label.querySelectorAll('small').forEach(n=>n.remove());return `<button data-act="${esc(b.dataset.menu??'tactic')}"${b.dataset.tactic?` data-tactic="${esc(b.dataset.tactic)}"`:''}${b.disabled?' disabled':''}${d.bandSelected===(b.dataset.tactic??b.dataset.menu)?' aria-pressed="true"':''} title="${esc(reason)}">${esc(label.textContent.trim())}</button>`;};
+  const all=[...menu.querySelectorAll('.dk-acts button')],more=['face','garrison','wait','hub','officer','recall','star','cancel-order'];
+  const fallback=(action,label,reason)=>{if(all.some(b=>b.dataset.menu===action))return;const b=document.createElement('button');b.dataset.menu=action;b.disabled=true;b.title=reason;b.textContent=label;all.push(b);};
+  fallback('move','이동',d.unitStatus?.actions?.reason||'이번 차례 이동을 쓸 수 없습니다');
+  fallback('attack','공격',d.unitStatus?.actions?.main.available?'지금 칠 수 있는 적이나 성이 없습니다':'주 행동을 쓸 수 없습니다');
+  fallback('brace','방어','이번 차례 주 행동을 마쳤습니다');fallback('regroup','재정비','이번 차례 주 행동을 마쳤습니다');
+  fallback('face','정면','이번 차례 이동을 썼습니다');fallback('garrison','주둔',d.garrisonWhy||'아군 성 주변에서 복귀할 수 있습니다');fallback('wait','대기','이번 차례 명령을 마쳤습니다');fallback('hub','거점','지금은 거점을 지을 수 없습니다');
+  const ordered=[...all.filter(b=>['move','attack'].includes(b.dataset.menu)),...all.filter(b=>b.dataset.tactic),...all.filter(b=>['brace','regroup'].includes(b.dataset.menu))];
+  ordered.sort((a,b)=>({move:0,attack:1,brace:3,regroup:4}[a.dataset.menu]??2)-({move:0,attack:1,brace:3,regroup:4}[b.dataset.menu]??2));
+  const reasons=ordered.filter(b=>b.disabled).map(b=>b.title).filter(Boolean);
+  html=`<button class="nb-hero" data-act="officer" title="장수 정보"><img src="${esc(face)}" alt="${esc(name)}"></button><div class="nb-identity"><b>${esc(name)}</b><span>${esc(d.bandMeta??'')}</span>${r?`<div class="nb-ratings" title="${esc(r.notes.join('\n'))}">${[['attack','공격'],['defense','방어'],['mobility','기동']].map(([k,label])=>`<span><small>${label}</small><b>${r[k]}</b></span>`).join('')}</div>`:''}</div><div class="nb-status">${['morale','formation','supply'].map(k=>`<button data-band-info class="${st[k]?.warn?'warn':''}" title="${esc(st[k]?.text??'')}" aria-expanded="${!q('.nb-sheet').hidden}">${esc(k==='formation'?(st[k]?.text??'').replace('전열 ',''):k==='supply'?(st[k]?.warn?(st[k].text==='굶주림'?'굶주림':(st[k].text.match(/[\d.]+/)?.[0]??'—')+'턴분'):'군량 안정'):st[k]?.text??'')}</button>`).join('')}<button data-band-info aria-label="부대 상세 설명" aria-expanded="${!q('.nb-sheet').hidden}">ⓘ</button></div><div class="nb-orders"><p class="nb-help" title="${esc(reasons.join(' · '))}">${esc(reasons[0]??d.commandIntent??'군령을 고르세요')}</p><div class="nb-order-row">${ordered.slice(0,4).map(button).join('')}<button data-band-more aria-expanded="false">더 보기 ▴</button></div><div class="nb-more" hidden>${[...ordered.slice(4),...all.filter(b=>more.includes(b.dataset.menu))].map(button).join('')}</div></div>`;
+  q('.nb-sheet > div').innerHTML=q('.ih-readout').innerHTML;
+ }else{
+  const advisor=document.querySelector('#w-advisor .face img')?.src,advice=document.querySelector('#campaign-advice:not([hidden])')?.textContent||document.querySelector('#status')?.textContent||d.summary||'전장을 살펴보십시오.';
+  html=`<span class="nb-advisor">${advisor?`<img src="${esc(advisor)}" alt="군사">`:'軍'}</span><p class="nb-advice">${esc(advice)}</p><div class="nb-orders"><button class="nb-next" data-band-next${!d.remaining?' disabled':''}>다음 부대 · ${d.remaining??0}</button></div>`;
+ }
+ band._unitHtml=html;band._unitState=showUnit?'unit':'rest';
+ if(band.dataset.state!=='forecast'){if(content.innerHTML!==html)content.innerHTML=html;fitBandOrders(content);setBandState(band,band._unitState);}
 }
 // C130: 클릭과 예고가 공유하는 화면 판정. 공격 가능 여부/경로는 엔진이 준다.
 export function clickTargetDecision({selected,enemyId,cityId,attackableEnemy=false,attackableCity=false,plan=null,approach=null}) {
