@@ -3,6 +3,7 @@
 // 층(아래→위): 땅(그린 지도 한 장, 없으면 지형 색) · 강(그림 속 강과 같은 곡선, 판정용 가는 선) · 길 · 영역 · 칸 · 안개
 //            · 이동/공격 칸 · 경로 · 클릭 칸 · 시설 · 탐험지 · 성(미니어처) · 부대(무리 그림 + 장수 깃발판) · 이름판 · 효과
 import {hexCenter, outlineRings} from '../design/city-walls.mjs';
+import {troopLayout,troopPlateY} from './troops.mjs';
 import supplyRules from '../../../docs/design-data/supply-v0.1.json' with {type:'json'};
 
 const SQRT3 = Math.sqrt(3), TILT = 0.62;
@@ -248,7 +249,7 @@ export function renderWorldMap(model, opts = {}) {
     const ribbon = labelAt ? `<image class="rib${ownTone ? ' owned' : ' unowned'}" href="/assets/ui-v3/ink/ribbon-${nameLen > 1 ? 2 : 1}${ownTone ? '-' + ownTone : ''}.png" x="${f(-ribW / 2)}" y="${f(-ribH / 2)}" width="${f(ribW)}" height="${f(ribH)}"/>` : '';
     if (opts.compactLabels) occupied.push({x:lx-iw/2-22,y:ly-50,w:iw+44,h:city.defenseMax?108:88});
     const status = city.besieged ? '포위' : city.unrest === 'CHAOS' ? '혼란' : city.unrest === 'UNREST' ? '동요' : city.occupation && city.occupation.stage && city.occupation.stage !== 'NORMAL' ? '점령' : '';
-    plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" transform="translate(${f(lx)} ${f(ly)}) scale(.88)" style="--fc:${fs.color}">
+    plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" data-camera-tile="${esc(city.center)}" transform="translate(${f(lx)} ${f(ly)}) scale(.88)" style="--fc:${fs.color}">
       ${kit?.cityPlate ? `<image class="plate-art" href="${esc(kit.cityPlate)}" x="${f(-w / 2 - 5)}" y="-13.5" width="${f(w + 10)}" height="27" preserveAspectRatio="none"/>` : ''}${(() => { const fl = kit?.cityFlag?.[KIT_TONE[city.factionId] ?? 'grey']; return fl ? `<g class="cflag" transform="translate(${f(labelAt ? sealX - sealR - 7 : -w / 2 - 12)} -50)"><image href="${esc(fl)}" x="-8" y="0" width="17" height="58"/>${/^F\d\d$/.test(city.factionId ?? '') ? `<image href="/assets/ui-v3/emblems/${esc(city.factionId)}.png" x="-4.6" y="9" width="10" height="10"/>` : ''}</g>` : ''; })()}
       ${ribbon}${seal}<rect class="bg" x="${f(-w / 2)}" y="-12" width="${f(w)}" height="24"/><g class="crest" transform="translate(${f(-w / 2 + 2)} 0)"><rect x="-9" y="-9" width="18" height="18" transform="rotate(45)"/><text y="4.5">${esc(fs.glyph)}</text></g>
       <text class="name" x="${f(kit?.cityPlate ? 0 : 9)}" y="5.5">${name}</text>${def !== null ? `<rect class="def-bg" x="${f(-w / 2 + 16)}" y="14" width="${f(w - 22)}" height="3"/><rect class="def" x="${f(-w / 2 + 16)}" y="14" width="${f((w - 22) * def)}" height="3"/>` : ''}
@@ -259,7 +260,7 @@ export function renderWorldMap(model, opts = {}) {
   // 부대 — 무리 그림(있으면) + 장수 깃발판(얼굴·병력) + 옥벽 고리
   const units = (model.units ?? []).filter((u) => u.count !== 0 || u.prevCount);
   const labelOffsets = new Map();
-  if (opts.compactLabels) {
+  if (opts.compactLabels && !opts.troopFormations) {
     // Reserve selected banners first; keep every portrait tethered to its actual tile.
     for (const u of [...units].sort((a,b)=>Number(!!b.active)-Number(!!a.active))) {
       const c=C(u.tileId), scale=u.active?1:.82, w=Math.max(70,String(u.name??'').length*12+20)*scale, h=72*scale;
@@ -280,6 +281,7 @@ export function renderWorldMap(model, opts = {}) {
     const n = (stack[u.tileId] = (stack[u.tileId] ?? -1) + 1), c = C(u.tileId), x = c.x + (opts.compactLabels?0:n * size * 0.42), y = c.y + (opts.compactLabels?0:n * size * 0.16);
     const label=labelOffsets.get(u.id);
     const inCity = cityCenters.has(u.tileId), fs = FACTION[u.factionId] ?? NEUTRAL, art = inCity ? null : opts.unitArt?.[troopKey(u)];
+    const formation=opts.troopFormations?troopLayout(u,inCity):null,footprint=formation?.bounds;
     // 병사 무리: 세력 색 천을 두른 무리를 칸 위에 크게(시안 final-map-v2). 발끝이 칸 가운데 조금 아래에 오게 놓는다
     const sq = inCity ? null : opts.squadArt?.[troopKey(u)]?.[KIT_TONE[u.factionId] ?? 'grey'], sqW = size * 3.3, sqH = sq ? sqW * sq.size[1] / sq.size[0] : 0;
     const ratio = u.maxCount ? Math.max(0, Math.min(1, (u.count ?? 0) / u.maxCount)) : 1;
@@ -287,13 +289,14 @@ export function renderWorldMap(model, opts = {}) {
     const flip = u.faceLeft ? ' scale(-1 1)' : '';
     const badges = [u.morale === 'ROUTING' ? '潰' : u.morale === 'SHAKEN' ? '搖' : '', u.formation === 'BROKEN' ? '崩' : u.formation === 'DISORDERED' ? '亂' : '', u.braced ? '守' : '', ...(u.status ?? []).map((s) => STATUS_GLYPH[s.kind ?? s] ?? '')].filter(Boolean);
     const cls = `w-unit${u.active ? ' active' : ''}${u.moved ? ' moved' : ''}${u.ready ? ' ready' : ''}${u.enemy ? ' enemy' : ''}${lost ? ' hit' : ''}${u.crisis ? ' crisis' : ''}${u.bond ? ' bonded' : ''}`;
-    svg += `<g class="${cls}" data-unit="${esc(u.id)}"${opts.troopFormations?' data-troop-anchor="1"':''} data-x="${f(x)}" data-y="${f(y)}" transform="translate(${f(x)} ${f(y)})" style="--fc:${fs.color}">
+    svg += `<g class="${cls}" data-unit="${esc(u.id)}" data-camera-tile="${esc(u.tileId)}"${footprint?` data-troop-anchor="1" data-troop-head="${formation.headTop}" data-troop-top="${footprint.top}" data-troop-left="${footprint.left}" data-troop-right="${footprint.right}" data-troop-bottom="${footprint.bottom}"`:''} data-x="${f(x)}" data-y="${f(y)}" transform="translate(${f(x)} ${f(y)})" style="--fc:${fs.color}">
+      ${footprint?`<g visibility="hidden" pointer-events="none"><rect data-troop-project="origin" width=".01" height=".01"/><rect data-troop-project="x" x="1" width=".01" height=".01"/><rect data-troop-project="y" y="1" width=".01" height=".01"/></g>`:''}
       <ellipse class="shadow" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.72)}" ry="${f(size * 0.25)}"/>
       ${!u.enemy?`<ellipse class="ink-pick-ring" cx="0" cy="10" rx="25" ry="10"/>`:""}
       ${u.active ? `<ellipse class="bi" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}"/><ellipse class="bi-in" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.64)}" ry="${f(size * 0.22)}"/>` : !u.enemy && u.moved ? `<ellipse class="bi done" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.8)}" ry="${f(size * 0.3)}" pathLength="100"/>` : ''}
       ${u.crisis ? `<ellipse class="crisis-ring" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.9)}" ry="${f(size * 0.34)}"/>` : ''}
       ${opts.troopFormations ? `<ellipse class="w-troops-hit" cx="0" cy="10" rx="22" ry="12"/>` : sq ? `<image class="squad big" href="${esc(sq.src)}" x="${f(-sqW / 2)}" y="${f(size * 0.62 - sqH)}" width="${f(sqW)}" height="${f(sqH)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : art ? `<image class="squad" href="${esc(art)}" x="${f(-size * 1.15)}" y="${f(-size * 1.55)}" width="${f(size * 2.3)}" height="${f(size * 2.3)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : ''}
-      ${label?`<path class="w-label-tether" d="M0 0L${f(label.dx)} ${f(label.dy+30*label.scale)}" fill="none" stroke="${fs.color}" stroke-width="1.5" pointer-events="none"/>`:""}<g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="${label?`translate(${f(label.dx)} ${f(label.dy)}) scale(${label.scale})`:`translate(${inCity ? f(size * 1.3) : 0} ${f(inCity ? -size * 0.4 : -size * (sq ? 2.2 : art ? 1.55 : 1.05))})`}">
+      ${label?`<path class="w-label-tether" d="M0 0L${f(label.dx)} ${f(label.dy+30*label.scale)}" fill="none" stroke="${fs.color}" stroke-width="1.5" pointer-events="none"/>`:""}<g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="${footprint?`translate(0 ${f(troopPlateY(formation.headTop))})`:label?`translate(${f(label.dx)} ${f(label.dy)}) scale(${label.scale})`:`translate(${inCity ? f(size * 1.3) : 0} ${f(inCity ? -size * 0.4 : -size * (sq ? 2.2 : art ? 1.55 : 1.05))})`}">
         <path class="pole" d="M0 14V${f(inCity ? size * 0.7 : size * (sq ? 1.15 : 1))}"/>
         ${/^F\d\d$/.test(u.factionId ?? '') ? `<g class="banner" transform="translate(-1 21)"><path class="cloth" d="M0 0H-17V22L-12.5 18L-8.5 22L-4.5 18L0 22Z"/><image href="/assets/ui-v3/emblems/${esc(u.factionId)}.png" x="-15" y="1" width="13" height="13"/></g>` : ''}
         ${u.tacticReady?`<g class="w-tactic-ready${u.tacticNew?' fresh':''}" transform="translate(29 5)"><rect x="-7" y="-8" width="16" height="17"/><text x="1" y="5">전</text></g>`:''}${u.active?'<g class="w-selected"><rect x="15" y="-24" width="28" height="14" rx="2"/><text x="29" y="-14">선택</text></g>':''}<g class="std" transform="scale(.82)"><g class="count k" transform="translate(0 27)"><path class="kplate" d="M-31 0L-25 -11.5H25L31 0L25 11.5H-25Z"/><text y="3.4">${Number(u.count ?? 0).toLocaleString('ko-KR')}</text><rect class="bar-bg" x="-20" y="5.8" width="40" height="2.6"/><rect class="bar" x="-20" y="5.8" width="${f(40 * ratio)}" height="2.6"/></g>${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}<path class="frame" d="M-16 -19H16V10L0 19.5L-16 10Z"/>
@@ -325,7 +328,7 @@ export function animateUnits(root, {duration = 420} = {}) {
   for (const g of root?.querySelectorAll?.('g.w-unit[data-unit]') ?? []) {
     const id = g.dataset.unit, x = Number(g.dataset.x), y = Number(g.dataset.y), prev = lastPos.get(id);
     seen.add(id); lastPos.set(id, {x, y});
-    if (!prev || (prev.x === x && prev.y === y) || Math.hypot(prev.x - x, prev.y - y) > 600 || !g.animate) continue;
+    if (g.hasAttribute('data-troop-anchor') || !prev || (prev.x === x && prev.y === y) || Math.hypot(prev.x - x, prev.y - y) > 600 || !g.animate) continue;
     g.animate([{transform: `translate(${prev.x}px, ${prev.y}px)`}, {transform: `translate(${x}px, ${y}px)`}], {duration, easing: 'cubic-bezier(.35,.1,.25,1)'});
   }
   for (const id of [...lastPos.keys()]) if (!seen.has(id)) lastPos.delete(id);

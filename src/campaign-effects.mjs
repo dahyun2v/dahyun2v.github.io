@@ -1,7 +1,7 @@
 import {diplomacyArmyHostile,diplomacyAttackReason,withdrawalProtection} from './campaign-diplomacy.mjs';
 import {initializeClasses,classPostMove} from './campaign-classes.mjs';
 import {C34_RULES,c34DamageLimit,c34Recovery,c34Finish,c34RemoveStatuses,c34Reveal} from './campaign-c34.mjs';
-import {c33Enabled,c33Card,c33Mods,c33Movement,c33Targets,c33AiUseful,c33Cooldown,c33Start,c33Immune,c33Limit,c33Owned} from './campaign-rule-registry.mjs';
+import {c33Enabled,c33Card,c33Mods,c33Movement,c33Targets,c33AiUseful,c33Cooldown,c33Start,c33Immune,c33Limit,c33Owned,c33Range} from './campaign-rule-registry.mjs';
 import {c31Move,c31Tactic} from './campaign-events.mjs';
 import {configureC30,c30Start,c30Finish,c30Joint,c30Move,c30Damage,c30TacticCard,c30Strategy} from './campaign-c29.mjs';
 import {creditCampaignGrowth} from './campaign-growth.mjs';
@@ -14,6 +14,7 @@ import {C23,archerAttackReason} from './campaign-abilities.mjs';
 import {attackDirection,isCharge,checkFormation,changeFormation,C12,turnFacing,directionToward} from './campaign-abilities.mjs';
 import {hexDistance,neighbors} from './map-primitives.mjs';
 import {troopToCampaign} from './campaign-adapters.mjs';
+import {specialTroop} from './campaign-special-troops.mjs';
 import {castleArmyActive} from './campaign-city-footprint.mjs';
 import {checkMorale,changeMorale} from './campaign-morale.mjs';
 import {recoverWoundedPersonnel,dispatchPersonnelTransport,arrivePersonnelTransport} from './military-personnel-ledger.mjs';
@@ -299,7 +300,34 @@ export function movementEffect(s,id){
 export function attackConfused(s,id){return (s.armies[id]?.effectStates??[]).some(e=>e.status==='CONFUSED'&&e.startsTurn<=s.turn&&activeState(s,e));}
 export function tacticCooldown(card){return card.cooldown??(card.cost==null?2:Math.min(3,Math.max(1,Math.ceil(card.cost/10))));}
 export function tacticIsDamage(card){return c33Card(card)&&card.effects.some(e=>['FLANK_RAID','VOLLEY','REPEATER','ROCKSLIDE','WHIRLWIND','RAM','INFERNO','FIRE_ARROW'].includes(e.rule))||uniqueTacticIsDamage(card)||(card.effects??[]).some(e=>e.op==='DAMAGE_MOD'&&e.when==='ON_TACTIC_USE')||combatTacticRule(card)?.rule==='DUAL_STRIKE';}
-export function tacticTargets(s,id,card){return withdrawalProtection(s,id)?[]:rawTacticTargets(s,id,card).filter(target=>!diplomacyAttackReason(s,id,target));}
+// One live eligibility query serves the public cards, preview and execution.
+export function tacticAvailability(s,id,card,targetId){
+ const a=s.armies[id],waiting=card.signature?Math.max(0,100-(c29Record(s,id)?.c29?.gauge??0),(a?.tacticReadyTurns?.[card.traitId]??0)-s.turn):Math.max(0,(a?.tacticReadyTurns?.[card.traitId]??0)-s.turn);
+ const archery=tacticIsDamage(card)&&a?archerAttackReason(s,id):'';
+ let targets=withdrawalProtection(s,id)||archery?[]:rawTacticTargets(s,id,card).filter(target=>!diplomacyAttackReason(s,id,target));
+ if(card.effects.some(e=>e.rule==='U_STORM_CAMP'))targets=targets.filter(target=>cityAttackTargets(s,id).includes(target));
+ const areaRule=card.effects.find(e=>e.rule?.startsWith('U_')||e.rule==='WHIRLWIND')?.rule;
+ const areaRange={U_MOUNTAIN_FALL:1,U_SHAKE_THE_REALM:1,U_FLAME_DANCE:1,WHIRLWIND:1,U_KING_ROAR:2,U_CHANGBAN_SHOUT:2}[areaRule];
+ if((tacticIsDamage(card)||areaRange!==undefined)&&targets.includes(id)){
+  const range=areaRange??card.range??0;
+  if(!Object.values(s.armies).some(b=>castleArmyActive(s,b)&&diplomacyArmyHostile(s,id,b.armyId)&&s.knowledge[a.factionId].tiles[b.tileId]==='VISIBLE'&&!ambushHidden(s,b.armyId,a.factionId)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=range))targets=[];
+ }
+ let reason='',reasonCode='';
+ if(!a||!castleArmyActive(s,a)){reasonCode='TACTIC_ARMY_INACTIVE';reason='패배하거나 해산된 부대는 전법을 사용할 수 없습니다.';}
+ else if(a.morale==='ROUTING'){reasonCode='TACTIC_ROUTING';reason='패주 중에는 전법을 사용할 수 없습니다.';}
+ else if(!canMainAction(s,id)){reasonCode='MAIN_ACTION_USED';reason='이번 차례 주 행동을 이미 사용했습니다.';}
+ else if(waiting){reasonCode='TACTIC_NOT_READY';reason=card.signature?'고유 전법의 기세 또는 재사용 대기를 확인하십시오.':`전법 재사용까지 ${waiting}차례 남았습니다.`;}
+ else if(archery){reasonCode=archery;reason=archery;}
+ else if(attackConfused(s,id)){reasonCode='TACTIC_CONFUSED';reason='혼란 중에는 전법을 사용할 수 없습니다.';}
+ else if(targetId!==undefined&&s.cities[targetId]&&!targets.includes(targetId)){
+  const city=s.cities[targetId];reasonCode='INVALID_CAMPAIGN_CITY_ATTACK';
+  reason=city.ownerFactionId===a.factionId?'아군 성에는 이 전법을 사용할 수 없습니다.':city.durability<=0?'이미 성벽이 무너진 성입니다.':s.knowledge[a.factionId].tiles[city.tileId]!=='VISIBLE'?'현재 보이는 성을 지정하십시오.':hexDistance(s.tiles[a.tileId],s.tiles[city.tileId])>(card.range??0)+(c33Card(card)?c33Range(s,id,card):0)?'성에 전법 사거리가 닿지 않습니다.':'성벽 부수기 돌격은 일반 성 공격이 가능한 성문·공성 위치에서 사용하십시오. 성 안의 수비 부대도 확인하십시오.';
+ }
+ else if(!targets.length){reasonCode='NO_VALID_TACTIC_TARGET';reason='전법의 범위 안에 유효한 대상이 없습니다.';}
+ else if(targetId!==undefined&&!targets.includes(targetId)){reasonCode='INVALID_CAMPAIGN_TACTIC';reason=diplomacyAttackReason(s,id,targetId)||'이 전법을 사용할 수 있는 대상을 지정하십시오.';}
+ return {targets,waiting,reason,reasonCode,reasonText:reasonCode===archery&&archery?'적과 붙은 원거리보병은 공격 전법을 사용할 수 없습니다.':reason,canUse:!reason};
+}
+export function tacticTargets(s,id,card){return tacticAvailability(s,id,card).targets;}
 function rawTacticTargets(s,id,card){
   const a=s.armies[id];if(!a||a.c34?.noTacticUntil>=s.turn||a.c33?.bideUntil>=s.turn||a.c33?.drillTurn===s.turn||!castleArmyActive(s,a)||a.morale==='ROUTING'||attackConfused(s,id)||!canMainAction(s,id)||!cardEffectReady(card)||(a.tacticReadyTurns?.[card.traitId]??0)>s.turn)return [];
   if(card.signature&&c29Record(s,id).c29.gauge<100)return [];
@@ -314,7 +342,7 @@ function rawTacticTargets(s,id,card){
   return Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&visibility[b.tileId]==='VISIBLE'&&!ambushHidden(s,b.armyId,a.factionId)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=range&&(!tacticIsDamage(card)||troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])>1)&&
     (hostile?diplomacyArmyHostile(s,a.armyId,b.armyId):b.factionId===a.factionId)).map(b=>b.armyId).sort();
 }
-export function campaignTactics(s,id){const r=c29Record(s,id);return [...officerEffectCards(s,s.armies[id]?.commanderId,{tactics:true}).filter(c=>!(c33Owned(s,id,'DIVINE_CALC')&&[c.classTag].flat().includes('무용'))&&(r.equippedTacticIds??[]).includes(c.traitId)||r.c29&&c.traitId===r.representativeId).map(c=>c29TacticCard(s,id,c)),...[c30Joint(s,id)].filter(Boolean)].map(c=>c30TacticCard(s,id,{...c,cooldown:c.signature?0:c.jointArmyIds?3:c33Cooldown(s,id,{...c,cooldown:uniqueCooldownTurns(s,id,tacticCooldown(c))})})).map(c=>c31Tactic(s,id,c)).map(c=>({...c,reason:tacticIsDamage(c)?archerAttackReason(s,id):'',waiting:c.signature?Math.max(0,100-r.c29.gauge,(s.armies[id].tacticReadyTurns?.[c.traitId]??0)-s.turn):Math.max(0,(s.armies[id].tacticReadyTurns?.[c.traitId]??0)-s.turn),targets:tacticTargets(s,id,c)}));}
+export function campaignTactics(s,id){const r=c29Record(s,id);if(!r)return [];return [...officerEffectCards(s,s.armies[id]?.commanderId,{tactics:true}).filter(c=>!(c33Owned(s,id,'DIVINE_CALC')&&[c.classTag].flat().includes('무용'))&&(r.equippedTacticIds??[]).includes(c.traitId)||r.c29&&c.traitId===r.representativeId).map(c=>c29TacticCard(s,id,c)),...[c30Joint(s,id)].filter(Boolean)].map(c=>c30TacticCard(s,id,{...c,cooldown:c.signature?0:c.jointArmyIds?3:c33Cooldown(s,id,{...c,cooldown:uniqueCooldownTurns(s,id,tacticCooldown(c))})})).map(c=>c31Tactic(s,id,c)).map(c=>({...c,...tacticAvailability(s,id,c)}));}
 
 export function ruleLine(s,id,rule,detail=''){
  const cards=[...officerEffectCards(s,s.armies[id]?.commanderId??id),...officerEffectCards(s,s.armies[id]?.commanderId??id,{tactics:true})].filter(c=>c.effects?.some(e=>e.op==='RULE'&&e.rule===rule));
@@ -342,6 +370,7 @@ export function surviveRule(s,id,loss,commit=true,lines=null){
  const a=s.armies[id];if(loss>=a.troopCount&&a.lastStandKey!==`${s.turn}.${s.activeFactionId??s.playerFactionId}`&&hasCampaignRule(s,id,'LAST_STAND')){if(commit)a.lastStandKey=`${s.turn}.${s.activeFactionId??s.playerFactionId}`;lines?.push(ruleLine(s,id,'LAST_STAND','병력 1로 생존'));return a.troopCount-1;}return loss;
 }
 export function finishFactionRules(s,factionId){
+ for(const a of Object.values(s.armies))if(a.factionId===factionId&&a.starVanguardTurn<s.turn)delete a.starVanguardTurn;
  if(s.campaignEffects?.startedTurns[factionId]===s.turn)c34Finish(s,factionId);
  c30Finish(s,factionId,x=>creditCampaignGrowth(s,x));
  for(const a of Object.values(s.armies))if(a.factionId===factionId&&s.campaignEffects?.startedTurns[factionId]===s.turn)c34RemoveStatuses(s,a.armyId,e=>e.expiresFactionId===factionId&&e.expiresTurn<=s.turn);
@@ -385,4 +414,12 @@ export function commonTacticAiUseful(s,id,card,target){
  if(rule==='STAKES'||rule==='OVERWATCH')return Object.values(s.armies).some(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&castleArmyActive(s,b)&&s.knowledge[a.factionId].tiles[b.tileId]==='VISIBLE'&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=2);
  if(card.id==='CTA-05')return [a,...Object.values(s.armies).filter(b=>b.factionId===a.factionId&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1)].some(b=>b.morale!=='STEADY');
  return true;
+}
+
+const wallSiege=(s,id,c)=>hasCampaignRule(s,id,'SIEGE_FROM_WALL')&&c.footprint.walls.some(w=>hexDistance(s.tiles[w],s.tiles[s.armies[id].tileId])===1)&&hexDistance(s.tiles[c.tileId],s.tiles[s.armies[id].tileId])===2;
+export function cityAttackTargets(s,id) {
+  const a=s.armies[id];
+  if(!a||a.c34?.disarmUntil>=s.turn||a.c32?.disarmUntil>=s.turn||archerAttackReason(s,id)||attackConfused(s,id)||!castleArmyActive(s,a)||a.morale==='ROUTING'||!canMainAction(s,id))return [];
+  return Object.values(s.cities).filter(c=>(troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])>1&&(!(specialTroop(s,a.troopType)&&a.troopType==='catapult')? !c.footprint.gates.some(g=>hexDistance(s.tiles[a.tileId],s.tiles[g])<=1):true))&&!diplomacyAttackReason(s,id,c.cityId)&&c.ownerFactionId!==a.factionId&&(c.footprint.gates.includes(a.tileId)||wallSiege(s,id,c)||specialTroop(s,a.troopType)&&a.troopType==='catapult'&&hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])===2)&&
+    (wallSiege(s,id,c)||specialTroop(s,a.troopType)&&a.troopType==='catapult'||!Object.values(s.armies).some(d=>d.tileId===c.tileId&&castleArmyActive(s,d)))).map(c=>c.cityId).sort();
 }

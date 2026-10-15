@@ -224,6 +224,7 @@ export function withdrawalTurns(s,id,f){
  return data.withdrawal.baseTurns;
 }
 export function startDiplomacyTurn(s){
+ clearExtinctDiplomacy(s);
  if(!diplomacyEnabled(s))return;
  const x=s.c43.axes,elapsed=s.turn-x.turn;
  if(elapsed>0){
@@ -253,17 +254,18 @@ export function startDiplomacyTurn(s){
 }
 export function rememberDiplomacyCombat(s,before){
  if(!diplomacyEnabled(s)||!s.c43)return;
+ clearExtinctDiplomacy(s);
  const previous=s.c43.history.length;
  for(const c of Object.values(s.cities))if(before.cities[c.cityId]?.ownerFactionId===null&&c.ownerFactionId){
   const key=`${c.cityId}:${s.turn}:${c.ownerFactionId}`;
   if(!s.c43.axes.neutralCaptures.includes(key)){s.c43.axes.neutralCaptures.push(key);s.c43.axes.threat[c.ownerFactionId]=clamp(reputation(s,'threat',c.ownerFactionId)+axes.threat.gain[c.kind==='major'?'majorCity':'minorCity'],axes.threat.range);axisLog(s,c.ownerFactionId,c.ownerFactionId,`${armyName(s,c.ownerFactionId)}이 ${c.name??'성'}을 차지해 위협이 커졌다`);}
  }
- for(const log of (s.combatLog??[]).filter(l=>l.sequence>(before.battleSequence??0))){const from=s.armies[log.attackerId]?.factionId??s.cities[log.attackerId]?.ownerFactionId;if(!from)continue;const targets=new Set([s.armies[log.targetId]?.factionId,before.cities[log.cityId??log.targetId]?.ownerFactionId,...(log.units??[]).filter(u=>u.casualties>0).map(u=>s.armies[u.unitId]?.factionId)]);for(const to of targets)if(to&&to!==from&&!s.c43.history.some(e=>e.type==='ATTACK'&&e.sequence===log.sequence&&e.from===from&&e.to===to))s.c43.history.push({type:'ATTACK',from,to,turn:log.turn,sequence:log.sequence});}
+ for(const log of (s.combatLog??[]).filter(l=>l.sequence>(before.battleSequence??0))){const from=s.armies[log.attackerId]?.factionId??s.cities[log.attackerId]?.ownerFactionId;if(!from)continue;const targets=new Set([s.armies[log.targetId]?.factionId,before.cities[log.cityId??log.targetId]?.ownerFactionId,...(log.units??[]).filter(u=>u.casualties>0).map(u=>s.armies[u.unitId]?.factionId)]);const issuedAttack=log.attackOrder??(log.kind===undefined||['ATTACK','TACTIC','JOINT_TACTIC','CITY'].includes(log.kind)||log.kind==='TACTIC_EFFECT'&&log.enemyLoss>0);for(const to of targets)if(to&&to!==from&&!s.c43.history.some(e=>e.type==='ATTACK'&&e.sequence===log.sequence&&e.from===from&&e.to===to))s.c43.history.push({type:'ATTACK',from,to,turn:log.turn,sequence:log.sequence,...(!issuedAttack?{issuedAttack:false}:{})});}
  for(const c of Object.values(s.cities)){const old=before.cities[c.cityId]?.ownerFactionId,captureTurn=(s.combatLog??[]).filter(l=>l.cityId===c.cityId&&l.captureLine&&l.turn>=before.turn).at(-1)?.turn??s.turn;if(old&&c.ownerFactionId&&old!==c.ownerFactionId&&!s.c43.history.some(e=>e.type==='CAPTURE'&&e.cityId===c.cityId&&e.from===c.ownerFactionId&&e.to===old&&e.turn===captureTurn))s.c43.history.push({type:'CAPTURE',from:c.ownerFactionId,to:old,turn:captureTurn,cityId:c.cityId});}
  for(const e of s.c43.history.slice(previous)){
   if(e.type==='ATTACK'){
    addDiplomacyOpinion(s,e.to,e.from,'attackedUs');const ended=s.c43.axes.ended[diplomacyPair(e.from,e.to)];
-   if(ended&&e.turn>=ended.turn&&e.turn-ended.turn<axes.trust.loss.surpriseAttack.withinTurns){loseTrust(s,e.from,e.to,'surpriseAttack');s.c43.history.push({type:'SURPRISE',from:e.from,to:e.to,turn:e.turn});}
+   if(e.issuedAttack!==false&&ended&&e.turn>=ended.turn&&e.turn-ended.turn<axes.trust.loss.surpriseAttack.withinTurns){loseTrust(s,e.from,e.to,'surpriseAttack');s.c43.history.push({type:'SURPRISE',from:e.from,to:e.to,turn:e.turn});}
   }else if(e.type==='CAPTURE'){
    addDiplomacyOpinion(s,e.to,e.from,'capturedOurCity',e.cityId);s.c43.axes.threat[e.from]=clamp(reputation(s,'threat',e.from)+axes.threat.gain[s.cities[e.cityId].kind==='major'?'majorCity':'minorCity'],axes.threat.range);axisLog(s,e.from,e.to,`${armyName(s,e.from)}이 ${name(s,e.to)}의 ${s.cities[e.cityId].name??'성'}을 빼앗아 위협이 커졌다`);
   }
@@ -272,6 +274,17 @@ export function rememberDiplomacyCombat(s,before){
   s.c43.axes.released.push(p.prisonerRecordId);
   const prior=before.terminal?.prisonersById?.[p.prisonerRecordId],closure=s.terminal.recordsById?.[p.closureRecordId];
   if(prior?.disposition!=='RELEASED'&&closure?.details.disposition!=='RECRUITED')addDiplomacyOpinion(s,p.homeFactionId,p.captorFactionId,'releasedOurOfficer',p.officerId);
+ }
+}
+export function clearExtinctDiplomacy(s){
+ if(!s.c43)return;
+ const alive=id=>s.factions[id]?.alive;
+ s.c43.proposals=s.c43.proposals.filter(p=>p.status!=='PENDING'||alive(p.from)&&alive(p.to));
+ for(const [key,p] of Object.entries(s.c43.pairs))if(key.split('|').some(id=>!alive(id)))delete p.pending;
+ if(s.council){
+  const obsolete=p=>p.kind==='DIPLOMACY'&&!alive(p.target.factionId);
+  s.council.proposals=s.council.proposals.filter(p=>p.decision!==null||!obsolete(p));
+  s.council.resolutions=s.council.resolutions.filter(r=>r.status!=='ACTIVE'||!obsolete(r));
  }
 }
 export function diplomacyView(s,f){return {

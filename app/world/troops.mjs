@@ -10,6 +10,28 @@ export const troopKind = u => TYPES[u.troop] ?? u.troop;
 export const soldierCount = count => Number.isFinite(count) && count > 0 ? Math.max(6, Math.min(36, Math.ceil(count / 10))) : 0;
 export const bearerCount = count => count ? Math.min(3, Math.ceil(count / 12)) : 0;
 
+// C165: one footprint for the canvas, portrait anchor and camera (map coordinates).
+export function troopLayout(u, inCity=false, sample=null) {
+  const kind=sample?.kind??troopKind(u), n=Math.min(inCity?8:kind==='cavalry'?9:12,soldierCount(u.count));
+  const points=formationPoints(kind,n,sample?.wedge??0), live=sample&&sample.progress>=0&&sample.progress<1;
+  const cs=Math.cos(sample?.angle??0),sn=Math.sin(sample?.angle??0),squeeze=inCity?.7:1;
+  const positions=points.map(p=>live?{x:(p.x*cs-p.y*sn)*SPREAD,y:(p.x*sn+p.y*cs)*.62*SPREAD+FOOT_Y}:{x:p.y*squeeze*SPREAD,y:p.x*.5*squeeze*SPREAD+FOOT_Y});
+  const top=Math.min(FOOT_Y,...positions.map(p=>p.y))-SOLDIER_H+SOLDIER_H*8/96;
+  // Existing 96px sheets: helmet rows, excluding raised spear/flag tips.
+  const headTop=top+SOLDIER_H*({militia:19,spear:27,bow:18,cavalry:23}[kind]??19)/96;
+  const halfWidth=SOLDIER_H*({militia:93,spear:160,bow:101,cavalry:177}[kind]??112)/96/2;
+  return {points,positions,n,headTop,bounds:{left:Math.min(0,...positions.map(p=>p.x))-halfWidth,right:Math.max(0,...positions.map(p=>p.x))+halfWidth,top,bottom:Math.max(FOOT_Y,...positions.map(p=>p.y))+3}};
+}
+export const troopPlateY = (top,scale=1) => top-2.4-28.6*scale;
+// getScreenCTM alone loses CSS perspective. Measure a tiny local SVG basis instead.
+export function troopScreenMatrix(node,pos,fallback){
+  const markers=['origin','x','y'].map(key=>node.querySelector(`[data-troop-project="${key}"]`)?.getBoundingClientRect());
+  if(markers.some(r=>!r?.width))return fallback;
+  const [o,x,y]=markers.map(r=>({x:r.left+r.width/2,y:r.top+r.height/2}));
+  const a=x.x-o.x,b=x.y-o.y,c=y.x-o.x,d=y.y-o.y;
+  return {a,b,c,d,e:o.x-a*pos.x-c*pos.y,f:o.y-b*pos.x-d*pos.y};
+}
+
 // Local coordinates: x = front/back, y = left/right. All footprints fit one hex.
 export function formationPoints(kind, count, wedge = 0) {
   return Array.from({length:count}, (_, i) => {
@@ -130,7 +152,7 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
     const svg=root.querySelector('svg');
     tiles=new Map([...svg.querySelectorAll('.w-hits [data-tile]')].map(n=>{const b=n.getBBox();return [n.dataset.tile,{x:b.x+b.width/2,y:b.y+b.height/2}];}));
     const nodes=new Map([...svg.querySelectorAll('.w-unit')].map(n=>[n.dataset.unit,n]));
-    units=model.units.flatMap(u=>{const node=nodes.get(u.id);if(!node?.hasAttribute('data-troop-anchor'))return [];return [{u:{...u},inCity:!!node.querySelector('.plate-top.in-city'),anchor:{x:Number(node.dataset.x),y:Number(node.dataset.y)}}];});
+    units=model.units.flatMap(u=>{const node=nodes.get(u.id);if(!node?.hasAttribute('data-troop-anchor'))return [];return [{u:{...u},node,inCity:!!node.querySelector('.plate-top.in-city'),anchor:{x:Number(node.dataset.x),y:Number(node.dataset.y)}}];});
     for(const {u,anchor} of units){
       const count=soldierCount(u.count), old=soldierCount(u.prevCount), key=`${u.prevCount}:${u.count}`;
       if(u.prevCount>u.count&&hits.get(u.id)?.key!==key)hits.set(u.id,{key,start:clock()});
@@ -158,14 +180,21 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
     ctx.setTransform(dpr*matrix.a,dpr*matrix.b,dpr*matrix.c,dpr*matrix.d,dpr*(matrix.e-r.left),dpr*(matrix.f-r.top));
     const elapsed=reduce()?1e6:now-mounted, time=reduce()?0:now;
     const ordered=units.map(row=>({...row,s:sampleTroop(row.u,row.anchor,id=>tiles.get(id),elapsed)})).sort((a,b)=>a.s.pos.y-b.s.pos.y);
-    for(const {u,anchor,s,inCity} of ordered){
+    for(const {u,node,anchor,s,inCity} of ordered){
+      // Portrait and soldiers share the same sampled motion, including long routes.
+      node.setAttribute('transform',`translate(${s.pos.x} ${s.pos.y})`);
+      const local=troopScreenMatrix(node,s.pos,matrix);
+      ctx.setTransform(dpr*local.a,dpr*local.b,dpr*local.c,dpr*local.d,dpr*(local.e-r.left),dpr*(local.f-r.top));
       const screen={x:matrix.a*s.pos.x+matrix.c*s.pos.y+matrix.e-r.left,y:matrix.b*s.pos.x+matrix.d*s.pos.y+matrix.f-r.top};
       if(screen.x< -100||screen.x>r.width+100||screen.y< -100||screen.y>r.height+100)continue;
       // 10-14 v4: 화면에 그리는 수 — 기병 최대 9(말이 넓다), 보병 12, 성 안 8. 간격을 띄운 만큼 줄였다(병력 비례는 그대로). 병력 비례는 그대로(soldierCount)
-      const cap=inCity?8:s.kind==='cavalry'?9:12, n=Math.min(cap,soldierCount(u.count)), points=formationPoints(s.kind,n,s.wedge), cs=Math.cos(s.angle),sn=Math.sin(s.angle);
+      const {points,positions,n,bounds,headTop}=troopLayout(u,inCity,s), cs=Math.cos(s.angle);
+      const plate=node.querySelector('.plate-top'),labelScale=Number(/scale\(([^)]+)\)/.exec(plate?.querySelector('.c153-label-art')?.getAttribute('transform')??'')?.[1]??1);
+      if(plate)plate.setAttribute('transform',`translate(0 ${troopPlateY(headTop,labelScale)})`);
+      node.dataset.troopHead=String(headTop);
+      for(const [key,value] of Object.entries(bounds))node.dataset['troop'+key[0].toUpperCase()+key.slice(1)]=String(value);
       // 10-14 Claude: 평소(가만히 · 이동)엔 화면 기준 반듯한 대열 — 옆줄 = 가로, 앞뒤 = 세로(지도를 눕혀 보는 각도라 앞뒤를 줄임). 공격 중에만 대상 쪽으로 돈다
-      const live=s.progress>=0&&s.progress<1, squeeze=inCity?.7:1;
-      const place=p=>live?{x:s.pos.x+(p.x*cs-p.y*sn)*SPREAD,y:s.pos.y+(p.x*sn+p.y*cs)*.62*SPREAD+FOOT_Y}:{x:s.pos.x+p.y*squeeze*SPREAD,y:s.pos.y+p.x*.5*squeeze*SPREAD+FOOT_Y};
+      const place=p=>{const q=positions[points.indexOf(p)];return {x:s.pos.x+q.x,y:s.pos.y+q.y};};
       // 발밑 먹 그늘 — 무리가 땅에 서 있게
       {const xs=points.map(p=>place(p)),minx=Math.min(...xs.map(q=>q.x)),maxx=Math.max(...xs.map(q=>q.x)),miny=Math.min(...xs.map(q=>q.y)),maxy=Math.max(...xs.map(q=>q.y));
        const cx=(minx+maxx)/2,cy=(miny+maxy)/2+1.5,rx=(maxx-minx)/2+7,ry=(maxy-miny)/2+4;
@@ -190,6 +219,7 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null}={}
         if(p>.64&&effects.clash.ready){ctx.save();ctx.globalAlpha=(1-p)*.7;ctx.drawImage(effects.clash.image,target.x-10,target.y+FOOT_Y-12,20,20);ctx.restore();}
       }
     }
+    ctx.setTransform(dpr*matrix.a,dpr*matrix.b,dpr*matrix.c,dpr*matrix.d,dpr*(matrix.e-r.left),dpr*(matrix.f-r.top));
     for(const [id,death] of casualties){const age=now-death.start;if(age>850||reduce()){casualties.delete(id);continue;}
       // 쓰러지는 병사도 살아 있는 대열과 같은 수 · 간격 · 반듯한 배치로(10-14 R3)
       const s=sampleTroop(death.u,death.anchor,id=>tiles.get(id),0), cap=s.kind==='cavalry'?9:12, from=Math.min(cap,death.from), to=Math.min(cap,death.to), points=formationPoints(s.kind,from);

@@ -457,7 +457,7 @@ export function recordCampaignCombatCareer(s,c){
  if(!c25Enabled(s))return;
  initializeCampaignGrowth(s);
  const a=s.armies[c.attackerId],t=s.armies[c.targetId],key=`CAREER.COMBAT.${c.sequence}`;
- if(c.kind==='CITY'){recordCareer(s,a.commanderId,key,{siegeDamage:c.dealt});return;}
+ if(c.kind==='CITY'||c.cityId&&c.dealt!==undefined){recordCareer(s,a.commanderId,key,{siegeDamage:c.dealt});return;}
  if(a&&t&&a.factionId!==t.factionId){
   const counts={[`foughtBy:${t.commanderId}`]:1,...(c.charge?{charge:1}:{}),...(c.side==='FLANK'?{flank:1}:c.side==='REAR'?{rear:1}:{}),...(c.kind==='PURSUIT'?{pursuit:1}:{})};
   recordCareer(s,a.commanderId,key,counts);

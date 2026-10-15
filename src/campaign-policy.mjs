@@ -99,7 +99,7 @@ export function settlePolicyRefugees(s){
 const axes=['leadership','might','intelligence','politics','charisma'];
 const axisNames=['지휘','무용','지략','정무','감화'];
 const actionNames={ARMY:['훈련','선봉','정찰','보급','격려'],CITY:['훈련','방비','정찰','증산','포섭']};
-const descriptions={ARMY:['전열·사기 한 단계 회복','이번 턴 다음 공격 피해 +25%','2턴 시야 +3','부상병 40 복귀','인접 아군 사기 한 단계 회복'],CITY:['다음 출진 병력 +100','2턴 성 사격 피해 +10','2턴 성 시야 +3','다음 정산 생산 +3','이번 턴 이 도시 등용 인망 절반']};
+const descriptions={ARMY:['전열·사기 한 단계 회복','다음 공격 1회 피해 +25%(다음 차례 끝까지)','2턴 시야 +3','부상병 40 복귀','인접 아군 사기 한 단계 회복'],CITY:['다음 출진 병력 +100','2턴 성 사격 피해 +10','2턴 성 시야 +3','다음 정산 생산 +3','이번 턴 이 도시 등용 인망 절반']};
 export function starAction(s,{armyId,cityId},factionId=s.playerFactionId){
  if(!c20Enabled(s)||factionId!=='F03')return null;
  const role=armyId?'ARMY':'CITY',target=armyId?s.armies[armyId]:s.cities[cityId],officerId=armyId?target?.commanderId:target?.governorId,o=s.officers[officerId];
@@ -126,7 +126,7 @@ export function useStarAction(s,command,factionId=s.playerFactionId){
  s.c20.readyTurns[action.key]=s.turn+(armyId?C20.armyCooldown:C20.cityCooldown)-(mufuDiscount(s,s.armies[armyId],s.cities[cityId])?C20.mufuCooldownReduction:0);s.c20.stats.starActions++;
  line(s,factionId,`\uBCC4\uC758 \uAE38 \u2014 ${s.officers[action.officerId].name} ${action.name}`);return s;
 }
-export const starAttackMultiplier=(s,a)=>c20Enabled(s)&&a.starVanguardTurn===s.turn?C20.vanguard:1;
+export const starAttackMultiplier=(s,a)=>c20Enabled(s)&&a.starVanguardTurn<=s.turn&&s.turn<=a.starVanguardTurn+1?C20.vanguard:1;
 export const cityRecruitCost=(s,cityId,fid)=>c34Cost(s,s.cities[cityId],'recruit',c31RecruitCost(s,fid,domesticRecruitCost(s,fid,c20Enabled(s)&&fid==='F03'&&s.cities[cityId]?.ownerFactionId===fid&&s.cities[cityId].starRecruitTurn===s.turn?C20.recruitCost*C20.recruitDiscount:C20.recruitCost)));
 export function aiStarAction(s,command,fid){
  const act=starAction(s,command,fid);if(!act?.canUse)return false;

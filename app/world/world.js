@@ -8,6 +8,8 @@ import {TICKS_PER_TURN} from '/src/first3.mjs';
 import {cityAttackTargets,previewCityAttack,previewTactic,tacticFailureReason,attackTargets,previewAttack,previewDisengage,previewApproachFire,armyActionEnded,attackRange,campaignUnitRatings} from '/src/campaign-combat.mjs';
 import {createCampaignCombatAudio} from '/src/campaign-combat-audio.mjs';
 import {createCampaign, view, step, serialize, deserialize, CAMPAIGN_SAVE_KEY,campaignMoveOptions,CAMPAIGN_TURN_LIMIT} from '/src/campaign-runtime.mjs';
+import {getFactionView} from '/src/knowledge.mjs';
+import {troopPlateY,troopScreenMatrix} from '/app/world/troops.mjs';
 import {hexDistance} from '/src/map-primitives.mjs'; // 굶는 부대 안내(starvingAdvice)가 쓰는데 빠져 있어, 굶는 부대를 고르면 화면 오류가 났다(C132 · 2026-10-12 자동 플레이에서 발견)
 import {archerAttackReason} from '/src/campaign-combat.mjs';
 import {diplomacyAttackReason,diplomacyMoveReason} from '/src/campaign-diplomacy.mjs';
@@ -295,6 +297,7 @@ function command(request,confirmed=false) {
   const before=state;state=step(state,{...request,incremental:true});overlapPick=null;
   try{decisionFeedback(request,before,state);}catch(e){console.warn('C159 decision feedback:',e);}
   const bv=view(before),av=view(state),notices=[...observedReinforcementLines(bv,av),...starvationLines(bv,av)];
+  rememberMapOwnership(before,state,av);
   for(const c of Object.values(av.ownCities)){const kind=c.currentProduction?.kind;if(!kind)continue;const old=bv.ownCities[c.cityId]?.jobs?.find(j=>j.kind===kind)?.estimate,next=c.jobs?.find(j=>j.kind===kind)?.estimate,r=productionReadout(next,old);if(r.change)notices.push(`${c.name} · ${r.change} · ${r.line}`);}
   for(const [id,a] of Object.entries(bv.ownArmies)){if((av.ownArmies[id]?.troopCount??0)>0)continue;const inj=av.officers[a.commanderId]?.injury;if(inj&&!bv.officers[a.commanderId]?.injury)notices.push(`부대가 무너졌습니다 — ${av.officers[a.commanderId]?.name??'장수'} 중상 · ${injuryReturnText(av.turn,inj)}`);}
   recordNotices=[...recordNotices,...notices.map(line=>({turn:av.turn,line}))].slice(-20);
@@ -329,7 +332,7 @@ function command(request,confirmed=false) {
   if(combat&&combatVisible(before,state,combat)){$('#attack-preview').hidden=true;$('#status').textContent='공격 중…';if(!!combat.tacticName){combatAnimating=true;const a=before.armies[combat.attackerId];render();showTacticCutIn(a.commanderId,combat.tacticName,a.factionId,()=>animateCombat(before,combat,id));}else animateCombat(before,combat,id);return;}
   if(request.type!=='MOVE_UNIT')selectedArmyId=null;
   if(keepSel&&state.armies[keepSel.id]&&!armyActionEnded(state,keepSel.id)&&state.phase==='PLAYER'){selectedArmyId=keepSel.id;selectedArmyIds=[keepSel.id];menuOpen=keepSel.menu;moveMode=true;}
-  render();scheduleOrders();if(request.type==='ADVANCE_AI'&&movers[0])follow(movers[0]);scheduleAi();
+  render();scheduleOrders();if(movers[0])follow(movers[0],true);scheduleAi();
   $('#status').textContent=state.phase==='AI'?(before.phase==='PLAYER'?(request.type==='END_TURN'?'AI 차례 진행 중…':'모든 부대 행동 완료 — AI 차례'):'AI 차례 진행 중…'):'명령을 선택하세요.';
   if(state.phase==='PLAYER'&&(before.phase!=='PLAYER'||state.turn>before.turn))startPlayerCamera();else autoNextUnit();
  }catch(error){$('#status').textContent=errorText(error);if(draftAction)$('#growth-error').textContent=errorText(error);}
@@ -375,7 +378,7 @@ function animateCombat(before,c,id){
  if(c.kind==='APPROACH_FIRE'&&motionRemaining()>0){
   combatAnimating=true;const units=campaignMapModel(view(before)).units;
   for(const u of c.units)losses[u.unitId]={displayCount:u.preBattleCount*campaignShownScale(before,u.unitId,state.playerFactionId),oldUnit:units.find(x=>x.id===u.unitId)};
-  render();follow(c.targetId);combatTimers.push(setTimeout(()=>{losses={};animateCombat(before,c,id);},motionRemaining()+20));return;
+  render();follow(c.targetId,true,null,before.armies[c.attackerId]?.tileId);combatTimers.push(setTimeout(()=>{losses={};animateCombat(before,c,id);},motionRemaining()+20));return;
  }
  ruleFx(before,c);
  if(c.tacticName)fxList.push({kind:'tactic',label:c.tacticName,from:before.armies[c.attackerId].tileId,to:before.armies[c.targetId]?.tileId??before.cities[c.targetId]?.tileId??(before.tiles[c.targetId]?c.targetId:before.armies[c.attackerId].tileId),start:performance.now(),duration:1700});
@@ -398,7 +401,7 @@ function animateCombat(before,c,id){
  attackAnims[c.attackerId]={targetTileId:targetTile,start:now,duration:520,ranged,charge:!!c.charge};
  facings[c.attackerId]={tileId:targetTile,until:now+2300};facings[c.targetId]={tileId:fromTile,until:now+(movementShot?560:2300)};
  fxList.push({kind:ranged?'volley':attackTroop==='BT04'?'charge':'clash',from:fromTile,to:targetTile,start:now+(ranged?0:150),duration:1100});
- render();follow(c.targetId);
+ render();follow(c.attackerId,true,null,targetTile);
  const hit=(armyId,loss,counter)=>{
   const u=c.units.find(u=>u.unitId===armyId);losses[armyId]={prevCount:u.preBattleCount*campaignShownScale(before,u.unitId,state.playerFactionId),postCount:u.postBattleCount*campaignShownScale(before,u.unitId,state.playerFactionId),heavyLoss:loss/u.preBattleCount>=.3,oldUnit:oldUnits.find(x=>x.id===armyId),impactFrom:counter?targetTile:fromTile,lossLabel:approach?'접근사격':pursuit&&!counter?'추격':counter?'반격':''};
   impactFeedback({from:counter?targetTile:fromTile,to:counter?fromTile:targetTile,loss,charge:!!c.charge&&!counter,counter,kind:ranged&&!counter?'volley':'clash'});
@@ -444,17 +447,13 @@ function overlayAnimations(model){
 // 행군이 끝나면 한 번 다시 그려 바라보는 쪽·교전 표시를 맞춘다(브라우저 프레임 기준, 타이머 대기열을 쓰지 않음).
 function scheduleRedraw(){
  if(redrawTimer||!globalThis.requestAnimationFrame)return;
- const tick=()=>{if(motionRemaining()>0){redrawTimer=requestAnimationFrame(tick);return;}redrawTimer=null;if(state&&!combatAnimating)drawMap(view(state));};
+ const tick=()=>{if(motionRemaining()>0){redrawTimer=requestAnimationFrame(tick);return;}redrawTimer=null;if(state&&!combatAnimating){const armyId=selectedArmyId??Object.keys(motions).find(id=>armyVisible(state,id));drawMap(view(state));if(armyId)follow(armyId,true);}};
  redrawTimer=requestAnimationFrame(tick);
 }
 // AI 가 화면 밖에서 움직이면 그쪽으로 부드럽게 옮겨 보여 준다.
-function follow(armyId,instant=false,previewTile=null){
- if(globalThis.document?.body?.classList?.contains('hud-band')&&armyId===bandFocusArmy){
-  // Claude 10-14: 예고(마우스를 대상에 올림) 중에는 카메라를 움직이지 않는다 — 움직이면 커서 밑 칸이 바뀌어 누르면 공격이 빗나간다(C157 회귀). 두 부대 구도는 '공격'을 누를 때 한 번 맞춘다(아래 action==='attack')
-  if(previewTile)return;
-  if(!bandFocusMoving&&!attackMode)frameBandContext(armyId,v3Mode());
-  return;
- }
+function follow(armyId,instant=false,previewTile=null,targetTileId=null){
+ if(globalThis.document?.body?.classList?.contains('hud-band')&&previewTile)return; // C157: hover never pans.
+ if(typeof bandFocusMoving!=='undefined'&&bandFocusMoving)return; // Initial composition owns the camera until it settles.
  const map=$('#map'),tileId=state?.armies?.[armyId]?.tileId,city=Object.values(state?.cities??{}).find(c=>c.tileId===tileId);
  const node=map.querySelector?.(`[data-unit="${armyId}"]`)??(city&&map.querySelector?.(`.w-cityplate[data-city="${city.cityId}"]`))??(tileId&&map.querySelector?.(`[data-tile="${tileId}"]`)),port=$('.viewport');
  if(!node?.getBoundingClientRect||!port?.getBoundingClientRect||!port.scrollTo)return;
@@ -469,10 +468,11 @@ function follow(armyId,instant=false,previewTile=null){
   const visible={left:Math.max(0,v.left),top:Math.max(0,v.top),right:Math.min(globalThis.innerWidth??v.left+v.width,v.right??v.left+v.width),bottom:Math.min(globalThis.innerHeight??v.top+v.height,v.bottom??v.top+v.height)};
   visible.width=visible.right-visible.left;visible.height=visible.bottom-visible.top;
   // Perspective makes screen pixels differ from scroll pixels. Remeasure after each instant correction.
-  for(let i=0;i<6;i++){let area=node.getBoundingClientRect();const extra=previewTile&&map.querySelector?.(`[data-tile="${previewTile}"]`)?.getBoundingClientRect?.();if(extra){area={left:Math.min(area.left,extra.left),right:Math.max(area.right,extra.right),top:Math.min(area.top,extra.top),bottom:Math.max(area.bottom,extra.bottom)};area.width=area.right-area.left;area.height=area.bottom-area.top;}const shift=uncoveredShift(area,visible,panels);if(!shift||(!shift.x&&!shift.y))return;
+  for(let i=0;i<14;i++){let area=armyScreenBounds(node);const goal=targetTileId??(globalThis.document?.body?.classList?.contains('hud-band')?armyCameraTarget(armyId):null);const extra=goal&&targetScreenBounds(map,goal);if(extra){area={left:Math.min(area.left,extra.left),right:Math.max(area.right,extra.right),top:Math.min(area.top,extra.top),bottom:Math.max(area.bottom,extra.bottom)};area.width=area.right-area.left;area.height=area.bottom-area.top;}const shift=uncoveredShift(area,visible,panels);if(!shift){if(goal&&zoom>.6){zoom=Math.max(.6,zoom*.86);applyZoom();continue;}return;}if(!shift.x&&!shift.y)return;
    const left=port.scrollLeft,top=port.scrollTop;
-   let next={left:left-shift.x,top:top-shift.y};
-   if(document.body?.classList?.contains('hud-band'))next=bandCameraPosition(port,map,next.left,next.top);
+   const matrix=map.querySelector?.('svg')?.getScreenCTM?.(),delta=matrix?screenScrollDelta(matrix,shift.x,shift.y,zoom):shift;
+   let next={left:left-delta.x,top:top-delta.y};
+   if(document.body?.classList?.contains('hud-band'))next=bandCameraPosition(port,map,next.left,next.top,true);
    port.scrollTo({...next,behavior:'auto'});if(port.scrollLeft===left&&port.scrollTop===top)return;
   }return;
  }
@@ -480,18 +480,21 @@ function follow(armyId,instant=false,previewTile=null){
  if(!instant)lockCamera(port);
  port.scrollTo({left:port.scrollLeft+(r.left+r.width/2)-(v.left+v.width/2),top:port.scrollTop+(r.top+r.height/2)-(v.top+v.height/2),behavior:instant?'auto':'smooth'});
 }
-function bandCameraPosition(port,map,left=port.scrollLeft,top=port.scrollTop){
+function bandCameraPosition(port,map,left=port.scrollLeft,top=port.scrollTop,allowRing=false){
  const svg=map.querySelector('svg'),box=svg?.viewBox?.baseVal;if(!box)return {left,top};
  // Automatic uncovering and resize stay inside land; manual map panning is unchanged.
  const margin=Number(svg.dataset.margin)||0,scale=svg.clientWidth/box.width;
+ // C165: uncovering a unit may use the painted ring, but never leave the world image.
+ if(allowRing)return {left:Math.max(0,Math.min(box.width*scale-port.clientWidth,left)),top:Math.max(0,Math.min(box.height*scale-port.clientHeight,top))};
  const limit=(value,current,extent,viewSize,keepEdge=false)=>{const low=margin*scale,high=(extent-margin)*scale-viewSize;if(high<low)return current;return keepEdge?Math.max(Math.min(low,current),Math.min(Math.max(high,current),value)):Math.max(low,Math.min(high,value));};
  // A capital at the southern edge already uses the rendered ring. Do not force it below the band,
  // and do not uncover farther into that ring than the current camera position.
  return {left:limit(left,port.scrollLeft,box.width,port.clientWidth),top:limit(top,port.scrollTop,box.height,port.clientHeight,true)};
 }
-// C157: framing is presentation only. Restore the camera captured before selection.
+// C165b: restore the initial C164 focus; later switches use C165 safe-region uncovering.
 let bandFocusSnapshot=null,bandFocusArmy=null,bandFocusMode=null,bandFocusMoving=false;
 let bandFocusTimer=null,bandPreviewPointer=null;
+// Initial selection and the explicit Attack button retain the established composition.
 function frameBandArmy(armyId,x,y,previewTile=null){
  const svg=$('#map svg'),node=$('#map').querySelector(`.w-unit[data-unit="${armyId}"]`);
  if(!svg?.createSVGPoint||!node?.getScreenCTM)return;
@@ -499,7 +502,7 @@ function frameBandArmy(armyId,x,y,previewTile=null){
   const plate=node.querySelector?.(':scope > .plate-top'),r=plate?.getBoundingClientRect?.();
   const p=r?.width?{x:r.left+r.width/2,y:r.top+r.height/2}:svg.createSVGPoint().matrixTransform(node.getScreenCTM());
   if(previewTile){
-   const foe=Object.values(state.armies).find(a=>a.armyId!==armyId&&a.tileId===previewTile),face=foe&&$('#map').querySelector(`.w-unit[data-unit="${foe.armyId}"] > .plate-top`),fr=face?.getBoundingClientRect?.();
+   const v=view(state),foe=Object.values(v.knowledge?.observedArmies??{}).find(a=>a.armyId!==armyId&&a.tileId===previewTile),face=foe&&$('#map').querySelector(`.w-unit[data-unit="${foe.armyId}"] > .plate-top`),fr=face?.getBoundingClientRect?.();
    const other=$('#map').querySelector(`[data-tile="${previewTile}"]`);
    if(fr?.width){p.x=(p.x+fr.left+fr.width/2)/2;p.y=(p.y+fr.top+fr.height/2)/2;}
    else if(other?.getBBox){const b=other.getBBox(),q=svg.createSVGPoint();q.x=b.x+b.width/2;q.y=b.y+b.height/2;const t=q.matrixTransform(other.getScreenCTM());p.x=(p.x+t.x)/2;p.y=(p.y+t.y)/2;}
@@ -508,12 +511,16 @@ function frameBandArmy(armyId,x,y,previewTile=null){
   viewport.scrollLeft+=delta.x;viewport.scrollTop+=delta.y;
  }
 }
-function syncBandFocus(armyId,mode){
+function syncBandFocus(armyId,mode,restoreOnClear=true){
+ // Action completion may clear the UI selection; only an explicit close leaves focus.
+ if(!armyId&&bandFocusArmy&&!restoreOnClear){follow(bandFocusArmy,true);return;}
  if(bandFocusArmy===armyId&&bandFocusMode===mode)return;
- const entering=!bandFocusArmy&&armyId,leaving=bandFocusArmy&&!armyId;
+ const entering=!bandFocusArmy&&armyId,leaving=bandFocusArmy&&!armyId,changingArmy=bandFocusArmy&&armyId&&bandFocusArmy!==armyId;
  bandFocusArmy=armyId;bandFocusMode=mode;bandPreviewPointer=null;
  if(entering)bandFocusSnapshot={zoom,left:viewport.scrollLeft,top:viewport.scrollTop};
- clearTimeout(bandFocusTimer);clearTimeout(zoomTimer);
+ clearTimeout(bandFocusTimer);clearTimeout(zoomTimer);bandFocusMoving=false;
+ // C165b: switching within focus only uncovers the new army and its existing goal.
+ if(changingArmy){follow(armyId,true);return;}
  const saved=bandFocusSnapshot;if(!saved)return;
  // C158: supply uses the broad pre-selection view; focus uses 04d's closer view.
  const responsive=Math.min(1,innerWidth/1672,innerHeight/941);
@@ -524,13 +531,9 @@ function syncBandFocus(armyId,mode){
   zoom=from+(to-from)*ease;applyZoom();
   if(leaving){viewport.scrollLeft=saved.left;viewport.scrollTop=saved.top;}
   else frameBandContext(armyId,mode);
-  if(t<1)bandFocusTimer=setTimeout(frame,16);else{bandFocusMoving=false;if(leaving)bandFocusSnapshot=null;}
+  if(t<1)bandFocusTimer=setTimeout(frame,16);else{bandFocusMoving=false;if(leaving)bandFocusSnapshot=null;else if(armyCameraTarget(armyId))follow(armyId,true);}
 }frame();
 }
- // C163: nearby friendly city labels are stable anchors for the baked castle art.
-// 04d: capital label (0.41, 0.77). In 05 the baked castle is above
-// its runtime label: lower that anchor by 8.4% of the viewport (C164).
-// Remote armies keep their own plate anchor; only public friendly cities are used.
 function frameBandContext(armyId,mode){
  const v=view(state),a=v.ownArmies?.[armyId],at=v.tiles?.[a?.tileId];
  const city=at&&Object.values(v.ownCities??{}).filter(c=>v.tiles[c.tileId]&&hexDistance(at,v.tiles[c.tileId])<=4).sort((a,b)=>hexDistance(at,v.tiles[a.tileId])-hexDistance(at,v.tiles[b.tileId]))[0];
@@ -548,11 +551,36 @@ function frameBandContext(armyId,mode){
 function frameBandAttack(armyId){
  clearTimeout(bandFocusTimer);bandFocusMoving=false;
  zoom=bandFocusSnapshot?.zoom??zoom;applyZoom();
- const target=attackTargets(state,armyId)[0]??cityAttackTargets(state,armyId)[0];
- const tile=target&&(state.armies[target]?.tileId??state.cities[target]?.tileId);
+ const v=view(state),target=attackTargets(state,armyId)[0]??cityAttackTargets(state,armyId)[0];
+ const tile=target&&(v.knowledge.observedArmies[target]?.tileId??v.knowledge.cities[target]?.tileId);
  // Frame once on the attack button; hovering must never move the camera.
  // A short viewport needs extra headroom above the fixed forecast band.
  frameBandArmy(armyId,.45,innerHeight>=850?.38:.24,tile);
+ follow(armyId,true,null,tile);
+}
+function armyCameraTarget(armyId){
+ const v=view(state),a=v.ownArmies?.[armyId]??v.knowledge?.observedArmies?.[armyId];
+ const strike=pendingStrike?.armyId===armyId?pendingStrike:null;
+ if(strike)return v.knowledge.observedArmies[strike.targetId]?.tileId??v.knowledge.cities[strike.cityId]?.tileId;
+ const order=orderHighlights(state,[armyId]).find(o=>o.unitId===armyId);
+ return a?.attack?.targetTileId??order?.path?.at(-1)??null;
+}
+function armyScreenBounds(node){
+ if(!node.hasAttribute?.('data-troop-anchor'))return node.getBoundingClientRect();
+ const m=troopScreenMatrix(node,{x:0,y:0},node.getScreenCTM()),d=node.dataset;
+ const points=[[+d.troopLeft,+d.troopTop],[+d.troopRight,+d.troopTop],[+d.troopLeft,+d.troopBottom],[+d.troopRight,+d.troopBottom]].map(([x,y])=>({x:m.a*x+m.c*y+m.e,y:m.b*x+m.d*y+m.f}));
+ const plate=node.querySelector('.plate-top .count')?.getBoundingClientRect(),face=node.querySelector('.plate-top .frame')?.getBoundingClientRect();
+ const rects=[plate,face].filter(r=>r?.width);
+ const left=Math.min(...points.map(p=>p.x),...rects.map(r=>r.left)),right=Math.max(...points.map(p=>p.x),...rects.map(r=>r.right)),top=Math.min(...points.map(p=>p.y),...rects.map(r=>r.top)),bottom=Math.max(...points.map(p=>p.y),...rects.map(r=>r.bottom));
+ return {left,right,top,bottom,width:right-left,height:bottom-top};
+}
+function targetScreenBounds(map,tileId){
+ const nodes=[...(map.querySelectorAll?.(`[data-camera-tile="${tileId}"]`)??[])];
+ const rects=nodes.map(n=>n.classList.contains('w-unit')?armyScreenBounds(n):n.getBoundingClientRect());
+ const tile=map.querySelector?.(`.w-hits [data-tile="${tileId}"]`)?.getBoundingClientRect?.();if(tile)rects.push(tile);
+ if(!rects.length)return null;
+ const left=Math.min(...rects.map(r=>r.left)),right=Math.max(...rects.map(r=>r.right)),top=Math.min(...rects.map(r=>r.top)),bottom=Math.max(...rects.map(r=>r.bottom));
+ return {left,right,top,bottom,width:right-left,height:bottom-top};
 }
 function lockCamera(port){
  cameraMoving=true;clearTimeout(cameraTimer);let x=port.scrollLeft,y=port.scrollTop,stable=0,tries=0;
@@ -855,7 +883,8 @@ function renderFirstSortie(v){const text=firstSortieText(v),p=$('#first-sortie-g
 // 대상 고르기 중 위 가운데 안내 한 줄: 攻 공격 · 術 전법 · 向 방향
 function renderHint(){
  const h=$('#w-hint');if(!h)return;const who=state?.officers?.[state?.armies?.[selectedArmyId]?.commanderId]?.name;let kind=null,g='',t='';
- if(selectedTacticId&&selectedArmyId){const card=campaignTactics(state,selectedArmyId).find(c=>c.traitId===selectedTacticId);kind='tactic';g='전법';t=`${who?who+' · ':''}${card?.name??'전법'} — 대상을 고르세요`;}
+ if(pendingStrike){kind='attack';g='공격';t=strikeNotice(pendingStrike);}
+ else if(selectedTacticId&&selectedArmyId){const card=campaignTactics(state,selectedArmyId).find(c=>c.traitId===selectedTacticId);kind='tactic';g='전법';t=`${who?who+' · ':''}${card?.name??'전법'} — 대상을 고르세요`;}
  else if(attackMode&&selectedArmyId){kind='attack';g='공격';t=`${who?who+' 부대 · ':''}공격할 적 부대나 성을 고르세요`;}
  else if(faceMode&&selectedArmyId){kind='face';g='정면';t=`${who?who+' 부대 · ':''}바라볼 쪽의 칸을 고르세요`;}
  h.hidden=!kind;if(!kind)return;h.dataset.kind=kind;h.querySelector('i').textContent=g;h.querySelector('span').textContent=t;
@@ -910,7 +939,7 @@ function renderHud(v){
   bars.push({pct:{STEADY:100,SHAKEN:50,ROUTING:12}[a.morale]??100,text:MORALE_NAME[a.morale]??'',title:'사기',tone:'bone'});
   if(sup)bars.push({pct:sup.max?(sup.stock??0)/sup.max*100:0,text:`${food1(sup.stock??0)}/${food1(sup.max??0)}`,title:`휴대 군량 · 보급 ${SUPPLY_LABEL[sup.state]??sup.state}${sup.model==='clock'?(sup.draining?' · 줄어드는 중':' · 보급권 안 — 줄지 않음'):''}`,tone:'teal'});}
  renderInkHud(root,{turnLimit:CAMPAIGN_TURN_LIMIT,supplyRange:supplyRules.link.range,unitTroops:a?.troopCount,unitLocation:a?(Object.values({...v.knowledge.cities,...v.ownCities}).find(c=>c.tileId===a.tileId||c.footprint?.gates?.includes(a.tileId)||c.footprint?.walls?.includes(a.tileId))?.name??({plain:'평지',forest:'숲',hill:'언덕',mountain:'산',water:'물'})[v.tiles[a.tileId]?.terrainType]??'지형'):null,foodModel:state.trialRules?.foodModel,bandSupply:a?{name:v.officers[a.commanderId]?.name??'',supply:a.supply,label:SUPPLY_LABEL[a.supply?.state]??'보급 정보 없음',source:v.ownCities[a.supply?.sourceCityId],hub:v.hubs?.find(h=>h.hubId===a.supply?.sourceHubId),context:supplySourceText(a.supply,v),blocked:a.supply?.state==='CUT'?(Object.values(v.knowledge?.cities??{}).some(c=>c.cityId!==a.supply?.sourceCityId&&c.ownerFactionId!==v.factionId&&(c.tileId===a.tileId||c.gates?.includes(a.tileId)||c.walls?.includes(a.tileId)))?'적 성에 붙어 있어 보급이 닿지 않음':'길이 끊겨 휴대 군량으로 버팀'):a.supply?.state==='STARVING'?'군량 바닥 · 굶주림 위험':''}:null,todoLines:bandTodoLines(state,v),bandSelected:selectedTacticId??(faceMode?'face':attackMode?'attack':moveMode?'move':null),garrisonWhy:a?reasonText(garrisonReason(state,a.armyId)||''):'',remaining:Object.values(v.ownArmies).filter(u=>!armyActionEnded(state,u.armyId)).length,todo:councilPending(state)+(pendingCampaignDraft(state)?1:0)+(v.pendingEvent?1:0),ratings:a?campaignUnitRatings(state,a.armyId):null,bandMeta:a?`${TROOP_NAME[troopToCampaign(a.troopType)]??a.troopType} · 병력 ${a.troopCount}`:'',bandStatus:a?{morale:{text:MORALE_NAME[a.morale],warn:a.morale!=='STEADY'},formation:{text:`전열 ${FORMATION_NAME[a.formation??'ORDERED']??'정돈'}`,warn:a.formation!=='ORDERED'},supply:{text:a.supply?.stock<=0&&a.supply?.draining?'굶주림':a.supply?.draining?`${food1(a.supply.turnsLeft)}차례분 · 줄어드는 중`:'보급권 안',warn:!!a.supply?.draining}}:null,factionId:v.factionId,factionName:FACTION_STYLE[v.factionId]?.name,factionColor:FACTION_STYLE[v.factionId]?.color,tone,turn:endedTurn(v.turn),date:campaignDate(endedTurn(v.turn)),left:$('#turn')?.dataset?.left??'',mode:v3Mode(),summary:$('#summary')?.textContent,currentNews,allNews,unitBars:bars,commandIntent,food:foodSnapshot(v),foodChange:lastFoodChange,unitResult:lastUnitResult,facilityResults:lastFacilityResults,combatHistory:recentCombats,recruitmentCount:(v.revealedWanderers??[]).length,unitStatus:a?{id:a.armyId,actions:selectedActions(a.armyId),action:armyActionEnded(state,a.armyId)?'이번 턴 행동 완료':state.movedArmyIds.includes(a.armyId)?'이동함 · 주 행동 확인':'행동 가능',formation:FORMATION_NAME[a.formation??'ORDERED']??'정돈'}:null,council:councilPending(state)});
- syncBandFocus(a?.armyId??null,v3Mode());
+ syncBandFocus(a?.armyId??null,v3Mode(),false);
 }
 // C149: reuse the same player council text already shown in the council UI.
 function bandTodoLines(s,v){
@@ -1603,7 +1632,7 @@ function resume() {
 function applySaved(saved) {
   try {
     if (!saved) throw new Error('캠페인 저장이 없습니다.');
-    tacticReadySeen.clear();tacticReadyPending.clear();tacticCutSeen.clear();cancelStrike();saved.manualEndTurn=true;state = saved;recordNotices=[];newsArchive=[];overlapPick=null;cancelAttackConfirmation();recentCombats=[];lastFoodChange=null;lastUnitResult=null;lastFacilityResults=[];turnLog=[];selectedArmyIds=[];scheduleOrders(); attackMode=false; selectedArmyId=null;menuOpen=false;moveMode=false;destination=null;zoom=START_ZOOM;render();centerPlayer(); scheduleAi(); $('#status').textContent = '저장된 캠페인을 이어합니다.';
+    tacticReadySeen.clear();tacticReadyPending.clear();tacticCutSeen.clear();cancelStrike();saved.manualEndTurn=true;state = saved;recordNotices=[];newsArchive=[];overlapPick=null;cancelAttackConfirmation();recentCombats=[];lastFoodChange=null;lastUnitResult=null;lastFacilityResults=[];turnLog=[];selectedArmyIds=[];scheduleOrders(); attackMode=false; selectedArmyId=null;menuOpen=false;moveMode=false;destination=null;bandFocusSnapshot=null;bandFocusArmy=null;bandFocusMode=null;clearTimeout(bandFocusTimer);bandFocusMoving=false;zoom=START_ZOOM;render();centerPlayer(); scheduleAi(); $('#status').textContent = '저장된 캠페인을 이어합니다.';
   } catch (error) {$('#status').textContent = error.message;}
 }
 // 새 판의 시드: 주소의 ?seed= 가 있으면 그것(재현용), 브라우저에서는 매번 새로(판마다 포텐·Draft가 달라지게 — 완료 기준 3),
@@ -1621,7 +1650,7 @@ for (const button of document.querySelectorAll('button[data-faction]')) {
     cancelStrike();clearTimeout(aiTimer);clearTimeout(orderTimer);selectedArmyIds=[];attackMode=false;// 새 판은 성에서 시작한다(야전 부대 없음 — 사용자 2026-10-11 "기본적으로 2부대 출진돼 있는 거 삭제"). 주소에 ?field=1 이면 예전처럼 두 부대가 나와 있는 채로(자동 점검 도구용)
     recordNotices=[];newsArchive=[];overlapPick=null;cancelAttackConfirmation();recentCombats=[];lastFoodChange=null;lastUnitResult=null;lastFacilityResults=[];turnLog=[];
     state = createCampaign({factionId,seed,manualEndTurn:true,...(companions?{companions}:{}),...(new URLSearchParams(location.search).get('field')==='1'?{}:{fieldArmies:false})});
-    tacticReadySeen.clear();tacticReadyPending.clear();tacticCutSeen.clear();selectedArmyId=null;menuOpen=false;moveMode=false;unlockAudio();zoom=START_ZOOM;render();centerPlayer(); $('#status').textContent = Object.keys(view(state).ownArmies).length?'부대를 선택해 이동 명령을 내리세요.':'나와 있는 부대가 없습니다 — 성을 눌러 들어가 병영에서 출진시키십시오.';
+    tacticReadySeen.clear();tacticReadyPending.clear();tacticCutSeen.clear();selectedArmyId=null;menuOpen=false;moveMode=false;unlockAudio();bandFocusSnapshot=null;bandFocusArmy=null;bandFocusMode=null;clearTimeout(bandFocusTimer);bandFocusMoving=false;zoom=START_ZOOM;render();centerPlayer(); $('#status').textContent = Object.keys(view(state).ownArmies).length?'부대를 선택해 이동 명령을 내리세요.':'나와 있는 부대가 없습니다 — 성을 눌러 들어가 병영에서 출진시키십시오.';
   };
   button.addEventListener('click', () => {
     const factionId=button.dataset.faction,seed=newCampaignSeed(),host=$('#officer-draft');
@@ -1706,7 +1735,7 @@ function positionUnitMenu(){
  const placement=unitMenuPlacement(svg.getBoundingClientRect(),$('#game').getBoundingClientRect(),{width:innerWidth,height:innerHeight},{clientX:anchor.x,clientY:anchor.y,bounds},menu.offsetHeight,obstacles);
  menu.hidden=!placement;if(placement)for(const [key,value]of Object.entries(placement))menu.style[key]=value+'px';
 }
-function closeUnitMenu(){setCommandIntent('');selectedTacticId=null;attackMode=false;menuOpen=false;moveMode=false;faceMode=false;queueMicrotask(renderHint);destination=null;selectedArmyId=null;selectedArmyIds=[];if(state)render();}
+function closeUnitMenu(){if(document.body?.classList?.contains('hud-band'))syncBandFocus(null,v3Mode());setCommandIntent('');selectedTacticId=null;attackMode=false;menuOpen=false;moveMode=false;faceMode=false;queueMicrotask(renderHint);destination=null;selectedArmyId=null;selectedArmyIds=[];if(state)render();}
 // 부대 명령 카드 머리(레퍼런스: 삼국지14 초상 부대 · 문명6 선택 패널 · 워해머3 부대 카드) — 초상·병종·병력·사기·전열
 // C21 전문인력(사용자 2026-10-04 승인 단순안): 종류·이름·아이콘·1명당 효과
 const SPECIALISTS=[['artisan','기술자','build','생산 +1'],['official','관료','politics','산출 +5% · 점령 단계 −1'],['scholar','학자','science','과학 +1'],['logistician','병참','food','군량 +1']];
@@ -1907,6 +1936,7 @@ $('#unit-menu').addEventListener('click',e=>{
 let pendingStrike=null,strikeTimer=null;
 // A growth choice pauses an already requested attack; it does not cancel it.
 function cancelStrike(){clearTimeout(strikeTimer);strikeTimer=null;pendingStrike=null;}
+function strikeNotice(p){return `다가가서 공격합니다 — ${p.via} 칸으로 이동 뒤 자동 공격`;}
 function strikeExpired(p){return !state||state.gameResult||state.phase!=='PLAYER'||state.turn!==p.turn||!state.armies[p.armyId];}
 function scheduleStrike(){
  clearTimeout(strikeTimer);strikeTimer=null;
@@ -2025,7 +2055,7 @@ function confirmRiskyAttack(request){
 function cancelAttackConfirmation(){pendingAttack=null;$('#attack-confirm').hidden=true;}
 // 지도 누르기와 '고른 부대 공격' 단추가 함께 쓴다: 다가가서 치거나, 칠 수 있는 자리로 예약 이동.
 function strikeOrApproach(who,target){
- if(target.kind==='strike'){command({type:'MOVE_UNIT',armyId:who,destinationTileId:target.via});if(state.armies[who]?.tileId===target.via){pendingStrike={...target,armyId:who,turn:state.turn};$('#status').textContent='다가가서 공격합니다…';scheduleStrike();if(pendingCampaignDraft(state))renderGrowthDraft();}return;}
+ if(target.kind==='strike'){command({type:'MOVE_UNIT',armyId:who,destinationTileId:target.via});if(state.armies[who]?.tileId===target.via){pendingStrike={...target,armyId:who,turn:state.turn};attackMode=false;$('#attack-preview').hidden=true;document.dispatchEvent(new CustomEvent('ink:forecast',{detail:null}));setCommandIntent(strikeNotice(pendingStrike));$('#status').textContent=strikeNotice(pendingStrike);renderHint();follow(who,true);scheduleStrike();if(pendingCampaignDraft(state))renderGrowthDraft();}return;}
  if(!orderEligible(state,who)){$('#status').textContent=selectedActions(who).reason;return;}
  command({type:'QUEUE_MOVE',armyIds:[who],destinationTileId:target.via});$('#status').textContent='칠 수 있는 자리로 갑니다. 닿으면 다시 눌러 공격하세요.';
 }
@@ -2112,6 +2142,7 @@ function mapClick(e){
 }
 $('#map').addEventListener('click',e=>{if(suppressPanClick){suppressPanClick=false;e.preventDefault();return;}mapClick(e);});
 $('#map').addEventListener('pointerover',function mapPointerOver(e){
+ if(typeof pendingStrike!=='undefined'&&pendingStrike){$('#status').textContent=strikeNotice(pendingStrike);renderHint();return;}
  if(panGesture||inputLocked()||!selectedArmyId)return;
  if(globalThis.document?.body?.classList?.contains('hud-band')&&bandPreviewPointer&&document.querySelector('.nb-band')?.dataset.state==='forecast'&&e.clientX===bandPreviewPointer.x&&e.clientY===bandPreviewPointer.y)return;
  const hoverTile=targetTile(e.target,state.armies,state.cities);
@@ -2265,9 +2296,27 @@ viewport.addEventListener('click',e=>{if(suppressPanClick){suppressPanClick=fals
 document.addEventListener('keydown',e=>{if(!state||e.target?.closest?.('input,select,textarea'))return;const d={ArrowLeft:[-80,0],a:[-80,0],ArrowRight:[80,0],d:[80,0],ArrowUp:[0,-80],w:[0,-80],ArrowDown:[0,80],s:[0,80]}[e.key.length===1?e.key.toLowerCase():e.key];if(d){e.preventDefault();viewport.scrollLeft+=d[0];viewport.scrollTop+=d[1];}});
 
 // Fixed SVG margin covers the viewport even at the minimum zoom; no second background.
+let cityOwnershipState=null,cityOwnershipView=null;
+const cityOwnershipEvents=new WeakMap();
+function rememberMapOwnership(before,after,v){
+ const known=new Map(cityOwnershipEvents.get(before)??[]);
+ for(const c of Object.values(after.cities)){
+  const was=before.cities[c.cityId]?.ownerFactionId;
+  if(v.knowledge.tiles[c.tileId]==='VISIBLE')known.delete(c.cityId);
+  // Losing one's own city is public even when its vision disappears immediately.
+  if(was!==c.ownerFactionId&&(was===v.factionId||c.ownerFactionId===v.factionId||v.knowledge.tiles[c.tileId]==='VISIBLE'))known.set(c.cityId,c.ownerFactionId);
+ }
+ cityOwnershipEvents.set(after,known);
+}
+function refreshMapOwnership(model,publicView,events=new Map()){
+ const cities={...publicView.knowledge.cities,...publicView.ownCities};
+ for(const c of model.cities){const live=cities[c.id];if(!live)continue;const owner=events.has(c.id)?events.get(c.id):live.ownerFactionId;c.factionId=owner;c.ownerFactionId=owner;c.neutral=owner===null;}
+}
 function drawMap(v,hoverOnly=false){
  const options=selectedArmyId&&!inputLocked()?campaignMoveOptions(state,selectedArmyId):[];
  const model=campaignMapModel(v,{selectedArmyId,movedArmyIds:Object.values(state.armies).filter(a=>state.movedArmyIds.includes(a.armyId)||armyActionEnded(state,a.armyId)).map(a=>a.armyId),moveOptions:options,destination,portraits:plateFaces()});
+ if(cityOwnershipState!==state){cityOwnershipState=state;cityOwnershipView=getFactionView(state);}
+ refreshMapOwnership(model,cityOwnershipView,cityOwnershipEvents.get(state));
  for(const u of model.units)u.active=!!selectedArmyId&&(selectedArmyIds.includes(u.id)||u.id===selectedArmyId)||overlapPick?.count>1&&!v.ownArmies[overlapPick.id]&&overlapPick.id===u.id;
  if(model.places){const xs=v.exploration?.places??[];model.places=model.places.map(p=>{const x=xs.find(e=>e.placeId===p.label),layer=x?.eventName?TRACE_LAYER[state.exploration?.places?.[p.label]?.eventId]??null:null;return {...p,status:x?.status,eventName:x?.eventName,layer,layerName:layer?TRACE_LAYERS[layer].name:null};});}
  model.highlights.orders=orderHighlights(state,selectedArmyIds);
@@ -2331,6 +2380,7 @@ function applyZoom(){
    // Claude 10-14: 예전 크기의 투명한 누르는 판을 따로 두지 않는다 — 줄인 표지보다 커서 이웃 칸(적이 선 칸)까지 덮어, 적을 눌러도 우리 부대가 눌렸다(공격 안 됨). 누르는 자리 = 줄인 그림 그대로
    if(!art){art=document.createElementNS('http://www.w3.org/2000/svg','g');art.classList.add('c153-label-art');while(label.firstChild)art.append(label.firstChild);label.append(art);}
    art.setAttribute('transform',`scale(${scale})`);
+   const unit=label.parentElement;if(label.classList.contains('plate-top')&&unit.hasAttribute('data-troop-top'))label.setAttribute('transform',`translate(0 ${troopPlateY(Number(unit.dataset.troopHead),scale)})`);
   }
  }
 }
