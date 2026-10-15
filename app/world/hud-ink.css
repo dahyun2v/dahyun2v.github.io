@@ -3098,21 +3098,33 @@ body.hud-band:has(.nb-supply:not([hidden])) .nb-advisor-box>div{padding-top:calc
 @media(prefers-reduced-motion:reduce){.tactic-ready-flash::after{display:none}}
 /* C159: supply route hints occupy the lower map, below its title and description. */
 /* C163: one bounded route hint in every map state, clear of the title and band. */
-body.hud-band #attack-preview:not(.forecast),body.hud-band:has(.nb-band[data-state="unit"]) #attack-preview:not(.forecast),body.hud-band:has(.nb-supply:not([hidden])) #attack-preview:not(.forecast){position:fixed;top:auto!important;bottom:18dvh;left:50vw!important;transform:translateX(-50%);width:min(46vw,720px);max-width:46vw;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;pointer-events:none;background:url(/assets/ui-v3/hud/kit/status-line.png) center/100% 100% no-repeat;background-size:100% 100%!important;padding:12px 24px;border:0;color:#eee4ce;font:400 clamp(12px,1.02vw,17px)/1.35 var(--serif)}
-body.hud-band #attack-preview:not(.forecast) :is(p,small){position:static;display:block;margin:3px 0;white-space:normal;overflow-wrap:anywhere}
+body.hud-band #attack-preview:not(.forecast),body.hud-band:has(.nb-band[data-state="unit"]) #attack-preview:not(.forecast),body.hud-band:has(.nb-supply:not([hidden])) #attack-preview:not(.forecast){position:fixed;top:var(--guide-top,80dvh)!important;bottom:auto;left:var(--guide-left,27vw)!important;transform:none;width:var(--guide-width,46vw);max-width:720px;height:28px;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:auto;background:linear-gradient(90deg,transparent,#111c 5%,#111c 95%,transparent);background-size:100% 100%!important;padding:3px 12px;border:0;box-shadow:none;z-index:2;color:#eee4ce;font:400 clamp(12px,1.02vw,17px)/22px var(--serif)}
 body.hud-band .nb-supply-source{height:calc(208 * var(--ku));max-height:calc(208 * var(--ku));overflow:auto;box-sizing:border-box;padding-bottom:calc(6 * var(--ku))}
 body.hud-band .nb-supply blockquote{top:auto;bottom:calc(22 * var(--ku));right:calc(28 * var(--ku));line-height:1.3}
-body.hud-band:has(.nb-band[data-state="forecast"]) .nb-forecast-status{left:auto;right:0;width:38vw;max-width:38vw;padding:0 calc(20 * var(--ku))!important;font-size:calc(19 * var(--ku))!important;word-spacing:0;white-space:normal;overflow-wrap:anywhere}
+body.hud-band:has(.nb-band[data-state="forecast"]) .nb-forecast-status{left:auto;right:0;width:38vw;max-width:38vw;padding:0 calc(32 * var(--ku))!important;font-size:calc(21 * var(--ku))!important;word-spacing:0;white-space:nowrap;gap:calc(18 * var(--ku));justify-content:flex-start;background:url(/assets/ui-v3/hud/kit/topbar-left.png) center/100% 100% no-repeat;border:0;box-shadow:none;overflow:visible}
+body.hud-band .nb-forecast-status>span{flex:none;white-space:nowrap}
 body.hud-band:has(.nb-band[data-state="forecast"]) .wmap .w-art{filter:saturate(.90) brightness(.89) contrast(1.22)!important;image-rendering:auto}
 body.hud-band .nb-preview-enemy .nb-preview-values{left:52.8vw;width:12.6vw}
 body.hud-band .nb-preview-enemy .nb-preview-count{font-size:calc(36 * var(--ku))}
 body.hud-band .nb-preview-enemy .nb-preview-loss{width:100%}
 body.hud-band .nb-preview-portrait.enemy{left:66.6vw;width:calc(232 * var(--ku));--band-face:calc(105 * var(--ku))}
-body.hud-band .nb-preview-middle::before,body.hud-band .nb-preview-middle::after{top:calc(83 * var(--ku));width:calc(174 * var(--ku));height:calc(92 * var(--ku));left:calc(18 * var(--ku));transform:none;opacity:.65;mask-image:url(/assets/ui-v3/hud/kit/hero-brush.png);mask-size:100% 100%;clip-path:polygon(0 50%,35% 8%,100% 22%,100% 80%,32% 92%)}
-body.hud-band .nb-preview-middle::after{left:auto;right:calc(18 * var(--ku));clip-path:polygon(0 22%,68% 8%,100% 50%,65% 92%,0 80%)}
-body.hud-band .nb-preview-middle>b{margin-top:calc(14 * var(--ku))}
+body.hud-band .nb-preview-middle::before,body.hud-band .nb-preview-middle::after{top:calc(78 * var(--ku));width:calc(110 * var(--ku));height:calc(100 * var(--ku));left:calc(-5 * var(--ku));transform:scaleX(-1);opacity:.7;mask:url(/assets/ui-v3/hud/kit-brush-arrow.png) right center/260% 100% no-repeat;mask-mode:alpha;clip-path:none}
+body.hud-band .nb-preview-middle::after{left:auto;right:calc(-5 * var(--ku));transform:none}
+body.hud-band .nb-preview-middle>b{position:relative;margin-top:calc(2 * var(--ku));font-size:calc(33 * var(--ku));line-height:1.2}
+body.hud-band .nb-preview-middle>b::before,body.hud-band .nb-preview-middle>b::after{content:'';position:absolute;left:calc(-42 * var(--ku));right:calc(-42 * var(--ku));top:calc(-5 * var(--ku));height:1px;background:linear-gradient(90deg,transparent,#c9bfaa80 20%,#c9bfaa80 80%,transparent)}
+body.hud-band .nb-preview-middle>b::after{top:auto;bottom:calc(-5 * var(--ku))}
 body.hud-band .nb-tasks li .nb-check{width:calc(28 * var(--ku));height:calc(28 * var(--ku));box-sizing:border-box;border:calc(1.5 * var(--ku)) solid #e6dcc8;border-radius:50%;background:none;filter:none;opacity:1}
 body.hud-band:has(.nb-supply:not([hidden])) .nb-state-title p{font-size:calc(20 * var(--ku));width:calc(390 * var(--ku))}
 body.hud-band .nb-supply-source h3{font-size:calc(32 * var(--ku));margin-bottom:calc(6 * var(--ku))}
 body.hud-band .nb-supply-source p{font-size:calc(18 * var(--ku));margin:calc(5 * var(--ku)) 0;padding:calc(3 * var(--ku)) 0}
 body.hud-band .nb-supply-source small{font-size:calc(16 * var(--ku));line-height:1.2;margin-top:calc(6 * var(--ku))}
+/* C164: muted red and a narrower command-band edge, using existing kit art. */
+body.hud-band .nb-state-title{background-blend-mode:luminosity;background-color:#19100d40}
+body.hud-band .nb-selected::after{filter:saturate(.58) brightness(.8)}
+body.hud-band .nb-band[data-state="unit"]{height:calc(139 * var(--ku));background-size:100% 100%}
+@media(max-height:849px){
+ body.hud-band .nb-band[data-state="forecast"]{height:38.4dvh;background-size:100% 100%}
+ body.hud-band .nb-preview-portrait{height:37.3dvh}
+ body.hud-band .nb-preview-portrait.enemy{height:36.2dvh}
+ body.hud-band:has(.nb-band[data-state="forecast"]) .nb-forecast-status{font-size:calc(20 * var(--ku))!important;gap:calc(12 * var(--ku));padding:0 calc(26 * var(--ku))!important}
+}

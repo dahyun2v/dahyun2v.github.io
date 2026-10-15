@@ -516,7 +516,8 @@ function syncBandFocus(armyId,mode){
  clearTimeout(bandFocusTimer);clearTimeout(zoomTimer);
  const saved=bandFocusSnapshot;if(!saved)return;
  // C158: supply uses the broad pre-selection view; focus uses 04d's closer view.
- const from=zoom,to=leaving||mode==='supply'?saved.zoom:Math.min(2.6,saved.zoom*1.35),start=performance.now();
+ const responsive=Math.min(1,innerWidth/1672,innerHeight/941);
+ const from=zoom,to=leaving?saved.zoom:(mode==='supply'?saved.zoom:Math.min(2.6,saved.zoom*1.35))*responsive,start=performance.now();
  bandFocusMoving=true;
  function frame(){
   const t=reduceMotion()?1:Math.min(1,(performance.now()-start)/350),ease=1-(1-t)**3;
@@ -526,8 +527,9 @@ function syncBandFocus(armyId,mode){
   if(t<1)bandFocusTimer=setTimeout(frame,16);else{bandFocusMoving=false;if(leaving)bandFocusSnapshot=null;}
 }frame();
 }
-// C163: nearby friendly city labels are stable anchors for the baked castle art.
-// 04d: capital name centre (0.41, 0.77); 05: (0.43, 0.556), measured in target pixels.
+ // C163: nearby friendly city labels are stable anchors for the baked castle art.
+// 04d: capital label (0.41, 0.77). In 05 the baked castle is above
+// its runtime label: lower that anchor by 8.4% of the viewport (C164).
 // Remote armies keep their own plate anchor; only public friendly cities are used.
 function frameBandContext(armyId,mode){
  const v=view(state),a=v.ownArmies?.[armyId],at=v.tiles?.[a?.tileId];
@@ -535,20 +537,22 @@ function frameBandContext(armyId,mode){
  const node=city&&$('#map').querySelector(`.w-cityplate[data-city="${city.cityId}"] .name`),svg=$('#map svg');
  if(!node?.getBoundingClientRect){frameBandArmy(armyId,mode==='supply'?.385:.44,mode==='supply'?.48:.54);return;}
  for(let i=0;i<4;i++){
-  const r=node.getBoundingClientRect(),delta=screenScrollDelta(svg.getScreenCTM(),r.left+r.width/2-innerWidth*(mode==='supply'?.43:.41),r.top+r.height/2-innerHeight*(mode==='supply'?.556:.77),zoom);
+  const r=node.getBoundingClientRect(),delta=screenScrollDelta(svg.getScreenCTM(),r.left+r.width/2-innerWidth*(mode==='supply'?.43:.41),r.top+r.height/2-innerHeight*(mode==='supply'?.64:.77),zoom);
   viewport.scrollLeft+=delta.x;viewport.scrollTop+=delta.y;
  }
  // Unit visibility takes precedence over the castle composition. A distant plate
  // or a plate behind either upper panel falls back to the clear central map area.
  const plate=$('#map').querySelector(`.w-unit[data-unit="${armyId}"] > .plate-top`),r=plate?.getBoundingClientRect?.();
- if(r&&(r.left<innerWidth*.27||r.right>innerWidth*.74||r.top<innerHeight*.18||r.bottom>innerHeight*.75))frameBandArmy(armyId,.44,.46);
+ if(r&&(r.left<innerWidth*.14||r.right>innerWidth*.74||r.top<innerHeight*.18||r.bottom>innerHeight*.75))frameBandArmy(armyId,.44,.46);
 }
 function frameBandAttack(armyId){
  clearTimeout(bandFocusTimer);bandFocusMoving=false;
  zoom=bandFocusSnapshot?.zoom??zoom;applyZoom();
  const target=attackTargets(state,armyId)[0]??cityAttackTargets(state,armyId)[0];
  const tile=target&&(state.armies[target]?.tileId??state.cities[target]?.tileId);
- frameBandArmy(armyId,.45,.30,tile);
+ // Frame once on the attack button; hovering must never move the camera.
+ // A short viewport needs extra headroom above the fixed forecast band.
+ frameBandArmy(armyId,.45,innerHeight>=850?.38:.24,tile);
 }
 function lockCamera(port){
  cameraMoving=true;clearTimeout(cameraTimer);let x=port.scrollLeft,y=port.scrollTop,stable=0,tries=0;
@@ -1726,6 +1730,31 @@ function forecastHtml(attId,tgtId,p,title=''){
 }
 function cityLabel(id){return document.querySelector?.(`#map .w-cityplate[data-city="${id}"] .name`)?.textContent??id;}
 function setTip(tip,html,text){tip.classList?.add('forecast');tip.innerHTML=html;if(!('firstElementChild' in tip))tip.textContent=text;}
+// Reserve one thin line immediately above the band. Prefer the widest clear
+// horizontal interval; if labels fill it, omit the guide rather than cover them.
+function bandGuidePlacement(width,top,height,markers){
+ const margin=12,gap=6,minWidth=Math.min(220,width*.3),wanted=Math.min(width*.46,720);
+ let intervals=[[Math.max(margin,width*.12),width-margin]];
+ for(const r of markers){
+  if(r.bottom<=top||r.top>=top+height)continue;
+  intervals=intervals.flatMap(([l,h])=>r.right+gap<=l||r.left-gap>=h?[[l,h]]:[[l,Math.max(l,r.left-gap)],[Math.min(h,r.right+gap),h]]).filter(([l,h])=>h-l>=minWidth);
+ }
+ const slot=intervals.sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]))[0];
+ if(!slot)return null;
+ const w=Math.min(wanted,slot[1]-slot[0]),left=Math.max(slot[0],Math.min((width-w)/2,slot[1]-w));
+ return {left,top,width:w};
+}
+function placeBandGuide(tip,refresh=false){
+ if(!refresh){const full=tip.textContent.trim(),first=tip.firstChild?.textContent?.trim()||full;
+  tip.title=full;tip.textContent=first;
+ }
+ const band=document.querySelector('.nb-band'),r=band?.getBoundingClientRect(),height=28;
+ const top=Math.min(r?.height?r.top:innerHeight*.835,innerHeight*.835)-height-6;
+ const markers=[...document.querySelectorAll('#map .w-cityplate,#map .w-unit>.plate-top,#map .w-site>.name')].map(n=>n.getBoundingClientRect());
+ const p=bandGuidePlacement(innerWidth,top,height,markers);
+ tip.hidden=!p;if(!p)return;
+ tip.style.setProperty('--guide-left',p.left+'px');tip.style.setProperty('--guide-top',p.top+'px');tip.style.setProperty('--guide-width',p.width+'px');
+}
 function placeTip(tip,e,w=320){
  if(globalThis.document?.body?.classList?.contains('hud-band')){
   if(tip.classList.contains('forecast')&&tip.querySelector('.fc-vs,.fc-dur,.fc-bar.wide')){
@@ -1735,6 +1764,7 @@ function placeTip(tip,e,w=320){
    if(tile&&band&&band.dataset.target!==tile){band.dataset.target=tile;bandPreviewPointer={x:e.clientX,y:e.clientY};requestAnimationFrame(()=>follow(selectedArmyId,true,tile));}return;
   }
   document.dispatchEvent(new CustomEvent('ink:forecast',{detail:null}));const band=document.querySelector('.nb-band');if(band)delete band.dataset.target;
+  tip.classList.remove('forecast');placeBandGuide(tip);return;
  }
  w=Math.max(w,tip.offsetWidth||0);const h=tip.offsetHeight||200,gap=70,right=e.clientX+gap;let left=right+w+8>innerWidth?Math.max(8,e.clientX-gap-w):right; // 대상 칸(방향 색)을 가리지 않게 옆으로. 폭·높이는 실제 창 크기(흑묵 교전 판은 320 보다 넓다 — 화면 밖으로 잘리던 것)
  const cap=tip.querySelector?.(':scope>.fc-sum:first-child')?.offsetHeight||0; // 판 위에 붙는 대상 설명 줄 — 화면 위로 잘리지 않게 그만큼 내린다
@@ -2149,11 +2179,11 @@ $('#map').addEventListener('pointerover',e=>{
   }
  }
 });
-$('#map').addEventListener('pointerleave',e=>{setCommandIntent('');if(document.body?.classList?.contains('hud-band')&&e.relatedTarget?.closest?.('.nb-band')&&document.querySelector('.nb-band')?.dataset.state==='forecast')return;$('#attack-preview').hidden=true;document.dispatchEvent(new CustomEvent('ink:forecast',{detail:null}));if(hoverSide){hoverSide=null;if(state)drawMap(view(state),true);}});
+$('#map').addEventListener('pointerleave',e=>{setCommandIntent('');if(document.body?.classList?.contains('hud-band')&&(e.relatedTarget?.closest?.('#attack-preview')||(e.relatedTarget?.closest?.('.nb-band')&&document.querySelector('.nb-band')?.dataset.state==='forecast')))return;$('#attack-preview').hidden=true;document.dispatchEvent(new CustomEvent('ink:forecast',{detail:null}));if(hoverSide){hoverSide=null;if(state)drawMap(view(state),true);}});
 $('#cancel-move').addEventListener('click',closeUnitMenu);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){cancelStrike();if(!$('#officer-modal').hidden){selectedOfficerId=null;$('#officer-modal').hidden=true;e.stopImmediatePropagation();return;} /* 장수 정보 창은 Esc 로 닫힌다(2026-10-12 — 닫기 단추로만 닫혀 다음 차례 단추를 가린 채 남았다) */ if(state&&pendingCampaignDraft(state))renderGrowthDraft();if(stage.city){e.stopImmediatePropagation();if(stage.opening)closeStage();else if(stage.fac)leaveFacility();else closeStage();return;}closeProdPop();selectedCityId=null;closeUnitMenu();$('#city-panel').hidden=true;}});
 document.addEventListener('click',e=>{const bandClick=document.body?.classList?.contains('hud-band')&&e.composedPath?.().some(n=>n.id==='ink-hud');if(menuOpen&&!bandClick&&!e.target.closest('#unit-menu,.ih-unit,.nb-band,.nb-sheet,.nb-bookmarks,.nb-news-tab,.ih-notice,[data-unit],[data-tile]'))closeUnitMenu();});
-globalThis.addEventListener('resize',()=>{if(state)drawMap(view(state));positionUnitMenu();if(state&&document.body?.classList?.contains('hud-band'))requestAnimationFrame(()=>{const port=$('.viewport');port.scrollTo({...bandCameraPosition(port,$('#map')),behavior:'auto'});if(selectedArmyId)follow(selectedArmyId,true);});});document.addEventListener('scroll',positionUnitMenu,true);
+globalThis.addEventListener('resize',()=>{if(state)drawMap(view(state));positionUnitMenu();if(state&&document.body?.classList?.contains('hud-band'))requestAnimationFrame(()=>{const port=$('.viewport');port.scrollTo({...bandCameraPosition(port,$('#map')),behavior:'auto'});if(selectedArmyId&&!attackMode){bandFocusMode=null;syncBandFocus(selectedArmyId,v3Mode());}});});document.addEventListener('scroll',()=>{positionUnitMenu();const tip=$('#attack-preview');if(!tip.hidden&&document.body?.classList?.contains('hud-band')&&!tip.classList.contains('forecast'))placeBandGuide(tip,true);},true);
 document.addEventListener('pointerdown',unlockAudio);
 $('#mute').addEventListener('click',()=>{pilotAudio.configure({muted:!pilotAudio.settings.muted});refreshAudio();});
 function refreshAudio(){pilotAudio=createPilotAudio();actionAudio.refresh();combatAudio.refresh();bgm.configure(pilotAudio.settings);voice.configure(pilotAudio.settings);$('#mute').textContent=pilotAudio.settings.muted?'默':'聲';$('#mute').title=pilotAudio.settings.muted?'소리 켜기':'소리 끄기';}

@@ -6918,6 +6918,17 @@
       "sha256": "fcd144fc8e785fd0634179d56f44b8cf6c224269fca43180baca84e3daf1dbaf",
       "sourceSheet": "prototype/assets/ui-v3/hud/kit-title-caocao.png",
       "prompt": "닷토리(2026-10-14 titles.zip): 시안에서 뜬 '조조' 글자를 레퍼런스로 같은 붓 · 굵기 · 높이 38px"
+    },
+    {
+      "path": "prototype/assets/ui-v3/hud/kit-brush-arrow.png",
+      "purpose": "예고 양끝 붓 화살촉 CSS mask",
+      "size": [
+        2172,
+        724
+      ],
+      "sha256": "f6cd1f8ccf9de7869b642172ff66a1232aceb1be99d3f218268cce33e1689fa5",
+      "sourceSheet": "docs/work-integration/20261014/c164/arrow-source/kit-brush-arrow.png",
+      "prompt": "내장 image_gen: 흰 먹 오른쪽 거친 붓 화살촉, #808080 바탕, kit-cut 배경 제거"
     }
   ],
   "sources": [

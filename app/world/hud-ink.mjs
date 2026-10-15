@@ -528,11 +528,18 @@ function mountCommandBand(root){
   const band=root.querySelector('.nb-band'),content=root.querySelector('.nb-content');
   if(e.detail){band.append(root.querySelector('.ih-end'));setBandState(band,'forecast');content._renderedHtml=null;content.innerHTML=bandForecastHtml(e.detail.html,e.detail.colors);
    root.querySelector('.nb-state-title').hidden=false;root.querySelector('.nb-state-title h1').textContent='교전 예고';root.querySelector('.nb-state-title p').textContent='';root.querySelector('.nb-supply').hidden=true;
-   root.querySelector('.nb-sheet').hidden=true;}
+   root.querySelector('.nb-sheet').hidden=true;fitForecastStatus(root.querySelector('.nb-forecast-status'));}
   else if(band.dataset.state==='forecast'){band.append(root.querySelector('.ih-end'));content.innerHTML=band._unitHtml??'';fitBandOrders(content);setBandState(band,band._unitState??'rest');renderBandSupply(root,band._supplyData??{});}
  });
 }
 // Rearrange the existing public preview; combat values and shown enemy counts stay in world.js.
+function fitForecastStatus(line){
+ line.style.removeProperty('font-size');
+ if(!line.clientWidth)return;
+ const css=getComputedStyle(line),padding=parseFloat(css.paddingLeft)+parseFloat(css.paddingRight),gap=parseFloat(css.columnGap)||0;
+ const spans=[...line.children],needed=spans.reduce((sum,n)=>sum+n.getBoundingClientRect().width,0),available=line.clientWidth-padding-gap*Math.max(0,spans.length-1);
+ if(needed>available&&available>0)line.style.setProperty('font-size',`${parseFloat(css.fontSize)*available/needed}px`,'important');
+}
 export function bandForecastHtml(html,colors={}){
  const source=document.createElement('div');source.innerHTML=html;
  const text=s=>source.querySelector(s)?.textContent.trim()??'',picture=s=>source.querySelector(s)?.getAttribute('src')??'';
@@ -586,7 +593,8 @@ function renderCommandBand(root,d,showUnit,menu){
  const goal=document.querySelector('#victory-guide'),dots=Number(goal?.textContent.match(/내 큰 성 (\d)/)?.[1]??0),left=goal?.textContent.match(/\d+차례 남음/)?.[0]??'';
  q('.ih-medal').title=[goal?.textContent,goal?.title].filter(Boolean).join('\n');
  q('[data-band-goal]').innerHTML=`승리 조건 <span class="nb-goal-dots" aria-label="내 큰 성 ${dots}/3">${[0,1,2].map(i=>i<dots?'●':'○').join('')}</span>`;
- q('.nb-forecast-status').textContent=`${String(d.date??'').replace(/^\d+턴\s*·\s*/, '')} · ${d.turn??''}차례  ${[...q('.ih-res').querySelectorAll('.ih-chip')].filter(c=>['food','production','troops'].includes(c.dataset.res)).map(c=>`${c.querySelector('.nb-resource-label')?.textContent} ${c.querySelector('b')?.textContent}${c.dataset.res==='production'?' '+(c.querySelector('small')?.textContent??''):''}`).join('  ')}`;
+ q('.nb-forecast-status').innerHTML=`<span class="nb-status-date">${esc(String(d.date??'').replace(/^\d+턴\s*·\s*/, ''))} · ${esc(d.turn??'')}차례</span>${[...q('.ih-res').querySelectorAll('.ih-chip')].filter(c=>['food','production','troops'].includes(c.dataset.res)).map(c=>`<span>${esc(c.querySelector('.nb-resource-label')?.textContent??'')} ${esc(c.querySelector('b')?.textContent??'')}${c.dataset.res==='production'?' '+esc(c.querySelector('small')?.textContent??''):''}</span>`).join('')}`;
+ fitForecastStatus(q('.nb-forecast-status'));
  const advisor=document.querySelector('#w-advisor .face img')?.src,advice=document.querySelector('#campaign-advice:not([hidden])')?.textContent||document.querySelector('#status')?.textContent||d.summary||'전장을 살펴보십시오.';
  q('.nb-advisor-box').innerHTML=`<span class="nb-advisor">${advisor?`<img src="${esc(advisor)}" alt="군사">`:'軍'}</span><div><b>${esc(document.querySelector('#w-advisor .who')?.textContent??'군사')}</b><p title="${esc(advice)}">${esc(advice)}</p><button class="nb-next" data-band-next${!d.remaining?' disabled':''}>다음 부대 · ${d.remaining??0}</button></div>`;
  const selected=q('.nb-selected');selected.hidden=!showUnit;selected.innerHTML=showUnit?selectedUnitHtml(d):'';
