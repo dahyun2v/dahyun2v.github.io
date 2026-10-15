@@ -1,3 +1,4 @@
+import {memoCampaignQuery} from './campaign-rule-registry.mjs';
 import {diplomacyArmyHostile,diplomacyAttackReason,withdrawalProtection} from './campaign-diplomacy.mjs';
 import {initializeClasses,classPostMove} from './campaign-classes.mjs';
 import {C34_RULES,c34DamageLimit,c34Recovery,c34Finish,c34RemoveStatuses,c34Reveal} from './campaign-c34.mjs';
@@ -102,15 +103,18 @@ function officerRules(r){
 }
 const emptyRules=new Map();
 export function hasCampaignRule(s,id,rule,whens=['PASSIVE'],ctx={}){
+  return whens.length===1&&whens[0]==='PASSIVE'&&!Object.keys(ctx).length?memoCampaignQuery(s,'has:'+id+':'+rule,()=>hasCampaignRuleUncached(s,id,rule,whens,ctx)):hasCampaignRuleUncached(s,id,rule,whens,ctx);
+}
+function hasCampaignRuleUncached(s,id,rule,whens,ctx){
   if(c28Suppressed(s,id))return false;
   if(uniqueHasRule(s,id,rule))return true;
   if(!CAMPAIGN_RULES.includes(rule))return false;
   if((s.armies[id]?.effectStates??[]).some(e=>e.op==='RULE'&&e.rule===rule&&activeState(s,e)&&e.startsTurn<=s.turn))return true;
-  const own=officerRules(s.campaignGrowth?.officers[s.armies[id]?.commanderId??id]).get(rule)??[];
+  const own=memoCampaignQuery(s,'officer:'+id,()=>officerRules(s.campaignGrowth?.officers[s.armies[id]?.commanderId??id])).get(rule)??[];
   for(const e of own)if((e.when==='PASSIVE'||whens.includes(e.when))&&effectCondition(s,id,e.condition,{...ctx,when:e.when})&&effectTargets(s,id,e.target??'SELF',ctx).includes(id))return true;
   for(const a of Object.values(s.armies)){
     if(a.armyId===id||!castleArmyActive(s,a))continue;
-    const effects=officerRules(s.campaignGrowth?.officers[a.commanderId]).get(rule)??[];
+    const effects=memoCampaignQuery(s,'officer:'+a.armyId,()=>officerRules(s.campaignGrowth?.officers[a.commanderId])).get(rule)??[];
     for(const e of effects)if(e.when==='PASSIVE'&&e.target!=='SELF'&&effectCondition(s,a.armyId,e.condition,ctx)&&effectTargets(s,a.armyId,e.target??'SELF',ctx).includes(id))return true;
   }
   return false;
@@ -351,7 +355,8 @@ export function ruleLine(s,id,rule,detail=''){
  // 미등록 규칙은 시험 표기: 새 설정 이름을 만들지 않고 짧은 일반명으로 표시.
  return `[${card?.name??stored?.name??CAMPAIGN_RULE_NAMES[rule]??'특기'}]${detail?' '+detail:''}`;
 }
-export function ambushHidden(s,id,factionId){if(c34Reveal(s,id,factionId))return false;
+export function ambushHidden(s,id,factionId){return memoCampaignQuery(s,'hidden:'+id+':'+factionId,()=>ambushHiddenUncached(s,id,factionId));}
+function ambushHiddenUncached(s,id,factionId){if(c34Reveal(s,id,factionId))return false;
  if(c33Enabled(s)&&Object.values(s.armies).some(a=>a.factionId===factionId&&castleArmyActive(s,a)&&troopToCampaign(a.troopType)==='BT03'&&c33Owned(s,a.armyId,'SHOOT_INTO_FOREST')&&hexDistance(s.tiles[a.tileId],s.tiles[s.armies[id].tileId])<=2))return false;
  const a=s.armies[id];if(Object.values(s.armies).some(b=>b.factionId===factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=C28.scoutRange&&c28Rule(s,b.armyId,'SCOUT_EYE')))return false;return a.factionId!==factionId&&(a.c32?.hiddenUntil>=s.turn||!!a.c27?.ambush||['forest','hill'].includes(s.tiles[a.tileId].terrainType)&&hasCampaignRule(s,id,'AMBUSH')&&!Object.values(s.armies).some(b=>b.factionId===factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=1));
 }

@@ -1,3 +1,4 @@
+import {memoCampaignQuery} from './campaign-rule-registry.mjs';
 import {diplomacyArmyHostile} from './campaign-diplomacy.mjs';
 import {C34_OFFICERS} from './campaign-officers-51-100.mjs';
 import {uniqueOwned,uniqueGovernor,uniqueBuff,uniqueStatus,uniqueIgnite} from './campaign-rule-registry.mjs';
@@ -12,7 +13,7 @@ export const C34_RULES=new Set(C34_OFFICERS.flatMap(o=>[o.uniqueTrait,o.signatur
 export const c34Enabled=s=>['v2','v3'].includes(s.mapId);
 const owned=(s,id,r)=>c34Enabled(s)&&uniqueOwned(s,id,r);
 const relevant=(s,id)=>!!s.campaignGrowth?.officers[s.armies[id]?.commanderId??id]?.cards[s.campaignGrowth.officers[s.armies[id]?.commanderId??id]?.coreId]?.effects?.some(e=>C34_RULES.has(e.rule));
-const present=s=>c34Enabled(s)&&(Object.values(s.campaignGrowth?.officers??{}).some(r=>r.cards[r.coreId]?.effects?.some(e=>C34_RULES.has(e.rule)))||Object.values(s.armies).some(a=>a.c34)||!!s.c34);
+const present=s=>memoCampaignQuery(s,'c34:present',()=>c34Enabled(s)&&(Object.values(s.campaignGrowth?.officers??{}).some(r=>r.cards[r.coreId]?.effects?.some(e=>C34_RULES.has(e.rule)))||Object.values(s.armies).some(a=>a.c34)||!!s.c34));
 const state=(s,id)=>s.armies[id].c34??={};
 const dist=(s,a,b)=>hexDistance(s.tiles[a],s.tiles[b]);
 const city=(s,id)=>Object.values(s.cities).find(c=>c.ownerFactionId===s.armies[id]?.factionId&&[c.tileId,...c.footprint.gates].includes(s.armies[id].tileId));

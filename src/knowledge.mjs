@@ -27,14 +27,33 @@ function knownEdges(s,knowledge){
   }
   return edges.sort((left,right)=>left.edgeId.localeCompare(right.edgeId,'en'));
 }
+// Geometry only. Validate coordinates even when fixtures edit tiles in place;
+// observers, ownership, disposition and last-seen timestamps remain live.
+const visionGeometry=new WeakMap();
+function visibilityGeometry(tiles){
+ const entries=Object.entries(tiles),signature=entries.map(([id,t])=>`${id}:${t.q}:${t.r}`).join('|');
+ let g=visionGeometry.get(tiles);if(g?.signature===signature)return g;
+ g={signature,entries,byCoordinate:new Map(entries.map(([id,t])=>[`${t.q},${t.r}`,id])),footprints:new Map(),integer:entries.every(([,t])=>Number.isInteger(t.q)&&Number.isInteger(t.r))};visionGeometry.set(tiles,g);return g;
+}
+function visibleFootprint(g,origin,range){
+ const key=`${origin.q},${origin.r}:${range}`;if(g.footprints.has(key))return g.footprints.get(key);
+ let ids=[];
+ if(g.integer&&g.byCoordinate.size===g.entries.length&&Number.isFinite(range)&&range>=0&&range<100){
+  const radius=Math.floor(range);
+  for(let dq=-radius;dq<=radius;dq++)for(let dr=Math.max(-radius,-dq-radius);dr<=Math.min(radius,-dq+radius);dr++){
+   const id=g.byCoordinate.get(`${origin.q+dq},${origin.r+dr}`);if(id)ids.push(id);
+  }
+ }else ids=g.entries.filter(([,t])=>canObserveTile(origin,t,range)).map(([id])=>id);
+ g.footprints.set(key,ids);return ids;
+}
 export function updateKnowledge(s){
+  const geometry=visibilityGeometry(s.tiles);
   for(const factionId of Object.keys(s.factions).sort()){
     const k=s.knowledge[factionId]??={tiles:{},observedArmies:{},lastSeenArmies:{},cities:{}};
     const observers=[...Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).map(c=>({tileId:c.tileId,range:s.mapRules.vision.city})),...Object.values(s.armies).filter(a=>a.factionId===factionId&&activeArmy(s,a)).map(a=>({tileId:a.tileId,range:s.mapRules.vision.byTroop?.[a.troopType]??s.mapRules.vision.field}))];
-    for(const [id,t]of Object.entries(s.tiles)){
-      const visible=observers.some(o=>canObserveTile(s.tiles[o.tileId],t,o.range+(s.tiles[o.tileId].terrainType==='hill'?s.mapRules.vision.hillBonus:0)));
-      k.tiles[id]=visible?'VISIBLE':k.tiles[id] && k.tiles[id]!=='UNEXPLORED'?'REMEMBERED':'UNEXPLORED';
-    }
+    const visible=new Set();
+    for(const o of observers){const origin=s.tiles[o.tileId],range=o.range+(origin.terrainType==='hill'?s.mapRules.vision.hillBonus:0);for(const id of visibleFootprint(geometry,origin,range))visible.add(id);}
+    for(const [id]of geometry.entries)k.tiles[id]=visible.has(id)?'VISIBLE':k.tiles[id] && k.tiles[id]!=='UNEXPLORED'?'REMEMBERED':'UNEXPLORED';
     k.observedArmies={};
     for(const a of Object.values(s.armies))if(activeArmy(s,a)&&a.factionId!==factionId && k.tiles[a.tileId]==='VISIBLE'){
       const record=minimumArmy(a);k.observedArmies[a.armyId]=record;

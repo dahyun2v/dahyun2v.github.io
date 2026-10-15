@@ -1,3 +1,4 @@
+import {withCampaignQueries,memoCampaignQuery} from './campaign-rule-registry.mjs';
 import {tryInjury} from './campaign-injury.mjs';
 import {diplomacyArmyHostile,diplomacyMoveReason,diplomacyState,withdrawalProtection} from './campaign-diplomacy.mjs';
 import {dejaVuEvent} from './campaign-deja-vu.mjs';
@@ -16,14 +17,16 @@ import {hexDistance,boardNeighbors,tileId} from './map-primitives.mjs';
 import {edgeTicks,findPath} from './movement.mjs';
 import {campaignMovementWorld,castleArmyActive} from './campaign-city-footprint.mjs';
 import {createRng} from './rng.mjs';
-export const enemies=(s,a)=>Object.values(s.armies).filter(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&castleArmyActive(s,b));
-export const inControlZone=(s,a,id=a.tileId)=>{
+export const enemies=(s,a)=>memoCampaignQuery(s,'enemies:'+a.armyId,()=>Object.values(s.armies).filter(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&castleArmyActive(s,b)));
+export const inControlZone=(s,a,id=a.tileId)=>memoCampaignQuery(s,'zoc:'+a.armyId+':'+id,()=>inControlZoneUncached(s,a,id));
+const inControlZoneUncached=(s,a,id)=>{
  const c33Ignore=(c33Owned(s,a.armyId,'BLOODY_PATH')&&a.morale==='ROUTING'||c33Formation(s,a.armyId,'FORMATION_DRILL'))&&hexDistance(s.tiles[a.tileId],s.tiles[id])===1;if(c33Ignore)return false;
  const fearless=a.morale==='STEADY'&&uniqueOwned(s,a.armyId,'U_FEARLESS'),unlimited=uniqueOwned(s,a.armyId,'U_FLYING_GENERAL')||(a.effectStates??[]).some(e=>e.rule==='IGNORE_ZOC'&&e.expiresTurn>=s.turn)||Object.values(s.campaignGrowth?.officers[a.commanderId]?.cards??{}).some(c=>c.rarity==='MYTHIC'&&c.effects?.some(e=>e.rule==='IGNORE_ZOC')&&s.campaignGrowth.officers[a.commanderId].track.growthStates[a.commanderId].ownedTraitRanks[c.traitId]);
  const ignore=hasCampaignRule(s,a.armyId,'IGNORE_ZOC')&&(!fearless||unlimited||hexDistance(s.tiles[a.tileId],s.tiles[id])<=1);
- return !ignore&&enemies(s,a).some(b=>b.formation!=='BROKEN'&&!combatIgnoreZone(s,a.armyId,b)&&!ambushHidden(s,b.armyId,a.factionId)&&hexDistance(s.tiles[id],s.tiles[b.tileId])<=(hasCampaignRule(s,b.armyId,'EXTENDED_ZOC')?2:1));
+ return !ignore&&enemies(s,a).some(b=>hexDistance(s.tiles[id],s.tiles[b.tileId])<=(hasCampaignRule(s,b.armyId,'EXTENDED_ZOC')?2:1)&&b.formation!=='BROKEN'&&!combatIgnoreZone(s,a.armyId,b)&&!ambushHidden(s,b.armyId,a.factionId));
 };
-export function campaignPath(s,id,destination){
+export function campaignPath(s,id,destination){return withCampaignQueries(s,()=>campaignPathUncached(s,id,destination));}
+function campaignPathUncached(s,id,destination){
  if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return null;
  if(!combatDestinationAllowed(s,id,destination)||diplomacyMoveReason(s,id,destination))return null;
  if(Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id))return campaignReachable(s,id,Infinity).get(destination)??null;
@@ -36,9 +39,11 @@ export function campaignPath(s,id,destination){
 }
 // 한 번의 탐색으로 이번 차례에 닿는 모든 칸(campaignPath 와 같은 경로·시간). 통제 구역 칸은 들어갈 수는 있지만 거쳐 갈 수 없다.
 // campaignPath 의 Dijkstra(거리 → 칸 id 순)를 그대로 따르므로 칸마다 따로 찾은 결과와 같다.
-export function campaignReachable(s,id,budget){
+export function campaignReachable(s,id,budget){return withCampaignQueries(s,()=>campaignReachableQuery(s,id,budget));}
+function campaignReachableQuery(s,id,budget,pathMode=false){
  if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return new Map();
- if(combatCanPostMove(s,id))budget=Math.min(budget,s.armies[id].c27?.cantoTicks??budget);
+ const diplomatic=Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id);
+ if((!pathMode||diplomatic)&&combatCanPostMove(s,id))budget=Math.min(budget,s.armies[id].c27?.cantoTicks??budget);
  if(movementEffect(s,id).rooted||hasCampaignRule(s,id,'NO_RETREAT')&&enemies(s,s.armies[id]).some(b=>hexDistance(s.tiles[b.tileId],s.tiles[s.armies[id].tileId])===1))return new Map();
  const a=s.armies[id],world=campaignMovementWorld(s,id),start=a.tileId;
  const zone=new Set(Object.values(s.tiles).filter(t=>t.tileId!==start&&inControlZone(s,a,t.tileId)).map(t=>t.tileId));
@@ -50,14 +55,20 @@ export function campaignReachable(s,id,budget){
   const [d,current]=pop();if(done.has(current)||d!==dist.get(current))continue;if(d>budget)break;done.add(current);
   if(current!==start&&zone.has(current))continue;
   for(const p of boardNeighbors(world.tiles[current],world.tiles)){
-   const next=tileId(p);if(diplomacyMoveReason(s,id,next,current))continue;const cost=edgeTicks(world,world.armies[id],current,next);if(cost===null)continue;
+   const next=tileId(p);if((!pathMode||diplomatic)&&diplomacyMoveReason(s,id,next,current))continue;const cost=edgeTicks(world,world.armies[id],current,next);if(cost===null)continue;
    const distance=d+cost;if(distance<(dist.get(next)??Infinity)){dist.set(next,distance);previous.set(next,current);push([distance,next]);}
   }
  }
  const out=new Map();
- for(const [t,d] of dist){if(!d||d>budget||!combatDestinationAllowed(s,id,t))continue;const path=[t];while(previous.has(path[0]))path.unshift(previous.get(path[0]));if(path.length-1>combatMovement(s,id).max)continue;out.set(t,{pathTileIds:path,totalTicks:d});}
+ for(const [t,d] of dist){if(!d||d>budget||!combatDestinationAllowed(s,id,t))continue;const path=[t];while(previous.has(path[0]))path.unshift(previous.get(path[0]));if(path.length-1>combatMovement(s,id).max||pathMode&&!diplomatic&&path.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path[i])))continue;out.set(t,{pathTileIds:path,totalTicks:d});}
  return out;
 }
+// All destinations for one read-only snapshot; no persistent engine cache.
+export function campaignPaths(s,id){return withCampaignQueries(s,()=>{
+ const paths=campaignReachableQuery(s,id,Infinity,true),start=s.armies[id]?.tileId;
+ if(start){const own=campaignPath(s,id,start);if(own)paths.set(start,own);}
+ return paths;
+});}
 export function retreatRouting(s,id){
  const a=s.armies[id],foes=enemies(s,a);if(!foes.length||hasCampaignRule(s,id,'NO_RETREAT')&&foes.some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1))return null;
  const world=campaignMovementWorld(s,id),distance=id=>Math.min(...foes.map(b=>hexDistance(s.tiles[id],s.tiles[b.tileId])));

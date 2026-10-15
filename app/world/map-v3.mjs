@@ -97,6 +97,20 @@ function defs(size) {
  *        mode:'world'|'supply'|'faction'|'diplomacy'|'trace', relations:{F02:'WAR'}, cityBadges:{cityId:{idle,name,turns}}}
  */
 const KIT_TONE = {F01: 'red', F02: 'green', F03: 'blue'}; // 표지 그림 색(없는 세력: 깃발 = 회색, 부대 틀 = 붉은 틀)
+// Transient route/facing layers share their exact markup with a full draw.
+export function renderMapPreview(hl,layout){
+ const size=layout.size,C=id=>hexCenter(parse(id),layout);let svg='';
+  if (hl.side?.tile) { const p = C(hl.side.tile), name = {FRONT: '정면', FLANK: '옆 +15%', REAR: '뒤 +30%'}[hl.side.side] ?? ''; svg += `<g class="w-side s-${esc(hl.side.side ?? '')}"><path d="${hexPath(p, size * 0.98)}"/>${name ? `<text x="${f(p.x)}" y="${f(p.y - size * 1.0)}">${name}</text>` : ''}</g>`; }
+  if (hl.path?.length > 1) svg += `<path class="w-path" d="M${hl.path.map((id) => { const p = C(id); return `${f(p.x)} ${f(p.y)}`; }).join('L')}"/>`;
+  for (const o of hl.orders ?? []) {
+    if (!o.path?.length) continue;
+    const pts = o.path.map((id) => C(id)), end = pts.at(-1);
+    if (pts.length > 1) svg += `<path class="w-order" d="M${pts.map((p) => `${f(p.x)} ${f(p.y)}`).join('L')}"/>`;
+    svg += `<g class="w-order-end" transform="translate(${f(end.x)} ${f(end.y)})"><path d="M0 2V-20"/><path class="cloth" d="M0 -20L12 -16L0 -12Z"/>${o.turns > 1 ? `<text y="13">${o.turns}차례</text>` : ''}</g>`;
+  }
+  // 클릭 칸(투명) — 장식 층은 pointer-events:none
+ return svg;
+}
 export function renderWorldMap(model, opts = {}) {
   const kit = opts.kit ?? null;
   const size = opts.size ?? 30;
@@ -114,7 +128,7 @@ export function renderWorldMap(model, opts = {}) {
   const C = (id) => hexCenter(byId.get(id) ?? parse(id), layout);
   const hl = model.highlights ?? {}, mode = opts.mode ?? 'world';
   const land = ringsPath(outlineRings(tiles, layout));
-  let svg = `<svg class="wmap mode-${esc(mode)}${world ? ' has-world' : ''}" data-margin="${margin}" viewBox="0 0 ${f(W)} ${f(H)}" xmlns="http://www.w3.org/2000/svg">${defs(size)}`;
+  let svg = `<svg class="wmap mode-${esc(mode)}${world ? ' has-world' : ''}" data-margin="${margin}" data-ox="${layout.ox}" data-oy="${layout.oy}" data-size="${size}" viewBox="0 0 ${f(W)} ${f(H)}" xmlns="http://www.w3.org/2000/svg">${defs(size)}`;
   svg += `<rect class="w-void" x="0" y="0" width="${f(W)}" height="${f(H)}"/>`;
 
   // 땅
@@ -167,18 +181,11 @@ export function renderWorldMap(model, opts = {}) {
   }
   const hexes = (ids, cls) => (ids ?? []).map((id) => byId.has(id) || parse(id) ? `<path class="${cls}" d="${hexPath(C(id), size * 0.92)}"/>` : '').join('');
   svg += hexes(hl.danger, 'w-danger') + hexes(hl.move, 'w-move') + hexes(hl.attack, 'w-attack');
-  if (hl.side?.tile) { const p = C(hl.side.tile), name = {FRONT: '정면', FLANK: '옆 +15%', REAR: '뒤 +30%'}[hl.side.side] ?? ''; svg += `<g class="w-side s-${esc(hl.side.side ?? '')}"><path d="${hexPath(p, size * 0.98)}"/>${name ? `<text x="${f(p.x)}" y="${f(p.y - size * 1.0)}">${name}</text>` : ''}</g>`; }
+  svg += renderMapPreview({side:hl.side},layout);
   for (const l of hl.links ?? []) { const a = C(l.from), z = C(l.to); svg += `<path class="w-link" d="M${f(a.x)} ${f(a.y)}L${f(z.x)} ${f(z.y)}"/>`; }
   for (const l of hl.intents ?? []) { const a = C(l.from), z = C(l.to), dx = z.x - a.x, dy = z.y - a.y, d = Math.hypot(dx, dy) || 1; svg += `<path class="w-intent" d="M${f(a.x + dx / d * size * .5)} ${f(a.y + dy / d * size * .5)}L${f(z.x - dx / d * size * .45)} ${f(z.y - dy / d * size * .45)}"/>`; }
   for (const l of hl.supply ?? []) { const a = C(l.from), z = C(l.to); svg += `<g class="w-supply s-${esc(String(l.state ?? '').toLowerCase())}"><path d="M${f(a.x)} ${f(a.y)}L${f(z.x)} ${f(z.y)}"/><circle cx="${f(z.x)}" cy="${f(z.y)}" r="5"/><circle class="end" cx="${f(a.x)}" cy="${f(a.y)}" r="3.5"/></g>`; }
-  if (hl.path?.length > 1) svg += `<path class="w-path" d="M${hl.path.map((id) => { const p = C(id); return `${f(p.x)} ${f(p.y)}`; }).join('L')}"/>`;
-  for (const o of hl.orders ?? []) {
-    if (!o.path?.length) continue;
-    const pts = o.path.map((id) => C(id)), end = pts.at(-1);
-    if (pts.length > 1) svg += `<path class="w-order" d="M${pts.map((p) => `${f(p.x)} ${f(p.y)}`).join('L')}"/>`;
-    svg += `<g class="w-order-end" transform="translate(${f(end.x)} ${f(end.y)})"><path d="M0 2V-20"/><path class="cloth" d="M0 -20L12 -16L0 -12Z"/>${o.turns > 1 ? `<text y="13">${o.turns}차례</text>` : ''}</g>`;
-  }
-  // 클릭 칸(투명) — 장식 층은 pointer-events:none
+  svg += renderMapPreview({path:hl.path,orders:hl.orders},layout);
   svg += `<g class="w-hits">${tiles.map((t) => `<path data-tile="${t.id}" d="${hexPath(hexCenter(t, layout), size)}"/>`).join('')}</g>`;
 
   // 시설

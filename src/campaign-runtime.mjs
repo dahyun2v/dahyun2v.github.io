@@ -294,7 +294,10 @@ function moveArmy(s, candidate, factionId) {
     moveOneTick(s);
     if(combatRule(s,id,'CANTO')){army.c27??={};army.c27.movementTicks=(army.c27.movementTicks??0)+1;}
     for(const [a,order] of suspended)a.currentOrder=order;
-    army.troopType=originalTroop;updateKnowledge(s);refreshCampaignSieges(s);army.troopType=parentTroop(originalTroop);
+    // Edge progress alone changes neither observers nor siege control. Keep the
+    // first refresh and every arrival/contact so intermediate discoveries and
+    // reactions retain their original order and last-seen timestamps.
+    if(tick===0||army.tileId!==old||s.history.length!==start){army.troopType=originalTroop;updateKnowledge(s);refreshCampaignSieges(s);army.troopType=parentTroop(originalTroop);}
     if(army.tileId!==old){
       army.facing=directionToward(s.tiles[old],s.tiles[army.tileId],army.facing);army.movedTiles++;if(army.classState){if(!armyClass(s,id,'CLS_MIRAGE')?.ability.params.terrains.includes(s.tiles[army.tileId].terrainType))army.classState.hidden=false;}
       captureHubs(s,id);s=resolveOverwatch(s,id,old,{stopped:inControlZone(s,s.armies[id])});if(!active(s,id)||s.armies[id].morale==='ROUTING'||!s.armies[id].troopCount)break;
@@ -340,13 +343,12 @@ function run(s, incremental=false) {
       if(entry.factionId){
         startDiplomacyAi(s,entry.factionId,{autoPlayer:s.autoPlayer});aiRelationFeast(s,entry.factionId);if(explorationEnabled(s))resolveAiExploration(s,entry.factionId);
         selectAiOccupations(s,{autoPlayer:s.autoPlayer});
-        const strikeSequence=s.battleSequence;
         startFactionPolicy(s,entry.factionId);for(const c of Object.values(s.cities).filter(c=>c.ownerFactionId===entry.factionId))aiStarAction(s,{cityId:c.cityId},entry.factionId);startFactionEffects(s,entry.factionId);startUniqueFaction(s,entry.factionId);startFactionMorale(s,entry.factionId);startClasses(s,entry.factionId,{heal:(id,n)=>healCampaignTroops(s,id,n)});updateKnowledge(s);startFactionEvents(s,entry.factionId,{auto:true});s=strikeCampaignCities(s,entry.factionId);updateKnowledge(s);refreshCampaignSieges(s);
         selectAiRoster(s,entry.factionId);selectCampaignAiJobs(s,entry.factionId);if(!campaignEconomyEnabled(s,entry.factionId))selectCityStartMuster(s,entry.factionId,campaignSiegeEnabled(s,entry.factionId)?campaignAiMusterTroop:null);checkDejaVuLocations(s);
         const plan=campaignAiPlan(s,entry.factionId,{remember:true,turnLimit:CAMPAIGN_TURN_LIMIT});
         const entries=(plan?.candidates??[]).filter(c=>!s.movedArmyIds.includes(c.armyId)).map(c=>({candidate:c,faction:entry.factionId,...(supplyEnabled(s)||campaignTacticsEnabled(s,entry.factionId)?{targetCityId:c.aiTargetCityId??plan?.goal?.targetCityId??null}:{})}));
         s.aiQueue.unshift(...entries,...(campaignTacticsEnabled(s,entry.factionId)||campaignAiRule(s,entry.factionId,9)?[{tacticsFaction:entry.factionId,entries}]:[]));
-        if(incremental&&s.battleSequence!==strikeSequence)return s;
+        if(incremental)return s;
         continue;
       }
       const id=entry.candidate.armyId;

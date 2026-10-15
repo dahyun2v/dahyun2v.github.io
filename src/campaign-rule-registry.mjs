@@ -11,6 +11,18 @@ import {c28Suppressed,c28Rule,C28,c28ControlGuard} from './campaign-career.mjs';
 import redesign50 from '../../docs/design-data/officer-pack/redesign-50-v0.2.json' with {type:'json'};
 import commonPool from '../../docs/design-data/officer-pack/common-pool-v0.3.json' with {type:'json'};
 // C25 extension registry. Existing engine rules retain their existing handlers.
+// C168: memoize only within an explicitly read-only query. Mutable engine steps
+// never retain entries; nested queries on the same snapshot share this scope.
+let queryScope=null;
+export function withCampaignQueries(s,read){
+ if(queryScope?.state===s)return read();
+ const previous=queryScope;queryScope={state:s,values:new Map()};
+ try{return read();}finally{queryScope=previous;}
+}
+export function memoCampaignQuery(s,key,read){
+ if(queryScope?.state!==s)return read();
+ const values=queryScope.values;if(!values.has(key))values.set(key,read());return values.get(key);
+}
 const handlers=new Map();
 // C32 definitions are projected from the read-only redesign input below.
 export function registerCampaignRule(id,handler){
@@ -461,7 +473,8 @@ export function combatTraitActive(r,key){
  const ranks=r.track.growthStates[r.pack.id].ownedTraitRanks,active=Object.keys(ranks).filter(k=>r.cards[k]?.kind==='trait'&&!reserves.includes(k)).length;
  return reserves.filter(k=>ranks[k]).indexOf(key)<Math.max(0,CAMPAIGN_TRAIT_SLOTS-active);
 }
-export function combatRule(s,id,rule){
+export function combatRule(s,id,rule){return memoCampaignQuery(s,'combat:'+id+':'+rule,()=>combatRuleUncached(s,id,rule));}
+function combatRuleUncached(s,id,rule){
  if(c28Suppressed(s,id))return null;
  const r=s.campaignGrowth?.officers[s.armies[id]?.commanderId??id];if(!r)return null;
  const ranks=r.track.growthStates[r.pack.id].ownedTraitRanks;
@@ -558,7 +571,8 @@ export function overlayUniquePack(s,pack){
  const index=next.draftPool.findIndex(c=>c.kind==='tactic'&&[c.classTag].flat().includes('고유'));
  next.draftPool[index<0?0:index]=structuredClone(o.signatureTactic);if(Number(pack.id.slice(1))>50){delete next.uniqueTrait.formerName;delete next.draftPool[index<0?0:index].formerName;}return next;
 }
-export function uniqueOwned(s,id,rule){
+export function uniqueOwned(s,id,rule){return memoCampaignQuery(s,'unique:'+id+':'+rule,()=>uniqueOwnedUncached(s,id,rule));}
+function uniqueOwnedUncached(s,id,rule){
  if(c28Suppressed(s,id)&&!c29Hidden(s,id))return null;
  if(!uniqueEnabled(s))return null;
  const r=s.campaignGrowth?.officers[s.armies[id]?.commanderId??id];if(!r)return null;

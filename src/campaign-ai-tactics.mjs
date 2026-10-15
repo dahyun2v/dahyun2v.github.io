@@ -21,6 +21,15 @@ let api;
 const previewDiagnostics={skipped:0,reasons:{}};
 export const campaignTacticsDiagnostics=()=>structuredClone(previewDiagnostics);
 export function configureAiTactics(services){api=services;}
+// A2 exception is a legal capture now, never a distant offensive forecast.
+export function campaignCapitalCaptureNow(s,v,id,targets){
+ const capitals=targets.filter(cityId=>{const c=v.knowledge.cities[cityId];return c?.ownerFactionId&&c.ownerFactionId!==v.factionId&&s.factions[c.ownerFactionId]?.capitalCityId===cityId;});
+ if(!capitals.length)return null;
+ const zero=capitals.find(cityId=>s.castleKnowledge?.[v.factionId]?.[cityId]?.durability===0);if(zero)return zero;
+ if(!api||!s.officers)return null;
+ const board=campaignTacticsWorld(s,v);
+ return capitals.find(cityId=>board.cities[cityId]&&api.cityTargets(board,id).includes(cityId)&&api.previewCity(board,id,cityId).dealt>=board.cities[cityId].durability)??null;
+}
 // 기본은 C141(strategy)이다. 전술 판단은 trialRules.aiSiege / aiProfile 이 'tactics' 일 때만 켜진다 — C142b 측정(시드 6)에서 순위는 기준선과 같고
 // 교환비와 상대하기 어려운 정도는 반반이라 기본으로 올리지 않았다(Claude 2026-10-13). 부대 수가 늘어나는 운영 수정(C143) 뒤에 다시 잰다.
 export const campaignTacticsEnabled=(s,f)=>['v2','v3'].includes(s.mapId)&&(s.trialRules?.aiProfile?.[f]??s.trialRules?.aiSiege)==='tactics';

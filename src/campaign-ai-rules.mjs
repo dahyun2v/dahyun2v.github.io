@@ -1,4 +1,6 @@
-import {hexDistance} from './map-primitives.mjs';
+import {hexDistance,movementTicks} from './map-primitives.mjs';
+import {parentTroop} from './campaign-special-troops.mjs';
+import {campaignCapitalCaptureNow} from './campaign-ai-tactics.mjs';
 
 // C144: judgment horizons and weights only. No combat/resource rule changes.
 export const AI_RULE_GATHER_TURNS=2;
@@ -94,11 +96,108 @@ export function campaignAiNearWinner(s,v){
  return [...rows].filter(([,n])=>n>=2).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0]?.[0]??null;
 }
 
+// C167: visible threats use one turn of public terrain/edge costs. Enemy
+// maneuver/traits are deliberately unknown (the public quote uses 50).
+export function campaignAiCityReach(s,v){
+ const adjacency=new Map(),known=v.knowledge.tiles;
+ for(const e of v.knownEdges??[]){
+  if(e.blocked||known[e.fromTileId]==='UNEXPLORED'||known[e.toTileId]==='UNEXPLORED')continue;
+  for(const [from,to] of [[e.fromTileId,e.toTileId],[e.toTileId,e.fromTileId]]){if(!adjacency.has(from))adjacency.set(from,[]);adjacency.get(from).push({to,e});}
+ }
+ const cities=Object.values({...v.knowledge.cities,...v.ownCities}),friends=Object.values(v.ownArmies),budget=s.time.ticksPerTurn;
+ return Object.values(v.knowledge.observedArmies).filter(a=>known[a.tileId]==='VISIBLE').map(a=>{
+  const troop=parentTroop(a.troopType),cls=troop==='cavalry'?'cavalry':troop==='engineer'?'engineer':'normal',range=['bow','archer'].includes(troop)?2:1;
+  const distance=new Map([[a.tileId,0]]),queue=new Set([a.tileId]);
+  const centers=new Set(cities.filter(c=>c.ownerFactionId!==a.factionId).map(c=>c.tileId));
+  while(queue.size){
+   const from=[...queue].sort((x,y)=>distance.get(x)-distance.get(y)||x.localeCompare(y))[0];queue.delete(from);
+   if(from!==a.tileId&&friends.some(b=>dist(v,from,b.tileId)<=1))continue;
+   for(const {to,e} of adjacency.get(from)??[]){
+    if(centers.has(to)||friends.some(b=>b.tileId===to))continue;
+    let cost=e.travelTicksByClass[cls];
+    if(s.mapRules?.tuning?.maneuverRange){
+     const key=[from,to].sort((x,y)=>x.localeCompare(y,'en')).join('|'),r=s.mapRules;
+     cost=movementTicks({from:v.tiles[from],to:v.tiles[to],troopType:troop,maneuver:50,edge:{road:r.roads.includes(key),river:r.riverEdges.includes(key),crossing:r.crossings[key]??'none',blocked:false},tuning:r.tuning,tickDays:s.time.tickDays});
+    }
+    if(cost===null||!Number.isFinite(cost))continue;
+    const next=distance.get(from)+cost;if(next>budget||next>=(distance.get(to)??Infinity))continue;distance.set(to,next);queue.add(to);
+   }
+  }
+  // Ordinary bows cannot siege. Melee must actually reach a gate; catapults
+  // use their public two-hex city attack. Hidden wall-siege traits are not guessed.
+  return {army:a,canHit:city=>troop!=='bow'&&troop!=='archer'?[...distance.keys()].some(t=>city.footprint?.gates?city.footprint.gates.includes(t):dist(v,t,city.tileId)<=range):a.troopType==='catapult'&&[...distance.keys()].some(t=>dist(v,t,city.tileId)===2)};
+ });
+}
+
+// Only records of the actor's own gains/losses are used, never foreign history.
+function recentCityChanges(s,v){
+ const changes=[];
+ for(const r of Object.values(s.terminal?.recordsById??{})){
+  const d=r.details;if(r.type!=='CITY_OCCUPATION'||d?.formerOwnerFactionId!==v.factionId&&d?.occupierFactionId!==v.factionId)continue;
+  const turn=Math.floor(r.globalTick/s.time.ticksPerTurn)+1;
+  if(turn>s.turn||s.turn-turn>3)continue;
+  changes.push({cityId:r.refs.cityIds[0],turn,from:d.formerOwnerFactionId,to:d.occupierFactionId});
+ }
+ // The capture log retains the actual capturing army after occupation resolves.
+ for(const e of s.combatLog??[])if(e.captureLine&&e.cityId&&s.turn-e.turn<3&&e.turn<=s.turn&&v.ownArmies[e.attackerId])changes.push({cityId:e.cityId,turn:e.turn,to:v.factionId,armyId:e.attackerId});
+ return changes;
+}
+
+function referenceCitySafety(s,v,plan,api,turnLimit){
+ if(!campaignAiRule(s,v.factionId,11)||!v.faction)return;
+ const units=Object.values(v.ownArmies).filter(a=>api.active(s,a)&&a.morale!=='ROUTING'&&!(s.movedArmyIds??[]).includes(a.armyId)),majors=Object.values(v.ownCities??{}).filter(c=>(c.kind??s.cities[c.cityId]?.kind)!=='minor');
+ const reach=campaignAiCityReach(s,v),threatened=c=>reach.some(t=>t.canHit(c)),assigned=new Set(),orders=new Map();
+ const hold=(c,city,reasonCode)=>({...c,type:'HOLD',destinationTileId:null,pathTileIds:[],targetArmyId:null,reasonCode,defendCityId:city.cityId,aiCityDefensePriority:true,aiReferenceMove:true,aiTargetCityId:null});
+ const defend=(a,city,reason)=>{
+  const c=plan.candidates.find(c=>c.armyId===a.armyId);if(!c)return false;
+  const capture=campaignCapitalCaptureNow(s,v,a.armyId,api.cityTargets(s,a.armyId));
+  if(capture){orders.set(a.armyId,{...c,type:'HOLD',destinationTileId:null,pathTileIds:[],targetArmyId:null,reasonCode:'R11_CAPTURE_CAPITAL',defendCityId:null,aiCityDefensePriority:false,aiTargetCityId:capture});assigned.add(a.armyId);return false;}
+  if(dist(v,a.tileId,city.tileId)<=1){orders.set(a.armyId,hold(c,city,reason));assigned.add(a.armyId);return true;}
+  const near=Object.keys(v.tiles).filter(t=>dist(v,t,city.tileId)<=1&&v.knowledge.tiles[t]!=='UNEXPLORED');
+  const route=near.map(t=>api.route(s,v,a.armyId,t)).filter(r=>r&&r.totalTicks<=s.time.ticksPerTurn).sort((x,y)=>x.totalTicks-y.totalTicks||x.pathTileIds.at(-1).localeCompare(y.pathTileIds.at(-1)))[0];
+  if(!route)return false;
+  orders.set(a.armyId,{...api.move(s,v,hold(c,city,reason),route,reason),defendCityId:city.cityId,aiCityDefensePriority:true,aiReferenceMove:true});assigned.add(a.armyId);return true;
+ };
+ const protectedCities=Object.values(v.ownCities??{}).filter(c=>c.cityId===v.faction.capitalCityId||majors.length===1&&c.cityId===majors[0].cityId||turnLimit-s.turn<5&&majors.includes(c)).filter(threatened).sort((a,b)=>Number(b.cityId===v.faction.capitalCityId)-Number(a.cityId===v.faction.capitalCityId)||a.cityId.localeCompare(b.cityId));
+ for(const city of protectedCities){
+  const choices=units.filter(a=>!assigned.has(a.armyId)&&!s.officers?.[a.commanderId]?.injury&&!/WITHDRAW|C31_|EXPLORE/.test(plan.candidates.find(c=>c.armyId===a.armyId)?.reasonCode??'')).map(a=>({a,ticks:dist(v,a.tileId,city.tileId)<=1?0:Math.min(...Object.keys(v.tiles).filter(t=>dist(v,t,city.tileId)<=1&&v.knowledge.tiles[t]!=='UNEXPLORED').map(t=>api.route(s,v,a.armyId,t)?.totalTicks??Infinity))})).filter(x=>x.ticks<=s.time.ticksPerTurn).sort((a,b)=>a.ticks-b.ticks||a.a.armyId.localeCompare(b.a.armyId)).map(x=>x.a);
+  // A resident is enough; otherwise recall just the nearest legal one-turn route.
+  for(const a of choices)if(defend(a,city,'R11_REACH_RETURN'))break;
+ }
+ for(const change of recentCityChanges(s,v).sort((a,b)=>b.turn-a.turn)){
+  const city=v.ownCities?.[change.cityId],a=v.ownArmies[change.armyId];
+  if(change.to!==v.factionId||s.turn-change.turn>1||!city||!a||!units.includes(a)||assigned.has(a.armyId)||!threatened(city)||dist(v,a.tileId,city.tileId)>1)continue;
+  const c=plan.candidates.find(c=>c.armyId===a.armyId);if(c){orders.set(a.armyId,hold(c,city,'R11_OCCUPATION_GUARD'));assigned.add(a.armyId);}
+ }
+ if(!orders.size)return;
+ plan.candidates=plan.candidates.map(c=>orders.get(c.armyId)??c);
+ // The bridge reapplies this existing priority list after reference planning.
+ const defense=plan.defense??={assignedArmyIds:[],quotas:[]};
+ defense.priorityOrders=[...(defense.priorityOrders??[]).filter(c=>!orders.has(c.armyId)),...orders.values()];
+ defense.assignedArmyIds=[...new Set([...(defense.assignedArmyIds??[]),...[...orders.values()].filter(c=>c.defendCityId).map(c=>c.armyId)])];
+}
+
+function referenceRecapture(s,v,plan,api){
+ if(!campaignAiRule(s,v.factionId,11)||!plan.strategy?.targets)return;
+ const lost=new Set(recentCityChanges(s,v).filter(c=>c.from===v.factionId&&v.knowledge.cities[c.cityId]?.ownerFactionId!==v.factionId).map(c=>c.cityId));
+ for(const row of plan.strategy.targets){
+  const city=v.knowledge.cities[row.cityId];if(!lost.has(row.cityId)||!city||row.unreachable||row.deferred||row.score<=0)continue;
+  const reachable=Object.values(v.ownArmies).some(a=>api.active(s,a)&&api.positions(s,v,a,city).some(t=>{const r=api.route(s,v,a.armyId,t);return r&&r.totalTicks<=s.time.ticksPerTurn;}));
+  if(reachable){row.recaptureBonus=AI_RULE_GOAL_BONUS;row.score+=row.recaptureBonus;}
+ }
+ if(!plan.strategy.targets.some(r=>r.recaptureBonus))return;
+ plan.strategy.targets.sort((a,b)=>b.score-a.score||a.cityId.localeCompare(b.cityId));
+ const best=plan.strategy.targets[0];if(best?.recaptureBonus)plan.goal={...plan.goal,targetCityId:best.cityId};
+}
+
 // Public routes/reachable positions are supplied by the bridge. Memory is
 // optional, bounded, JSON data; diagnostics never write or consume game RNG.
 export function campaignReferencePlan(s,v,plan,{remember=false,ranking=[],turnLimit=26,api}={}){
  if(!campaignAiRulesEnabled(s,v.factionId))return plan;
  const f=v.factionId,m=structuredClone(s.aiMilitary?.[f]??{units:{},groups:[]}),units=Object.values(v.ownArmies).filter(a=>api.active(s,a)&&a.morale!=='ROUTING'),posture=campaignAiPosture(s,v,ranking,turnLimit);
+ const originalTarget=plan.goal?.targetCityId;
+ referenceRecapture(s,v,plan,api);
+ referenceCitySafety(s,v,plan,api,turnLimit);
  m.units=Object.fromEntries(Object.entries(m.units??{}).filter(([id])=>v.ownArmies[id]));
  const primary=v.knowledge.cities[plan.goal?.targetCityId]??v.knowledge.observedArmies[plan.goal?.targetArmyId],reserved=new Set();
  let targets=primary?[primary]:[];
@@ -124,7 +223,7 @@ export function campaignReferencePlan(s,v,plan,{remember=false,ranking=[],turnLi
   return {targetId:target.cityId??target.armyId,targetTileId:target.tileId,armyIds:selected.map(x=>x.a.armyId),power,ratio:power/Math.max(1,foes*(campaignAiRule(s,f,7)?AI_RULE_ENEMY_MARGIN:1)),stageTileId,startedTurn:prior?.startedTurn??s.turn,gatherCount:prior?.gatherCount??0,gatherTurn:prior?.gatherTurn??0,phase:prior?.phase==='ADVANCE'?'ADVANCE':'READY'};
  });
  plan.candidates=plan.candidates.map(c=>{
-  if(c.aiCityDefensePriority){note('R11_PRIORITY');return c;}
+  if(c.aiCityDefensePriority||c.reasonCode==='R11_CAPTURE_CAPITAL'){note('R11_PRIORITY');return c;}
   const a=v.ownArmies[c.armyId];if(!a||!api.active(s,a)||a.morale==='ROUTING'||/WITHDRAW|CLOCK_RETREAT|C31_|EXPLORE/.test(c.reasonCode??''))return c;
   const old=m.units[a.armyId]??{},record={...old,lastTurn:s.turn};m.units[a.armyId]=record;
   const target=assigned.get(a.armyId)??primary,group=groups.find(g=>g.targetId===(target?.cityId??target?.armyId));
@@ -153,7 +252,7 @@ export function campaignReferencePlan(s,v,plan,{remember=false,ranking=[],turnLi
    }
    group.phase='ADVANCE';
    if(!launch)note('MARGINAL_FORCE_ADVANCE');
-   if(target.cityId!==primary?.cityId){const choice=api.positions(s,v,a,target).map(t=>api.route(s,v,a.armyId,t)).filter(Boolean).sort((x,y)=>x.totalTicks-y.totalTicks)[0];if(choice)return {...api.move(s,v,c,choice,'RULE_TWO_CITIES'),aiReferenceMove:true,aiTargetCityId:target.cityId};}
+   if(target.cityId!==primary?.cityId||originalTarget!==plan.goal?.targetCityId){const choice=api.positions(s,v,a,target).map(t=>api.route(s,v,a.armyId,t)).filter(Boolean).sort((x,y)=>x.totalTicks-y.totalTicks)[0];if(choice)return {...api.move(s,v,c,choice,'RULE_TWO_CITIES'),aiReferenceMove:true,aiTargetCityId:target.cityId};}
   }
   if(!campaignAiRule(s,f,3)||c.type==='MOVE'||api.goodAttack?.(a.armyId))return c;
   // No profitable contact: next-turn flank, onward march, then known hub/empty city.

@@ -1,5 +1,5 @@
 import {diplomacyMoveReason} from './campaign-diplomacy.mjs';
-import {campaignPath} from './campaign-morale.mjs';
+import {campaignPath,campaignPaths} from './campaign-morale.mjs';
 import {hexDistance,boardNeighbors,tileId} from './map-primitives.mjs';
 import {edgeTicks,edgeKey} from './movement.mjs';
 import {campaignMovementWorld,castleArmyActive,campaignCenterEntryAllowed} from './campaign-city-footprint.mjs';
@@ -15,6 +15,15 @@ export function orderRoute(s,id,to){
  if(!path||path.pathTileIds.some(t=>!known[t]||known[t]==='UNEXPLORED'))return null;
  if(Object.values(s.cities).some(c=>c.tileId===to&&c.ownerFactionId!==s.playerFactionId&&!campaignCenterEntryAllowed(s,id,c)))return null;
  return path;
+}
+// UI owns snapshot lifetime (step replaces state). Engine orderRoute stays live.
+export function orderRoutes(s,id){
+ if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return new Map();
+ const known=s.knowledge[s.playerFactionId]?.tiles??{},blocked=new Set(s.mapRules.blockedEdges);
+ for(const t of Object.values(s.tiles))if(!known[t.tileId]||known[t.tileId]==='UNEXPLORED')for(const n of boardNeighbors(t,s.tiles))blocked.add(edgeKey(t.tileId,tileId(n)));
+ const routes=campaignPaths({...s,mapRules:{...s.mapRules,blockedEdges:[...blocked]}},id);
+ for(const [to,path] of routes)if(!known[to]||known[to]==='UNEXPLORED'||path.pathTileIds.some(t=>!known[t]||known[t]==='UNEXPLORED')||Object.values(s.cities).some(c=>c.tileId===to&&c.ownerFactionId!==s.playerFactionId&&!campaignCenterEntryAllowed(s,id,c)))routes.delete(to);
+ return routes;
 }
 export function assignGroupDestinations(s,ids,to){
  if(!s.tiles[to])throw new Error('INVALID_ORDER_DESTINATION');
