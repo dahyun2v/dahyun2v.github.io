@@ -15,7 +15,23 @@ export const SFX = Object.freeze({
   capture: {gain: 0.7, gap: 1500}, rout: {gain: 0.5, gap: 1500}, warhorn: {gain: 0.5, gap: 1500},
   gate: {gain: 0.75, gap: 500}, hammer: {gain: 0.85, gap: 300}, coins: {gain: 0.8, gap: 250}, muster: {gain: 0.8, gap: 500}, cup: {gain: 0.8, gap: 500},
   levelup: {gain: 0.75, gap: 700}, stone: {gain: 0.8, gap: 500}, guqin: {gain: 0.75, gap: 600},
+  // 10-15 사용자 "교전 효과음이 너무 구림 — 함성 · 병기 부딪히는 소리 · 돌진 소리, 타격감", "화계 불타는 소리", "성 화면에 사람 소리"
+  warcry: {gain: 0.6, gap: 900}, 'charge-rumble': {gain: 0.8, gap: 900}, 'clash-heavy': {gain: 0.85, gap: 120}, impact: {gain: 0.9, gap: 120},
+  melee: {gain: 0.5, gap: 700}, 'tactic-boom': {gain: 0.9, gap: 600}, 'fire-ignite': {gain: 0.9, gap: 600}, 'fire-burn': {gain: 0.55, gap: 900},
+  'town-ambience': {gain: 0.32, gap: 0},
 });
+/** 맞는 순간의 소리에 겹쳐 내는 소리: [이름, 늦춤(ms), 크기 배율]. 한 소리만으로는 '쾅' 하나라 얇다 — 금속(병기) · 묵직한 타격 · 이어지는 난전을 겹친다.
+ * @type {Readonly<Record<string, [string, number, number][]>>} */
+export const SFX_LAYERS = Object.freeze({
+  clash: [['clash-heavy', 0, 1], ['impact', 30, 0.9], ['melee', 160, 0.8]],
+  charge: [['impact', 0, 1], ['clash-heavy', 60, 0.9], ['melee', 220, 0.8]],
+  siege: [['impact', 0, 0.8]],
+  tactic: [['tactic-boom', 0, 1]],
+});
+/** 되풀이해 트는 소리(이어 틀기 · 서서히 켜고 끔). 창 id → 소리 */
+export const LOOP_PANELS = Object.freeze({'city-stage': 'town-ambience'});
+/** 이름에 불이 든 전법(화계 · 화공 · 화시 …) */
+export const fireTactic = (/** @type {unknown} */ name) => /화계|화공|화시|화우|화염|불|火|fire/i.test(String(name ?? ''));
 const BASE = '/assets/audio/sfx/';
 
 /** 병종 → 움직일 때 · 칠 때의 소리. 특수 병종(투석기 등)은 이름에 든 글자로 가른다. @param {unknown} troop */
@@ -39,7 +55,11 @@ export function commandSounds({request, before, state, combat, deferImpact = fal
     const atk = army(combat.attackerId ?? request?.armyId), seen = !ai || visible(combat.attackerId) || visible(combat.targetId);
     if (seen) {
       const k = ai ? 0.7 : 1, city = type === 'ATTACK_CITY' || !!combat.cityId || combat.kind === 'SIEGE';
-      if (type === 'USE_TACTIC' || !!combat.tacticName || combat.kind === 'TACTIC') out.push(['tactic', 0, k]);
+      const tactic = type === 'USE_TACTIC' || !!combat.tacticName || combat.kind === 'TACTIC';
+      if (tactic) out.push(['tactic', 0, k]);
+      if (tactic && fireTactic(combat.tacticName)) out.push(['fire-ignite', 300, k], ['fire-burn', 900, k]);
+      // 치기 시작할 때 함성(기병은 말발굽 우레) — 맞는 순간의 소리는 world.js 가 따로 낸다(deferImpact)
+      else if (!tactic && !city && combat.kind !== 'OVERWATCH' && combat.kind !== 'TACTIC_EFFECT') out.push([troopSounds(atk?.troopType).hit === 'charge' ? 'charge-rumble' : troopSounds(atk?.troopType).hit === 'clash' ? 'warcry' : '', 0, k * 0.8]);
       if(!deferImpact&&combat.kind!=='TACTIC_EFFECT')out.push([combat.kind === 'OVERWATCH' ? 'arrows' : city ? 'siege' : troopSounds(atk?.troopType).hit, type === 'USE_TACTIC' ? 260 : 0, k]);
       if ((combat.eliminatedIds ?? []).some((/** @type {string} */ id) => before?.armies?.[id]?.factionId === me)) out.push(['rout', 900, 1]);
     }
@@ -66,7 +86,7 @@ export function commandSounds({request, before, state, combat, deferImpact = fal
   else if (simple && !(combat && type !== 'END_TURN')) out.push([simple, 0, type === 'VISIT' ? 0.6 : 1]);
   // 새 차례: 징 한 번(차례 넘김의 북 뒤에)
   if ((state?.turn ?? 0) > (before?.turn ?? 0) && !state?.gameResult) out.push(['gong', 750, 1]);
-  return out;
+  return out.filter(([name]) => !!name);
 }
 
 /** 창이 열릴 때 · 닫힐 때의 소리(창의 id → [열림, 닫힘]) */
@@ -113,10 +133,32 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
     try { ctx ??= contextFactory(); if (ctx.state === 'suspended') Promise.resolve(ctx.resume()).catch(() => {}); } catch { return; }
     for (const name of Object.keys(SFX)) load(name);   // 첫 손짓에 한꺼번에 받아 둔다(모두 합쳐 0.7MB)
   }
-  /** @param {string} name @param {{gain?: number, delay?: number}} [o] */
-  function play(name, {gain = 1, delay = 0} = {}) {
+  /** @param {string} name @param {{gain?: number, delay?: number, layers?: boolean}} [o] */
+  function play(name, {gain = 1, delay = 0, layers = true} = {}) {
     const def = SFX[name]; if (!def) return false;
-    if (delay > 0) { timer(() => play(name, {gain}), delay); return true; }
+    if (delay > 0) { timer(() => play(name, {gain, layers}), delay); return true; }
+    const played = playNow(name, def, gain);
+    if (played && layers) for (const [layer, d, k] of SFX_LAYERS[name] ?? []) play(layer, {gain: gain * k, delay: d, layers: false});
+    return played;
+  }
+  /** @type {Map<string, {src:any, g:any}>} */ const loops = new Map();
+  /** 되풀이해 틀기(서서히 켬). 이미 틀고 있으면 그대로. @param {string} name */
+  function startLoop(name) {
+    const def = SFX[name], v = level(); if (!def || !v || loops.has(name)) return false;
+    const buf = buffers.get(name); if (!buf) { load(name).then((b) => { if (b && !loops.has(name)) startLoop(name); }); return false; }
+    try {
+      const src = ctx.createBufferSource(), g = ctx.createGain(), t = ctx.currentTime ?? 0;
+      src.buffer = buf; src.loop = true; g.gain.setValueAtTime?.(0, t); g.gain.linearRampToValueAtTime?.(Math.min(1, v * def.gain), t + 1.2);
+      src.connect(g).connect(ctx.destination); src.start(); loops.set(name, {src, g}); return true;
+    } catch { return false; }
+  }
+  /** 서서히 끄기. @param {string} name */
+  function stopLoop(name) {
+    const l = loops.get(name); if (!l) return; loops.delete(name);
+    try { const t = ctx.currentTime ?? 0; l.g.gain.cancelScheduledValues?.(t); l.g.gain.setValueAtTime?.(l.g.gain.value, t); l.g.gain.linearRampToValueAtTime?.(0, t + 0.6); l.src.stop(t + 0.7); } catch { /* 이미 멈춤 */ }
+  }
+  /** @param {string} name @param {SfxDef} def @param {number} gain */
+  function playNow(name, def, gain) {
     const v = level(), now = clock();
     if (!v || now - (last.get(name) ?? -Infinity) < def.gap || (name === 'click' && now - lastAny < 90)) return false;
     const buf = buffers.get(name); if (!buf) { load(name); return false; }
@@ -143,10 +185,11 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
       const open = !(/** @type {any} */ (el).hidden), was = seen.get(el.id); seen.set(el.id, open);
       if (was === undefined || was === open) return;
       const name = open ? pair[0] : pair[1]; if (name) play(name);
+      const loop = /** @type {Record<string, string>} */ (LOOP_PANELS)[el.id]; if (loop) { if (open) startLoop(loop); else stopLoop(loop); }
     };
     for (const id of Object.keys(PANEL_SOUNDS)) { const el = doc.getElementById(id); if (el) seen.set(id, !(/** @type {any} */ (el).hidden)); }
     new MutationObserver((list) => { for (const m of list) if (m.type === 'attributes' && m.target instanceof Element) check(m.target); })
       .observe(doc.body, {attributes: true, attributeFilter: ['hidden'], subtree: true});
   }
-  return {unlock, play, command, attach, get ready() { return buffers.size; }};
+  return {unlock, play, command, attach, startLoop, stopLoop, get ready() { return buffers.size; }};
 }

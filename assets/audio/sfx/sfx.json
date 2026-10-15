@@ -243,6 +243,87 @@
    "rms": 0.224,
    "peak": 0.853,
    "bytes": 36614
+  },
+  "warcry": {
+   "file": "warcry.ogg",
+   "seconds": 2.85,
+   "source": "warcry-v1.wav",
+   "onset": 0.03,
+   "rms": 0.181,
+   "peak": 0.844,
+   "bytes": 34815
+  },
+  "impact": {
+   "file": "impact.ogg",
+   "seconds": 0.52,
+   "source": "impact-v1.wav",
+   "onset": 0.25,
+   "rms": 0.104,
+   "peak": 0.816,
+   "bytes": 9660
+  },
+  "clash-heavy": {
+   "file": "clash-heavy.ogg",
+   "seconds": 0.47,
+   "source": "clash-heavy-v1.wav",
+   "onset": 0.0,
+   "rms": 0.078,
+   "peak": 0.78,
+   "bytes": 9682
+  },
+  "charge-rumble": {
+   "file": "charge-rumble.ogg",
+   "seconds": 3.26,
+   "source": "charge-rumble-v1.wav",
+   "onset": 0.0,
+   "rms": 0.09,
+   "peak": 0.838,
+   "bytes": 39078
+  },
+  "fire-ignite": {
+   "file": "fire-ignite.ogg",
+   "seconds": 1.11,
+   "source": "fire-ignite-v1.wav",
+   "onset": 0.65,
+   "rms": 0.099,
+   "peak": 0.847,
+   "bytes": 16729
+  },
+  "tactic-boom": {
+   "file": "tactic-boom.ogg",
+   "seconds": 1.79,
+   "source": "tactic-boom-v1.wav",
+   "onset": 0.01,
+   "rms": 0.107,
+   "peak": 0.848,
+   "bytes": 28202
+  },
+  "melee": {
+   "file": "melee.ogg",
+   "seconds": 3.86,
+   "source": "melee-v1.wav",
+   "onset": 0.0,
+   "rms": 0.047,
+   "peak": 0.829,
+   "bytes": 64894
+  },
+  "fire-burn": {
+   "file": "fire-burn.ogg",
+   "seconds": 5.0,
+   "source": "fire-burn-v1.wav",
+   "onset": 0.0,
+   "rms": 0.052,
+   "peak": 0.914,
+   "bytes": 88481
+  },
+  "town-ambience": {
+   "file": "town-ambience.ogg",
+   "seconds": 7.0,
+   "source": "town-ambience-v1.wav",
+   "onset": 0.0,
+   "rms": 0.062,
+   "peak": 0.825,
+   "bytes": 79393
   }
  }
 }
