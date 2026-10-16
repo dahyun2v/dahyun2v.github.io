@@ -52,3 +52,5 @@ globalThis.addEventListener?.('storage',e=>{if(e.key===audioKey||e.key===null)re
 globalThis.addEventListener?.('pagehide',()=>{pageHidden=true;if(navigationTimer!==null){clearTimeout(navigationTimer);navigationTimer=null;}bgm.deactivate();audio.deactivate();});
 globalThis.addEventListener?.('pageshow',e=>{if(e?.persisted===false&&!pageHidden)return;pageHidden=false;navigating=false;if(navigationTimer!==null){clearTimeout(navigationTimer);navigationTimer=null;}reloadAudio();audio.activate();bgm.activate();$('#new-game').disabled=false;$('#settings').disabled=false;$('#guide').disabled=false;refreshContinue();});
 showAudio();refreshContinue();if(document.visibilityState!=='hidden')bgm.activate();
+
+window.__titleMenuReady=true;

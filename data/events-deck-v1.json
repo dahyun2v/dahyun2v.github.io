@@ -1,0 +1,5248 @@
+{
+  "schema": "events-deck-v1",
+  "version": "1.0.0-review",
+  "status": "24_NEW_CONTENT_READY__6_LEGACY_REVIEW_REQUIRED",
+  "createdAt": "2026-10-16",
+  "setting": "역사가 끝난 뒤 다시 깨어난 인물들. 역사 자료는 출전 메타데이터이며 게임 대사는 희미한 기억으로만 표현한다.",
+  "inputManifest": [
+    {
+      "file": "EFFECTS.md",
+      "bytes": 1873,
+      "sha256": "695388d72f29a2a1914441a290618be3972937780c233845c81b7322df04614f",
+      "readScope": "full"
+    },
+    {
+      "file": "EVENT-DECK-DESIGN.md",
+      "bytes": 4975,
+      "sha256": "55d8ae0bb85eee277206b445e0d79fe35b64cc6e15566b187539f84a9a2a0285",
+      "readScope": "full"
+    },
+    {
+      "file": "deja-vu-v0.1.json",
+      "bytes": 10011,
+      "sha256": "557a98b404105da370a35b53366d6ebe1c8fb81c4bb638625ae00bbdd356b901",
+      "readScope": "full"
+    },
+    {
+      "file": "existing-6-events.json",
+      "bytes": 3540,
+      "sha256": "c20140acb8a1bd3a101e1e5a1c43a657167b94b6b389c07b2b8f41218a311a00",
+      "readScope": "full"
+    },
+    {
+      "file": "roster.csv",
+      "bytes": 1422,
+      "sha256": "65431d8f3ba201ec2b02bbee813175d1ef64f4fd4ede2f955a17feb97ece8b3a",
+      "readScope": "full"
+    },
+    {
+      "file": "visit-talks-v0.1.json",
+      "bytes": 41421,
+      "sha256": "99c1f7763402c9bbc77786e669b30464df747b8a14ac205a07f92be758f606c2",
+      "readScope": "full"
+    }
+  ],
+  "contract": {
+    "kind": "첨부 엔진 계약 초안에 맞춘 콘텐츠 계약. 실행 엔진 구현·어댑터는 이 산출물에 포함되지 않음.",
+    "turnLimit": 26,
+    "playerOnly": true,
+    "maxEventsPerRun": 4,
+    "minimumTurnGap": 4,
+    "oncePerRun": true,
+    "previousRunSeenWeightMultiplier": 0.5,
+    "legacyAiAutoChoice": false,
+    "preserveEngineCrisis": "CRISIS_HEGEMONY",
+    "selection": {
+      "deterministic": true,
+      "rule": "발생 자격은 guards와 roles를 모두 충족해야 한다. 가중치는 기존 결정론 선택기의 입력이며 새 난수 호출을 하지 않는다. 고정된 캠페인 상태·시드·직전 판 기록이 같으면 같은 결과여야 한다. 선택기 자체는 미제공이므로 연동 검사 필요.",
+      "recentPenaltyBasis": "직전 판에 화면에 제시된 카드 ID, history/twist/defer 여부와 무관"
+    },
+    "roleResolution": {
+      "freezeAt": "카드가 표시되기 직전",
+      "rule": "후보가 없으면 카드를 제시하지 않는다. 필수 역할은 표시 시 실제 ID와 이름을 고정하며 이후 가장 가까운 다른 성·부대로 대체하지 않는다. 별칭이 같은 실제 대상을 가리킬 수 있는 경우 중복 효과는 명시된 배열대로만 적용한다.",
+      "ownership": "세력 카드의 고정 장수는 현재 플레이어 소유이고 활동 가능해야 한다. WANDERER 고정 장수는 아직 어느 세력에도 합류하지 않고 영입 가능한 상태여야 한다.",
+      "places": "현재 지명은 allowedCityNames만 사용. 역할 셀렉터의 문자열은 기존 엔진 함수명이 아니라 어댑터가 구현할 결정론 질의 명세이다."
+    },
+    "allowedCityNames": [
+      "업",
+      "거록",
+      "신도",
+      "중산",
+      "남피",
+      "계",
+      "역경",
+      "평원"
+    ],
+    "oathTiming": {
+      "signedAt": "플레이어가 twist 선택 시 현재 차례 t",
+      "deadlineAbsolute": "t + deadline; t + deadline <= 26",
+      "firstCheck": "선택 차례의 결과를 소급 인정하지 않고 t+1 차례 끝부터",
+      "pointGoals": "CAPTURE_CITY·DEFEAT_ARMY는 서약 이후 일어난 행위를 t+1..t+N 차례 말에 판정하여 최초 성공 시 1회만 보상한다. 선택 차례 t의 선택 이후 행위도 로그에는 저장하되 가장 빠른 지급은 t+1 끝이다.",
+      "lastTurnGoal": "FOOD_AT_LEAST는 t+N 차례 끝에만 성공/실패 판정한다.",
+      "continuousGoals": "HOLD_CITY·PAIR_TOGETHER·TRUCE_KEEP는 t+1..t+N 차례 끝을 모두 충족해야 성공. HOLD의 잠깐 상실, TRUCE의 먼저 공격은 행동 로그에 실패를 기록하므로 되찾기/재협정으로 덮어쓰지 않는다. PAIR는 명세대로 차례 말 위치만 검사한다.",
+      "onceOnly": "성공과 실패는 배타적이며 각각 중복 지급하지 않는다. 조기 위반을 기록하더라도 penalty 정산은 t+N 끝에 1회.",
+      "campaignEndsEarly": "승패로 조기 종료한 경우 미완료 맹세는 완료/실패를 지어내지 않고 미완료로 기록한다. 목표·기한을 고치지 않는다. 이 종료 정책은 제안 사항으로 어댑터 검수 필요."
+    },
+    "tags": {
+      "meaning": "twist 선택 기록; 자원이나 능력치가 아니다.",
+      "setWhen": "선택 즉시. 맹세 실패로 제거하지 않는다.",
+      "requiresTwist": "나열한 이전 카드 모두에서 oath가 있는 선택을 했고 연결 tag가 존재해야 한다.",
+      "count": "4개의 느슨한 연결 쌍. links.setsTag와 선택의 setsTag는 같은 기록 한 번을 가리키는 별칭, 중복 실행하지 않음."
+    },
+    "effectRepresentation": "각 효과는 EFFECTS.md의 정확한 효과명을 단일 키로 사용한다. prestige는 숫자, 나머지는 해당 표의 필드를 가진 객체이다. trigger 테스트와 roles의 pick은 효과가 아니다.",
+    "preview": {
+      "template": "build_deck.py effect_text / goal_text / preview에서 효과 배열로 자동 생성한다.",
+      "units": "예비병 내부 1 = 화면 병력 10명. 다른 수치는 내부=표시.",
+      "scope": "정적 명세의 요청 변화량과 preview는 정확히 일치. 상태 상·하한에서 실제 적용량을 줄이는 엔진 규칙은 입력에 없으므로 포화 상태의 실적 일치까지 검증한 것은 아니다.",
+      "display": "화면은 역할 이름과 절대 마감 차례를 함께 치환하고, 현재 효과의 상한·하한 조정이 있다면 조정된 값을 표시해야 한다. 숨은 치환/이중 지급 금지."
+    },
+    "extensions": {
+      "phase_origin_sourceRefs": "검수용 메타데이터; 게임 관리 수치가 아님.",
+      "twist_alt": "기존 6장의 세 번째 실효 선택을 지우지 않기 위한 추가 선택 ID. oath를 가진 선택은 동일한 twist 흐름으로 처리한다. 문자열 history/twist/defer만 허용하는 로더에는 이 확장 검토가 필요하다.",
+      "legacyMigration": "6장 모두 migration.original에 입력 객체를 변경 없이 내장하고, 변경 제안은 별도 choices에 둔다. 원형 무손실 이관 완료로 취급하지 않는다."
+    },
+    "runtimeGates": [
+      "원문 효과와 충돌하는 E01/E02/E05 대체안 승인 전, 6개 legacy 카드는 자동 배포하지 않는다.",
+      "최고 무용·높은 지휘·진행 중 둔전·활성 휴전·실제 이동 가능성·상한/하한을 엔진에서 조회해 검사한다.",
+      "맹세 대상이 영구 소멸/영입 취소/진영 변경하면 대체 ID를 뽑지 않는다. 목표는 실패로 기록하고 도착 가능한 penalty만 임의 선택해 줄이지 말 것; 아래 대상 유효성 정책 검토가 필요하다."
+    ],
+    "targetValidityPolicy": "reward/penalty의 원래 대상이 소멸한 경우 처리 규칙은 입력에 없다. 이번 산출물은 새로운 타깃 치환 효과를 발명하지 않는다. 실행 전 엔진에서 소멸 대상의 적용 규칙과 화면 안내를 확정해야 한다.",
+    "economyStatus": "정적 수치 감사만 완료 대상. 시작 자원·성 수입·부대 유지비·병력 비용·상한·실제 발생빈도는 첨부에 없어 26차례 경제 균형과 재미의 실증 검증은 불가."
+  },
+  "sources": {
+    "C1": {
+      "work": "三國志",
+      "volume": 10,
+      "biography": "荀彧傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "순욱이 후방을 지키고 연주 기반을 먼저 굳히도록 조조에게 권함.",
+      "locator": "留彧守鄄城；深根固本以制天下",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷10",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "134–135"
+    },
+    "C2": {
+      "work": "三國志",
+      "volume": 9,
+      "biography": "夏侯惇傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "가뭄·메뚜기 피해 뒤 하후돈이 직접 흙을 나르며 둑을 만들고 벼농사를 권장함.",
+      "locator": "身自負土，率將士勸種稻",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷09",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "142"
+    },
+    "C3": {
+      "work": "三國志",
+      "volume": 17,
+      "biography": "張遼傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "장료가 창희의 집에 홀로 들어가 항복을 받아내자 조조가 장수의 위험한 행동을 경계함.",
+      "locator": "遼單身上三公山，入希家",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷17",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "132"
+    },
+    "C4": {
+      "work": "三國志",
+      "volume": 18,
+      "biography": "許褚傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "동관 싸움의 도하 때 허저가 말안장으로 조조를 가리고 배를 저어 건넘.",
+      "locator": "左手舉馬鞍蔽太祖",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷18",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "193–194"
+    },
+    "C5": {
+      "work": "三國志",
+      "volume": 9,
+      "biography": "曹仁傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "강릉에서 조인이 포위된 우진(牛金)과 남은 병사들을 거듭 구함.",
+      "locator": "餘眾未盡出，仁復直還突之",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷09",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "171"
+    },
+    "C6": {
+      "work": "三國志",
+      "volume": 10,
+      "biography": "荀彧傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "순욱이 조조의 국공·구석 추진에 반대하여 뜻이 어긋남.",
+      "locator": "君子愛人以德，不宜如此",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷10",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "165"
+    },
+    "L1": {
+      "work": "三國志",
+      "volume": 36,
+      "biography": "趙雲傳",
+      "layer": "裴松之注",
+      "quotedWork": "雲別傳",
+      "scene": "조운이 성도 평정 뒤 집과 밭을 백성에게 돌려주자고 건의함.",
+      "locator": "今益州人民，初罹兵革，田宅皆可歸還",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷36",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "164"
+    },
+    "L2": {
+      "work": "三國志",
+      "volume": 36,
+      "biography": "張飛傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "유비가 장비에게 병사들을 가혹하게 대하고 가까이 두는 일을 경계하라고 권함.",
+      "locator": "先主常戒之曰",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷36",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "145"
+    },
+    "L3": {
+      "work": "三國志",
+      "volume": 35,
+      "biography": "諸葛亮傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "제갈량의 군수 장비 설계에 목우·유마가 포함됨.",
+      "locator": "木牛流馬，皆出其意",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷35",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "156"
+    },
+    "L4": {
+      "work": "三國志",
+      "volume": 41,
+      "biography": "費詩傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "관우가 황충과 같은 반열을 못마땅해하자 비시가 설득하여 관우가 임명을 받아들임.",
+      "locator": "大丈夫終不與老兵同列",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷41",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "180"
+    },
+    "L5": {
+      "work": "三國志",
+      "volume": 36,
+      "biography": "張飛傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "장비가 사로잡은 엄안을 풀어 주고 빈객으로 대우함.",
+      "locator": "飛壯而釋之，引為賓客",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷36",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "143"
+    },
+    "L6": {
+      "work": "三國志",
+      "volume": 36,
+      "biography": "趙雲傳",
+      "layer": "裴松之注",
+      "quotedWork": "雲別傳",
+      "scene": "조운이 유비의 오나라 공격에 반대했으나 유비가 따르지 않음.",
+      "locator": "不應置魏，先與吳戰",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷36",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "164"
+    },
+    "S1": {
+      "work": "三國志",
+      "volume": 46,
+      "biography": "孫策傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "손책이 손권에게 인수를 주며 두 사람의 장점을 나누어 평가하고 후사를 부탁함.",
+      "locator": "呼權佩以印綬",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷46",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "152"
+    },
+    "S2": {
+      "work": "三國志",
+      "volume": 49,
+      "biography": "太史慈傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "태사자가 유요의 남은 무리를 위무하러 떠나며 약속한 기한 안에 돌아옴.",
+      "locator": "不過六十日；果如期而反",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷49",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "151"
+    },
+    "S3": {
+      "work": "三國志",
+      "volume": 55,
+      "biography": "甘寧傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "감녕이 이릉에서 포위되어도 태연히 웃으며 구원군을 기다림.",
+      "locator": "惟寧談笑自若",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷55",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "211"
+    },
+    "S4": {
+      "work": "三國志",
+      "volume": 54,
+      "biography": "周瑜傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "주유가 손책 가족에게 큰 집을 내주고 살림을 함께 쓰며 친교를 맺음.",
+      "locator": "推道南大宅以舍策，升堂拜母，有無通共",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷54",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "131"
+    },
+    "S5": {
+      "work": "三國志",
+      "volume": 58,
+      "biography": "陸遜傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "육손이 승리 뒤 장수들의 불복을 왜 알리지 않았느냐는 질문에 함께 큰일을 이룰 이들이라며 감쌈.",
+      "locator": "君何以初不啟諸將違節度者邪",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷58",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "142–146"
+    },
+    "S6": {
+      "work": "三國志",
+      "volume": 47,
+      "biography": "吳主傳",
+      "layer": "裴松之注",
+      "quotedWork": "吳歷",
+      "scene": "손권이 가벼운 배로 조조의 진용을 직접 살핀다는 전승.",
+      "locator": "權乃自來，乘輕船",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷47",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "146"
+    },
+    "A1": {
+      "work": "三國志",
+      "volume": 54,
+      "biography": "魯肅傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "노숙이 군량을 구하는 주유에게 두 곡창 가운데 하나를 내줌.",
+      "locator": "肅乃指一囷與周瑜",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷54",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "153"
+    },
+    "A2": {
+      "work": "三國志",
+      "volume": 1,
+      "biography": "武帝紀",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "조조가 항복한 청주 황건군 가운데 정예를 추려 청주병으로 삼음.",
+      "locator": "收其精銳者，號爲青州兵",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷01",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "146"
+    },
+    "A3": {
+      "work": "三國志",
+      "volume": 54,
+      "biography": "魯肅傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "노숙과 관우의 교섭 뒤 유비가 상수를 경계로 나누고 양측이 군사를 거둠.",
+      "locator": "備遂割湘水為界，於是罷軍",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷54",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "161"
+    },
+    "A4": {
+      "work": "三國志",
+      "volume": 54,
+      "biography": "魯肅傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "주유가 떠나려던 노숙을 붙잡아 손권에게 천거함.",
+      "locator": "瑜因薦肅才宜佐時",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷54",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "154"
+    },
+    "W1": {
+      "work": "三國志",
+      "volume": 37,
+      "biography": "龐統傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "방통이 뇌양령에서 면직된 뒤 추천과 유비의 면담을 거쳐 다시 중용됨.",
+      "locator": "守耒陽令，在縣不治；先主見與善譚",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷37",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "130"
+    },
+    "W2": {
+      "work": "三國志",
+      "volume": 10,
+      "biography": "賈詡傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "가후가 자신을 경계하는 단외를 떠나 장수에게 가고, 외부의 의탁처로 가족도 보호받음.",
+      "locator": "詡遂往，繡執子孫禮",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷10",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "199"
+    },
+    "E01": {
+      "work": "三國志",
+      "volume": 16,
+      "biography": "任峻傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "조조의 둔전에서 임준이 전농중랑장으로 백성을 모아 농사를 짓게 함.",
+      "locator": "以峻爲典農中郎將，募百姓屯田於許下",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷16",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "134"
+    },
+    "E02": {
+      "work": "三國志",
+      "volume": 10,
+      "biography": "荀彧傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "관도 대치 중 군량이 떨어지자 순욱이 조조에게 버티도록 권함.",
+      "locator": "太祖與袁紹相拒於官渡，太祖糧方盡",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷10",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "157"
+    },
+    "E03": {
+      "work": "三國志",
+      "volume": 32,
+      "biography": "先主傳",
+      "layer": "裴松之注",
+      "quotedWork": "魏書",
+      "scene": "유비가 굶주림과 혼란 속에서 재물을 베풀고 낮은 신분의 사람들과도 함께 먹음.",
+      "locator": "備外禦寇難，內豐財施",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷32",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "132"
+    },
+    "E04": {
+      "work": "三國志",
+      "volume": 32,
+      "biography": "先主傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "백성들이 유비를 따라 남하해 행군이 느려져도 유비가 사람들을 버리지 않음.",
+      "locator": "今人歸吾，吾何忍棄去",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷32",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "139"
+    },
+    "E05": {
+      "work": "三國志",
+      "volume": 54,
+      "biography": "周瑜傳",
+      "layer": "裴松之注",
+      "quotedWork": "江表傳",
+      "scene": "주유가 나이를 내세워 자신을 얕보던 정보에게 양보하여 마침내 존중을 얻음.",
+      "locator": "瑜折節容下，終不與校",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷54",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "140"
+    },
+    "E06": {
+      "work": "三國志",
+      "volume": 49,
+      "biography": "太史慈傳",
+      "layer": "陳壽本文",
+      "quotedWork": null,
+      "scene": "손책이 태사자에게 변경의 현을 맡기고 그 부대를 두어 국경을 안정시킴.",
+      "locator": "以慈為建昌都尉",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷49",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 web.open으로 원문 해당 문단 확인",
+      "publicationDate": null,
+      "publicationDateNote": "고전 원전의 현대 전사본. 웹페이지 최초 게시일은 확인하지 않음.",
+      "verifiedScope": "아래 locator가 있는 해당 장면 문단; 권 전체의 판본 교감은 수행하지 않음.",
+      "webLineHint": "152"
+    }
+  },
+  "events": [
+    {
+      "id": "EV-F01-01",
+      "title": "비워 두지 않을 자리",
+      "scope": "F01",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G04",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "순욱이 후방을 지키고 연주 기반을 먼저 굳히도록 조조에게 권함. (《三國志》卷10〈荀彧傳〉)",
+      "sourceRefs": [
+        "C1"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{city}의 지도 한쪽에 {officer}이 남을 자리를 표시한다. “명공, 뒤를 지킬 사람이 필요합니다.” {lord}는 홀로 빈 성을 지키던 얼굴을 꿈에서 본 듯하다. 같은 자리에 남길까, 이번에는 곁에서 함께 길을 고르게 할까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 후방을 맡기고 뜻을 믿는다",
+          "effects": [
+            {
+              "relation": {
+                "a": "lord",
+                "b": "officer",
+                "delta": 5
+              }
+            }
+          ],
+          "preview": "{lord}·{officer} 관계 +5",
+          "dejaVu": "텅 빈 집무실에서도 서로의 뜻을 알았던 것 같다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 전선에서 나란히 판단한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": 15
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": -5
+                }
+              }
+            ],
+            "goalText": "2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {lord}·{officer} 관계 +15 | 실패: {lord}·{officer} 관계 −5",
+          "setsTag": "counsel_shared"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": "counsel_shared"
+      },
+      "designNote": "후방의 대리인이라는 순욱의 자리를 동행하는 조언자로 바꿔 두 장수의 이동 자유를 건다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F01-02",
+      "title": "흙 묻은 손",
+      "scope": "F01",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "FOOD_LOW",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "enemy_city_reachable",
+            "city": "targetCity",
+            "byArmy": "army",
+            "withinTurns": 4
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G33",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "lowest_food_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        },
+        "targetCity": {
+          "pick": "nearest_reachable_enemy_city",
+          "from": "army",
+          "owner": "enemy",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "excludeActiveTruce": true,
+          "tieBreak": "path_cost_then_id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "가뭄·메뚜기 피해 뒤 하후돈이 직접 흙을 나르며 둑을 만들고 벼농사를 권장함. (《三國志》卷9〈夏侯惇傳〉)",
+      "sourceRefs": [
+        "C2"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{city}의 빈 곡간 앞에서 {officer}이 소매를 걷는다. “맹덕, 흙은 내가 나르면 돼. 넌 사람부터 모아.” 손바닥의 굳은살에 낯선 둑의 감촉이 겹친다. 함께 밭을 일굴까, 농사는 주민에게 맡기고 군대는 바깥의 길을 열까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 장수도 함께 밭을 일군다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": 10
+              }
+            }
+          ],
+          "preview": "{city} 식량 +10",
+          "dejaVu": "흙 한 짐의 무게를 오래전부터 알고 있었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 농사는 맡기고 인접 적성을 확보한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "CAPTURE_CITY",
+              "city": "targetCity"
+            },
+            "deadline": 4,
+            "reward": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": 20
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "4차례 안에 {targetCity} 함락"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 4차례 안에 {targetCity} 함락 | 성공: {city} 식량 +20 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "장수의 직접 생산을 외부 확보로 뒤집어 식량 위기에 수비적·공세적 답을 모두 연다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F01-03",
+      "title": "혼자 오르지 않을 산",
+      "scope": "F01",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          15
+        ],
+        "when": "AFTER_BATTLE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "battle_participant",
+            "army": "army"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          },
+          {
+            "test": "player_survived_context_battle"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G24",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "nearest_owned_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "장료가 창희의 집에 홀로 들어가 항복을 받아내자 조조가 장수의 위험한 행동을 경계함. (《三國志》卷17〈張遼傳〉)",
+      "sourceRefs": [
+        "C3"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "전투가 끝나자 {officer}가 호위 없이 떠날 채비를 한다. “명공, 저들이 마음을 열었을 때 찾아가겠습니다.” {lord}에게는 홀로 산길을 오르는 뒷모습이 낯익다. 이번에도 한 사람의 담력으로 설득할까, 군주가 곁에 서서 말을 보탤까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 장수의 담력에 교섭을 맡긴다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "호위 없이 지나던 문턱이 손끝에 남아 있는 것 같다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 군주가 곁에 서서 교섭을 보증한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "prestige": 15
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: 인망 +15 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "단독 사절의 위험을 군주의 동행 비용으로 바꿔 지도 위 두 부대의 배치를 묶는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F01-04",
+      "title": "안장 하나의 그늘",
+      "scope": "F01",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "AFTER_BATTLE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "battle_participant",
+            "army": "army"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          },
+          {
+            "test": "player_survived_context_battle"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G25",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "officer_current_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "동관 싸움의 도하 때 허저가 말안장으로 조조를 가리고 배를 저어 건넘. (《三國志》卷18〈許褚傳〉)",
+      "sourceRefs": [
+        "C4"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{city}의 성문을 지나는 {officer}가 낡은 안장을 만진다. “명공, 제 뒤에 계십시오.” 물보라 속에서 누군가를 가렸던 듯 어깨가 먼저 굳는다. 한 사람의 몸만 가릴 것인가, 그 안쪽에 사는 이들까지 지킨다고 약속할 것인가.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 군주를 가리는 호위를 다진다",
+          "effects": [
+            {
+              "buff": {
+                "army": "army",
+                "defensePct": 10,
+                "turns": 1
+              }
+            }
+          ],
+          "preview": "{army} 방어 +10% (1차례)",
+          "dejaVu": "안장 아래로 얼굴 하나를 지켜 낸 꿈이 있었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 성 전체를 지키겠다고 약속한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "buff": {
+                  "army": "army",
+                  "defensePct": 20,
+                  "turns": 1
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "morale": {
+                  "army": "army",
+                  "step": -1
+                }
+              }
+            ],
+            "goalText": "3차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: {army} 방어 +20% (1차례) | 실패: {army} 사기 하락 1단계"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "허저의 좁고 강한 호위를 성 전체의 방어 책임으로 넓혀 보호의 범위를 바꾼다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F01-05",
+      "title": "두 번째 성문",
+      "scope": "F01",
+      "origin": "new",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          24
+        ],
+        "when": "CITY_BESIEGED",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "besieged",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G34",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "context_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "강릉에서 조인이 포위된 우진(牛金)과 남은 병사들을 거듭 구함. (《三國志》卷9〈曹仁傳〉)",
+      "sourceRefs": [
+        "C5"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "포위된 {city}에서 {officer}이 열린 문과 닫힌 문을 번갈아 본다. “명공, 밖에 남은 이를 두고 돌아섰던 것 같지는 않습니다.” 되돌아 달리던 말발굽이 희미하게 귀에 남는다. 구원에 나서는 담력을 택할까, 모두가 돌아올 성을 먼저 지킬까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 직접 구원에 나설 채비를 한다",
+          "effects": [
+            {
+              "xp": {
+                "officer": "officer",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "{officer} 경험치 +20",
+          "dejaVu": "한 번 돌아온 뒤에도 다시 문밖으로 나갔던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 돌아올 성을 잃지 않겠다고 약속한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "officer",
+                  "delta": 40
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "morale": {
+                  "army": "army",
+                  "step": -1
+                }
+              }
+            ],
+            "goalText": "2차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: {officer} 경험치 +40 | 실패: {army} 사기 하락 1단계"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "조인의 반복 구원을 돌격 보상이 아닌 귀환 거점의 유지 책임으로 비튼다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F01-06",
+      "title": "같은 뜻을 쓰지 않는 칸",
+      "scope": "F01",
+      "origin": "new",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          23
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "tag_present",
+            "tag": "counsel_shared"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G04",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "순욱이 조조의 국공·구석 추진에 반대하여 뜻이 어긋남. (《三國志》卷10〈荀彧傳〉)",
+      "sourceRefs": [
+        "C6"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{officer}이 새 문서의 마지막 칸을 비워 둔다. “명공, 곁에 서겠다는 말이 모든 뜻에 따르겠다는 말은 아닙니다.” {lord}는 멀어지는 발소리를 언젠가 들었던 듯하다. 앞서 함께 걷자던 선택을, 서로 다른 뜻 앞에서도 이어 갈 수 있을까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 뜻이 다른 것을 인정하고 거리를 둔다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "말하지 않은 한 줄이 두 사람 사이에 남았던 것 같다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 반대하는 조언자와 계속 함께 걷는다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 15
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: 인망 +15 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [
+          "EV-F01-01"
+        ],
+        "setsTag": null
+      },
+      "designNote": "앞선 동행의 선택을 찬동이 아닌 이견을 견디는 동행으로 다시 시험한다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F02-01",
+      "title": "돌려줄 땅의 이름",
+      "scope": "F02",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "CITY_CAPTURED",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "just_captured_by_player",
+            "city": "city"
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G02",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "context_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "조운이 성도 평정 뒤 집과 밭을 백성에게 돌려주자고 건의함. (《三國志》卷36〈趙雲傳〉 裴松之注引《雲別傳》)",
+      "sourceRefs": [
+        "L1"
+      ],
+      "adaptationNote": "성도 토지 반환 건의의 논점을 하북의 새 점령지로 옮겼다. 실제 토지 소유·세금·반환 장부는 만들지 않으며 효과는 인망뿐이다.",
+      "text": "새로 얻은 {city}의 밭문서가 쌓인다. {officer}이 빈 소유주 칸을 짚는다. “주공, 먼저 살던 이들의 이름부터 찾아야 합니다.” 군공과 땅을 맞바꾸던 풍경이 꿈처럼 스친다. 곧바로 돌려줄까, 우선 먹을 것을 마련한 뒤 약속을 지킬까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 밭을 주민에게 돌려준다는 뜻을 밝힌다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "남의 집 문서에서 지워진 이름을 되살렸던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 군량을 마련해 반환 약속을 뒷받침한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 15
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: 인망 +15 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "즉시 반환의 명분을 비축으로 증명하게 하여 점령 직후 식량 사용에 제약을 준다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F02-02",
+      "title": "형님의 말이 머무는 밤",
+      "scope": "F02",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G19",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "유비가 장비에게 병사들을 가혹하게 대하고 가까이 두는 일을 경계하라고 권함. (《三國志》卷36〈張飛傳〉)",
+      "sourceRefs": [
+        "L2"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{city}의 병영이 조용하다. {lord}가 {officer} 곁에 앉는다. “익덕아, 네가 꾸짖은 사람도 내일 네 등을 지킬 사람이야.” 그 말을 놓쳤던 밤이 있었던 것만 같다. 경고하고 떠날까, 형이 곁에 남아 함께 병사들의 말을 들을까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 경고를 전하고 스스로 돌아보게 한다",
+          "effects": [
+            {
+              "relation": {
+                "a": "lord",
+                "b": "officer",
+                "delta": 5
+              }
+            }
+          ],
+          "preview": "{lord}·{officer} 관계 +5",
+          "dejaVu": "듣고도 흘려보낸 말이 밤마다 되돌아왔던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 형이 곁에 남아 함께 이야기를 듣는다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": 15
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": -5
+                }
+              }
+            ],
+            "goalText": "3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {lord}·{officer} 관계 +15 | 실패: {lord}·{officer} 관계 −5",
+          "setsTag": "listen_to_soldiers"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": "listen_to_soldiers"
+      },
+      "designNote": "장비 개인에게 맡긴 절제를 유비의 동행 책임으로 바꿔 형제의 지휘권 분산을 늦춘다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F02-03",
+      "title": "수레보다 먼저 채울 것",
+      "scope": "F02",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "FOOD_LOW",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G03",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "lowest_food_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "제갈량의 군수 장비 설계에 목우·유마가 포함됨. (《三國志》卷35〈諸葛亮傳〉)",
+      "sourceRefs": [
+        "L3"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{city}의 군량표 옆에 {officer}이 수레 바퀴를 그린다. “주공, 나르는 법만 좋아져도 실을 곡식이 없다면 헛수고입니다.” 스스로 움직이는 소가 꿈결에 지나간다. 먼저 도구의 답을 구할까, 이번에는 창고를 채우는 일을 앞세울까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 운반 도구의 설계를 다듬는다",
+          "effects": [
+            {
+              "xp": {
+                "officer": "officer",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "{officer} 경험치 +20",
+          "dejaVu": "나무로 만든 짐승의 발소리를 들었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 도구보다 실제 비축으로 답한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "officer",
+                  "delta": 60
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": -10
+                }
+              }
+            ],
+            "goalText": "3차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: {officer} 경험치 +60 | 실패: {city} 식량 −10"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "목우유마의 발명을 무료 생산력으로 구현하지 않고 식량 비축이라는 행동 목표로 뒤집는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F02-04",
+      "title": "노장과 같은 줄",
+      "scope": "F02",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "officer",
+              "officer2"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G18",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "officer2": {
+          "officerId": "G06",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "관우가 황충과 같은 반열을 못마땅해하자 비시가 설득하여 관우가 임명을 받아들임. (《三國志》卷41〈費詩傳〉)",
+      "sourceRefs": [
+        "L4"
+      ],
+      "adaptationNote": "비시의 설득 장면을 유비의 군의로 옮겼다. 비시는 첨부 로스터에 없으므로 현재 등장시키지 않는다.",
+      "text": "군의의 자리표에서 {officer}와 {officer2}의 이름이 나란하다. “형님, 공의 앞뒤가 이 한 줄로 같아지는 것이오?” {lord}에게 오래된 불평처럼 들린다. 말로 공을 헤아려 줄까, 함께 움직이며 서로의 무게를 알게 할까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 각자의 공을 설명해 불만을 푼다",
+          "effects": [
+            {
+              "relation": {
+                "a": "officer",
+                "b": "officer2",
+                "delta": 5
+              }
+            }
+          ],
+          "preview": "{officer}·{officer2} 관계 +5",
+          "dejaVu": "같은 관직 한 줄 때문에 마음이 멀어졌던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 나란히 움직여 서로를 직접 겪게 한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "officer",
+                "officer2"
+              ]
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "relation": {
+                  "a": "officer",
+                  "b": "officer2",
+                  "delta": 15
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "relation": {
+                  "a": "officer",
+                  "b": "officer2",
+                  "delta": -5
+                }
+              }
+            ],
+            "goalText": "2차례 동안 매 차례 끝에 {officer}·{officer2} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 매 차례 끝에 {officer}·{officer2} 같은 칸 또는 이웃 칸 | 성공: {officer}·{officer2} 관계 +15 | 실패: {officer}·{officer2} 관계 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "말로 해결한 관우의 서열 불만을 관우·황충의 실제 배치 제약으로 바꾼다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F02-05",
+      "title": "빈 칸에 적는 수비병",
+      "scope": "F02",
+      "origin": "new",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          24
+        ],
+        "when": "CITY_CAPTURED",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "just_captured_by_player",
+            "city": "city"
+          },
+          {
+            "test": "tag_present",
+            "tag": "listen_to_soldiers"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G19",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "context_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "장비가 사로잡은 엄안을 풀어 주고 빈객으로 대우함. (《三國志》卷36〈張飛傳〉)",
+      "sourceRefs": [
+        "L5"
+      ],
+      "adaptationNote": "엄안 석방·빈객 대우만 차용한다. 엄안은 현재 인물로 생성하지 않고, 원전의 위협 장면도 재현하지 않는다. 예비병은 일반 병력이다.",
+      "text": "{city}의 항복 명부 앞에서 {officer}가 붓을 든다. “형, 장수 이름만 적고 끝낼 일은 아닌 것 같아.” 굽히지 않던 노인을 손님으로 맞았던 꿈이 스친다. 앞서 병사들의 말을 듣자던 선택을, 오늘 새로 만난 이들에게도 넓힐 것인가.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 굴하지 않은 장수를 예우해 병사들을 안심시킨다",
+          "effects": [
+            {
+              "reserves": {
+                "city": "city",
+                "delta": 50
+              }
+            }
+          ],
+          "preview": "{city} 예비병 +500명 (내부 +50)",
+          "dejaVu": "꺾지 않은 고개가 오히려 가까워졌던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 이름 없는 병사들에게도 성의 안전을 보증한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": 100
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "security": {
+                  "city": "city",
+                  "step": -1
+                }
+              }
+            ],
+            "goalText": "2차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: {city} 예비병 +1,000명 (내부 +100) | 실패: {city} 치안 악화 1단계"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [
+          "EV-F02-02"
+        ],
+        "setsTag": null
+      },
+      "designNote": "엄안 한 사람에 대한 예우를 항복한 병사들의 정착 보증으로 넓혀 앞선 경청 선택을 잇는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F02-06",
+      "title": "동쪽을 접은 지도",
+      "scope": "F02",
+      "origin": "new",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          23
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "active_truce_covers",
+            "faction": "otherFaction",
+            "turns": 3
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G02",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        },
+        "otherFaction": {
+          "factionId": "F03",
+          "mustHaveActiveTruceWith": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "조운이 유비의 오나라 공격에 반대했으나 유비가 따르지 않음. (《三國志》卷36〈趙雲傳〉 裴松之注引《雲別傳》)",
+      "sourceRefs": [
+        "L6"
+      ],
+      "adaptationNote": "조운의 동정 반대는 裴注《雲別傳》의 전승이다. 관우 등의 죽음을 현재 사실로 말하지 않고, 역사대로도 휴전 파기 효과를 자동 실행하지 않는다.",
+      "text": "{lord}의 손이 지도 동쪽에 오래 머문다. {officer}이 조심스레 말을 건넨다. “주공, 떠오르는 슬픔이 지금 싸워야 할 까닭인지는 살펴야 합니다.” 누구를 잃었는지도 모를 기억이 아프다. 출정을 준비할까, 이미 맺은 휴전을 끝까지 지킬까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 울분을 출정 준비로 돌린다",
+          "effects": [
+            {
+              "buff": {
+                "army": "army",
+                "attackPct": 10,
+                "turns": 1
+              }
+            }
+          ],
+          "preview": "{army} 공격 +10% (1차례)",
+          "dejaVu": "말렸던 목소리보다 북소리가 크게 들렸던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 희미한 원한보다 지금의 휴전을 지킨다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "TRUCE_KEEP",
+              "faction": "otherFaction"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "buff": {
+                  "army": "army",
+                  "attackPct": 20,
+                  "turns": 1
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {otherFaction} 측과 기존 휴전 유지 (먼저 공격하지 않음)"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {otherFaction} 측과 기존 휴전 유지 (먼저 공격하지 않음) | 성공: {army} 공격 +20% (1차례) | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "기억 속 복수를 현재 외교보다 앞세우지 않도록 기존 휴전 유지에 전투 보상을 건다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F03-01",
+      "title": "놓지 않은 인장",
+      "scope": "F03",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G20",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "손책이 손권에게 인수를 주며 두 사람의 장점을 나누어 평가하고 후사를 부탁함. (《三國志》卷46〈孫策傳〉)",
+      "sourceRefs": [
+        "S1"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{officer}이 {lord}의 손에 인장을 쥐여 주다가 멈춘다. “중모, 넌 사람을 쓰는 데 나보다 낫지.” {lord}은 그 손이 사라질까 잠시 움켜잡는다. 꿈속의 인계처럼 각자의 자리를 나눌까, 이번에는 살아 있는 형과 함께 앞길을 걸을까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 형제의 장점을 나누어 맡긴다",
+          "effects": [
+            {
+              "relation": {
+                "a": "lord",
+                "b": "officer",
+                "delta": 5
+              }
+            }
+          ],
+          "preview": "{lord}·{officer} 관계 +5",
+          "dejaVu": "인장이 건너온 뒤 손의 온기만 남았던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 형과 같은 길에서 함께 지휘한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": 15
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": -5
+                }
+              }
+            ],
+            "goalText": "2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {lord}·{officer} 관계 +15 | 실패: {lord}·{officer} 관계 −5",
+          "setsTag": "brothers_share_front"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": "brothers_share_front"
+      },
+      "designNote": "죽음 뒤의 계승을 재현하지 않고 살아 있는 형제의 공동 지휘로 바꿔 배치를 묶는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F03-02",
+      "title": "돌아올 날 대신 남을 성",
+      "scope": "F03",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "PLACE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G30",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "officer_current_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "place": {
+          "pick": "resolved_city_tile",
+          "city": "city",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "태사자가 유요의 남은 무리를 위무하러 떠나며 약속한 기한 안에 돌아옴. (《三國志》卷49〈太史慈傳〉)",
+      "sourceRefs": [
+        "S2"
+      ],
+      "adaptationNote": "본전의 유요 유민 위무·기한 내 귀환을 사용한다. 본전과 다르다고 배송지가 지적한 裴注《吳歷》의 신정 다음날 귀환은 근거로 쓰지 않는다.",
+      "text": "{city}의 문밖에서 {officer}가 돌아올 날을 짚어 본다. “주공, 기다리게 하지는 않겠습니다.” 오래 걸릴 길인데도 누군가 자신을 믿고 보내 주었던 듯하다. 떠나 사람들을 모아올 믿음을 줄까, 이번에는 떠나지 않고 지킬 성을 약속하게 할까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 돌아온다는 말을 믿고 인심을 모은다",
+          "effects": [
+            {
+              "reserves": {
+                "city": "city",
+                "delta": 50
+              }
+            }
+          ],
+          "preview": "{city} 예비병 +500명 (내부 +50)",
+          "dejaVu": "멀리 떠났어도 약속한 날을 어긴 적은 없었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 돌아올 날 대신 성의 안전을 약속한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": 150
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": -50
+                }
+              }
+            ],
+            "goalText": "3차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: {city} 예비병 +1,500명 (내부 +150) | 실패: {city} 예비병 −500명 (내부 −50)"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "태사자의 기한 내 귀환을 일정 기간의 거점 유지로 바꿔 믿음의 대상이 날짜에서 장소로 옮겨 간다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F03-03",
+      "title": "방울을 울리지 않는 밤",
+      "scope": "F03",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "CITY_BESIEGED",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "besieged",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "enemy_army_reachable",
+            "army": "army",
+            "withinTurns": 3
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G29",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "context_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "감녕이 이릉에서 포위되어도 태연히 웃으며 구원군을 기다림. (《三國志》卷55〈甘寧傳〉)",
+      "sourceRefs": [
+        "S3"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{city}의 지붕에 적의 화살이 박힌다. {officer}은 웃으며 허리의 방울을 손으로 누른다. “주공, 겁먹은 얼굴부터 거두겠습니다.” 포위 속에서 웃던 낯선 밤이 겹친다. 태연히 구원을 기다릴까, 이번에는 자기 부대로 포위군을 꺾겠다고 맹세할까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 태연히 지휘하며 구원을 기다린다",
+          "effects": [
+            {
+              "xp": {
+                "officer": "officer",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "{officer} 경험치 +20",
+          "dejaVu": "웃음 하나로 성 안의 공포를 눌렀던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 자기 부대로 적 한 부대를 격파한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "DEFEAT_ARMY",
+              "army": "army"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "officer",
+                  "delta": 60
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "formation": {
+                  "army": "army",
+                  "step": -1
+                }
+              }
+            ],
+            "goalText": "3차례 안에 적 부대 1개 격파 (담당: {army})"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 안에 적 부대 1개 격파 (담당: {army}) | 성공: {officer} 경험치 +60 | 실패: {army} 전열 흐트러짐 1단계"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "이릉에서 구원을 기다린 감녕을 직접 돌파해야 하는 부대로 바꾸되 백 기 야습 기시감은 피한다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F03-04",
+      "title": "형님의 벗, 나의 장수",
+      "scope": "F03",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          10,
+          17
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "tag_present",
+            "tag": "brothers_share_front"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G27",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "주유가 손책 가족에게 큰 집을 내주고 살림을 함께 쓰며 친교를 맺음. (《三國志》卷54〈周瑜傳〉)",
+      "sourceRefs": [
+        "S4"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "{officer}가 {lord}에게 자리를 권한다. “주공, 오늘의 뜻을 들려주십시오.” 살림까지 나누던 형의 벗이라는 기억만 희미하게 앞선다. 형과 함께 걷자던 선택을 이제 누구의 신뢰로 이어 갈까. 옛 친분에 맡길까, 직접 곁에 서서 일을 나눌까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 형과 맺은 오랜 신의를 존중한다",
+          "effects": [
+            {
+              "relation": {
+                "a": "lord",
+                "b": "officer",
+                "delta": 5
+              }
+            }
+          ],
+          "preview": "{lord}·{officer} 관계 +5",
+          "dejaVu": "같은 집의 등불 아래서 마음을 나눴던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 물려받은 친분 대신 함께 움직이며 신뢰를 쌓는다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": 15
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": -5
+                }
+              }
+            ],
+            "goalText": "2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {lord}·{officer} 관계 +15 | 실패: {lord}·{officer} 관계 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [
+          "EV-F03-01"
+        ],
+        "setsTag": null
+      },
+      "designNote": "손책과의 우정을 물려받는 데서 멈추지 않고 손권이 주유와 직접 공동 행동을 하게 만든다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F03-05",
+      "title": "쓰지 않은 고발장",
+      "scope": "F03",
+      "origin": "new",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          23
+        ],
+        "when": "AFTER_BATTLE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "battle_participant",
+            "army": "army"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          },
+          {
+            "test": "player_survived_context_battle"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G28",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "nearest_owned_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "육손이 승리 뒤 장수들의 불복을 왜 알리지 않았느냐는 질문에 함께 큰일을 이룰 이들이라며 감쌈. (《三國志》卷58〈陸遜傳〉)",
+      "sourceRefs": [
+        "S5"
+      ],
+      "adaptationNote": "원전의 선택 갈림길만 차용하고 인물은 첨부 로스터, 현재 장소는 하북 지도에 한정한다. 대화·맹세·수치는 창작이다.",
+      "text": "싸움이 끝난 뒤 {officer}이 빈 보고서를 접는다. “주공, 앞서 제 말을 따르지 않았어도 오늘 공을 세운 이들입니다.” 남의 허물을 덮던 먹빛이 낯익다. 지나간 불화를 묻을까, 다른 의견을 그대로 둔 채 같은 성을 지킬 약속을 받을까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 불복의 허물보다 오늘의 공을 보고한다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "고발할 이름 대신 공을 적었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 이견을 지우지 않고 함께 지킬 성을 정한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 15
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: 인망 +15 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "승리 뒤의 관용을 끝난 일의 봉합이 아니라 이견을 가진 군대의 공동 방어 책임으로 돌린다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-F03-06",
+      "title": "눈으로만 재지 않을 거리",
+      "scope": "F03",
+      "origin": "new",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          24
+        ],
+        "when": "PLACE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G30",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "officer_current_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "lord",
+          "owner": "player",
+          "required": true
+        },
+        "place": {
+          "pick": "resolved_city_tile",
+          "city": "city",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "손권이 가벼운 배로 조조의 진용을 직접 살핀다는 전승. (《三國志》卷47〈吳主傳〉 裴松之注引《吳歷》)",
+      "sourceRefs": [
+        "S6"
+      ],
+      "adaptationNote": "《吳歷》의 손권 관진 전승만 사용한다. 다른 주석 《魏略》의 피격·배 균형 이야기는 합치지 않는다. 지금 장면은 하북 육상 정찰이며 새 해전·사냥 시스템이 아니다.",
+      "text": "{city} 밖을 살피던 {lord}이 호위보다 먼저 말을 몰려 한다. “주공, 보실 것은 함께 보겠습니다.” {officer}가 고삐를 맞춘다. 적의 진을 홀로 훑던 물결이 꿈처럼 스친다. 자기 눈을 믿을까, 이번에는 곁의 눈과 보폭을 맞출까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 군주가 직접 살펴 판단한다",
+          "effects": [
+            {
+              "xp": {
+                "officer": "lord",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "{lord} 경험치 +20",
+          "dejaVu": "가벼운 배 한 척에서 적진을 헤아렸던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 호위와 보폭을 맞춰 함께 살핀다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "lord",
+                  "delta": 40
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "morale": {
+                  "army": "army",
+                  "step": -1
+                }
+              }
+            ],
+            "goalText": "2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {lord} 경험치 +40 | 실패: {army} 사기 하락 1단계"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "손권의 단독 관찰을 동행 정찰로 바꾸어 군주의 이동 자유와 경험 보상을 맞바꾼다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ANY-01",
+      "title": "곡창 한 칸의 값",
+      "scope": "ANY",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "PLACE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "pick": "player_lord",
+          "required": true
+        },
+        "officer": {
+          "pick": "owned_officer_at_city",
+          "city": "city",
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "city": {
+          "pick": "lowest_food_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "place": {
+          "pick": "resolved_city_tile",
+          "city": "city",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "노숙이 군량을 구하는 주유에게 두 곡창 가운데 하나를 내줌. (《三國志》卷54〈魯肅傳〉)",
+      "sourceRefs": [
+        "A1"
+      ],
+      "adaptationNote": "노숙·주유의 장면 구조를 공용 사건으로 전이한다. 두 사람을 현재 인물로 소환하지 않고 이름 없는 주민의 도움과 현 소속 장수의 선택으로 표현한다.",
+      "text": "{city}의 창고 앞에서 {officer}의 손이 문짝 하나를 활짝 연다. 곡창 한 칸을 통째로 내주고 벗을 얻던 장면이 누구의 꿈인지 모르게 스친다. 눈앞의 도움을 받아들일까, 이번에는 빚진 마음보다 스스로 채운 창고로 오래갈 신의를 보일까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 먼저 내민 도움을 받아들인다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": 10
+              }
+            }
+          ],
+          "preview": "{city} 식량 +10",
+          "dejaVu": "가득 찬 곡창보다 내민 손이 더 오래 남았던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 받기보다 스스로 비축해 신의를 보인다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": 20
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: {city} 식량 +20 | 실패: 인망 −5",
+          "setsTag": "granary_debt"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": "granary_debt"
+      },
+      "designNote": "노숙의 일방적 증여를 비축을 책임지는 약속으로 바꿔 훗날 천거 사건의 씨앗을 남긴다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ANY-02",
+      "title": "군번보다 앞선 주소",
+      "scope": "ANY",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "AFTER_BATTLE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "battle_participant",
+            "army": "army"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          },
+          {
+            "test": "player_survived_context_battle"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "pick": "player_lord",
+          "required": true
+        },
+        "officer": {
+          "pick": "player_commander_in_context_battle",
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "city": {
+          "pick": "nearest_owned_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "조조가 항복한 청주 황건군 가운데 정예를 추려 청주병으로 삼음. (《三國志》卷1〈武帝紀〉)",
+      "sourceRefs": [
+        "A2"
+      ],
+      "adaptationNote": "청주병 편성의 구조만 차용한다. 역사 원문의 병력 규모는 게임 수치로 환산하지 않으며 유민은 별도 관리 대상이 아니다.",
+      "text": "전투 뒤 {city}로 향하는 길에 새로 따르겠다는 사람들이 모인다. {officer}의 눈길이 무기를 들 수 있는 손과 짐을 쥔 손을 번갈아 훑는다. 정예만 추려 부대를 만들었던 기억이 스친다. 당장 병력을 늘릴까, 먼저 머물 성을 지켜 더 큰 신뢰를 얻을까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 싸울 수 있는 이들을 먼저 받아들인다",
+          "effects": [
+            {
+              "reserves": {
+                "city": "city",
+                "delta": 50
+              }
+            }
+          ],
+          "preview": "{city} 예비병 +500명 (내부 +50)",
+          "dejaVu": "새 군번 뒤로 남겨진 발자국이 있었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 머물 성을 지켜 정착부터 보증한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": 150
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": -50
+                }
+              }
+            ],
+            "goalText": "3차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: {city} 예비병 +1,500명 (내부 +150) | 실패: {city} 예비병 −500명 (내부 −50)"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "청주병의 정예 편입을 정착지 방어로 뒤집어 병력의 즉시 충원과 지연 충원을 갈라 놓는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ANY-03",
+      "title": "강 가운데 멈춘 붓",
+      "scope": "ANY",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "active_truce_covers",
+            "faction": "otherFaction",
+            "turns": 3
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "pick": "player_lord",
+          "required": true
+        },
+        "officer": {
+          "pick": "owned_officer_at_city",
+          "city": "city",
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "otherFaction": {
+          "pick": "existing_truce_faction",
+          "exclude": "player",
+          "minRemainingTurns": 3,
+          "tieBreak": "faction_id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "노숙과 관우의 교섭 뒤 유비가 상수를 경계로 나누고 양측이 군사를 거둠. (《三國志》卷54〈魯肅傳〉)",
+      "sourceRefs": [
+        "A3"
+      ],
+      "adaptationNote": "노숙·관우의 경계 교섭을 공용 선택으로 바꾼다. 영토 양도, 휴전 생성, 강제 외교 변경은 없다.",
+      "text": "{officer}의 탁자에 {otherFaction} 측과 맺은 휴전 문서가 펼쳐진다. 종이의 접힌 선이 낯선 강줄기처럼 보인다. 경계를 나누고 군사를 거두던 목소리가 희미하다. 지금의 합의를 확인하는 데 그칠까, 눈앞에 빈 성이 보여도 약속을 지킬까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 합의된 경계를 인정한다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "강 가운데 그은 선 덕에 칼집이 닫혔던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 빈틈이 보여도 이미 맺은 휴전을 지킨다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "TRUCE_KEEP",
+              "faction": "otherFaction"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 15
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {otherFaction} 측과 기존 휴전 유지 (먼저 공격하지 않음)"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {otherFaction} 측과 기존 휴전 유지 (먼저 공격하지 않음) | 성공: 인망 +15 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "상수 경계 합의를 새 외교 기능으로 만들지 않고 이미 있는 휴전을 지키는 유혹 저항으로 쓴다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ANY-04",
+      "title": "곡창보다 남은 이름",
+      "scope": "ANY",
+      "origin": "new",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          23
+        ],
+        "when": "FOOD_LOW",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "tag_present",
+            "tag": "granary_debt"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "pick": "player_lord",
+          "required": true
+        },
+        "officer": {
+          "pick": "owned_officer_at_city",
+          "city": "city",
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "city": {
+          "pick": "lowest_food_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "주유가 떠나려던 노숙을 붙잡아 손권에게 천거함. (《三國志》卷54〈魯肅傳〉)",
+      "sourceRefs": [
+        "A4"
+      ],
+      "adaptationNote": "주유의 노숙 천거가 참조 장면이다. 실제 신규 장수 영입 효과는 없고 인망만 바뀐다.",
+      "text": "{city}의 군량표 아래에 추천장이 놓인다. {officer}의 머릿속에 앞서 창고에서 꺼냈던 약속이 떠오른다. 벗의 도움 뒤에 다른 벗의 이름을 천거하던 풍경이 꿈처럼 겹친다. 좋은 말로 신의를 잇겠는가, 다시 비축을 갖추어 말의 무게를 보이겠는가.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 그 뜻을 사람들에게 전한다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "곡식보다 오래 남는 추천 한 줄이 있었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 추천보다 실제 비축으로 신의를 증명한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 15
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: 인망 +15 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [
+          "EV-ANY-01"
+        ],
+        "setsTag": null
+      },
+      "designNote": "앞 카드의 약속을 성공했다고 단정하지 않고 말의 천거와 실물 비축을 다시 갈라 느슨하게 잇는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-WANDERER-01",
+      "title": "작은 고을의 큰 답",
+      "scope": "WANDERER",
+      "origin": "new",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "PLACE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "wanderer_available",
+            "officer": "officer"
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "recruit_eligible",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "pick": "player_lord",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G21",
+          "owner": "WANDERER",
+          "required": true
+        },
+        "city": {
+          "pick": "lowest_food_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "place": {
+          "pick": "resolved_city_tile",
+          "city": "city",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "방통이 뇌양령에서 면직된 뒤 추천과 유비의 면담을 거쳐 다시 중용됨. (《三國志》卷37〈龐統傳〉)",
+      "sourceRefs": [
+        "W1"
+      ],
+      "adaptationNote": "뇌양령 면직 뒤 면담으로 중용된 구조만 차용한다. 새 관직 평가 수치나 자동 태수 임명은 없고, 두 선택 모두 방통이 즉시 합류하며 맹세 실패로 합류가 취소되지 않는다.",
+      "text": "{city}의 주점에서 {officer}이 작은 고을의 장부를 뒤집는다. “주공, 작은 일에 서툴렀다는 평만으로 저를 재시겠습니까?” 벼슬을 잃고 나서야 말을 들어 주던 얼굴이 흐릿하다. 이야기를 듣고 맞이할까, 함께 창고를 채우며 답을 확인할까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 이야기를 듣고 능력을 인정한다",
+          "effects": [
+            {
+              "recruit": {
+                "officerId": "G21",
+                "city": "city"
+              }
+            },
+            {
+              "xp": {
+                "officer": "officer",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "방통 1명 합류 → {city} · {officer} 경험치 +20",
+          "dejaVu": "장부를 덮은 뒤에야 내 말을 들어 주었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 합류시킨 뒤 실제 비축으로 시험한다",
+          "effects": [
+            {
+              "recruit": {
+                "officerId": "G21",
+                "city": "city"
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "officer",
+                  "delta": 60
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 방통 1명 합류 → {city} | 맹세: 3차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: {officer} 경험치 +60 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "방통을 만나는 데서 끝내지 않고 합류 뒤 식량 비축으로 평판을 뒤집을 기회를 준다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [
+          {
+            "recruit": {
+              "officerId": "G21",
+              "city": "city"
+            }
+          }
+        ],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED",
+      "onOathFailure": "합류는 취소하지 않으며 penalty에 적힌 효과만 적용한다."
+    },
+    {
+      "id": "EV-WANDERER-02",
+      "title": "머물 자리를 묻는 사람",
+      "scope": "WANDERER",
+      "origin": "new",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "wanderer_available",
+            "officer": "officer"
+          },
+          {
+            "test": "recruit_eligible",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "pick": "player_lord",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G35",
+          "owner": "WANDERER",
+          "required": true
+        },
+        "city": {
+          "pick": "lord_current_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "가후가 자신을 경계하는 단외를 떠나 장수에게 가고, 외부의 의탁처로 가족도 보호받음. (《三國志》卷10〈賈詡傳〉)",
+      "sourceRefs": [
+        "W2"
+      ],
+      "adaptationNote": "단외에게서 장수(張繡)로 의탁처를 옮긴 장면을 차용한다. 장수는 현 로스터에 없어 등장하지 않는다. 합류 즉시 도시에 배치하며 군주와의 동행은 이후 차례 말부터 확인한다.",
+      "text": "{officer}는 {lord}보다 먼저 {city}의 문과 의자 사이를 살핀다. “주공, 재주를 쓰실 뜻인지 곁에 묶어 두실 뜻인지 여쭙겠습니다.” 의심 많은 집을 떠나야 안심했던 꿈이 스친다. 거리를 허락해 맞이할까, 이번에는 함께 다니며 믿음을 보일까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 거리를 존중하며 조언자로 맞이한다",
+          "effects": [
+            {
+              "recruit": {
+                "officerId": "G35",
+                "city": "city"
+              }
+            },
+            {
+              "xp": {
+                "officer": "officer",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "가후 1명 합류 → {city} · {officer} 경험치 +20",
+          "dejaVu": "멀리 의탁한 뒤에야 가까운 사람들이 안전했던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 합류시킨 뒤 군주가 동행하며 믿음을 보인다",
+          "effects": [
+            {
+              "recruit": {
+                "officerId": "G35",
+                "city": "city"
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "officer",
+                  "delta": 60
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 가후 1명 합류 → {city} | 맹세: 2차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {officer} 경험치 +60 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "가후의 거리를 둔 의탁을 자발적 동행으로 뒤집고 군주의 배치 자유를 건다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [
+          {
+            "recruit": {
+              "officerId": "G35",
+              "city": "city"
+            }
+          }
+        ],
+        "method": "동일 효과·동일 대상의 history 추가 보상과 twist 성공 보상을 비교; 기간도 동일."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED",
+      "onOathFailure": "합류는 취소하지 않으며 penalty에 적힌 효과만 적용한다."
+    },
+    {
+      "id": "E01",
+      "title": "버려진 밭의 주인들",
+      "scope": "F01",
+      "origin": "legacy",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "active_production",
+            "city": "city",
+            "project": "existing_tuntian"
+          },
+          {
+            "test": "food_at_least",
+            "city": "city",
+            "value": 15
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 20
+          },
+          {
+            "test": "prestige_at_least",
+            "value": 10
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G04",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 80,
+      "oncePerRun": true,
+      "history": "조조의 둔전에서 임준이 전농중랑장으로 백성을 모아 농사를 짓게 함. (《三國志》卷16〈任峻傳〉)",
+      "sourceRefs": [
+        "E01"
+      ],
+      "adaptationNote": "입력에는 역사 출처가 없으므로 해당 주제를 뒷받침하는 장면을 새로 대조했다. 원문 선택이 실제 역사에서 그대로 행해졌다는 뜻이 아니다. 기존 운영 선택을 역사대로로 묶는 것은 이관상의 근사이다.",
+      "text": "{city}의 황폐한 밭에 유민들이 돌아왔다. {officer}이 멍에와 땅문서를 나란히 놓는다. “명공, 누가 일구느냐에 따라 남는 마음도 다를 것입니다.” 버려진 밭에서 군량이 자라던 꿈이 스친다. 관에서 맡을까, 호족에게 맡길까, 주민 스스로 나눌까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 관유 농우를 배정한다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": -15
+              }
+            },
+            {
+              "progress": {
+                "city": "city",
+                "delta": 7
+              }
+            }
+          ],
+          "preview": "{city} 식량 −15 · {city} 생산 진행 +7",
+          "dejaVu": "황폐한 밭을 군량의 바탕으로 바꿨던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 호족에게 위탁한다",
+          "effects": [
+            {
+              "prestige": -10
+            },
+            {
+              "food": {
+                "city": "city",
+                "delta": 10
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": 20
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": -10
+                }
+              }
+            ],
+            "goalText": "3차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 인망 −10 · {city} 식량 +10 | 맹세: 3차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: {city} 식량 +20 | 실패: {city} 식량 −10"
+        },
+        {
+          "id": "twist_alt",
+          "label": "다르게 — 주민 자치를 허용한다",
+          "effects": [
+            {
+              "population": {
+                "city": "city",
+                "delta": 1
+              }
+            },
+            {
+              "security": {
+                "city": "city",
+                "step": 1
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 10
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: {city} 인구 +1 · {city} 치안 회복 1단계 | 맹세: 3차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: 인망 +10 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다 — 설치를 미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "둔전의 주도권 세 갈래를 남기되 지속 지급을 표현할 어휘가 없어 지급 시점 변경을 별도 승인 대상으로 분리한다.",
+      "migration": {
+        "status": "REVIEW_REQUIRED",
+        "lossless": false,
+        "original": {
+          "eventId": "E01",
+          "factionId": "F01",
+          "title": "버려진 밭의 주인들",
+          "scale": "SITUATION",
+          "text": "황폐한 밭에 유민이 돌아왔다. 누가 이 땅을 일굴 것인가.",
+          "choices": [
+            {
+              "label": "관유 농우를 배정한다",
+              "preview": "식량 −15 · 둔전 진행 +7 (건설 불가: 식량 +2, 5턴)"
+            },
+            {
+              "label": "호족에게 위탁한다",
+              "preview": "인망 −10 · 식량 +2, 5턴"
+            },
+            {
+              "label": "주민 자치를 허용한다",
+              "preview": "인구 +1 · 치안 회복"
+            },
+            {
+              "label": "설치를 미룬다",
+              "preview": "효과 없음"
+            }
+          ]
+        },
+        "changes": [
+          "원문 4선택을 유지하려고 두 번째 비틀기 id=twist_alt를 사용함.",
+          "차례당 식량 +2 × 5를 일시 식량 +10으로 제안 치환: 합계만 같고 지급 시점은 다름.",
+          "첫 선택은 진행 중인 둔전 생산이 있을 때만 카드 후보가 되게 제한함. 원문의 건설 불가 대체 경로는 제안본에서 제외됨.",
+          "비틀기 두 갈래의 맹세·성공 보상·실패 손해는 원문에 없던 추가 설계임."
+        ],
+        "ratioStatus": "UNSATISFIED_REVIEW_REQUIRED: 기존 다자원 선택 보존과 전 선택 2~3배 요구가 충돌; 공통 가치 환산을 만들지 않음."
+      },
+      "integrationStatus": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "E02",
+      "title": "관도로 가는 군량",
+      "scope": "F01",
+      "origin": "legacy",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          16
+        ],
+        "when": "FOOD_LOW",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "food_at_least",
+            "city": "city",
+            "value": 20
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "enemy_city_reachable",
+            "city": "targetCity",
+            "byArmy": "army",
+            "withinTurns": 3
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G24",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "recent_engaged_player_army",
+          "tieBreak": "most_recent_then_id_asc",
+          "required": true
+        },
+        "smallArmy": {
+          "pick": "smallest_player_army",
+          "tieBreak": "troop_count_then_id_asc",
+          "required": true
+        },
+        "targetCity": {
+          "pick": "nearest_reachable_enemy_city",
+          "from": "army",
+          "owner": "enemy",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "excludeActiveTruce": true,
+          "tieBreak": "path_cost_then_id_asc",
+          "required": true
+        }
+      },
+      "weight": 80,
+      "oncePerRun": true,
+      "history": "관도 대치 중 군량이 떨어지자 순욱이 조조에게 버티도록 권함. (《三國志》卷10〈荀彧傳〉)",
+      "sourceRefs": [
+        "E02"
+      ],
+      "adaptationNote": "입력에는 역사 출처가 없으므로 해당 주제를 뒷받침하는 장면을 새로 대조했다. 원문 선택이 실제 역사에서 그대로 행해졌다는 뜻이 아니다. 기존 운영 선택을 역사대로로 묶는 것은 이관상의 근사이다.",
+      "text": "전선의 비축이 바닥나고 있다. {city}의 창고 앞에서 {officer}가 수송로를 짚는다. “명공, 한 길에 힘을 모을지 여러 길로 나눌지 정해 주십시오.” 먼 전장에서 군량을 기다리던 느낌이 되살아난다. 호송대를 모을까, 분산할까, 먼저 공격을 늦출까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 대규모 수송대를 호송한다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": -20
+              }
+            },
+            {
+              "morale": {
+                "army": "army",
+                "step": 1
+              }
+            },
+            {
+              "reserves": {
+                "city": "city",
+                "delta": 50
+              }
+            }
+          ],
+          "preview": "{city} 식량 −20 · {army} 사기 회복 1단계 · {city} 예비병 +500명 (내부 +50)",
+          "dejaVu": "버틸 곡식만 오면 길이 열린다고 믿었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 여러 길로 나누어 보낸다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": -10
+              }
+            },
+            {
+              "morale": {
+                "army": "smallArmy",
+                "step": 1
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "CAPTURE_CITY",
+              "city": "targetCity"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": 100
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 안에 {targetCity} 함락"
+          },
+          "preview": "즉시: {city} 식량 −10 · {smallArmy} 사기 회복 1단계 | 맹세: 3차례 안에 {targetCity} 함락 | 성공: {city} 예비병 +1,000명 (내부 +100) | 실패: 인망 −5"
+        },
+        {
+          "id": "twist_alt",
+          "label": "다르게 — 공격을 늦춘다",
+          "effects": [
+            {
+              "brace": {
+                "army": "army"
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "officer",
+                  "delta": 40
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: {army} 방어 태세 | 맹세: 3차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: {officer} 경험치 +40 | 실패: 인망 −5"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "수송 집중·분산·지연의 원래 선택을 남기고, 허용되지 않은 부상병 복귀는 예비병 대체안임을 드러낸다.",
+      "migration": {
+        "status": "REVIEW_REQUIRED",
+        "lossless": false,
+        "original": {
+          "eventId": "E02",
+          "factionId": "F01",
+          "title": "관도로 가는 군량",
+          "scale": "EVENT",
+          "text": "전선의 비축이 바닥나고 있다. 후방 창고의 군량을 어떻게 보낼 것인가.",
+          "choices": [
+            {
+              "label": "대규모 수송대를 호송한다",
+              "preview": "수도 식량 −20 · 교전 부대 사기 회복 · 부상병 40 복귀"
+            },
+            {
+              "label": "여러 길로 나누어 보낸다",
+              "preview": "수도 식량 −10 · 최소 병력 부대 사기 회복"
+            },
+            {
+              "label": "공격을 늦춘다",
+              "preview": "교전 부대 방어 태세"
+            }
+          ]
+        },
+        "changes": [
+          "부상병 40의 부대 복귀는 허용 효과가 아니므로 수도 예비병 +50으로 제안 치환함. 대상·수량·병력 상태가 달라 등가 이관이 아님.",
+          "두 기존 대안에 맹세를 추가함. 원문의 즉시 선택만을 보존한 버전이 아님."
+        ],
+        "ratioStatus": "UNSATISFIED_REVIEW_REQUIRED: 기존 다자원 선택 보존과 전 선택 2~3배 요구가 충돌; 공통 가치 환산을 만들지 않음."
+      },
+      "integrationStatus": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "E03",
+      "title": "성문 앞의 굶주린 마을",
+      "scope": "F02",
+      "origin": "legacy",
+      "phase": "early",
+      "trigger": {
+        "turns": [
+          2,
+          8
+        ],
+        "when": "PLACE",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "food_at_least",
+            "city": "city",
+            "value": 15
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "officer_current_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "place": {
+          "pick": "resolved_city_tile",
+          "city": "city",
+          "required": true
+        }
+      },
+      "weight": 80,
+      "oncePerRun": true,
+      "history": "유비가 굶주림과 혼란 속에서 재물을 베풀고 낮은 신분의 사람들과도 함께 먹음. (《三國志》卷32〈先主傳〉 裴松之注引《魏書》)",
+      "sourceRefs": [
+        "E03"
+      ],
+      "adaptationNote": "입력에는 역사 출처가 없으므로 해당 주제를 뒷받침하는 장면을 새로 대조했다. 원문 선택이 실제 역사에서 그대로 행해졌다는 뜻이 아니다. 기존 운영 선택을 역사대로로 묶는 것은 이관상의 근사이다.",
+      "text": "{city}의 성문 앞에 굶주린 마을 사람들이 모였다. {lord}는 빈 그릇과 묶인 짐을 번갈아 본다. 같은 솥을 나누었던 얼굴들이 꿈처럼 겹친다. 성 안으로 받아들일까, 마을까지 식량을 보낼까, 가진 것을 지키며 안전한 길만 알려 줄까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 성 안으로 받아들인다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": -15
+              }
+            },
+            {
+              "population": {
+                "city": "city",
+                "delta": 1
+              }
+            },
+            {
+              "prestige": 10
+            }
+          ],
+          "preview": "{city} 식량 −15 · {city} 인구 +1 · 인망 +10",
+          "dejaVu": "빈 그릇을 함께 놓고 먹던 얼굴들이 떠오른다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 마을로 식량을 보낸다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": -10
+              }
+            },
+            {
+              "security": {
+                "city": "city",
+                "step": 1
+              }
+            },
+            {
+              "prestige": 5
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": 20
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: {city} 식량 −10 · {city} 치안 회복 1단계 · 인망 +5 | 맹세: 3차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: {city} 식량 +20 | 실패: 인망 −5"
+        },
+        {
+          "id": "twist_alt",
+          "label": "다르게 — 안전한 길만 알려 준다",
+          "effects": [
+            {
+              "prestige": -5
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "prestige": 10
+              }
+            ],
+            "penalty": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": -10
+                }
+              }
+            ],
+            "goalText": "2차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 인망 −5 | 맹세: 2차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: 인망 +10 | 실패: {city} 식량 −10"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "입성 구호·현지 구호·길 안내의 즉시 손익은 보존하고 비틀기에는 식량 재건 또는 거점 유지 책임을 붙인다.",
+      "migration": {
+        "status": "REVIEW_REQUIRED",
+        "lossless": false,
+        "original": {
+          "eventId": "E03",
+          "factionId": "F02",
+          "title": "성문 앞의 굶주린 마을",
+          "scale": "INCIDENT",
+          "text": "굶주린 마을 사람들이 성문 앞에 모였다.",
+          "choices": [
+            {
+              "label": "성 안으로 받아들인다",
+              "preview": "식량 −15 · 인구 +1 · 인망 +10"
+            },
+            {
+              "label": "마을로 식량을 보낸다",
+              "preview": "식량 −10 · 치안 회복 · 인망 +5"
+            },
+            {
+              "label": "안전한 길만 알려 준다",
+              "preview": "인망 −5"
+            }
+          ]
+        },
+        "changes": [
+          "기존 3갈래의 즉시 효과는 유지함. 두 대안에 맹세를 새로 붙였으므로 전체 결과는 변경됨.",
+          "실제 지출 식량을 감당할 수 있는 성에서만 발생하도록 가드를 추가함."
+        ],
+        "ratioStatus": "UNSATISFIED_REVIEW_REQUIRED: 기존 다자원 선택 보존과 전 선택 2~3배 요구가 충돌; 공통 가치 환산을 만들지 않음."
+      },
+      "integrationStatus": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "E04",
+      "title": "함께 가겠다는 사람들",
+      "scope": "F02",
+      "origin": "legacy",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "CITY_BESIEGED",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "lord_army_outside_city",
+            "army": "army"
+          },
+          {
+            "test": "reserves_at_least",
+            "city": "city",
+            "value": 50
+          },
+          {
+            "test": "enemy_army_reachable",
+            "army": "army",
+            "withinTurns": 3
+          },
+          {
+            "test": "besieged",
+            "city": "threatCity"
+          },
+          {
+            "test": "different_resolved_ids",
+            "roles": [
+              "city",
+              "threatCity"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        },
+        "largestArmy": {
+          "pick": "largest_player_army",
+          "tieBreak": "troop_count_desc_then_id_asc",
+          "required": true
+        },
+        "threatCity": {
+          "pick": "context_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 80,
+      "oncePerRun": true,
+      "history": "백성들이 유비를 따라 남하해 행군이 느려져도 유비가 사람들을 버리지 않음. (《三國志》卷32〈先主傳〉)",
+      "sourceRefs": [
+        "E04"
+      ],
+      "adaptationNote": "입력에는 역사 출처가 없으므로 해당 주제를 뒷받침하는 장면을 새로 대조했다. 원문 선택이 실제 역사에서 그대로 행해졌다는 뜻이 아니다. 기존 운영 선택을 역사대로로 묶는 것은 이관상의 근사이다.",
+      "text": "포위된 {threatCity}를 떠나는 행렬 뒤로 백성들이 따라나선다. {lord}는 군대보다 길어진 그림자를 돌아본다. 속도를 늦추더라도 사람을 두고 가지 못했던 꿈이 있었던 듯하다. {city}로 모두 데려갈까, 싸울 이들만 받을까, 병력을 떼어 따로 보호할까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 모두 함께 간다",
+          "effects": [
+            {
+              "population": {
+                "city": "city",
+                "delta": 1
+              }
+            },
+            {
+              "morale": {
+                "army": "largestArmy",
+                "step": -1
+              }
+            }
+          ],
+          "preview": "{city} 인구 +1 · {largestArmy} 사기 하락 1단계",
+          "dejaVu": "늘어진 행렬을 끝내 버리지 못했던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 싸울 수 있는 이들만 데려간다",
+          "effects": [
+            {
+              "reserves": {
+                "city": "city",
+                "delta": 100
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "DEFEAT_ARMY",
+              "army": "army"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "lord",
+                  "delta": 40
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": -50
+                }
+              }
+            ],
+            "goalText": "3차례 안에 적 부대 1개 격파 (담당: {army})"
+          },
+          "preview": "즉시: {city} 예비병 +1,000명 (내부 +100) | 맹세: 3차례 안에 적 부대 1개 격파 (담당: {army}) | 성공: {lord} 경험치 +40 | 실패: {city} 예비병 −500명 (내부 −50)"
+        },
+        {
+          "id": "twist_alt",
+          "label": "다르게 — 따로 병력을 붙여 지킨다",
+          "effects": [
+            {
+              "prestige": 15
+            },
+            {
+              "reserves": {
+                "city": "city",
+                "delta": -50
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": 20
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: 인망 +15 · {city} 예비병 −500명 (내부 −50) | 맹세: 3차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: {city} 식량 +20 | 실패: 인망 −5"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "피란민 동행의 인구·사기·예비병 교환은 유지하며 선택 뒤 전투 또는 보호 거점의 약속을 추가한다.",
+      "migration": {
+        "status": "REVIEW_REQUIRED",
+        "lossless": false,
+        "original": {
+          "eventId": "E04",
+          "factionId": "F02",
+          "title": "함께 가겠다는 사람들",
+          "scale": "SITUATION",
+          "text": "성을 버리고 떠나는 길, 백성들이 따라나섰다.",
+          "choices": [
+            {
+              "label": "모두 함께 간다",
+              "preview": "인구 +1 · 최대 병력 부대 사기 저하"
+            },
+            {
+              "label": "싸울 수 있는 이들만 데려간다",
+              "preview": "예비병 +100 (성 없으면 효과 없음)"
+            },
+            {
+              "label": "따로 병력을 붙여 지킨다",
+              "preview": "인망 +15 · 예비병 −50"
+            }
+          ]
+        },
+        "changes": [
+          "기존 즉시 효과는 보존하지만 소유 성이 있을 때만 발생하도록 제한함. 원문의 성 없음 시 효과 없음 경로는 제외됨.",
+          "두 대안에 맹세를 추가하여 전체 결과를 변경함.",
+          "발생 시점은 다른 소유 성이 포위되고 피란 행렬을 맞이하는 상황으로 좁혔다. 목적지는 수도, 포위된 성과는 별도 역할이다."
+        ],
+        "ratioStatus": "UNSATISFIED_REVIEW_REQUIRED: 기존 다자원 선택 보존과 전 선택 2~3배 요구가 충돌; 공통 가치 환산을 만들지 않음."
+      },
+      "integrationStatus": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "E05",
+      "title": "두 장수, 하나의 전선",
+      "scope": "F03",
+      "origin": "legacy",
+      "phase": "middle",
+      "trigger": {
+        "turns": [
+          9,
+          17
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "officer",
+              "officer2"
+            ]
+          },
+          {
+            "test": "enemy_army_reachable",
+            "army": "army",
+            "withinTurns": 3
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G27",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "officer2": {
+          "officerId": "G29",
+          "owner": "player",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "officer",
+          "owner": "player",
+          "required": true
+        },
+        "army2": {
+          "pick": "army_commanded_by",
+          "officer": "officer2",
+          "owner": "player",
+          "required": true
+        },
+        "commandArmy": {
+          "pick": "higher_command_army",
+          "among": [
+            "army",
+            "army2"
+          ],
+          "tieBreak": "command_desc_then_id_asc",
+          "required": true
+        }
+      },
+      "weight": 80,
+      "oncePerRun": true,
+      "history": "주유가 나이를 내세워 자신을 얕보던 정보에게 양보하여 마침내 존중을 얻음. (《三國志》卷54〈周瑜傳〉 裴松之注引《江表傳》)",
+      "sourceRefs": [
+        "E05"
+      ],
+      "adaptationNote": "입력에는 역사 출처가 없으므로 해당 주제를 뒷받침하는 장면을 새로 대조했다. 원문 선택이 실제 역사에서 그대로 행해졌다는 뜻이 아니다. 기존 운영 선택을 역사대로로 묶는 것은 이관상의 근사이다.",
+      "text": "{officer}와 {officer2}이 같은 전선의 선봉을 두고 지도를 당긴다. {lord}에게는 누군가의 자존심을 누그러뜨리던 군의가 낯익다. 이름 하나를 앞세울까, 두 사람의 계획을 합칠까, 다툰 채 움직이지 않도록 출정을 늦출까. 접힌 지도만 두 손 사이에 남는다.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 총지휘관 한 명을 정한다",
+          "effects": [
+            {
+              "buff": {
+                "army": "commandArmy",
+                "attackPct": 15,
+                "turns": 1
+              }
+            }
+          ],
+          "preview": "{commandArmy} 공격 +15% (1차례)",
+          "dejaVu": "한 사람이 먼저 양보한 뒤 군의가 조용해졌던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 군의를 열어 함께 계획한다",
+          "effects": [
+            {
+              "formation": {
+                "army": "army",
+                "step": 1
+              }
+            },
+            {
+              "formation": {
+                "army": "army2",
+                "step": 1
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "DEFEAT_ARMY",
+              "army": "army"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "officer",
+                  "delta": 40
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "formation": {
+                  "army": "army",
+                  "step": -1
+                }
+              }
+            ],
+            "goalText": "3차례 안에 적 부대 1개 격파 (담당: {army})"
+          },
+          "preview": "즉시: {army} 전열 회복 1단계 · {army2} 전열 회복 1단계 | 맹세: 3차례 안에 적 부대 1개 격파 (담당: {army}) | 성공: {officer} 경험치 +40 | 실패: {army} 전열 흐트러짐 1단계"
+        },
+        {
+          "id": "twist_alt",
+          "label": "다르게 — 출정을 늦춘다",
+          "effects": [
+            {
+              "brace": {
+                "army": "army"
+              }
+            },
+            {
+              "brace": {
+                "army": "army2"
+              }
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "officer",
+                "officer2"
+              ]
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "relation": {
+                  "a": "officer",
+                  "b": "officer2",
+                  "delta": 10
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 매 차례 끝에 {officer}·{officer2} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: {army} 방어 태세 · {army2} 방어 태세 | 맹세: 3차례 동안 매 차례 끝에 {officer}·{officer2} 같은 칸 또는 이웃 칸 | 성공: {officer}·{officer2} 관계 +10 | 실패: 인망 −5"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "두 장수의 지휘·공동 계획·출정 지연을 남기되 공격 1회 제한을 잃는 대체안을 승인 전 상태로 둔다.",
+      "migration": {
+        "status": "REVIEW_REQUIRED",
+        "lossless": false,
+        "original": {
+          "eventId": "E05",
+          "factionId": "F03",
+          "title": "두 장수, 하나의 전선",
+          "scale": "EVENT",
+          "text": "같은 전선에 선 두 장수가 서로 선봉을 다툰다.",
+          "choices": [
+            {
+              "label": "총지휘관 한 명을 정한다",
+              "preview": "높은 지휘 부대 이번 턴 다음 공격 +15%"
+            },
+            {
+              "label": "군의를 열어 함께 계획한다",
+              "preview": "두 부대 전열 회복"
+            },
+            {
+              "label": "출정을 늦춘다",
+              "preview": "두 부대 방어 태세"
+            }
+          ]
+        },
+        "changes": [
+          "이번 차례 다음 공격 1회 +15%를 부대 공격 +15%, 1차례로 제안 치환함. 공격 횟수 제한이 사라지므로 등가가 아님.",
+          "정보는 로스터에 없으므로 현재 배역은 주유·감녕으로 전이함.",
+          "기존 두 대안에 맹세를 추가함."
+        ],
+        "ratioStatus": "UNSATISFIED_REVIEW_REQUIRED: 기존 다자원 선택 보존과 전 선택 2~3배 요구가 충돌; 공통 가치 환산을 만들지 않음."
+      },
+      "integrationStatus": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "E06",
+      "title": "객장에게 맡길 강 어귀",
+      "scope": "F03",
+      "origin": "legacy",
+      "phase": "late",
+      "trigger": {
+        "turns": [
+          18,
+          24
+        ],
+        "when": "CITY_CAPTURED",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "just_captured_by_player",
+            "city": "city"
+          },
+          {
+            "test": "occupation_at_least",
+            "city": "city",
+            "value": 2
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G30",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "context_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "governor": {
+          "pick": "highest_martial_owned_officer",
+          "tieBreak": "martial_desc_then_id_asc",
+          "required": true
+        }
+      },
+      "weight": 80,
+      "oncePerRun": true,
+      "history": "손책이 태사자에게 변경의 현을 맡기고 그 부대를 두어 국경을 안정시킴. (《三國志》卷49〈太史慈傳〉)",
+      "sourceRefs": [
+        "E06"
+      ],
+      "adaptationNote": "입력에는 역사 출처가 없으므로 해당 주제를 뒷받침하는 장면을 새로 대조했다. 원문 선택이 실제 역사에서 그대로 행해졌다는 뜻이 아니다. 기존 운영 선택을 역사대로로 묶는 것은 이관상의 근사이다.",
+      "text": "새로 얻은 {city}의 군정 인장이 탁자에 놓인다. {lord}은 객장과 토착 대표가 남긴 두 문서를 펼친다. 낯선 이에게 경계를 맡겼던 듯한 기억이 스친다. 가장 무용이 높은 장수에게 맡길까, 현지와 협약할까, 중앙이 직접 책임질까.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 객장에게 군정권을 맡긴다",
+          "effects": [
+            {
+              "governor": {
+                "city": "city",
+                "officer": "governor"
+              }
+            },
+            {
+              "occupation": {
+                "city": "city",
+                "delta": -1
+              }
+            }
+          ],
+          "preview": "{city} 태수 → {governor} · {city} 점령 남은 차례 −1 (최소 1차례)",
+          "dejaVu": "어제의 객장에게 오늘의 경계를 맡겼던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 토착 대표와 협약한다",
+          "effects": [
+            {
+              "security": {
+                "city": "city",
+                "step": 1
+              }
+            },
+            {
+              "prestige": -5
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "prestige": 15
+              }
+            ],
+            "penalty": [
+              {
+                "security": {
+                  "city": "city",
+                  "step": -1
+                }
+              }
+            ],
+            "goalText": "2차례 동안 {city} 소유권을 한 번도 잃지 않음"
+          },
+          "preview": "즉시: {city} 치안 회복 1단계 · 인망 −5 | 맹세: 2차례 동안 {city} 소유권을 한 번도 잃지 않음 | 성공: 인망 +15 | 실패: {city} 치안 악화 1단계"
+        },
+        {
+          "id": "twist_alt",
+          "label": "다르게 — 중앙에서 직접 다스린다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 2,
+            "reward": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": 20
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "2차례 뒤 차례 끝에 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 인망 +5 | 맹세: 2차례 뒤 차례 끝에 {city} 식량 30 이상 | 성공: {city} 식량 +20 | 실패: 인망 −5"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "객장 위임·현지 협약·직할의 즉시 효과를 유지하면서 통치 선택이 거점 유지나 군량 확보로 이어지게 한다.",
+      "migration": {
+        "status": "REVIEW_REQUIRED",
+        "lossless": false,
+        "original": {
+          "eventId": "E06",
+          "factionId": "F03",
+          "title": "객장에게 맡길 강 어귀",
+          "scale": "SITUATION",
+          "text": "새로 얻은 땅을 누구에게 맡길 것인가.",
+          "choices": [
+            {
+              "label": "객장에게 군정권을 맡긴다",
+              "preview": "무용 최고 장수 태수 · 점령 남은 턴 −1 (최소 1)"
+            },
+            {
+              "label": "토착 대표와 협약한다",
+              "preview": "치안 회복 · 인망 −5"
+            },
+            {
+              "label": "중앙에서 직접 다스린다",
+              "preview": "인망 +5"
+            }
+          ]
+        },
+        "changes": [
+          "기존 즉시 효과와 최고 무용 태수 선택은 보존함. 무용 수치는 CSV에 없어 실제 엔진 조회가 필요함.",
+          "두 대안에 맹세를 추가함. FOOD 목표가 이미 끝나 있지 않도록 식량 30 미만 가드를 추가함."
+        ],
+        "ratioStatus": "UNSATISFIED_REVIEW_REQUIRED: 기존 다자원 선택 보존과 전 선택 2~3배 요구가 충돌; 공통 가치 환산을 만들지 않음."
+      },
+      "integrationStatus": "REVIEW_REQUIRED"
+    }
+  ]
+}

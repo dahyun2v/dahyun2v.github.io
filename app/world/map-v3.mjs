@@ -5,7 +5,7 @@ import {troopText} from '../../src/troop-display.mjs';
 //            · 이동/공격 칸 · 경로 · 클릭 칸 · 시설 · 탐험지 · 성(미니어처) · 부대(무리 그림 + 장수 깃발판) · 이름판 · 효과
 import {hexCenter, outlineRings} from '../design/city-walls.mjs';
 import {troopLayout,troopPlateY,sampleTroop} from './troops.mjs';
-import {headOf} from './hud-ink.mjs';
+import {headOf,C190_ART,citySiegeText,cityProductionText} from './hud-ink.mjs';
 import supplyRules from '../../../docs/design-data/supply-v0.1.json' with {type:'json'};
 import paintedWater from '../../assets/ui-v3/dots-1016/facilities/painted-water.json' with {type:'json'};
 
@@ -89,7 +89,7 @@ export function unitStatusMarks(u) {
   const marks=[],add=(kind,glyph,what,effect,recovery)=>marks.push({kind,glyph,text:`${what}\n효과 · ${effect}\n회복 · ${recovery}`});
   if(u.morale==='SHAKEN')add('SHAKEN','동','동요','공격 ×0.8','옆에 적이 없으면 차례 끝마다 한 단계 회복 또는 재정비');
   if(u.morale==='ROUTING')add('ROUTING','패','패주','명령 불가 · 매 차례 한 칸 물러남','옆에 적이 없으면 차례 끝에 동요로 회복');
-  if(u.formation==='DISORDERED')add('DISORDERED','흐','흐트러짐','받는 피해 ×1.15 · 반격 ×0.5','옆에 적이 없으면 차례 끝에 한 단계 회복 또는 재정비');
+  if(u.formation==='DISORDERED')add('DISORDERED','란','흐트러짐','받는 피해 ×1.15 · 반격 ×0.5','옆에 적이 없으면 차례 끝에 한 단계 회복 또는 재정비');
   if(u.formation==='BROKEN')add('BROKEN','붕','붕괴','받는 피해 ×1.30 · 통제 구역 없음','옆에 적이 없으면 차례 끝에 한 단계 회복 또는 재정비');
   if(u.braced)add('BRACED','방','방어','받는 피해 ÷1.25 · 반격 ×1.2','다음 자기 차례가 시작되면 해제');
   for(const s of u.status??[]){const kind=s.kind??s;
@@ -106,20 +106,47 @@ export function unitCityOffsets(cities,C,size=30) {
   }
   return offsets;
 }
+export function primaryUnitStatus(u){
+  const order=['BROKEN','CONFUSED','SHAKEN','DISORDERED','BRACED','ROUTING','ROOTED','SLOWED','INSPIRED'];
+  return unitStatusMarks(u).sort((a,b)=>order.indexOf(a.kind)-order.indexOf(b.kind))[0]??null;
+}
+export function labelBorder(side,x=-40,y=0,w=80,h=24){
+  const rect=`M${x} ${y}H${x+w}V${y+h}H${x}Z`;
+  if(side==='allied')return `${rect}M${x+2} ${y+2}H${x+w-2}V${y+h-2}H${x+2}Z`;
+  if(side!=='enemy')return rect;
+  const points=[];
+  for(let i=0;i<=w;i+=4)points.push([x+i,y-(i%8===0?2:0)]);
+  for(let i=0;i<=h;i+=4)points.push([x+w+(i%8===0?2:0),y+i]);
+  for(let i=0;i<=w;i+=4)points.push([x+w-i,y+h+(i%8===0?2:0)]);
+  for(let i=0;i<=h;i+=4)points.push([x-(i%8===0?2:0),y+h-i]);
+  return 'M'+points.map(p=>p.join(' ')).join('L')+'Z';
+}
 function unitMarker(u) {
   const key=troopKey(u),label=u.troopName??({militia:'근접보병',spear:'장병',bow:'궁병',cavalry:'기병'}[key]??'부대');
-  const box=mapHeadBox(headOf(u.portrait)),score=n=>Number.isFinite(n)?String(n):'—';
-  const h=headOf(u.portrait),portrait=u.portrait&&box?`<foreignObject class="unit-head" x="34" y="4" width="13" height="13"><div xmlns="http://www.w3.org/1999/xhtml" style="width:13px;height:13px;background-image:url(&quot;${esc(u.portrait)}&quot;);background-size:${13*h.size[0]/box[2]}px ${13*h.size[1]/box[3]}px;background-position:${-13*box[0]/box[2]}px ${-13*box[1]/box[3]}px"></div></foreignObject>`:`<text class="unit-head-initial" x="40.5" y="14">${esc(String(u.name??'').slice(0,1))}</text>`;
-  return `<g class="unit-marker"><title>${esc(u.name)} · ${esc(label)} · 병력 ${troopLabel(u.count)}${u.ratings?' · '+esc(u.ratings.notes?.[0]??'표준 부대 대비 평가값'):''}</title>
-    <rect class="unit-flag" x="-33" y="1" width="2" height="20"/>
-    <rect class="unit-counter-bg" x="-31" y="1" width="63" height="21" rx="2"/>
-    <image class="unit-kind" href="/assets/ui-v3/units-ink/c170-${esc(key)}.png" x="-29" y="2" width="20" height="20"><title>${esc(label)}</title></image>
-    <g class="count unit-count"><text x="10" y="17">${troopLabel(u.count)}</text></g>
-    <g class="unit-specs"><title>${esc(u.ratings?.notes?.join('\n')??'적 부대의 평가값은 공개되지 않습니다')}</title><text x="0" y="28.6">공 ${score(u.ratings?.attack)} · 방 ${score(u.ratings?.defense)}</text></g>
-    <g class="unit-portrait"><rect class="frame" x="34" y="4" width="13" height="13" rx="6.5"/>${portrait}</g>
-    <g class="unit-status">${unitStatusMarks(u).map((s,i)=>`<g class="unit-status-mark" data-status="${s.kind}" tabindex="0" aria-label="${esc(s.text)}" transform="translate(${i*12-25} -6)"><title>${esc(s.text)}</title><rect x="-5" y="-5" width="10" height="10" rx="2"/><text y="3">${s.glyph}</text></g>`).join('')}</g>
-    ${u.tacticReady?'<g class="unit-tactic"><title>사용 가능한 전법 있음</title><text x="28" y="-3">전</text></g>':''}
-    <text class="uname" y="-15">${esc(u.name)}</text></g>`;
+  const h=headOf(u.portrait),box=mapHeadBox(h),side=u.side??(u.enemy?'enemy':'ally'),status=primaryUnitStatus(u);
+  const portrait=u.portrait&&box?`<foreignObject class="unit-head" x="-66" y="0" width="24" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="width:24px;height:24px;background-image:url(&quot;${esc(u.portrait)}&quot;);background-size:${24*h.size[0]/box[2]}px ${24*h.size[1]/box[3]}px;background-position:${-24*box[0]/box[2]}px ${-24*box[1]/box[3]}px"></div></foreignObject>`:`<text class="unit-head-initial" x="-54" y="17">${esc(String(u.name??'').slice(0,1))}</text>`;
+  const art=C190_ART[{ally:'tagAlly',allied:'tagAllied',enemy:'tagEnemy'}[side]],count=u.remembered?'?':troopLabel(u.count);
+  return `<g class="unit-marker c190-marker side-${side}${u.remembered?' remembered':''}"><title>${esc(u.name)} · ${esc(label)} · 병력 ${count}${u.remembered?' · 기억한 위치':''}</title>
+    <rect class="unit-counter-bg" x="-40" y="0" width="80" height="24"/>
+    ${art?`<image data-side="${side}" href="${esc(art)}" x="-40" y="0" width="80" height="24"/>`:`<path class="unit-side-border" data-side="${side}" d="${labelBorder(side)}"/>`}
+    <image class="unit-kind" href="/assets/ui-v3/units-ink/c170-${esc(key)}.png" x="-38" y="2" width="20" height="20"><title>${esc(label)}</title></image>
+    <g class="count unit-count"><text x="10" y="17">${count}</text></g>
+    <g class="unit-portrait"><rect class="frame" x="-66" y="0" width="24" height="24" rx="12"/>${portrait}</g>
+    <g class="unit-status">${status&&!u.remembered?`<g class="unit-status-mark" data-status="${status.kind}" tabindex="0" aria-label="${esc(status.text)}" transform="translate(34 -7)"><title>${esc(status.text)}</title>${C190_ART.statusSeal?`<image href="${esc(C190_ART.statusSeal)}" x="-9" y="-9" width="18" height="18"/>`:'<rect x="-9" y="-9" width="18" height="18"/>'}<text y="5">${status.glyph}</text></g>`:''}</g></g>`;
+}
+function cityBand(city,badge){
+  const siege=city.besieged,wall=Number.isFinite(city.defense)?Math.round(city.defense):'?',max=Number.isFinite(city.defenseMax)?city.defenseMax:'?';
+  const gauge=(y,ratio,text,kind)=>{const width=f(Math.max(0,Math.min(1,ratio??0))*44),id=`c190-bar-${esc(city.id)}-${kind}`;
+    return `<g class="city-gauge ${kind}" transform="translate(-68 ${y})">${C190_ART.barTrack?`<image href="${esc(C190_ART.barTrack)}" width="44" height="2"/>`:'<rect class="city-bar-track" width="44" height="2"/>'}${Number.isFinite(ratio)?C190_ART.barFill?`<clipPath id="${id}"><rect width="${width}" height="2"/></clipPath><image href="${esc(C190_ART.barFill)}" width="44" height="2" clip-path="url(#${id})"/>`:`<rect class="city-bar-fill" width="${width}" height="2"/>`:''}<text class="city-bar-number" x="80" y="4">${text}</text></g>`;};
+  return `<g class="c190-city-band${siege?' besieged':''}${city.remembered?' remembered':''}"><rect class="city-band-bg" x="-76" y="-10" width="152" height="${badge||siege?66:50}"/>
+    ${C190_ART.cityBand?`<image href="${esc(C190_ART.cityBand)}" x="-76" y="-10" width="151" height="24"/>`:''}
+    <path class="city-name-border" d="${labelBorder(siege?'enemy':'ally',-76,-10,152,24)}"/>
+    <text class="name" x="-68" y="7">${esc(city.name)}</text>
+    <g class="city-details"><title>성벽 ${wall}/${max} · ${city.own?'수비':'보이는 수비'} ${Number.isFinite(city.troops)?troopLabel(city.troops):'?'}</title>
+      ${gauge(23,city.defenseMax?city.defense/city.defenseMax:null,`${wall}/${max}`,'wall')}
+      ${gauge(35,city.own&&Number.isFinite(city.troops)?1:null,Number.isFinite(city.troops)?troopLabel(city.troops):'?','guard')}
+      ${siege?`<text class="city-siege" x="-68" y="53">${citySiegeText(city)}</text>`:badge?`<g class="prod${badge.idle?' idle':''}" data-prod-city="${esc(city.id)}"><title>${esc(cityProductionText(badge))}</title><text x="-68" y="53">${badge.idle?'●':'⚒'} ${esc(cityProductionText(badge))}</text></g>`:''}
+    </g></g>`;
 }
 
 function corners(c, size) { return Array.from({length: 6}, (_, i) => { const a = Math.PI / 180 * (60 * i - 90); return {x: c.x + size * Math.cos(a), y: c.y + size * Math.sin(a) * TILT}; }); }
@@ -266,6 +293,7 @@ export function renderWorldMap(model, opts = {}) {
   const hexes = (ids, cls) => (ids ?? []).map((id) => byId.has(id) || parse(id) ? `<path class="${cls}" d="${hexPath(C(id), size * 0.92)}"/>` : '').join('');
   svg += hexes(hl.danger, 'w-danger') + hexes(hl.move, 'w-move') + hexes(hl.zoc, 'w-zoc') + hexes(hl.attack, 'w-attack');
   if(hl.move?.length)svg+=`<path class="w-move-boundary" d="${ringsPath(outlineRings(tiles.filter(t=>hl.move.includes(t.id)),layout))}"/>`;
+  if(hl.platformRange?.length)svg+=`<path class="w-platform-range" d="${ringsPath(outlineRings(tiles.filter(t=>hl.platformRange.includes(t.id)),layout))}"/>`;
   svg += '<defs><marker id="c186-front-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#d4c7a5"/></marker><marker id="c186-danger-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#c95f52"/></marker></defs>';
   svg += renderMapPreview({side:hl.side,facing:hl.facing},layout);
   for (const l of hl.links ?? []) { const a = C(l.from), z = C(l.to); svg += `<path class="w-link" d="M${f(a.x)} ${f(a.y)}L${f(z.x)} ${f(z.y)}"/>`; }
@@ -291,7 +319,7 @@ export function renderWorldMap(model, opts = {}) {
     if (art && !baked) { const w = size * 2, h = w * 0.75; svg += `<image href="${esc(art)}" x="${f(-w / 2)}" y="${f(-h * 0.62)}" width="${f(w)}" height="${f(h)}"/>`; }
     else if (!baked || unknown) svg += `<g class="mark"><rect x="-10" y="-22" width="20" height="20" transform="rotate(45 0 -12)"/><text y="-7">${unknown ? '?' : PLACE_GLYPH[p.label] ?? '跡'}</text></g>`;
     if (!unknown) svg += `<text class="name" y="${f(size * 0.78)}">${esc(p.label)}</text>`;
-    if(status==='KNOWN'||status==='PENDING')svg+=`<text class="c186-site-goal" y="${f(size*1.15)}">${status==='PENDING'?'조사 중':'조사 목표'}</text>`;
+    if(status==='KNOWN'||status==='PENDING')svg+=`<g class="c191-investigate" aria-label="조사 목표"><circle r="${f(size*.87)}"/><g transform="translate(${f(size*.65)} ${f(-size*.62)})"><circle r="6"/><path d="M4 4l6 6"/></g></g><text class="c186-site-goal" y="${f(size*1.15)}">${status==='PENDING'?'조사 중':'조사 목표'}</text>`;
     // 단계 표지: 조사 중 = 査(점선 고리 돎) · 조사 끝 = 已 인장
     if (status === 'PENDING') svg += `<g class="badge pend" transform="translate(${f(size * 0.72)} ${f(-size * 0.86)})"><circle class="spin" r="9.5"/><circle r="7"/><text y="3.6">査</text></g>`;
     if (status === 'RESOLVED') svg += `<g class="badge done"${p.layer ? ` data-layer="${esc(p.layer)}"` : ''} transform="translate(${f(size * 0.72)} ${f(-size * 0.86)})"><rect x="-7.5" y="-7.5" width="15" height="15"/><text y="3.6">${esc(p.layer ?? '已')}</text></g>`;
@@ -344,6 +372,10 @@ export function renderWorldMap(model, opts = {}) {
     const ribbon = labelAt ? `<image class="rib${ownTone ? ' owned' : ' unowned'}" href="/assets/ui-v3/ink/ribbon-${nameLen > 1 ? 2 : 1}${ownTone ? '-' + ownTone : ''}.png" x="${f(-ribW / 2)}" y="${f(-ribH / 2)}" width="${f(ribW)}" height="${f(ribH)}"/>` : '';
     if (opts.compactLabels) occupied.push({x:lx-iw/2-22,y:ly-50,w:iw+44,h:city.defenseMax?108:88});
     const status = city.besieged ? '포위' : city.unrest === 'CHAOS' ? '혼란' : city.unrest === 'UNREST' ? '동요' : city.occupation && city.occupation.stage && city.occupation.stage !== 'NORMAL' ? '점령' : '';
+    if(opts.unitMarkers){
+      plates.push(`<g class="w-cityplate c190-cityplate${city.attackable?' attackable':''}" data-city="${esc(city.id)}" data-camera-tile="${esc(city.center)}" transform="translate(${f(lx)} ${f(ly)})" style="--fc:${fs.color}">${cityBand(city,b)}</g>`);
+      continue;
+    }
     plates.push(`<g class="w-cityplate${city.attackable?' attackable':''}${city.kind === 'minor' ? ' minor' : ''}${city.neutral ? ' neutral' : ''}" data-city="${esc(city.id)}" data-camera-tile="${esc(city.center)}" transform="translate(${f(lx)} ${f(ly)}) scale(.88)" style="--fc:${fs.color}">
       ${kit?.cityPlate ? `<image class="plate-art" href="${esc(kit.cityPlate)}" x="${f(-w / 2 - 5)}" y="-13.5" width="${f(w + 10)}" height="27" preserveAspectRatio="none"/>` : ''}${(() => { const fl = kit?.cityFlag?.[KIT_TONE[city.factionId] ?? 'grey']; return fl ? `<g class="cflag" transform="translate(${f(labelAt ? sealX - sealR - 7 : -w / 2 - 12)} -50)"><image href="${esc(fl)}" x="-8" y="0" width="17" height="58"/>${/^F\d\d$/.test(city.factionId ?? '') ? `<image href="/assets/ui-v3/emblems/${esc(city.factionId)}.png" x="-4.6" y="9" width="10" height="10"/>` : ''}</g>` : ''; })()}
       ${ribbon}${seal}<rect class="bg" x="${f(-w / 2)}" y="-12" width="${f(w)}" height="24"/><g class="crest" transform="translate(${f(-w / 2 + 2)} 0)"><rect x="-9" y="-9" width="18" height="18" transform="rotate(45)"/><text y="4.5">${esc(fs.glyph)}</text></g>
@@ -351,12 +383,16 @@ export function renderWorldMap(model, opts = {}) {
       ${status ? `<g class="st" transform="translate(${f(w / 2 + 4)} -6)"><rect x="0" y="-9" width="34" height="17"/><text x="17" y="4">${status}</text></g>` : ''}${info}${badge}</g>`);
   }
 
+  // C196: small ink stepping stones on the actual crossing boundary. No assets.
+  for(const [a,b] of model.fords??[]){const p=C(a),q=C(b),x=(p.x+q.x)/2,y=(p.y+q.y)/2,angle=Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI;
+    svg+=`<g class="w-ford" pointer-events="none" aria-label="여울 — 건널 수 있는 강 경계" transform="translate(${f(x)} ${f(y)}) rotate(${f(angle)})"><title>여울 — 건널 수 있는 강 경계</title><path d="M-11 0H11" stroke="#d6c9ae" stroke-width="5" stroke-linecap="round"/><path d="M-9 -1l3 1m4 -1l3 1m4 -1l3 1" fill="none" stroke="#292521" stroke-width="3.5" stroke-linecap="round"/></g>`;
+  }
   svg += '<g class="w-fire-ground" pointer-events="none" aria-hidden="true"></g>';
   svg += `<g class="w-plates">${plates.join('')}</g>`; // 성 이름판은 부대 아래(부대를 누르기 쉽게)
   // 부대 — 무리 그림(있으면) + 장수 깃발판(얼굴·병력) + 옥벽 고리
   const units = (model.units ?? []).filter((u) => u.count !== 0 || u.prevCount);
   const labelOffsets = new Map();
-  if (opts.compactLabels && !opts.troopFormations) {
+  if (opts.compactLabels && !opts.troopFormations && !opts.unitMarkers) {
     // Reserve selected banners first; keep every portrait tethered to its actual tile.
     for (const u of [...units].sort((a,b)=>Number(!!b.active)-Number(!!a.active))) {
       const c=C(u.tileId), scale=u.active?1:.82, w=Math.max(70,String(u.name??'').length*12+20)*scale, h=72*scale;
@@ -386,7 +422,7 @@ export function renderWorldMap(model, opts = {}) {
     const ratio = u.maxCount ? Math.max(0, Math.min(1, (u.count ?? 0) / u.maxCount)) : 1;
     const lost = Number.isFinite(u.prevCount) && u.prevCount > u.count ? u.prevCount - u.count : 0;
     const flip = u.faceLeft ? ' scale(-1 1)' : '';
-    const badges = [u.morale === 'ROUTING' ? '潰' : u.morale === 'SHAKEN' ? '搖' : '', u.formation === 'BROKEN' ? '崩' : u.formation === 'DISORDERED' ? '亂' : '', u.braced ? '守' : '', ...(u.status ?? []).map((s) => STATUS_GLYPH[s.kind ?? s] ?? '')].filter(Boolean);
+    const badges = [u.morale === 'ROUTING' ? '潰' : u.morale === 'SHAKEN' ? '搖' : '', u.formation === 'BROKEN' ? '崩' : u.formation === 'DISORDERED' ? '亂' : '', u.braced ? '守' : '', u.platformState === 'DEPLOYED' ? '전' : '', ...(u.status ?? []).map((s) => STATUS_GLYPH[s.kind ?? s] ?? '')].filter(Boolean);
     const cls = `w-unit${u.active ? ' active' : ''}${u.moved ? ' moved' : ''}${u.ready ? ' ready' : ''}${u.enemy ? ' enemy' : ''}${lost ? ' hit' : ''}${u.crisis ? ' crisis' : ''}${u.bond ? ' bonded' : ''}`;
     const offset=displayOffsets[u.tileId]??{x:0,y:0};
     svg += `<g class="${cls}" data-unit="${esc(u.id)}" data-camera-tile="${esc(u.tileId)}" data-display-offsets="${esc(JSON.stringify(displayOffsets))}"${footprint?` data-troop-anchor="1" data-troop-head="${formation.headTop}" data-troop-top="${footprint.top}" data-troop-left="${footprint.left}" data-troop-right="${footprint.right}" data-troop-bottom="${footprint.bottom}"`:''} data-x="${f(x)}" data-y="${f(y)}" transform="translate(${f(sample?.pos.x??x+offset.x)} ${f(sample?.pos.y??y+offset.y)})" style="--fc:${fs.color}">

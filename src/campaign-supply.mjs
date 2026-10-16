@@ -1,5 +1,7 @@
 import data from '../../docs/design-data/supply-v0.1.json' with {type:'json'};
 import models from '../../docs/design-data/supply-v0.2.json' with {type:'json'};
+import {C184,domesticEngineEnabled} from './campaign-domestic.mjs';
+import {TROOP_DISPLAY_SCALE} from './troop-display.mjs';
 import {boardNeighbors,tileId,hexDistance} from './map-primitives.mjs';
 import {edgeTicks,findPath} from './movement.mjs';
 import {diplomacyHostile} from './campaign-diplomacy.mjs';
@@ -16,6 +18,25 @@ export const baseCityFood=s=>foodModel(s)==='cheap'?models.cheap.cityBaseFood:4;
 export const troopFoodRate=s=>foodModel(s)==='cheap'?models.cheap.troopFoodPerThousand:2;
 export const supplyStockTurns=s=>clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns;
 export const armyFoodPerTurn=(a,s=null)=>Math.round(a.troopCount*troopFoodRate(s))/1000;
+export function fieldDrainTurns(s,a){if(!domesticEngineEnabled(s))return 1;const shown=a.troopCount*TROOP_DISPLAY_SCALE;return C184.fieldDrainTurns[shown<=C184.fieldShownThresholds[0]?0:shown<=C184.fieldShownThresholds[1]?1:2];}
+export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*(link.state==='SAFE'?1:fieldDrainTurns(s,a));}
+// City stocks use the same passable land edges, without a last-mile range cap.
+export function citySupplyRoute(s,from,to){
+ if(!from||!to||!from.ownerFactionId||from.ownerFactionId!==to.ownerFactionId||from.besieged||to.besieged)return null;
+ const blocked=new Set(Object.values(s.armies).filter(a=>active(s,a)&&diplomacyHostile(s,from.ownerFactionId,a.factionId)).map(a=>a.tileId));
+ for(const c of Object.values(s.cities))if(c!==from&&c!==to&&diplomacyHostile(s,from.ownerFactionId,c.ownerFactionId))cityTiles(c).forEach(id=>blocked.add(id));
+ const starts=cityTiles(from).filter(id=>s.tiles[id]&&!blocked.has(id)&&!['mountain','water'].includes(s.tiles[id].terrainType));
+ const goals=new Set(cityTiles(to)),queue=starts.map(id=>[id]),seen=new Set(starts);
+ for(let i=0;i<queue.length;i++){
+  const path=queue[i],id=path.at(-1);if(goals.has(id))return path;
+  for(const p of boardNeighbors(s.tiles[id],s.tiles)){
+   const next=tileId(p),key=[id,next].sort().join('|');
+   if(seen.has(next)||blocked.has(next)||['mountain','water'].includes(s.tiles[next].terrainType)||s.mapRules.blockedEdges.includes(key)||s.mapRules.riverEdges.includes(key)&&!s.mapRules.crossings[key])continue;
+   seen.add(next);queue.push([...path,next]);
+  }
+ }
+ return null;
+}
 export const supplyMax=(s,a)=>armyFoodPerTurn(a,s)*supplyStockTurns(s);
 const round=n=>Math.round(n*1e6)/1e6;
 const active=(s,a)=>services?.active?services.active(s,a):a.troopCount>0&&a.hp>0;
@@ -72,8 +93,9 @@ export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2
  return best?{state:best.distance<=data.link.range?'SAFE':'DISRUPTED',sourceCityId:best.source.city?.cityId??null,sourceHubId:best.source.hub?.hubId??null,...best}:{state:'CUT',sourceCityId:null,sourceHubId:null,distance:null,source:null};
 }
 export function supplyView(s,a,at=a.tileId){
- const link=supplyLink(s,a,at),perTurn=armyFoodPerTurn(a,s),max=supplyMax(s,a),free=clockFood(s)&&link.state==='SAFE'&&!link.source?.city?.besieged;
- return {state:!free&&at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max,perTurn,turnsLeft:free?supplyStockTurns(s):perTurn?round(a.supplyFood/perTurn):0,sourceCityId:link.sourceCityId,sourceHubId:link.sourceHubId,distance:link.distance,model:foodModel(s),draining:clockFood(s)?!free:link.state!=='SAFE'||(link.source?.city?link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<perTurn:(link.source?.hub?.stock??0)<perTurn)};
+ const link=supplyLink(s,a,at),perTurn=armyFieldConsumption(s,a,link),max=supplyMax(s,a),free=clockFood(s)&&link.state==='SAFE'&&!link.source?.city?.besieged;
+ const drain=free?0:clockFood(s)&&!link.source?.city?.besieged?perTurn*(link.state==='DISRUPTED'?.5:1):perTurn;
+ return {state:!free&&at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max,perTurn,...(domesticEngineEnabled(s)?{drainPerTurn:drain,drainTurns:link.state==='SAFE'?0:fieldDrainTurns(s,a)}:{}),turnsLeft:free?supplyStockTurns(s):drain?round(a.supplyFood/drain):0,sourceCityId:link.sourceCityId,sourceHubId:link.sourceHubId,distance:link.distance,model:foodModel(s),draining:clockFood(s)?!free:link.state!=='SAFE'||(link.source?.city?link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<perTurn:(link.source?.hub?.stock??0)<perTurn)};
 }
 function take(s,source,wanted,{protect=true}={}){
  if(!source)return 0;
@@ -162,7 +184,7 @@ export function settleSupply(s){
   if(link.source.city)(link.source.city.economyCauses??=[]).push({resource:'food',label:'보급 거점 채움',amount:0-amount});
  }
  for(const a of Object.values(s.armies).filter(a=>active(s,a)).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
-  const link=supplyLink(s,a),need=armyFoodPerTurn(a,s),max=supplyMax(s,a); a.supplyFood=Math.min(a.supplyFood,max);
+  const link=supplyLink(s,a),need=armyFieldConsumption(s,a,link),max=supplyMax(s,a); a.supplyFood=Math.min(a.supplyFood,max);
   if(clockFood(s)&&!link.source?.city?.besieged){
    const required=link.state==='SAFE'?0:link.state==='DISRUPTED'?need/2:need;
    const starving=a.supplyFood+1e-6<required;a.supplyFood=link.state==='SAFE'?max:round(Math.max(0,a.supplyFood-required));
@@ -184,7 +206,7 @@ export function settleSupply(s){
 }
 export function supplyAiAction(s,id,reachable,{targetCityId=null,allowBuild=true,publicWorld=null,foodAware=false}={}){
  if(!s.armies[id]||!active(s,s.armies[id]))return null;
- if(!supplyEnabled(s))return null;const a=s.armies[id],link=supplyLink(publicWorld??s,a),need=armyFoodPerTurn(a,s);
+ if(!supplyEnabled(s))return null;const a=s.armies[id],link=supplyLink(publicWorld??s,a),need=armyFieldConsumption(s,a,link);
  if(a.morale==='ROUTING')return null;
  const emptySource=!clockFood(s)&&foodAware&&link.source?.city&&link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<need;
  const clockReturn=clockFood(s)&&link.state!=='SAFE'&&a.supplyFood<=need&&!services.canWin?.(publicWorld??s,id);
@@ -233,7 +255,7 @@ export function supplyAiHubSite(s,id,reachable,targetCityId){
 }
 export function supplyAiMoveAllowed(s,id,to,{targetTileId=null,turnsToGoal=1,supplyState=null}={}){
  if(!supplyEnabled(s)||s.armies[id].morale==='ROUTING')return true;
- const a=s.armies[id],state=supplyState??supplyLink(s,a,to).state,need=armyFoodPerTurn(a,s),carried=need?a.supplyFood/need:0;
+ const a=s.armies[id],state=supplyState??supplyLink(s,a,to).state,need=armyFieldConsumption(s,a,{state}),carried=need?a.supplyFood/need:0;
  if(state==='SAFE')return true;
  if(targetTileId&&hexDistance(s.tiles[to],s.tiles[targetTileId])===1&&carried>=2)return true;
  return turnsToGoal<=(state==='DISRUPTED'?carried*2:carried);

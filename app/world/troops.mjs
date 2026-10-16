@@ -1,4 +1,5 @@
 // C155: presentation only. Public map units in, pixels out; no engine/state mutation.
+import {parentTroop} from '../../src/campaign-special-troops.mjs';
 const TYPES = {BT01:'militia', BT02:'spear', BT03:'bow', BT04:'cavalry', engineer:'militia', mystic:'bow'};
 const TONES = {F01:'red', F02:'green', F03:'blue'};
 const ROOT = '/assets/ui-v3/units-ink/';
@@ -6,24 +7,43 @@ const FOOT_Y = 16; // Below the tile center, clear of the portrait/count above i
 export const SOLDIER_H = 20; // C170: fewer readable people, same adopted sprite sheets.
 const SPREAD = 1.4; // 10-14 v4: 지도 속 대열(C160)처럼 병사 사이를 한 사람 너비쯤 띄운다 — 겹치면 검은 덩어리(닷토리 21판)
 const sheets = new Map();
-export const troopKind = u => TYPES[u.troop] ?? u.troop;
+export const troopKind = u => TYPES[u.troop] ?? parentTroop(u.troop);
+export const troopSpriteKind = u => u.special ?? u.troop;
+// C194: sheet pixels (96px high); equipment is one machine with two crew.
+export const SPECIAL_SPRITE_METRICS = Object.freeze({
+  hubao:Object.freeze({width:137,head:19,height:20,cap:5}),
+  catapult:Object.freeze({width:125,head:29,height:28,cap:1}),
+  qingzhou:Object.freeze({width:158,head:24,height:20,cap:7,spread:1.15}),
+  baiyi:Object.freeze({width:94,head:12,height:20,cap:7}),
+  wudang:Object.freeze({width:101,head:10,height:20,cap:7}),
+  jiefan:Object.freeze({width:184,head:30,height:20,cap:7}),
+  danyang:Object.freeze({width:155,head:10,height:20,cap:7}),
+});
+export function troopSheetName(u,tone,asset) {
+  const special=`sheet-${troopSpriteKind(u)}-${tone}.png`,kind=troopKind(u);
+  if(asset(`units-ink/${special}`))return special;
+  const parent=`sheet-${kind}-${tone}.png`;
+  return asset(`units-ink/${parent}`)?parent:`sheet-${kind}.png`;
+}
+const spriteMetrics = (u,kind=troopSpriteKind(u)) => SPECIAL_SPRITE_METRICS[kind];
 export const soldierCount = count => Number.isFinite(count) && count > 0 ? Math.max(6, Math.min(36, Math.ceil(count / 10))) : 0;
 export const bearerCount = count => count ? Math.min(3, Math.ceil(count / 12)) : 0;
 
 // C165: one footprint for the canvas, portrait anchor and camera (map coordinates).
 export function troopLayout(u, inCity=false, sample=null) {
-  const kind=sample?.kind??troopKind(u), n=Math.min(inCity?4:kind==='cavalry'?5:7,soldierCount(u.count));
+  const kind=sample?.kind??troopKind(u),metric=spriteMetrics(u,sample?.spriteKind??troopSpriteKind(u)),height=metric?.height??SOLDIER_H;
+  const n=Math.min(metric?.cap??(inCity?4:kind==='cavalry'?5:7),inCity?4:7,soldierCount(u.count));
   const points=formationPoints(kind,n,sample?.wedge??0), live=sample&&sample.progress>=0&&sample.progress<1;
-  const cs=Math.cos(sample?.angle??0),sn=Math.sin(sample?.angle??0),squeeze=inCity?.7:1;
+  const cs=Math.cos(sample?.angle??0),sn=Math.sin(sample?.angle??0),squeeze=inCity?.7:1,spread=metric?.spread??SPREAD;
   const positions=points.map((p,i)=>{
     const tussle=sample?.melee?Math.sin(sample.meleeTime/95+i*2.1)*(p.x>=0?4:1.5):0;
-    return live?{x:((p.x+tussle)*cs-p.y*sn)*SPREAD,y:((p.x+tussle)*sn+p.y*cs)*.62*SPREAD+FOOT_Y}:{x:p.y*squeeze*SPREAD,y:p.x*.5*squeeze*SPREAD+FOOT_Y};
+    return live?{x:((p.x+tussle)*cs-p.y*sn)*spread,y:((p.x+tussle)*sn+p.y*cs)*.62*spread+FOOT_Y}:{x:p.y*squeeze*spread,y:p.x*.5*squeeze*spread+FOOT_Y};
   });
-  const top=Math.min(FOOT_Y,...positions.map(p=>p.y))-SOLDIER_H+SOLDIER_H*8/96;
+  const top=Math.min(FOOT_Y,...positions.map(p=>p.y))-height+height*8/96;
   // Existing 96px sheets: helmet rows, excluding raised spear/flag tips.
-  const headTop=top+SOLDIER_H*({militia:19,spear:27,bow:18,cavalry:23}[kind]??19)/96;
-  const halfWidth=SOLDIER_H*({militia:93,spear:160,bow:101,cavalry:177}[kind]??112)/96/2;
-  return {points,positions,n,headTop,bounds:{left:Math.min(0,...positions.map(p=>p.x))-halfWidth,right:Math.max(0,...positions.map(p=>p.x))+halfWidth,top,bottom:Math.max(FOOT_Y,...positions.map(p=>p.y))+3}};
+  const headTop=top+height*(metric?.head??({militia:19,spear:27,bow:18,cavalry:23}[kind]??19))/96;
+  const halfWidth=height*(metric?.width??({militia:93,spear:160,bow:101,cavalry:177}[kind]??112))/96/2;
+  return {points,positions,n,height,headTop,bounds:{left:Math.min(0,...positions.map(p=>p.x))-halfWidth,right:Math.max(0,...positions.map(p=>p.x))+halfWidth,top,bottom:Math.max(FOOT_Y,...positions.map(p=>p.y))+3}};
 }
 export const troopPlateY = (top,scale=1) => top-2.4-28.6*scale;
 export function syncTroopNode(node,s,layout) {
@@ -135,7 +155,7 @@ function mapTone(img){const c=document.createElement('canvas');c.width=img.natur
 function loadSheet(name, columns, width, height, asset) {
   const src=troopAssetPath(name,asset);
   if(sheets.has(src))return sheets.get(src);
-  const item={image:null,columns,width,height,ready:false,placeholder:false}; sheets.set(src,item);
+  const item={name,image:null,columns,width,height,ready:false,placeholder:false}; sheets.set(src,item);
   const load = (fallback) => {
     const img=new Image(); img.onload=()=>{if(name.startsWith('sheet-'))item.width=img.naturalWidth/9;item.image=TONED.test(name)?mapTone(img):fallback&&!name.startsWith('fx-')?outlinedPlaceholder(img):/^sheet-[a-z]+\.png$/.test(name)?paperTone(img):img;if(name.startsWith('bearer-'))item.width=img.naturalWidth/3;item.columns=Math.floor(img.naturalWidth/item.width);item.height=img.naturalHeight;item.ready=item.columns>=Math.min(columns,8);item.placeholder=fallback;};
     img.onerror=()=>{if(!fallback)load(true);}; img.src=fallback?ROOT+'placeholder/'+name:src;
@@ -166,7 +186,13 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null,cha
   const reduce=()=>globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const foot=Object.fromEntries(['militia','spear','bow','cavalry'].map(k=>[k,loadSheet(`sheet-${k}.png`,9,k==='cavalry'?112:64,96,asset)]));
   // 10-14 R3(관우 기병 돌격 시안): 옷이 세력색인 시트 sheet-<병종>-<red|green|blue|grey>.png — 에셋 목록에 있으면 그것, 없으면 위의 색 없는 시트
-  const toned={};const footFor=(k,tone)=>{const key=`${k}-${tone}`;if(!(key in toned))toned[key]=asset(`units-ink/sheet-${key}.png`)?loadSheet(`sheet-${key}.png`,9,k==='cavalry'?112:64,96,asset):null;return toned[key]??foot[k];};
+  const toned={};const footFor=(u,tone)=>{
+    const k=troopKind(u),name=troopSheetName(u,tone,asset),parentName=troopSheetName({troop:k},tone,asset);
+    const get=name=>toned[name]??(toned[name]=loadSheet(name,9,k==='cavalry'?112:64,96,asset));
+    const parent=parentName===`sheet-${k}.png`?foot[k]:get(parentName),chosen=name===parentName?parent:get(name);
+    // Missing HTTP asset or an in-flight special image keeps its parent visible.
+    return chosen?.ready?chosen:parent?.ready?parent:foot[k];
+  };
   const bearers={};for(const k of ['foot','horse'])for(const tone of ['red','green','blue','grey'])bearers[`${k}-${tone}`]=loadSheet(`bearer-${k}-${tone}.png`,3,k==='horse'?112:64,128,asset);
   const effects={arrow:loadSheet('fx-arrow.png',1,40,8,asset),dust:loadSheet('fx-dust.png',1,96,40,asset),clash:loadSheet('fx-clash.png',1,96,96,asset)};
   let tiles=new Map(), freezeUntil=0, frozenTime=0, pausedTime=0;
@@ -206,14 +232,15 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null,cha
     const ordered=units.map(row=>({...row,s:sampleTroop(row.u,row.anchor,id=>tiles.get(id),elapsed)})).sort((a,b)=>a.s.pos.y-b.s.pos.y);
     for(const {u,node,anchor,s,inCity} of ordered){
       // Portrait and soldiers share the same sampled motion, including long routes.
-      const layout=troopLayout(u,inCity,s);
+      const sheet=footFor(u,TONES[u.factionId]??'grey'),spriteKind=sheet?.name===`sheet-${troopSpriteKind(u)}-${TONES[u.factionId]??'grey'}.png`?troopSpriteKind(u):s.kind;
+      const layout=troopLayout(u,inCity,{...s,spriteKind});
       syncTroopNode(node,s,layout);
       const local=troopScreenMatrix(node,s.pos,matrix);
       ctx.setTransform(dpr*local.a,dpr*local.b,dpr*local.c,dpr*local.d,dpr*(local.e-r.left),dpr*(local.f-r.top));
       const screen={x:matrix.a*s.pos.x+matrix.c*s.pos.y+matrix.e-r.left,y:matrix.b*s.pos.x+matrix.d*s.pos.y+matrix.f-r.top};
       if(screen.x< -100||screen.x>r.width+100||screen.y< -100||screen.y>r.height+100)continue;
       // C170: cavalry 5, infantry 7, city 4; represented troop strength is unchanged.
-      const {points,positions,n}=layout, cs=Math.cos(s.angle);
+      const {points,positions,n,height}=layout, cs=Math.cos(s.angle);
       // 10-14 Claude: 평소(가만히 · 이동)엔 화면 기준 반듯한 대열 — 옆줄 = 가로, 앞뒤 = 세로(지도를 눕혀 보는 각도라 앞뒤를 줄임). 공격 중에만 대상 쪽으로 돈다
       const place=p=>{const q=positions[points.indexOf(p)];return {x:s.pos.x+q.x,y:s.pos.y+q.y};};
       chargeDust(ctx,s,{reduced:!!reduce(),active:!!u.attack||!!u.motion}); // C177: adopted E3 tail follows this same motion/direction.
@@ -227,7 +254,7 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null,cha
         const front=points[p.i].x>0, frame=s.melee&&front?5+Math.floor((s.meleeTime+p.i*105)/160)%2:spriteFrame({moving:s.moving,progress:front||s.kind==='bow'?s.progress:-1,hit},time,p.i);
         const sway=reduce()?0:Math.sin(time/430+p.i*2.7)*.18;
         ctx.save();if(hit&&hitAge<120)ctx.filter='brightness(0) invert(1) sepia(.4)';
-        sprite(ctx,footFor(s.kind,TONES[u.factionId]??'grey'),frame,p.x+dx/dist*kick,p.y+sway+dy/dist*kick,SOLDIER_H,cs<0,1);ctx.restore();
+        sprite(ctx,sheet,frame,p.x+dx/dist*kick,p.y+sway+dy/dist*kick,height,cs<0,1);ctx.restore();
       }
       const nb=1;for(let i=0;i<nb;i++)sprite(ctx,bearers[`${s.kind==='cavalry'?'horse':'foot'}-${TONES[u.factionId]??'grey'}`],s.moving?1+Math.floor(time/160+i)%2:0,s.pos.x-14+i*11,s.pos.y+FOOT_Y+9,SOLDIER_H*1.15,cs<0,1);
       // Canvas is above the baked wall art and SVG rings: retain a visible front arc.
@@ -252,8 +279,9 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null,cha
     ctx.setTransform(dpr*matrix.a,dpr*matrix.b,dpr*matrix.c,dpr*matrix.d,dpr*(matrix.e-r.left),dpr*(matrix.f-r.top));
     for(const [id,death] of casualties){const age=now-death.start;if(age>850||reduce()){casualties.delete(id);continue;}
       // 쓰러지는 병사도 살아 있는 대열과 같은 수 · 간격 · 반듯한 배치로(10-14 R3)
-      const s=sampleTroop(death.u,death.anchor,id=>tiles.get(id),0), cap=s.kind==='cavalry'?5:7, from=Math.min(cap,death.from), to=Math.min(cap,death.to), points=formationPoints(s.kind,from);
-      for(let i=to;i<from;i++){const p=points[i];sprite(ctx,footFor(s.kind,TONES[death.u.factionId]??'grey'),8,s.pos.x+p.y*SPREAD,s.pos.y+p.x*.5*SPREAD+FOOT_Y+age/180,SOLDIER_H,Math.cos(s.angle)<0,(1-age/850)*.85,true);}
+      const s=sampleTroop(death.u,death.anchor,id=>tiles.get(id),0),sheet=footFor(death.u,TONES[death.u.factionId]??'grey');
+      const metric=spriteMetrics(death.u,sheet?.name===`sheet-${troopSpriteKind(death.u)}-${TONES[death.u.factionId]??'grey'}.png`?troopSpriteKind(death.u):s.kind),cap=metric?.cap??(s.kind==='cavalry'?5:7), from=Math.min(cap,death.from), to=Math.min(cap,death.to), points=formationPoints(s.kind,from);
+      for(let i=to;i<from;i++){const p=points[i],spread=metric?.spread??SPREAD;sprite(ctx,sheet,8,s.pos.x+p.y*spread,s.pos.y+p.x*.5*spread+FOOT_Y+age/180,metric?.height??SOLDIER_H,Math.cos(s.angle)<0,(1-age/850)*.85,true);}
     }
     // Erase label rectangles after drawing, keeping the original SVG labels intact.
     // clearRect is much cheaper than a complex clipping path on every soldier.

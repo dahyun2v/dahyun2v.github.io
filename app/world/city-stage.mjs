@@ -4,9 +4,42 @@ import {troopText} from '../../src/troop-display.mjs';
 // 명령 자체는 컨트롤러의 성 창(#city-panel)을 시설 장면 오른쪽에 옮겨 붙여 그대로 쓴다(명령 처리 코드 그대로).
 
 import {cityLifeHtml} from './city-life.mjs';
-import {cityEconomyRates} from '../../src/campaign-economy.mjs';
+import {cityEconomyRates,facilityTiles} from '../../src/campaign-economy.mjs';
+import {view} from '../../src/campaign-runtime.mjs';
 import {C20_FACILITIES} from '../../src/campaign-policy.mjs';
+import {directionToward} from '../../src/campaign-abilities.mjs';
+import {parentTroop} from '../../src/campaign-special-troops.mjs';
+import {v3Asset} from '../design/v3-ui.mjs';
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+/** Same six axial rays as combat facing, translated into screen compass names. */
+export function sortieGateName(center,tile){
+  if(center.q===tile.q&&center.r===tile.r)return '성 가운데';
+  return ['동문','북동문','북서문','서문','남서문','남동문'][directionToward(center,tile)];
+}
+export const sortieTroopIcon=type=>`/assets/ui-v3/dots-1016/icons/D3-${({militia:'melee',spear:'spear',bow:'bow',cavalry:'cavalry'})[type]??'melee'}.png`;
+export function sortieSquadPath(type='militia',tone='grey',asset=v3Asset){
+  return asset(`units-ink/squad-${type}-${tone}.webp`)??`/assets/ui-v3/units-ink/squad-${parentTroop(type)}-${tone}.webp`;
+}
+
+/** Presentation only: ranges, gate availability and refusals are supplied by the engine controller. */
+export function sortieHtml({city,officer,art,roster,troops,selectedType,gates,selectedGate,sequence,keep,face}){
+  const icon=sortieTroopIcon(selectedType??officer?.troopType),tone=({F01:'red',F02:'green',F03:'blue'})[city.ownerFactionId]??'grey';
+  return `<header class="u3-sortie-head"><span>${esc(city.name)} 병영 · 출진 편성</span><button type="button" data-sortie-close>병영으로 돌아가기 ×</button></header>
+    <div class="u3-sortie-art">${art?`<img src="${esc(art)}" alt="${esc(officer?.name)} 전신 원화">`:''}</div>
+    <section class="u3-sortie-panel" aria-label="부대 편성"><p class="u3-sortie-sequence">${sequence+1}번째 출진 · 한 장수 한 부대</p>
+      <div class="u3-sortie-title"><h1>${esc(officer?.name??'장수 없음')}</h1><label><img src="${icon}" alt=""><select id="city-job-muster-troop" aria-label="출진 병종" ${troops.length<2?'disabled':''}>${troops.map(t=>`<option value="${esc(t.troopType)}" ${t.troopType===selectedType?'selected':''}>${esc(t.troopDisplayName)}</option>`).join('')}</select></label></div>
+      <div class="u3-sortie-squad" aria-label="병종 대열">${Array.from({length:4},()=>`<img src="${sortieSquadPath(selectedType??'militia',tone)}" alt="">`).join('')}</div>
+      <dl class="u3-sortie-stats"><div><dt>공격</dt><dd data-sortie-stat="attack">—</dd></div><div><dt>방어</dt><dd data-sortie-stat="defense">—</dd></div><div><dt>기동</dt><dd data-sortie-stat="mobility">—</dd></div></dl>
+      <div class="u3-sortie-strength"><label for="city-sortie-count">편성 병력</label><p><output id="sortie-strength"></output><span>명</span></p></div>
+      <div class="u3-sortie-slider"><input id="city-sortie-count" type="range" aria-label="출진 병력"><div class="u3-sortie-limits"><span id="sortie-min"></span><span id="sortie-max"></span></div><small id="muster-troop-info"></small></div>
+      <div class="u3-sortie-result"><p id="sortie-reserve"></p><p id="muster-selection" aria-live="polite"></p><small id="sortie-supply"></small></div>
+      <select id="city-job-officer" hidden aria-label="출진 장수">${roster.map(r=>`<option value="${esc(r.officerId)}" ${r.officerId===officer?.officerId?'selected':''}>${esc(r.name)}</option>`).join('')}</select>
+    </section>
+    <aside class="u3-sortie-roster" aria-label="장수 명단"><h2>장수 명단 <small>${roster.length}명</small></h2><div>${roster.map(r=>`<button type="button" class="u3-sortie-row ${r.officerId===officer?.officerId?'on':''}" data-sortie-officer="${esc(r.officerId)}" ${r.reason?'disabled':''}><span class="u3-sortie-face">${face(r.officerId)?`<img src="${esc(face(r.officerId))}" alt="">`:''}</span><span><b>${esc(r.name)}</b><small><img src="${sortieTroopIcon(r.troopType)}" alt="">${esc(r.troopName)}</small><small class="${r.reason?'refusal':''}">${esc(r.reason??r.status)}</small></span></button>`).join('')}</div></aside>
+    <div class="u3-sortie-gates" aria-label="출진 성문"><span class="u3-sortie-gate-label">나갈 문<br><b>${gates.filter(g=>!g.reason).length}</b>곳 열림</span><div>${gates.map(g=>`<button type="button" class="u3-sortie-gate ${g.tileId===selectedGate?'on':''}" data-sortie-gate="${esc(g.tileId)}" aria-pressed="${g.tileId===selectedGate}" ${g.reason?'disabled':''}><b>${esc(g.name)}${g.reason?' · 막힘':''}</b><small>${esc(g.reason??'이 문으로 출진')}</small></button>`).join('')}</div></div>
+    <footer class="u3-sortie-action"><label><input id="sortie-keep" type="checkbox" ${keep?'checked':''}> 계속 출진</label><button type="button" data-sortie>출진</button><small>누르면 바로 출진 · 이번 차례에 이동 가능</small></footer>`;
+}
 
 export const D2_ICON = Object.freeze({farm:'farm',granary:'granary',market:'market',workshop:'workshop',barracks:'barracks',tuntian:'tuntian',clinic:'clinic',mufu:'command-tent',muster:'sortie',recruit:'recruit',reorganize:'reorganize',repair:'repair',idle:'idle'});
 const d2 = kind => `/assets/ui-v3/dots-1016/icons/D2-${D2_ICON[kind]??'command-tent'}.png`;
@@ -15,17 +48,20 @@ const stageKind = id => ({gate:'repair'}[id]??id);
 /** Current contribution (all facilities of this kind), or next-facility preview; engine output only. */
 export function cityFacilityRoles(state, cityId) {
   const c=state.cities[cityId];if(!c || c.ownerFactionId!==state.playerFactionId)return {};
+  const sites=view(state).ownCities[cityId]?.facilitySites;
   const out={},dest={food:'군량 · 주민 유지',capacity:'식량 비축 한도',prestige:'정책 · 장수 등용',production:'건설 · 모집 속도',workBonus:'모집 · 재편 속도'};
   const resource={food:'식량',capacity:'저장',prestige:'인망',production:'생산',workBonus:'작업 보너스'};
   for(const kind of ['farm','granary','market','workshop','barracks']){
     const installed=(c.facilities??[]).filter(f=>f.kind===kind), rest=(c.facilities??[]).filter(f=>f.kind!==kind);
+    const tileId=sites?sites[kind]?.tileId:facilityTiles(state,c)[0];
+    if(!installed.length&&!tileId){out[kind]={label:'추가 불가',text:'시설을 지을 빈 칸이 없습니다.'};continue;}
     const before=cityEconomyRates(state,{...c,facilities:rest});
-    const after=cityEconomyRates(state,{...c,facilities:installed.length?c.facilities:[...rest,{kind,tileId:c.tileId}]});
+    const after=cityEconomyRates(state,{...c,facilities:installed.length?c.facilities:[...rest,{kind,tileId}]});
     const lines=Object.keys(dest).flatMap(k=>{
       const n=k==='capacity'||k==='workBonus'?after[k]-before[k]:(after.raw?.[k]??after[k])-(before.raw?.[k]??before[k]);
       return Math.abs(n)>1e-8?[`${resource[k]} ${n>0?'+':''}${Number((n*(k==='workBonus'?100:1)).toFixed(2))}${k==='workBonus'?'%':''} → ${dest[k]}`]:[];
     });
-    out[kind]={label:installed.length?'현재 시설 합계':'추가 시',text:lines.join(' / ')||'산출 변화 없음 → 시설 상태 · 한도 확인'};
+    out[kind]={label:installed.length?'현재 시설 합계':'추가 시',text:lines.join(' / ')||'산출 변화 없음 → 시설 상태 · 작업 칸 확인'};
   }
   for(const [kind,b] of Object.entries(C20_FACILITIES))out[kind]={label:'시설 역할',text:b.description};
   return out;

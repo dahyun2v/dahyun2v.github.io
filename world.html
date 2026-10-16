@@ -1,6 +1,25 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>천하 — 지도</title>
+<script type="importmap">{"imports":{"/src/":"/src-3dfe36bd/","/app/":"/app-3dfe36bd/"}}</script><script id="boot-failsafe-script">
+// C201: classic script runs even when the module graph cannot load.
+(()=>{
+ const clean=value=>String(value??'').replace(/(?:https?:\/\/|file:\/\/)[^\s'"<>]+/gi,'[주소]').replace(/[A-Z]:[\\/][^\s'"<>]+/gi,'[경로]').replace(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/g,'[이메일]').replace(/"[^"]*"|'[^']*'/g,'[인용값]').replace(/\/(?:Users|home)\/[^\s'"<>]+/gi,'[경로]').replace(/[\r\n\t]+/g,' ').trim();
+ window.__bootErrorLine=error=>clean(error?.name||'Error').slice(0,40)+': '+clean(error?.message??(typeof error==='string'?error:'원인 정보를 받지 못했습니다')).slice(0,120);
+ let first='';
+ const remember=error=>{if(!first)first=window.__bootErrorLine(error);};
+ window.addEventListener('error',event=>{if(event.error||event.message)remember(event.error||{name:'Error',message:event.message});else if(event.target?.tagName==='SCRIPT')remember({name:'ModuleLoadError',message:'화면 모듈 요청 실패'});},true);
+ window.addEventListener('unhandledrejection',event=>remember(event.reason));
+ const notice=()=> '화면 코드를 불러오지 못했습니다 — Ctrl+Shift+R(강력 새로고침) 후 다시. 오류: '+(first||'ModuleLoadError: 준비 시간 초과 (4초)');
+ setTimeout(()=>{
+  if(window.__worldReady)return;
+  const banner=document.createElement('div');banner.id='boot-failsafe';banner.setAttribute('role','alert');
+  banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;padding:14px;background:#201c18;color:#fff1ce;border-bottom:2px solid #d9ac60;font:16px/1.6 sans-serif';
+  const message=document.createElement('span');message.textContent=notice();banner.appendChild(message);
+  const reload=document.createElement('button');reload.type='button';reload.textContent='새로고침';reload.style.cssText='margin-left:16px;padding:6px 12px';reload.addEventListener('click',()=>location.reload());banner.appendChild(reload);
+  document.body.prepend(banner);
+ },4000);
+})();
+</script><title>천하 — 지도</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap">
 <script>/* 글꼴 벌: 기본 F4(연성 붓글씨 제목 + 고운바탕 본문 — 2026-10-10 사용자 선택). ?font=F1~F9 로 바꿔 본다. 고른 벌의 구글 글꼴만 불러온다 */(()=>{const SETS={F1:'',F2:'Hahmlet:wght@400;500;700;800;900',F3:'Song+Myung&family=Gowun+Batang:wght@400;700',F4:'Yeon+Sung&family=Gowun+Batang:wght@400;700',F5:'Black+Han+Sans&family=Gowun+Dodum',F6:'East+Sea+Dokdo&family=Gowun+Batang:wght@400;700',F7:'Hahmlet:wght@400;500;700;800;900&family=Nanum+Brush+Script',F8:'Hahmlet:wght@400;500;700;800;900&family=Yeon+Sung',F9:'Hahmlet:wght@400;500;700;800;900&family=Song+Myung'},DEF='F4';let f=DEF;try{const q=new URLSearchParams(location.search).get('font');if(q&&q in SETS)f=q;}catch{}document.documentElement.dataset.font=f;if(SETS[f]){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+SETS[f]+'&display=swap';document.head.appendChild(l);}})();</script>
@@ -102,7 +121,7 @@
 <!-- C137: diplomatic attack confirmation uses the same in-screen dialog as save. -->
 <div id="attack-confirm" class="w-modal" hidden><section class="w-card save-confirm-card" role="dialog" aria-modal="true" aria-labelledby="attack-confirm-title"><h2 id="attack-confirm-title">신용이 떨어집니다</h2><p id="attack-confirm-text"></p><div><button id="attack-cancel" class="w-btn">취소</button><button id="attack-proceed" class="w-btn primary">신용이 떨어집니다 — 그래도 공격</button></div></section></div>
 <div id="ink-hud" hidden></div>
-<script type="module" src="/app/world/world.js"></script>
+<script type="module" src="/app-3dfe36bd/world/world.js"></script>
 <div id="ink-toasts" role="status" aria-live="polite"></div>
 <button id="tactic-cutin" hidden aria-label="전법 연출 넘기기"></button>
 </body></html>

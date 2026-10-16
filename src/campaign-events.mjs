@@ -10,8 +10,10 @@ import {changeFormation} from './campaign-abilities.mjs';
 import {cityPopulationCapacity,freeCityOfficers} from './campaign-roster.mjs';
 import {cityJobReason,selectCityJob} from './campaign-economy.mjs';
 import {syncCampaignAdministrativeTerminal} from './campaign-terminal-world-application.mjs';
+import {eventDeckCard,startEventDeck,deckDefinition,chooseDeckEvent,eventDeckView,validateEventDeck} from './campaign-event-deck.mjs';
+import {recordOathCapture} from './campaign-oaths.mjs';
 // C22 numbers are trial values, shared by runtime, preview and AI.
-export const C22=Object.freeze({limit:3,gap:4,contactTurns:2,pairRange:3,enemyRange:5,recentTurns:3,crisisTurn:18,majorCities:2,duration:6,foodSmall:10,food:15,foodLarge:20,progress:7,bonusFood:2,bonusTurns:5,population:1,prestigeSmall:5,prestige:10,prestigeLarge:15,wounded:40,reserves:100,guard:50,attack:1.15,coalition:1.1,durability:20,aiWeight:100});
+export const C22=Object.freeze({limit:4,gap:4,contactTurns:2,pairRange:3,enemyRange:5,recentTurns:3,crisisTurn:18,majorCities:2,duration:6,foodSmall:10,food:15,foodLarge:20,progress:7,bonusFood:2,bonusTurns:5,population:1,prestigeSmall:5,prestige:10,prestigeLarge:15,wounded:40,reserves:100,guard:50,attack:1.15,coalition:1.1,durability:20,aiWeight:100});
 export const c22Enabled=s=>['v2','v3'].includes(s.mapId);
 const rows=[
  ['E01','F01','버려진 밭의 주인들','SITUATION','황폐한 밭에 유민이 돌아왔다. 누가 이 땅을 일굴 것인가.',['관유 농우를 배정한다','호족에게 위탁한다','주민 자치를 허용한다','설치를 미룬다'],['식량 −15 · 둔전 진행 +7 (건설 불가: 식량 +2, 5턴)','인망 −10 · 식량 +2, 5턴','인구 +1 · 치안 회복','효과 없음'],['c','a','b','d']],
@@ -27,7 +29,7 @@ const armies=(s,fid)=>Object.values(s.armies).filter(a=>a.factionId===fid&&castl
 const contact=(s,a)=>Object.values(s.armies).some(b=>b.factionId!==a.factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1);
 const line=(s,fid,text)=>{s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId:fid,text});};
 export function initializeCampaignEvents(s){if(c22Enabled(s))s.c22??={fired:[],pending:{},crisis:null,startedTurns:{},contacts:{},captures:{},foodBonuses:[],escape:null,crisisStartedTurn:null};return s;}
-export function recordC22Capture(s,p){initializeCampaignEvents(s);if(!c22Enabled(s))return;const c=s.cities[p.capturedCityId];s.c22.captures[c.cityId]={factionId:p.occupierFactionId,turn:s.turn};if(p.formerOwnerFactionId==='F02'&&p.occupierFactionId!=='F02')s.c22.escape??={turn:s.turn,originTileId:c.tileId,eligibleTurn:s.c22.startedTurns.F02===s.turn?s.turn+1:s.turn};}
+export function recordC22Capture(s,p){initializeCampaignEvents(s);if(!c22Enabled(s))return;recordOathCapture(s,p);const c=s.cities[p.capturedCityId];s.c22.captures[c.cityId]={factionId:p.occupierFactionId,turn:s.turn};if(p.formerOwnerFactionId==='F02'&&p.occupierFactionId!=='F02')s.c22.escape??={turn:s.turn,originTileId:c.tileId,eligibleTurn:s.c22.startedTurns.F02===s.turn?s.turn+1:s.turn};}
 const nearest=(s,fid,origin)=>cities(s,fid).sort((a,b)=>hexDistance(s.tiles[origin],s.tiles[a.tileId])-hexDistance(s.tiles[origin],s.tiles[b.tileId])||a.tileId.localeCompare(b.tileId,'en'))[0];
 export function eventCandidate(s,eventId){
  const e=C22_EVENTS.find(e=>e.eventId===eventId);if(!e||!c22Enabled(s))return null;const cs=cities(s,e.factionId),as=armies(s,e.factionId);let c,ids;
@@ -40,9 +42,19 @@ export function eventCandidate(s,eventId){
  if(eventId==='E05')for(let i=0;i<as.length;i++)for(let j=i+1;j<as.length;j++)if(hexDistance(s.tiles[as[i].tileId],s.tiles[as[j].tileId])<=C22.pairRange&&[as[i],as[j]].some(a=>Object.values(s.knowledge.F03.observedArmies).some(b=>s.knowledge.F03.tiles[b.tileId]==='VISIBLE'&&castleArmyActive(s,s.armies[b.armyId])&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=C22.enemyRange)))return {armyIds:[as[i].armyId,as[j].armyId],officerIds:[as[i].commanderId,as[j].commanderId]};
  return null;
 }
-function definition(s,fid,p){if(p.eventId!=='CRISIS_HEGEMONY')return C22_EVENTS.find(e=>e.eventId===p.eventId);const leader=s.c22.crisis?.factionId===fid;return {eventId:p.eventId,title:'패권 견제',scale:'CRISIS',text:'천하가 패권을 견제하기 위해 움직인다.',ai:['a','b','c'],choices:(leader?['전군을 결집한다','성 방비를 다진다','그대로 밀어붙인다']:['연합에 참가한다','관망한다']).map((label,i)=>({id:'abc'[i],label,preview:(leader?['전 부대 사기 회복 · 수도 식량 −20','전 성 내구도 +20','효과 없음']:['위기 동안 패권 세력 상대 피해 +10% · 인망 +10','효과 없음'])[i]}))};}
+// New-deck legacy cards use the deck's guards and frozen role bindings. The
+// original C22 predicate remains exclusively on the old-save path below.
+function legacyDeckContext(s,p){
+ const fid=p.factionId,r=p.roles,base={cityId:r.city};
+ if(p.eventId==='E02')return {...base,armyIds:armies(s,fid).filter(a=>contact(s,a)||a.armyId===r.army).map(a=>a.armyId)};
+ if(p.eventId==='E04')return {...base,armyIds:armies(s,fid).sort((a,b)=>b.troopCount-a.troopCount||a.armyId.localeCompare(b.armyId)).map(a=>a.armyId)};
+ if(p.eventId==='E05')return {...base,armyIds:[r.army,r.army2],officerIds:[r.officer,r.officer2]};
+ if(p.eventId==='E06')return {...base,officerIds:freeCityOfficers(s,s.cities[r.city]).map(o=>o.officerId)};
+ return base;
+}
+function definition(s,fid,p){const deck=deckDefinition(s,p);if(deck)return deck;if(p.eventId!=='CRISIS_HEGEMONY')return C22_EVENTS.find(e=>e.eventId===p.eventId);const leader=s.c22.crisis?.factionId===fid;return {eventId:p.eventId,title:'패권 견제',scale:'CRISIS',text:'천하가 패권을 견제하기 위해 움직인다.',ai:['a','b','c'],choices:(leader?['전군을 결집한다','성 방비를 다진다','그대로 밀어붙인다']:['연합에 참가한다','관망한다']).map((label,i)=>({id:'abc'[i],label,preview:(leader?['전 부대 사기 회복 · 수도 식량 −20','전 성 내구도 +20','효과 없음']:['위기 동안 패권 세력 상대 피해 +10% · 인망 +10','효과 없음'])[i]}))};}
 export function eventChoiceReason(s,fid,p,id){
- const e=definition(s,fid,p);if(!e?.choices.some(c=>c.id===id))return '알 수 없는 선택지';const c=s.cities[p.cityId],f=s.factions[fid],key=p.eventId;
+ const e=definition(s,fid,p);if(eventDeckCard(p.eventId)?.origin==='new')return e?.choices.find(c=>c.id===id)?.blockedReason??(e?.choices.some(c=>c.id===id)?null:'? ? ?? ???');if(!e?.choices.some(c=>c.id===id))return '알 수 없는 선택지';const c=s.cities[p.cityId],f=s.factions[fid],key=p.eventId;
  const food=key==='E01'&&id==='a'||key==='E03'&&id==='a'?C22.food:key==='E02'&&id==='a'||key==='CRISIS_HEGEMONY'&&s.c22.crisis?.factionId===fid&&id==='a'?C22.foodLarge:key==='E02'&&id==='b'||key==='E03'&&id==='b'?C22.foodSmall:0;
  if(food&&(!c||c.ownerFactionId!==fid||domesticFoodAvailable(s,c)<food))return `식량 ${food} 필요`;
  const cost=key==='E01'&&id==='b'?C22.prestige:key==='E06'&&id==='b'?C22.prestigeSmall:0;
@@ -57,6 +69,7 @@ const morale=(s,a,n)=>{const stages=['STEADY','SHAKEN','ROUTING'];changeMorale(s
 function reserve(s,c,n){if(!c)return;if(n>0){const id=`C22.${s.turn}.${c.cityId}`;s.personnel.lots.push({lotId:id,kind:'READY',nodeId:c.cityId,identity:{baseTroopId:'BT01',specialTroopId:null},originFormationId:null,count:n});s.personnel.initialPersonnel+=n;s.economy.lotFaction[id]=c.ownerFactionId;}else {let left=-n;for(const l of s.personnel.lots.filter(l=>l.nodeId===c.cityId&&l.kind!=='WOUNDED')){const take=Math.min(left,l.count);l.count-=take;left-=take;}s.personnel.initialPersonnel+=n;}c.reserveTroops+=n;}
 function returnWounded(s,a){const f=s.personnel.formations.find(f=>f.formationId===a.armyId);let left=Math.min(C22.wounded,f.targetStrength-f.field);for(const l of s.personnel.lots.filter(l=>l.originFormationId===a.armyId&&l.kind==='WOUNDED')){const n=Math.min(left,l.count);l.count-=n;f.field+=n;a.troopCount+=n;a.woundedCount=Math.max(0,a.woundedCount-n);left-=n;} }
 export function chooseCampaignEvent(s,{eventId,choiceId},fid=s.playerFactionId){
+ const deckPending=s.c22?.pending[fid];if(s.eventDeck&&eventDeckCard(eventId)?.origin==='new'&&deckPending?.eventId===eventId)return chooseDeckEvent(s,deckPending,choiceId);
  const p=c22Enabled(s)&&s.c22?.pending[fid];if(!p||p.eventId!==eventId)throw new Error('INVALID_EVENT_CHOICE');const reason=eventChoiceReason(s,fid,p,choiceId);if(reason)throw new Error(reason);
  const oldSecurity=s.cities[p.cityId]?.securityLevel??0,eventGovernor=s.cities[p.cityId]?.governorId;
  const e=definition(s,fid,p),c=s.cities[p.cityId],f=s.factions[fid],as=(p.armyIds??[]).map(id=>s.armies[id]).filter(a=>a&&a.factionId===fid&&castleArmyActive(s,a)),id=choiceId;
@@ -70,13 +83,16 @@ export function chooseCampaignEvent(s,{eventId,choiceId},fid=s.playerFactionId){
  creditCampaignDomestic(s,{officerId:eventGovernor,eventId:`C25.EVENT.${s.turn}.${fid}.${eventId}`,kind:'EVENT_DECIDED',counts:{eventsDecided:1}});
  if(c&&(c.securityLevel??0)<oldSecurity)creditCampaignDomestic(s,{officerId:eventGovernor,eventId:`C25.EVENTSECURITY.${s.turn}.${fid}.${eventId}`,kind:'SECURITY_RECOVERED',counts:{securityRecovered:oldSecurity-c.securityLevel}});
  if(s.terminal)syncCampaignAdministrativeTerminal(s);
+ if(s.eventDeck&&eventId!=='CRISIS_HEGEMONY')s.eventDeck.lastResult={eventId,title:e.title,turn:s.turn,choiceId:id,text:e.choices.find(c=>c.id===id).preview,dejaVu:null};
  s.c22.fired.push({eventId,factionId:fid,turn:s.turn,choiceId:id});delete s.c22.pending[fid];line(s,fid,`사건 — ${e.title}: ${e.choices.find(c=>c.id===id).label}(${e.choices.find(c=>c.id===id).preview})`);return s;
 }
-export function resolveAiEvent(s,fid){const p=s.c22?.pending[fid];if(!p)return;const e=definition(s,fid,p),id=e.ai.find(id=>!eventChoiceReason(s,fid,p,id));chooseCampaignEvent(s,{eventId:p.eventId,choiceId:id},fid);}
-export function startFactionEvents(s,fid,{auto=false}={}){
+export function resolveAiEvent(s,fid){const p=s.c22?.pending[fid];if(!p)return;if(fid!==s.playerFactionId&&p.eventId!=='CRISIS_HEGEMONY'){delete s.c22.pending[fid];return;}const deck=deckDefinition(s,p);if(deck){const id=deck.choices.find(c=>c.id==='history'&&!c.blockedReason)?.id??deck.choices.find(c=>!c.blockedReason)?.id;chooseCampaignEvent(s,{eventId:p.eventId,choiceId:id},fid);return;}const e=definition(s,fid,p),id=e.ai.find(id=>!eventChoiceReason(s,fid,p,id));chooseCampaignEvent(s,{eventId:p.eventId,choiceId:id},fid);}
+export function startFactionEvents(s,fid,{auto=false,turnStart=true}={}){
  initializeCampaignEvents(s);if(!c22Enabled(s)||!s.factions[fid]?.alive)return s;const x=s.c22;
+ if(fid!==s.playerFactionId){if(x.pending[fid]?.eventId!=='CRISIS_HEGEMONY')delete x.pending[fid];return s;}
+ if(s.eventDeck){if(x.startedTurns[fid]!==s.turn){x.startedTurns[fid]=s.turn;for(const a of armies(s,fid)){const prev=x.contacts[a.armyId];x.contacts[a.armyId]={turn:s.turn,count:contact(s,a)?(prev?.turn===s.turn-1?prev.count:0)+1:0};}}startEventDeck(s,fid,legacyDeckContext,{turnStart});if(auto)resolveAiEvent(s,fid);return s;}
  if(x.startedTurns[fid]!==s.turn){x.startedTurns[fid]=s.turn;for(const a of armies(s,fid)){const prev=x.contacts[a.armyId];x.contacts[a.armyId]={turn:s.turn,count:contact(s,a)?(prev?.turn===s.turn-1?prev.count:0)+1:0};}
- if(!x.pending[fid]){const fired=x.fired.filter(e=>e.factionId===fid&&e.eventId!=='CRISIS_HEGEMONY');if(fired.length<C22.limit&&(!fired.length||s.turn-fired.at(-1).turn>=C22.gap)){for(const e of C22_EVENTS.filter(e=>e.factionId===fid)){if(x.fired.some(f=>f.eventId===e.eventId)||Object.values(x.pending).some(p=>p.eventId===e.eventId))continue;const candidate=eventCandidate(s,e.eventId);if(candidate){x.pending[fid]={eventId:e.eventId,...candidate,turn:s.turn};break;}}}}}
+ if(!x.pending[fid]){const fired=x.fired.filter(e=>e.factionId===fid&&e.eventId!=='CRISIS_HEGEMONY');if(fired.length<3&&(!fired.length||s.turn-fired.at(-1).turn>=C22.gap)){for(const e of C22_EVENTS.filter(e=>e.factionId===fid)){if(x.fired.some(f=>f.eventId===e.eventId)||Object.values(x.pending).some(p=>p.eventId===e.eventId))continue;const candidate=eventCandidate(s,e.eventId);if(candidate){x.pending[fid]={eventId:e.eventId,...candidate,turn:s.turn};break;}}}}}
  if(auto)resolveAiEvent(s,fid);return s;
 }
 export function finishC22Crisis(s){
@@ -93,11 +109,12 @@ export function settleCampaignEvents(s){
  queueCrisisCard(s);return s;
 }
 export function queueCrisisCard(s){const x=s.c22,fid=s.playerFactionId;if(c22Enabled(s)&&x?.crisis&&!x.crisis.cardQueued&&!x.pending[fid]){x.pending[fid]={eventId:'CRISIS_HEGEMONY',turn:s.turn,...(s.cities[s.factions[fid].capitalCityId]?.ownerFactionId===fid?{cityId:s.factions[fid].capitalCityId}:{})};x.crisis.cardQueued=true;}}
-export function campaignEventsView(s,fid=s.playerFactionId){const x=s.c22;if(!c22Enabled(s)||!x)return {};const p=x.pending[fid],e=p&&definition(s,fid,p);return {pendingEvent:p?{eventId:e.eventId,title:e.title,scale:e.scale,text:e.text,...(p.cityId?{cityName:s.cityDisplayNames?.[p.cityId]??s.cities[p.cityId].name}:{}),...(p.officerIds?{officerNames:p.officerIds.map(id=>s.officers[id]?.name).filter(Boolean)}:{}),choices:e.choices.map(c=>({...c,blockedReason:eventChoiceReason(s,fid,p,c.id)}))}:null,pastEvents:structuredClone(x.fired),crisis:x.crisis?{name:x.crisis.name,factionId:x.crisis.factionId,turnsLeft:Math.max(0,x.crisis.endTurn-s.turn),joined:x.crisis.joined.includes(fid)}:null};}
+export function campaignEventsView(s,fid=s.playerFactionId){const x=s.c22;if(!c22Enabled(s)||!x)return {};const p=x.pending[fid],e=p&&definition(s,fid,p);return {...eventDeckView(s,fid),pendingEvent:p?{eventId:e.eventId,title:e.title,scale:e.scale,text:e.text,...(e.cityName?{cityName:e.cityName}:{}),...(e.officerNames?{officerNames:e.officerNames}:{}),...(p.cityId?{cityName:s.cityDisplayNames?.[p.cityId]??s.cities[p.cityId].name}:{}),...(p.officerIds?{officerNames:p.officerIds.map(id=>s.officers[id]?.name).filter(Boolean)}:{}),choices:e.choices.map(c=>({...c,blockedReason:eventChoiceReason(s,fid,p,c.id)}))}:null,pastEvents:structuredClone(x.fired),crisis:x.crisis?{name:x.crisis.name,factionId:x.crisis.factionId,turnsLeft:Math.max(0,x.crisis.endTurn-s.turn),joined:x.crisis.joined.includes(fid)}:null};}
 export const c22TargetWeight=(s,fid,targetFaction)=>c22Enabled(s)&&s.c22?.crisis&&fid!==s.c22.crisis.factionId&&targetFaction===s.c22.crisis.factionId?C22.aiWeight:0;
 export function c22AttackMultiplier(s,a,targetFaction,{counter=false,reaction=false,pursuit=false}={}){if(!c22Enabled(s)||counter||reaction||pursuit)return 1;return (s.c22?.attackBonus?.armyId===a.armyId&&s.c22.attackBonus.turn===s.turn?C22.attack:1)*(s.c22?.crisis?.joined.includes(a.factionId)&&s.c22.crisis.factionId===targetFaction?C22.coalition:1);}
 export function consumeC22Attack(s,id){if(s.c22?.attackBonus?.armyId===id)delete s.c22.attackBonus;}
 export function validateCampaignEvents(s){
+ validateEventDeck(s);
  if(!c22Enabled(s)||!s.c22)return;
  const x=s.c22,fail=()=>{throw new Error('INVALID_C22');},integer=n=>Number.isSafeInteger(n)&&n>=0;
  const turn=n=>integer(n)&&n>=1&&n<=s.turn;
@@ -105,14 +122,14 @@ export function validateCampaignEvents(s){
  if(!Array.isArray(x.fired)||!dict(x.pending)||!dict(x.contacts)||!dict(x.captures)||!Array.isArray(x.foodBonuses)||!dict(x.startedTurns)||!(x.crisisStartedTurn===null||turn(x.crisisStartedTurn))||x.lastSettledTurn!==undefined&&!turn(x.lastSettledTurn))fail();
  const seen=new Set();
  for(const e of x.fired){
-  const spec=C22_EVENTS.find(r=>r.eventId===e.eventId);
+  const card=eventDeckCard(e.eventId),spec=C22_EVENTS.find(r=>r.eventId===e.eventId)??(s.eventDeck&&card?.origin==='new'?{factionId:s.playerFactionId,choices:card.choices}:null);
   if(!s.factions[e.factionId]||!turn(e.turn)||e.eventId!=='CRISIS_HEGEMONY'&&(!spec||spec.factionId!==e.factionId||!spec.choices.some(c=>c.id===e.choiceId))||e.eventId==='CRISIS_HEGEMONY'&&!['a','b','c'].includes(e.choiceId))fail();
   const key=e.eventId==='CRISIS_HEGEMONY'?`${e.eventId}.${e.factionId}`:e.eventId;if(seen.has(key))fail();seen.add(key);
  }
- for(const fid of Object.keys(s.factions)){const es=x.fired.filter(e=>e.factionId===fid&&e.eventId!=='CRISIS_HEGEMONY');if(es.length>C22.limit||es.some((e,i)=>i&&e.turn-es[i-1].turn<C22.gap))fail();}
+ for(const fid of Object.keys(s.factions)){const es=x.fired.filter(e=>e.factionId===fid&&e.eventId!=='CRISIS_HEGEMONY');if(es.length>(s.eventDeck?C22.limit:3)||es.some((e,i)=>i&&e.turn-es[i-1].turn<C22.gap))fail();}
  const pendingIds=new Set();
  for(const [fid,p] of Object.entries(x.pending)){
-  const e=definition(s,fid,p),key=p.eventId==='CRISIS_HEGEMONY'?`${p.eventId}.${fid}`:p.eventId;
+  const e=deckDefinition(s,p)??definition(s,fid,p),key=p.eventId==='CRISIS_HEGEMONY'?`${p.eventId}.${fid}`:p.eventId;
   if(!s.factions[fid]||!turn(p.turn)||!e||p.eventId!=='CRISIS_HEGEMONY'&&e.factionId!==fid||p.cityId&&!s.cities[p.cityId]||p.armyIds&&(!Array.isArray(p.armyIds)||p.armyIds.some(id=>!s.armies[id]))||p.officerIds&&(!Array.isArray(p.officerIds)||p.officerIds.some(id=>!s.officers[id]))||p.eventId==='CRISIS_HEGEMONY'&&(!x.crisis||fid!==s.playerFactionId)||seen.has(key)||pendingIds.has(p.eventId))fail();pendingIds.add(p.eventId);
  }
  for(const [fid,t] of Object.entries(x.startedTurns))if(!s.factions[fid]||!turn(t))fail();

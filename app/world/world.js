@@ -1,8 +1,12 @@
+import {oathBandHtml,twistHistoryHtml,readRecentEventIds,writeRecentEventIds} from './hud-ink.mjs';
+import {levelupReadout,levelupQueue,levelupArtCategory,LEVELUP_ASSETS,levelupUpgradeText,fatigueLineText} from '/app/world/hud-ink.mjs';
 // 천하재결 새 화면 컨트롤러(UI v3, 2026-10-08) — 게임 흐름 로직은 옛 campaign.js 에서 갈라 왔고, 보이는 것(마크업·지도·아이콘)은 새로 쓴다.
 // 옛 화면(/campaign)은 그대로 둔다. 지도: /app/world/map-v3.mjs, 스타일: /app/world/world.css
 import {orderEligible,orderRoutes,routeTurns,orderHighlights,queuedOrderUnit,waypointRoute,visibleControlZones} from '/src/campaign-orders.mjs';
 import {selectionRect,rectangleSelection,toggleSelection,cycleTileUnit,targetTile} from '/src/campaign-select.mjs';
-import {campaignTactics,officerEffectCards,tacticIsDamage,cardEffectPending,recallReason,hasCampaignRule,canMainAction,strengthenedValue} from '/src/campaign-effects.mjs';
+import {campaignTactics,officerEffectCards,tacticIsDamage,cardEffectPending,cardTroopReady,recallReason,hasCampaignRule,canMainAction,strengthenedValue} from '/src/campaign-effects.mjs';
+import {C31_DATA} from '/src/campaign-events.mjs';
+import {crisisRewardText,diplomacyTimingText,taxAdvanceLines} from '/app/world/hud-ink.mjs';
 import {regroupReason,campaignPath} from '/src/campaign-morale.mjs';
 import {cityAttackTargets,previewCityAttack,previewTactic,tacticFailureReason,attackTargets,previewAttack,previewDisengage,previewApproachFire,armyActionEnded,attackRange,campaignUnitRatings,campaignDangerTiles} from '/src/campaign-combat.mjs';
 import {createCampaignCombatAudio} from '/src/campaign-combat-audio.mjs';
@@ -11,12 +15,13 @@ import {getFactionView} from '/src/knowledge.mjs';
 import {troopPlateY,troopScreenMatrix} from '/app/world/troops.mjs';
 import {hexDistance} from '/src/map-primitives.mjs'; // 굶는 부대 안내(starvingAdvice)가 쓰는데 빠져 있어, 굶는 부대를 고르면 화면 오류가 났다(C132 · 2026-10-12 자동 플레이에서 발견)
 import {archerAttackReason} from '/src/campaign-combat.mjs';
-import {diplomacyAttackReason,diplomacyMoveReason} from '/src/campaign-diplomacy.mjs';
+import {diplomacyAttackReason,diplomacyMoveReason,diplomacyTiming} from '/src/campaign-diplomacy.mjs';
 import {campaignHorizonText,noFieldArmyText,commandIntentText,tacticChangeText,resultReasonText,growthUseText,unfieldedOfficerNames,uncoveredShift,turnNews,overlapSelection} from '/app/world/hud-ink.mjs'; // C137 · C138
 import {statsToOfficerPack,troopToCampaign} from '/src/campaign-adapters.mjs';
 import {saveText,loadText,settle,saveMarkerKey} from '/src/save-store.mjs';
 import {campaignSubAbility,directionToward} from '/src/campaign-abilities.mjs';
-import {troopInfo} from '/src/campaign-special-troops.mjs';
+import {C193,troopInfo,platformState,platformAttackReason} from '/src/campaign-special-troops.mjs';
+import {platformActionReason} from '/src/campaign-effects.mjs';
 import {troopText,troopDelta,TROOP_DISPLAY_SCALE} from '/src/troop-display.mjs';
 import {CAREER_DATA} from '/src/campaign-career.mjs';
 import {movementUndoReason,playerTurnSummary,campaignResultScore,titleProgress,facingTiles,tacticTargetsHtml} from '/app/world/hud-ink.mjs';
@@ -28,11 +33,12 @@ import {campaignCaptives,captiveRecruitmentReason} from '/src/campaign-captives.
 import {UNIQUE_OFFICERS} from '/src/campaign-rule-registry.mjs';
 import {cityRecruitCost} from '/src/campaign-policy.mjs';
 import {c29CoreCard,c29CoreFactor} from '/src/campaign-c29.mjs';
-import {c29BindingTargets} from '/src/campaign-c29.mjs';
+import {c29AiChoice,c29BindingTargets} from '/src/campaign-c29.mjs';
 import {xpToNextLevel} from '/src/growth-progress.mjs';
-import {pendingCampaignDraft,needsTraitResolution,tacticLoadoutReason,CAMPAIGN_RARITY_NAMES,resolveTraitSpace,CAMPAIGN_TRAIT_SLOTS,CAMPAIGN_TACTIC_SLOTS} from '/src/campaign-growth.mjs';
+import {rankCampaignAiDraft,pendingCampaignDraft,needsTraitResolution,tacticLoadoutReason,CAMPAIGN_RARITY_NAMES,resolveTraitSpace,CAMPAIGN_TRAIT_SLOTS,CAMPAIGN_TACTIC_SLOTS} from '/src/campaign-growth.mjs';
 
 import {renderWorldMap,renderMapPreview,animateUnits,FACTION} from '/app/world/map-v3.mjs';
+import {C190_ART,mapLabelDetail,cityPublicReadout,cityQuickHtml,cityQuickPlacement,cityQuickIntent} from '/app/world/hud-ink.mjs';
 // C155: old art remains usable until the new presentation module is served.
 let troopLayer=null;
 let fxInk=null,chargeDust=()=>{};
@@ -42,7 +48,7 @@ import {cutout} from '/app/world/cutout.mjs';
 import {createUiSfx} from '/app/world/ui-sfx.mjs';
 import {C22_EVENTS} from '/src/campaign-events.mjs';
 import {mountCityLife} from '/app/world/city-life.mjs';
-import {BUILDINGS,cityPeople,cityIssues,loadStageArt,overviewHtml,facilityHtml,cityFile,cityFacilityRoles} from '/app/world/city-stage.mjs';
+import {BUILDINGS,cityPeople,cityIssues,loadStageArt,overviewHtml,facilityHtml,cityFile,cityFacilityRoles,sortieHtml,sortieGateName} from '/app/world/city-stage.mjs';
 import {tacticFaceMarkup,mountInkHud,renderInkHud,shownTroopForecast,surpriseWarning,productionReadout,observedReinforcementLines,starvationLines,injuryReturnText,recruitmentLeadsHtml,foodSnapshot,foodTransition,combatReadout,garrisonResult,facilityCompletionLines,readableText,readableError,labelNumber,cardNumericText,clickTargetDecision,targetPreviewText,unitActionReadout} from '/app/world/hud-ink.mjs';
 import {v3Asset,loadV3Manifest,v3MapOptions,v3ModeHighlights,v3Relations,setV3Mode,v3Mode,renderWorldDial,renderAdvisor,renderModeRail,resourceIcon,factionEmblem} from '/app/design/v3-ui.mjs';
 const FACTION_STYLE=Object.fromEntries(Object.entries(FACTION).map(([k,v])=>[k,{...v,soft:v.color}]));
@@ -61,7 +67,8 @@ import {relation,relationCityOfficers,socialReason,RELATIONS} from '/src/campaig
 import {renderCouncilWorld,councilPending,councilEscape} from '/app/world/council-world.mjs';
 import {openOfficerDraft} from '/app/world/officer-draft-ui.mjs';
 import {showClash} from '/app/world/clash-scene.mjs';
-import {garrisonReason,sortieReason} from '/src/campaign-roster.mjs';
+import {garrisonReason,sortieReason,sortie,sortieTroopRange} from '/src/campaign-roster.mjs';
+import {combatFireAt} from '/src/campaign-rule-registry.mjs';
 import supplyRules from '/docs/design-data/supply-v0.1.json' with {type:'json'};
 import {hubBuildReason} from '/src/campaign-supply.mjs';
 // 흑묵 그래픽 노블 스킨(2026-10-10, 스타일 바이블 v2) — ?skin=v3 으로 이전 겉모습
@@ -69,6 +76,7 @@ try{if(new URLSearchParams(location.search).get('skin')!=='v3'){document.body?.c
  // 먹 선 흔들림 필터(영토 선 등) — ink-skin.css 의 filter:url(#ink-rough)
  document.body?.insertAdjacentHTML?.('beforeend','<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="ink-rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.4"/></filter></svg>');}}catch{}
 let achPick=null,visitTalks=null,feastPick=[],feastCity=null,visitScene=null; // C38 친목: 저택 대화 초안(visit-talks)·주점 술자리 고른 장수·열린 대화
+let sortieUi=null;
 let crisisData=null,crisisSeen=new Set(),bondsData=null,hoverSide=null,dangerMode=true,lastActedArmy=null,dangerCache=null,memoryLines={},artCatalog=null,portraits={},menuOpen=false,moveMode=false,faceMode=false,destination=null,soundSequence=0,audioGesture=false;
 // 엔진 오류 코드를 플레이어 문장으로(코드는 콘솔에만)
 const ERROR_TEXT={C26_COMMAND_UNAVAILABLE:'지금은 이 내정 명령을 쓸 수 없습니다.',INVALID_C26_CITY:'우리 성에서만 쓸 수 있습니다.',INVALID_ORDER_UNITS:'이미 움직였거나 행동을 마친 부대에는 이동 명령을 줄 수 없습니다.',INVALID_ORDER_DESTINATION:'갈 수 없는 칸입니다.',INVALID_CAMPAIGN_ATTACK:'지금 공격할 수 없는 대상입니다.',INVALID_CAMPAIGN_CITY_ATTACK:'지금 이 성은 공격할 수 없습니다.',INVALID_CAMPAIGN_FACE:'이동하기 전에만 정면을 돌릴 수 있습니다.',INVALID_MUSTER_OFFICER_OR_TROOP:'출진할 장수와 병종을 확인하세요.',MUSTER_RESERVE_200_REQUIRED:`예비병이 ${troopText(200)}명 이상 있어야 출진할 수 있습니다.`,INVALID_WANDERER_RECRUITMENT:'지금은 등용할 수 없습니다(이미 협의 중이거나 성의 주인이 아님).',INVALID_GARRISON:'적과 붙어 있지 않은 상태로 자기 성 중심에 있어야 주둔할 수 있습니다.',MAIN_ACTION_USED:'이번 턴 행동을 이미 썼습니다.',EVENT_PENDING:'사건 카드를 먼저 정하세요.',UNIQUE_FACILITY_LIMIT:'고유 시설은 도시당 1개입니다.',UNIQUE_FACILITY_LOCKED:'다른 세력의 고유 시설입니다.',NO_DAMAGED_FACILITY:'손상된 시설이 없습니다.',MINOR_CITY_NO_FACILITIES:'작은 성에는 지을 수 없습니다.',STAR_COOLDOWN:'재사용 대기 중입니다.',STAR_UNAVAILABLE:'패주 중이라 쓸 수 없습니다.',STAR_OCCUPIED:'점령 처리 중인 성입니다.'};
@@ -124,11 +132,8 @@ function draftDescription(c,id){
    if(changes.length)return `${playerText(c.text)} · ${changes.join(' · ')}`;}
   return playerText(c.text||'이 특기의 수치가 한 단계 오른다');
  }
- const effective=c29CoreCard(state,id,{...c,rank:Math.min(5,(c.rank??0)+1)});
- const text=cardDescription(effective,id);
- const previous=c.rank?cardDescription(c29CoreCard(state,id,{...c,rank:c.rank}),id):text;
- if(previous!==text)return `${previous} → ${text}`;
- return cardEffectPending(c)?text+' · 효과 준비 중':text;
+ const text=c.rank?levelupUpgradeText(c,card=>cardDescription(c29CoreCard(state,id,card),id)):cardDescription(c29CoreCard(state,id,{...c,rank:1}),id);
+ return text+(cardEffectPending(c)?' · 효과 준비 중':'');
 }
 const FORMATION_NAME={DISORDERED:'흐트러짐',BROKEN:'붕괴'};
 // C138: use registered combat pools, not names/class tags. Mixed unique rules stay unlabelled.
@@ -202,7 +207,7 @@ const START_ZOOM=new URLSearchParams(location.search).get('hud')==='old'?1.7:2.1
 let motions={},attackAnims={},facings={},fxList=[],motionSeq=0,redrawTimer=null;
 const factionName=id=>({F01:"조조군",F02:"유비군",F03:"손권군"}[id]??id);
 let cameraMoving=false,cameraTimer=null;
-function inputLocked(){return !$('#save-confirm')?.hidden||$('#attack-confirm')?.hidden===false||cameraMoving||(state?.orderQueue?.length>0)||combatAnimating||state?.phase==='AI'||!!(state&&pendingCampaignDraft(state));}
+function inputLocked(){return $('#c197-event-result')?.hidden===false||!$('#save-confirm')?.hidden||$('#attack-confirm')?.hidden===false||cameraMoving||(state?.orderQueue?.length>0)||combatAnimating||state?.phase==='AI'||!!(state&&pendingCampaignDraft(state));}
 function scheduleOrders(){
  clearTimeout(orderTimer);
  if(!state?.gameResult&&state?.phase==='PLAYER'&&queuedOrderUnit(state)&&!combatAnimating&&!pendingCampaignDraft(state))orderTimer=setTimeout(()=>command({type:'ADVANCE_ORDER'}),Math.max(10,motionRemaining()+60));
@@ -252,7 +257,7 @@ function decisionFeedback(request,before,after){
   inkToast(`${name(request.officerId)} · ${troopName(unit.troopType)} ${troopText(unit.troopCount)}명 출진`);
   requestAnimationFrame(()=>cityCommitSeal(request.cityId));
  }else if(request.type==='CITY_GOVERNOR')inkToast(`${c.name} · 태수 — ${request.officerId?name(request.officerId):'공석'}`);
- else if(request.type==='GARRISON')inkToast(`${name(a?.commanderId)} · 복귀 완료`);
+ else if(request.type==='GARRISON')inkToast(garrisonResult(view(before),view(after),request.armyId)||`${name(a?.commanderId)} · 복귀 완료`);
  else if(request.type==='RECALL_UNIT')inkToast(`${name(a?.commanderId)} · 귀환 완료`);
  else if(request.type==='TACTIC_LOADOUT')inkToast(`${name(request.officerId)} · 전법 ${request.equip?'장착':'해제'}`);
 }
@@ -262,7 +267,7 @@ function tacticButtonState(card,armyId){
 }
 function updateTacticReady(model){
  const live=new Set();
- for(const u of model.units){if(u.enemy)continue;const cards=campaignTactics(state,u.id);u.tacticReady=cards.some(c=>c.targets.length>0);u.tacticNew=false;
+ for(const u of model.units){if(u.enemy)continue;const cards=campaignTactics(state,u.id);u.tacticReady=cards.some(c=>c.canUse);u.tacticNew=false;
   if(state.phase!=='PLAYER')continue;
   for(const c of cards){const key=u.id+':'+c.traitId,ready=c.waiting===0&&!!c.effects?.length;live.add(key);const was=tacticReadySeen.get(key);
    if(state.phase==='PLAYER'&&ready&&was===false)tacticReadyPending.add(key);if(!ready)tacticReadyPending.delete(key);tacticReadySeen.set(key,ready);
@@ -305,6 +310,7 @@ function trackBatchCommand(before,after,request){
   const records=(after.administrationLog??[]).slice((base.administrationLog??[]).length).filter(e=>!e.factionId||e.factionId===av.factionId);
   const names=Object.fromEntries([...campaignMapModel(view(base)).units,...campaignMapModel(av).units].map(a=>[a.id,a.name]));
   const rows=playerTurnSummary(view(base),av,records,(after.combatLog??[]).filter(e=>e.sequence>(base.battleSequence??0)),names);
+  const oathRows=(av.oaths??[]).filter(o=>o.resolvedTurn>=base.turn&&['SUCCESS','FAILED'].includes(o.status)).map(o=>`맹세 ${o.status==='SUCCESS'?'성공':'실패'} — ${o.title}: ${o.result?.text??''}`);rows.unshift(...oathRows.filter(row=>!rows.includes(row)));
   turnSummaryPending=rows.length?rows:['잃은 성 없음 · 지난 상대 차례에 받은 공격 없음','새로 관측한 적 없음','외교·견제 협상 소식 없음'];rivalTurnBaseline=null;
  }
 }
@@ -323,12 +329,12 @@ function renderBatchUi(v){
  }
  const danger=$('#c186-danger');danger.setAttribute('aria-pressed',String(dangerMode));danger.textContent=`위험 ${dangerMode?'켬':'끔'}`;danger.title='보이는 적의 이동·공격 가능 범위 · 점선은 공격 가능한 내 대상 (실제 AI 계획 아님)';
  const why=moveUndo?.after===state?moveUndo.reason:'무를 이동 없음',undo=$('#c186-undo');undo.disabled=!!why||inputLocked();undo.title=why||'방금 이동한 부대를 이동 전 상태로';$('#c186-undo-reason').textContent=moveUndo?.after===state&&why?why:'';
- const trace=v3Mode()==='trace';$('#c186-map-guide').hidden=!trace;$('#c186-map-guide').textContent='탐험 보기 · 흔적 그림 = 정보 / 밝은 칸 = 이동 / 조사 = 목표 · 부대·성 표식은 흐림 · 지형을 누르면 돌아가기';
+ const trace=v3Mode()==='trace';$('#c186-map-guide').hidden=!trace;$('#c186-map-guide').innerHTML='탐험 보기 · 흔적을 살피기 쉽게 부대·성 표식은 숨김<br>점선 원 + 돋보기 = 조사 목표 · 뼈색 테 = 이동 칸 <button type="button" id="c191-trace-back">돌아가기(Esc)</button>';$('#c191-trace-back').onclick=()=>{setV3Mode('world');render();};
  const captured=Object.values(v.ownCities).filter(c=>['CAPTURED','OCCUPATION'].includes(c.occupation?.stage));
  $('#c186-capture-links').innerHTML=captured.map(c=>`<button data-c186-occupation="${esc(c.cityId)}">${esc(c.name)} 점령 · 회유 / 군정</button>`).join('');
  for(const b of $('#c186-capture-links').querySelectorAll('button'))b.onclick=()=>{selectedCityId=b.dataset.c186Occupation;cityTab='jobs';renderCityPanel(view(state));};
  let summary=$('#c186-turn-summary');if(!summary){document.body.insertAdjacentHTML('beforeend','<div id="c186-turn-summary" class="modal-backdrop" hidden><section class="panel lacquer" role="dialog" aria-modal="true" aria-labelledby="c186-summary-title"><h2 id="c186-summary-title">내 차례 · 지난 상대 차례</h2><ul></ul><button class="btn" type="button">지도로</button></section></div>');summary=$('#c186-turn-summary');summary.querySelector('button').onclick=()=>{turnSummaryPending=null;summary.hidden=true;};}
- summary.hidden=!turnSummaryPending||state.phase!=='PLAYER'||!!v.pendingEvent||!!pendingCampaignDraft(state)||combatAnimating;
+ summary.hidden=$('#c197-event-result')?.hidden===false||!turnSummaryPending||state.phase!=='PLAYER'||!!v.pendingEvent||!!pendingCampaignDraft(state)||!!pendingChoice(v)||combatAnimating;
  if(!summary.hidden){const rows=[...turnSummaryPending];for(const [kind,empty] of [['잃은 성','잃은 성 없음'],['받은 공격','받은 공격 기록 없음'],['새로 본 적','새로 관측한 적 없음']])if(rows.length<3&&!rows.some(x=>x.includes(kind)))rows.push(empty);summary.querySelector('ul').innerHTML=rows.map(x=>`<li>${esc(x)}</li>`).join('');}
 }
 function command(request,confirmed=false) {
@@ -345,8 +351,9 @@ function command(request,confirmed=false) {
   if(!draftAction&&!['ADVANCE_AI','ADVANCE_ORDER'].includes(request.type))cancelStrike();
   const before=state;state=step(state,{...request,incremental:true});overlapPick=null;
   trackBatchCommand(before,state,request);
+  diplomacyFeedback(before,state);
   try{decisionFeedback(request,before,state);}catch(e){console.warn('C159 decision feedback:',e);}
-  const bv=view(before),av=view(state),notices=[...observedReinforcementLines(bv,av),...starvationLines(bv,av)];
+  const bv=view(before),av=view(state),notices=[...observedReinforcementLines(bv,av),...starvationLines(bv,av),...taxAdvanceLines(bv,av)];
   rememberMapOwnership(before,state,av);
   for(const c of Object.values(av.ownCities)){const kind=c.currentProduction?.kind;if(!kind)continue;const old=bv.ownCities[c.cityId]?.jobs?.find(j=>j.kind===kind)?.estimate,next=c.jobs?.find(j=>j.kind===kind)?.estimate,r=productionReadout(next,old);if(r.change)notices.push(`${c.name} · ${r.change} · ${r.line}`);}
   for(const [id,a] of Object.entries(bv.ownArmies)){if((av.ownArmies[id]?.troopCount??0)>0)continue;const inj=av.officers[a.commanderId]?.injury;if(inj&&!bv.officers[a.commanderId]?.injury)notices.push(`부대가 무너졌습니다 — ${av.officers[a.commanderId]?.name??'장수'} 중상 · ${injuryReturnText(av.turn,inj)}`);}
@@ -360,7 +367,7 @@ function command(request,confirmed=false) {
    if(!combatVisible(before,state,e))continue;
    const row=combatReadout(view(before),view(state),e,Object.fromEntries(campaignMapModel(view(before)).units.map(u=>[u.id,u.name])));
    if(row&&!recentCombats.some(r=>r.sequence===row.sequence))recentCombats=[...recentCombats,row].slice(-6);
-   if(row&&e.tacticName){const visibleIds=Object.keys({...bv.ownArmies,...bv.knowledge.observedArmies}).filter(id=>bv.ownArmies[id]||bv.knowledge.tiles[bv.knowledge.observedArmies[id]?.tileId]==='VISIBLE');const summary=tacticChangeText(e,{ownIds:Object.keys(bv.ownArmies),visibleIds,cityTarget:!!bv.ownCities[e.targetId]||bv.knowledge.tiles[bv.knowledge.cities[e.targetId]?.tileId]==='VISIBLE'});turnLog.push(summary);row.lines.unshift(summary);}
+   if(row&&e.tacticName){const visibleIds=Object.keys({...bv.ownArmies,...bv.knowledge.observedArmies}).filter(id=>bv.ownArmies[id]||bv.knowledge.tiles[bv.knowledge.observedArmies[id]?.tileId]==='VISIBLE');const summary=tacticChangeText(e,{names:Object.fromEntries(campaignMapModel(bv).units.map(u=>[u.id,u.name])),ownIds:Object.keys(bv.ownArmies),visibleIds,cityTarget:!!bv.ownCities[e.targetId]||bv.knowledge.tiles[bv.knowledge.cities[e.targetId]?.tileId]==='VISIBLE'});turnLog.push(summary);row.lines.unshift(summary);}
   }
   $('#growth-error').textContent='';
   const id=`campaign:${++soundSequence}`;
@@ -382,6 +389,11 @@ function command(request,confirmed=false) {
   if(request.type!=='MOVE_UNIT')selectedArmyId=null;
   if(request.type==='SORTIE'){
    const unit=Object.values(state.armies).find(a=>!before.armies[a.armyId]&&a.commanderId===request.officerId);
+   if(sortieUi){
+    sortieUi.sequence++;sortieUi.deployed.push(unit.armyId);
+    const roster=sortieRoster(view(state),view(state).ownCities[request.cityId]);
+    if(sortieUi.keep&&roster.some(o=>!o.reason)){sortieUi.officerId=roster.find(o=>!o.reason).officerId;sortieUi.tileId=undefined;renderSortie();return;}
+   }
    closeStage();selectedArmyId=unit.armyId;selectedArmyIds=[unit.armyId];menuOpen=true;moveMode=true;
    render();follow(unit.armyId,true);$('#status').textContent='출진 완료 — 목적지를 눌러 이동하세요.';return;
   }
@@ -700,7 +712,7 @@ function repeatFree(log,mine){const previous=new Set(log.filter(e=>e.turn===stat
  title?.addEventListener?.('click',()=>{folded=!folded;try{localStorage.setItem('sg-tracker-folded',folded?'1':'0');}catch{}apply();});apply();}
 function markUnknownCounts(model){
  for(const unit of model.units){
-  if(Number.isFinite(unit.count))continue;
+  if(Number.isFinite(unit.count)||unit.remembered)continue;
   for(const node of unitNodes(unit.id)){
    const count=node.querySelector('.count');if(count)count.textContent='—';
    for(const bar of node.querySelectorAll('.bar,.bar-bg'))bar.style.visibility='hidden';
@@ -826,6 +838,7 @@ async function openStage(cityId,fac=null){
 }
 // 성 → 지도: 무대가 옅어지고 지도가 성에서 빠져나오듯 넓어진다
 function closeStage(){
+ closeSortie();
  const root=$('#city-stage'),game=$('#game');stage.transition++;stage.opening=false;stage.city=null;stage.fac=null;selectedCityId=null;renderFirstSortie(view(state));
  const panel=$('#city-panel');if(panel){panel.hidden=true;document.body?.appendChild?.(panel);}
  const finish=()=>{if(root&&!stage.city){root.classList?.remove('push','facility','focus');root.hidden=true;}};
@@ -870,12 +883,17 @@ function renderStage(v){
  const people=cityPeople(v,c),idle=!!cityProductionBadge(c)?.idle,issues=cityIssues(v,c,people,{idle});
  const over=root.querySelector('.cs-over'),la=people.office?.officerId?fullArt(people.office.officerId):null;
  if(over)over.innerHTML=overviewHtml({v,c,art:stage.art,people,issues,date:campaignDate(v.turn),facilityState:{working:c.currentProduction?.kind?CITY_JOBS[c.currentProduction.kind]?.name:null,news:stageNews(v,c),gauges:stageGauges(c),stats:stageStats(c),lordGauges:stageLordGauges(c),job:stageJob(c),roles:cityFacilityRoles(state,c.cityId)},portraits:plateFaces(),emblem:emblemHtml(v.factionId),lordArt:la?.src});
+ for(const row of root.querySelectorAll('.cs-cast .face-btn')){
+  const id=people[row.dataset.spot]?.officerId??Object.values(people).find(o=>o?.name===row.querySelector('.tag b')?.textContent)?.officerId;
+  const f=v.officers[id]?.fatigue,text=fatigueLineText(f);if(text)row.querySelector('.tag')?.insertAdjacentHTML('beforeend',`<small class="c191-fatigue${f.musterBlocked?' blocked':''}">${esc(text)}</small>`);
+ }
  mountCityLife(root);
  if(over&&la&&!la.cut){const im=over.querySelector('.cs-lord .art img');if(im){im.style.opacity='0';cutout(la.src).then(u=>{if(im.isConnected){if(u)im.src=u;im.style.opacity='';}});}} // 태수 판 그림: 배경 지운 사본(시설 장면과 같은 방식)
  root.style?.setProperty?.('--fc',FACTION_STYLE[v.factionId]?.color??'#777');
  fitStageShift();
  requestAnimationFrame(fitCityMarkers);
  if(stage.fac)renderFacilityScene(v,c,people);
+ if(sortieUi)renderSortie();
 }
 // 흑묵 성 전경: 오른쪽 태수 판이 건물 표지를 가리지 않게 그림을 왼쪽으로 민다(왼쪽 끝 표지는 화면 안에 남긴다)
 function fitStageShift(){
@@ -1004,6 +1022,7 @@ function renderHud(v){
   bars.push({pct:{STEADY:100,SHAKEN:50,ROUTING:12}[a.morale]??100,text:MORALE_NAME[a.morale]??'',title:'사기',tone:'bone'});
   if(sup)bars.push({pct:sup.max?(sup.stock??0)/sup.max*100:0,text:`${food1(sup.stock??0)}/${food1(sup.max??0)}`,title:`휴대 군량 · 보급 ${SUPPLY_LABEL[sup.state]??sup.state}${sup.model==='clock'?(sup.draining?' · 줄어드는 중':' · 보급권 안 — 줄지 않음'):''}`,tone:'teal'});}
  renderInkHud(root,{turnLimit:CAMPAIGN_TURN_LIMIT,supplyRange:supplyRules.link.range,unitClass:a?v.officers[a.commanderId]?.class?.name:null,unitTroops:a?.troopCount,unitLocation:a?(Object.values({...v.knowledge.cities,...v.ownCities}).find(c=>c.tileId===a.tileId||c.footprint?.gates?.includes(a.tileId)||c.footprint?.walls?.includes(a.tileId))?.name??({plain:'평지',forest:'숲',hill:'언덕',mountain:'산',water:'물'})[v.tiles[a.tileId]?.terrainType]??'지형'):null,foodModel:state.trialRules?.foodModel,bandSupply:a?{name:v.officers[a.commanderId]?.name??'',supply:a.supply,label:SUPPLY_LABEL[a.supply?.state]??'보급 정보 없음',source:v.ownCities[a.supply?.sourceCityId],hub:v.hubs?.find(h=>h.hubId===a.supply?.sourceHubId),context:supplySourceText(a.supply,v),blocked:a.supply?.state==='CUT'?(Object.values(v.knowledge?.cities??{}).some(c=>c.cityId!==a.supply?.sourceCityId&&c.ownerFactionId!==v.factionId&&(c.tileId===a.tileId||c.gates?.includes(a.tileId)||c.walls?.includes(a.tileId)))?'적 성에 붙어 있어 보급이 닿지 않음':'길이 끊겨 휴대 군량으로 버팀'):a.supply?.state==='STARVING'?'군량 바닥 · 굶주림 위험':''}:null,todoLines:bandTodoLines(state,v),bandSelected:selectedTacticId??(faceMode?'face':attackMode?'attack':moveMode?'move':null),garrisonWhy:a?reasonText(garrisonReason(state,a.armyId)||''):'',remaining:Object.values(v.ownArmies).filter(u=>!armyActionEnded(state,u.armyId)).length,todo:councilPending(state)+(pendingCampaignDraft(state)?1:0)+(v.pendingEvent?1:0),ratings:a?campaignUnitRatings(state,a.armyId):null,bandMeta:a?`${troopName(a.troopType)} · ${v.officers[a.commanderId]?.class?.name??'계통 없음'} · 병력 ${troopText(a.troopCount)}`:'',bandStatus:a?{morale:{text:MORALE_NAME[a.morale],warn:a.morale!=='STEADY'},formation:{text:`전열 ${FORMATION_NAME[a.formation??'ORDERED']??'정돈'}`,warn:a.formation!=='ORDERED'},supply:{text:a.supply?.stock<=0&&a.supply?.draining?'굶주림':a.supply?.draining?`${food1(a.supply.turnsLeft)}차례분 · 줄어드는 중`:'보급권 안',warn:!!a.supply?.draining}}:null,factionId:v.factionId,factionName:FACTION_STYLE[v.factionId]?.name,factionColor:FACTION_STYLE[v.factionId]?.color,tone,turn:endedTurn(v.turn),date:campaignDate(endedTurn(v.turn)),left:$('#turn')?.dataset?.left??'',mode:v3Mode(),summary:$('#summary')?.textContent,currentNews,allNews,unitBars:bars,commandIntent,food:foodSnapshot(v),foodChange:lastFoodChange,unitResult:lastUnitResult,facilityResults:lastFacilityResults,combatHistory:recentCombats,recruitmentCount:(v.revealedWanderers??[]).length,unitStatus:a?{id:a.armyId,actions:selectedActions(a.armyId),action:armyActionEnded(state,a.armyId)?'이번 턴 행동 완료':state.movedArmyIds.includes(a.armyId)?'이동함 · 주 행동 확인':'행동 가능',formation:FORMATION_NAME[a.formation??'ORDERED']??'정돈'}:null,council:councilPending(state)});
+ syncPlatformBand(root,a?.armyId);
  syncBandFocus(a?.armyId??null,v3Mode(),false);
 }
 // C149: reuse the same player council text already shown in the council UI.
@@ -1057,7 +1076,7 @@ const EVENT_SCALE={SITUATION:'상황',EVENT:'사건',INCIDENT:'돌발',CRISIS:'�
 const EV_CARD={E01:['supply','persuade','people','wait'],E02:['supply','ride','guard'],E03:['people','supply','retreat'],E04:['people','charge','guard'],E05:['charge','persuade','wait'],E06:['ride','persuade','guard']};
 const EV_CARD_WORD=[['charge',/돌격|공격|결집|선봉|싸울/],['guard',/수비|방비|지킨|방어|늦춘|다스/],['ride',/질주|나누어|추격|밀어붙|객장/],['persuade',/협약|위탁|설득|군의|연합|맡긴/],['supply',/식량|수송|군량|보급|농우/],['people',/백성|주민|받아들|함께|마을/],['retreat',/퇴각|물러|길만|버리/],['wait',/미룬|관망|대기/]];
 function eventBlockedText(reason){
- const p=state.c22?.pending[state.playerFactionId],c=state.cities[p?.cityId],need=/^(식량|인망|예비병) (\d+) 필요$/.exec(reason);
+ const p=state.c22?.pending[state.playerFactionId],c=state.cities[p?.roles?.city??p?.cityId],need=/^(식량|인망|예비병) (\d+) 필요$/.exec(reason);
  if(need){const n=Number(need[2]);if(need[1]==='식량'&&c){const now=domesticFoodAvailable(state,c),local=Math.max(0,c.foodStock-(c.reservedResources?.food??0)),scope=now===local?'이 성의':'공유 창고의';return `${scope} 쓸 수 있는 식량이 모자랍니다(필요 ${n} · 지금 ${cityNumber(now)})`;}
  if(need[1]==='예비병'&&c)return `이 성의 예비병이 모자랍니다(필요 ${troopText(n)} · 지금 ${troopText(c.reserveTroops)})`;
  if(need[1]==='인망')return `쓸 수 있는 인망이 모자랍니다(필요 ${n} · 지금 ${cityNumber(state.factions[state.playerFactionId].prestige-(state.captiveRecruitment?.factions[state.playerFactionId]?.reservedPrestige??0))})`;
@@ -1066,11 +1085,12 @@ function eventBlockedText(reason){
  return reasonText(reason);
 }
 function renderEventCard(v=view(state)){
+ renderEventDeckUi(v);
  const modal=$('#event-modal');if(!modal)return;
  const e=v.pendingEvent;modal.hidden=!e||combatAnimating||!!state.gameResult||!!pendingCampaignDraft(state);if(modal.hidden)return;
  menuOpen=false;$('#unit-menu').hidden=true;
  const crisis=e.scale==='CRISIS'||e.eventId==='CRISIS_HEGEMONY';
- {const k=crisis?'CRISIS':e.eventId;$('#event-art').src=v3Asset(`events/${k}.webp`)??`/assets/event-art/${esc(k)}_v1.jpg`;}
+ {const k=crisis?'CRISIS':e.eventId.startsWith('EV-')?'E01':e.eventId;$('#event-art').src=v3Asset(`events/${k}.webp`)??`/assets/event-art/${esc(k)}_v1.jpg`;}
  $('#event-scale').textContent=EVENT_SCALE[e.scale]??'사건';$('#event-scale').className='ev-scale'+(crisis?' crisis':'');
  $('#event-title').textContent=e.title;
  $('#event-place').textContent=[e.cityName,...(e.officerNames??[])].filter(Boolean).join(' · ');
@@ -1083,25 +1103,39 @@ function renderEventCard(v=view(state)){
  // 흑묵(page-event): 선택지 = 그림 카드(창 = 선택 그림 또는 사건 그림 한 조각) + 각 카드 바로 아래 비용·효과 미리보기
  const evArt=$('#event-art').src,n=e.choices.length,fx=x=>esc(x.blockedReason?eventBlockedText(x.blockedReason):x.preview);
  $('#event-choices').style?.setProperty?.('--n',n);
- $('#event-choices').innerHTML=e.choices.map((c,i)=>{const card=v3Asset(`cards/${EV_CARD[e.eventId]?.[i]??EV_CARD_WORD.find(([,re])=>re.test(c.label))?.[0]??'wait'}.webp`);return `<button class="ev-choice${card?' has-card':''}" data-event-choice="${esc(c.id)}" title="${fx(c)}" style="--art:url(${card??evArt});--pos:${n>1?Math.round(i/(n-1)*100):50}%" ${c.blockedReason||inputLocked()?'disabled':''}><span class="ev-card-face"><span class="key">${i+1}</span><b>${esc(c.label)}</b></span><small>${fx(c)}</small></button>`;}).join('');
+ $('#event-choices').innerHTML=e.choices.map((c,i)=>{const card=v3Asset(`cards/${EV_CARD[e.eventId]?.[i]??EV_CARD_WORD.find(([,re])=>re.test(c.label))?.[0]??'wait'}.webp`),route=({history:'역사대로',twist:'다르게',defer:'미룬다'})[c.id],label=route?c.label.replace(/^(역사대로|다르게)\s*[—–-]\s*/,''):c.label;return `<button class="ev-choice${card?' has-card':''}" data-event-choice="${esc(c.id)}" aria-label="${esc(c.label)}" title="${fx(c)}" style="--art:url(${card??evArt});--pos:${n>1?Math.round(i/(n-1)*100):50}%" ${c.blockedReason||inputLocked()?'disabled':''}><span class="ev-card-face"><span class="key">${i+1}</span><b><span>${esc(label)}</span></b></span><small>${route?`<strong class="c197-route">${route}</strong>`:''}${fx(c)}</small></button>`;}).join('');
 }
+
+let c197ResultSeen=null;
+function renderEventDeckUi(v){
+ if(state.eventDeck)writeRecentEventIds(undefined,v.eventDeckSeen??[]);
+ let band=$('#c197-oath-band');if(!band){document.body.insertAdjacentHTML('beforeend','<aside id="c197-oath-band" aria-label="맹세"></aside>');band=$('#c197-oath-band');}
+ band.innerHTML=oathBandHtml(v.oaths);band.hidden=!band.innerHTML||!!state.gameResult;
+ let result=$('#c197-event-result');if(!result){document.body.insertAdjacentHTML('beforeend','<div id="c197-event-result" class="modal-backdrop" hidden><section class="panel lacquer" role="dialog" aria-modal="true" aria-labelledby="c197-result-title"><h2 id="c197-result-title"></h2><p class="c197-effect"></p><p class="c197-dejavu"></p><button class="btn" type="button">지도로</button></section></div>');result=$('#c197-event-result');}
+ const e=v.eventResult,key=e?`${e.eventId}.${e.turn}`:null;result.hidden=!e||c197ResultSeen===key||!!v.pendingEvent||combatAnimating||!!state.gameResult;
+ if(!result.hidden){$('#c197-result-title').textContent=e.title;result.querySelector('.c197-effect').textContent=e.text;result.querySelector('.c197-dejavu').textContent=e.dejaVu?`기시감: ${e.dejaVu}`:'';result.querySelector('button').onclick=()=>{c197ResultSeen=key;result.hidden=true;render();};}
+}
+
 $('#event-choices')?.addEventListener?.('click',e=>{const id=e.target.closest('[data-event-choice]')?.dataset.eventChoice,ev=state&&view(state).pendingEvent;if(!id||!ev)return;
  try{state=step(state,{type:'EVENT_CHOICE',eventId:ev.eventId,choiceId:id});$('#event-error').textContent='';render();scheduleOrders();autoNextUnit();}catch(err){$('#event-error').textContent=errorText(err);}});
 // 외교(C43) — 세력 창 '외교' 칸 + 받은 제안은 선택 창. 화면은 다시 만들 예정이라 기능 확인용
 function supplyDuration(n){if(!Number.isFinite(n)||n<0)return '';if(n>0&&n<0.1)return '0.1차례분 미만';return `${Number.isInteger(n)?'':'약 '}${food1(n)}차례분`;}
 const SUPPLY_LABEL={SAFE:'안전',DISRUPTED:'불안',CUT:'끊김',STARVING:'굶주림'},food1=n=>Number.isInteger(n)?String(n):n.toFixed(1);
 const DIPLO_KIND={TRUCE:'휴전',ALLIANCE:'동맹'},DIPLO_STATE={WAR:'전쟁',TRUCE:'휴전',ALLIANCE:'동맹'};
+function diplomacyFeedback(before,after){
+ const old=before.c43?.history?.length??0;for(const e of (after.c43?.history??[]).slice(old)){if(e.type!=='ACCEPT'||e.kind!=='TRUCE'||![e.from,e.to].includes(after.playerFactionId))continue;const other=e.from===after.playerFactionId?e.to:e.from,line='휴전 수락 — '+diplomacyTimingText(diplomacyTiming(after,after.playerFactionId,other));$('#status').textContent=line;inkToast(line);recordNotices=[...recordNotices,{turn:after.turn,line}].slice(-20);}
+}
 const DIPLO_TEXT={TRUCE:'다음 차례부터 3차례 동안 서로 공격하지 않고 상대 땅에 새로 들어가지 않습니다. 상대 땅에 있던 부대는 철수하는 동안 보호받습니다.',ALLIANCE:'서로 공격하지 않습니다. 자동으로 함께 싸우지는 않습니다.'};
 function diplomacySection(v){
  const d=v.diplomacy;if(!d)return '';
- const btn=(f,kind)=>{const c=f.canPropose?.[kind];if(!c)return '';const tip=[c.reason,...(c.effectLines??[]),Number.isFinite(c.score)?`받을 점수 ${c.score}(0 이상이면 받음)`:''].filter(Boolean).join('\n');return `<button class="btn sm" data-diplo-propose="${esc(f.factionId)}" data-kind="${kind}" ${c.ok&&!inputLocked()?'':'disabled'} title="${esc(tip)}">${DIPLO_KIND[kind]} 제안</button>`;};
+ const btn=(f,kind)=>{const c=f.canPropose?.[kind];if(!c)return '';const tip=[kind==='TRUCE'?diplomacyTimingText(diplomacyTiming(state,v.factionId,f.factionId,kind)):'',c.reason,...(c.effectLines??[]),Number.isFinite(c.score)?`받을 점수 ${c.score}(0 이상이면 받음)`:''].filter(Boolean).join('\n');return `<button class="btn sm" data-diplo-propose="${esc(f.factionId)}" data-kind="${kind}" ${c.ok&&!inputLocked()?'':'disabled'} title="${esc(tip)}">${DIPLO_KIND[kind]} 제안</button>`;};
  const bar=(label,val,min,max,cls='')=>{const pct=Math.max(0,Math.min(100,((val??0)-min)/(max-min)*100));return `<span class="dp-bar ${cls}"><small>${label}</small><i><b style="width:${pct.toFixed(0)}%"></b>${min<0?'<s></s>':''}</i><em>${val??'—'}</em></span>`;};
  const medal=f=>{const rf=faceOf(state.factions?.[f.factionId]?.rulerId);return `<span class="dp-medal">${rf?`<img src="${esc(rf)}" alt="">`:''}<i class="flag" style="--em:url(/assets/ui-v3/emblems/${esc(f.factionId)}.png)"></i></span>`;}; // 흑묵(page-diplomacy): 군주 둥근 메달 + 세력 깃발
- const card=f=>`<li class="dp-card" data-state="${esc(f.state)}" style="--fc:${FACTION_STYLE[f.factionId]?.color??'#777'}"><header>${medal(f)}${emblemHtml(f.factionId)}<b>${esc(f.name??FACTION_STYLE[f.factionId]?.name??f.factionId)}</b><em class="dp-state">${DIPLO_STATE[f.state]??f.state}${Number.isFinite(f.turnsLeft)?` ${f.turnsLeft}차례`:''}${f.endingAt?` · ${f.endingAt}턴 종료`:''}</em></header>${f.contact===false?'<p class="muted">아직 만나지 않았습니다.</p>':''}<div class="dp-bars">${bar('우리를 보는 마음',f.opinionOfMe,-100,100,'op'+((f.opinionOfMe??0)<0?' neg':''))}${bar('신용',f.trust,0,100,'tr')}${bar('위협',f.threat,0,100,'th'+((f.threat??0)>=50?' neg':''))}</div>${(f.opinionReasons??[]).length?`<ul class="dp-why">${f.opinionReasons.map(x=>`<li><span>${esc(x.text)}</span><b class="${x.value<0?'neg':''}">${x.value>0?'+':''}${x.value}</b>${Number.isFinite(x.turnsLeft)?`<small>${x.turnsLeft}차례</small>`:''}</li>`).join('')}</ul>`:''}<footer>${f.contact===false?'':f.state==='ALLIANCE'?`<button class="btn sm" data-diplo-end="${esc(f.factionId)}" ${f.endingAt||inputLocked()?'disabled':''}>동맹 종료</button>`:btn(f,'TRUCE')+btn(f,'ALLIANCE')}</footer></li>`;
- const rows=(d.factions??[]).map(card).join('');const rowsOld=(d.factions??[]).map(f=>`<li class="dp-row" data-state="${esc(f.state)}"><span class="emblem" data-faction="${esc(f.factionId)}">${FACTION[f.factionId]?.glyph??'中'}</span><b>${esc(f.name??FACTION_STYLE[f.factionId]?.name??f.factionId)}</b><em class="dp-state">${DIPLO_STATE[f.state]??f.state}${Number.isFinite(f.turnsLeft)?` ${f.turnsLeft}차례`:''}${f.endingAt?` · ${f.endingAt}턴 종료`:''}</em><span class="dp-acts">${f.contact===false?'<small>아직 만나지 않음</small>':`${f.state==='ALLIANCE'?`<button class="btn sm" data-diplo-end="${esc(f.factionId)}" ${f.endingAt||inputLocked()?'disabled':''}>동맹 종료</button>`:btn(f,'TRUCE')+btn(f,'ALLIANCE')}`}</span>${Number.isFinite(f.opinionOfMe)?`<div class="dp-axes"><span class="dp-op" title="이 세력이 나를 보는 마음(−100~100)">나를 보는 호감 <b class="${f.opinionOfMe>=0?'up':'down'}">${f.opinionOfMe>0?'+':''}${f.opinionOfMe}</b></span>${Number.isFinite(f.trust)?`<span title="약속을 지키면 오르고 기습·배신하면 떨어짐">신용 <b>${f.trust}</b></span>`:''}${Number.isFinite(f.threat)?`<span title="성을 빼앗을수록 오름 — 50 이상이면 다른 세력이 견제 동맹">위협 <b class="${f.threat>=50?'down':''}">${f.threat}</b></span>`:''}</div>${(f.opinionReasons??[]).length?`<ul class="dp-reasons">${f.opinionReasons.map(r=>`<li><span>${esc(r.text)}</span><b class="${r.value>=0?'up':'down'}">${r.value>0?'+':''}${r.value}</b><small>${Number.isFinite(r.turnsLeft)?`${r.turnsLeft}차례`:'계속'}</small></li>`).join('')}</ul>`:''}`:''}${['TRUCE','ALLIANCE'].map(k=>f.canPropose?.[k]?.ok&&f.canPropose[k].effectLines?.length?`<small class="dp-why">${DIPLO_KIND[k]}: ${esc(f.canPropose[k].effectLines.join(' · '))}${Number.isFinite(f.canPropose[k].score)?` → ${f.canPropose[k].score}`:''}</small>`:'').join('')}</li>`).join('');
+ const card=f=>`<li class="dp-card" data-state="${esc(f.state)}" style="--fc:${FACTION_STYLE[f.factionId]?.color??'#777'}"><header>${medal(f)}${emblemHtml(f.factionId)}<b>${esc(f.name??FACTION_STYLE[f.factionId]?.name??f.factionId)}</b><em class="dp-state">${diplomacyTiming(state,v.factionId,f.factionId).pending?'합의'+' · '+diplomacyTimingText(diplomacyTiming(state,v.factionId,f.factionId))+' · ':''}${DIPLO_STATE[f.state]??f.state}${Number.isFinite(f.turnsLeft)?` ${f.turnsLeft}차례`:''}${f.endingAt?` · ${f.endingAt}턴 종료`:''}</em></header>${f.contact===false?'<p class="muted">아직 만나지 않았습니다.</p>':''}<div class="dp-bars">${bar('우리를 보는 마음',f.opinionOfMe,-100,100,'op'+((f.opinionOfMe??0)<0?' neg':''))}${bar('신용',f.trust,0,100,'tr')}${bar('위협',f.threat,0,100,'th'+((f.threat??0)>=50?' neg':''))}</div>${(f.opinionReasons??[]).length?`<ul class="dp-why">${f.opinionReasons.map(x=>`<li><span>${esc(x.text)}</span><b class="${x.value<0?'neg':''}">${x.value>0?'+':''}${x.value}</b>${Number.isFinite(x.turnsLeft)?`<small>${x.turnsLeft}차례</small>`:''}</li>`).join('')}</ul>`:''}<footer>${f.contact===false?'':f.state==='ALLIANCE'?`<button class="btn sm" data-diplo-end="${esc(f.factionId)}" ${f.endingAt||inputLocked()?'disabled':''}>동맹 종료</button>`:btn(f,'TRUCE')+btn(f,'ALLIANCE')}</footer></li>`;
+ const rows=(d.factions??[]).map(card).join('');const rowsOld=(d.factions??[]).map(f=>`<li class="dp-row" data-state="${esc(f.state)}"><span class="emblem" data-faction="${esc(f.factionId)}">${FACTION[f.factionId]?.glyph??'中'}</span><b>${esc(f.name??FACTION_STYLE[f.factionId]?.name??f.factionId)}</b><em class="dp-state">${diplomacyTiming(state,v.factionId,f.factionId).pending?'합의'+' · '+diplomacyTimingText(diplomacyTiming(state,v.factionId,f.factionId))+' · ':''}${DIPLO_STATE[f.state]??f.state}${Number.isFinite(f.turnsLeft)?` ${f.turnsLeft}차례`:''}${f.endingAt?` · ${f.endingAt}턴 종료`:''}</em><span class="dp-acts">${f.contact===false?'<small>아직 만나지 않음</small>':`${f.state==='ALLIANCE'?`<button class="btn sm" data-diplo-end="${esc(f.factionId)}" ${f.endingAt||inputLocked()?'disabled':''}>동맹 종료</button>`:btn(f,'TRUCE')+btn(f,'ALLIANCE')}`}</span>${Number.isFinite(f.opinionOfMe)?`<div class="dp-axes"><span class="dp-op" title="이 세력이 나를 보는 마음(−100~100)">나를 보는 호감 <b class="${f.opinionOfMe>=0?'up':'down'}">${f.opinionOfMe>0?'+':''}${f.opinionOfMe}</b></span>${Number.isFinite(f.trust)?`<span title="약속을 지키면 오르고 기습·배신하면 떨어짐">신용 <b>${f.trust}</b></span>`:''}${Number.isFinite(f.threat)?`<span title="성을 빼앗을수록 오름 — 50 이상이면 다른 세력이 견제 동맹">위협 <b class="${f.threat>=50?'down':''}">${f.threat}</b></span>`:''}</div>${(f.opinionReasons??[]).length?`<ul class="dp-reasons">${f.opinionReasons.map(r=>`<li><span>${esc(r.text)}</span><b class="${r.value>=0?'up':'down'}">${r.value>0?'+':''}${r.value}</b><small>${Number.isFinite(r.turnsLeft)?`${r.turnsLeft}차례`:'계속'}</small></li>`).join('')}</ul>`:''}`:''}${['TRUCE','ALLIANCE'].map(k=>f.canPropose?.[k]?.ok&&f.canPropose[k].effectLines?.length?`<small class="dp-why">${DIPLO_KIND[k]}: ${esc(f.canPropose[k].effectLines.join(' · '))}${Number.isFinite(f.canPropose[k].score)?` → ${f.canPropose[k].score}`:''}</small>`:'').join('')}</li>`).join('');
  const prot=(d.protectedArmies??[]).length?`<p class="muted">철수 보호 중: ${d.protectedArmies.map(a=>`${esc(v.officers[v.ownArmies[a.armyId]?.commanderId]?.name??a.armyId)}(${a.until}턴까지)`).join(', ')}</p>`:'';
  const me=d.me?`<p class="dp-me">우리 신용 <b>${d.me.trust}</b> · 우리 위협 <b class="${d.me.threat>=50?'down':''}">${d.me.threat}</b> <small>(위협 50 이상이면 다른 세력들이 견제 동맹)</small></p>`:'';
- return `<h3>외교</h3>${me}<ul class="dp-cards">${rows||'<li class="muted">외교 상대 없음</li>'}</ul>${prot}<p class="muted">휴전 3차례 · 동맹은 서로 공격 금지(자동 참전 없음) · 거절되면 같은 제안은 3차례 뒤에</p>`;
+ return `<h3>외교</h3>${me}<ul class="dp-cards">${rows||'<li class="muted">외교 상대 없음</li>'}</ul>${prot}<p class="muted">휴전은 다음 차례부터 3차례 · 동맹은 서로 공격 금지(자동 참전 없음) · 거절되면 같은 제안은 3차례 뒤에</p>`;
 }
 // ── 평정(기준 final-council-v2) — 엔진 campaign-council(C90), 화면 council-world.mjs. 왼쪽 '평정' 단추로 엶 ──
 let councilOpen=false;
@@ -1126,10 +1160,10 @@ function renderDiplo(){
  const medal=fid=>{const face=faceOf(state.factions?.[fid]?.rulerId);return `<span class="dq-medal" style="--bst:url(/assets/ui-v3/hud/faction-beast-${esc(fid)}.png)"><span class="disc">${face?`<img src="${esc(face)}" alt="">`:''}</span><img class="fr" src="${H}dip-medal.png" style="filter:hue-rotate(${(hueOfHex(FACTION_STYLE[fid]?.color)-8+360)%360}deg)" alt=""><img class="em" src="/assets/ui-v3/hud/faction-banner-${esc(fid)}.png" alt="" onerror="this.onerror=null;this.src='/assets/ui-v3/emblems/${esc(fid)}.png'"></span>`;};
  const plate=(rows,st)=>`<span class="dq-plate"><img class="pl" src="${H}dip-plate.png" alt="">${rows.map(([ic,label,val,p,cls],i)=>`<i class="ico i${i+1}">${IC(ic)}</i><i class="bar b${i+1} ${cls}" title="${label} ${val??'—'}"><u style="width:${p}%"></u></i>`).join('')}<i class="st">${st?IC(st):''}</i></span>`;
  const STATE_IC={ALLIANCE:'mode-diplomacy',TRUCE:'b-treaty',WAR:'cmd-attack'};
- const stateText=f=>`${DIPLO_STATE[f.state]??f.state}${Number.isFinite(f.turnsLeft)?` ${f.turnsLeft}차례`:''}${f.endingAt?` · ${f.endingAt}턴 종료`:''}`;
+ const stateText=f=>`${diplomacyTiming(state,v.factionId,f.factionId).pending?'합의'+' · '+diplomacyTimingText(diplomacyTiming(state,v.factionId,f.factionId))+' · ':''}${DIPLO_STATE[f.state]??f.state}${Number.isFinite(f.turnsLeft)?` ${f.turnsLeft}차례`:''}${f.endingAt?` · ${f.endingAt}턴 종료`:''}`;
  const me=`<div class="dq-lord me">${medal(v.factionId)}<b class="nm">${esc(FACTION_STYLE[v.factionId]?.name??'')}<small>우리</small></b>${plate([['res-fame','인망',v.faction?.prestige??0,pc(v.faction?.prestige??0,0,100),'fm'],['cmd-brace','우리 신용',d.me?.trust,pc(d.me?.trust,0,100),'tr'],['cmd-attack','우리 위협',d.me?.threat,pc(d.me?.threat,0,100),'th']],null)}</div>`;
  const others=fs.map((f,i)=>`<button class="dq-lord p${i+1}${f===pick?' on':''}${f.contact===false?' far':''}" data-diplo-pick="${esc(f.factionId)}" data-state="${esc(f.state)}">${medal(f.factionId)}<b class="nm">${esc(nameOf(f))}<small>${f.contact===false?'아직 만나지 않음':esc(stateText(f))}</small></b>${plate([['b-heart','우리를 보는 마음',f.opinionOfMe,pc(f.opinionOfMe,-100,100),(f.opinionOfMe??0)<0?'neg':'op'],['cmd-brace','신용',f.trust,pc(f.trust,0,100),'tr'],['cmd-attack','위협',f.threat,pc(f.threat,0,100),'th']],STATE_IC[f.state])}</button>`).join('');
- const act=(kind,ic,tone)=>{const c=pick?.canPropose?.[kind];if(!c)return '';const tip=[c.reason,...(c.effectLines??[]),Number.isFinite(c.score)?`받을 점수 ${c.score}(0 이상이면 받음)`:''].filter(Boolean).join('\n');return `<button class="dq-act" data-diplo-propose="${esc(pick.factionId)}" data-kind="${kind}" ${c.ok&&!inputLocked()?'':'disabled'} title="${esc(tip)}"><img class="cd" src="${H}dip-act-${tone}.png" alt="">${IC(ic)}<span>${DIPLO_KIND[kind]} 제안</span></button>`;};
+ const act=(kind,ic,tone)=>{const c=pick?.canPropose?.[kind];if(!c)return '';const tip=[kind==='TRUCE'?diplomacyTimingText(diplomacyTiming(state,v.factionId,pick.factionId,kind)):'',c.reason,...(c.effectLines??[]),Number.isFinite(c.score)?`받을 점수 ${c.score}(0 이상이면 받음)`:''].filter(Boolean).join('\n');return `<button class="dq-act" data-diplo-propose="${esc(pick.factionId)}" data-kind="${kind}" ${c.ok&&!inputLocked()?'':'disabled'} title="${esc(tip)}"><img class="cd" src="${H}dip-act-${tone}.png" alt="">${IC(ic)}<span>${DIPLO_KIND[kind]} 제안</span></button>`;};
  const farAct=(kind,ic)=>`<button class="dq-act" disabled title="아직 만나지 않은 세력입니다 — 부대나 성이 닿으면 제안할 수 있습니다"><img class="cd" src="${H}dip-act-teal.png" alt="">${IC(ic)}<span>${DIPLO_KIND[kind]} 제안</span></button>`; // 만나기 전에도 무엇을 할 수 있는지는 보인다(기준 page-diplomacy 가운데 깃발 줄)
  // 가운데 깃발 줄 = 늘 네 장(시안 page-diplomacy: 선물 · 악수 · 문서 · 칼, 2026-10-11). 규칙에 있는 일만 켜진다 — 선물은 아직 규칙이 없어 꺼진 채 자리만, 칼 = 동맹 종료(동맹일 때만)
  const off=(ic,tone,label,tip)=>`<button class="dq-act" disabled title="${esc(tip)}"><img class="cd" src="${H}dip-act-${tone}.png" alt="">${IC(ic)}<span>${label}</span></button>`;
@@ -1139,14 +1173,14 @@ function renderDiplo(){
  const op=pick?.opinionOfMe??0,nOp=Math.min(5,Math.ceil(Math.abs(op)/20)),segOn=k=>op>0?k<5&&4-k<nOp:op<0?k>=5&&k-5<nOp:false; // 가운데에서 왼쪽 = 우호(청록), 오른쪽 = 적대(주홍)
  const meter=pick?`<div class="dq-meter"><img class="mt" src="${H}dip-meter.png" alt=""><i class="ring"><img src="/assets/ui-v3/emblems/${esc(pick.factionId)}.png" alt="" onerror="this.remove()"></i><i class="segs">${Array.from({length:10},(_,k)=>`<u class="${segOn(k)?'on':''} ${k<5?'hi':'lo'}"></u>`).join('')}</i></div><p class="dq-why"><b>${esc(nameOf(pick))}</b> · 우리를 보는 마음 <b class="${op<0?'neg':''}">${op>0?'+':''}${op}</b>${(pick.opinionReasons??[]).slice(0,4).map(x=>` · ${esc(x.text)} <b class="${x.value<0?'neg':''}">${x.value>0?'+':''}${x.value}</b>`).join('')}</p>`:'';
  const LP=[[18,36],[81.5,36],[14,72],[84.5,72],[33,76],[67,76]],links=`<svg class="dq-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${fs.map((f,i)=>f.contact===false||!LP[i]?'':`<line x1="50" y1="27" x2="${LP[i][0]}" y2="${LP[i][1]}" data-state="${esc(f.state)}" class="${f===pick?'on':''}"/>`).join('')}</svg>`; // 관계 줄(기준 page-diplomacy 점선)
- host.innerHTML=`${links}${me}${others}<div class="dq-acts">${acts}</div>${meter}<p class="dq-msg" role="status"></p><p class="dq-note">선물은 인망을 써서 우리를 보는 마음을 올린다 · 휴전 3차례 · 동맹은 서로 공격 금지(자동 참전 없음) · 거절되면 같은 제안은 3차례 뒤에</p><button class="dq-close" data-diplo-close title="닫기 (Esc)"><img src="${H}city-btn.png" alt=""><b>✕</b></button>`;
+ host.innerHTML=`${links}${me}${others}<div class="dq-acts">${acts}</div>${meter}<p class="dq-msg" role="status"></p><p class="dq-note">선물은 인망을 써서 우리를 보는 마음을 올린다 · 휴전은 다음 차례부터 3차례 · 동맹은 서로 공격 금지(자동 참전 없음) · 거절되면 같은 제안은 3차례 뒤에</p><button class="dq-close" data-diplo-close title="닫기 (Esc)"><img src="${H}city-btn.png" alt=""><b>✕</b></button>`;
 }
 $('#diplo')?.addEventListener?.('click',e=>{if(!state)return;
  if(e.target.closest?.('[data-diplo-close]')){diploOpen=false;renderDiplo();return;}
  const pk=e.target.closest?.('[data-diplo-pick]');if(pk){diploPick=pk.dataset.diploPick;renderDiplo();return;}
  const b=e.target.closest?.('[data-diplo-propose],[data-diplo-end],[data-diplo-gift]');if(!b||b.disabled||inputLocked())return;
  const cmd=b.dataset.diploGift?{type:'DIPLO_GIFT',factionId:b.dataset.diploGift}:b.dataset.diploPropose?{type:'DIPLO_PROPOSE',factionId:b.dataset.diploPropose,kind:b.dataset.kind}:{type:'DIPLO_END_ALLIANCE',factionId:b.dataset.diploEnd};
- try{state=step(state,cmd);render();}catch(err){const m=$('#diplo')?.querySelector?.('.dq-msg');if(m)m.textContent=errorText(err);}});
+ try{const before=state;state=step(state,cmd);diplomacyFeedback(before,state);render();}catch(err){const m=$('#diplo')?.querySelector?.('.dq-msg');if(m)m.textContent=errorText(err);}});
 document.addEventListener?.('ink:diplomacy',()=>{if(!state)return;diploOpen=true;renderDiplo();});
 document.addEventListener?.('keydown',e=>{if(e.key==='Escape'&&diploOpen){diploOpen=false;renderDiplo();}});
 // 선택 창 — 탐험 조사 결과(C42) 등. 사건 카드 모양 재사용(화면은 다시 만들 예정이라 기능 확인용)
@@ -1186,7 +1220,7 @@ function renderChoiceCard(v=view(state)){
   $('#choice-list').innerHTML=c.choices.map((x,i)=>`<button class="ev-choice" data-choice="${esc(x.id)}" title="${esc(x.preview??'')}"${scene?` style="--art:url(${esc(scene)});--pos:${n>1?Math.round(i/(n-1)*100):50}%"`:''} ${inputLocked()?'disabled':''}><span class="ev-card-face"><span class="key">${i+1}</span><b>${esc(x.label)}</b></span><small>${esc(x.preview??'')}</small></button>`).join('');}
 }
 $('#choice-list')?.addEventListener?.('click',e=>{const id=e.target.closest('[data-choice]')?.dataset.choice,c=state&&pendingChoice(view(state));if(!id||!c)return;
- try{const cmd=c.send(id);if(!cmd){renderChoiceCard(view(state));return;}state=step(state,cmd);$('#choice-error').textContent='';render();autoNextUnit();}catch(err){$('#choice-error').textContent=errorText(err);}});
+ try{const cmd=c.send(id);if(!cmd){renderChoiceCard(view(state));return;}const before=state;state=step(state,cmd);diplomacyFeedback(before,state);$('#choice-error').textContent='';render();autoNextUnit();}catch(err){$('#choice-error').textContent=errorText(err);}});
 function growthLogText(e){return e.kind==='awakening'?e.text.replace(/ \d+단계(?: · 효과 준비 중)?$/,' 각성'):e.text;}
 function renderGrowthDraft(){
  const pending=pendingCampaignDraft(state),modal=$('#growth-modal');
@@ -1194,17 +1228,26 @@ function renderGrowthDraft(){
  menuOpen=false;$('#unit-menu').hidden=true;$('#attack-preview').hidden=true;
  if(draftPick&&!pending.cards.some(c=>c.traitId===draftPick))draftPick=null;
  const r=state.campaignGrowth.officers[pending.officerId],level=pending.draft.contextSnapshot.levelAfter;
- const officer=state.officers[pending.officerId],face=portraits[pending.officerId]?.path;
+ const officer=state.officers[pending.officerId],face=fullArt(pending.officerId)?.src??portraits[pending.officerId]?.path;
+ const growth=levelupReadout(state.campaignGrowth.log,pending.officerId,state.turn,level);
+ for(const [key,url] of Object.entries(LEVELUP_ASSETS.parts))modal.style.setProperty(`--levelup-${key}`,`url("${url}")`);
+ if(!$('#growth-stat-strip'))$('#growth-title').insertAdjacentHTML('afterend','<div id="growth-stat-strip"></div><p id="growth-reason"></p><div id="growth-queue"></div>');
+ const statNames={leadership:'지휘',might:'무용',strength:'무용',intelligence:'지략',politics:'정무',charisma:'감화'};
+ $('#growth-stat-strip').innerHTML=growth.stats.map(v=>`<div class="levelup-stat" data-stat="${esc(v.key)}"><b>${esc(statNames[v.key]??v.key)}</b><span class="before">${v.before}</span><span class="arrow">→</span><strong>${v.after}</strong><em>+${v.delta}</em></div>`).join('');
+ $('#growth-stat-strip').hidden=!growth.stats.length;
+ $('#growth-reason').textContent=growth.reason;$('#growth-reason').hidden=!growth.reason;
+ $('#growth-queue').innerHTML=`<span>${esc(levelupQueue(state,pending.officerId))}</span><button type="button" id="growth-auto">자동 고르기</button>`;
+ $('#growth-auto').onclick=()=>{draftPick=c29AiChoice(r,pending.draft,rankCampaignAiDraft(r,pending.draft.offeredIds))??null;renderGrowthDraft();};
  const collapse=recordNotices.findLast(x=>x.turn===state.turn&&x.line.includes(`${officer.name} 중상`));
  $('#growth-collapse').textContent=collapse?.line??'';$('#growth-collapse').hidden=!collapse;
- $('#growth-title').innerHTML=`<span>${esc(officer.name)} <small>Lv ${level - 1} → ${level}</small></span><span class="potential" data-rank="${esc(r.potential)}" title="이번 판 포텐">${esc(r.potential)}</span>`;
+ $('#growth-title').textContent=`${pending.draft.c29?.awakening?'각성 · ': '성장 · '}Lv ${growth.before} → ${growth.after}`;
  // 레벨업 창 왼쪽 전신 그림(하데스·파이어 엠블렘·다키스트 던전 구도). 그림이 없으면 먹 실루엣.
  const line=memoryLines[pending.officerId];
- $('#growth-art').innerHTML=`${face?`<img src="${esc(face)}" alt="">`:`<span class="art-fallback">${faceFallback(officer.name,FACTION_STYLE[officer.allegianceFactionId]?.color)}</span>`}<figcaption><i class="gp-face"${faceOf(pending.officerId)?` style="--face:url(${esc(faceOf(pending.officerId))})"`:''}></i><b>${esc(officer.name)}</b><small>Lv ${level - 1} → ${level}</small><i class="gp-pot potential" data-rank="${esc(r.potential)}">${esc(r.potential)}</i>${line?`<q>${esc(line)}</q>`:''}${face?'':'<em>초상 준비 중</em>'}</figcaption>`;
+ $('#growth-art').innerHTML=`${face?`<img src="${esc(face)}" alt="">`:`<span class="art-fallback">${faceFallback(officer.name,FACTION_STYLE[officer.allegianceFactionId]?.color)}</span>`}<figcaption><i class="gp-face"${faceOf(pending.officerId)?` style="--face:url(${esc(faceOf(pending.officerId))})"`:''}></i><b>${esc(officer.name)}</b><small>Lv ${growth.before} → ${growth.after}</small><i class="gp-pot potential" data-rank="${esc(r.potential)}">${esc(r.potential)}</i>${line?`<q>${esc(line)}</q>`:''}${face?'':'<em>초상 준비 중</em>'}</figcaption>`;
  {const im=$('#growth-art img'),art=officer&&fullArt(officer.officerId);if(im&&art){im.style.opacity='0';cutout(art.src).then(u=>{if(im.isConnected){im.src=u??art.src;im.style.opacity='';}});}}
  $('#growth-status').textContent=(officer.injury?`부대가 무너졌습니다 — ${officer.name} 중상 · ${injuryReturnText(state.turn,view(state).officers[officer.officerId]?.injury)}. `:'')+(pending.draft.c29?.awakening?`고유 특기 각성 — ${pending.cards.length}갈래 중 1개를 고르세요.`:`레벨업 — ${level%5===0?'전법':'특기'} ${pending.cards.length}장 중 1장을 고르세요. ${level%5===0?'얻은 전법의 장착 상태는 장수 정보에서 확인하세요.':'같은 특기는 다시 고르면 강해집니다(최대 5단계).'}`)+(pendingStrike?' 선택을 마치면 예약한 공격을 이어갑니다(Esc 취소).':'');
- const cardUse=c=>{const v=view(state),r=state.campaignGrowth.officers[pending.officerId],base=c.kind==='awakening'&&c.rule==='STEADY_UP'?r.cards[r.coreId]:c;return growthUseText(base,{field:Object.values(v.ownArmies).some(a=>a.commanderId===pending.officerId),governor:Object.values(v.ownCities).some(city=>city.governorId===pending.officerId),domesticRules:GROWTH_DOMESTIC_RULES,combatRules:GROWTH_COMBAT_RULES});};
- const c28=pending.draft.c28,bonus=c28?.bonusRerolls??0,cardHtml=c=>`<button class="draft-card reveal${c.traitId===draftPick?' picked':''}" data-rarity="${esc(c.rarity)}" data-draft-pick="${esc(c.traitId)}"><span class="kind">${UI_ICON(c.kind==='stat'?'stat-up':['trait','tactic'].includes(c.kind)?c.kind:c.kind==='fork'?'tactic':'trait')}${(c.kind==='awakening'?`각성 · ${{steady:'정석',narrative:'서사',wild:'변칙'}[c.branch]??''}`:c.kind==='fork'?'갈래':c.modifier?'전법 변형':{stat:'능력',trait:'특기',tactic:'전법'}[c.kind]??'특기')} · <span class="grade" data-rarity="${esc(c.rarity)}">${RARITY_NAME[c.rarity]??esc(c.rarity)}</span></span><span class="art">${UI_ICON(c.kind==='awakening'?'trait':CARD_ART_ICON[c.classTag]??(c.kind==='stat'?'stat-up':c.kind))}</span><h3>${esc(c.name)}</h3>${cardOrigin(c)?`<span class="origin">유래 ${esc(cardOrigin(c))}</span>`:''}<p>${esc(draftDescription(c,pending.officerId))}</p>${cardUse(c)?`<p class="card-use">${esc(cardUse(c))}</p>`:''}<span class="foot"><span>${esc(c.kind==='awakening'?'고유 특기 각성':c.sourceText??c.classTag??'고유 경로')}</span><span class="tier">${c.rank?`${c.rank}단계 → ${c.rank+1}단계`:'신규'}</span></span></button>`;
+ const cardUse=c=>{const v=view(state),r=state.campaignGrowth.officers[pending.officerId],base=c.kind==='awakening'&&c.rule==='STEADY_UP'?r.cards[r.coreId]:c,a=Object.values(v.ownArmies).find(a=>a.commanderId===pending.officerId);return growthUseText(base,{field:!!a,troopReady:!!a&&cardTroopReady(state,a.armyId,base),governor:Object.values(v.ownCities).some(city=>city.governorId===pending.officerId),domesticRules:GROWTH_DOMESTIC_RULES,combatRules:GROWTH_COMBAT_RULES});};
+ const c28=pending.draft.c28,bonus=c28?.bonusRerolls??0,cardHtml=c=>`<button class="draft-card reveal${c.traitId===draftPick?' picked':''}" data-rarity="${esc(c.rarity)}" data-draft-pick="${esc(c.traitId)}" aria-pressed="${c.traitId===draftPick}"><span class="kind">${UI_ICON(c.kind==='stat'?'stat-up':['trait','tactic'].includes(c.kind)?c.kind:c.kind==='fork'?'tactic':'trait')}${(c.kind==='awakening'?`각성 · ${{steady:'정석',narrative:'서사',wild:'변칙'}[c.branch]??''}`:c.kind==='fork'?'갈래':c.modifier?'전법 변형':{stat:'능력',trait:'특기',tactic:'전법'}[c.kind]??'특기')} · <span class="grade" data-rarity="${esc(c.rarity)}">${RARITY_NAME[c.rarity]??esc(c.rarity)}</span></span><span class="art"><img src="${LEVELUP_ASSETS.art[levelupArtCategory(c)]}" alt="" data-art-category="${levelupArtCategory(c)}"></span><span class="c191-select-seal" aria-hidden="true">${c.traitId===draftPick?'선택':''}</span><h3>${esc(c.name)}</h3>${cardOrigin(c)?`<span class="origin">유래 ${esc(cardOrigin(c))}</span>`:''}<p>${esc(draftDescription(c,pending.officerId))}</p>${cardUse(c)?`<p class="card-use">${esc(cardUse(c))}</p>`:''}<span class="foot"><span>${esc(c.kind==='awakening'?'고유 특기 각성':c.sourceText??c.classTag??'고유 경로')}</span><span class="tier">${c.rank?`${c.rank}단계 → ${c.rank+1}단계`:'신규'}</span></span></button>`;
  $('#growth-cards').innerHTML=pending.cards.map(c=>c28?`<div class="draft-slot" data-slot="${esc(c.slot??'')}">${c.slot?`<span class="slot-tag">${esc(c.slot)}</span>`:''}${cardHtml(c)}<button class="card-reroll" data-card-reroll="${esc(c.traitId)}" ${(c.rerollsRemaining??0)+bonus<1?'disabled':''}>다시 뽑기 · ${(c.rerollsRemaining??0)}${bonus?` (+${bonus})`:''}</button></div>`:cardHtml(c)).join('');
  const draft=pending.draft,limit=draft.rerollLimit??1;
  $('#growth-reroll').hidden=!!draft.c28;
@@ -1213,7 +1256,7 @@ function renderGrowthDraft(){
  // 흑묵(final-draft 아래 줄): 지금 가진 특기·전법 여섯 칸 + 확정 단추
  {const hv=$('#growth-have'),cf=$('#growth-confirm'),have=(view(state).officers?.[pending.officerId]?.growth?.cards??[]).slice(0,6);
   if(hv)hv.innerHTML=Array.from({length:6},(_,i)=>{const h=have[i];return `<li class="${h?(h.kind==='trait'?'trait':'tactic'):'empty'}"${h?` title="${esc(h.name)}${h.rank?` ${h.rank}단계`:''}"`:''}>${h?esc(String(h.name??'').slice(0,1)):''}</li>`;}).join('');
-  if(cf){cf.disabled=!draftPick;cf.title=draftPick?'고른 카드로 정합니다':'카드를 먼저 고르세요';}}
+  if(cf){cf.querySelector('span').textContent=draftPick?`${pending.cards.find(c=>c.traitId===draftPick)?.name??''} 선택 확정`:'카드를 고르세요';cf.disabled=!draftPick;cf.title=draftPick?'고른 카드로 정합니다':'카드를 먼저 고르세요';}}
 }
 let bindChoice=null,draftPick=null; // draftPick: 흑묵 레벨업 창에서 먼저 골라 둔 카드(확정 전)
 function showBindChooser(pending,traitId){
@@ -1275,7 +1318,7 @@ function renderResultSummary(v,won){
  // C138: city-start initial armies were disbanded before play; bornTurn marks actual musters.
  const unused=unfieldedOfficerNames(state,officers);
  const reason=resultReasonText(g,factionName);
- box.innerHTML=`<section class="c186-score"><h3>점수 ${score.total.toLocaleString('ko-KR')}</h3><p>시험값 · ${score.parts.map(([label,n,w])=>`${label} ${n} × ${w} = ${n*w}`).join(' + ')}</p></section><p class="rs-reason">${esc(reason)}</p>${unused.length?`<p class="rs-unused">출진하지 않은 장수: ${unused.map(esc).join(' · ')}</p>`:''}${rank}${deeds}<p class="rs-sub" title="천하 집계는 부대 교전·성 공격·사격·추격·전법·함정 등 전투 기록의 순번입니다. ">천하 교전·전법 기록 ${state.battleSequence??0}건 · 내 성 ${Object.keys(v.ownCities).length}곳${won?'':' · 다음 판에는 포텐과 카드가 달라집니다'} · <span title="같은 판 다시 하기: 주소 뒤에 ?seed=${esc(state.campaignSeed)}">시드 ${esc(state.campaignSeed)}</span> <button type="button" class="btn sm" id="c186-retry">같은 시드로 다시</button></p>
+ box.innerHTML=`<section class="c186-score"><h3>점수 ${score.total.toLocaleString('ko-KR')}</h3><p>시험값 · ${score.parts.map(([label,n,w])=>`${label} ${n} × ${w} = ${n*w}`).join(' + ')}</p></section><p class="rs-reason">${esc(reason)}</p>${unused.length?`<p class="rs-unused">출진하지 않은 장수: ${unused.map(esc).join(' · ')}</p>`:''}${rank}${deeds}${twistHistoryHtml(v.twistHistory,v.oaths)}<p class="rs-sub" title="천하 집계는 부대 교전·성 공격·사격·추격·전법·함정 등 전투 기록의 순번입니다. ">천하 교전·전법 기록 ${state.battleSequence??0}건 · 내 성 ${Object.keys(v.ownCities).length}곳${won?'':' · 다음 판에는 포텐과 카드가 달라집니다'} · <span title="같은 판 다시 하기: 주소 뒤에 ?seed=${esc(state.campaignSeed)}">시드 ${esc(state.campaignSeed)}</span> <button type="button" class="btn sm" id="c186-retry">같은 시드로 다시</button></p>
  <section class="rs-chron"><h3>연대기</h3><ol class="rs-band">${chron.map(e=>`<li data-kind="${e.kind}"><span class="t">${e.turn}<small>턴</small></span><p>${esc(e.text)}</p></li>`).join('')}</ol></section>
  <section class="rs-off"><h3>함께한 장수</h3><ul class="rs-officers">${officers.slice(0,10).map(o=>{const gr=o.growth,face=faceOf(o.officerId),t=titleOf(o.officerId);return `<li style="--fc:${color}"><span class="f">${face?`<img src="${esc(face)}" alt="">`:faceFallback(o.name)}</span><div><p><b>${esc(o.name)}</b><span class="potential" data-rank="${gr.potential}">${gr.potential}</span><small>Lv ${gr.level}</small></p><p class="rs-t">${t?`‘${esc(t)}’`:(gr.cards??[]).filter(c=>c.kind==='tactic').slice(0,2).map(c=>esc(c.name)).join(' · ')}</p></div></li>`;}).join('')}</ul></section>`;
  $('#c186-retry').onclick=()=>{const url=new URL(location.href);url.searchParams.set('seed',String(state.campaignSeed));url.searchParams.set('retryFaction',state.playerFactionId);location.assign(url.href);};
@@ -1341,10 +1384,10 @@ function openCrisisCard(v=view(state)){
  const actor=state.officers[x.actorId],type=crisisData?.types?.find(t=>t.id===x.type),face=portraits[x.actorId]?.path,fac=FACTION_STYLE[actor?.allegianceFactionId];
  const gauge=Math.round(state.campaignGrowth?.officers?.[x.actorId]?.c29?.gauge??0),resolver=state.c31?.resolverId&&state.officers[state.c31.resolverId];
  const playerResolved=!!x.resolved&&x.resolved!=='TIMEOUT'&&resolver?.allegianceFactionId===v.factionId,timeoutFaction=FACTION_STYLE[x.factionId];
- const name=actor?.name??'',reward=playText(crisisData?.reward?.text).replace(/\{actor\}를/g,name+(hasBatchim(name)?'을':'를')).replace(/\{actor\}/g,name);
+ const name=actor?.name??'',reward=crisisRewardText(C31_DATA,name);
  const title=x.resolved?(x.resolved==='TIMEOUT'?'위기가 지나갔다':'위기를 막았다'):'위기 인물 등장';
  const body=x.resolved
-  ?`<p class="cr-warn">${esc(name)}의 ${esc(x.name)} — ${esc(resolver?josa(`${resolver.name}이(가) ${CRISIS_END[x.resolved]??'막았다'}`):CRISIS_END[x.resolved]??'끝났다')}</p><dl class="cr-rows">${x.resolved==='TIMEOUT'?`<dt>결과</dt><dd>${esc(timeoutFaction?.name??'위기 세력')} 인망 +${crisisData?.end?.timeoutFame??30}. 위기 동안의 효과는 사라지고, ${esc(josa(name+'이(가)'))} 얻은 레벨·칭호·카드는 남는다.</dd>`:`<dt>보상</dt><dd>${esc(playerResolved?reward.replace('해결한 플레이어 장수',resolver.name):resolver?`${resolver.name}의 세력이 해결했습니다 — 우리 세력에는 해결 보상이 지급되지 않습니다`:'해결한 플레이어 장수가 없어 우리 세력에는 해결 보상이 지급되지 않습니다')}</dd>`}</dl>`
+  ?`<p class="cr-warn">${esc(name)}의 ${esc(x.name)} — ${esc(resolver?josa(`${resolver.name}이(가) ${CRISIS_END[x.resolved]??'막았다'}`):CRISIS_END[x.resolved]??'끝났다')}</p><dl class="cr-rows">${x.resolved==='TIMEOUT'?`<dt>결과</dt><dd>${esc(timeoutFaction?.name??'위기 세력')} 인망 +${C31_DATA.end.timeoutFame}. 위기 동안의 효과는 사라지고, ${esc(josa(name+'이(가)'))} 얻은 레벨·칭호·카드는 남는다.</dd>`:`<dt>보상</dt><dd>${esc(playerResolved?reward.replace('해결한 플레이어 장수',resolver.name):resolver?`${resolver.name}의 세력이 해결했습니다 — 우리 세력에는 해결 보상이 지급되지 않습니다`:'해결한 플레이어 장수가 없어 우리 세력에는 해결 보상이 지급되지 않습니다')}</dd>`}</dl>`
   :`<p class="cr-warn">${esc(josa(x.warnText))}</p><dl class="cr-rows"><dt>달라지는 것</dt><dd>${esc(playText(type?.effect))}</dd><dt>막는 법</dt><dd>${esc(x.turnsLeft>Math.max(0,CAMPAIGN_TURN_LIMIT-v.turn+1)?'그 장수 부대를 패주·소멸시키거나 사로잡으면 해결 · 시간 경과만 기다리면 이번 판이 끝날 때까지 이어집니다':playText(crisisData?.end?.text))}</dd><dt>보상</dt><dd>${esc(reward)}</dd></dl><div class="cr-meter"><span class="cr-gauge"><small>고유 전법</small><i><b style="width:${Math.min(100,gauge)}%"></b></i><em>${gauge}/100</em></span><span class="cr-turns"><b>${x.turnsLeft}</b><small>턴 남음</small></span></div>`;
  const bg=v3Asset('events/CRISIS.webp'),fig=fullArt(x.actorId);
  $('#crisis-art').innerHTML=`${bg?`<img class="cr-bg" src="${esc(bg)}" alt="">`:''}${fig?`<img class="cr-fig" src="${esc(fig.src)}" data-cut="${fig.cut?1:0}" alt="">`:face?`<img src="${esc(face)}" alt="">`:`<span class="art-fallback">${faceFallback(name,fac?.color)}</span>`}<figcaption style="--fc:${fac?.color??'#a3453d'}"><small>${esc(fac?.name??'')} 세력 · Lv ${state.campaignGrowth?.officers?.[x.actorId]?.track?.growthStates?.[x.actorId]?.level??'—'}</small>${memoryLines[x.actorId]?`<q>${esc(memoryLines[x.actorId])}</q>`:''}</figcaption>`;
@@ -1496,7 +1539,7 @@ function tavernActsHtml(v,c){
 }
 function visitListHtml(v,c){
  const soc=v.social,ids=relationCityOfficers(state,state.cities[c.cityId]).filter(id=>id!==soc.lordId),g=RELATIONS.gains.visit.values;
- const rows=ids.map(id=>{const s=soc.officers[id],r=relation(state,soc.lordId,id);return `<li>${faceChip(id)}<div class="visit-who"><p><b>${esc(officerName(id))}</b>${tierChip(r)}</p>${affBar(r.value)}<small>군주와 ${r.value} · ${statLine(v.officers[id]??state.officers[id])}</small></div><button class="btn sm" data-visit="${esc(id)}" ${s?.visitUsed?'disabled':''}>${s?.visitUsed?'이번 달 만남':'찾아가기'}</button></li>`;}).join('');
+ const rows=ids.map(id=>{const s=soc.officers[id],r=relation(state,soc.lordId,id);return `<li>${faceChip(id)}<div class="visit-who"><p><b>${esc(officerName(id))}</b>${tierChip(r)}</p>${affBar(r.value)}<small>군주와 ${r.value} · ${statLine(v.officers[id]??state.officers[id])}</small>${availabilityLine(v.officers[id])}</div><button class="btn sm" data-visit="${esc(id)}" ${s?.visitUsed?'disabled':''}>${s?.visitUsed?'이번 달 만남':'찾아가기'}</button></li>`;}).join('');
  return `<h3>찾아가기 <small>장수마다 한 달에 한 번 · 군주와 친밀도 +${g[0]}~${g.at(-1)}</small></h3>${rows?`<ul class="visit-list">${rows}</ul>`:'<p class="muted">이 성에 찾아갈 장수가 없습니다.</p>'}`;
 }
 function relationSection(id){
@@ -1581,7 +1624,7 @@ function renderCityPanel(v) {
   }
   return `<button class="option" data-city-job="${kind}" title="${esc([job.description,estimate.line].filter(Boolean).join(' · '))}" style="${thumb?`--thumb:url(${thumb});`:''}${gface?`--gface:url(${gface})`:''}" aria-pressed="${c.currentProduction?.kind===kind}" ${inputLocked()||blocked||kind==='reorganize'&&!armies.length||kind==='muster'&&!musterOfficers.length?'disabled':''}>${UI_ICON(JOB_ICON[kind]??'build')}<b>${job.name}</b>${job.description?`<em class="job-fx">${esc(job.description)}</em>`:''}<small>${unavailable?esc(unavailable):`생산 ${job.cost} · ${cityNumber(progress)}/${job.cost} · ${status==='NORMAL'?esc(estimate.line):'중단'}`}</small><span class="job-track"><i style="width:${Math.min(100,progress/job.cost*100)}%"></i></span><span class="ink-cells"><i data-k="cost" title="생산 비용">${job.cost}</i><i data-k="done" title="진행">${cityNumber(progress)}</i><i data-k="turns" title="남은 차례">${unavailable?'—':status==='NORMAL'?remaining:'—'}</i><i data-k="state" title="상태">${c.currentProduction?.kind===kind?'●':''}</i></span></button>`;
  });
- const MIL_JOBS=new Set(['muster','recruit','reorganize']),options=optionList.filter((_,k)=>!MIL_JOBS.has(jobList[k][0])).join(''),milOptions=optionList.filter((_,k)=>MIL_JOBS.has(jobList[k][0])&&jobList[k][0]!=='muster').join(''),musterOption='<button type="button" class="option" data-sortie><b>출진</b><small>누르면 바로 출진 · 같은 차례에 여러 부대 가능</small></button>';
+ const MIL_JOBS=new Set(['muster','recruit','reorganize']),options=optionList.filter((_,k)=>!MIL_JOBS.has(jobList[k][0])).join(''),milOptions=optionList.filter((_,k)=>MIL_JOBS.has(jobList[k][0])&&jobList[k][0]!=='muster').join(''),musterOption='<button type="button" class="option" data-sortie-open><b>출진</b><small>누르면 바로 출진 · 같은 차례에 여러 부대 가능</small></button>';
  const cause=x=>{const d=economyCauseDisplay(x);return `<div class="cause"><span${d.hint?` title="${esc(d.hint)}"`: ''}>${esc(d.label)}</span><span class="v ${x.amount>=0?'up':'down'}">${esc(d.amount)}</span></div>`;};
  const RES_NAME={food:'식량',production:'생산',science:'과학',prestige:'인망'};
  const causes=Object.entries(RES_NAME).map(([r,n])=>{const list=(c.economyCauses??[]).filter(x=>x.resource===r&&(r==='food'||x.amount));return list.length?`<p class="cause-head">${n}</p>${list.map(cause).join('')}`:'';}).join('');
@@ -1604,10 +1647,10 @@ function renderCityPanel(v) {
  <h3>지은 시설</h3><ul class="city-facilities">${c.facilities.map(f=>`<li>${UI_ICON(JOB_ICON[f.kind]??'build')}${CITY_JOBS[f.kind].name} · ${esc(f.tileId)}${f.disabled?' · 효과 정지':''}</li>`).join('')||'<li>없음</li>'}</ul></div>`)
  +pane('barracks',`<h3 class="barracks-title">출진 · 편성</h3><div class="barracks-scroll"><div class="barracks-readiness" aria-label="병력 현황"><p><span>예비병 <b>${troopText(c.reserveTroops??0)}명</b></span><span>부상병 <b>${troopText(c.woundedTroops??0)}명</b></span><span>주변 부대 <b>${armies.length}개</b></span>${Number.isFinite(c.foodStock)?`<button type="button" class="barracks-food-link" data-barracks-food title="관청의 식량 재고와 이번 정산 내역 보기">현지 식량 <b>${cityNumber(c.foodStock)}</b> · 내역 ›</button>`:''}</p>${barracksSupplyNote(v,selectedCityId)?`<p class="barracks-warning" title="현재 보급 출처가 이 성인 부대의 직전 정산 결과입니다. 새 부대의 출진 후 결과를 예측한 것은 아닙니다.">${esc(barracksSupplyNote(v,selectedCityId))}</p>`:'<p class="barracks-guide">출진: 장수 한 명이 한 부대를 이끌고 즉시 출진 · 모집: 예비병 충원 · 재편: 겸병 장수의 병종 변경</p>'}${!armies.length?'<p class="barracks-warning">재편할 부대가 없습니다. 부대를 이 성 주변 2칸 안으로 이동시키세요.</p>':''}</div><p class="city-working">${working?`진행 중 · <b>${esc(working)}</b>`:'진행 중인 작업 없음'} <small>한 번에 1개 · 작업별 진행도 보존${c.jobBlocked?' · '+esc(c.jobBlocked):''}</small></p><div class="options">${milOptions||'<p class="muted">이 성에서 할 수 있는 군사 일이 없습니다.</p>'}</div>
 
- ${armies.length?`<div class="reorganize-target"><label>재편 부대 <select id="city-job-army">${armies.map(a=>`<option value="${esc(a.armyId)}">${esc(v.officers[a.commanderId]?.name??a.armyId)}</option>`).join('')}</select></label><label>병종 <select id="city-job-troop"></select></label></div>`:''}</div><footer class="barracks-footer"> ${musterOfficers.length?`<div class="muster-target"><label>출진 장수 <select id="city-job-officer">${musterOfficers.map(o=>{const tag=musterTag(v.officers[o.officerId]);return `<option value="${esc(o.officerId)}" ${tag?'disabled':''}>${esc(o.name)}${o.officerId===c.governorId?' (태수)':''}${tag}</option>`;}).join('')}</select></label><label>병종 <select id="city-job-muster-troop"></select></label><label class="sortie-count">병력 <span><button type="button" data-sortie-count="-1" aria-label="출진 병력 줄이기">−</button><input id="city-sortie-count" type="number" aria-label="출진 병력" inputmode="numeric"><button type="button" data-sortie-count="1" aria-label="출진 병력 늘리기">+</button></span></label><small id="muster-troop-info" class="muster-info"></small></div>`:('freeOfficers' in c?'<p class="muted">출진할 장수가 없습니다(부대를 맡지 않은 장수가 이 성에 있어야 함).</p>':'')}<p id="muster-selection" aria-live="polite"></p>${musterOption}</footer>`)
+ ${armies.length?`<div class="reorganize-target"><label>재편 부대 <select id="city-job-army">${armies.map(a=>`<option value="${esc(a.armyId)}">${esc(v.officers[a.commanderId]?.name??a.armyId)}</option>`).join('')}</select></label><label>병종 <select id="city-job-troop"></select></label></div>`:''}</div><footer class="barracks-footer">${musterOption}</footer>`)
  +pane('tavern',`<p class="place-lede">떠돌이 인재와 소문이 모이는 곳. 마음 맞는 장수들과 술자리를 열 수도 있다.</p>${feastHtml(v,c)}${v.social?tavernActsHtml(v,c):''}<h3>떠돌이 인재</h3>${wanderersHtml(c.wanderers,true)||'<p class="muted">이 성에 재야 장수가 없습니다.</p>'}`)
  +pane('residence',`<p class="place-lede">장수들이 머무는 곳. 찾아가 이야기를 나눌 수 있다.</p><div class="city-governor">${portrait?`<img src="${esc(portrait)}" alt="${esc(governor?.name??'태수')} 초상">`:`<span class="governor-placeholder">${governor?faceFallback(governor.name,FACTION_STYLE[c.ownerFactionId]?.color):'공석'}</span>`}<div><small>태수</small><b>${esc(governor?.name??'공석')}</b><br>정무 ${governor?.baseStats.politics??'—'} · 산출 +${cityNumber(rates.bonus*100)}%</div></div>
- <div class="governor-pick">${governorSelection}</div>${c.starAction?starButton(c.starAction,`data-city-star="${esc(c.cityId)}"`):''}${v.social?visitListHtml(v,c):(c.freeOfficers??[]).length?`<h3>성의 자유 장수</h3><ul class="wanderers">${c.freeOfficers.map(o=>`<li><b>${esc(o.name)}</b> <small>${statLine(v.officers[o.officerId]??o)}</small></li>`).join('')}</ul>`:''}`);
+ <div class="governor-pick">${governorSelection}</div>${c.starAction?starButton(c.starAction,`data-city-star="${esc(c.cityId)}"`):''}${v.social?visitListHtml(v,c):(c.freeOfficers??[]).length?`<h3>성의 자유 장수</h3><ul class="wanderers">${c.freeOfficers.map(o=>`<li><b>${esc(o.name)}</b> <small>${statLine(v.officers[o.officerId]??o)}</small>${availabilityLine(v.officers[o.officerId])}</li>`).join('')}</ul>`:''}`);
  refreshCityTroops(v);refreshMusterTroops(v);
 }
 function economyCauseDisplay(x) {
@@ -1623,19 +1666,82 @@ function barracksSupplyNote(v,cityId) {
  if(count&&hungry[0].supply.model==='clock')return `이 성에 보급선을 댄 부대 ${count}개가 보급권 밖에서 굶주리고 있습니다 — 성 · 보급 거점에서 8칸 안으로 돌아오면 군량이 채워집니다.`;
  return count?`보급 연결 부대 ${count}개가 군량 부족 상태입니다. 추가 출진 전 보급을 확인하세요.`:'';
 }
+function sortieRoster(v,c){
+ if(!c)return [];
+ const ids=[...(c.freeOfficers??[]).map(o=>o.officerId),...(c.governorId?[c.governorId]:[])];
+ return [...new Set(ids)].map(id=>{const o=v.officers[id],type=o.troopType,r=sortieTroopRange(state,state.cities[c.cityId],type);
+  return {...o,reason:sortieReason(state,{cityId:c.cityId,officerId:id,troopType:type,troopCount:r.min})?.message,troopName:troopName(type),status:`${id===c.governorId?'태수 · ':''}피로 ${o.fatigue?.value??0} · 출진 가능`};});
+}
+function sortieGateOptions(v,c){
+ const raw=state.cities[c.cityId],occupied=new Set([...Object.values(v.ownArmies),...Object.values(v.knowledge.observedArmies).filter(a=>v.knowledge.tiles[a.tileId]==='VISIBLE')].filter(a=>a.troopCount>0).map(a=>a.tileId));
+ return [raw.tileId,...(raw.footprint?.gates??[])].map(tileId=>({tileId,name:sortieGateName(state.tiles[raw.tileId],state.tiles[tileId]),reason:combatFireAt(state,tileId)?'불타는 칸':occupied.has(tileId)?'그 문 앞에 부대가 있음':null}));
+}
+function openSortie(){
+ sortieUi={cityId:selectedCityId,officerId:null,tileId:undefined,sequence:0,keep:false,deployed:[]};renderSortie();
+ $('#city-panel').hidden=true;
+ $('#sortie-screen [data-sortie-officer]:not([disabled])')?.focus();
+}
+function closeSortie(){
+ const root=$('#sortie-screen');if(root)root.remove();sortieUi=null;
+}
+function renderSortie(){
+ if(!sortieUi)return;
+ const v=view(state),c=v.ownCities[sortieUi.cityId];if(!c){closeSortie();return;}
+ selectedCityId=c.cityId;
+ const roster=sortieRoster(v,c),o=roster.find(o=>o.officerId===sortieUi.officerId)??roster.find(o=>!o.reason)??roster[0];
+ sortieUi.officerId=o?.officerId;
+ const gates=sortieGateOptions(v,c);
+ if(!gates.some(g=>g.tileId===sortieUi.tileId&&!g.reason))sortieUi.tileId=gates.find(g=>!g.reason)?.tileId;
+ const troops=o?musterTroopChoices(v,c,o.officerId):[],selectedType=troops.some(t=>t.troopType===sortieUi.troopType)?sortieUi.troopType:troops[0]?.troopType??o?.troopType;
+ sortieUi.troopType=selectedType;
+ let root=$('#sortie-screen');if(!root){root=document.createElement('section');root.id='sortie-screen';root.className='u3-sortie';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','출진 편성');document.body.appendChild(root);bindSortie(root);}
+ root.dataset.tileId=sortieUi.tileId??'';
+ root.innerHTML=sortieHtml({city:c,officer:o,art:o?fullArt(o.officerId)?.src:null,roster,troops,selectedType,gates,selectedGate:sortieUi.tileId,sequence:sortieUi.sequence,keep:sortieUi.keep,face:faceOf});
+ refreshMusterRange(v);
+}
+function refreshSortieReadout(request,reason){
+ const c=view(state).ownCities[request.cityId],n=request.troopCount,input=$('#city-sortie-count');
+ $('#sortie-strength').textContent=troopText(n);
+ $('#sortie-min').textContent=Number(input.min).toLocaleString('ko-KR');$('#sortie-max').textContent=Number(input.max).toLocaleString('ko-KR');
+ input.style.setProperty('--sortie-fill',`${Number(input.max)>Number(input.min)?(Number(input.value)-Number(input.min))/(Number(input.max)-Number(input.min))*100:100}%`);
+ // Ask the unchanged sortie path on a disposable copy; preview never mutates the live game or RNG.
+ let ratings=null,reserveAfter=null,supply=null;
+ if(!reason){const preview=structuredClone(state);sortie(preview,request);const id=preview.officers[request.officerId].locationRef.id;reserveAfter=preview.cities[request.cityId].reserveTroops;ratings=campaignUnitRatings(preview,id);supply=view(preview).ownArmies[id]?.supply;}
+ $('#sortie-reserve').textContent=`${c.name} 예비병 ${troopText(c.reserveTroops)} → ${reserveAfter===null?'출진 불가':troopText(reserveAfter)}`;
+ $('#sortie-supply').textContent=supply?`휴대 군량 ${supply.stock} · ${supply.model==='clock'?'보급 밖 ':''}차례당 ${supply.perTurn} · ${supply.turnsLeft}차례분`:'';
+ for(const key of ['attack','defense','mobility'])$(`[data-sortie-stat="${key}"]`).textContent=ratings?.[key]??'—';
+ $('.u3-sortie-stats').title=ratings?.notes?.join('\n')??'출진 가능한 편성을 고르세요';
+}
+function bindSortie(root){
+ root.addEventListener('input',e=>{if(e.target.id==='city-sortie-count')refreshMusterButton();});
+ root.addEventListener('change',e=>{
+  if(e.target.id==='sortie-keep')sortieUi.keep=e.target.checked;
+  if(e.target.id==='city-job-muster-troop'){sortieUi.troopType=e.target.value;renderSortie();}
+ });
+ root.addEventListener('click',e=>{
+  e.stopPropagation();
+  if(e.target.closest('[data-sortie-close]')){closeSortie();renderCityPanel(view(state));return;}
+  const officer=e.target.closest('[data-sortie-officer]');if(officer&&!officer.disabled){sortieUi.officerId=officer.dataset.sortieOfficer;sortieUi.troopType=null;renderSortie();return;}
+  const gate=e.target.closest('[data-sortie-gate]');if(gate&&!gate.disabled){sortieUi.tileId=gate.dataset.sortieGate;root.dataset.tileId=sortieUi.tileId;for(const b of root.querySelectorAll('[data-sortie-gate]')){const on=b===gate;b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));}refreshMusterButton();return;}
+  if(e.target.closest('[data-sortie]')&&!inputLocked())command(sortieRequest());
+ });
+}
+document.addEventListener('keydown',e=>{if(!sortieUi)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeSortie();renderCityPanel(view(state));}},true);
 // Public engine options own the troop identity and personnel range.
 function musterTroopChoices(v,c,officerId){
  const o=v.officers[officerId],types=o?.multiTroopTrait?.troopTypes??[o?.troopType];
  return (c?.musterOptions?.find(m=>m.officerId===officerId)?.troops??[]).filter(t=>types.includes(t.troopType));
 }
 function sortieRequest(){
- return {type:'SORTIE',cityId:selectedCityId,officerId:$('#city-job-officer')?.value,troopType:$('#city-job-muster-troop')?.value,troopCount:Number($('#city-sortie-count')?.value)/TROOP_DISPLAY_SCALE};
+ const tileId=$('#sortie-screen')?.dataset.tileId;
+ return {type:'SORTIE',...(tileId?{tileId}:{}),cityId:selectedCityId,officerId:$('#city-job-officer')?.value,troopType:$('#city-job-muster-troop')?.value,troopCount:Number($('#city-sortie-count')?.value)/TROOP_DISPLAY_SCALE};
 }
 function refreshMusterButton(){
  const button=$('[data-sortie]');if(!button)return;
  const request=sortieRequest(),reason=sortieReason(state,request)?.message;
  button.disabled=inputLocked()||!!reason;
  const o=view(state).officers[request.officerId],summary=$('#muster-selection');
+ if($('#sortie-screen')&&!$('#sortie-screen').hidden)refreshSortieReadout(request,reason);
  if(summary)summary.textContent=reason??`${o?.name??'장수 미선택'} · ${troopName(request.troopType)} ${troopText(request.troopCount)}명 · 즉시 출진`;
 }
 function refreshMusterRange(v=view(state)){
@@ -1663,7 +1769,7 @@ $('#city-panel').addEventListener('change',e=>{if(e.target.id==='city-job-army')
 $('#city-panel').addEventListener('click',e=>{
  const countStep=e.target.closest('[data-sortie-count]')?.dataset.sortieCount;
  if(countStep&&!inputLocked()){const input=$('#city-sortie-count');if(input&&!input.disabled){input.value=String(Math.max(Number(input.min),Math.min(Number(input.max),Number(input.value)+Number(countStep)*Number(input.step))));refreshMusterButton();}return;}
- if(e.target.closest('[data-sortie]')&&!inputLocked()){e.stopPropagation();command(sortieRequest());return;}
+ if(e.target.closest('[data-sortie-open]')&&!inputLocked()){e.stopPropagation();openSortie();return;}
  if(e.target.closest('[data-barracks-food]')){officeTab='state';if(stage.fac){enterFacility('office');}else{cityTab='office';renderCityPanel(view(state));}return;}
  if(e.target.closest('[data-city-close]')){selectedCityId=null;$('#city-panel').hidden=true;return;}
  const starCity=e.target.closest('[data-city-star]')?.dataset.cityStar;
@@ -1691,17 +1797,17 @@ $('#city-panel').addEventListener('click',e=>{
 });
 function refreshContinue() {
   attempt(()=>settle(savedState(),saved=>{$('#continue').disabled = !saved;}),
-    ()=>{$('#continue').disabled = true; $('#status').textContent = '저장을 읽을 수 없습니다. 기존 저장은 보존했습니다.';});
+    error=>{$('#continue').disabled = true; $('#status').textContent = '저장을 읽을 수 없습니다. 기존 저장은 보존했습니다. 오류: '+window.__bootErrorLine(error);});
 }
 function resume() {
-  attempt(()=>settle(savedState(),applySaved),error=>{$('#status').textContent = errorText(error);});
+  attempt(()=>settle(savedState(),applySaved),error=>{$('#status').textContent = '이어하기 실패 — 기존 저장은 보존했습니다. 오류: '+window.__bootErrorLine(error);});
 }
 function applySaved(saved) {
   try {
     if (!saved) throw new Error('캠페인 저장이 없습니다.');
     fxInk?.reset();
     tacticReadySeen.clear();tacticReadyPending.clear();tacticCutSeen.clear();cancelStrike();saved.manualEndTurn=true;state = saved;moveUndo=null;queuedUndoStart=null;rivalTurnBaseline=null;turnSummaryPending=null;inspectedArmyId=null;recordNotices=[];newsArchive=[];overlapPick=null;cancelAttackConfirmation();recentCombats=[];lastFoodChange=null;lastUnitResult=null;lastFacilityResults=[];turnLog=[];selectedArmyIds=[];scheduleOrders(); attackMode=false; selectedArmyId=null;menuOpen=false;moveMode=false;destination=null;bandFocusSnapshot=null;bandFocusArmy=null;bandFocusMode=null;clearTimeout(bandFocusTimer);bandFocusMoving=false;zoom=START_ZOOM;render();centerPlayer(); scheduleAi(); $('#status').textContent = '저장된 캠페인을 이어합니다.';
-  } catch (error) {$('#status').textContent = error.message;}
+  } catch (error) {$('#status').textContent = '이어하기 실패 — 기존 저장은 보존했습니다. 오류: '+window.__bootErrorLine(error);}
 }
 // 새 판의 시드: 주소의 ?seed= 가 있으면 그것(재현용), 브라우저에서는 매번 새로(판마다 포텐·Draft가 달라지게 — 완료 기준 3),
 // 브라우저가 아닌 시험 환경은 기존 고정값
@@ -1718,8 +1824,8 @@ for (const button of document.querySelectorAll('button[data-faction]')) {
     fxInk?.reset();
     cancelStrike();clearTimeout(aiTimer);clearTimeout(orderTimer);selectedArmyIds=[];attackMode=false;// 새 판은 성에서 시작한다(야전 부대 없음 — 사용자 2026-10-11 "기본적으로 2부대 출진돼 있는 거 삭제"). 주소에 ?field=1 이면 예전처럼 두 부대가 나와 있는 채로(자동 점검 도구용)
     recordNotices=[];newsArchive=[];overlapPick=null;cancelAttackConfirmation();recentCombats=[];lastFoodChange=null;lastUnitResult=null;lastFacilityResults=[];turnLog=[];
-    moveUndo=null;queuedUndoStart=null;rivalTurnBaseline=null;turnSummaryPending=null;inspectedArmyId=null;
-    state = createCampaign({factionId,seed,manualEndTurn:true,...(companions?{companions}:{}),...(new URLSearchParams(location.search).get('field')==='1'?{}:{fieldArmies:false})});
+    moveUndo=null;queuedUndoStart=null;rivalTurnBaseline=null;turnSummaryPending=null;inspectedArmyId=null;c197ResultSeen=null;
+    state = createCampaign({factionId,seed,manualEndTurn:true,recentEventIds:readRecentEventIds(),...(companions?{companions}:{}),...(new URLSearchParams(location.search).get('field')==='1'?{}:{fieldArmies:false})});
     tacticReadySeen.clear();tacticReadyPending.clear();tacticCutSeen.clear();selectedArmyId=null;menuOpen=false;moveMode=false;unlockAudio();bandFocusSnapshot=null;bandFocusArmy=null;bandFocusMode=null;clearTimeout(bandFocusTimer);bandFocusMoving=false;zoom=START_ZOOM;render();centerPlayer(); $('#status').textContent = Object.keys(view(state).ownArmies).length?'부대를 선택해 이동 명령을 내리세요.':'나와 있는 부대가 없습니다 — 성을 눌러 들어가 병영에서 출진시키십시오.';
   };
   button.addEventListener('click', () => {
@@ -1886,6 +1992,45 @@ function cityProductionBadge(c){
 }
 function idleCities(v){return state.phase==='PLAYER'&&!state.gameResult?Object.values(v.ownCities).filter(c=>cityProductionBadge(c)?.idle):[];}
 function closeProdPop(){const p=document.querySelector?.('#prod-pop');if(p)p.hidden=true;}
+// C190: transient map UI only; never serialized or sourced from raw foreign cities.
+let cityQuickId=null;
+function closeCityQuick(){cityQuickId=null;const p=$('#city-quick'),line=$('#city-quick-link');if(p)p.hidden=true;if(line)line.hidden=true;}
+function placeCityQuick(){
+ if(!cityQuickId)return;
+ const p=$('#city-quick'),map=$('#map'),city=map?.querySelector(`.w-city[data-city="${cityQuickId}"] .ground`),label=map?.querySelector(`.w-cityplate[data-city="${cityQuickId}"] .name`);
+ if(!p||!city||!label){closeCityQuick();return;}
+ const a=city.getBoundingClientRect(),b=label.getBoundingClientRect(),r={left:Math.min(a.left,b.left),right:Math.max(a.right,b.right),top:Math.min(a.top,b.top),bottom:Math.max(a.bottom,b.bottom)};
+ if(r.right<0||r.left>innerWidth||r.bottom<60||r.top>innerHeight){closeCityQuick();return;}
+ const avoid=[...document.querySelectorAll('#ink-hud .nb-state,#ink-hud .nb-selected,.ih-end')].filter(n=>!n.hidden&&getComputedStyle(n).display!=='none').map(n=>n.getBoundingClientRect());
+ const at=cityQuickPlacement(r,innerWidth,innerHeight,avoid);p.style.left=at.left+'px';p.style.top=at.top+'px';
+ const line=$('#city-quick-link'),x=(b.left+b.right)/2,y=(b.top+b.bottom)/2;
+ line?.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);
+ line?.querySelector('path')?.setAttribute('d',`M${x} ${y}L${Math.max(at.left,Math.min(at.left+280,x))} ${Math.max(at.top,Math.min(at.top+220,y))}`);
+}
+function openCityQuick(cityId){
+ const v=view(state),c=cityPublicReadout(v,cityId,cityProductionBadge(v.ownCities?.[cityId]??{}));if(!c)return false;
+ closeProdPop();let p=$('#city-quick');
+ if(!p){
+  p=document.createElement('section');p.id='city-quick';p.className='city-quick';p.setAttribute('role','dialog');p.setAttribute('aria-label','성 빠른 명령');document.body.appendChild(p);
+  p.style.setProperty('--cq-panel',`url("${C190_ART.panel}")`);
+  if(C190_ART.btn)p.style.setProperty('--cq-btn',`url("${C190_ART.btn}")`);
+  if(C190_ART.btnRed)p.style.setProperty('--cq-btn-red',`url("${C190_ART.btnRed}")`);
+  const link=document.createElementNS('http://www.w3.org/2000/svg','svg');link.id='city-quick-link';link.innerHTML='<path/>';document.body.appendChild(link);
+  p.addEventListener('click',e=>{
+   const action=e.target.closest('[data-city-quick-action]')?.dataset.cityQuickAction,id=cityQuickId;
+   if(!action||!id||inputLocked()||!view(state).ownCities[id])return;
+   closeCityQuick();
+   if(action==='sortie')openStage(id,'barracks');
+   else if(action==='production')openProdPop(id,e);
+   else if(action==='office')openCity(id,'office');
+   else if(action==='enter')openStage(id);
+  });
+ }
+ cityQuickId=cityId;p.dataset.city=cityId;p.classList.toggle('foreign',!c.own);p.classList.toggle('besieged',c.besieged);p.innerHTML=cityQuickHtml(c);p.hidden=false;$('#city-quick-link').hidden=false;placeCityQuick();return true;
+}
+document.addEventListener('pointerdown',e=>{if(cityQuickId&&!e.target.closest?.('#city-quick'))closeCityQuick();},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&cityQuickId){closeCityQuick();e.preventDefault();e.stopImmediatePropagation();}},true);
+window.addEventListener('resize',placeCityQuick);
 function openProdPop(cityId,e){
  const v=view(state),c=v.ownCities[cityId];if(!c?.jobs||!document.createElement)return false;
  let pop=document.querySelector('#prod-pop');if(!pop){pop=document.createElement('div');pop.id='prod-pop';pop.className='panel lacquer prod-pop';document.body.appendChild(pop);
@@ -1935,7 +2080,7 @@ function starButton(a,attr){const wait=a.readyTurn>state.turn?a.readyTurn-state.
 function availabilityLine(o){
  if(!o)return '';const f=o.fatigue,inj=o.injury,parts=[];
  if(inj)parts.push(`<span class="av-inj" title="중상 — 요양이 끝나면 복귀(군주와 친밀도 +5·경험치 +10)">중상 · ${esc(injuryReturnText(state.turn,inj))}</span>`);
- if(f&&Number.isFinite(f.value))parts.push(`<span class="av-fat${f.musterBlocked?' blocked':''}" title="성 밖에서 보낸 차례·교전으로 오르고 성에서 쉬면 내림. 60 이상이면 다시 출진 못 함 — 이미 나가 있는 부대에는 효과 없음"><i style="--v:${Math.max(0,Math.min(100,f.value))}%"></i>피로 ${Math.round(f.value)}${f.levelName?` · ${esc(f.levelName)}`:''}${f.musterBlocked?` · 출진 불가${Number.isFinite(f.restTurns)&&f.restTurns>0?`(${f.restTurns}차례 쉼)`:''}`:''}</span>`);
+ if(fatigueLineText(f))parts.push(`<span class="av-fat${f.musterBlocked?' blocked':''}" title="이미 출진한 부대에는 효과 없음">${esc(fatigueLineText(f))}</span>`);
  return parts.length?`<p class="av-line">${parts.join('')}</p>`:'';
 }
 const musterTag=o=>o?.injury?' — 중상 요양':o?.fatigue?.musterBlocked?` — 피로(${Number.isFinite(o.fatigue.restTurns)?o.fatigue.restTurns+'차례 쉼':'쉬어야 함'})`:'';
@@ -1954,7 +2099,7 @@ function supplySourceText(sup,v){
  else parts.push(`세력 식량 합계 ${food1(foodSnapshot(v).stock)}`);
  return parts.join(' · ');
 }
-function tacticAvailability(c){if(c.targets?.length)return '사용 가능';if(c.waiting>0)return `재사용까지 ${c.waiting}턴`;if(c.reason==='ARCHER_ENGAGED')return '적과 붙어 있어 사격 불가';return '대상·사용 조건 확인';}
+function tacticAvailability(c){if(c.reasonText)return c.reasonText;if(c.reason)return reasonText(c.reason);if(c.targets?.length)return '사용 가능';if(c.waiting>0)return `재사용까지 ${c.waiting}턴`;return '대상·사용 조건 확인';}
 function selectedActions(id=selectedArmyId){
  const a=state.armies[id];return unitActionReadout({moveUsed:state.movedArmyIds.includes(id),canMove:!!a&&campaignMoveOptions(state,id).length>0,canMain:!!a&&canMainAction(state,id),ended:!a||armyActionEnded(state,id),routing:a?.morale==='ROUTING'});
 }
@@ -1969,16 +2114,44 @@ function starvingAdvice(army,v){
  if(source.foodStock<=0)return `${source.name}의 식량 재고가 0입니다 — 복귀하거나 식량이 있는 내 성으로 이동하세요.`;
  return `${source.name}의 식량 중 주민·예약 몫을 뺀 군량이 부족합니다 — 복귀해 예비병으로 합류하거나 식량이 있는 내 성으로 이동하세요.`;
 }
+function platformButton(armyId){
+ const a=state.armies[armyId];if(a?.troopType!=='catapult')return '';
+ const type=platformState(a)==='DEPLOYED'?'STOW':'DEPLOY',reason=platformActionReason(state,armyId,type),label=type==='DEPLOY'?'전개':'거두기';
+ return `<button class="platform-command" data-menu="${type.toLowerCase()}" ${reason?'disabled':''} title="${esc(reason||`${label} — 주 행동 1회`)}">${label}</button>${reason?`<small class="platform-reason">${esc(reason)}</small>`:''}`;
+}
+function platformCommand(action){
+ if(!['deploy','stow'].includes(action))return false;
+ const type=action.toUpperCase();if(platformActionReason(state,selectedArmyId,type))return true;
+ command({type,armyId:selectedArmyId});return true;
+}
+// The current HUD copies a fixed list of legacy commands. Extend only this
+// unit's band and its stored return-from-forecast markup, using its existing
+// data-act delegation and button styling.
+function syncPlatformBand(root,armyId){
+ const band=root.querySelector('.nb-band');if(!band||!armyId)return;
+ const html=platformButton(armyId).replace('data-menu=','data-act=');if(!html)return;
+ const marker='<div class="nb-order-row">';
+ if(band._unitHtml?.includes(marker))band._unitHtml=band._unitHtml.replace(marker,marker+html);
+ if(band.dataset.state!=='forecast'){
+  const row=band.querySelector('.nb-order-row');if(!row)return;
+  row.querySelectorAll('.platform-command,.platform-reason').forEach(n=>n.remove());
+  row.insertAdjacentHTML('afterbegin',html);
+ }
+}
+function platformRangeTiles(v,armyId){
+ const a=v.ownArmies[armyId];if(platformState(a)!=='DEPLOYED')return [];
+ return Object.keys(v.tiles).filter(id=>v.knowledge.tiles[id]!=='UNEXPLORED'&&hexDistance(v.tiles[a.tileId],v.tiles[id])<=C193.catapult.range);
+}
 function renderUnitMenu(v){
  const menu=$('#unit-menu');menu.hidden=!menuOpen;if(!menuOpen&&!selectedArmyId)return;
  if(selectedArmyIds.length>1){menu.innerHTML=`<header class="dk-head"><div class="dk-id"><h2>${selectedArmyIds.length}개 부대</h2><div class="dk-meta">함께 명령</div></div></header><div class="dk-body"><div class="dk-acts"><button data-menu="move" ${selectedArmyIds.every(id=>orderEligible(state,id))?'':'disabled'}>${UI_ICON('move')}이동(목적지 클릭)</button><button data-menu="brace" ${selectedArmyIds.every(id=>!armyActionEnded(state,id)&&canMainAction(state,id))?'':'disabled'} title="${selectedArmyIds.every(id=>!armyActionEnded(state,id)&&canMainAction(state,id))?'전체 방어':'행동을 마친 부대가 포함되어 있습니다.'}">${UI_ICON('security')}방어 태세(전체)</button><button data-menu="wait">${UI_ICON('wait')}대기(전체)</button><button data-menu="close" class="close" title="닫기">${UI_ICON('cancel')}</button></div></div>`;return;}
  const army=v.ownArmies[selectedArmyId],title=v.officers[army?.commanderId]?.name??'';
  const recall=hasCampaignRule(state,selectedArmyId,'RECALL')?`<button data-menu="recall" ${recallReason(state,selectedArmyId)?'disabled':''}>귀환${recallReason(state,selectedArmyId)?' · '+esc(recallReason(state,selectedArmyId)):''}</button>`:'';
  const controls=armyActionEnded(state,selectedArmyId)?`<p>${army?.morale==='ROUTING'?'패주 — 명령 불가':'이번 턴 행동 완료'}</p>`:
-  `${campaignMoveOptions(state,selectedArmyId).length?`<button data-menu="move">${UI_ICON('move')}이동</button>`:''}${(attackTargets(state,selectedArmyId).length||cityAttackTargets(state,selectedArmyId).length)?`<button data-menu="attack">${UI_ICON('attack')}공격</button>`:''}${state.movedArmyIds.includes(selectedArmyId)?'':`<button data-menu="face" title="이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다.">${UI_ICON('command')}정면</button>`}<button data-menu="brace" ${!canMainAction(state,selectedArmyId)?'disabled':''} title="${canMainAction(state,selectedArmyId)?'이번 차례 방어 태세':'이번 턴 행동을 이미 썼습니다.'}">${UI_ICON('security')}방어</button>${(()=>{const gr=garrisonReason(state,selectedArmyId);return !gr?`<button data-menu="garrison" title="부대가 해산되고 병력 ${troopText(army.troopCount)}이 이 성의 예비병이 됩니다">${UI_ICON('city')}복귀</button>`:gr==='ENEMY_ADJACENT'?`<button data-menu="garrison" disabled title="옆 칸에 적이 있어 성으로 들어갈 수 없습니다">${UI_ICON('city')}복귀</button>`:'';})()}<button data-menu="regroup" ${regroupReason(state,selectedArmyId)?'disabled':''} title="${esc(regroupReason(state,selectedArmyId)||'흐트러진 전열·사기를 추스릅니다')}">${UI_ICON('reserve')}재정비</button><button data-menu="wait">${UI_ICON('wait')}대기</button>`;
+  `${campaignMoveOptions(state,selectedArmyId).length?`<button data-menu="move">${UI_ICON('move')}이동</button>`:''}${(()=>{const why=!canMainAction(state,selectedArmyId)?ERROR_TEXT.MAIN_ACTION_USED:archerAttackReason(state,selectedArmyId)?reasonText(archerAttackReason(state,selectedArmyId)):!(attackTargets(state,selectedArmyId).length||cityAttackTargets(state,selectedArmyId).length)?'지금 공격할 수 있는 대상이 없습니다':'';return `<button data-menu="attack" ${why?'disabled':''} title="${esc(why||'공격할 대상을 고릅니다')}">${UI_ICON('attack')}공격</button>`;})()}${state.movedArmyIds.includes(selectedArmyId)?'':`<button data-menu="face" title="이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다.">${UI_ICON('command')}정면</button>`}<button data-menu="brace" ${!canMainAction(state,selectedArmyId)?'disabled':''} title="${canMainAction(state,selectedArmyId)?'이번 차례 방어 태세':ERROR_TEXT.MAIN_ACTION_USED}">${UI_ICON('security')}방어</button>${(()=>{const gr=garrisonReason(state,selectedArmyId);return !gr?`<button data-menu="garrison" title="부대가 해산되고 병력 ${troopText(army.troopCount)}이 이 성의 예비병이 됩니다">${UI_ICON('city')}복귀</button>`:gr==='ENEMY_ADJACENT'?`<button data-menu="garrison" disabled title="옆 칸에 적이 있어 성으로 들어갈 수 없습니다">${UI_ICON('city')}복귀</button>`:'';})()}<button data-menu="regroup" ${regroupReason(state,selectedArmyId)?'disabled':''} title="${esc(regroupReason(state,selectedArmyId)||'흐트러진 전열·사기를 추스릅니다')}">${UI_ICON('reserve')}재정비</button><button data-menu="wait">${UI_ICON('wait')}대기</button>`;
  const chase=!armyActionEnded(state,selectedArmyId)&&campaignMoveOptions(state,selectedArmyId).length?previewDisengage(state,selectedArmyId):null;
  const warn=chase?`<p class="warn">이동하면 추격받음 — ${esc(state.officers[state.armies[chase.pursuerId].commanderId]?.name??'적')} 예상 −${troopText(chase.dealt)} ${chase.effectLines.length?' · '+esc(chase.effectLines.join(' · ')):''}</p>`:'';
- const tactics=campaignTactics(state,selectedArmyId).map(c=>`<button data-tactic="${esc(c.traitId)}" ${tacticButtonState(c,selectedArmyId)} ${!c.targets.length?'disabled':''}>${UI_ICON('tactic')}${tacticFaceMarkup(Math.max(0,(army.tacticReadyTurns?.[c.traitId]??0)-state.turn),c.signature?Math.min(100,state.campaignGrowth?.officers?.[army.commanderId]?.c29?.gauge??0):null)}${c.jointArmyIds?'<span class="joint-tag">공동</span>':''}${esc(c.name)} <small>${c.signature?(()=>{const g=Math.min(100,state.campaignGrowth?.officers?.[state.armies[selectedArmyId]?.commanderId]?.c29?.gauge??(100-(c.waiting??0)));return `<span class="sig-gauge" style="--g:${g}%">고유 · 게이지 ${Math.round(g)}/100${g>=100?' · '+esc(tacticAvailability(c)):' · 충전 중'}</span>`;})():esc(tacticAvailability(c))}${c.effects?.length?'':' · 효과 준비 중'}</small></button>`).join('');
+ const tactics=campaignTactics(state,selectedArmyId).map(c=>`<button data-tactic="${esc(c.traitId)}" ${tacticButtonState(c,selectedArmyId)} ${!c.canUse?'disabled':''} title="${esc(tacticAvailability(c))}">${UI_ICON('tactic')}${tacticFaceMarkup(Math.max(0,(army.tacticReadyTurns?.[c.traitId]??0)-state.turn),c.signature?Math.min(100,state.campaignGrowth?.officers?.[army.commanderId]?.c29?.gauge??0):null)}${c.jointArmyIds?'<span class="joint-tag">공동</span>':''}${esc(c.name)} <small>${c.signature?(()=>{const g=Math.min(100,state.campaignGrowth?.officers?.[state.armies[selectedArmyId]?.commanderId]?.c29?.gauge??(100-(c.waiting??0)));return `<span class="sig-gauge" style="--g:${g}%">고유 · 게이지 ${Math.round(g)}/100${g>=100?' · '+esc(tacticAvailability(c)):' · 충전 중'}</span>`;})():esc(tacticAvailability(c))}${c.effects?.length?'':' · 효과 준비 중'}</small></button>`).join('');
  const fm=FORMATION_NAME[army?.formation]?`<p class="warn">전열 ${FORMATION_NAME[army.formation]} — 받는 피해 +${army.formation==='BROKEN'?30:15}%${army.formation==='BROKEN'?', 반격 불가':', 반격 절반'} · 재정비로 회복${regroupReason(state,selectedArmyId)?` — 지금은 안 됨: ${esc(regroupReason(state,selectedArmyId))}`:''}</p>`:'';
  const star=army?.starAction&&!armyActionEnded(state,selectedArmyId)?starButton(army.starAction,'data-menu="star"'):'';
  // 보급(C45): 상태 한 줄 + 보급 거점 짓기
@@ -1987,16 +2160,17 @@ function renderUnitMenu(v){
  const sup=army?.supply,supLine=sup?`<p class="supply-line" data-supply="${esc(sup.state)}" title="${sup.model==='clock'?`보급선: 내 성 · 보급 거점까지 지나갈 수 있는 길 — 8칸 안 안전(군량이 줄지 않고 차례마다 가득 채워짐), 16칸 안 불안(차례마다 반 차례분 줄어듦), 그 밖 끊김(한 차례분 줄어듦). 적 성문에 붙은 부대는 가까워도 끊김 — 포위는 휴대 군량으로 버틴다. 휴대 군량은 ${sup.perTurn?Math.round(sup.max/sup.perTurn):5}차례분. 적 부대를 없애면 한 차례분, 성이나 적 거점을 빼앗으면 가득 얻는다. 바닥나면 굶주림(병력 손실)`:'보급선: 내 성·보급 거점까지 지나갈 수 있는 길 — 8칸 안 안전, 16칸 안 불안(성이 절반만), 그 밖 끊김(휴대 군량만). 휴대 군량이 바닥나면 굶주림'}">보급선 <b>${SUPPLY_LABEL[sup.state]??esc(sup.state)}</b> · 부대가 가진 군량 ${food1(sup.stock??0)}/${food1(sup.max??0)}${supplyDuration(sup.turnsLeft)?` (${supplyDuration(sup.turnsLeft)})`:''}${sup.model==='clock'&&sup.state!=='STARVING'?(!sup.draining?' · 보급권 안 — 줄지 않음':sup.state==='CUT'?(atOtherCity?' · 적 성에 붙어 있어 보급이 닿지 않음 — 차례마다 한 차례분씩 줄어듦':' · 차례마다 한 차례분씩 줄어듦'):sup.state==='DISRUPTED'?' · 차례마다 반 차례분씩 줄어듦':' · 줄어드는 중'):''}${sup.state!=='STARVING'&&Number.isFinite(sup.turnsLeft)&&sup.turnsLeft<1?' · 군량 바닥 — 채워지지 않으면 다음 차례 굶주림':''}${Number.isFinite(sup.distance)?` · 원천까지 ${sup.distance}칸`:''}</p>`:'';
  const hubWhy=sup&&!armyActionEnded(state,selectedArmyId)?(()=>{try{return hubBuildReason(state,state.armies[selectedArmyId]);}catch{return '';}})():null;
  const hub=hubWhy!==null?`<button data-menu="hub" ${hubWhy?'disabled':''} title="${hubWhy?esc(hubWhy)+' — ':''}이 칸에 보급 거점을 짓습니다 — 교전 없이 이번 차례를 마치면 완공, ${sup?.model==='clock'?'거점에서 8칸 안이 보급권이 되어 그 안의 부대는 군량이 줄지 않습니다':'원천에서 군량 2차례분을 옮겨 첫 재고로'}">${UI_ICON('build')}보급 거점</button>`:'';
- menu.innerHTML=`${unitCardHead(v,army,title)}<div class="dk-body"><div class="dk-info">${actionReadoutHtml(selectedActions())}${supLine}${supplySourceText(sup,v)?`<p class="supply-context">${esc(supplySourceText(sup,v))}</p>`:''}${sup?.state==='STARVING'?`<p class="warn">${esc(starvingAdvice(army,v))}</p>`:''}${(f=>f&&Number.isFinite(f.value)?`<p class="av-line"><span class="av-fat" title="나가 있는 동안은 효과 없음 — 돌아와서 다시 출진할 때 60 이상이면 막힘"><i style="--v:${Math.max(0,Math.min(100,f.value))}%"></i>피로 ${Math.round(f.value)}${f.levelName?` · ${esc(f.levelName)}`:''} · 재출진 때만 적용</span></p>`:'')(v.officers[army?.commanderId]?.fatigue)}${fm}${warn}</div><div class="dk-acts">${controls}${hub}${recall}${star}${tactics}${state.moveOrders?.[selectedArmyId]?`<button data-menu="cancel-order">${UI_ICON('cancel')}이동 취소</button>`:''}<button data-menu="officer">${UI_ICON('info')}장수</button><button data-menu="close" class="close" title="닫기 (Esc)">${UI_ICON('cancel')}</button></div></div>`;
+ menu.innerHTML=`${unitCardHead(v,army,title)}<div class="dk-body"><div class="dk-info">${actionReadoutHtml(selectedActions())}${supLine}${supplySourceText(sup,v)?`<p class="supply-context">${esc(supplySourceText(sup,v))}</p>`:''}${sup?.state==='STARVING'?`<p class="warn">${esc(starvingAdvice(army,v))}</p>`:''}${(f=>f&&Number.isFinite(f.value)?`<p class="av-line"><span class="av-fat" title="나가 있는 동안은 효과 없음 — 돌아와서 다시 출진할 때 60 이상이면 막힘"><i style="--v:${Math.max(0,Math.min(100,f.value))}%"></i>피로 ${Math.round(f.value)}${f.levelName?` · ${esc(f.levelName)}`:''} · 재출진 때만 적용</span></p>`:'')(v.officers[army?.commanderId]?.fatigue)}${fm}${warn}</div><div class="dk-acts">${controls}${platformButton(selectedArmyId)}${hub}${recall}${star}${tactics}${state.moveOrders?.[selectedArmyId]?`<button data-menu="cancel-order">${UI_ICON('cancel')}이동 취소</button>`:''}<button data-menu="officer">${UI_ICON('info')}장수</button><button data-menu="close" class="close" title="닫기 (Esc)">${UI_ICON('cancel')}</button></div></div>`;
  for(const [a,key] of Object.entries(ACTION_KEYS))menu.querySelector?.(`[data-menu="${a}"]`)?.insertAdjacentHTML?.('beforeend',`<kbd>${key}</kbd>`);
  [...(menu.querySelectorAll?.('[data-tactic]')??[])].slice(0,3).forEach((b,n)=>b.insertAdjacentHTML?.('beforeend',`<kbd>${n+1}</kbd>`));
 }
 $('#unit-menu').addEventListener('click',e=>{
  const action=e.target.closest('[data-menu]')?.dataset.menu;
  if(inputLocked())return;
+ if(platformCommand(action))return;
  const tacticId=e.target.closest('[data-tactic]')?.dataset.tactic;
  if(action||tacticId)cancelStrike();
- if(tacticId){const card=campaignTactics(state,selectedArmyId).find(c=>c.traitId===tacticId);if(!card?.targets.length)return;if(card.targets.length===1&&card.targets[0]===selectedArmyId){command({type:'USE_TACTIC',armyId:selectedArmyId,traitId:tacticId,targetId:selectedArmyId});return;}selectedTacticId=tacticId;menuOpen=false;moveMode=false;render();$('#status').textContent='전법 대상을 누르세요';return;}
+ if(tacticId){const card=campaignTactics(state,selectedArmyId).find(c=>c.traitId===tacticId);if(!card?.canUse){$('#status').textContent=card?tacticAvailability(card):'전법을 고르세요';return;}if(card.targets.length===1&&card.targets[0]===selectedArmyId){command({type:'USE_TACTIC',armyId:selectedArmyId,traitId:tacticId,targetId:selectedArmyId});return;}selectedTacticId=tacticId;menuOpen=false;moveMode=false;render();$('#status').textContent='전법 대상을 누르세요';return;}
  if(action==='cancel-order'){command({type:'CANCEL_MOVE',armyId:selectedArmyId});return;}
  if(selectedArmyIds.length>1&&['brace','wait'].includes(action)){const ids=[...selectedArmyIds];for(const armyId of ids)command({type:action==='brace'?'BRACE':'WAIT_UNIT',armyId});selectedArmyIds=[];return;}
  if(action==='brace'||action==='regroup'){command({type:action==='brace'?'BRACE':'REGROUP',armyId:selectedArmyId});return;}
@@ -2027,6 +2201,7 @@ function scheduleStrike(){
 const hexGap=(a,b)=>{const A=state.tiles[a],B=state.tiles[b];return A&&B?(Math.abs(A.q-B.q)+Math.abs(A.q+A.r-B.q-B.r)+Math.abs(A.r-B.r))/2:99;};
 function strikePlan(armyId,tileId,cityId){
  const army=state.armies[armyId];if(!army||state.movedArmyIds.includes(armyId))return null;
+ if(platformState(army)==='STOWED')return null;
  const opts=campaignMoveOptions(state,armyId);if(!opts.length)return null;
  const v=view(state),foe=v.knowledge.tiles[tileId]==='VISIBLE'?Object.values(v.knowledge.observedArmies).find(a=>a.tileId===tileId&&a.factionId!==state.playerFactionId):null;
  const city=!foe&&cityId&&state.cities[cityId]?.ownerFactionId!==state.playerFactionId?state.cities[cityId]:null;
@@ -2043,7 +2218,11 @@ function approachTile(armyId,tileId,cityId){
  const city=!foe&&cityId&&state.cities[cityId]?.ownerFactionId!==state.playerFactionId?state.cities[cityId]:null;
  if(!foe&&!city)return null;
  const army=state.armies[armyId];if(!army)return null;
- const spots=foe?Object.keys(state.tiles).filter(t=>hexGap(t,tileId)===1):Object.keys(state.tiles).filter(t=>((city.footprint?.gates??[]).includes(t)||hexGap(t,city.tileId)===2)&&cityAttackTargets({...state,armies:{...state.armies,[armyId]:{...army,tileId:t}}},armyId).includes(cityId));
+ const stowed=platformState(army)==='STOWED',catapult=army.troopType==='catapult';
+ if(stowed&&foe)return null;
+ // A stowed platform previews movement only. Probe deployed legality without changing state.
+ const occupied=new Set([...Object.values(v.ownArmies),...Object.values(v.knowledge.observedArmies).filter(a=>v.knowledge.tiles[a.tileId]==='VISIBLE')].filter(a=>a.armyId!==armyId).map(a=>a.tileId));
+ const spots=foe?Object.keys(state.tiles).filter(t=>hexGap(t,tileId)===1):Object.keys(state.tiles).filter(t=>!occupied.has(t)&&(catapult?hexGap(t,city.tileId)<=C193.catapult.range:(city.footprint?.gates??[]).includes(t)||hexGap(t,city.tileId)===2)&&cityAttackTargets({...state,armies:{...state.armies,[armyId]:{...army,tileId:t,...(stowed?{platformState:'DEPLOYED'}:{})}}},armyId).includes(cityId));
  let best=null,len=1e9;for(const t of spots){if(t===state.armies[armyId]?.tileId)return null;const r=orderRoute(state,armyId,t);if(r&&r.pathTileIds.length<len){best=t;len=r.pathTileIds.length;}}
  return best;
 }
@@ -2067,6 +2246,7 @@ function mapTarget(armyId,tileId,cityId){
  const approach=!directEnemy&&!directCity&&!plan&&orderEligible(state,armyId)?approachTile(armyId,tileId,cityId):null;
  const target=clickTargetDecision({selected:true,enemyId:foe?.armyId,cityId,attackableEnemy:directEnemy,attackableCity:directCity,plan,approach});
  target.wallBlocked=!!foe&&!!cityId&&!directCity;
+ if(cityId&&state.cities[cityId]?.ownerFactionId!==state.armies[armyId]?.factionId&&platformState(state.armies[armyId])==='STOWED')target.deploymentReason=`투석기는 전개해야 칠 수 있음 — 성에서 ${C193.catapult.range}칸 안으로 옮긴 뒤 다음 차례 전개`;
  targetCache.set(key,target);return target;
 }
 function targetText(target){
@@ -2104,7 +2284,7 @@ function movementPreview(to){
 }
 function routeExplanation(armyId,to,route){
  const result=armyId===selectedArmyId?movementPreview(to):waypointRoute(state,armyId,[to]);
- return result.ok?'이번 차례 이동 가능 · Shift+누르기: 경유 · Esc/우클릭: 하나 취소':playerText(result.reason);
+ return result.ok?'이번 차례 이동 가능 · Shift+누르기: 경유 · Esc/우클릭: 하나 취소'+(routeFordTiles(result).length?' · 여울 건넘':''):playerText(result.reason);
 }
 function undoWaypoint(){
  if(!state||!selectedArmyId||!draftPoints().length)return false;
@@ -2125,8 +2305,9 @@ function cityAttackExplanation(armyId,cityId){
  const treaty=diplomacyAttackReason(state,armyId,cityId);if(treaty)return treaty;
  if(archerAttackReason(state,armyId))return '붙어 있는 적 때문에 사격할 수 없습니다';
  if(!canMainAction(state,armyId))return '이번 차례 주 행동을 이미 썼습니다';
+ if(platformAttackReason(state,armyId))return `투석기는 전개해야 칠 수 있음 — 성에서 ${C193.catapult.range}칸 안으로 옮긴 뒤 다음 차례 전개`;
  if(troopToCampaign(a.troopType)==='BT03'&&a.troopType!=='catapult'&&!hasCampaignRule(state,armyId,'SIEGE_FROM_WALL'))return '원거리 병종은 일반 성 공격 불가 — 공성 전법이나 다른 병종을 사용하십시오';
- if(a.troopType==='catapult'&&hexGap(a.tileId,c.tileId)!==2)return '성 공격 사거리 밖입니다 — 투석기는 성 중심에서 2칸';
+ if(a.troopType==='catapult'&&hexGap(a.tileId,c.tileId)>attackRange(a,state))return `성 공격 사거리 밖입니다 — 전개한 투석기는 성 중심에서 ${attackRange(a,state)}칸`;
  return targetText(mapTarget(armyId,c.tileId,cityId))||'성 공격 위치에 닿지 않습니다 — 성문으로 이동하십시오';
 }
 let pendingAttack=null;
@@ -2144,7 +2325,7 @@ function cancelAttackConfirmation(){pendingAttack=null;$('#attack-confirm').hidd
 function strikeOrApproach(who,target){
  if(target.kind==='strike'){command({type:'MOVE_UNIT',armyId:who,destinationTileId:target.via});if(state.armies[who]?.tileId===target.via){pendingStrike={...target,armyId:who,turn:state.turn};attackMode=false;$('#attack-preview').hidden=true;document.dispatchEvent(new CustomEvent('ink:forecast',{detail:null}));setCommandIntent(strikeNotice(pendingStrike));$('#status').textContent=strikeNotice(pendingStrike);renderHint();follow(who,true);scheduleStrike();if(pendingCampaignDraft(state))renderGrowthDraft();}return;}
  if(!orderEligible(state,who)){$('#status').textContent=selectedActions(who).reason;return;}
- command({type:'QUEUE_MOVE',armyIds:[who],destinationTileId:target.via});$('#status').textContent='칠 수 있는 자리로 갑니다. 닿으면 다시 눌러 공격하세요.';
+ command({type:'QUEUE_MOVE',armyIds:[who],destinationTileId:target.via});$('#status').textContent=target.deploymentReason||'칠 수 있는 자리로 갑니다. 닿으면 다시 눌러 공격하세요.';
 }
 // C137: cycling an enemy inspects it first; the explicit button attacks the chosen unit.
 function refreshOverlapAttack(){
@@ -2170,7 +2351,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pendingAttack){e.pr
 function mapClick(e){
  if(!state||state.gameResult||inputLocked())return;
  cancelStrike();
- const prodCity=e.target.closest?.('[data-prod-city]')?.dataset.prodCity;if(prodCity&&state.cities[prodCity]?.ownerFactionId===state.playerFactionId&&openProdPop(prodCity,e))return;
+ const prodCity=e.target.closest?.('[data-prod-city]')?.dataset.prodCity;if(!selectedArmyId&&prodCity&&state.cities[prodCity]?.ownerFactionId===state.playerFactionId&&openProdPop(prodCity,e))return;
  closeProdPop();
  const tileId=targetTile(e.target,state.armies,state.cities);if(!tileId){if(globalThis.document?.body?.classList?.contains('hud-band')&&menuOpen)closeUnitMenu();return;}
  if((e.altKey||e.shiftKey&&!e.target.closest?.('[data-unit]')||moveDraft.state===state&&moveDraft.armyId===selectedArmyId&&moveDraft.points.length)&&handleWaypointClick(e,tileId))return;
@@ -2230,7 +2411,13 @@ function mapClick(e){
  if(selectedArmyId&&moveMode){$('#status').textContent=routeExplanation(selectedArmyId,tileId,null);return;}
  if(menuOpen)closeUnitMenu();
 }
-$('#map').addEventListener('click',e=>{if(suppressPanClick){suppressPanClick=false;e.preventDefault();return;}mapClick(e);});
+function c190MapClick(e){
+ if(!state||state.gameResult||inputLocked())return;
+ const tile=targetTile(e.target,state.armies,state.cities),city=e.target.closest?.('[data-city]')?.dataset.city??Object.values(view(state).ownCities).find(c=>c.tileId===tile)?.cityId;
+ if(cityQuickIntent(selectedArmyId,city)==='quick'&&openCityQuick(city))return;
+ closeCityQuick();mapClick(e);
+}
+$('#map').addEventListener('click',e=>{if(suppressPanClick){suppressPanClick=false;e.preventDefault();return;}c190MapClick(e);});
 $('#map').addEventListener('pointerover',function mapPointerOver(e){
  if(typeof pendingStrike!=='undefined'&&pendingStrike){$('#status').textContent=strikeNotice(pendingStrike);renderHint();return;}
  if(panGesture||inputLocked()||!selectedArmyId)return;
@@ -2247,7 +2434,7 @@ $('#map').addEventListener('pointerover',function mapPointerOver(e){
    const html=p.cityId?`<div class="fc-top"><span class="fc-title">${esc(title)} · ${esc(cityLabel(p.cityId))}</span></div><p class="fc-sum">내구 −${p.dealt}</p><small class="fc-dur">내구 ${state.cities[p.cityId].durability} → <em>${Math.max(0,state.cities[p.cityId].durability-p.dealt)}</em></small>${cityRisk?`<p class="fc-risk">${esc(cityRisk)}</p>`:''}`:p.effectOnly?`<div class="fc-top"><span class="fc-title">${esc(title)}</span></div>`:forecastHtml(selectedArmyId,target,p,title);
    const v=view(state),names=Object.fromEntries(campaignMapModel(v).units.map(a=>[a.id,a.name]));
    const scales=Object.fromEntries(Object.values(v.knowledge.observedArmies).filter(a=>v.knowledge.tiles[a.tileId]==='VISIBLE').map(a=>[a.armyId,campaignShownScale(state,a.armyId,v.factionId)]));
-   setTip(tip,`<p class="fc-sum">${esc(tacticChangeText({...p,attackerId:selectedArmyId,targetId:target},{name:c.name,ownIds:Object.keys(v.ownArmies),preview:true}))}</p>`+html+((p.cityId||p.effectOnly)&&effects?`<ul class="fc-mods">${effects}</ul>`:'')+tacticTargetsHtml(p,v,names,scales),p.cityId?`내구 −${p.dealt}`:title);
+   setTip(tip,`<p class="fc-sum">${esc(tacticChangeText({...p,attackerId:selectedArmyId,targetId:target},{name:c.name,names,ownIds:Object.keys(v.ownArmies),preview:true}))}</p>`+html+((p.cityId||p.effectOnly)&&effects?`<ul class="fc-mods">${effects}</ul>`:'')+tacticTargetsHtml(p,v,names,scales),p.cityId?`내구 −${p.dealt}`:title);
   }catch(error){setTip(tip,`<p class="fc-sum">${esc(errorText(error))}</p>`,errorText(error));}
   tip.hidden=false;placeTip(tip,e);return;
  }
@@ -2277,7 +2464,7 @@ $('#map').addEventListener('pointerover',function mapPointerOver(e){
  if(cityId&&target.targetId){const text=targetText(target),risk=surpriseWarning(view(state).diplomacy?.factions?.find(f=>f.factionId===(state.armies[target.targetId]?.factionId??state.cities[cityId]?.ownerFactionId))?.attackWarning);setTip(tip,`<p class="fc-sum">${esc(text)}</p>${risk?`<p class="fc-risk">${esc(risk)}</p>`:''}`,text);tip.hidden=false;placeTip(tip,e);return;}
  tip.hidden=true;tip.classList?.remove?.('forecast');if(hoverSide){hoverSide=null;drawMap(null,true);}
  const id=hoverTile;
- if(cityId&&view(state).ownCities[cityId]&&state.armies[selectedArmyId]?.tileId===hoverTile){const why=garrisonReason(state,selectedArmyId);tip.textContent=why?reasonText(why):'누르면 성으로 들어가 예비병이 됩니다 — 부대는 해산';tip.hidden=false;placeTip(tip,e);return;}
+ if(cityId&&view(state).ownCities[cityId]&&state.armies[selectedArmyId]?.tileId===hoverTile){const why=garrisonReason(state,selectedArmyId);tip.textContent=commandIntentText({kind:'move'},{name:view(state).ownCities[cityId].name,ownCity:true,atCity:true,blocked:why?reasonText(why):''});tip.hidden=false;placeTip(tip,e);return;}
  if(moveMode&&id){
   // Commands replace state; selection and tile changes also invalidate this entry.
   let cached=mapPointerOver.movePreview;
@@ -2423,11 +2610,14 @@ function drawMap(v,hoverOnly=false){
  const model=campaignMapModel(v,{selectedArmyId,movedArmyIds:Object.values(state.armies).filter(a=>state.movedArmyIds.includes(a.armyId)||armyActionEnded(state,a.armyId)).map(a=>a.armyId),moveOptions:options,destination,portraits:plateFaces()});
  if(cityOwnershipState!==state){cityOwnershipState=state;cityOwnershipView=getFactionView(state);}
  refreshMapOwnership(model,cityOwnershipView,cityOwnershipEvents.get(state));
+ model.fords=['v2','v3'].includes(state.mapId)?model.bridges??[]:Object.entries(state.mapRules.crossings??{}).filter(([edge,kind])=>kind==='ford'&&state.mapRules.riverEdges.includes(edge)).map(([edge])=>edge.split('|')).filter(edge=>edge.every(id=>v.knowledge.tiles[id]&&v.knowledge.tiles[id]!=='UNEXPLORED'));
  // Only own public records receive the existing own-unit comparison rating.
  for(const u of model.units){const a=v.ownArmies[u.id];if(a){u.braced=!!a.braced;u.ratings=campaignUnitRatings(state,u.id);}}
  for(const u of model.units)u.active=!!selectedArmyId&&(selectedArmyIds.includes(u.id)||u.id===selectedArmyId)||overlapPick?.count>1&&!v.ownArmies[overlapPick.id]&&overlapPick.id===u.id;
  if(model.places){const xs=v.exploration?.places??[];model.places=model.places.map(p=>{const x=xs.find(e=>e.placeId===p.label),layer=x?.eventName?TRACE_LAYER[state.exploration?.places?.[p.label]?.eventId]??null:null;return {...p,status:x?.status,eventName:x?.eventName,layer,layerName:layer?TRACE_LAYERS[layer].name:null};});}
  model.highlights.orders=orderHighlights(state,selectedArmyIds);
+ model.highlights.platformRange=platformRangeTiles(v,selectedArmyId);
+ for(const u of model.units)u.platformState=({...v.ownArmies,...v.knowledge.observedArmies})[u.id]?.platformState;
  if(selectedArmyId&&!inputLocked()&&moveMode){
   model.highlights.zoc=visibleControlZones(state,selectedArmyId);
   const points=draftPoints(),preview=destination||points.length?movementPreview(destination):null;
@@ -2452,7 +2642,8 @@ function drawMap(v,hoverOnly=false){
  // 아직 행동할 수 있는 내 부대(테두리 빛) · 내 성 안 병력(성 이름판 정보 줄) — 사용자 2026-10-11
  for(const u of model.units)u.ready=state.phase==='PLAYER'&&state.armies[u.id]?.factionId===state.playerFactionId&&!armyActionEnded(state,u.id);
  for(const c of model.cities)c.attackable=!!selectedArmyId&&!inputLocked()&&['unit','city','strike','approach'].includes(mapTarget(selectedArmyId,state.cities[c.id].tileId,c.id).kind);
- for(const c of model.cities){const oc=v.ownCities?.[c.id];if(oc)c.troops=oc.reserveTroops??0;}
+ for(const c of model.cities){const publicCity=cityPublicReadout(v,c.id,cityProductionBadge(v.ownCities?.[c.id]??{}));if(publicCity)Object.assign(c,publicCity);}
+ for(const u of model.units){u.side=v.ownArmies[u.id]?'ally':v.diplomacy?.factions?.find(f=>f.factionId===u.factionId)?.state==='ALLIANCE'?'allied':'enemy';u.remembered=!!u.enemy&&v.knowledge.tiles[u.tileId]!=='VISIBLE';}
  updateTacticReady(model);
  overlayAnimations(model);
  for(const u of model.units){const a=state.armies[u.id];if(a&&Number.isInteger(a.facing))u.faceLeft=[2,3,4].includes(a.facing);}
@@ -2487,9 +2678,9 @@ function applyZoom(){
  const svg=$('#map svg');if(!svg)return;
  const width=svg.viewBox?.baseVal?.width;
  if(width)svg.style.width=width*zoom+'px';
- svg.classList.toggle('zoom-far',zoom<.75);svg.classList.toggle('zoom-near',zoom>=1.4);
- // C170: this map's cover clamp can stop at 1x; unit detail still folds there.
- svg.classList.toggle('units-far',zoom<1.2);
+ const far=mapLabelDetail(zoom)==='far';
+ svg.classList.toggle('zoom-far',far);svg.classList.toggle('zoom-near',!far);
+ svg.classList.toggle('units-far',far);
  // Wrap visual children, retaining the original placement, data target and hit extent.
  // The protected map renderer and label CSS remain untouched.
  if(document.body.classList.contains('hud-band')){
@@ -2503,11 +2694,21 @@ function applyZoom(){
    // Claude 10-14: 예전 크기의 투명한 누르는 판을 따로 두지 않는다 — 줄인 표지보다 커서 이웃 칸(적이 선 칸)까지 덮어, 적을 눌러도 우리 부대가 눌렸다(공격 안 됨). 누르는 자리 = 줄인 그림 그대로
    if(!art){art=document.createElementNS('http://www.w3.org/2000/svg','g');art.classList.add('c153-label-art');while(label.firstChild)art.append(label.firstChild);label.append(art);}
    art.setAttribute('transform',`scale(${scale})`);
-   const unit=label.parentElement;if(label.classList.contains('plate-top')&&unit.hasAttribute('data-troop-top'))label.setAttribute('transform',`translate(0 ${troopPlateY(Number(unit.dataset.troopHead),scale)})`);
+   // Map tilt/perspective magnifies labels as well as zoom. Measure the actual
+   // screen width, then scale uniformly so the 80px/152px reference stays quiet.
+   let labelScale=scale;
+   const counter=art.querySelector('.c190-marker .unit-counter-bg,.c190-city-band .city-band-bg');
+   if(counter){const r=counter.getBoundingClientRect(),w=counter.getBBox().width;if(r.width>0){labelScale=scale*w/r.width;art.setAttribute('transform',`scale(${labelScale})`);}}
+   const unit=label.parentElement;if(label.classList.contains('plate-top')&&unit.hasAttribute('data-troop-top'))label.setAttribute('transform',`translate(0 ${troopPlateY(Number(unit.dataset.troopHead),labelScale)})`);
   }
  }
+ placeCityQuick();
 }
 export function mapLabelScale(value){return value>1.7?1.7/value:1;}
+// Panning changes the map perspective even at the same zoom. Coalesce label
+// sizing and the castle connector into one frame after scrolling settles.
+let c190LabelFrame=null;
+viewport.addEventListener('scroll',()=>{if(c190LabelFrame!==null)return;c190LabelFrame=requestAnimationFrame(()=>{c190LabelFrame=null;if(state)applyZoom();});},{passive:true});
 export function screenScrollDelta(m,x,y,z){const det=m.a*m.d-m.b*m.c;return Math.abs(det)<1e-8?{x:0,y:0}:{x:(m.d*x-m.c*y)*z/det,y:(m.a*y-m.b*x)*z/det};}
 export function zoomScroll(left,top,x,y,from,to){return {left:(left+x)*to/from-x,top:(top+y)*to/from-y};}
 let zoomTimer=null;
@@ -2540,7 +2741,7 @@ $('#faction')?.addEventListener?.('click',()=>{if(!state)return;$('#faction-moda
 $('#faction-close')?.addEventListener?.('click',()=>{$('#faction-modal').hidden=true;});
 $('#faction-content')?.addEventListener?.('click',e=>{if(!state||inputLocked())return;const b=e.target.closest('[data-diplo-propose],[data-diplo-end]');if(!b)return;
  const cmd=b.dataset.diploPropose?{type:'DIPLO_PROPOSE',factionId:b.dataset.diploPropose,kind:b.dataset.kind}:{type:'DIPLO_END_ALLIANCE',factionId:b.dataset.diploEnd};
- try{state=step(state,cmd);render();renderFactionModal();}catch(err){$('#status').textContent=errorText(err);}});
+ try{const before=state;state=step(state,cmd);diplomacyFeedback(before,state);render();renderFactionModal();}catch(err){$('#status').textContent=errorText(err);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#rules-modal')&&!$('#rules-modal').hidden)$('#rules-modal').hidden=true;});
 // The band and N/Space share selection and camera behavior.
 function nextBandUnit(){
@@ -2579,3 +2780,7 @@ $('#map').addEventListener('pointerleave',()=>{$('#map').classList.remove('frien
 
 // C186 retry uses the existing faction-start path.
 {const retry=new URLSearchParams(location.search).get('retryFaction'),card=retry?document.querySelector(`#selection .w-lord[data-pick="${CSS.escape(retry)}"]`):null;if(card){card.click();$('#start-go').click();}}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&v3Mode()==='trace'){setV3Mode('world');if(state)render();}});
+
+window.__worldReady=true;

@@ -1,5 +1,7 @@
 import {combatFireAt} from './campaign-rule-registry.mjs';
 import {selectCityJob,cityJobReason} from './campaign-economy.mjs';
+import {C184,domesticEngineEnabled,initializeDomesticEngine,clearDomesticOfficer,domesticOfficerPresent,DEPARTMENTS} from './campaign-domestic.mjs';
+import {citySupplyRoute,fieldDrainTurns,armyFoodPerTurn} from './campaign-supply.mjs';
 import troopAssignments from '../data/c169a-troops.json' with {type:'json'};
 import {troopText} from './troop-display.mjs';
 import {injuryReason} from './campaign-injury.mjs';
@@ -224,11 +226,44 @@ export function sortieTroopRange(s,c,type){
  const target=type==='hubao'?500+bonus+C24.hubaoReserve:type==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):500+bonus;
  return {min:specialTroop(s,type)?500:200,max:Math.floor(Math.min(domesticMusterAvailable(s,c),Math.floor(target*uniqueMusterFactor(s,c)))/50)*50,step:50};
 }
-function sortieTile(s,c){
- const occupied=new Set(Object.values(s.armies).filter(a=>a.troopCount>0&&(!s.terminal||s.terminal.armiesById[a.armyId]?.disposition==='ACTIVE')).map(a=>a.tileId));
- return [c.tileId,...(c.footprint?.gates??[])].find(id=>!occupied.has(id)&&!combatFireAt(s,id));
+export function assignCityDepartment(s,{cityId,department,officerId=null},factionId=s.playerFactionId){
+ initializeDomesticEngine(s);const c=s.cities[cityId];
+ if(!domesticEngineEnabled(s)||c?.ownerFactionId!==factionId||!DEPARTMENTS[department])throw new Error('INVALID_CITY_DEPARTMENT');
+ if(officerId!==null){if(!domesticOfficerPresent(s,c,officerId)||Object.values(s.cities).some(city=>city.governorId===officerId||city.absentGovernorId===officerId))throw new Error('INVALID_DEPARTMENT_OFFICER');clearDomesticOfficer(s,officerId);}
+ c.departments[department]=officerId;return s;
 }
-export function sortieReason(s,{cityId,officerId,troopType,troopCount},factionId=s.playerFactionId){
+export function transferCityOfficer(s,{officerId,fromCityId,toCityId},factionId=s.playerFactionId){
+ initializeDomesticEngine(s);const o=s.officers[officerId],from=s.cities[fromCityId],to=s.cities[toCityId];
+ const route=domesticEngineEnabled(s)&&from&&to&&from!==to&&from.ownerFactionId===factionId&&domesticOfficerPresent(s,from,officerId)&&citySupplyRoute(s,from,to);
+ if(!route)throw new Error('INVALID_OFFICER_TRANSFER');
+ clearDomesticOfficer(s,officerId);
+ if(from.governorId===officerId){from.governorId=null;if(s.terminal)s.terminal.citiesById[fromCityId].governorId=null;}
+ o.locationRef={kind:'NONE',id:null};o.travelState='TRAVELLING';terminalOfficer(s,o);
+ s.officerTransfers.push({officerId,factionId,fromCityId,toCityId,departureTurn:s.turn,arrivalTurn:s.turn+(route.length-1<=C184.transferOneTurnDistance?1:2),state:'MOVING'});
+ syncCampaignAdministrativeTerminal(s);return s;
+}
+export function settleOfficerTransfers(s){
+ if(!domesticEngineEnabled(s))return;
+ for(const t of s.officerTransfers??[]){
+  if(t.state==='ARRIVED'||t.state==='CANCELLED')continue;const o=s.officers[t.officerId],from=s.cities[t.fromCityId],to=s.cities[t.toCityId];
+  if(o?.lifeState!=='ALIVE'||o.captivityState!=='FREE'||o.allegianceFactionId!==t.factionId){t.state='CANCELLED';continue;}
+  if(s.turn<t.arrivalTurn)continue;
+  if(!citySupplyRoute(s,from,to)){
+   t.state='BLOCKED';
+   if(to?.ownerFactionId!==t.factionId&&from?.ownerFactionId===t.factionId){t.toCityId=t.fromCityId;t.arrivalTurn=s.turn+1;}
+   continue;
+  }
+  o.locationRef={kind:'CITY',id:t.toCityId};o.travelState='STATIONARY';terminalOfficer(s,o);t.state='ARRIVED';t.arrivedTurn=s.turn;
+  (s.administrationLog??=[]).push({turn:s.turn,factionId:t.factionId,text:`${o.name}: ${s.cityDisplayNames?.[t.toCityId]??to.name} 도착`});
+ }
+ syncCampaignAdministrativeTerminal(s);
+}
+function sortieTile(s,c,tileId){
+ const occupied=new Set(Object.values(s.armies).filter(a=>a.troopCount>0&&(!s.terminal||s.terminal.armiesById[a.armyId]?.disposition==='ACTIVE')).map(a=>a.tileId));
+ const tiles=[c.tileId,...(c.footprint?.gates??[])];
+ return (tileId===undefined?tiles:tiles.filter(id=>id===tileId)).find(id=>!occupied.has(id)&&!combatFireAt(s,id));
+}
+export function sortieReason(s,{cityId,officerId,troopType,troopCount,tileId},factionId=s.playerFactionId){
  const fail=(code,message)=>({code,message}),c=s.cities[cityId],o=s.officers[officerId];
  if(s.mapId==='v1'||!c||c.ownerFactionId!==factionId)return fail('SORTIE_CITY','출진할 아군 성이 없습니다.');
  if(!o||!freeCityOfficers(s,c).some(x=>x.officerId===officerId))return fail('SORTIE_OFFICER','출진 가능한 자유 장수가 없습니다.');
@@ -242,6 +277,7 @@ export function sortieReason(s,{cityId,officerId,troopType,troopCount},factionId
  if(troopCount!==undefined&&!Number.isSafeInteger(troopCount))return fail('SORTIE_COUNT','병력 수를 정수로 고르십시오.');
  if(domesticMusterAvailable(s,c)<range.min||troopCount>domesticMusterAvailable(s,c))return fail('SORTIE_RESERVE',`예비병 부족 — 최소 ${troopText(range.min)}명 필요`);
  if(troopCount!==undefined&&(!Number.isSafeInteger(troopCount)||troopCount<range.min||troopCount>range.max||troopCount%range.step))return fail('SORTIE_COUNT',`병력은 ${troopText(range.min)}~${troopText(range.max)}명, ${troopText(range.step)}명 단위로 고르십시오.`);
+ if(tileId!==undefined&&!sortieTile(s,c,tileId))return fail('SORTIE_GATE',![c.tileId,...(c.footprint?.gates??[])].includes(tileId)?'이 성의 성문이 아닙니다.':combatFireAt(s,tileId)?'불타는 칸':'그 문 앞에 부대가 있음');
  if(!sortieTile(s,c))return fail('SORTIE_TILE','빈 칸 없음 — 성 가운데와 성문이 모두 차 있습니다.');
  return null;
 }
@@ -250,13 +286,17 @@ export function sortie(s,command,factionId=s.playerFactionId){
  const reason=sortieReason(s,{...command,troopType},factionId);
  if(reason)throw Object.assign(new Error(`${reason.code}: ${reason.message}`),{code:reason.code});
  const troopCount=command.troopCount??sortieTroopRange(s,c,troopType).max;
+ const tileId=sortieTile(s,c,command.tileId);
  if(!completeMuster(s,c,{officerId:command.officerId,troopType,troopCount}))throw new Error(c.jobBlocked);
+ // Keep legacy muster/AI placement intact; only the explicit SORTIE chooses a gate.
+ if(command.tileId!==undefined){const a=s.armies[o.locationRef.id];a.tileId=tileId;a.facing=null;initializeArmyFacing(s);}
  s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId,text:`${o.name} 출진 — ${troopInfo(s,troopType).troopDisplayName} ${troopText(troopCount)}명`});
  return s;
 }
 export function musterTroopOptions(s,c,officerId){return [...(s.officers[officerId]?.allowedTroops??[]),...Object.keys(SPECIAL_TROOPS)].map(type=>{
  const range=sortieTroopRange(s,c,type),reason=sortieReason(s,{cityId:c.cityId,officerId,troopType:type},c.ownerFactionId);
- return {...troopInfo(s,type),blockedReason:reason?.message??null,reasonCode:reason?.code??null,reserveRequired:range.min,troopCountRange:range};
+ const count=range.max,perTurn=armyFoodPerTurn({troopCount:count},s)*fieldDrainTurns(s,{troopCount:count});
+ return {...troopInfo(s,type),blockedReason:reason?.message??null,reasonCode:reason?.code??null,reserveRequired:range.min,troopCountRange:range,...(domesticEngineEnabled(s)?{fieldConsumption:{troopCount:count,perTurn,drainTurns:fieldDrainTurns(s,{troopCount:count}),label:'최대 병력으로 보급권 밖에서 차례당 소모'}}:{})};
 });}
 export function musterReason(s,c,officerId,troopType){
  return sortieReason(s,{cityId:c.cityId,officerId,troopType},c.ownerFactionId)?.message??null;
@@ -275,7 +315,7 @@ export function completeMuster(s,c,job){
  c30MusterOrigin(s,c,a);domesticMuster(s,c,a);
  s.armies[id]=a;s.factions[c.ownerFactionId].armyIds.push(id);o.locationRef={kind:'ARMY',id};
  s.personnel.formations.push({formationId:id,nodeId:c.cityId,identity:{baseTroopId:troopToCampaign(job.troopType),specialTroopId:SPECIAL_TROOPS[job.troopType]?job.troopType:null},field:count,targetStrength:Math.max(count,specialTroop(s,job.troopType)?job.troopType==='wudang'?C24.wudangCount:job.troopType==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):job.troopType==='hubao'?500+bonus+C24.hubaoReserve:500+bonus:500+bonus),specialSupportAvailable:false});delete c.starMusterBonus;
- if(c.governorId===o.officerId){c.governorId=null;if(s.terminal)s.terminal.citiesById[c.cityId].governorId=null;}
+ if(c.governorId===o.officerId){if(domesticEngineEnabled(s))c.absentGovernorId=o.officerId;c.governorId=null;if(s.terminal)s.terminal.citiesById[c.cityId].governorId=null;}
  if(s.terminal){s.terminal.armyOrder.push(id);s.terminal.armyOrder.sort();s.terminal.armiesById[id]={armyId:id,factionId:a.factionId,commanderId:o.officerId,disposition:'ACTIVE',terminalAtTick:null,terminalRecordId:null};terminalOfficer(s,o,o.locationRef);syncCampaignAdministrativeTerminal(s);}
  loadMusterSupply(s,a,c);syncResearchCities(s);initializeArmyFacing(s);initializeClasses(s);c.reserveTroops=s.personnel.lots.filter(l=>l.nodeId===c.cityId&&l.kind!=='WOUNDED').reduce((n,l)=>n+l.count,0);if(specialTroop(s,job.troopType)){s.c24Stats??={musters:{},catapultCityDamage:0};s.c24Stats.musters[job.troopType]=(s.c24Stats.musters[job.troopType]??0)+1;}(s.c16Stats??={musters:0,wandererRecruitments:0}).musters++;observeRelationGroups(s);return true;
 }
@@ -309,6 +349,7 @@ function disbandIntoCity(s,a,c){
  s.economy.lotFaction[lotId]=a.factionId;s.economy.recruitedReady[lotId]=true;s.economy.readyAt[lotId]=s.turn;c.reserveTroops+=a.troopCount;
  s.personnel.formations.find(f=>f.formationId===id).field=0;a.troopCount=0;a.hp=0;a.currentOrder=null;a.movementState=null;a.engagedArmyIds=[];
  const o=s.officers[a.commanderId];o.locationRef={kind:'CITY',id:c.cityId};terminalOfficer(s,o);
+ if(domesticEngineEnabled(s))for(const city of Object.values(s.cities))if(city.absentGovernorId===o.officerId){city.absentGovernorId=null;if(city===c&&!c.governorId){c.governorId=o.officerId;s.terminal.citiesById[c.cityId].governorId=o.officerId;terminalOfficer(s,o,o.locationRef);}}
  delete s.moveOrders[id];s.orderQueue=s.orderQueue.filter(x=>x!==id);if(s.ui?.selectedArmyId===id)s.ui.selectedArmyId=null;
  for(const b of Object.values(s.armies))b.engagedArmyIds=b.engagedArmyIds.filter(x=>x!==id);
  syncCampaignAdministrativeTerminal(s);return s;
@@ -341,9 +382,9 @@ export function selectAiRoster(s,factionId){
  for(const o of Object.values(s.wanderers))if(s.cities[o.locationRef.id].ownerFactionId===factionId){
   const wallet=s.captiveRecruitment.factions[factionId];if(s.factions[factionId].prestige-wallet.reservedPrestige>=cityRecruitCost(s,o.locationRef.id,factionId)&&!Object.values(s.captiveRecruitment.proposals).some(p=>p.targetOfficerId===o.officerId&&p.status==='NEGOTIATING'))recruitWanderer(s,{officerId:o.officerId,cityId:o.locationRef.id},factionId);
  }
- for(const c of Object.values(s.cities))if(c.ownerFactionId===factionId&&!c.governorId&&c.occupationState==='NORMAL'){
+ for(const c of Object.values(s.cities))if(c.ownerFactionId===factionId&&!c.governorId&&!(domesticEngineEnabled(s)&&c.absentGovernorId)&&c.occupationState==='NORMAL'){
   const o=freeCityOfficers(s,c,{includeGovernor:false}).sort((a,b)=>b.baseStats.politics-a.baseStats.politics||a.officerId.localeCompare(b.officerId))[0];
-  if(o){c.governorId=o.officerId;domesticGovernor(s,c);syncResearchCities(s);terminalOfficer(s,o,o.locationRef);if(s.terminal){s.terminal.citiesById[c.cityId].governorId=o.officerId;syncCampaignAdministrativeTerminal(s);}}
+  if(o){if(domesticEngineEnabled(s))clearDomesticOfficer(s,o.officerId);c.governorId=o.officerId;domesticGovernor(s,c);syncResearchCities(s);terminalOfficer(s,o,o.locationRef);if(s.terminal){s.terminal.citiesById[c.cityId].governorId=o.officerId;syncCampaignAdministrativeTerminal(s);}}
  }
 }
 

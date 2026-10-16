@@ -308,6 +308,11 @@ export function clearExtinctDiplomacy(s){
   s.council.resolutions=s.council.resolutions.filter(r=>r.status!=='ACTIVE'||!obsolete(r));
  }
 }
+// C196: presentation query for the player's own agreement, no state changes.
+export function diplomacyTiming(s,f,other,kind='TRUCE'){
+ const p=s.c43?.pairs?.[diplomacyPair(f,other)],pending=p?.pending;
+ return {kind:pending?.state??kind,startsAt:pending?.at??s.turn+1,turns:((pending?.state??kind)==='TRUCE'?data.truce.turns:null),pending:!!pending};
+}
 export function diplomacyView(s,f){return {
  me:{trust:reputation(s,'trust',f),threat:reputation(s,'threat',f)},
  factions:Object.keys(s.factions).filter(id=>id!==f&&s.factions[id].alive).sort().map(id=>{const p=s.c43.pairs[diplomacyPair(f,id)],truce=canProposeDiplomacy(s,f,id,'TRUCE'),alliance=canProposeDiplomacy(s,f,id,'ALLIANCE');return {factionId:id,name:name(s,id),opinionOfMe:diplomacyOpinion(s,id,f),myOpinion:diplomacyOpinion(s,f,id),opinionReasons:diplomacyOpinionReasons(s,id,f).map(r=>({text:opinionModifiers[r.key].text.replace(/C\d+\s*/g,''),value:r.value,turnsLeft:r.persistent?null:r.remaining})),trust:reputation(s,'trust',id),threat:reputation(s,'threat',id),state:p.state,...(p.state==='TRUCE'?{turnsLeft:p.until-s.turn+1}:{}),...(p.endingAt?{endingAt:p.endingAt}:{}),contact:diplomacyContact(s,f,id),canGift:canGift(s,f,id),canPropose:{TRUCE:truce,ALLIANCE:alliance},aiStance:{TRUCE:diplomacyAcceptance(s,f,id,'TRUCE'),ALLIANCE:diplomacyAcceptance(s,f,id,'ALLIANCE')}};}),

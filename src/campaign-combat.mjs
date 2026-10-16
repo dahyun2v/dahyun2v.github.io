@@ -15,7 +15,7 @@ import {c30Combat,c30TacticUsed,c30Strategy,c30ElementDamage,c30ChargeWeight,c30
 import {c29Record,c29TacticUsed,c29Combat,c29Aw,c29PostCombat} from './campaign-c29.mjs';
 import {C28,c28Rule,recordC28Combat,recordC28Tactic,c28ControlGuard} from './campaign-career.mjs';
 import {domesticWall,domesticStrike,combatRule,combatRuleLine,combatParams,combatCount,combatTacticRule,combatAlly,combatArmyAt,oppositeCombatTile,combatEmptyStep,combatFinishAttack,combatRecordRouts,runCombatRule,executeCampaignRule,combatCanPostMove} from './campaign-rule-registry.mjs';
-import {C24,specialTroop,c24DamageFactor,jiefanLine,lossMoraleThreshold} from './campaign-special-troops.mjs';
+import {C193,C24,specialTroop,c24DamageFactor,jiefanLine,lossMoraleThreshold,platformState,platformAttackReason} from './campaign-special-troops.mjs';
 import {C23,archerAttackReason,archerEngaged} from './campaign-abilities.mjs';
 export {archerAttackReason} from './campaign-abilities.mjs';
 import {c22AttackMultiplier,consumeC22Attack} from './campaign-events.mjs';
@@ -85,7 +85,7 @@ export function campaignUnitRatings(state, armyId) {
  return {attack:out.damage,defense:Math.round(standardLoss/incoming.damage*100),mobility,notes:[`표준: 병력 ${troopText(250)} · 능력 70 · 정돈 근접보병 · 평지 정면 / 방어 100 = 표준`, `공격 상성 ×${out.multipliers.matchup} · 기동 평지 ${mobility}칸`,[...officerEffectCards(s,own.commanderId).map(c=>c.name).slice(0,2),...out.effectLines,...incoming.effectLines].filter((x,i,a)=>a.indexOf(x)===i).join(' · ')||'추가 특기 보정 없음']};
 }
 
-export const attackRange = (army,s=null) => ( troopToCampaign(army.troopType)==='BT03'||s&&specialTroop(s,army.troopType)&&army.troopType==='jiefan'||s&&hasCampaignRule(s,army.armyId,'REACH_2')?2:1)+(s?c33Range(s,army.armyId)+c34Range(s,army.armyId):0);
+export const attackRange = (army,s=null) => army.troopType==='catapult'?platformState(army)==='DEPLOYED'?C193.catapult.range+(s?c33Range(s,army.armyId):0):0:( troopToCampaign(army.troopType)==='BT03'||s&&specialTroop(s,army.troopType)&&army.troopType==='jiefan'||s&&hasCampaignRule(s,army.armyId,'REACH_2')?2:1)+(s?c33Range(s,army.armyId)+c34Range(s,army.armyId):0);
 // v3.6 default; v35 and p1/p2/p3 remain selectable comparison trials.
 const troopMatchups={
  v36:{'BT01>BT02':1.25,'BT01>BT03':1.2,'BT02>BT01':.9,'BT02>BT03':1.15,'BT02>BT04':1.4,'BT03>BT01':1.25,'BT03>BT02':[.85,'FRONT'],'BT03>BT04':1.3,'BT04>BT01':1.2,'BT04>BT03':1.4},
@@ -101,7 +101,7 @@ function troopMatchup(s,attacker,target,side){
 function combatFollowups(s,id,target,hit,options){
  if(options.counter||options.reaction||options.pursuit)return [];
  const rows=[],pincer=combatRule(s,id,'PINCER_FOLLOWUP'),e=combatTacticRule(options.tactic);
- const add=(ally,rule,ratio=100)=>{if(!ally||!diplomacyArmyHostile(s,ally.armyId,target)||archerAttackReason(s,ally.armyId))return;const loss=Math.round(attackFormula(s,ally.armyId,target,undefined,{reaction:true,first:false}).damage*ratio/100);rows.push({sourceId:ally.armyId,targetId:target,rule,loss,line:`${rule==='PINCER_FOLLOWUP'?combatRuleLine(s,id,rule):options.tactic?.name??c33Owned(s,ally.armyId,rule)?.card.name??ruleLine(s,ally.armyId,rule)} — ${s.officers[ally.commanderId].name} 추격타 ${troopDelta(-loss)}`});};
+ const add=(ally,rule,ratio=100)=>{if(!ally||platformAttackReason(s,ally.armyId)||!diplomacyArmyHostile(s,ally.armyId,target)||archerAttackReason(s,ally.armyId))return;const loss=Math.round(attackFormula(s,ally.armyId,target,undefined,{reaction:true,first:false}).damage*ratio/100);rows.push({sourceId:ally.armyId,targetId:target,rule,loss,line:`${rule==='PINCER_FOLLOWUP'?combatRuleLine(s,id,rule):options.tactic?.name??c33Owned(s,ally.armyId,rule)?.card.name??ruleLine(s,ally.armyId,rule)} — ${s.officers[ally.commanderId].name} 추격타 ${troopDelta(-loss)}`});};
  if(pincer)add(combatAlly(s,id,target,{behind:true}),'PINCER_FOLLOWUP',pincer.params.ratio);
  if(e?.rule==='DUAL_STRIKE')add(combatAlly(s,id,target),'DUAL_STRIKE');
  if(e?.rule==='PIERCE'){const other=combatArmyAt(s,oppositeCombatTile(s,id,target));if(other){const loss=Math.round(hit.damage*combatParams(e.params,options.tactic.rank).ratio/100);rows.push({sourceId:id,targetId:other.armyId,rule:'PIERCE',loss,line:`${options.tactic.name} — ${s.officers[other.commanderId].name} 관통 ${troopDelta(-loss)}`});}}
@@ -110,6 +110,7 @@ function combatFollowups(s,id,target,hit,options){
 }
 export function attackTargets(s,id) {
   const a=s.armies[id];
+  if(platformAttackReason(s,id))return [];
   if(!a||a.c34?.disarmUntil>=s.turn||a.c32?.disarmUntil>=s.turn||a.c33?.bideUntil>=s.turn||archerAttackReason(s,id)||attackConfused(s,id)||a.morale==='ROUTING'||!castleArmyActive(s,a)||!canMainAction(s,id))return [];
   const v={knowledge:s.knowledge[a.factionId]};
   return Object.values(v.knowledge.observedArmies).filter(t=>s.knowledge[a.factionId].tiles[t.tileId]==='VISIBLE'&&
@@ -162,7 +163,7 @@ function attackFormula(s,attackerId,targetId,troopCount=s.armies[attackerId].tro
   const effect=damageEffects(s,attackerId,targetId,{...options,charge,classDamage:cls.damage});
   const social=relationAttack(s,attackerId,targetId,options);effect.factor*=social.factor;effect.lines.push(...social.lines);
   const oath=a.c27?.oath&&combatRule(s,attackerId,'OATH_OF_REVENGE'),penalty=oath?Math.max(0,1-oath.params.penalty/100):1;
-  const damage=Math.max(1,Math.round((hold?Math.min(1/(1-hold.ability.params.frontReduce/100),brace)/ (1/(1-hold.ability.params.frontReduce/100)):1)*(options.tactic&&a.c33?.doubleTurn===s.turn?2:1)*(t.c33?.smokeUntil>=s.turn&&at==='BT03'?.6:1)*(c33Owned(s,attackerId,'POINT_BLANK')&&archerEngagedC33(s,attackerId)? .7:1)*(options.tactic?1:uniqueOrdinaryDamageFactor(s,attackerId))*(1-(options.reaction&&uniqueOwned(s,targetId,'U_SUPERVISE')?30:0)/100)*penalty*(s.armies[attackerId].c28ExposeTurn===s.turn?1-C28.exposePenalty/100:1)*c24DamageFactor(s,a,t,charge)*effect.factor*c31DamageFactor(s,a,t,options)*c22AttackMultiplier(s,a,t.factionId,options)*(!options.counter&&!options.reaction?starAttackMultiplier(s,a):1)*terrainAttack*troopCount*.12*attack*matchup*river*(flank+sideMultiplier-1)*chargeMultiplier*formation*shaken/(defense*terrain*castle*brace)));
+  const damage=platformAttackReason(s,attackerId)?0:Math.max(1,Math.round((hold?Math.min(1/(1-hold.ability.params.frontReduce/100),brace)/ (1/(1-hold.ability.params.frontReduce/100)):1)*(options.tactic&&a.c33?.doubleTurn===s.turn?2:1)*(t.c33?.smokeUntil>=s.turn&&at==='BT03'?.6:1)*(c33Owned(s,attackerId,'POINT_BLANK')&&archerEngagedC33(s,attackerId)? .7:1)*(options.tactic?1:uniqueOrdinaryDamageFactor(s,attackerId))*(1-(options.reaction&&uniqueOwned(s,targetId,'U_SUPERVISE')?30:0)/100)*penalty*(s.armies[attackerId].c28ExposeTurn===s.turn?1-C28.exposePenalty/100:1)*c24DamageFactor(s,a,t,charge)*effect.factor*c31DamageFactor(s,a,t,options)*c22AttackMultiplier(s,a,t.factionId,options)*(!options.counter&&!options.reaction?starAttackMultiplier(s,a):1)*terrainAttack*troopCount*.12*attack*matchup*river*(flank+sideMultiplier-1)*chargeMultiplier*formation*shaken/(defense*terrain*castle*brace)));
   const ruleLines=[...(momentum&&extra?[combatRuleLine(s,attackerId,'CHARGE_MOMENTUM',`돌격 +${extra*100}%`)]:[]),...(noFront?[combatRuleLine(s,attackerId,'NO_FRONT','최소 측면 · 대가 후방 보너스 0')]:[]),...(ambusher?[combatRuleLine(s,attackerId,'AMBUSHER','시야 밖 첫 공격 후방')]:[]),...(square?[combatRuleLine(s,targetId,'SQUARE','측면·후방 보너스 무효 · 이동 1칸')]:[]),...(hedge?[combatRuleLine(s,targetId,'HEDGEHOG','정돈 측면 무효')]:[]),...(stakes?['말뚝 박고 버티기 — 측면·돌격 보너스 무효 · 다음 이동 불가']:[]),...(oath?[combatRuleLine(s,attackerId,'OATH_OF_REVENGE',`피해 −${oath.params.penalty}% · ${a.c27.oath.left}회 남음`)]:[]),...(a.c27?.ambush&&first?['매복 — 첫 공격 후방']:[])];
   return {damage,side,charge,sideWeight:square||hedge||stakes&&side==='FLANK'?0:side==='REAR'?C12.rearWeight:side==='FLANK'?C12.flankWeight:0,multipliers:{...(terrainAttack!==1?{terrainAttack}:{}),...(['v2','v3'].includes(s.mapId)?{relations:social.factor}:{}),c24:c24DamageFactor(s,a,t,charge),side:sideMultiplier,charge:chargeMultiplier,formation,matchup,terrain,castle,river,flank,brace,shaken,effects:effect.special,aptitude:effect.aptitude,traitDefense:effect.defense},effectLines:[...(terrainAttack!==1?[`병종 × 지형: ${at==='BT04'?'기병':'궁병'} ${s.tiles[a.tileId].terrainType==='forest'?'숲':'언덕'} 공격 ${Math.round((terrainAttack-1)*100)}%`]:[]),...((c31IgnoreControlZone(s,attackerId)||c31IgnoreControlZone(s,targetId))?['위기 장수 — 통제 구역에 멈추지 않음 · 대응: 빈 길을 부대로 막거나 집중 공격']:[]),...cls.lines,...(hold?[classLine(hold,'정면 피해 −20% · 전열 유지')]:[]),...effect.lines,...ruleLines,...(brace>1?['방어 태세 ×1.25']:[]),...(a.morale==='SHAKEN'?['동요 공격 −20%']:[]),...(sideMultiplier>1?[side==='REAR'?'후방 +30%':'측면 +15%']:[]),...(charge?[`돌격 +${Math.round((chargeMultiplier-1)*10000)/100}%`]:[]),...(t.formation==='BROKEN'?['붕괴 +30%']:t.formation==='DISORDERED'?['흐트러짐 +15%']:[])]};
 }
@@ -172,7 +173,8 @@ function attackNumbers(s,attackerId,targetId,options={}) {
   const ignoreBrace=!!(t.braced&&specialTroop(s,a.troopType)&&a.troopType==='danyang');
   const c27Side=attackFormula(s,attackerId,targetId,undefined,options).side;
   const spearPreempt=dt==='BT02'&&at!=='BT03'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===1&&c27Side==='FRONT'&&!options.pursuit&&(!options.reaction||!!options.joint);
-  const chargeStopped=spearPreempt&&at==='BT04'&&(a.movedTiles??0)>=2;
+  const chargeStopped=spearPreempt&&at==='BT04'&&(a.movedTiles??0)>=C193.brace.momentumTiles;
+  const bracedChargeStopped=chargeStopped&&t.braced&&!ignoreBrace;
   const firstStrike=spearPreempt||dt==='BT02'&&c27Side==='FLANK'&&!!c33Owned(s,targetId,'FLANK_FIRST_STRIKE')||!options.pursuit&&hasCampaignRule(s,targetId,'FIRST_STRIKE',['ON_DEFEND'],{targetId:attackerId});
   const flankStop=c27Side!=='FRONT'&&combatRule(s,attackerId,'NO_COUNTER_ON_FLANK'),shatter=combatTacticRule(options.tactic)?.rule==='SHATTER_LINE';
   const cls=classAttack(s,attackerId,targetId,options,c27Side);
@@ -181,7 +183,7 @@ function attackNumbers(s,attackerId,targetId,options={}) {
   let preCounter=0;
   if(canCounter&&firstStrike)preCounter=attackFormula(counterState,targetId,attackerId,t.troopCount,{counter:true,first:false,classCounter:c27Side==='FRONT'}).damage;
   const riposte=armyClass(s,targetId,'CLS_RIPOSTE');
-  const rate=c34CounterFactor(s,targetId,attackerId)*C12.counter*(t.formation==='DISORDERED'?C12.counter:1)*(dt==='BT03'&&!hasCampaignRule(s,targetId,'COUNTER_ALL')?.6:1)*(t.braced&&!ignoreBrace?1.2:1)*(chargeStopped?1+C23.spearChargeCounter:1);
+  const rate=c34CounterFactor(s,targetId,attackerId)*C12.counter*(t.formation==='DISORDERED'?C12.counter:1)*(dt==='BT03'&&!hasCampaignRule(s,targetId,'COUNTER_ALL')?.6:1)*(t.braced&&!ignoreBrace?1.2:1)*(chargeStopped?1+C23.spearChargeCounter:1)*(bracedChargeStopped?C193.brace.preemptMultiplier:1);
   const earlyLoss=surviveRule(s,attackerId,Math.min(a.troopCount,Math.round(preCounter*rate)),false);
   const earlyFormationChanges=[],earlyMoraleChanges=[];
   let hitState=s;
@@ -207,7 +209,7 @@ function attackNumbers(s,attackerId,targetId,options={}) {
   const collapse=formationRisk.check&&t.formation==='DISORDERED';
   const chance=w=>Math.max(0,Math.min(100,C12.moraleBase+(s.officers[t.commanderId].baseStats.leadership+campaignSubAbility(s,t.commanderId,'감화','결집'))/C12.moraleDivisor-relationMoraleWeight(s,targetId,c30MoraleWeight(s,targetId,w))))/100;
   const moraleRisk={check:enemyLoss<t.troopCount&&t.morale!=='ROUTING'&&(moraleWeights.length>0||collapse),conditionalOnCollapse:collapse,successProbability:moraleWeights.reduce((p,w)=>p*chance(w),1)*(collapse?formationRisk.successProbability+(1-formationRisk.successProbability)*chance(C12.collapseMorale):1)};
-  const prediction={c27Followups,reflect,sideWeight:hit.sideWeight,ignoreBrace,spearPreempt:counter&&spearPreempt,chargeStopped:counter&&chargeStopped,earlyFormationChanges,earlyMoraleChanges,moraleRisk,formationRisk,side:hit.side,charge:hit.charge,allyLoss,enemyLoss,rawAllyLoss,rawEnemyLoss,counter,firstStrike:counter&&firstStrike,damage,counterDamage,multipliers:hit.multipliers,effectLines:[...(counter&&spearPreempt?['\uC815\uBA74 \uCC3D\uBCD1 \uC120\uC81C \uBC18\uACA9',...(chargeStopped?['\uB3CC\uACA9 \uBCF4\uB108\uC2A4 \uBB34\uD6A8 \u00B7 \uCC3D\uBCD1 \uBC18\uACA9 +25%']:[])]:[]),...hit.effectLines,...classWoundedLines(s,targetId,enemyLoss),...classWoundedLines(s,attackerId,allyLoss),...(classCamp(s,targetId)&&weight>0?[`[${classCamp(s,targetId).abilityName}] 진지 전열 판정 +${classCamp(s,targetId).formation}`]:[]),...classGuardedLoss(s,targetId,rawEnemyLoss).lines,...classGuardedLoss(s,attackerId,rawAllyLoss).lines,...(counter&&riposte&&c27Side==='FRONT'?[classLine(riposte,`정면 반격 +${riposte.ability.params.counter}%`)]:[]),...c27Followups.map(f=>f.line),...(reflect?[combatRuleLine(s,targetId,'SET_SPEARS','반사 '+troopDelta(-reflect))]:[]),...(flankStop?[combatRuleLine(s,attackerId,'NO_COUNTER_ON_FLANK','측면·후방 반격 없음')]:[]),...(shatter?['전열 깨기 — 반격 없음 · 정돈 → 흐트러짐']:[]),...(hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===2&&hasCampaignRule(s,attackerId,'REACH_2')?[ruleLine(s,attackerId,'REACH_2','2\uCE78 \uACF5\uACA9')]:[]),...(counter&&hasCampaignRule(s,targetId,'COUNTER_ALL')?[ruleLine(s,targetId,'COUNTER_ALL','\uC6D0\uAC70\uB9AC \uBC18\uACA9')]:[])]};
+  const prediction={c27Followups,reflect,sideWeight:hit.sideWeight,ignoreBrace,spearPreempt:counter&&spearPreempt,chargeStopped:counter&&chargeStopped,earlyFormationChanges,earlyMoraleChanges,moraleRisk,formationRisk,side:hit.side,charge:hit.charge,allyLoss,enemyLoss,rawAllyLoss,rawEnemyLoss,counter,firstStrike:counter&&firstStrike,damage,counterDamage,multipliers:hit.multipliers,effectLines:[...(counter&&bracedChargeStopped?['방어 태세 창병 — 돌격 막힘',`정면 선제 피해 ×${C193.brace.preemptMultiplier}`]:[]),...(counter&&spearPreempt?['\uC815\uBA74 \uCC3D\uBCD1 \uC120\uC81C \uBC18\uACA9',...(chargeStopped?['\uB3CC\uACA9 \uBCF4\uB108\uC2A4 \uBB34\uD6A8 \u00B7 \uCC3D\uBCD1 \uBC18\uACA9 +25%']:[])]:[]),...hit.effectLines,...classWoundedLines(s,targetId,enemyLoss),...classWoundedLines(s,attackerId,allyLoss),...(classCamp(s,targetId)&&weight>0?[`[${classCamp(s,targetId).abilityName}] 진지 전열 판정 +${classCamp(s,targetId).formation}`]:[]),...classGuardedLoss(s,targetId,rawEnemyLoss).lines,...classGuardedLoss(s,attackerId,rawAllyLoss).lines,...(counter&&riposte&&c27Side==='FRONT'?[classLine(riposte,`정면 반격 +${riposte.ability.params.counter}%`)]:[]),...c27Followups.map(f=>f.line),...(reflect?[combatRuleLine(s,targetId,'SET_SPEARS','반사 '+troopDelta(-reflect))]:[]),...(flankStop?[combatRuleLine(s,attackerId,'NO_COUNTER_ON_FLANK','측면·후방 반격 없음')]:[]),...(shatter?['전열 깨기 — 반격 없음 · 정돈 → 흐트러짐']:[]),...(hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===2&&hasCampaignRule(s,attackerId,'REACH_2')?[ruleLine(s,attackerId,'REACH_2','2\uCE78 \uACF5\uACA9')]:[]),...(counter&&hasCampaignRule(s,targetId,'COUNTER_ALL')?[ruleLine(s,targetId,'COUNTER_ALL','\uC6D0\uAC70\uB9AC \uBC18\uACA9')]:[])]};
   prediction.appliedTactics=[appliedTactic(attackerId,targetId,hit)];
   prediction.effectLines.push(...survivalLines);Object.defineProperty(prediction,'survivalLines',{value:survivalLines});
   if(hit.charge&&!options.reaction&&!options.pursuit){for(const [rule,detail] of [['BREAKTHROUGH','대가: 자기 전열 한 단계'],['CANTO','남은 이동으로 후퇴 가능 · 추격 적용']])if(combatRule(s,attackerId,rule))prediction.effectLines.push(combatRuleLine(s,attackerId,rule,detail));}
@@ -251,6 +253,7 @@ function approachFirePrediction(s,armyId,start){
   let best=null;
   for(const b of Object.values(s.armies).sort((x,y)=>x.armyId.localeCompare(y.armyId,'en'))){
     const was=start.armies[b.armyId];
+    if(platformAttackReason(s,b.armyId))continue;
     if(!was||troopToCampaign(b.troopType)!=='BT03'||!castleArmyActive(s,b)||b.troopCount<=0||b.morale==='ROUTING'||b.formation==='BROKEN'||(was.engaged??archerEngaged(start,b.armyId))||
       !diplomacyArmyHostile(s,b.armyId,armyId)||hexDistance(start.tiles[was.tileId],start.tiles[old.tileId])===1||hexDistance(s.tiles[b.tileId],s.tiles[a.tileId])!==1||
       s.knowledge[b.factionId]?.tiles[a.tileId]!=='VISIBLE'||ambushHidden(s,armyId,b.factionId)||classHidden(s,armyId,b.factionId))continue;
@@ -694,7 +697,7 @@ export function resolveOverwatch(state,moverId,fromTileId,{stopped=true}={}){
 for(const maze of s.c29Mazes??[])if(maze.until>=s.turn&&diplomacyHostile(s,maze.factionId,mover.factionId)&&!withdrawalProtection(s,moverId)&&maze.tiles.includes(mover.tileId)){mover.c29??={};mover.c29.rootedUntil=s.turn+1;}
  for(const guard of Object.values(s.armies).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
   if(!castleArmyActive(s,mover)||!castleArmyActive(s,guard)||!diplomacyArmyHostile(s,guard.armyId,mover.armyId)||!guard.braced||!hasCampaignRule(s,guard.armyId,'OVERWATCH')||guard.overwatchKey===`${s.turn}.${mover.factionId}`||ambushHidden(s,moverId,guard.factionId))continue;
-  if(archerAttackReason(s,guard.armyId)||troopToCampaign(guard.troopType)==='BT03'&&hexDistance(s.tiles[guard.tileId],s.tiles[mover.tileId])<=1)continue;
+  if(platformAttackReason(s,guard.armyId)||archerAttackReason(s,guard.armyId)||troopToCampaign(guard.troopType)==='BT03'&&hexDistance(s.tiles[guard.tileId],s.tiles[mover.tileId])<=1)continue;
   const range=attackRange(guard,s);if(hexDistance(s.tiles[guard.tileId],s.tiles[fromTileId])<=range||hexDistance(s.tiles[guard.tileId],s.tiles[mover.tileId])>range||s.knowledge[guard.factionId].tiles[mover.tileId]!=='VISIBLE')continue;
   s.armies[guard.armyId].overwatchKey=`${s.turn}.${mover.factionId}`;
   s=resolveAttack(s,guard.armyId,moverId,null,{reaction:true});s.lastCombat.effectLines.push(ruleLine(s,guard.armyId,'OVERWATCH','\uACBD\uACC4 \uC0AC\uACA9'));
@@ -705,6 +708,7 @@ for(const maze of s.c29Mazes??[])if(maze.until>=s.turn&&diplomacyHostile(s,maze.
 function resolveC27MovementEffects(state,id,from,stopped){
  let s=state;const a=s.armies[id];if(!a||!castleArmyActive(s,a))return s;
  for(const original of Object.values(s.armies).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
+  if(platformAttackReason(s,original.armyId))continue;
   const guard=s.armies[original.armyId],mover=s.armies[id];if(!castleArmyActive(s,guard)||!castleArmyActive(s,mover)||guard.morale==='ROUTING'||mover.morale==='ROUTING'||!diplomacyArmyHostile(s,guard.armyId,mover.armyId)||ambushHidden(s,id,guard.factionId))continue;
   const blade=stopped&&combatRule(s,guard.armyId,'BLADESTORM')&&hexDistance(s.tiles[guard.tileId],s.tiles[mover.tileId])===1&&hexDistance(s.tiles[guard.tileId],s.tiles[from])>1&&guard.c27?.bladeTurn!==s.turn;
   const watch=guard.c27?.overwatch,front=at=>{const d=(directionToward(s.tiles[guard.tileId],s.tiles[at],guard.facing)-guard.facing+6)%6;return [0,1,5].includes(d)&&hexDistance(s.tiles[guard.tileId],s.tiles[at])<=watch.range;};

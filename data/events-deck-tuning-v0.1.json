@@ -1,0 +1,684 @@
+{
+  "schema": "events-deck-tuning-v0.1",
+  "status": "WORK_TRIAL",
+  "cards": {
+    "EV-F01-01": {
+      "turns": [
+        2,
+        12
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "lord",
+            "officer"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "lord",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F01-02": {
+      "turns": [
+        2,
+        14
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 60
+        },
+        {
+          "test": "enemy_city_reachable",
+          "city": "targetCity",
+          "byArmy": "army",
+          "withinTurns": 4
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F01-03": {
+      "turns": [
+        3,
+        20
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "battle_participant",
+          "army": "army"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "lord",
+            "officer"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        },
+        {
+          "test": "player_survived_context_battle"
+        }
+      ]
+    },
+    "EV-F01-04": {
+      "turns": [
+        3,
+        22
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "battle_participant",
+          "army": "army"
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        },
+        {
+          "test": "player_survived_context_battle"
+        }
+      ]
+    },
+    "EV-F01-05": {
+      "turns": [
+        2,
+        24
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "besieged",
+          "city": "city"
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F01-06": {
+      "turns": [
+        6,
+        23
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "lord",
+            "officer"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "tag_present",
+          "tag": "counsel_shared"
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F02-01": {
+      "turns": [
+        2,
+        20
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "just_captured_by_player",
+          "city": "city",
+          "withinTurns": 2
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 60
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F02-02": {
+      "turns": [
+        2,
+        12
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "lord",
+            "officer"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "lord",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F02-03": {
+      "turns": [
+        4,
+        20
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 60
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F02-04": {
+      "turns": [
+        4,
+        20
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "officer",
+            "officer2"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F02-05": {
+      "turns": [
+        6,
+        24
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "just_captured_by_player",
+          "city": "city",
+          "withinTurns": 2
+        },
+        {
+          "test": "tag_present",
+          "tag": "listen_to_soldiers"
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F02-06": {
+      "turns": [
+        4,
+        22
+      ]
+    },
+    "EV-F03-01": {
+      "turns": [
+        2,
+        12
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "lord",
+            "officer"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F03-03": {
+      "turns": [
+        2,
+        24
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "besieged",
+          "city": "city"
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "enemy_army_reachable",
+          "army": "army",
+          "withinTurns": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F03-04": {
+      "turns": [
+        6,
+        20
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "lord",
+            "officer"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "tag_present",
+          "tag": "brothers_share_front"
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-F03-05": {
+      "turns": [
+        4,
+        23
+      ]
+    },
+    "EV-F03-06": {
+      "turns": [
+        4,
+        24
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "lord",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "lord",
+            "officer"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-ANY-01": {
+      "weight": 50,
+      "turns": [
+        2,
+        5
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 30
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "EV-ANY-02": {
+      "weight": 50,
+      "turns": [
+        8,
+        13
+      ]
+    },
+    "EV-ANY-03": {
+      "weight": 50,
+      "turns": [
+        4,
+        22
+      ]
+    },
+    "EV-ANY-04": {
+      "weight": 50,
+      "turns": [
+        6,
+        23
+      ]
+    },
+    "EV-WANDERER-01": {
+      "turns": [
+        2,
+        20
+      ]
+    },
+    "EV-WANDERER-02": {
+      "turns": [
+        2,
+        22
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "wanderer_available",
+          "officer": "officer"
+        },
+        {
+          "test": "recruit_eligible",
+          "officer": "officer",
+          "city": "city"
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "lord",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "E01": {
+      "weight": 100,
+      "turns": [
+        2,
+        14
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "food_at_least",
+          "city": "city",
+          "value": 15
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 60
+        },
+        {
+          "test": "prestige_at_least",
+          "value": 10
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "officer",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "E02": {
+      "weight": 100,
+      "turns": [
+        3,
+        22
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "food_at_least",
+          "city": "city",
+          "value": 20
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 60
+        },
+        {
+          "test": "enemy_city_reachable",
+          "city": "targetCity",
+          "byArmy": "army",
+          "withinTurns": 4
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "E03": {
+      "weight": 100,
+      "turns": [
+        2,
+        14
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "food_at_least",
+          "city": "city",
+          "value": 15
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 60
+        },
+        {
+          "test": "officer_at_city",
+          "officer": "lord",
+          "city": "city",
+          "withinTiles": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "E04": {
+      "weight": 100,
+      "turns": [
+        2,
+        22
+      ]
+    },
+    "E05": {
+      "weight": 100,
+      "turns": [
+        3,
+        22
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "pair_adjacent",
+          "officers": [
+            "officer",
+            "officer2"
+          ],
+          "withinTiles": 3
+        },
+        {
+          "test": "enemy_army_reachable",
+          "army": "army",
+          "withinTurns": 3
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    },
+    "E06": {
+      "weight": 100,
+      "turns": [
+        2,
+        24
+      ],
+      "guards": [
+        {
+          "test": "all_required_roles_resolve"
+        },
+        {
+          "test": "just_captured_by_player",
+          "city": "city",
+          "withinTurns": 2
+        },
+        {
+          "test": "occupation_at_least",
+          "city": "city",
+          "value": 2
+        },
+        {
+          "test": "food_below",
+          "city": "city",
+          "value": 30
+        },
+        {
+          "test": "all_choice_immediate_costs_affordable"
+        }
+      ]
+    }
+  }
+}

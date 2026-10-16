@@ -1,4 +1,6 @@
 import {injuryReason} from './campaign-injury.mjs';
+import {C184,domesticEngineEnabled,initializeDomesticEngine,autoFillDepartments,departmentOutput,domesticOfficerPresent,cityInfluence,facilitySite} from './campaign-domestic.mjs';
+import {citySupplyRoute} from './campaign-supply.mjs';
 import {initializeAchievements,recordAchievementEvent,settleAchievements,achievementCityFactor} from './campaign-achievements.mjs';
 import {campaignScenario} from './campaign-scenario.mjs';
 import {supplyEnabled,settleSupply,armyFoodPerTurn,supplyLink,supplyAiLaunchFood,foodModel,clockFood,troopFoodRate,baseCityFood} from './campaign-supply.mjs';
@@ -26,7 +28,7 @@ export function validateSpecialists(s){
 }
 export function initializeSpecialists(s,c){if(!c21Enabled(s))return;c.specialists??={artisan:0,official:0,scholar:0,logistician:0};c.specialistSettlements??=0;}
 export function specialistGovernor(s,c){const o=s.officers[c.governorId];return o?.lifeState==='ALIVE'&&o.captivityState==='FREE'&&o.allegianceFactionId===c.ownerFactionId&&o.locationRef?.kind==='CITY'&&o.locationRef.id===c.cityId?o:null;}
-export function specialistChoice(s,c){const o=specialistGovernor(s,c);if(!o)return {kind:'artisan',axis:null,officerId:null};const axes=['행정','병참','인사','제도','민정'];const axis=axes.reduce((best,key)=>campaignSubAbility(s,o.officerId,'정무',key)>campaignSubAbility(s,o.officerId,'정무',best)?key:best,axes[0]);return {kind:{행정:'official',병참:'logistician',인사:'official',제도:'scholar',민정:'artisan'}[axis],axis,officerId:o.officerId};}
+export function specialistChoice(s,c){const o=specialistGovernor(s,c),policy=domesticEngineEnabled(s)?{agriculture:'logistician',commerce:'artisan',military:'official'}[c.domesticPolicy]:null;if(policy)return {kind:policy,axis:'성 방침',officerId:o?.officerId??null};if(!o)return {kind:'artisan',axis:null,officerId:null};const axes=['행정','병참','인사','제도','민정'];const axis=axes.reduce((best,key)=>campaignSubAbility(s,o.officerId,'정무',key)>campaignSubAbility(s,o.officerId,'정무',best)?key:best,axes[0]);return {kind:{행정:'official',병참:'logistician',인사:'official',제도:'scholar',민정:'artisan'}[axis],axis,officerId:o.officerId};}
 export function specialistView(s,c){return {specialists:structuredClone(c.specialists),specialistTurnsLeft:C21.period-(c.specialistSettlements??0),nextSpecialist:specialistChoice(s,c).kind,...(c.specialistCapture?{specialistCapture:structuredClone(c.specialistCapture)}:{})};}
 export function settleSpecialists(s,c,isNormal){if(!c21Enabled(s)||!isNormal||c.ownerFactionId===null)return;initializeSpecialists(s,c);if(++c.specialistSettlements<C21.period)return;c.specialistSettlements=0;const pick=specialistChoice(s,c);c.specialists[pick.kind]++;s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId:c.ownerFactionId,text:`${s.cityDisplayNames?.[c.cityId]??c.name}: ${SPECIALIST_NAMES[pick.kind]} 1명 늘어남${pick.officerId?`(태수 ${s.officers[pick.officerId].name} · ${pick.axis})`:''}`});if(pick.officerId){creditCampaignDomestic(s,{officerId:pick.officerId,eventId:`C25.SPECIALIST.${s.turn}.${c.cityId}`,kind:'SPECIALIST_GROWN',counts:{[`specialist:${pick.kind}`]:1},amount:0});creditCampaignGrowth(s,{eventId:`C21.${s.turn}.${c.cityId}`,officerId:pick.officerId,kind:'GOVERNOR_TURN',amount:C21.governorXp});s.xpEvents.push({eventId:`C21.${s.turn}.${c.cityId}`,officerId:pick.officerId,kind:'GOVERNOR_TURN',amount:C21.governorXp});}}
 export function transferSpecialists(s,c,owner){if(!c21Enabled(s)||c.ownerFactionId===owner)return;initializeSpecialists(s,c);const before=structuredClone(c.specialists);for(const key of Object.keys(SPECIALIST_NAMES))c.specialists[key]=Math.floor(c.specialists[key]*C21.captureRetention);c.specialistSettlements=0;c.specialistCapture={turn:s.turn,formerOwnerFactionId:c.ownerFactionId,ownerFactionId:owner,before,remaining:structuredClone(c.specialists)};s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId:owner,text:`${s.cityDisplayNames?.[c.cityId]??c.name}: 전문인력 잔류 · ${Object.entries(c.specialists).map(([k,n])=>`${SPECIALIST_NAMES[k]} ${n}`).join(' · ')}`});}
@@ -84,6 +86,7 @@ export function cityProductionIdle(s,c){
 export function initializeCampaignEconomy(s) {
   // xpEvents is display-only; 120 is a trial history cap, not the XP source ledger.
   initializeCampaignPolicy(s);
+  initializeDomesticEngine(s);
   initializeAchievements(s);
   s.xpEvents ??= [];
   s.economy ??= {lastSettledTurn:null, readyAt:{}, occupationStatus:{}};
@@ -126,6 +129,7 @@ export function cityJobList(s,c){return Object.entries(CITY_JOBS).filter(([kind]
 export function facilityTiles(s,c) {
   const occupied = new Set(Object.values(s.cities).flatMap(city =>
     [city.tileId,...(city.footprint?.gates??[]),...(city.footprint?.walls??[]),...(city.facilities??[]).map(f=>f.tileId)]));
+  if(domesticEngineEnabled(s))return cityInfluence(s,c).tiles.filter(t=>!['water'].includes(t.terrain)&&!occupied.has(t.tileId)).map(t=>t.tileId);
   return Object.values(s.tiles).filter(t => hexDistance(s.tiles[c.tileId],t) === 2 &&
     !['mountain','water'].includes(t.terrainType) && !occupied.has(t.tileId))
     .map(t=>t.tileId).sort((a,b)=>a.localeCompare(b,'en'));
@@ -139,7 +143,7 @@ export function facilityDisabled(s,c,f) {
 export function cityEconomyRates(s,c,{shortage=null,commit=false}={}) {
   const governor = s.officers[c.governorId];
   const eligible = governor?.lifeState === 'ALIVE' && governor.captivityState === 'FREE' &&
-    governor.allegianceFactionId === c.ownerFactionId && !injuryReason(s,governor.officerId);
+    governor.allegianceFactionId === c.ownerFactionId && !injuryReason(s,governor.officerId)&&(!domesticEngineEnabled(s)||domesticOfficerPresent(s,c,c.governorId));
   const bonus = eligible ? Math.max(0,Math.min(100,governor.baseStats?.politics??governor.stats?.politics??0))/500 : 0;
   const active = (c.facilities??[]).filter(f=>!facilityDisabled(s,c,f));
   const count = kind => active.filter(f=>f.kind===kind).length;
@@ -149,15 +153,18 @@ export function cityEconomyRates(s,c,{shortage=null,commit=false}={}) {
   const output=resource=>eligible?Math.max(0,1+effectModifiers(s,c.cityId,['TURN_SETTLE'],{cityId:c.cityId,resource,sources:[{id:c.governorId,whens:['TURN_SETTLE']}]}).CITY_OUTPUT_MOD/100):1;
   const scale=c.kind==='minor'?.5:1;
   const population=c19Enabled(s)?Math.max(0,c.population-C19.populationBase):0;
-  const foodRaw=(activeUnique(s,c,'tuntian')?C20.tuntianFood:0)+(scale*(baseCityFood(s)+2*Math.min(2,count('farm')))+C19.populationFood*population)*multiplier*output('FOOD')*(c19Enabled(s)?security:1);
+  const influence=domesticEngineEnabled(s)?cityInfluence(s,c):null,department=departmentOutput(s,c);
+  const baseFood=influence?influence.food*baseCityFood(s)/4:scale*(baseCityFood(s)+2*Math.min(2,count('farm')))+C19.populationFood*population;
+  const foodRaw=(influence?0:activeUnique(s,c,'tuntian')?C20.tuntianFood:0)+(baseFood+department.food)*multiplier*output('FOOD')*(c19Enabled(s)?security:1);
   const specialistFood=s.mapId==='v2'||s.mapId==='v3'?(foodRaw+(c.specialists?.logistician??0)*C21.logisticianFood)*(1+(c.specialists?.official??0)*C21.officialRate):foodRaw;
   shortage??=c.foodStock-c.reservedResources.food+((normal(s,c)||c19Enabled(s))?Math.floor(specialistFood+(c.outputCarry?.food??0)+1e-9):0)<campaignFoodNeed(s,c);
   const penalty=Math.min(security,shortage?c34Shortage(s,c):1);
   const raw={food:foodRaw,
-    production:(c20Enabled(s)&&c.starProductionTurn===s.turn?C20.production:0)+(scale*2+C19.populationProduction*population+(c19Enabled(s)?count('workshop')*C19.workshopProduction:0))*multiplier*output('PRODUCTION')*penalty,
+    production:(c20Enabled(s)&&c.starProductionTurn===s.turn?C20.production:0)+((influence?influence.production:scale*2+C19.populationProduction*population+(c19Enabled(s)?count('workshop')*C19.workshopProduction:0))+department.production)*multiplier*output('PRODUCTION')*penalty,
     science:(scale+C19.populationScience*population)*multiplier*output('SCIENCE')*penalty,
-    prestige:scale*(1+count('market'))*multiplier*output('FAME')*penalty};
+    prestige:(scale*(1+count('market'))+department.prestige)*multiplier*output('FAME')*penalty};
   const specialistCauses=specialistOutput(s,c,raw);
+  specialistCauses.push(...department.causes.filter(e=>['food','production','prestige'].includes(e.resource)));
   specialistCauses.push(...domesticOutput(s,c,raw,{commit}));c33DomesticOutput(s,c,raw);
   specialistCauses.push(...uniqueDomestic(s,c,raw,{commit}));
   if(!injuryReason(s,c.governorId))c30CityOutput(s,c,raw);raw.production*=c31Production(s,c.ownerFactionId);
@@ -271,6 +278,31 @@ export function selectCityJob(s,{cityId,kind,armyId=null,troopType=null,officerI
   c.productionProgress=c.jobProgress[key]??0;
   if(c.c26?.productionCarry){c.jobProgress[key]=c.productionProgress+c.c26.productionCarry;c.productionProgress=c.jobProgress[key];c.c26.productionCarry=0;}
   return s;
+}
+export function reserveCityJob(s,command,factionId=s.playerFactionId){
+ initializeCampaignEconomy(s);const c=s.cities[command.cityId];
+ if(!domesticEngineEnabled(s)||c?.ownerFactionId!==factionId)throw new Error('INVALID_CITY_RESERVATION');
+ if(command.kind===null){c.nextProduction=null;return s;}
+ if(!CITY_JOBS[command.kind]||command.kind==='muster')throw new Error('INVALID_CITY_RESERVATION');
+ const probe=structuredClone(s);selectCityJob(probe,command,factionId);
+ c.nextProduction={kind:command.kind,...(command.armyId?{armyId:command.armyId}:{}),...(command.troopType?{troopType:command.troopType}:{})};return s;
+}
+let domesticProduction,domesticProductionDepth=0;
+export function configureDomesticProduction(selector){domesticProduction=selector;}
+export function startDomesticProduction(s,c){
+ if(!domesticEngineEnabled(s)||c.currentProduction||!normal(s,c)||!c.ownerFactionId)return;
+ if(c.nextProduction){try{selectCityJob(s,{cityId:c.cityId,...c.nextProduction},c.ownerFactionId);c.nextProduction=null;}catch(e){c.jobBlocked=`예약: ${e.message}`;}return;}
+ if(c.domesticPolicy==='delegated'&&domesticProduction&&domesticProductionDepth===0){
+  domesticProductionDepth++;
+  try{
+  const sandbox=structuredClone(s);
+  // The shared AI selector can first suggest immediate sorties. Simulate those
+  // choices only in the sandbox until it reaches its production recommendation.
+  const limit=Object.keys(s.officers).length+1;
+  for(let i=0;i<limit;i++){const count=Object.keys(sandbox.armies).length;domesticProduction(sandbox,c.ownerFactionId);if(sandbox.cities[c.cityId].currentProduction||Object.keys(sandbox.armies).length===count)break;}
+  const job=sandbox.cities[c.cityId].currentProduction;if(job&&job.kind!=='muster')selectCityJob(s,{cityId:c.cityId,...job},c.ownerFactionId);
+  }finally{domesticProductionDepth--;}
+ }
 }
 
 function cityPersonnel(s,c) {
@@ -413,9 +445,10 @@ export function completeJob(s,c,rates,paid) {
     damaged.damaged=false;
   } else {
     const reason=cityJobReason(s,c,job.kind);if(reason){c.jobBlocked=reason;return;}
-    const tileId=facilityTiles(s,c)[0];
+    const site=domesticEngineEnabled(s)?facilitySite(s,c,job.kind,facilityTiles(s,c)):null;
+    const tileId=site?.tileId??facilityTiles(s,c)[0];
     if (!tileId || (job.kind==='farm'&&c.facilities.filter(f=>f.kind==='farm').length>=2)) {c.jobBlocked='시설 칸';return;}
-    c.facilities.push({kind:job.kind,tileId});creditCampaignDomestic(s,{officerId:c.governorId,eventId:`C25.FACILITY.${s.turn}.${c.cityId}`,kind:'FACILITY_BUILT',counts:{facilitiesBuilt:1}});if(C20_FACILITIES[job.kind])s.c20.stats.facilities++;
+    c.facilities.push({kind:job.kind,tileId,...(site?{siteReason:site.reason}:{})});creditCampaignDomestic(s,{officerId:c.governorId,eventId:`C25.FACILITY.${s.turn}.${c.cityId}`,kind:'FACILITY_BUILT',counts:{facilitiesBuilt:1}});if(C20_FACILITIES[job.kind])s.c20.stats.facilities++;
     if(job.kind!=='barracks')recordAchievementEvent(s,{id:`FACILITY.${s.turn}.${c.cityId}.${tileId}`,type:'FACILITY',factionId:c.ownerFactionId,cityId:c.cityId,officerId:c.governorId});
   }
   domesticJobCompleted(s,c,job,overflow);
@@ -425,12 +458,14 @@ export function completeJob(s,c,rates,paid) {
   c.productionProgress=0;
   c.currentProduction=null;
   c.jobBlocked=null;
+  startDomesticProduction(s,c);
 }
 
 export function settleCampaignEconomy(s) {
   c30Settle(s);
   initializeCampaignEconomy(s);
   if (s.economy.lastSettledTurn===s.turn) return s;
+  autoFillDepartments(s);
   evacuateDestroyedWounded(s);
   for(const c of Object.values(s.cities))if(c.ownerFactionId!==null)domesticBeforeSettlement(s,c);
   const pools=domesticBeginGranaries(s,cityEconomyRates,campaignFoodNeed);
@@ -440,6 +475,7 @@ export function settleCampaignEconomy(s) {
     const pool=pools[c.ownerFactionId];if(pool)c.foodStock=pool.stock+c.reservedResources.food;
     const status=cityOccupationStatus(s,c),isNormal=status==='NORMAL';
     settleSpecialists(s,c,isNormal);
+    if(isNormal){startDomesticProduction(s,c);settleDepartments(s,c);}
     const openingSecurity=c.securityLevel??0;
     settleCampaignSecurity(s,c);runDomestic(s,c,'HARSH_TREATMENT','settle');
     let rates=cityEconomyRates(s,c,{shortage:pool?.shortage??null}),baseline=cityEconomyRates(s,{...c,governorId:null},{shortage:pool?.shortage??null});
@@ -478,6 +514,14 @@ export function settleCampaignEconomy(s) {
       {resource:'food',label:'군량',amount:0-round(Math.max(0,result.actualConsumed-civilian))},
       {resource:'food',label:'성장 소비',amount:0-result.growthFoodConsumed},
       ...['production','science','prestige'].flatMap(resource=>{const base=scale*(resource==='production'?2:resource==='prestige'?1+c.facilities.filter(f=>f.kind==='market'&&!facilityDisabled(s,c,f)).length:1);return [{resource,label:'도시 생산',amount:isNormal?base:0},{resource,label:'태수·특기·치안·군량·소수 누적 보정',amount:isNormal?rates[resource]-base:0}];})];
+    if(domesticEngineEnabled(s)){
+     const influence=cityInfluence(s,c),tileFood=foodEnabled?influence.food*baseCityFood(s)/4:0;
+     Object.assign(c.economyCauses[0],{label:'영향권 칸 산출(시설 포함)',amount:tileFood});
+     Object.assign(c.economyCauses[1],{label:'태수·담당·치안·소수 누적 보정',amount:(foodEnabled?rates.food:0)-tileFood});
+     Object.assign(c.economyCauses[2],{label:'식량 소수 누적에 포함',amount:0});
+     const base=c.economyCauses.find(e=>e.resource==='production'),correction=c.economyCauses.findLast(e=>e.resource==='production');
+     base.label='성 중심·영향권 칸 산출';base.amount=isNormal?influence.production:0;correction.amount=(isNormal?rates.production:0)-base.amount;
+    }
     if(s.mapId!=='v1'){
       // Specialist rows explain part of the same output, not an extra grant.
       for(const cause of rates.specialistCauses){
@@ -487,10 +531,10 @@ export function settleCampaignEconomy(s) {
       c.economyCauses.push(...rates.specialistCauses);
     }
     if(c19Enabled(s)&&c.besieged)c.economyCauses.push({resource:'food',label:'포위로 지원 끊김',amount:0});
-    if(support[c.cityId])c.economyCauses.push({resource:'food',label:'지원',amount:support[c.cityId]});
+    if(support[c.cityId])c.economyCauses.push(...(domesticEngineEnabled(s)?s.economy.supportLines.filter(e=>e.cityId===c.cityId):[{resource:'food',label:'지원',amount:support[c.cityId]}]));
     if(c.securityCauses.length)c.economyCauses.push({resource:'security',label:securityLabel({...c,securityLevel:relationSecurity(s,c).securityLevel})+' · '+c.securityCauses.join(' · '),amount:0});
     if (!isNormal) c.economyCauses.push({resource:'food',label:'점령 중 생산·모집 중단',amount:0});
-    if (!paid) c.economyCauses.push({resource:'food',label:'유지비 미지급',amount:result.shortage});
+    if (!paid) c.economyCauses.push({resource:'food',label:'유지비 미지급',amount:domesticEngineEnabled(s)?0:result.shortage,...(domesticEngineEnabled(s)?{unpaid:result.shortage}:{})});
     c.economyCauses.push(...currentRuleCauses);
     c.foodCapacity=pool?Math.max(pool.cap,closing.foodStock+reserved):Math.max(reserved,rates.capacity);
     const available=closing.foodStock+reserved;
@@ -571,8 +615,11 @@ export function legacyGovernorValidationView(s) {
 import {C25,c25Enabled} from './campaign-career.mjs';
 import {creditCampaignGrowth,creditCampaignDomestic,campaignGrowthTrial} from './campaign-growth.mjs';
 
-export const securityLabel=c=>['안정','불안','혼란'][c.securityLevel??0];
+export const securityLabel=c=>['안정','민심 불안','혼란'][c.securityLevel??0];
 export function campaignFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(clockFood(s)?0:(p.field+p.ready+p.wounded)*troopFoodRate(s)/1000));}
+// Readout follows the actual settlement debit, including local ready/wounded
+// personnel even when field armies use the clock supply model.
+export function campaignLedgerFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(p.field+p.ready+p.wounded)*2/1000);}
 export function settleCampaignSecurity(s,c){
  const causes=[];
  if(c.plunderTurn===s.turn||c.plunderTurn===s.turn-1)causes.push('수탈');
@@ -582,19 +629,30 @@ export function settleCampaignSecurity(s,c){
  domesticSecurityCauses(s,c,causes);
  const before=c.securityLevel??0;
  const plunderAlreadyApplied=causes.length===1&&causes[0]==='수탈'&&c.plunderTurn===s.turn-1;
- causes.splice(0,causes.length,...c34Security(s,c,causes));c.securityLevel=Math.max(0,Math.min(2,before+(causes.length?(plunderAlreadyApplied?0:1):-1)));c.securityCauses=[...causes,...relationSecurity(s,c).securityCauses];
+ causes.splice(0,causes.length,...c34Security(s,c,causes));c.securityLevel=Math.max(0,Math.min(2,before+(causes.length?(plunderAlreadyApplied?0:1):-1)-departmentOutput(s,c).security));c.securityCauses=[...causes,...relationSecurity(s,c).securityCauses];
  if(before!==c.securityLevel){s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId:c.ownerFactionId,text:`${s.cityDisplayNames?.[c.cityId]??c.name}: 치안 ${securityLabel({...c,securityLevel:relationSecurity(s,c).securityLevel})}${c.securityCauses.length?' · '+c.securityCauses.join(' · '):' · 원인 해소'}`});s.administrationLog=s.administrationLog.filter((e,i,list)=>e.turn===s.turn||i>=list.length-120);}
 }
 export function autoSupportCampaignFood(s,pools={}){
- const cities=Object.values(s.cities).sort((a,b)=>a.cityId.localeCompare(b.cityId)),net={},sent={};
+ const enabled=domesticEngineEnabled(s),cities=Object.values(s.cities).sort((a,b)=>(enabled?Number(b.foodPriority)-Number(a.foodPriority):0)||a.cityId.localeCompare(b.cityId)),net={},sent={};
+ if(enabled)s.economy.supportLines=[];
  const output=c=>(normal(s,c)||c19Enabled(s))?cityEconomyRates(s,c).food:0;
- for(const c of cities){if(pools[c.ownerFactionId])continue;let need=Math.min(20,Math.max(0,campaignFoodNeed(s,c)-output(c)-(c.foodStock-c.reservedResources.food)));
+ const demand=c=>enabled?campaignLedgerFoodNeed(s,c):campaignFoodNeed(s,c);
+ for(const c of cities){if(pools[c.ownerFactionId]||enabled&&!c.ownerFactionId)continue;let need=Math.min(enabled?C184.supportPerTurn:20,Math.max(0,demand(c)-output(c)-(c.foodStock-c.reservedResources.food)));
   for(const donor of cities){if(!need)break;if(donor===c||donor.ownerFactionId!==c.ownerFactionId||c19Enabled(s)&&(c.besieged||donor.besieged)&&!domesticRule(s,donor,'UNBLOCKABLE_SUPPLY'))continue;
-   const spare=Math.max(0,donor.foodStock-donor.reservedResources.food-2*campaignFoodNeed(s,donor));
-   const amount=Math.min(need,spare,20-(sent[donor.cityId]??0));if(!amount)continue;
+   if(enabled&&!domesticRule(s,donor,'UNBLOCKABLE_SUPPLY')&&!citySupplyRoute(s,donor,c))continue;
+   const spare=Math.max(0,donor.foodStock-donor.reservedResources.food-(enabled?C184.supportReserveTurns:2)*demand(donor));
+   const amount=Math.min(need,spare,(enabled?C184.supportPerTurn:20)-(sent[donor.cityId]??0));if(!amount)continue;
    donor.foodStock-=amount;c.foodStock+=amount;domesticSupport(s,donor,c,amount);uniqueSupply(s,donor,amount);need-=amount;sent[donor.cityId]=(sent[donor.cityId]??0)+amount;
    net[donor.cityId]=(net[donor.cityId]??0)-amount;net[c.cityId]=(net[c.cityId]??0)+amount;
+   if(enabled){const from=s.cityDisplayNames?.[donor.cityId]??donor.name,to=s.cityDisplayNames?.[c.cityId]??c.name;s.economy.supportLines.push({cityId:c.cityId,resource:'food',label:`지원 +${amount}, ${from}에서`,amount,sourceCityId:donor.cityId},{cityId:donor.cityId,resource:'food',label:`${to} 지원`,amount:-amount,targetCityId:c.cityId});(s.administrationLog??=[]).push({turn:s.turn,factionId:c.ownerFactionId,text:`${to}: 지원 +${amount}, ${from}에서`});}
   }
  }
  return net;
+}
+function settleDepartments(s,c){
+ if(!domesticEngineEnabled(s))return;
+ for(const [kind,id] of Object.entries(c.departments))if(domesticOfficerPresent(s,c,id))creditCampaignDomestic(s,{officerId:id,eventId:`C184.${s.turn}.${c.cityId}.${kind}`,kind:'GOVERNOR_OUTPUT',counts:{govTurns:1},amount:C184.departmentXp});
+ const n=Math.min(departmentOutput(s,c).reserve,Math.max(0,campaignMobilization(s,c.ownerFactionId).capacity-campaignMobilization(s,c.ownerFactionId).used));
+ if(!n)return;
+ const lotId=`C184.Ready.${s.turn}.${c.cityId}`;s.personnel.lots.push({lotId,kind:'READY',nodeId:c.cityId,identity:{baseTroopId:'BT01',specialTroopId:null},originFormationId:null,count:n});s.personnel.initialPersonnel+=n;s.economy.readyAt[lotId]=s.turn;s.economy.lotFaction[lotId]=c.ownerFactionId;
 }

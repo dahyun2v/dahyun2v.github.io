@@ -1,0 +1,35 @@
+{
+  "status": "WORK_TRIAL",
+  "expansionPopulation": 2,
+  "terrain": {
+    "plain": {"food": 2, "production": 0},
+    "riverside": {"food": 3, "production": 0},
+    "hill": {"food": 0, "production": 2},
+    "forest": {"food": 1, "production": 1},
+    "mountain": {"food": 0, "production": 1},
+    "water": {"food": 1, "production": 0}
+  },
+  "foodScale": 0.3333333333333333,
+  "foodScalePopulationShare": 0.6666666666666666,
+  "minorFoodScale": 0.6666666666666666,
+  "centerProduction": 2,
+  "tileProductionScale": 0.5,
+  "policyWeights": {"balanced": [2, 1], "agriculture": [4, 1], "commerce": [1, 4], "military": [1, 4], "delegated": [2, 1]},
+  "facilityYield": {"farm": {"food": 2}, "tuntian": {"food": 3}, "workshop": {"production": 1}},
+  "statOffset": 30,
+  "statStep": 20,
+  "departmentXp": 2,
+  "reservePerBonus": 10,
+  "securityBonusThreshold": 2,
+  "transferOneTurnDistance": 12,
+  "supportPerTurn": 20,
+  "supportReserveTurns": 2,
+  "fieldShownThresholds": [2000, 4000],
+  "fieldDrainTurns": [1, 2, 3],
+  "facilityPreference": {
+    "farm": ["riverside", "plain", "forest", "hill", "mountain"],
+    "tuntian": ["riverside", "plain", "forest", "hill", "mountain"],
+    "workshop": ["hill", "forest", "plain", "riverside", "mountain"],
+    "default": ["plain", "riverside", "hill", "forest", "mountain"]
+  }
+}

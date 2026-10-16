@@ -3,6 +3,46 @@ import {troopText,troopDelta,TROOP_DISPLAY_SCALE} from '../../src/troop-display.
 // 판·단추·깃발·아이콘은 모두 GPT 가 기준 그림에서 한 장씩 뽑아 그린 그림(/assets/ui-v3/hud/). 코드는 자리·글자·숫자·막대 길이만.
 // 게임 처리는 옛 HUD(숨김)의 단추를 그대로 누른다 — 명령 코드는 한 곳(world.js)에만 있다.
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+// C197: these helpers consume only the player event projection.
+export function oathGoalText(o){return String(o.goalText??'').replace(/\{([^}]+)\}/g,(_,k)=>o.names?.[k]??k);}
+export function oathBandHtml(oaths=[]){const active=oaths.filter(o=>o.status==='ACTIVE');if(!active.length)return '';const row=o=>`맹세: ${esc(oathGoalText(o))} — ${o.turnsLeft}차례 남음`;return active.length===1?`<p>${row(active[0])}</p>`:`<details><summary>${row(active[0])} · 외 ${active.length-1}건</summary>${active.slice(1).map(o=>`<p>${row(o)}</p>`).join('')}</details>`;}
+export function twistHistoryHtml(twists=[],oaths=[]){return `<section class="c197-twists"><h3>비틀기 기록</h3>${twists.length?`<ol>${twists.map(t=>{const o=oaths.find(o=>o.eventId===t.eventId&&o.signedTurn===t.turn);return `<li>${t.turn}차례 · ${esc(t.title)} — 맹세 ${({SUCCESS:'성공',FAILED:'실패',UNFINISHED:'미완료',ACTIVE:'미완료'})[o?.status]??'미완료'}</li>`;}).join('')}</ol>`:'<p>이번 판에는 역사를 비틀지 않았습니다.</p>'}</section>`;}
+export const EVENT_RECENT_KEY='samgukji.event-deck.previous-run.v1';
+export function readRecentEventIds(storage){try{const ids=JSON.parse((storage??globalThis.localStorage).getItem(EVENT_RECENT_KEY)??'[]');return Array.isArray(ids)?ids.filter(id=>typeof id==='string'):[];}catch{return [];}}
+export function writeRecentEventIds(storage,seen){try{(storage??globalThis.localStorage).setItem(EVENT_RECENT_KEY,JSON.stringify(seen.map(e=>e.eventId)));}catch{/* Storage denial does not interrupt play. */}}
+// C199: central U3 paths; SVG fallbacks remain available for missing optional slots.
+export const C190_ART = Object.freeze({"tagAlly":"/assets/ui-v3/u3/map/tag-ally.png","tagAllied":"/assets/ui-v3/u3/map/tag-allied.png","tagEnemy":"/assets/ui-v3/u3/map/tag-enemy.png","statusSeal":"/assets/ui-v3/u3/map/status-seal.png","cityBand":"/assets/ui-v3/u3/map/city-band.png","barTrack":"/assets/ui-v3/u3/map/bar-track.png","barFill":"/assets/ui-v3/u3/map/bar-fill.png","panel":"/assets/ui-v3/u3/cityquick/panel.png","sealCao":"/assets/ui-v3/u3/cityquick/seal-cao.png","sealYuan":"/assets/ui-v3/u3/cityquick/seal-yuan.png","sealLiu":"/assets/ui-v3/u3/cityquick/seal-liu.png","sealSun":"/assets/ui-v3/u3/cityquick/seal-sun.png","btn":"/assets/ui-v3/u3/cityquick/btn.png","btnRed":"/assets/ui-v3/u3/cityquick/btn-red.png"});
+export const C190_SEALS = Object.freeze({F01:{glyph:'曹',art:'sealCao'},F02:{glyph:'劉',art:'sealLiu'},F03:{glyph:'孫',art:'sealSun'},F04:{glyph:'袁',art:'sealYuan'}});
+// WORK_TRIAL: the single detail boundary for both city and unit labels.
+export const C190_DETAIL_ZOOM = 1.2;
+export const mapLabelDetail = zoom => zoom < C190_DETAIL_ZOOM ? 'far' : 'near';
+export const cityQuickIntent = (selectedArmyId,cityId) => cityId&&!selectedArmyId?'quick':'command';
+export function cityPublicReadout(v,cityId,badge=null){
+ const own=v.ownCities?.[cityId],c=own??v.knowledge?.cities?.[cityId];if(!c)return null;
+ const visible=v.knowledge?.tiles?.[c.tileId]==='VISIBLE',tiles=new Set([c.tileId,...(c.footprint?.gates??[]),...(c.footprint?.walls??[])]);
+ const guards=Object.values(v.knowledge?.observedArmies??{}).filter(a=>a.factionId===c.ownerFactionId&&tiles.has(a.tileId)&&v.knowledge.tiles[a.tileId]==='VISIBLE'&&Number.isFinite(a.troopCount));
+ const troops=own?own.reserveTroops:visible&&guards.length?guards.reduce((n,a)=>n+a.troopCount,0):null;
+ return {id:cityId,name:c.name,factionId:c.ownerFactionId,own:!!own,remembered:!own&&!visible,defense:c.durability,defenseMax:c.durabilityMax,troops,
+  // No reserve strength or siege duration is projected for foreign cities.
+  besieged:!!c.besieged,siegeTurns:Number.isFinite(c.siegeTurns)?c.siegeTurns:null,badge:own?badge:null};
+}
+export const citySiegeText = c => c.besieged?`포위${Number.isFinite(c.siegeTurns)?` · ${c.siegeTurns}차례`:''}`:'포위되지 않음';
+export const cityProductionText = b => !b?'생산 정보 없음':b.idle?'놀고 있음':`${b.name??'생산'} · ${b.turns??'—'}차례`;
+export function cityQuickHtml(c){
+ const seal=C190_SEALS[c.factionId],art=seal&&C190_ART[seal.art],num=n=>Number.isFinite(n)?Math.round(n):'?';
+ const bar=(label,value,max,text)=>`<div class="cq-meter"><span>${label} <b>${esc(text)}</b></span><i><s style="width:${Number.isFinite(value)&&max>0?Math.max(0,Math.min(100,value/max*100)):0}%"></s></i></div>`;
+ return `<header><h2>${esc(c.name)}</h2><span class="cq-seal" aria-label="세력 ${esc(seal?.glyph??'中')}">${art?`<img src="${esc(art)}" alt="${seal.glyph}">`:esc(seal?.glyph??'中')}</span></header>`
+  +bar('성벽',c.defense,c.defenseMax,`${num(c.defense)}/${num(c.defenseMax)}`)
+  +bar(c.own?'수비':'보이는 수비',c.troops,c.own?Math.max(1,c.troops??0):null,Number.isFinite(c.troops)?troopText(c.troops):'?')
+  +(c.own?`<p class="cq-production${c.badge?.idle?' idle':''}">${c.badge?.idle?'●':'⚒'} ${esc(cityProductionText(c.badge))}</p><nav aria-label="성 빠른 명령"><button data-city-quick-action="sortie">출진</button><button data-city-quick-action="production">생산</button><button data-city-quick-action="office">내정</button><button data-city-quick-action="enter">들어가기</button></nav>`:`<p class="cq-siege">${citySiegeText(c)}</p><p class="cq-hint">공격하려면 부대를 고르세요${c.remembered?' · 기억한 정보':''}</p>`);
+}
+// Prefer either side without covering the visible castle; clamp inside the viewport.
+export function cityQuickPlacement(r,width,height,avoid=[]){
+ const w=280,h=220,gap=18,pad=12,top=Math.max(64,Math.min(height-h-pad,(r.top+r.bottom-h)/2));
+ const candidates=[{left:r.right+gap,top},{left:r.left-w-gap,top},{left:Math.max(pad,Math.min(width-w-pad,r.left)),top:r.bottom+gap},{left:Math.max(pad,Math.min(width-w-pad,r.left)),top:r.top-h-gap}];
+ const overlap=(a,b)=>Math.max(0,Math.min(a.left+w,b.right)-Math.max(a.left,b.left))*Math.max(0,Math.min(a.top+h,b.bottom)-Math.max(a.top,b.top));
+ return candidates.map(p=>({left:Math.max(pad,Math.min(width-w-pad,p.left)),top:Math.max(64,Math.min(height-h-pad,p.top))})).sort((a,b)=>overlap(a,r)*10+avoid.reduce((n,r)=>n+overlap(a,r),0)-overlap(b,r)*10-avoid.reduce((n,r)=>n+overlap(b,r),0))[0];
+}
 // C138: readouts use existing engine metadata and recorded outcomes only.
 export function campaignHorizonText(text, turn, limit) {
   const left = Math.max(0, limit - turn + 1);
@@ -32,23 +72,24 @@ export const ACTION_MEANING = Object.freeze({
 });
 export function commandIntentText(target, {name='', turns=null, blocked='', tactic='', ownCity=false, atCity=false} = {}) {
   if (tactic) return `${tactic} 사용 · ${name}`;
+  if (target.deploymentReason) return `${target.deploymentReason}${target.kind==='approach'?' · 전개 자리로 이동만':''}`;
   if (target.kind === 'unit') return `${name} 부대 공격 · 이번 차례에 침`;
   if (target.kind === 'city') return `${name} 성 공격 · 이번 차례에 침`;
   if (target.kind === 'strike') return `${name}으로 접근 · 이번 차례에 이동 후 공격`;
   if (target.kind === 'approach') return `${name}으로 접근 · 이번 차례는 이동만 · 닿은 뒤 다시 공격`;
-  if (ownCity && atCity) return blocked || '성으로 복귀 · 누르면 성으로 들어가 예비병이 됩니다 — 부대는 해산';
+  if (ownCity && atCity) return blocked || `귀환 — ${name}성으로 들어감 · 누르면 예비병이 됩니다 — 부대는 해산`;
   if (blocked) return blocked;
   return turns == null ? '' : `${name || '가리킨 칸'}까지 이동 · ${turns > 1 ? `${turns}차례 걸림` : '이번 차례에 이동'}`;
 }
-export function tacticChangeText(event, {name=event.tacticName ?? '전법', ownIds=[], visibleIds=null, preview=false, cityTarget=false} = {}) {
-  const lines=[], city=!!event.cityId||cityTarget, own=new Set(ownIds), shown=id=>visibleIds===null||visibleIds.includes(id), side=id=>own.has(id)?'아군':'적';
+export function tacticChangeText(event, {name=event.tacticName ?? '전법', ownIds=[], visibleIds=null, names={}, preview=false, cityTarget=false} = {}) {
+  const lines=[], city=!!event.cityId||cityTarget, own=new Set(ownIds), shown=id=>visibleIds===null||visibleIds.includes(id), side=id=>own.has(id)?'아군':'적',who=id=>`${side(id)}${names[id]?' '+names[id]:''}`;
   if(!preview&&!city&&event.units?.length){
-    const losses={아군:0,적:0};
-    for(const u of event.units)if(shown(u.unitId))losses[side(u.unitId)]+=Math.max(0,u.preBattleCount-u.postBattleCount);
+    const losses={};
+    for(const u of event.units)if(shown(u.unitId))losses[who(u.unitId)]=(losses[who(u.unitId)]??0)+Math.max(0,u.preBattleCount-u.postBattleCount);
     for(const [label,loss] of Object.entries(losses))if(loss>0)lines.push(`${label} −${troopText(loss)}`);
   }else{
-    if (!city && event.enemyLoss > 0&&shown(event.targetId)) lines.push(`${side(event.targetId)} −${troopText(event.enemyLoss)}`);
-    if (event.allyLoss > 0&&shown(event.attackerId)) lines.push(`${side(event.attackerId)} −${troopText(event.allyLoss)}`);
+    if (!city && event.enemyLoss > 0&&shown(event.targetId)) lines.push(`${who(event.targetId)} −${troopText(event.enemyLoss)}`);
+    if (event.allyLoss > 0&&shown(event.attackerId)) lines.push(`${who(event.attackerId)} −${troopText(event.allyLoss)}`);
   }
   const labels={ORDERED:'정돈',DISORDERED:'흐트러짐',BROKEN:'붕괴',STEADY:'안정',SHAKEN:'동요',ROUTING:'패주'};
   for (const [key, label] of [['formationChanges','전열'],['moraleChanges','사기']]) {
@@ -76,12 +117,12 @@ export function resultReasonText(result, name = id => id) {
   if(a.troops!==b.troops)return `${lead} 승리 — 큰 성·작은 성이 같아 병력 ${troopText(a.troops)} 대 ${troopText(b.troops)}로 갈렸습니다`;
   return `${lead} 승리 — 큰 성·작은 성·병력이 모두 같아 동률 순서로 판정했습니다`;
 }
-export function growthUseText(card, {field=false, governor=false, domesticRules=[], combatRules=[]} = {}) {
+export function growthUseText(card, {field=false, governor=false, troopReady=true, domesticRules=[], combatRules=[]} = {}) {
   const effects=card.effects??[], domestic=card.domestic===true || effects.some(e=>['CITY_OUTPUT_MOD','OCCUPATION_SPEED'].includes(e.op)||domesticRules.includes(e.rule));
   const combat=card.kind==='tactic'||card.kind==='fork'||!!card.modifier||card.domestic===false||effects.some(e=>combatRules.includes(e.rule)||['DAMAGE_MOD','DEFENSE_MOD','COUNTER_MOD','FORMATION_DELTA','MORALE_DELTA','MOVE_MOD','INITIATIVE_MOD','CASUALTY_SHIFT','HEAL_TROOPS','STATUS_APPLY'].includes(e.op)||['ON_ATTACK','ON_DEFEND','ON_COUNTER','BATTLE_START','ON_TACTIC_USE'].includes(e.when));
   if(domestic&&combat)return '';
   if(domestic)return governor?'지금 바로 쓰입니다':'태수가 되어야 쓰입니다';
-  if(combat)return field?'지금 바로 쓰입니다':'출진해야 쓰입니다';
+  if(combat)return field?(troopReady?'지금 바로 쓰입니다':'현재 병종으로는 발동하지 않습니다'):'출진해야 쓰입니다';
   if(effects.length&&effects.every(e=>e.op==='XP_MOD'))return '지금 바로 쓰입니다';
   return '';
 }
@@ -104,7 +145,20 @@ export function productionReadout(job, previous) {
   const turns = remaining===null ? null : remaining<=0 ? 1 : Number.isFinite(job.gain)&&job.gain>0 ? Math.max(1,Math.ceil(remaining/job.gain)) : null;
   const change = previous && previous.kind === job.kind && previous.gain !== job.gain
     ? `차례당 진행 ${previous.gain} → ${job.gain} — 현재 생산량·태수 효과 반영` : '';
-  return {turns, line: turns === null ? '생산이 없어 진행 중단' : `${turns}차례 남음 · 차례당 진행 ${job.gain}${job.advance ? ` · 앞당긴 생산 ${job.advance}` : ''}`, change};
+  const advance=job.advance>0?` · ${taxAdvanceText(job)}`:'';
+  return {turns, line: (turns === null ? '생산이 없어 진행 중단' : `${turns}차례 남음 · 차례당 진행 ${job.gain}`)+advance, change};
+}
+export function taxAdvanceText(job){
+ const advance=job?.advance??0,needed=Math.max(0,(job?.cost??0)-(job?.progress??0)),used=Math.min(advance,needed);
+ return `선지급 ${labelNumber(advance)} 중 현재 작업 진행에 ${labelNumber(used)} · 초과 ${labelNumber(Math.max(0,advance-used))} · 정산 후 선지급 잔액 0`;
+}
+export function taxAdvanceLines(before,after){
+ if(before.factionId!==after.factionId)return [];
+ return Object.values(before.ownCities??{}).flatMap(c=>{const job=c.jobs?.find(j=>j.kind===c.currentProduction?.kind)?.estimate,next=after.ownCities?.[c.cityId];return job?.advance>0&&next&&!next.jobs?.some(j=>j.estimate?.advance>0)?[`${c.name} · ${taxAdvanceText(job)}`]:[];});
+}
+export function diplomacyTimingText(t){return `${t.startsAt}차례(다음 차례)부터${t.turns?` ${t.turns}차례`:''}`;}
+export function crisisRewardText(data,actor){
+ return `해결한 플레이어 장수: 경험치 +${data.reward.xp}, 칭호 '${actor}${(actor.charCodeAt(actor.length-1)-0xac00)%28?'을':'를'} 꺾은 자' 보장. 플레이어 세력 인망 +${data.reward.fame}.`;
 }
 export function observedReinforcementLines(before, after) {
   if (before.factionId !== after.factionId) return [];
@@ -195,7 +249,7 @@ export function garrisonResult(before, after, armyId) {
   if (!city || !before.ownCities?.[location.id]) return '';
   const added=city.reserveTroops-before.ownCities[location.id].reserveTroops;
   if (!Number.isFinite(added) || added<=0) return '';
-  return `${officer.name??'장수'} · ${city.name} 복귀 — 병력 ${troopText(added)}명 예비병 편입`;
+  return `${officer.name??'장수'} · ${city.name} 복귀 완료 — 예비병 +${troopText(added)}명`;
 }
 export function facilityCompletionLines(before, after, names = {}) {
   if (before.factionId !== after.factionId || after.turn !== before.turn + 1) return [];
@@ -639,6 +693,7 @@ export function clickTargetDecision({selected,enemyId,cityId,attackableEnemy=fal
   return {kind:cityId?'info':'none',cityId,targetId:enemyId};
 }
 export function targetPreviewText(target,{name='',damage=0,chase=null,ranged=false,guard=false,wallBlocked=guard}={}) {
+  if(target.deploymentReason)return `${target.deploymentReason}${target.kind==='approach'?' · 전개 자리로 이동만':''}`;
   const wallReason=guard&&wallBlocked&&target.kind!=='city'?' · 수비대가 있어 성벽을 칠 수 없습니다':'';
   if(target.kind==='city')return `성벽 공격 — 내구 −${damage}`;
   if(target.kind==='unit')return `${guard?'수비대 ':''}${name}와 교전${wallReason}`;
@@ -754,4 +809,45 @@ export function facingTiles(a,tileIds){
  if(!a||!Number.isInteger(a.facing))return [];
  const [q,r]=a.tileId.split(',').map(Number),dirs=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
  return dirs.map(([dq,dr],i)=>({tile:`${q+dq},${r+dr}`,side:i===a.facing?'FRONT':Math.min((i-a.facing+6)%6,(a.facing-i+6)%6)<=1?'FRONT':Math.min((i-a.facing+6)%6,(a.facing-i+6)%6)===2?'FLANK':'REAR',arrow:i===a.facing})).filter(x=>tileIds.has(x.tile));
+}
+
+// C191: presentation reads recorded deltas, never derives stat gains from potential.
+export function levelupReadout(log, officerId, turn, fallbackLevel) {
+ const rows=(log??[]).filter(e=>e.kind==='LEVEL_UP'&&e.officerId===officerId&&e.turn===turn);
+ const stats=new Map();
+ for(const row of rows)for(const [key,v] of Object.entries(row.statChanges??{})){
+  const old=stats.get(key);stats.set(key,{key,before:old?.before??v.before,after:v.after});
+ }
+ return {before:rows[0]?.levelBefore??fallbackLevel-1,after:rows.at(-1)?.levelAfter??fallbackLevel,
+  stats:[...stats.values()].filter(v=>v.after>v.before).map(v=>({...v,delta:v.after-v.before})),
+  reason:[...new Set(rows.map(e=>e.text).filter(Boolean))].join(' · ')};
+}
+export function levelupQueue(s, officerId) {
+ const ids=Object.entries(s.campaignGrowth?.officers??{}).filter(([id,r])=>{
+  const o=s.officers[id];return !s.wanderers?.[id]&&o?.allegianceFactionId===s.playerFactionId&&o.lifeState==='ALIVE'&&o.captivityState==='FREE'&&
+   (s.campaignGrowth.log??[]).some(e=>e.kind==='LEVEL_UP'&&e.turn===s.turn&&e.officerId===id);
+ }).map(([id])=>id);
+ return ids.length?`이번 차례 레벨업 ${ids.length}명 · ${Math.max(1,ids.indexOf(officerId)+1)}/${ids.length}`:'';
+}
+// Art classification uses metadata only; order resolves multi-tag cards deterministically.
+export function levelupArtCategory(card) {
+ const tags=[...(Array.isArray(card.classTag)?card.classTag:[card.classTag]),card.type,card.category,card.troopType,card.stat].filter(Boolean).join(' ');
+ if(/군량|보급|병참|식량|supply|logistic|food/i.test(tags))return 'grain';
+ if(/원거리|궁|노병|bow|ranged|crossbow/i.test(tags))return 'crossbow';
+ if(/정치|정무|내정|인사|민정|politic|administrat/i.test(tags))return 'seal';
+ if(/지략|계략|군재|책사|intell|strateg/i.test(tags))return 'slips';
+ if(/지휘|사기|감화|통솔|command|charisma|morale/i.test(tags))return 'banner';
+ return 'halberd';
+}
+// C199: six delivered illustrations and five board parts; background is pending.
+export const LEVELUP_ASSETS={"art":{"halberd":"/assets/ui-v3/u3/levelup/art-halberd.png","crossbow":"/assets/ui-v3/u3/levelup/art-crossbow.png","banner":"/assets/ui-v3/u3/levelup/art-banner.png","seal":"/assets/ui-v3/u3/levelup/art-seal.png","slips":"/assets/ui-v3/u3/levelup/art-slips.png","grain":"/assets/ui-v3/u3/levelup/art-grain.png"},"parts":{"stat-strip":"/assets/ui-v3/u3/levelup/stat-strip.png","card":"/assets/ui-v3/u3/levelup/card.png","card-on":"/assets/ui-v3/u3/levelup/card-on.png","seal-select":"/assets/ui-v3/u3/levelup/seal-select.png","btn-confirm":"/assets/ui-v3/u3/levelup/btn-confirm.png"},"background":"/assets/ui-v3/u3/levelup/bg.jpg"};
+export function levelupUpgradeText(card, describe) {
+ const rank=card.rank??0,next=Math.min(5,rank+1),after=describe({...card,rank:next});
+ if(!rank)return after;
+ const before=describe({...card,rank});
+ return before===after?`${rank}단계 → ${next}단계 · 효과 그대로(단계만 오름)`:`${rank}단계 → ${next}단계: ${before} → ${after}`;
+}
+export function fatigueLineText(f) {
+ if(!f||!Number.isFinite(f.value))return '';
+ return `피로 ${Math.round(f.value)}${f.levelName?' · '+f.levelName:''}${f.musterBlocked?` — ${f.restTurns}차례 쉬면 출진 가능`:''}`;
 }

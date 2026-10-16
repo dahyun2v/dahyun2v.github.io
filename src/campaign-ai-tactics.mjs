@@ -48,7 +48,7 @@ const moveTiles=(s,a)=>Math.max(0,Math.min(api.movement(s,a.armyId).max,Math.flo
 export function campaignTacticsView(s,f){
  const v=api.banner(s,api.publicView(s,f));
  for(const b of Object.values(v.knowledge.observedArmies))if(v.knowledge.tiles[b.tileId]==='VISIBLE'){
-  const a=s.armies[b.armyId];Object.assign(b,{facing:a.facing,formation:a.formation,morale:a.morale});
+  const a=s.armies[b.armyId];Object.assign(b,{facing:a.facing,formation:a.formation,morale:a.morale,braced:!!a.braced,...(a.troopType==='catapult'?{platformState:a.platformState??'STOWED'}:{})});
   b.troopCount??=a.troopCount;
  }
  v.knowledge.observedArmies=Object.fromEntries(Object.entries(v.knowledge.observedArmies).filter(([,b])=>v.knowledge.tiles[b.tileId]==='VISIBLE'&&api.hostile(s,f,b.factionId)&&!api.withdrawal(s,b.armyId)));
@@ -68,7 +68,7 @@ export function campaignTacticsWorld(s,v){
   const commanderId=`AI.PUBLIC.${b.armyId}`,o=structuredClone(v.officers[template.commanderId]);
   Object.assign(o,{officerId:commanderId,name:b.armyId,allegianceFactionId:b.factionId,locationRef:{kind:'ARMY',id:b.armyId},uniqueTrait:null,acquiredTraits:[],activeTraits:[],tactics:[],c34Abilities:null,baseStats:Object.fromEntries(Object.keys(o.baseStats).map(k=>[k,AI_PUBLIC_STAT])),aptitude:{militia:'B',spear:'B',bow:'B',archer:'B',cavalry:'B'},allowedTroops:[b.troopType]});
   probe.officers[commanderId]=o;
-  probe.armies[b.armyId]={...structuredClone(template),...b,commanderId,troopCount:b.troopCount,hp:Math.max(1,b.troopCount*2),maxHp:Math.max(1,b.troopCount*2),effectStates:[],c27:null,c28:null,c29:null,c32:null,c33:null,c34:null,classState:null,tacticReadyTurns:{},mainActionTurn:0,mainActionCount:0,movedTiles:0,braced:false};
+  probe.armies[b.armyId]={...structuredClone(template),...b,commanderId,troopCount:b.troopCount,hp:Math.max(1,b.troopCount*2),maxHp:Math.max(1,b.troopCount*2),effectStates:[],c27:null,c28:null,c29:null,c32:null,c33:null,c34:null,classState:null,tacticReadyTurns:{},mainActionTurn:0,mainActionCount:0,movedTiles:0,braced:!!b.braced};
  }
  // Every hypothetical observer sees just the actor's public board. No hidden
  // unit can become a counter, assist, pursuit or approach-fire source.

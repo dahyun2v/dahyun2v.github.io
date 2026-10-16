@@ -1,5 +1,6 @@
 import {hexDistance,movementTicks} from './map-primitives.mjs';
-import {parentTroop} from './campaign-special-troops.mjs';
+import {C193,parentTroop,platformState,platformReason} from './campaign-special-troops.mjs';
+import {diplomacyHostile,diplomacyArmyHostile} from './campaign-diplomacy.mjs';
 import {campaignCapitalCaptureNow} from './campaign-ai-tactics.mjs';
 
 // C144: judgment horizons and weights only. No combat/resource rule changes.
@@ -66,6 +67,16 @@ export function campaignAiLaunch(s,f,id,ratio,threshold=AI_RULE_START_RATIO){
 }
 export function campaignAiRecordBlocked(s,f,id,blocked){const m=((s.aiMilitary??={})[f]??={units:{},groups:[]});m.units??={};const r=m.units[id]??={};if(blocked){if(r.blockedTurn!==s.turn){r.blockedCount=r.blockedTurn===s.turn-1?(r.blockedCount??0)+1:1;r.blockedTurn=s.turn;}}else{delete r.blockedCount;delete r.blockedTurn;}}
 export const campaignAiExchange=(p)=>{const enemy=Math.max(0,p?.enemyLoss??p?.dealt??0),ally=Math.max(0,p?.allyLoss??0);return ally?enemy/ally:enemy?Infinity:0;};
+// The same public city/contact information that the player can inspect.
+export function campaignPlatformAiAction(s,v,id){
+ const a=v.ownArmies[id];if(a?.troopType!=='catapult')return null;
+ const cities=Object.values(v.knowledge.cities).filter(c=>c.ownerFactionId!==v.factionId&&(!c.ownerFactionId||diplomacyHostile(s,v.factionId,c.ownerFactionId))&&v.knowledge.tiles[c.tileId]==='VISIBLE'&&hexDistance(v.tiles[a.tileId],v.tiles[c.tileId])<=C193.catapult.range).sort((a,b)=>a.cityId.localeCompare(b.cityId));
+ if(platformState(a)==='DEPLOYED'){
+  const target=a.platformTargetCityId?cities.find(c=>c.cityId===a.platformTargetCityId):cities[0];
+  return target?null:{type:'STOW'};
+ }
+ return cities.length&&!platformReason(s,id,'DEPLOY',b=>diplomacyArmyHostile(s,id,b.armyId))?{type:'DEPLOY',cityId:cities[0].cityId}:null;
+}
 export function campaignAiExchangeAllowed(p,{aggressive=false}={}){const ratio=campaignAiExchange(p);return ratio>=.7&&ratio>=(aggressive&&ratio>=1?1:1.2);}
 const count=a=>Math.max(0,a?.troopCount??0);
 const dist=(v,a,b)=>v.tiles[a]&&v.tiles[b]?hexDistance(v.tiles[a],v.tiles[b]):Infinity;

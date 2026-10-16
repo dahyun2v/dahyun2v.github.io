@@ -6998,7 +6998,945 @@
     {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-sortie.png", "purpose": "C178 D2-sortie", "workId": "C178", "size": [256, 256]},
     {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-tuntian.png", "purpose": "C178 D2-tuntian", "workId": "C178", "size": [256, 256]},
     {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-workshop.png", "purpose": "C178 D2-workshop", "workId": "C178", "size": [256, 256]},
-    {"path": "prototype/assets/ui-v3/dots-1016/facilities/painted-water.json", "purpose": "C178 painted-map water clearance; display only", "workId": "C178"}
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/painted-water.json", "purpose": "C178 painted-map water clearance; display only", "workId": "C178"},
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-hubao-red.png",
+      "purpose": "C194 hubao sheet red",
+      "size": [
+        1233,
+        96
+      ],
+      "sha256": "df9f730b540ea67d7548d63a7811dfc06beae276abbb8dae54e322b43ddd7773",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-hubao-green.png",
+      "purpose": "C194 hubao sheet green",
+      "size": [
+        1233,
+        96
+      ],
+      "sha256": "542a336344905ce53b2ff58b2cb5ffa89f111b0fce742d7b6063773cd44b2628",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-hubao-blue.png",
+      "purpose": "C194 hubao sheet blue",
+      "size": [
+        1233,
+        96
+      ],
+      "sha256": "7d30537dbae839aaa8ea43066f19903c6856df4c37465a7a1edce6fea7617109",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-hubao-grey.png",
+      "purpose": "C194 hubao sheet grey",
+      "size": [
+        1233,
+        96
+      ],
+      "sha256": "c810827cf171e1b278e37fb01d29d60deb6e02bac205c3756e3fdee8e8061077",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-hubao-red.webp",
+      "purpose": "C194 hubao squad red",
+      "size": [
+        302,
+        173
+      ],
+      "sha256": "042c0151ed8fe5133cd562a8f943c7932b2470628d1cb37eae8bc11d2ce6f9c0",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-hubao-green.webp",
+      "purpose": "C194 hubao squad green",
+      "size": [
+        302,
+        173
+      ],
+      "sha256": "ec5e91f726b8c8dcd35b8eedf5df83cfbd15c24b014463fded12ea0610fea300",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-hubao-blue.webp",
+      "purpose": "C194 hubao squad blue",
+      "size": [
+        302,
+        173
+      ],
+      "sha256": "5bad8265410174f72edb48b8f8fd927ae39f56c05f8d744f9999f8d395c007f4",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-hubao-grey.webp",
+      "purpose": "C194 hubao squad grey",
+      "size": [
+        302,
+        173
+      ],
+      "sha256": "b4986eeb2cb9ae5e73277d481e676dee05b185379c11d6bb47bbbf740ed156bc",
+      "sourceSheet": "docs/work-integration/20261016/c194/hubao-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-catapult-red.png",
+      "purpose": "C194 catapult sheet red",
+      "size": [
+        1125,
+        96
+      ],
+      "sha256": "c8cbd130c65a40e798fcfb555c68d6b0014cc5f4d3d1c89e0c408f74d4819666",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-catapult-green.png",
+      "purpose": "C194 catapult sheet green",
+      "size": [
+        1125,
+        96
+      ],
+      "sha256": "0681fad94a80fb003c0e27bd3342c929277f8cf199a06df3ea20ee86ff720278",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-catapult-blue.png",
+      "purpose": "C194 catapult sheet blue",
+      "size": [
+        1125,
+        96
+      ],
+      "sha256": "4c67d3b4d1e085ef10c01f970078c9fc0388dae22ae3b31de1e41190e6d33a4f",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-catapult-grey.png",
+      "purpose": "C194 catapult sheet grey",
+      "size": [
+        1125,
+        96
+      ],
+      "sha256": "ef2a6d071666e3525a44fc75bd31fbdf10200fa9843b0991ddca56c6617f4d95",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-catapult-red.webp",
+      "purpose": "C194 catapult squad red",
+      "size": [
+        154,
+        102
+      ],
+      "sha256": "c81c2611837d0cc973c41b95fa1a2769436da7bc61c756b8a39d501a52490514",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-catapult-green.webp",
+      "purpose": "C194 catapult squad green",
+      "size": [
+        154,
+        102
+      ],
+      "sha256": "1e5430ed4931db1bc05764110ace28e40f8743bf090b08fac5744cf0cfa2a534",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-catapult-blue.webp",
+      "purpose": "C194 catapult squad blue",
+      "size": [
+        154,
+        102
+      ],
+      "sha256": "1a317726388671334551b4ef4e67e20765f10d67fcd32a4d8434b940974b8e9c",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-catapult-grey.webp",
+      "purpose": "C194 catapult squad grey",
+      "size": [
+        154,
+        102
+      ],
+      "sha256": "e2af3c891f0468834ce76e8e198680c7a568fa126b4c350da33d81cd6eaf9b4b",
+      "sourceSheet": "docs/work-integration/20261016/c194/catapult-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-qingzhou-red.png",
+      "purpose": "C194b qingzhou sheet red",
+      "size": [
+        1422,
+        96
+      ],
+      "sha256": "8fbf86cabc6d1fbec7c53f41e74364099c089d4a6e2683ecfab32348d32ec418",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-qingzhou-green.png",
+      "purpose": "C194b qingzhou sheet green",
+      "size": [
+        1422,
+        96
+      ],
+      "sha256": "aaabfd4a204b28669c30644e5d90adc084e7c5d7d0233fba87bad29f31ffc380",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-qingzhou-blue.png",
+      "purpose": "C194b qingzhou sheet blue",
+      "size": [
+        1422,
+        96
+      ],
+      "sha256": "267979efae2bc421666c5c5651bf647caa7ed3d46012f72b2e01da27c2b48092",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-qingzhou-grey.png",
+      "purpose": "C194b qingzhou sheet grey",
+      "size": [
+        1422,
+        96
+      ],
+      "sha256": "d08af082478a0fe2a806a18fa07c85afbff561e50ba26c3bd95ffebb06c0483a",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-qingzhou-red.webp",
+      "purpose": "C194b qingzhou squad red",
+      "size": [
+        217,
+        186
+      ],
+      "sha256": "d8eb956752257198f4fbd865dae3360d28d044078999cf6bafc2bf1735e9938a",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-qingzhou-green.webp",
+      "purpose": "C194b qingzhou squad green",
+      "size": [
+        217,
+        186
+      ],
+      "sha256": "0a47764e656313c3585d73daeae5cb64cc32bdc52a4529c9ff7d809733342fda",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-qingzhou-blue.webp",
+      "purpose": "C194b qingzhou squad blue",
+      "size": [
+        217,
+        186
+      ],
+      "sha256": "d063afacd9b78fb9d9a30d5a62c51c4a44888357e92dc7b69e08caa0cc96f1c7",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-qingzhou-grey.webp",
+      "purpose": "C194b qingzhou squad grey",
+      "size": [
+        217,
+        186
+      ],
+      "sha256": "9bfbc02c5315879aa46366d573989aa46a178ab3d285c8cd7bf70d9ca898d9e5",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-qingzhou-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-baiyi-red.png",
+      "purpose": "C194b baiyi sheet red",
+      "size": [
+        846,
+        96
+      ],
+      "sha256": "629569032537bf77a8e931072c5c7fbe5196f7752814f1f4732d0a650306e0ee",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-baiyi-green.png",
+      "purpose": "C194b baiyi sheet green",
+      "size": [
+        846,
+        96
+      ],
+      "sha256": "8339cc7732df4979dbd71282aa3f1c0b036e68668ca7fc4beddb5d5c5df17e63",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-baiyi-blue.png",
+      "purpose": "C194b baiyi sheet blue",
+      "size": [
+        846,
+        96
+      ],
+      "sha256": "5e0bfdc31916a2b05fb33e5913d9ea462669c8d0d00dd8c643a60a206779dce1",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-baiyi-grey.png",
+      "purpose": "C194b baiyi sheet grey",
+      "size": [
+        846,
+        96
+      ],
+      "sha256": "b459a3fd0f644c83c70bc754675938dcd103717060b702062b0b8201b89b307f",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-baiyi-red.webp",
+      "purpose": "C194b baiyi squad red",
+      "size": [
+        285,
+        179
+      ],
+      "sha256": "a1fef6b3802f89de9c40cef16187bacb29854fe56960b399be625d8b9de8259a",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-baiyi-green.webp",
+      "purpose": "C194b baiyi squad green",
+      "size": [
+        285,
+        179
+      ],
+      "sha256": "0952ead1d00106cfaaea3eff2a97a36aec16158f263e411e4b8af2f77f273f53",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-baiyi-blue.webp",
+      "purpose": "C194b baiyi squad blue",
+      "size": [
+        285,
+        179
+      ],
+      "sha256": "29c80aea2925160f8e7106ee5dd2432bdd6ab0ea6980ac114d9b081840cd2e19",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-baiyi-grey.webp",
+      "purpose": "C194b baiyi squad grey",
+      "size": [
+        285,
+        179
+      ],
+      "sha256": "b3c3883ddadffe524e49867eb5b71f29f5ed8dfa7d9dd3499fc891b1d60cd501",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-baiyi-grid.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-wudang-red.png",
+      "purpose": "C194b wudang sheet red",
+      "size": [
+        909,
+        96
+      ],
+      "sha256": "ec0e576a49c60513213bf6d55a5650c7063eb87d7c4994a1790dc170608767ff",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-wudang-green.png",
+      "purpose": "C194b wudang sheet green",
+      "size": [
+        909,
+        96
+      ],
+      "sha256": "d809f1b76d68ad88e9bcc1ea3679f1c47457e9935b86a4dfd5746ddf07d17c18",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-wudang-blue.png",
+      "purpose": "C194b wudang sheet blue",
+      "size": [
+        909,
+        96
+      ],
+      "sha256": "36fb2a936230cd3e1c5e72ccd30258fc1ba05666943e98eb1291ce495a9e1b54",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-wudang-grey.png",
+      "purpose": "C194b wudang sheet grey",
+      "size": [
+        909,
+        96
+      ],
+      "sha256": "b2a5fa795875fbb3d6669385118658dfcc4b1372e456f804777ed8a1422ff0b4",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-wudang-red.webp",
+      "purpose": "C194b wudang squad red",
+      "size": [
+        287,
+        181
+      ],
+      "sha256": "9d32c6195012fccbab72c237751a8b6a3492656d32ac7cc6967ceb18b7a1dc79",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-wudang-green.webp",
+      "purpose": "C194b wudang squad green",
+      "size": [
+        287,
+        181
+      ],
+      "sha256": "947056166abbeee5c6fb28da06b43e8012d2faec32af5e1edb04044761a5d95f",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-wudang-blue.webp",
+      "purpose": "C194b wudang squad blue",
+      "size": [
+        287,
+        181
+      ],
+      "sha256": "6c9a0f29ca739b85ad5e3af4eab356aeeb8acb88710e908f8c7064b33473b47e",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-wudang-grey.webp",
+      "purpose": "C194b wudang squad grey",
+      "size": [
+        287,
+        181
+      ],
+      "sha256": "008610c79105ebe949418f7da936e38096b03745d3374dc2942c494d0542cdc8",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-wudang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-jiefan-red.png",
+      "purpose": "C194b jiefan sheet red",
+      "size": [
+        1656,
+        96
+      ],
+      "sha256": "38d783efabee952859162693021451b04509379a9b9b24b9aee38a2f8269783a",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-jiefan-green.png",
+      "purpose": "C194b jiefan sheet green",
+      "size": [
+        1656,
+        96
+      ],
+      "sha256": "de219084ec1ae1c498f9bde1385a38f7d8f14621f9c1d1bce163058c6473a771",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-jiefan-blue.png",
+      "purpose": "C194b jiefan sheet blue",
+      "size": [
+        1656,
+        96
+      ],
+      "sha256": "a28833034b0192e6ae5dc2980a93918fdf781f896982ab71d33aafa5b680c21a",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-jiefan-grey.png",
+      "purpose": "C194b jiefan sheet grey",
+      "size": [
+        1656,
+        96
+      ],
+      "sha256": "1b749fd3efadad8505ad0d879b54a0af163823e9aa3c4a6ca520401599718d8c",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-jiefan-red.webp",
+      "purpose": "C194b jiefan squad red",
+      "size": [
+        301,
+        190
+      ],
+      "sha256": "423fa4b7c3269fb68ab7cfd11e56dce2229dd2ffb186a46952fa4a462363e750",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-jiefan-green.webp",
+      "purpose": "C194b jiefan squad green",
+      "size": [
+        301,
+        190
+      ],
+      "sha256": "1131a1f6ce07b18e2539ac14f5bb9900cae8989760e64405bbbb9186cbb4ebbd",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-jiefan-blue.webp",
+      "purpose": "C194b jiefan squad blue",
+      "size": [
+        301,
+        190
+      ],
+      "sha256": "122699bc3075b7196c391c16e88aed085fd9b55a5ec44a906307b9a98c2bedf3",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-jiefan-grey.webp",
+      "purpose": "C194b jiefan squad grey",
+      "size": [
+        301,
+        190
+      ],
+      "sha256": "b45b67641db3040247eae4e760b26390bd552d900511794f8ae531f7399ab74c",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-jiefan-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-danyang-red.png",
+      "purpose": "C194b danyang sheet red",
+      "size": [
+        1395,
+        96
+      ],
+      "sha256": "32a950b71d3820f9e9cb3512ccf8faf0d264c6ad19886033b322dabe734a5b93",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-danyang-green.png",
+      "purpose": "C194b danyang sheet green",
+      "size": [
+        1395,
+        96
+      ],
+      "sha256": "438e9638fa100c7005efe2be65c86ac088adecef9bc4488e4dfda748c2727d30",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-danyang-blue.png",
+      "purpose": "C194b danyang sheet blue",
+      "size": [
+        1395,
+        96
+      ],
+      "sha256": "5be1796c0a6ff279c064c5476e84bddc87deeac68ed580cc29095f2b3057ebf5",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-danyang-grey.png",
+      "purpose": "C194b danyang sheet grey",
+      "size": [
+        1395,
+        96
+      ],
+      "sha256": "6eaec27151454a0bfb3889f4faa4f6d4b9728270249daf21d71d4735ca45ab83",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-danyang-red.webp",
+      "purpose": "C194b danyang squad red",
+      "size": [
+        310,
+        182
+      ],
+      "sha256": "d67ff8fb56b80404f55ed260f43d23fa1df13dc8125730d4fe113b9dacaa93dc",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-danyang-green.webp",
+      "purpose": "C194b danyang squad green",
+      "size": [
+        310,
+        182
+      ],
+      "sha256": "c24784933d8948f025e2c06a1f4e091cf7eb5a165ec0935a03ef5070828efb62",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-danyang-blue.webp",
+      "purpose": "C194b danyang squad blue",
+      "size": [
+        310,
+        182
+      ],
+      "sha256": "cee1508ef761d3578bb6e78b0751ac17429ca3950efab421dfda89004e63b2a2",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-danyang-grey.webp",
+      "purpose": "C194b danyang squad grey",
+      "size": [
+        310,
+        182
+      ],
+      "sha256": "1422d5a734718e3ff27c3e466d0488f12adea672788c62d6c945da4716f549bd",
+      "sourceSheet": "docs/work-integration/20261016/c194/b-danyang-grid-2.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/cityquick/btn-red.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        222,
+        60
+      ],
+      "sha256": "28c3edcf7b2b4e6221bb9623802ad74056e774d7b9257e5dfb859bea88944821"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/cityquick/btn.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        230,
+        58
+      ],
+      "sha256": "1bb53a0ce6ecc089415e30ad8ca4fab9ff2084a1f0d276ae5973eb4d4aadccee"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/cityquick/panel.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        560,
+        440
+      ],
+      "sha256": "867ccf29fe6f5ccb8216007e6218c31bdbfb210ed5cfd99d657212f957924d4b"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/cityquick/seal-cao.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        54,
+        54
+      ],
+      "sha256": "1d7fff0a92ff6e85475b4d04f0e287548be87ab58a2008e54e8c007225eb8459"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/cityquick/seal-liu.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        54,
+        54
+      ],
+      "sha256": "f8a7ff9872364b2d624e855f5ceca386b92fabfd72a381b3f474cbafb72a717a"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/cityquick/seal-sun.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        54,
+        54
+      ],
+      "sha256": "0367bab4318cc538edd7d085021a385d65f227abb90c4db750181d88dc26c40f"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/cityquick/seal-yuan.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        54,
+        54
+      ],
+      "sha256": "99b4378073e95a54ffb96d10dcb9933f8ad1fac811412ea67a299a2d8ba7e938"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/art-banner.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        504
+      ],
+      "sha256": "ca9860c0491fd401bcefa88b34c5edac45e5702b4c89da678fec0123959c32db"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/art-crossbow.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        504
+      ],
+      "sha256": "1ef62fa05b467ed9838ed5f59285d035c90a217d7063be9257ead36606cebb88"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/art-grain.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        504
+      ],
+      "sha256": "3f7fe952e8f5cc049e024b8cad4cd067eacf3cff82688595ee2b6da1804ef08c"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/art-halberd.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        504
+      ],
+      "sha256": "f718fbbeee0eebab3acec5f1366e5c57dd54bda5eddfb5e90c601b3bd38e0ef4"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/art-seal.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        504
+      ],
+      "sha256": "8be1bc3b7a2db4c01854c13ad82b06764573061ee909e4e0412ca3fb15b3230d"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/art-slips.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        504
+      ],
+      "sha256": "8aef4f4cfce2623b5976e1db9da92d14b545581132d596149e80b4d53aa6502e"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/btn-confirm.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        1134,
+        158
+      ],
+      "sha256": "280a00b83d8c308613b5c45204fb81f7c46b562987f5ecc5f9baae3d187f515a"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/card-on.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        840
+      ],
+      "sha256": "94c8a183d10f56cd59c2ac1fda74e15138f05d9508df3ae60a1e0315b3021cfd"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/card.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        612,
+        840
+      ],
+      "sha256": "ac43d73b3386cc832955918e4d25fface12bab2628853130f6a9206afeb6960d"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/seal-select.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        168,
+        120
+      ],
+      "sha256": "49b3d49cd1c2a66e362041a7f4026aaa8a53e01ef74dd46d456dd4d3897e5cc4"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/stat-strip.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        1880,
+        178
+      ],
+      "sha256": "39048c737d0d38f365e5e3738667ae8c091a6b82f96268490699ae87627209ba"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/map/bar-fill.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        88,
+        4
+      ],
+      "sha256": "f1bd35436d89e48a039814dde56b5e697010af2aeeb181c910369e51d34b1e38"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/map/bar-track.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        88,
+        4
+      ],
+      "sha256": "e03badd3dcbfc78baf6c5c2582244c084089d7e94da18e680349e0be53e55467"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/map/city-band.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        302,
+        48
+      ],
+      "sha256": "9f62c64dbdf6a7cc302e3831b7c47f92b4984b5e2ebb38681838cdf8ead604ab"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/map/status-seal.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        40,
+        40
+      ],
+      "sha256": "827e3065aeef956ae830088c15a85dcaeeb6970f3a5b34b39d1a8323db20bb0c"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/map/tag-allied.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        160,
+        48
+      ],
+      "sha256": "b776bf94dc1bb3ceeadfbe4cc873cb9f5548a964ed14502a1d472cde68b5fee7"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/map/tag-ally.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        160,
+        48
+      ],
+      "sha256": "0fb668a49801ec4d90de0eda78e81a25bc22ac102d0f188b8dae8eb425a65f90"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/map/tag-enemy.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        160,
+        48
+      ],
+      "sha256": "a3808e380539745f8c0c1f108bb9bff2c456c37f68b7db7ab6325e279fb83953"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/naejeong/dept-on.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        366,
+        246
+      ],
+      "sha256": "ad5d47555dc68fd1b4177af2526fb6c59051d879ea4e7da89771188abccd2e9e"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/naejeong/dept.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        366,
+        246
+      ],
+      "sha256": "36c68ac7213807d1a45560504c675b65e2fd0666d83fa6dfb7061f3b2882a3ce"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/naejeong/facility-panel.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        938,
+        1360
+      ],
+      "sha256": "7f8e06ceed3a9cebbb2738ba60e9e29902288964aee90a9d841fa5b52cc5c124"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/naejeong/ledger.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        3344,
+        258
+      ],
+      "sha256": "803822198dc4e1fe682dab16b31464ac9f5e88bdda929d7d44b8267bdda75338"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/naejeong/policy-seal-on.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        138,
+        134
+      ],
+      "sha256": "ad379397962387e45c301af9b74a80f9dec231358506725c068d01a78b55fe25"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/naejeong/policy-seal.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        138,
+        134
+      ],
+      "sha256": "8a504952bb2f92adda84c19a06e58169b5fa64171d96bb5e99fb49a503197cdf"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/btn-sortie.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        832,
+        170
+      ],
+      "sha256": "cf37e997c0cc99d8f636126fe2bce3e8a48acffe9fd653223adc1f37a7c7a2b5"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/gate-blocked.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        446,
+        308
+      ],
+      "sha256": "688b812db4db55b7161416f6f844c6cb40598a641739e56247015a8e6a089f37"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/gate-on.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        482,
+        308
+      ],
+      "sha256": "0166f74d80917fa05ba4fa578de0c5a166564091ad000dbe2409d8e385a7c07b"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/gate.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        482,
+        308
+      ],
+      "sha256": "714de6f3f6a69fc22506c3b290c63ccfe6302fbceaff2da4a801c84810a5a868"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/panel.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        1100,
+        1340
+      ],
+      "sha256": "39424c89bd19399f352004deb96a4ba725785134e09da532e923c444acb2cca3"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/roster-row-on.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        660,
+        218
+      ],
+      "sha256": "cc876c9aad97e3ed3eb6fe3f035da8f4a85751acfcc09e133eab6aa6a37a98ca"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/roster-row.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        660,
+        218
+      ],
+      "sha256": "3d3cd9953af37e53b412507985eed2ff2a59cbc5c1a661b3795e45475d431a16"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/slider-thumb.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        20,
+        28
+      ],
+      "sha256": "34d9e46470604cf69b793b9919b04b953e954e06dfa99b8f7f3c92f625f0cfaf"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/slider-track.png",
+      "purpose": "C199 U3 bitmap part; display at half size or proportional contain",
+      "size": [
+        906,
+        6
+      ],
+      "sha256": "4b36fe858dbdc304d3db51090d583cc6a0a290e850cc02aa67777597c2c14c23"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/levelup/bg.jpg",
+      "purpose": "U3-4 성장 화면 바탕(닷토리, 3344x1882 - 왼쪽 원화 여백 · 가운데~오른쪽 어둡게)",
+      "size": [
+        3344,
+        1882
+      ],
+      "sha256": "83ef5c1eb51c7279b3e2abff036624526bd2543630fb7da5ab8c468733da5178"
+    },
+    {
+      "path": "prototype/assets/ui-v3/u3/sortie/panel-tall.png",
+      "purpose": "U3-1 출진 큰 판 세로 긴 판(Claude - panel-band-insert 로 실제 띠 2개 복사, 1180 화면용)",
+      "size": [
+        1100,
+        1520
+      ],
+      "sha256": "2894f3d2a53ce7a98eec22d9f95470fbfe6f451469963bf07b2baa5d3a61e571"
+    }
   ],
   "sources": [
     {
