@@ -31,10 +31,28 @@ export const CAMPAIGN_GROWTH_TRIAL=Object.freeze({
     ['F',6,.7],['E',10,.8],['D',16,.9],['C',22,1],['B',20,1.1],
     ['A',13,1.2],['S',8,1.3],['SS',4,1.4],['UR',1,1.6],
   ].map(([rank,weight,xpMultiplier])=>Object.freeze({rank,weight,xpMultiplier}))),
-  // 첫 레벨업이 공격 2~3번에 오도록(한 판 30~60분에 Lv 8~12 목표) — 시험값
   damageXp:1.5,killXp:60,captureXp:100,governorXp:12,
   primaryWeight:60,secondaryWeight:30,
 });
+// C174b: XP only. Lv10 around turns 18~20, roster mean Lv5~6 (trial).
+export const CAMPAIGN_GROWTH_26_TRIAL=Object.freeze({damageXp:1.5,killXp:60,captureXp:100,governorXp:12,catchup:1.5,xpBase:100,xpPerLevel:5});
+export const campaignGrowthTrial=s=>['v2','v3'].includes(s.mapId)&&s.trialRules?.growth!=='legacy'?CAMPAIGN_GROWTH_26_TRIAL:CAMPAIGN_GROWTH_TRIAL;
+export function campaignNextXp(record,level){
+ const base=xpToNextLevel(level);if(base===null)return base;
+ if(record.xpCurveVersion==='174b')return CAMPAIGN_GROWTH_26_TRIAL.xpBase+CAMPAIGN_GROWTH_26_TRIAL.xpPerLevel*level;
+ if(record.xpCurveVersion!==174)return base;
+ // Keep the opening intact, reach the second tactic promptly, slow the tail.
+ return Math.round(base*(level<10?1:level<14?.7:1+(level-13)*.5));
+}
+export function campaignCatchupFactor(s,id){
+ if(!['v2','v3'].includes(s.mapId)||s.trialRules?.growth==='legacy')return 1;
+ const officer=s.officers[id],fid=officer?.allegianceFactionId,r=s.campaignGrowth?.officers[id];
+ if(!fid||!r||officer.lifeState!=='ALIVE'||officer.captivityState!=='FREE'||s.wanderers?.[id])return 1;
+ const peers=Object.values(s.officers).filter(o=>o.allegianceFactionId===fid&&o.lifeState==='ALIVE'&&o.captivityState==='FREE'&&!s.wanderers?.[o.officerId]&&s.campaignGrowth.officers[o.officerId]);
+ if(!peers.length)return 1;
+ const average=peers.reduce((n,o)=>n+s.campaignGrowth.officers[o.officerId].track.growthStates[o.officerId].level,0)/peers.length;
+ return average-r.track.growthStates[id].level>=2?CAMPAIGN_GROWTH_26_TRIAL.catchup:1;
+}
 const trialPacks=Object.fromEntries([g02,g03,g04,g05,g07,g08,g20,g24,g27].map(p=>[p.id,p]));
 export const CAMPAIGN_TRAIT_SLOTS=5, CAMPAIGN_TACTIC_SLOTS=3;
 export const POTENTIAL_STAT_GAIN=Object.freeze({F:1,E:1,D:1,C:2,B:2,A:2,S:3,SS:3,UR:4});
@@ -190,7 +208,7 @@ export function initializeCampaignGrowth(s,packs=trialPacks){
       controllerType:o.allegianceFactionId===s.playerFactionId?'PLAYER':'AI',
       affinityTags:classTags(pack.primaryClass),level:1};
     s.campaignGrowth.officers[o.officerId]={potential:rollPotential(s.campaignSeed,o.officerId),
-      status:pack.status?.includes('TRIAL')?'TRIAL':'PACK',pack,...built,xp:0,totalXp:0,sources:{},
+      status:pack.status?.includes('TRIAL')?'TRIAL':'PACK',pack,...built,xp:0,totalXp:0,sources:{},...(['v2','v3'].includes(s.mapId)&&s.trialRules?.growth!=='legacy'?{xpCurveVersion:'174b'}:{}),
       track:createGrowthTrack({campaignId:`C4.${s.campaignSeed}`,pool:built.pool,characters:{[o.officerId]:profile}})};
     const r=s.campaignGrowth.officers[o.officerId];if(r.representativeId)r.track.growthStates[o.officerId].ownedTraitRanks[r.representativeId]=1;
     if(c25Enabled(s)){initializeCareer(r);initializeC28(r);const count=r.pool.traits.length;installCareerCards(r);installCommonCombatTactics(r);r.c33Troops=o.allowedTroops??[];installC33(r);if(count!==r.pool.traits.length)syncPoolFingerprint(r);}
@@ -202,7 +220,7 @@ const growthState=(record,id)=>record.track.growthStates[id];
 export function campaignOfficerGrowth(s,id){
   const r=s.campaignGrowth?.officers[id];if(!r)return null;
   return {potential:r.potential,status:r.status,cards:[...officerEffectCards(s,id),...officerEffectCards(s,id,{tactics:true}).map(c=>c29TacticCard(s,id,c))],level:growthState(r,id).level,xp:r.xp,
-    ...(c25Enabled(s)?{trace:clone(r.trace),titles:clone(r.titles),c28:clone(r.c28),...(r.c29?{signature:{traitId:r.representativeId,gauge:r.c29.gauge,max:100},awakenings:r.c29.awakenings.map(({id,name,text})=>({id,name,text}))}:{} )}:{}),totalXp:r.totalXp,nextXp:xpToNextLevel(growthState(r,id).level),ownedTraitRanks:clone(growthState(r,id).ownedTraitRanks),traitSlots:CAMPAIGN_TRAIT_SLOTS,traitCount:officerEffectCards(s,id).length,equippedTacticIds:[...r.equippedTacticIds]};
+    ...(c25Enabled(s)?{trace:clone(r.trace),titles:clone(r.titles),c28:clone(r.c28),...(r.c29?{signature:{traitId:r.representativeId,gauge:r.c29.gauge,max:100},awakenings:r.c29.awakenings.map(({id,name,text})=>({id,name,text}))}:{} )}:{}),totalXp:r.totalXp,nextXp:campaignNextXp(r,growthState(r,id).level),ownedTraitRanks:clone(growthState(r,id).ownedTraitRanks),traitSlots:CAMPAIGN_TRAIT_SLOTS,traitCount:officerEffectCards(s,id).length,equippedTacticIds:[...r.equippedTacticIds]};
 }
 export function pendingCampaignDraft(s){
   if(s.phase!=='PLAYER')return null;
@@ -300,7 +318,7 @@ export function applyCampaignDraftCommand(s,command){
 }
 // Only confirmed campaign results call this adapter. They are not forged
 // strategic training events: retain source identity, content conflict detection,
-// exactly-once awards and the growth-progress threshold/level cap.
+// exactly-once awards, versioned XP thresholds and the existing level cap.
 export function creditCampaignGrowth(s,{eventId,officerId,kind,amount,fixed=false}){
   initializeCampaignGrowth(s);
   if(!['DAMAGE','COUNTER','PURSUIT','KILL','CAPTURE','GOVERNOR_TURN',...(['v2','v3'].includes(s.mapId)?['DEJA_VU','RETURN']:[]),...(c25Enabled(s)?[...CAREER_DATA.draftRule.civilSources,'DEFEAT','SURVIVAL']:[])].includes(kind))fail('UNSUPPORTED_CAMPAIGN_XP_SOURCE');
@@ -313,13 +331,16 @@ export function creditCampaignGrowth(s,{eventId,officerId,kind,amount,fixed=fals
   if(state.level===GROWTH_PROGRESS_TRIAL.maxLevel)return s;
   const recipient=Object.values(s.armies).find(a=>a.commanderId===officerId&&castleArmyActive(s,a));
   const mentor=recipient&&Object.values(s.armies).some(a=>a.armyId!==recipient.armyId&&a.factionId===recipient.factionId&&castleArmyActive(s,a)&&hexDistance(s.tiles[a.tileId],s.tiles[recipient.tileId])===1&&hasCampaignRule(s,a.armyId,'MENTOR'))?1.5:1;
-  let xp=Math.round(amount*c29XpFactor(s,officerId)*mentor*potentialMultiplier(r.potential)*Math.max(0,1+effectModifiers(s,Object.values(s.armies).find(a=>a.commanderId===officerId)?.armyId??officerId,[kind==='COUNTER'?'ON_COUNTER':kind==='KILL'?'ON_KILL':kind==='CAPTURE'?'ON_CAPTURE_CITY':kind==='GOVERNOR_TURN'?'TURN_SETTLE':'ON_ATTACK']).XP_MOD/100));
+  const captureScale=kind==='CAPTURE'?campaignGrowthTrial(s).captureXp/CAMPAIGN_GROWTH_TRIAL.captureXp:1;
+  let xp=Math.round(amount*captureScale*c29XpFactor(s,officerId)*mentor*potentialMultiplier(r.potential)*Math.max(0,1+effectModifiers(s,Object.values(s.armies).find(a=>a.commanderId===officerId)?.armyId??officerId,[kind==='COUNTER'?'ON_COUNTER':kind==='KILL'?'ON_KILL':kind==='CAPTURE'?'ON_CAPTURE_CITY':kind==='GOVERNOR_TURN'?'TURN_SETTLE':'ON_ATTACK']).XP_MOD/100));
+  xp=fixed?Math.round(amount):Math.round(xp*uniqueXpFactor(s,officerId)*(r.c33Loss?1.3:1));
+  xp=Math.round(xp*campaignCatchupFactor(s,officerId));
   if(c25Enabled(s)&&kind==='DEFEAT'){const key=String(s.turn);xp=Math.min(xp,Math.max(0,C25.lossCap-(r.lossXpByTurn[key]??0)));r.lossXpByTurn[key]=(r.lossXpByTurn[key]??0)+xp;}
-  xp=fixed?Math.round(amount):Math.round(xp*uniqueXpFactor(s,officerId)*(r.c33Loss?1.3:1));r.totalXp+=xp;const debt=Math.min(xp,r.c29?.xpDebt??0);if(r.c29)r.c29.xpDebt=(r.c29.xpDebt??0)-debt;r.xp+=xp-debt;
+  r.totalXp+=xp;const debt=Math.min(xp,r.c29?.xpDebt??0);if(r.c29)r.c29.xpDebt=(r.c29.xpDebt??0)-debt;r.xp+=xp-debt;
   if(c25Enabled(s)){r.levelSources[kind]=(r.levelSources[kind]??0)+xp;r.careerXpTotals[kind]=(r.careerXpTotals[kind]??0)+xp;}
-  while(growthState(r,officerId).level<GROWTH_PROGRESS_TRIAL.maxLevel&&r.xp>=xpToNextLevel(growthState(r,officerId).level)){
+  while(growthState(r,officerId).level<GROWTH_PROGRESS_TRIAL.maxLevel&&r.xp>=campaignNextXp(r,growthState(r,officerId).level)){
     const previous=clone(growthState(r,officerId)),levelAfter=previous.level+1;
-    r.xp-=xpToNextLevel(previous.level);
+    r.xp-=campaignNextXp(r,previous.level);
     // One source may cross several thresholds, so give each level a stable ID.
     const sourceEventId=`${eventId}.L${levelAfter}`;
     const tag=CAREER_DATA.draftRule.civilSources.includes(kind)?'GOVERNOR_TURN':'DAMAGE';
@@ -341,8 +362,15 @@ export function creditCampaignGrowth(s,{eventId,officerId,kind,amount,fixed=fals
       state:{...previous,aptitudePoints:previous.aptitudePoints+1},context,pool:c28Enabled(s)?c28Eligible(s,officerId,draftPoolForLevel(r,levelAfter),levelAfter,c=>!(c.effects??[]).some(e=>e.op==='RULE'&&!campaignEffectValid(e,c))):draftPoolForLevel(r,levelAfter),seed:s.campaignSeed,rngState:entitlement.rngState,config});
     r.track=granted.state;generated.nextState.level=levelAfter;generated.draft.ruleDoubleDraft=double;generated.draft.rerollLimit=double?2:1;if(config.candidateCount>campaignDraftConfig(r.potential,double).candidateCount)generated.draft.c26Extra=config.candidateCount-campaignDraftConfig(r.potential,double).candidateCount;
     if(c28Enabled(s)){composeC28Draft(s,officerId,generated.draft);composeC29Draft(s,officerId,generated.draft);syncPoolFingerprint(r);}
+    const statsBefore=clone(s.officers[officerId].baseStats);
     applyAutomaticStats(s,officerId,levelAfter);
     uniqueLevel(s,officerId);
+    if(['v2','v3'].includes(s.mapId)&&s.trialRules?.growth!=='legacy'){
+      const statChanges=Object.fromEntries(Object.values(ABILITY_NAMES).map(label=>{const key=abilityToEngine(label);return [key,{before:statsBefore[key],after:s.officers[officerId].baseStats[key]}];}));
+      const changes=Object.entries(statChanges).filter(([,v])=>v.before!==v.after).map(([key,v])=>`${ABILITY_NAMES[key==='strength'?'might':key]} ${v.before} → ${v.after}`);
+      s.campaignGrowth.log.push({turn:s.turn,officerId,kind:'LEVEL_UP',levelBefore:previous.level,levelAfter,statChanges,text:`${s.officers[officerId].name}: Lv${previous.level} → Lv${levelAfter}${changes.length?' · '+changes.join(' · '):''}`});
+      s.campaignGrowth.log=s.campaignGrowth.log.slice(-120);
+    }
     r.track.draftsById[generated.draft.draftId]=generated.draft;r.track.growthStates[officerId]=generated.nextState;
     if(c25Enabled(s)){const carry=r.xp;r.levelSources=Object.fromEntries(Object.entries(r.levelSources).map(([k,v])=>[k,sourceTotal?v*carry/sourceTotal:0]));}
     resolveCampaignAiDrafts(s,{autoPlayer:s.autoPlayer===true});
@@ -363,11 +391,12 @@ export function creditCampaignCombat(s,combat){
   const lossSide=c25Enabled(s)?enemyLoss>allyLoss?targetId:allyLoss>enemyLoss?attackerId:null:null;
   const kills=combat.units.filter(u=>u.postBattleCount===0);
   const winner=lossSide===attackerId?targetId:attackerId;
-  const battleXp=Math.max(dealt,allyLoss)*CAMPAIGN_GROWTH_TRIAL.damageXp+kills.filter(u=>(u.unitId===attackerId?targetId:attackerId)===winner).length*CAMPAIGN_GROWTH_TRIAL.killXp;
+  const tuning=campaignGrowthTrial(s);
+  const battleXp=Math.max(dealt,allyLoss)*tuning.damageXp+kills.filter(u=>(u.unitId===attackerId?targetId:attackerId)===winner).length*tuning.killXp;
   if(lossSide)award(lossSide,'DEFEAT',battleXp*C25.lossRate,'defeat');
-  if(dealt&&lossSide!==attackerId)award(attackerId,combat.kind==='PURSUIT'?'PURSUIT':'DAMAGE',dealt*CAMPAIGN_GROWTH_TRIAL.damageXp,'damage');
-  if(allyLoss&&lossSide!==targetId)award(targetId,'COUNTER',allyLoss*CAMPAIGN_GROWTH_TRIAL.damageXp,'counter');
-  for(const u of kills){const killer=u.unitId===attackerId?targetId:attackerId;if(killer!==lossSide)award(killer,'KILL',CAMPAIGN_GROWTH_TRIAL.killXp,`kill.${u.unitId}`);}
+  if(dealt&&lossSide!==attackerId)award(attackerId,combat.kind==='PURSUIT'?'PURSUIT':'DAMAGE',dealt*tuning.damageXp,'damage');
+  if(allyLoss&&lossSide!==targetId)award(targetId,'COUNTER',allyLoss*tuning.damageXp,'counter');
+  for(const u of kills){const killer=u.unitId===attackerId?targetId:attackerId;if(killer!==lossSide)award(killer,'KILL',tuning.killXp,`kill.${u.unitId}`);}
   return s;
 }
 export function validateCampaignGrowth(s){
@@ -378,7 +407,7 @@ export function validateCampaignGrowth(s){
     if(c25Enabled(s))validateCareer(s,id,r);validateC28(s,id,r);validateC29(s,id);
     const level=growthState(r,id).level;
     if(!(s.officers[id]??s.wanderers?.[id])||level>30||!Number.isSafeInteger(r.xp)||r.xp<0||
-      (level===30?r.xp!==0:r.xp>=xpToNextLevel(level))||
+      (level===30?r.xp!==0:r.xp>=campaignNextXp(r,level))||
       !Object.values(growthState(r,id).ownedTraitRanks).every(rank=>Number.isInteger(rank)&&rank>=1&&rank<=5)||
       !(growthState(r,id).ownedTraitRanks[r.coreId]>=1))fail('INVALID_CAMPAIGN_GROWTH_RECORD');
   }

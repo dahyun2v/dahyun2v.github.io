@@ -1,10 +1,13 @@
+import {troopText} from '../../src/troop-display.mjs';
 // 천하재결 지도 렌더러 v3 (Claude, 2026-10-08) — 옛 map-render.mjs 를 쓰지 않고 새로 짠다.
 // 입력: campaignMapModel(view) 모델. 출력: SVG 문자열. 클릭은 data-tile / data-unit / data-city / data-prod-city / data-place.
 // 층(아래→위): 땅(그린 지도 한 장, 없으면 지형 색) · 강(그림 속 강과 같은 곡선, 판정용 가는 선) · 길 · 영역 · 칸 · 안개
 //            · 이동/공격 칸 · 경로 · 클릭 칸 · 시설 · 탐험지 · 성(미니어처) · 부대(무리 그림 + 장수 깃발판) · 이름판 · 효과
 import {hexCenter, outlineRings} from '../design/city-walls.mjs';
-import {troopLayout,troopPlateY} from './troops.mjs';
+import {troopLayout,troopPlateY,sampleTroop} from './troops.mjs';
+import {headOf} from './hud-ink.mjs';
 import supplyRules from '../../../docs/design-data/supply-v0.1.json' with {type:'json'};
+import paintedWater from '../../assets/ui-v3/dots-1016/facilities/painted-water.json' with {type:'json'};
 
 const SQRT3 = Math.sqrt(3), TILT = 0.62;
 const f = (n) => Math.round(n * 10) / 10;
@@ -40,7 +43,84 @@ const TERRAIN = {plain: '#5f5a47', forest: '#34432f', hill: '#6d5d42', mountain:
 const PLACE_GLYPH = {'성소': '祠', '은거지': '隱', '옛 진지': '營', '군마 산지': '馬'};
 const FACILITY_GLYPH = {farm: '農', granary: '倉', market: '市', barracks: '兵', workshop: '工', tuntian: '屯', clinic: '醫', mufu: '幕', naval: '水'};
 const FACILITY_NAME = {farm: '농지', granary: '곡창', market: '시장', barracks: '병영', workshop: '공방', tuntian: '둔전', clinic: '의원', mufu: '장막부', naval: '장막부'};
+export const FACILITY_TONE = 'saturate(.8) brightness(.955) contrast(1.23)';
+const FACILITY_FILE = {farm:'farm',granary:'granary',market:'market',workshop:'workshop',barracks:'barracks',tuntian:'tuntian',clinic:'clinic',mufu:'command-tent',naval:'command-tent'};
+
+/** Visual placement stays within the engine tile; water tiles are never relocated to another tile. */
+export function facilityPlacement(model, fc, layout, painting=null) {
+  const tile=model.tiles.find(t=>`${t.q},${t.r}`===fc.tileId);
+  if(!tile || ['water','river'].includes(tile.terrain??tile.terrainType))return null;
+  const center=hexCenter(tile,layout), size=layout.size;
+  const neighbors=model.tiles.filter(t=>hexDist(t,tile)===1&&['water','river'].includes(t.terrain??t.terrainType));
+  const edges=[...(model.rivers??[]),...(model.bridges??[])].filter(e=>e.includes(fc.tileId));
+  const wet=[...neighbors.map(t=>`${t.q},${t.r}`),...edges.map(e=>e.find(id=>id!==fc.tileId))];
+  const normals=[...new Set(wet)].filter(Boolean).map(id=>{const p=hexCenter(parse(id),layout),dx=p.x-center.x,dy=(p.y-center.y)/TILT,d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};});
+  const candidates=[{x:0,y:0},...[.10,.20,.28].flatMap(radius=>Array.from({length:12},(_,i)=>({x:Math.cos(i*Math.PI/6)*size*radius,y:Math.sin(i*Math.PI/6)*size*radius})))];
+  // Conservative opaque footprint; additionally clipped to the inset ground hex when painted.
+  const rx=size*.40, ry=size*.25;
+  const valid=c=>[-1,1].every(sx=>[-1,1].every(sy=>{
+    const x=c.x+sx*rx,y=c.y+sy*ry;
+    return Math.abs(x)<=size*.75 && Math.abs(y/TILT)+Math.abs(x)/SQRT3<=size*.82 && normals.every(n=>x*n.x+y/TILT*n.y<=size*(SQRT3/2-.35));
+  }));
+  const charted=painting&&[paintedWater.source,...paintedWater.sameGeometry].some(name=>painting.src?.endsWith(name));
+  const dry=c=>{
+    if(!charted)return true;
+    const [w,h]=paintedWater.size;
+    // Bounds cover the delivered sheets' opaque content, including workshop roofs and smoke.
+    const x0=Math.floor((center.x+c.x-size*.55-painting.x)/painting.width*w),x1=Math.ceil((center.x+c.x+size*.55-painting.x)/painting.width*w);
+    const y0=Math.floor((center.y+c.y-size*.4-painting.y)/painting.height*h),y1=Math.ceil((center.y+c.y+size*.4-painting.y)/painting.height*h);
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(x<0||y<0||x>=w||y>=h||paintedWater.rows[y][x]==='1')return false;
+    return true;
+  };
+  const score=c=>normals.reduce((n,v)=>n+c.x*v.x+c.y/TILT*v.y,0);
+  const at=candidates.filter(c=>valid(c)&&dry(c)).sort((a,b)=>score(a)-score(b)||Math.hypot(a.x,a.y)-Math.hypot(b.x,b.y))[0];
+  return at?{x:center.x+at.x,y:center.y+at.y,center,tileId:fc.tileId}:null;
+}
 const STATUS_GLYPH = {INSPIRED: '昂', SLOWED: '遲', ROOTED: '縛', CONFUSED: '惑'};
+
+// C170 / C169b integration point: all map troop numbers use this formatter.
+export const troopLabel = value => Number.isFinite(value) ? troopText(value) : '—';
+export function mapHeadBox(h) {
+  if(!h)return null;
+  const [w,hgt]=h.size,s=Math.min(w,hgt,h.head[2]*w*1.25);
+  return [Math.max(0,Math.min(w-s,h.head[0]*w-s/2)),Math.max(0,Math.min(hgt-s,h.head[1]*hgt-s/2)),s,s];
+}
+export function unitStatusMarks(u) {
+  const marks=[],add=(kind,glyph,what,effect,recovery)=>marks.push({kind,glyph,text:`${what}\n효과 · ${effect}\n회복 · ${recovery}`});
+  if(u.morale==='SHAKEN')add('SHAKEN','동','동요','공격 ×0.8','옆에 적이 없으면 차례 끝마다 한 단계 회복 또는 재정비');
+  if(u.morale==='ROUTING')add('ROUTING','패','패주','명령 불가 · 매 차례 한 칸 물러남','옆에 적이 없으면 차례 끝에 동요로 회복');
+  if(u.formation==='DISORDERED')add('DISORDERED','흐','흐트러짐','받는 피해 ×1.15 · 반격 ×0.5','옆에 적이 없으면 차례 끝에 한 단계 회복 또는 재정비');
+  if(u.formation==='BROKEN')add('BROKEN','붕','붕괴','받는 피해 ×1.30 · 통제 구역 없음','옆에 적이 없으면 차례 끝에 한 단계 회복 또는 재정비');
+  if(u.braced)add('BRACED','방','방어','받는 피해 ÷1.25 · 반격 ×1.2','다음 자기 차례가 시작되면 해제');
+  for(const s of u.status??[]){const kind=s.kind??s;
+    if(kind==='CONFUSED')add(kind,'혼','혼란','공격 · 전법 · 반격 불가',Number.isFinite(s.turnsLeft)?`${s.turnsLeft}차례 뒤 해제`:'정해진 차례 뒤 해제');
+    else if(STATUS_GLYPH[kind])add(kind,STATUS_GLYPH[kind],{INSPIRED:'고무',SLOWED:'둔화',ROOTED:'발 묶임'}[kind],{INSPIRED:'공격 강화',SLOWED:'이동 감소',ROOTED:'이동 불가'}[kind],'정해진 차례 뒤 해제');
+  }
+  return marks;
+}
+export function unitCityOffsets(cities,C,size=30) {
+  const offsets={};
+  for(const city of cities??[]){
+    const c=C(city.center);offsets[city.center]={x:size*2.3,y:size*.35};
+    for(const id of city.gates??[]){const p=C(id),dx=p.x-c.x,dy=p.y-c.y,d=Math.hypot(dx,dy)||1;offsets[id]={x:dx/d*size*.6,y:dy/d*size*.6};}
+  }
+  return offsets;
+}
+function unitMarker(u) {
+  const key=troopKey(u),label=u.troopName??({militia:'근접보병',spear:'장병',bow:'궁병',cavalry:'기병'}[key]??'부대');
+  const box=mapHeadBox(headOf(u.portrait)),score=n=>Number.isFinite(n)?String(n):'—';
+  const h=headOf(u.portrait),portrait=u.portrait&&box?`<foreignObject class="unit-head" x="34" y="4" width="13" height="13"><div xmlns="http://www.w3.org/1999/xhtml" style="width:13px;height:13px;background-image:url(&quot;${esc(u.portrait)}&quot;);background-size:${13*h.size[0]/box[2]}px ${13*h.size[1]/box[3]}px;background-position:${-13*box[0]/box[2]}px ${-13*box[1]/box[3]}px"></div></foreignObject>`:`<text class="unit-head-initial" x="40.5" y="14">${esc(String(u.name??'').slice(0,1))}</text>`;
+  return `<g class="unit-marker"><title>${esc(u.name)} · ${esc(label)} · 병력 ${troopLabel(u.count)}${u.ratings?' · '+esc(u.ratings.notes?.[0]??'표준 부대 대비 평가값'):''}</title>
+    <rect class="unit-flag" x="-33" y="1" width="2" height="20"/>
+    <rect class="unit-counter-bg" x="-31" y="1" width="63" height="21" rx="2"/>
+    <image class="unit-kind" href="/assets/ui-v3/units-ink/c170-${esc(key)}.png" x="-29" y="2" width="20" height="20"><title>${esc(label)}</title></image>
+    <g class="count unit-count"><text x="10" y="17">${troopLabel(u.count)}</text></g>
+    <g class="unit-specs"><title>${esc(u.ratings?.notes?.join('\n')??'적 부대의 평가값은 공개되지 않습니다')}</title><text x="0" y="28.6">공 ${score(u.ratings?.attack)} · 방 ${score(u.ratings?.defense)}</text></g>
+    <g class="unit-portrait"><rect class="frame" x="34" y="4" width="13" height="13" rx="6.5"/>${portrait}</g>
+    <g class="unit-status">${unitStatusMarks(u).map((s,i)=>`<g class="unit-status-mark" data-status="${s.kind}" tabindex="0" aria-label="${esc(s.text)}" transform="translate(${i*12-25} -6)"><title>${esc(s.text)}</title><rect x="-5" y="-5" width="10" height="10" rx="2"/><text y="3">${s.glyph}</text></g>`).join('')}</g>
+    ${u.tacticReady?'<g class="unit-tactic"><title>사용 가능한 전법 있음</title><text x="28" y="-3">전</text></g>':''}
+    <text class="uname" y="-15">${esc(u.name)}</text></g>`;
+}
 
 function corners(c, size) { return Array.from({length: 6}, (_, i) => { const a = Math.PI / 180 * (60 * i - 90); return {x: c.x + size * Math.cos(a), y: c.y + size * Math.sin(a) * TILT}; }); }
 const hexPath = (c, size) => 'M' + corners(c, size).map((p) => `${f(p.x)} ${f(p.y)}`).join('L') + 'Z';
@@ -100,6 +180,9 @@ const KIT_TONE = {F01: 'red', F02: 'green', F03: 'blue'}; // 표지 그림 색(�
 // Transient route/facing layers share their exact markup with a full draw.
 export function renderMapPreview(hl,layout){
  const size=layout.size,C=id=>hexCenter(parse(id),layout);let svg='';
+ for(const mark of hl.facing??[]){const p=C(mark.tile);if(mark.arrow){const a=C(mark.from),dx=p.x-a.x,dy=p.y-a.y;svg+=`<path class="w-c186-front" d="M${f(a.x+dx*.2)} ${f(a.y+dy*.2)}L${f(a.x+dx*.72)} ${f(a.y+dy*.72)}"/>`;}else if(mark.side!=='FRONT')svg+=`<g class="w-c186-facing ${mark.side}"><path d="${hexPath(p,size*.82)}"/><text x="${f(p.x)}" y="${f(p.y)}">${mark.side==='REAR'?'뒤 +30%':'옆 +15%'}</text></g>`;}
+ for(const [i,id] of (hl.waypoints??[]).entries()){const p=C(id);svg+=`<g class="w-waypoint" transform="translate(${f(p.x)} ${f(p.y)})"><circle r="9"/><text y="4">${i+1}</text></g>`;}
+ if(hl.blocked?.blockedTileId){const p=C(hl.blocked.blockedTileId),text=hl.blocked.reason;svg+=`<g class="w-route-blocked"><path d="${hexPath(p,size*.94)}"/><g transform="translate(${f(p.x)} ${f(p.y-size)})"><rect x="-8" y="-16" width="${text.length*9+16}" height="23" rx="3"/><text y="0">${esc(text)}</text></g></g>`;}
   if (hl.side?.tile) { const p = C(hl.side.tile), name = {FRONT: '정면', FLANK: '옆 +15%', REAR: '뒤 +30%'}[hl.side.side] ?? ''; svg += `<g class="w-side s-${esc(hl.side.side ?? '')}"><path d="${hexPath(p, size * 0.98)}"/>${name ? `<text x="${f(p.x)}" y="${f(p.y - size * 1.0)}">${name}</text>` : ''}</g>`; }
   if (hl.path?.length > 1) svg += `<path class="w-path" d="M${hl.path.map((id) => { const p = C(id); return `${f(p.x)} ${f(p.y)}`; }).join('L')}"/>`;
   for (const o of hl.orders ?? []) {
@@ -123,12 +206,13 @@ export function renderWorldMap(model, opts = {}) {
   const wkx = world ? (maxX - minX + size * 2) / world.land[0] : 0, wky = world ? (maxY - minY + size * 2) / world.land[1] : 0;
   const margin = world ? Math.floor(Math.min(world.ring * wkx, world.ring * wky)) - 2 : (opts.margin ?? 90);
   const layout = {size, tilt: TILT, ox: margin - minX + size, oy: margin - minY + size * 2.2};
+  const painting = world ? {src:world.src,x:minX-size+layout.ox-world.ring*wkx,y:minY-size+layout.oy-world.ring*wky,width:(world.land[0]+world.ring*2)*wkx,height:(world.land[1]+world.ring*2)*wky} : null;
   const W = maxX - minX + size * 2 + margin * 2, H = maxY - minY + size * 3.2 + margin * 2;
   const byId = new Map(tiles.map((t) => [t.id, t]));
   const C = (id) => hexCenter(byId.get(id) ?? parse(id), layout);
   const hl = model.highlights ?? {}, mode = opts.mode ?? 'world';
   const land = ringsPath(outlineRings(tiles, layout));
-  let svg = `<svg class="wmap mode-${esc(mode)}${world ? ' has-world' : ''}" data-margin="${margin}" data-ox="${layout.ox}" data-oy="${layout.oy}" data-size="${size}" viewBox="0 0 ${f(W)} ${f(H)}" xmlns="http://www.w3.org/2000/svg">${defs(size)}`;
+  let svg = `<svg class="wmap mode-${esc(mode)}${world ? ' has-world' : ''}${opts.targetPicking ? ' target-picking' : ''}" data-margin="${margin}" data-ox="${layout.ox}" data-oy="${layout.oy}" data-size="${size}" viewBox="0 0 ${f(W)} ${f(H)}" xmlns="http://www.w3.org/2000/svg">${defs(size)}<defs><pattern id="c171-zoc" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="8" height="8" fill="#52212655"/><path d="M0 0V8" stroke="#f29486" stroke-width="2.5"/></pattern></defs>`;
   svg += `<rect class="w-void" x="0" y="0" width="${f(W)}" height="${f(H)}"/>`;
 
   // 땅
@@ -180,18 +264,21 @@ export function renderWorldMap(model, opts = {}) {
     if(covered.length)svg+=`<path class="w-supply-boundary" d="${ringsPath(outlineRings(covered,layout))}"/>`;
   }
   const hexes = (ids, cls) => (ids ?? []).map((id) => byId.has(id) || parse(id) ? `<path class="${cls}" d="${hexPath(C(id), size * 0.92)}"/>` : '').join('');
-  svg += hexes(hl.danger, 'w-danger') + hexes(hl.move, 'w-move') + hexes(hl.attack, 'w-attack');
-  svg += renderMapPreview({side:hl.side},layout);
+  svg += hexes(hl.danger, 'w-danger') + hexes(hl.move, 'w-move') + hexes(hl.zoc, 'w-zoc') + hexes(hl.attack, 'w-attack');
+  if(hl.move?.length)svg+=`<path class="w-move-boundary" d="${ringsPath(outlineRings(tiles.filter(t=>hl.move.includes(t.id)),layout))}"/>`;
+  svg += '<defs><marker id="c186-front-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#d4c7a5"/></marker><marker id="c186-danger-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#c95f52"/></marker></defs>';
+  svg += renderMapPreview({side:hl.side,facing:hl.facing},layout);
   for (const l of hl.links ?? []) { const a = C(l.from), z = C(l.to); svg += `<path class="w-link" d="M${f(a.x)} ${f(a.y)}L${f(z.x)} ${f(z.y)}"/>`; }
   for (const l of hl.intents ?? []) { const a = C(l.from), z = C(l.to), dx = z.x - a.x, dy = z.y - a.y, d = Math.hypot(dx, dy) || 1; svg += `<path class="w-intent" d="M${f(a.x + dx / d * size * .5)} ${f(a.y + dy / d * size * .5)}L${f(z.x - dx / d * size * .45)} ${f(z.y - dy / d * size * .45)}"/>`; }
   for (const l of hl.supply ?? []) { const a = C(l.from), z = C(l.to); svg += `<g class="w-supply s-${esc(String(l.state ?? '').toLowerCase())}"><path d="M${f(a.x)} ${f(a.y)}L${f(z.x)} ${f(z.y)}"/><circle cx="${f(z.x)}" cy="${f(z.y)}" r="5"/><circle class="end" cx="${f(a.x)}" cy="${f(a.y)}" r="3.5"/></g>`; }
-  svg += renderMapPreview({path:hl.path,orders:hl.orders},layout);
+  svg += renderMapPreview({path:hl.path,orders:hl.orders,waypoints:hl.waypoints},layout);
   svg += `<g class="w-hits">${tiles.map((t) => `<path data-tile="${t.id}" d="${hexPath(hexCenter(t, layout), size)}"/>`).join('')}</g>`;
 
   // 시설
-  for (const fc of model.facilities ?? []) {
-    const c = C(fc.tileId), art = opts.facilityArt?.[fc.kind];
-    if (art) { const w = size * 2.1, h = w * 0.75; svg += `<g class="w-facility${fc.disabled ? ' off' : ''}" transform="translate(${f(c.x)} ${f(c.y)})"><title>${esc(FACILITY_NAME[fc.kind] ?? fc.kind)}</title><image href="${esc(art)}" x="${f(-w / 2)}" y="${f(-h * 0.62)}" width="${f(w)}" height="${f(h)}"/></g>`; }
+  for (const [index,fc] of (model.facilities ?? []).entries()) {
+    const c = facilityPlacement(model,fc,layout,painting);if(!c)continue;
+    const art = FACILITY_FILE[fc.kind]?`/assets/ui-v3/dots-1016/facilities/A-${FACILITY_FILE[fc.kind]}.png`:opts.facilityArt?.[fc.kind];
+    if (art) { const w = size * 1.35, h = w * 0.75, clip=`w-facility-land-${index}`; svg += `<clipPath id="${clip}"><path d="${hexPath(c.center,size*.82)}"/></clipPath><g clip-path="url(#${clip})"><g class="w-facility${fc.disabled ? ' off' : ''}${fc.constructing||fc.underConstruction?' building':''}" data-facility-tile="${esc(fc.tileId)}" transform="translate(${f(c.x)} ${f(c.y)})"><title>${esc(FACILITY_NAME[fc.kind] ?? fc.kind)}</title><image style="filter:${FACILITY_TONE}" href="${esc(art)}" x="${f(-w / 2)}" y="${f(-h / 2)}" width="${f(w)}" height="${f(h)}"/></g></g>`; }
     else svg += `<g class="w-facility token${fc.disabled ? ' off' : ''}" transform="translate(${f(c.x)} ${f(c.y)})"><title>${esc(FACILITY_NAME[fc.kind] ?? fc.kind)}</title><path d="${hexPath({x: 0, y: 0}, size * 0.52)}"/><text y="5">${FACILITY_GLYPH[fc.kind] ?? '工'}</text></g>`;
   }
   // 탐험지 — 모르는 곳은 안개 형체, 아는 곳은 미니어처(없으면 각인 표지)
@@ -204,6 +291,7 @@ export function renderWorldMap(model, opts = {}) {
     if (art && !baked) { const w = size * 2, h = w * 0.75; svg += `<image href="${esc(art)}" x="${f(-w / 2)}" y="${f(-h * 0.62)}" width="${f(w)}" height="${f(h)}"/>`; }
     else if (!baked || unknown) svg += `<g class="mark"><rect x="-10" y="-22" width="20" height="20" transform="rotate(45 0 -12)"/><text y="-7">${unknown ? '?' : PLACE_GLYPH[p.label] ?? '跡'}</text></g>`;
     if (!unknown) svg += `<text class="name" y="${f(size * 0.78)}">${esc(p.label)}</text>`;
+    if(status==='KNOWN'||status==='PENDING')svg+=`<text class="c186-site-goal" y="${f(size*1.15)}">${status==='PENDING'?'조사 중':'조사 목표'}</text>`;
     // 단계 표지: 조사 중 = 査(점선 고리 돎) · 조사 끝 = 已 인장
     if (status === 'PENDING') svg += `<g class="badge pend" transform="translate(${f(size * 0.72)} ${f(-size * 0.86)})"><circle class="spin" r="9.5"/><circle r="7"/><text y="3.6">査</text></g>`;
     if (status === 'RESOLVED') svg += `<g class="badge done"${p.layer ? ` data-layer="${esc(p.layer)}"` : ''} transform="translate(${f(size * 0.72)} ${f(-size * 0.86)})"><rect x="-7.5" y="-7.5" width="15" height="15"/><text y="3.6">${esc(p.layer ?? '已')}</text></g>`;
@@ -239,7 +327,7 @@ export function renderWorldMap(model, opts = {}) {
     // 성 기본 정보 줄(사용자 2026-10-11 "성에 총 병력수·내구도 등 기본 정보 — 코삼·문명처럼"): 병력(내 성 = 성 안 예비병, 남의 성 = 모름 '?') · 내구
     const iw = Math.max(w + 14, 78), infoY = def !== null ? 19 : 15;
     const info = city.defenseMax || Number.isFinite(city.troops) ? `<g class="cinfo" transform="translate(0 ${infoY})"><rect class="ci-bg" x="${f(-iw / 2)}" y="0" width="${f(iw)}" height="13.5" rx="1.5"/>`
-      + `<image href="/assets/ui-v3/hud/icons/res-troops.png" x="${f(-iw / 2 + 3)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t" x="${f(-iw / 2 + 15)}" y="10.2">${Number.isFinite(city.troops) ? Number(city.troops).toLocaleString('ko-KR') : '?'}</text>`
+      + `<image href="/assets/ui-v3/hud/icons/res-troops.png" x="${f(-iw / 2 + 3)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t" x="${f(-iw / 2 + 15)}" y="10.2">${Number.isFinite(city.troops) ? troopLabel(city.troops) : '?'}</text>`
       + (city.defenseMax ? `<image href="/assets/ui-v3/hud/icons/cmd-garrison.png" x="${f(iw / 2 - 37)}" y="1.6" width="10.5" height="10.5"/><text class="ci-t${def !== null && def < 0.5 ? ' low' : ''}" x="${f(iw / 2 - 25)}" y="10.2">${Math.round(city.defense ?? 0)}</text>` : '') + '</g>' : '';
     // 2026-10-14 이름표 자리(사용자 "성 이름이 성의 어느 방향에 어느 정도 붙어 있는지 · 글자 크기 · 색을 레퍼런스 보고"): 바탕에 그려 넣은 성이면
     // 그려진 성벽 아래끝 가운데(world.cityLabelAt, 바탕 그림 px)에 띠 위쪽이 살짝 걸치게 — 솔 시안 04b 의 업 · RTK14 처럼 성에 붙인다. 아니면 예전 자리(칸 가운데 아래)
@@ -263,6 +351,7 @@ export function renderWorldMap(model, opts = {}) {
       ${status ? `<g class="st" transform="translate(${f(w / 2 + 4)} -6)"><rect x="0" y="-9" width="34" height="17"/><text x="17" y="4">${status}</text></g>` : ''}${info}${badge}</g>`);
   }
 
+  svg += '<g class="w-fire-ground" pointer-events="none" aria-hidden="true"></g>';
   svg += `<g class="w-plates">${plates.join('')}</g>`; // 성 이름판은 부대 아래(부대를 누르기 쉽게)
   // 부대 — 무리 그림(있으면) + 장수 깃발판(얼굴·병력) + 옥벽 고리
   const units = (model.units ?? []).filter((u) => u.count !== 0 || u.prevCount);
@@ -282,13 +371,16 @@ export function renderWorldMap(model, opts = {}) {
     units.sort((a,b)=>Number(!!a.active)-Number(!!b.active));
   }
   const stack = {}, cityCenters = new Set((model.cities ?? []).map((c) => c.center));
+  const cityTiles=new Set((model.cities??[]).flatMap(c=>[c.center,...(c.gates??[])]));
+  const displayOffsets=opts.unitMarkers?unitCityOffsets(model.cities,C,size):{};
   // 그리는 순서: 위쪽 칸 먼저 → 아래쪽 칸, 성 안 부대는 맨 뒤. 성 안 부대는 깃발판만 있어서 옆 칸 병사 무리에 가리면 숫자만 남는다(2026-10-12)
   if (!opts.compactLabels) units.sort((a, b) => Number(cityCenters.has(a.tileId)) - Number(cityCenters.has(b.tileId)) || C(a.tileId).y - C(b.tileId).y);
   for (const u of units) {
     const n = (stack[u.tileId] = (stack[u.tileId] ?? -1) + 1), c = C(u.tileId), x = c.x + (opts.compactLabels?0:n * size * 0.42), y = c.y + (opts.compactLabels?0:n * size * 0.16);
     const label=labelOffsets.get(u.id);
-    const inCity = cityCenters.has(u.tileId), fs = FACTION[u.factionId] ?? NEUTRAL, art = inCity ? null : opts.unitArt?.[troopKey(u)];
-    const formation=opts.troopFormations?troopLayout(u,inCity):null,footprint=formation?.bounds;
+    const inCity = (opts.unitMarkers?cityTiles:cityCenters).has(u.tileId), fs = FACTION[u.factionId] ?? NEUTRAL, art = inCity ? null : opts.unitArt?.[troopKey(u)];
+    const sample=opts.troopFormations?sampleTroop({...u,displayOffsets},{x,y},C):null;
+    const formation=opts.troopFormations?troopLayout(u,inCity,sample):null,footprint=formation?.bounds;
     // 병사 무리: 세력 색 천을 두른 무리를 칸 위에 크게(시안 final-map-v2). 발끝이 칸 가운데 조금 아래에 오게 놓는다
     const sq = inCity ? null : opts.squadArt?.[troopKey(u)]?.[KIT_TONE[u.factionId] ?? 'grey'], sqW = size * 3.3, sqH = sq ? sqW * sq.size[1] / sq.size[0] : 0;
     const ratio = u.maxCount ? Math.max(0, Math.min(1, (u.count ?? 0) / u.maxCount)) : 1;
@@ -296,7 +388,8 @@ export function renderWorldMap(model, opts = {}) {
     const flip = u.faceLeft ? ' scale(-1 1)' : '';
     const badges = [u.morale === 'ROUTING' ? '潰' : u.morale === 'SHAKEN' ? '搖' : '', u.formation === 'BROKEN' ? '崩' : u.formation === 'DISORDERED' ? '亂' : '', u.braced ? '守' : '', ...(u.status ?? []).map((s) => STATUS_GLYPH[s.kind ?? s] ?? '')].filter(Boolean);
     const cls = `w-unit${u.active ? ' active' : ''}${u.moved ? ' moved' : ''}${u.ready ? ' ready' : ''}${u.enemy ? ' enemy' : ''}${lost ? ' hit' : ''}${u.crisis ? ' crisis' : ''}${u.bond ? ' bonded' : ''}`;
-    svg += `<g class="${cls}" data-unit="${esc(u.id)}" data-camera-tile="${esc(u.tileId)}"${footprint?` data-troop-anchor="1" data-troop-head="${formation.headTop}" data-troop-top="${footprint.top}" data-troop-left="${footprint.left}" data-troop-right="${footprint.right}" data-troop-bottom="${footprint.bottom}"`:''} data-x="${f(x)}" data-y="${f(y)}" transform="translate(${f(x)} ${f(y)})" style="--fc:${fs.color}">
+    const offset=displayOffsets[u.tileId]??{x:0,y:0};
+    svg += `<g class="${cls}" data-unit="${esc(u.id)}" data-camera-tile="${esc(u.tileId)}" data-display-offsets="${esc(JSON.stringify(displayOffsets))}"${footprint?` data-troop-anchor="1" data-troop-head="${formation.headTop}" data-troop-top="${footprint.top}" data-troop-left="${footprint.left}" data-troop-right="${footprint.right}" data-troop-bottom="${footprint.bottom}"`:''} data-x="${f(x)}" data-y="${f(y)}" transform="translate(${f(sample?.pos.x??x+offset.x)} ${f(sample?.pos.y??y+offset.y)})" style="--fc:${fs.color}">
       ${footprint?`<g visibility="hidden" pointer-events="none"><rect data-troop-project="origin" width=".01" height=".01"/><rect data-troop-project="x" x="1" width=".01" height=".01"/><rect data-troop-project="y" y="1" width=".01" height=".01"/></g>`:''}
       <ellipse class="shadow" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.72)}" ry="${f(size * 0.25)}"/>
       ${!u.enemy?`<ellipse class="ink-pick-ring" cx="0" cy="10" rx="25" ry="10"/>`:""}
@@ -304,17 +397,18 @@ export function renderWorldMap(model, opts = {}) {
       ${u.crisis ? `<ellipse class="crisis-ring" cx="0" cy="${f(size * 0.3)}" rx="${f(size * 0.9)}" ry="${f(size * 0.34)}"/>` : ''}
       ${opts.troopFormations ? `<ellipse class="w-troops-hit" cx="0" cy="10" rx="22" ry="12"/>` : sq ? `<image class="squad big" href="${esc(sq.src)}" x="${f(-sqW / 2)}" y="${f(size * 0.62 - sqH)}" width="${f(sqW)}" height="${f(sqH)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : art ? `<image class="squad" href="${esc(art)}" x="${f(-size * 1.15)}" y="${f(-size * 1.55)}" width="${f(size * 2.3)}" height="${f(size * 2.3)}"${flip ? ` transform="${flip.trim()}"` : ''}/>` : ''}
       ${label?`<path class="w-label-tether" d="M0 0L${f(label.dx)} ${f(label.dy+30*label.scale)}" fill="none" stroke="${fs.color}" stroke-width="1.5" pointer-events="none"/>`:""}<g class="plate plate-top${inCity ? ' in-city' : ''}" data-unit="${esc(u.id)}" transform="${footprint?`translate(0 ${f(troopPlateY(formation.headTop))})`:label?`translate(${f(label.dx)} ${f(label.dy)}) scale(${label.scale})`:`translate(${inCity ? f(size * 1.3) : 0} ${f(inCity ? -size * 0.4 : -size * (sq ? 2.2 : art ? 1.55 : 1.05))})`}">
-        <path class="pole" d="M0 14V${f(inCity ? size * 0.7 : size * (sq ? 1.15 : 1))}"/>
+        ${opts.unitMarkers ? unitMarker(u) : `        <path class="pole" d="M0 14V${f(inCity ? size * 0.7 : size * (sq ? 1.15 : 1))}"/>
         ${/^F\d\d$/.test(u.factionId ?? '') ? `<g class="banner" transform="translate(-1 21)"><path class="cloth" d="M0 0H-17V22L-12.5 18L-8.5 22L-4.5 18L0 22Z"/><image href="/assets/ui-v3/emblems/${esc(u.factionId)}.png" x="-15" y="1" width="13" height="13"/></g>` : ''}
-        ${u.tacticReady?`<g class="w-tactic-ready${u.tacticNew?' fresh':''}" transform="translate(29 5)"><rect x="-7" y="-8" width="16" height="17"/><text x="1" y="5">전</text></g>`:''}${u.active?'<g class="w-selected"><rect x="15" y="-24" width="28" height="14" rx="2"/><text x="29" y="-14">선택</text></g>':''}<g class="std" transform="scale(.82)"><g class="count k" transform="translate(0 27)"><path class="kplate" d="M-31 0L-25 -11.5H25L31 0L25 11.5H-25Z"/><text y="3.4">${Number(u.count ?? 0).toLocaleString('ko-KR')}</text><rect class="bar-bg" x="-20" y="5.8" width="40" height="2.6"/><rect class="bar" x="-20" y="5.8" width="${f(40 * ratio)}" height="2.6"/></g>${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}<path class="frame" d="M-16 -19H16V10L0 19.5L-16 10Z"/>
+        ${u.tacticReady?`<g class="w-tactic-ready${u.tacticNew?' fresh':''}" transform="translate(29 5)"><rect x="-7" y="-8" width="16" height="17"/><text x="1" y="5">전</text></g>`:''}${u.active?'<g class="w-selected"><rect x="15" y="-24" width="28" height="14" rx="2"/><text x="29" y="-14">선택</text></g>':''}<g class="std" transform="scale(.82)"><g class="count k" transform="translate(0 27)"><path class="kplate" d="M-31 0L-25 -11.5H25L31 0L25 11.5H-25Z"/><text y="3.4">${troopLabel(u.count)}</text><rect class="bar-bg" x="-20" y="5.8" width="40" height="2.6"/><rect class="bar" x="-20" y="5.8" width="${f(40 * ratio)}" height="2.6"/></g>${u.ready ? '<path class="rglow" d="M-17.5 -20.5H17.5V11L0 21.5L-17.5 11Z"/>' : ''}<path class="frame" d="M-16 -19H16V10L0 19.5L-16 10Z"/>
         ${u.portrait ? faceImage(u.portrait, 'w-face-shield') : `<text class="initial" y="7">${esc(String(u.name ?? '').slice(0, 1))}</text>`}
         <g class="troop" transform="translate(-19 -19)"><rect x="-7" y="-7" width="14" height="14" transform="rotate(45)"/><text y="4">${TROOP_GLYPH[troopKey(u)] ?? '兵'}</text></g>
         ${badges.map((b, i) => `<g class="badge" transform="translate(22 ${-13 + i * 15})"><rect x="-7" y="-7" width="14" height="14"/><text y="4">${b}</text></g>`).join('')}
-        </g><text class="uname" y="-23">${esc(u.name)}</text>
+        </g><text class="uname" y="-23">${esc(u.name)}</text>`}
       </g>
-      ${lost ? `<text class="dmg ink-damage${u.heavyLoss?' heavy':''}" style="--damage-size:${Math.min(34,19+lost/60)}px" y="${f(-size * 2.6)}">${u.lossLabel ? esc(u.lossLabel) + ' ' : ''}−${lost.toLocaleString('ko-KR')}</text>` : ''}
+      ${lost ? `<text class="dmg ink-damage${u.heavyLoss?' heavy':''}" style="--damage-size:${Math.min(34,19+lost/60)}px" y="${f(-size * 2.6)}">${u.lossLabel ? esc(u.lossLabel) + ' ' : ''}−${troopLabel(lost)}</text>` : ''}
     </g>`;
   }
+  svg += '<g class="w-fire-layer" pointer-events="none" aria-hidden="true"></g><g class="w-ink-fx" pointer-events="none" aria-hidden="true"></g>';
   // C159: existing bitmap effects on public map tiles; decorations never intercept clicks.
   for(const fx of model.fx??[]){if(!fx.to)continue;const a=C(fx.from??fx.to),z=C(fx.to),delay=Math.max(0,fx.elapsed??0),duration=fx.duration??1100;
    if(delay>=duration)continue;
@@ -325,7 +419,7 @@ export function renderWorldMap(model, opts = {}) {
    if(fx.label)svg+=`<text class="effect-label" y="-28">${esc(fx.label)}</text>`;
    svg+='</g>';
   }
-  return svg + '</svg>';
+  return svg + renderMapPreview({blocked:hl.blocked},layout) + '</svg>';
 }
 
 // 부대 이동: 다시 그린 뒤 지난 자리에서 새 자리로 미끄러지게(Web Animations). 순간이동 거리(12칸 이상)는 건너뜀.

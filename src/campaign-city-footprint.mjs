@@ -4,6 +4,7 @@ import {c31Sync} from './campaign-events.mjs';
 import {C24,specialTroop,parentTroop} from './campaign-special-troops.mjs';
 import {movementEffect,hasCampaignRule} from './campaign-effects.mjs';
 import {neighbors, tileId, hexDistance} from './map-primitives.mjs';
+import {moveOneTick} from './movement.mjs';
 
 /** Same ring order and road priority as the display renderer, without a UI import. */
 export function castleFootprint(centerId, {roads = [], exists = () => true} = {}) {
@@ -89,10 +90,7 @@ export function campaignMovementWorld(s,armyId) {
   const blocked = new Set(s.mapRules.blockedEdges);
   const unit=s.armies[armyId];
   if(diplomacyEnabled(s))for(const f of Object.keys(s.factions))if(f!==unit.factionId&&diplomacyState(s,unit.factionId,f)==='TRUCE'&&!diplomacyTerritory(s,f,unit.tileId))for(const t of Object.values(s.tiles))if(diplomacyTerritory(s,f,t.tileId))for(const n of neighbors(t))if(s.tiles[tileId(n)])blocked.add([t.tileId,tileId(n)].sort().join('|'));
-  // Campaign armies act sequentially; a stationary ally cannot vacate a route.
-  for(const a of Object.values(s.armies))if(a.armyId!==armyId&&a.factionId===s.armies[armyId].factionId&&castleArmyActive(s,a)){
-    for(const n of neighbors(s.tiles[a.tileId]))if(s.tiles[tileId(n)])blocked.add([a.tileId,tileId(n)].sort().join('|'));
-  }
+  // Allies are passable. Only the final destination has field occupancy limits.
   for (const c of Object.values(s.cities)) {
     if (campaignCenterEntryAllowed(s,armyId,c)) continue;
     // Enemy centers are reached only by a city attack capture.
@@ -111,4 +109,43 @@ export function campaignMovementWorld(s,armyId) {
 export function campaignCastleDefense(s,army) {
   return Object.values(s.cities).some(c => c.ownerFactionId === army.factionId &&
     [c.footprint.center,...c.footprint.gates].includes(army.tileId)) ? 1.25 : 1;
+}
+
+export function campaignStackAllowed(s,id,to){
+ const a=s.armies[id];return !!a&&['v2','v3'].includes(s.mapId)&&Object.values(s.cities).some(c=>[c.tileId,...c.footprint.gates].includes(to));
+}
+export function campaignDestinationAllowed(s,id,to){
+ const a=s.armies[id];if(!a||!s.tiles[to])return false;
+ const occupants=Object.values(s.armies).filter(b=>b.armyId!==id&&castleArmyActive(s,b)&&b.tileId===to);
+ // Preserve timeline contact with enemies, including undiscovered ones.
+ if(occupants.some(b=>b.factionId!==a.factionId))return true;
+ return !occupants.length||campaignStackAllowed(s,id,to)&&occupants.every(b=>b.factionId===a.factionId);
+}
+// Keep the FIRST3 timeline unchanged. Sequential campaign movement may cross
+// stationary allies; canonical army objects/history are still updated in place.
+export function moveCampaignOneTick(s,id){
+ const a=s.armies[id],armies=Object.fromEntries(Object.entries(s.armies).filter(([key,b])=>key===id||b.factionId!==a.factionId));
+ moveOneTick({...s,armies});
+}
+
+// 32 §8.4: existing local ready troops, never an unnamed field army.
+// Trial tuning: 500 ready => wall damage /1.25, counter 10 (cap 20).
+export function campaignReserveDefense(s,c){
+ const ready=(s.personnel?.lots??[]).filter(l=>l.nodeId===c.cityId&&l.kind!=='WOUNDED'&&
+  (s.economy?.lotFaction?.[l.lotId]??s.armies[l.originFormationId]?.factionId??c.ownerFactionId)===c.ownerFactionId).reduce((n,l)=>n+l.count,0);
+ const strength=Math.min(1,ready/1000);
+ return {ready,wallMultiplier:1/(1+strength*.5),counter:Math.round(strength*20)};
+}
+export function disperseCapturedReserves(s,cityId,formerOwnerFactionId){
+ const c=s.cities[cityId];if(formerOwnerFactionId===null||formerOwnerFactionId===c.ownerFactionId)return 0;
+ let dispersed=0;
+ for(const l of s.personnel.lots.filter(l=>l.nodeId===cityId&&l.kind!=='WOUNDED'&&l.count>0)){
+  const faction=s.economy?.lotFaction?.[l.lotId]??s.armies[l.originFormationId]?.factionId??formerOwnerFactionId;if(faction!==formerOwnerFactionId)continue;
+  dispersed+=l.count;l.count=0;
+ }
+ // Demobilization leaves the military ledger, like C22 reserve withdrawal;
+ // these people are dispersed, not invented battle deaths / wounded troops.
+ s.personnel.initialPersonnel-=dispersed;
+ c.reserveTroops=s.personnel.lots.filter(l=>l.nodeId===cityId&&l.kind!=='WOUNDED').reduce((n,l)=>n+l.count,0);
+ return dispersed;
 }

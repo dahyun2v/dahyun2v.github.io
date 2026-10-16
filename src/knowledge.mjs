@@ -1,5 +1,21 @@
 import {boardNeighbors,hexDistance,movementTicks,tileId} from './map-primitives.mjs';
-export function canObserveTile(observer,target,range){return hexDistance(observer,target)<=range;}
+// Optional terrain is campaign-only. FIRST3 callers retain distance visibility.
+export function canObserveTile(observer,target,range,tiles=null){
+ return hexDistance(observer,target)<=range&&(!tiles||terrainVisible(observer,target,(q,r)=>tiles[`${q},${r}`]));
+}
+function terrainVisible(origin,target,at){
+ const distance=hexDistance(origin,target);
+ if(distance<=1)return true;
+ // Trace both sides of a hex-edge tie; an opaque terrain touching either ray blocks.
+ for(const epsilon of [-1e-6,1e-6])for(let i=1;i<distance;i++){
+  const f=i/distance,x=origin.q+(target.q-origin.q)*f+epsilon,z=origin.r+(target.r-origin.r)*f+epsilon,y=-x-z;
+  let q=Math.round(x),r=Math.round(z),s=Math.round(y);
+  const dx=Math.abs(q-x),dz=Math.abs(r-z),dy=Math.abs(s-y);
+  if(dx>dy&&dx>dz)q=-s-r;else if(dy>dz)s=-q-r;else r=-q-s;
+  if(['mountain','forest','hill'].includes(at(q,r)?.terrainType))return false;
+ }
+ return true;
+}
 const minimumArmy=a=>({armyId:a.armyId,factionId:a.factionId,tileId:a.tileId,commanderId:a.commanderId,troopType:a.troopType});
 const activeArmy=(s,a)=>!s.campaignTerminalWorld||s.campaignTerminalWorld.armiesById?.[a.armyId]?.disposition==='ACTIVE';
 const KNOWN=new Set(['VISIBLE','REMEMBERED']);
@@ -31,12 +47,12 @@ function knownEdges(s,knowledge){
 // observers, ownership, disposition and last-seen timestamps remain live.
 const visionGeometry=new WeakMap();
 function visibilityGeometry(tiles){
- const entries=Object.entries(tiles),signature=entries.map(([id,t])=>`${id}:${t.q}:${t.r}`).join('|');
+ const entries=Object.entries(tiles),signature=entries.map(([id,t])=>`${id}:${t.q}:${t.r}:${t.terrainType}`).join('|');
  let g=visionGeometry.get(tiles);if(g?.signature===signature)return g;
  g={signature,entries,byCoordinate:new Map(entries.map(([id,t])=>[`${t.q},${t.r}`,id])),footprints:new Map(),integer:entries.every(([,t])=>Number.isInteger(t.q)&&Number.isInteger(t.r))};visionGeometry.set(tiles,g);return g;
 }
-function visibleFootprint(g,origin,range){
- const key=`${origin.q},${origin.r}:${range}`;if(g.footprints.has(key))return g.footprints.get(key);
+function visibleFootprint(g,origin,range,occlusion){
+ const key=`${origin.q},${origin.r}:${range}:${occlusion}`;if(g.footprints.has(key))return g.footprints.get(key);
  let ids=[];
  if(g.integer&&g.byCoordinate.size===g.entries.length&&Number.isFinite(range)&&range>=0&&range<100){
   const radius=Math.floor(range);
@@ -44,6 +60,7 @@ function visibleFootprint(g,origin,range){
    const id=g.byCoordinate.get(`${origin.q+dq},${origin.r+dr}`);if(id)ids.push(id);
   }
  }else ids=g.entries.filter(([,t])=>canObserveTile(origin,t,range)).map(([id])=>id);
+ if(occlusion){const tiles=new Map(g.entries);ids=ids.filter(id=>terrainVisible(origin,tiles.get(id),(q,r)=>tiles.get(g.byCoordinate.get(`${q},${r}`))));}
  g.footprints.set(key,ids);return ids;
 }
 export function updateKnowledge(s){
@@ -52,7 +69,7 @@ export function updateKnowledge(s){
     const k=s.knowledge[factionId]??={tiles:{},observedArmies:{},lastSeenArmies:{},cities:{}};
     const observers=[...Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).map(c=>({tileId:c.tileId,range:s.mapRules.vision.city})),...Object.values(s.armies).filter(a=>a.factionId===factionId&&activeArmy(s,a)).map(a=>({tileId:a.tileId,range:s.mapRules.vision.byTroop?.[a.troopType]??s.mapRules.vision.field}))];
     const visible=new Set();
-    for(const o of observers){const origin=s.tiles[o.tileId],range=o.range+(origin.terrainType==='hill'?s.mapRules.vision.hillBonus:0);for(const id of visibleFootprint(geometry,origin,range))visible.add(id);}
+    for(const o of observers){const origin=s.tiles[o.tileId],range=o.range+(origin.terrainType==='hill'?s.mapRules.vision.hillBonus:0);for(const id of visibleFootprint(geometry,origin,range,s.mapRules.vision.profile==='CAMPAIGN_V1'))visible.add(id);}
     for(const [id]of geometry.entries)k.tiles[id]=visible.has(id)?'VISIBLE':k.tiles[id] && k.tiles[id]!=='UNEXPLORED'?'REMEMBERED':'UNEXPLORED';
     k.observedArmies={};
     for(const a of Object.values(s.armies))if(activeArmy(s,a)&&a.factionId!==factionId && k.tiles[a.tileId]==='VISIBLE'){

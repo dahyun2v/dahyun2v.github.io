@@ -1,3 +1,4 @@
+import {troopText} from './troop-display.mjs';
 import {memoCampaignQuery} from './campaign-rule-registry.mjs';
 import {diplomacyArmyHostile,diplomacyAttackReason,withdrawalProtection} from './campaign-diplomacy.mjs';
 import {initializeClasses,classPostMove} from './campaign-classes.mjs';
@@ -11,7 +12,7 @@ import {C28,c28Enabled,c28Rule,c28Suppressed,c28DamageBonus,c28Expose,c28Control
 import {DOMESTIC_RULES,domesticStartFaction,COMBAT_TITLE_RULES,COMMON_TACTIC_RULES,combatTacticRule,combatTraitActive,combatMovement,combatStartFaction,combatCanPostMove,combatSurvive,combatRuleLine,combatArmyAt,combatAlly,oppositeCombatTile,combatEmptyStep} from './campaign-rule-registry.mjs';
 import {campaignRuleRegistered,executeCampaignRule} from './campaign-rule-registry.mjs';
 import {expandUniqueEffect,uniqueHasRule,uniqueOps,uniqueOwned,uniqueImmune,uniqueTacticTargets,uniqueTacticIsDamage,uniqueCooldownTurns,uniqueDamageLimit,uniqueStart,uniqueRange} from './campaign-rule-registry.mjs';
-import {C23,archerAttackReason} from './campaign-abilities.mjs';
+import {archerAttackReason} from './campaign-abilities.mjs';
 import {attackDirection,isCharge,checkFormation,changeFormation,C12,turnFacing,directionToward} from './campaign-abilities.mjs';
 import {hexDistance,neighbors} from './map-primitives.mjs';
 import {troopToCampaign} from './campaign-adapters.mjs';
@@ -191,7 +192,7 @@ export function effectModifiers(s,recipient,whens=['PASSIVE'],ctx={}){
   }
   const extra=c33Mods(s,recipient,whens,ctx);values.DAMAGE_MOD+=extra.DAMAGE_MOD;values.DEFENSE_MOD+=extra.DEFENSE_MOD;lines.push(...extra.lines);return {...values,lines};
 }
-export function aptitudePercent(s,id){const a=s.armies[id];return ({HIGH:C23.aptitudeHigh,LOW:C23.aptitudeLow})[s.campaignGrowth?.officers[a?.commanderId]?.pack.troopAptitude?.[(a?troopToCampaign(a.troopType):null)]]??0;}
+export function aptitudePercent(s,id){return 0;}
 export function damageEffects(s,attacker,target,{counter=false,tactic=null,first=true,charge=isCharge(s,attacker,target),classDamage=0}={}){
   const events=counter?['ON_COUNTER']:['ON_ATTACK',...(first&&s.armies[attacker]?.effectFirstAttackTurn!==s.turn?['BATTLE_START']:[])];
   const sources=[{id:attacker,whens:events},{id:target,whens:['ON_DEFEND'],ctx:{targetId:attacker,when:'ON_DEFEND',counter}}];
@@ -372,7 +373,7 @@ export function surviveRule(s,id,loss,commit=true,lines=null){
  if(commit&&loss>0&&s.armies[id]?.c32?.restHits>0)s.armies[id].c32.restHits--;
  const beforeLives=loss;loss=combatSurvive(s,id,loss,commit);
  if(loss<beforeLives)lines?.push(combatRuleLine(s,id,'NINE_LIVES','병력 5%로 패주'));
- const a=s.armies[id];if(loss>=a.troopCount&&a.lastStandKey!==`${s.turn}.${s.activeFactionId??s.playerFactionId}`&&hasCampaignRule(s,id,'LAST_STAND')){if(commit)a.lastStandKey=`${s.turn}.${s.activeFactionId??s.playerFactionId}`;lines?.push(ruleLine(s,id,'LAST_STAND','병력 1로 생존'));return a.troopCount-1;}return loss;
+ const a=s.armies[id];if(loss>=a.troopCount&&a.lastStandKey!==`${s.turn}.${s.activeFactionId??s.playerFactionId}`&&hasCampaignRule(s,id,'LAST_STAND')){if(commit)a.lastStandKey=`${s.turn}.${s.activeFactionId??s.playerFactionId}`;lines?.push(ruleLine(s,id,'LAST_STAND',`병력 ${troopText(1)}명으로 생존`));return a.troopCount-1;}return loss;
 }
 export function finishFactionRules(s,factionId){
  for(const a of Object.values(s.armies))if(a.factionId===factionId&&a.starVanguardTurn<s.turn)delete a.starVanguardTurn;
@@ -425,6 +426,6 @@ const wallSiege=(s,id,c)=>hasCampaignRule(s,id,'SIEGE_FROM_WALL')&&c.footprint.w
 export function cityAttackTargets(s,id) {
   const a=s.armies[id];
   if(!a||a.c34?.disarmUntil>=s.turn||a.c32?.disarmUntil>=s.turn||archerAttackReason(s,id)||attackConfused(s,id)||!castleArmyActive(s,a)||a.morale==='ROUTING'||!canMainAction(s,id))return [];
-  return Object.values(s.cities).filter(c=>(troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])>1&&(!(specialTroop(s,a.troopType)&&a.troopType==='catapult')? !c.footprint.gates.some(g=>hexDistance(s.tiles[a.tileId],s.tiles[g])<=1):true))&&!diplomacyAttackReason(s,id,c.cityId)&&c.ownerFactionId!==a.factionId&&(c.footprint.gates.includes(a.tileId)||wallSiege(s,id,c)||specialTroop(s,a.troopType)&&a.troopType==='catapult'&&hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])===2)&&
+  return Object.values(s.cities).filter(c=>s.knowledge[a.factionId].tiles[c.tileId]==='VISIBLE'&&(troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])>1&&(!(specialTroop(s,a.troopType)&&a.troopType==='catapult')? !c.footprint.gates.some(g=>hexDistance(s.tiles[a.tileId],s.tiles[g])<=1):true))&&!diplomacyAttackReason(s,id,c.cityId)&&c.ownerFactionId!==a.factionId&&(c.footprint.gates.includes(a.tileId)||wallSiege(s,id,c)||specialTroop(s,a.troopType)&&a.troopType==='catapult'&&hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])===2)&&
     (wallSiege(s,id,c)||specialTroop(s,a.troopType)&&a.troopType==='catapult'||!Object.values(s.armies).some(d=>d.tileId===c.tileId&&castleArmyActive(s,d)))).map(c=>c.cityId).sort();
 }

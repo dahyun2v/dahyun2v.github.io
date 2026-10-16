@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C172 글 시험판</title>
+<style>body{max-width:1100px;margin:24px auto;padding:0 16px;font:16px/1.6 system-ui;background:#f6f4ee;color:#222}button,input,select{font:inherit;margin:4px;padding:6px}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #bbb;padding:12px}#actions button{text-align:left;display:block;width:100%;margin:4px 0}#message{border-left:4px solid #685;padding:12px}#command{width:70%}[hidden]{display:none!important}</style>
+<h1>C172 글 시험판</h1>
+<form id="start"><label>세력 <select id="faction"><option value="F01">조조</option><option value="F02">유비</option><option value="F03">손권</option></select></label><label>시드 <input id="seed" type="number" value="190919" required></label><label><input id="skip" type="checkbox">시작 장수 드래프트 생략</label><button>새 판</button></form>
+<p>번호·짧은 명령·엔진 JSON으로 진행합니다. 저장은 이 시험판 전용입니다. 소리·그림·화면 조작감은 실제 게임에서 확인하십시오.</p>
+<div id="draft"></div><p id="message" role="status" aria-live="polite">새 판을 시작하십시오.</p>
+<div><button id="save" disabled>저장 파일</button><label>불러오기 <input id="load" type="file" accept=".json"></label><button id="log" disabled>한 판 기록 내려받기</button></div>
+<pre id="summary"></pre>
+<form id="send"><input id="command" aria-label="명령" placeholder="번호 또는 공격 U-F01-G07 U-F02-G05"><button id="go" disabled>실행</button></form>
+<details><summary>명령 예</summary>이동 부대ID 칸ID / 공격 부대ID 대상ID / 성공격 부대ID 성ID / 전법 부대ID 전법ID 대상ID / 생산 성ID farm / 출진 성ID 장수ID spear 2000 / 사건 E01 d / 방어 부대ID / 재정비 부대ID / 다음 / 상대<br>출진 번호에서 장수·병종·최소/절반/최대 표시 병력을 고릅니다. 짧은 명령의 병력도 표시 인원이며 생략하면 최대입니다. 엔진 JSON의 troopCount는 내부 단위입니다.</details>
+<h2>지금 할 수 있는 행동</h2><div id="actions"></div>
+<script type="module">
+import {Harness,formatSummary,formatAction,formatResult,actionCatalogProblems} from './harness.mjs';
+import {lockDraftOfficer,rerollOfficerDraft} from '../../src/campaign-officer-draft.mjs';
+const $=s=>document.querySelector(s);let h=null,busy=false;
+function say(s){$('#message').textContent=s;}
+function button(text,fn){const b=document.createElement('button');b.type='button';b.textContent=text;b.onclick=()=>guard(fn);return b;}
+async function guard(fn){if(busy)return;busy=true;$('#go').disabled=true;try{await fn();}catch(e){say(e.message);}finally{busy=false;$('#go').disabled=!h?.state;}}
+function render(){
+ $('#draft').replaceChildren();$('#actions').replaceChildren();$('#save').disabled=!h?.state;$('#log').disabled=!h?.state;$('#go').disabled=!h?.state;
+ const d=h.draftView();
+ if(d){$('#summary').textContent=JSON.stringify(d,null,2);for(const c of d.cards)if(!c.locked&&!c.lockBlocked)$('#draft').append(button('잠금 '+c.name,()=>{h.officerDraft=lockDraftOfficer(h.officerDraft,c.officerId);render();}));if(d.canReroll)$('#draft').append(button('다시 뽑기',()=>{h.officerDraft=rerollOfficerDraft(h.officerDraft);render();}));if(d.canConfirm)$('#draft').append(button('드래프트 확정',()=>{h.start();render();}));return;}
+ const actions=h.actions();
+ $('#summary').textContent=formatSummary(h.state)+(actionCatalogProblems(h.state).length?'\n\n[엔진 문제: 예고 가능/실행 거절 — 행동 목록에서 제외]\n'+JSON.stringify(actionCatalogProblems(h.state),null,2):'');
+ for(const a of actions)$('#actions').append(button(formatAction(a),()=>execute(a.command)));
+}
+function execute(cmd){const r=h.execute(cmd);say(formatResult(r));render();}
+$('#start').onsubmit=e=>{e.preventDefault();guard(()=>{h=new Harness({factionId:$('#faction').value,seed:Number($('#seed').value),skipDraft:$('#skip').checked});say('새 판');render();});};
+$('#send').onsubmit=e=>{e.preventDefault();guard(()=>{execute($('#command').value);$('#command').value='';});};
+function download(name,text){const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('#save').onclick=()=>guard(()=>download('harness-save.json',h.save()));
+$('#load').onchange=()=>guard(async()=>{const f=$('#load').files[0];if(!f)return;const candidate=h??new Harness({skipDraft:true});candidate.load(await f.text());h=candidate;say('불러오기 완료');render();});
+$('#log').onclick=()=>guard(()=>download('harness-log.txt',h.transcript()));
+</script></html>

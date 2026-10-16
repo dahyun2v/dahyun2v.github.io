@@ -1,8 +1,47 @@
+import {troopText} from '../../src/troop-display.mjs';
 // 성 무대(CITY STAGE, 정본 §23) — 성 전경 → 건물 → 시설 장면(장수 큰 그림 + 그 시설의 명령).
 // Claude 2026-10-08. 화면 연출은 Fable 시안(docs/work-integration/20261008/ui-v3/compare/fable-city-stage.html)에서 가져오고 실제 게임 상태로 채운다.
 // 명령 자체는 컨트롤러의 성 창(#city-panel)을 시설 장면 오른쪽에 옮겨 붙여 그대로 쓴다(명령 처리 코드 그대로).
 
+import {cityLifeHtml} from './city-life.mjs';
+import {cityEconomyRates} from '../../src/campaign-economy.mjs';
+import {C20_FACILITIES} from '../../src/campaign-policy.mjs';
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+export const D2_ICON = Object.freeze({farm:'farm',granary:'granary',market:'market',workshop:'workshop',barracks:'barracks',tuntian:'tuntian',clinic:'clinic',mufu:'command-tent',muster:'sortie',recruit:'recruit',reorganize:'reorganize',repair:'repair',idle:'idle'});
+const d2 = kind => `/assets/ui-v3/dots-1016/icons/D2-${D2_ICON[kind]??'command-tent'}.png`;
+const stageKind = id => ({gate:'repair'}[id]??id);
+
+/** Current contribution (all facilities of this kind), or next-facility preview; engine output only. */
+export function cityFacilityRoles(state, cityId) {
+  const c=state.cities[cityId];if(!c || c.ownerFactionId!==state.playerFactionId)return {};
+  const out={},dest={food:'군량 · 주민 유지',capacity:'식량 비축 한도',prestige:'정책 · 장수 등용',production:'건설 · 모집 속도',workBonus:'모집 · 재편 속도'};
+  const resource={food:'식량',capacity:'저장',prestige:'인망',production:'생산',workBonus:'작업 보너스'};
+  for(const kind of ['farm','granary','market','workshop','barracks']){
+    const installed=(c.facilities??[]).filter(f=>f.kind===kind), rest=(c.facilities??[]).filter(f=>f.kind!==kind);
+    const before=cityEconomyRates(state,{...c,facilities:rest});
+    const after=cityEconomyRates(state,{...c,facilities:installed.length?c.facilities:[...rest,{kind,tileId:c.tileId}]});
+    const lines=Object.keys(dest).flatMap(k=>{
+      const n=k==='capacity'||k==='workBonus'?after[k]-before[k]:(after.raw?.[k]??after[k])-(before.raw?.[k]??before[k]);
+      return Math.abs(n)>1e-8?[`${resource[k]} ${n>0?'+':''}${Number((n*(k==='workBonus'?100:1)).toFixed(2))}${k==='workBonus'?'%':''} → ${dest[k]}`]:[];
+    });
+    out[kind]={label:installed.length?'현재 시설 합계':'추가 시',text:lines.join(' / ')||'산출 변화 없음 → 시설 상태 · 한도 확인'};
+  }
+  for(const [kind,b] of Object.entries(C20_FACILITIES))out[kind]={label:'시설 역할',text:b.description};
+  return out;
+}
+
+export function buildingHitBox(s, art) {
+  if(s.hitBox)return s.hitBox;
+  if(s.poly?.length){const xs=s.poly.map(p=>p[0]*(p[0]<=1?art.w:1)),ys=s.poly.map(p=>p[1]*(p[1]<=1?art.h:1));return [Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys)];}
+  return [s.x-art.w*.025,s.y-art.h*.04,art.w*.05,art.h*.04];
+}
+
+function roleHtml(id, roles={}, c={}, inline=false) {
+  const kind=stageKind(id), role=roles[kind];
+  const text=role?.text??({office:'성의 일 · 인사 → 내정 운영',barracks:'예비병 → 부대 출진',gate:'성벽 · 출입 → 성 방어',residence:'머무는 장수 → 방문 · 대화',tavern:'소문 · 재야 인재 → 만남 · 등용'}[id]??BUILDINGS[id]?.fn??'');
+  return `<span class="cs-role${inline?' inline':''}"${inline?'':' role="tooltip"'}><img src="${d2(kind)}" alt=""><b>${BUILDINGS[id]?.name??id}</b><small>${esc(role?.label??'건물 역할')}</small><span>${esc(text)}${id==='barracks'?` / 예비병 ${Number(c.reserveTroops??0).toLocaleString('ko-KR')} → 부대 출진`:''}</span></span>`;
+}
 
 // 건물: 이름·한자·기능·시설 장면에서 열 성 창 칸(pane)·선택 표식·조명
 export const BUILDINGS = {
@@ -39,7 +78,7 @@ const ACT_ICON = {
 const HUD = '/assets/ui-v3/hud/';
 const BUILD_ICON = {office: 'b-office', residence: 'b-residence', market: 'b-market', granary: 'res-food', tavern: 'b-tavern', barracks: 'cmd-attack', workshop: 'b-build', gate: 'cmd-garrison'};
 const ACT_IC = {office: 'b-develop', barracks: 'cmd-attack', market: 'b-trade', workshop: 'b-build'};
-const ic = (name) => `<img class="ic" src="${HUD}icons/${name}.png" alt="" onerror="this.style.visibility='hidden'">`;
+const ic = (name) => `<img class="ic" src="${name.startsWith('D2:')?d2(name.slice(3)):`${HUD}icons/${name}.png`}" alt="" onerror="this.style.visibility='hidden'">`;
 const SIL = '<svg viewBox="0 0 11 20"><path d="M5.5 0a2.1 2.1 0 1 1 0 4.2A2.1 2.1 0 0 1 5.5 0zM2.2 6.3C2.2 5.3 3.7 4.6 5.5 4.6s3.3.7 3.3 1.7V12H7.6l-.5 8H3.9l-.5-8H2.2z"/></svg>';
 
 /** 이 성의 사람들을 건물에 앉힌다: 관청 = 태수, 병영 = 지휘 높은 자유 장수, 주점 = 재야(없으면 감화 높은 장수), 저택 = 군주 또는 남은 장수. */
@@ -81,7 +120,9 @@ export async function loadStageArt(cityId, assetUrl, tone = '') {
       const j = await fetch('/assets/ui-v3/scenes/plate-city.json').then((r) => r.json());
       const [w, h] = j.size ?? [1672, 941];
       const spots = Object.fromEntries((j.buildings ?? []).filter((b) => BUILDINGS[b.id]).map((b) => [b.id, {x: (b.anchor?.[0] ?? 0.5) * w, y: (b.anchor?.[1] ?? 0.5) * h}]));
-      return {src: plate, w, h, spots, full: true, plate: true};
+      let life=null;
+      try {const r=await fetch('/assets/ui-v3/dots-1016/city-life/plate-city.json');if(r.ok!==false){const data=await r.json(),rel=plate.replace('/assets/ui-v3/','');if([data.image,...(data.sameGeometry??[])].includes(rel)){life=data;for(const [id,box] of Object.entries(data.hitBoxes??{}))if(spots[id])spots[id].hitBox=box;}}} catch { /* uncharted art uses smoke and birds only */ }
+      return {src: plate, w, h, spots, full: true, plate: true, life};
     } catch { /* 아래 옛 그림 */ }
   }
   const f = cityFile(cityId), img = assetUrl(`city-stage/${f}.webp`), meta = img ? `/assets/ui-v3/city-stage/${f}.json` : null; // 좌표 json 은 manifest 에 없어도 그림 옆에서 읽는다
@@ -106,7 +147,8 @@ export function overviewHtml({v, c, art, people, issues, date, facilityState = {
   const place = (id) => people[id] ? `<div class="cs-mark" data-spot="${id}">${SIL}<span>${esc(people[id].name)}</span>${portraits[people[id].officerId]?.path ? `<div class="face"><img src="${esc(portraits[people[id].officerId].path)}" alt=""></div>` : ''}</div>` : '';
   const spots = Object.entries(art.spots).map(([id, s]) => {
     const b = BUILDINGS[id]; if (!b) return '';
-    return `<button class="cs-spot" data-spot="${id}" data-hanja="${b.hanja}" style="left:${(s.x / art.w * 100).toFixed(3)}%;top:${(s.y / art.h * 100).toFixed(3)}%" aria-label="${b.name}"><span class="mk"><img class="mk-art" src="${HUD}city-marker.png" alt="">${ic(BUILD_ICON[id] ?? 'b-office')}</span><i class="glow"></i><svg class="ring" viewBox="-60 -37 120 74"><ellipse class="full" cx="0" cy="0" rx="46" ry="28"/><path class="half" d="M-46,0 A46,28 0 0,0 46,0"/></svg><span class="label"><b>${b.name}</b><small>${b.fn}</small></span>${place(id)}</button>`;
+    const [x,y,w,h]=buildingHitBox(s,art);
+    return `<div class="cs-spot" data-spot="${id}" data-hanja="${b.hanja}" style="left:${x/art.w*100}%;top:${y/art.h*100}%;width:${w/art.w*100}%;height:${h/art.h*100}%"><button class="cs-hit" aria-label="${b.name}" aria-describedby="cs-role-${id}"></button><i class="cs-building-highlight" style="background-image:url('${esc(art.src)}');background-size:${art.w/w*100}% ${art.h/h*100}%;background-position:${x/(art.w-w)*100}% ${y/(art.h-h)*100}%"></i><span class="cs-decoration" style="left:${(s.x-x)/w*100}%;top:${(s.y-y)/h*100}%"><span class="mk"><img class="mk-art" src="${HUD}city-marker.png" alt="">${ic(BUILD_ICON[id] ?? 'b-office')}</span><span class="label"><b>${b.name}</b><small>${b.fn}</small></span>${place(id)}</span><span id="cs-role-${id}" class="cs-role-host">${roleHtml(id,facilityState.roles,c)}</span></div>`;
   }).join('');
   const shown = issues.slice(0, 3), more = issues.length - shown.length;
   // 흑묵판(page-city-v2): 왼쪽 = 건물에 앉은 사람의 둥근 초상 + 건물 표(누르면 그 건물), 오른쪽 = 태수 판(큰 그림·능력 막대·건물 바로가기)
@@ -123,9 +165,9 @@ export function overviewHtml({v, c, art, people, issues, date, facilityState = {
   const lordTone = {F01: 'red', F02: 'green', F03: 'blue'}[v.factionId] ?? 'red';
   const lordHtml = lord ? `<aside class="cs-lord v3"><img class="panel" src="${HUD}city-lord-v3-${lordTone}.png" alt="" onerror="this.onerror=null;this.src='${HUD}city-lord-v3-red.png'">${v.factionId ? `<img class="em" src="${HUD}faction-banner-${esc(v.factionId)}.png" alt="" onerror="this.onerror=null;this.src='/assets/ui-v3/emblems/${esc(v.factionId)}.png'">` : ''}<div class="art" data-spot="office" title="${esc(lord.name)} · 관청">${lordArt ? `<img src="${esc(lordArt)}" alt="${esc(lord.name)}">` : lordFace ? `<img class="face" src="${esc(lordFace)}" alt="${esc(lord.name)}">` : ''}</div><b class="nm">${esc(lord.name)}<small>${lord.officerId === c.governorId ? '태수' : '관청'}</small></b>${gauges}<ol class="stats">${stats}</ol></aside>` : '';
   const job = facilityState.job;
-  return `<div class="cs-stage"><img class="cs-under" src="${esc(art.src)}" alt="" aria-hidden="true"><div class="cs-fit${art.full ? ' full' : ''}${art.plate ? ' plate' : ''}" style="--ar:${(art.w / art.h).toFixed(4)}"><div class="cs-camera"><img class="cs-img" src="${esc(art.src)}" alt="" draggable="false"><i class="cs-light"></i><i class="cs-fog a"></i><i class="cs-fog b"></i><div class="cs-spots">${spots}</div></div></div><i class="cs-vignette"></i></div>
+  return `<div class="cs-stage"><img class="cs-under" src="${esc(art.src)}" alt="" aria-hidden="true"><div class="cs-fit${art.full ? ' full' : ''}${art.plate ? ' plate' : ''}" style="--ar:${(art.w / art.h).toFixed(4)}"><div class="cs-camera"><img class="cs-img" src="${esc(art.src)}" alt="" draggable="false"><i class="cs-light"></i><i class="cs-fog a"></i><i class="cs-fog b"></i>${cityLifeHtml(art)}<div class="cs-spots">${spots}</div></div></div><i class="cs-vignette"></i></div>
   <header class="cs-top"><div class="cell id">${emblem}<span class="name">${esc(c.name)}</span></div><div class="cell owner"><i style="background:var(--fc)"></i>${esc(owner || '우리 성')}<small>${c.kind === 'minor' ? '작은 성' : '큰 성'}</small></div><div class="cell date">${esc(date)}</div>
-    <div class="cell vitals"><span>식량<b>${fmt(c.foodStock)}</b>${d(c.economyForecast?.food)}</span><span>인구<b>${fmt(c.population)}</b></span><span>예비병<b>${fmt(c.reserveTroops)}</b></span><span>치안<b>${sec}</b></span>${facilityState.working ? `<span class="role">생산 · ${esc(facilityState.working)}</span>` : ''}</div>
+    <div class="cell vitals"><span>식량<b>${fmt(c.foodStock)}</b>${d(c.economyForecast?.food)}</span><span>인구<b>${fmt(c.population)}</b></span><span>예비병<b>${troopText(c.reserveTroops??0)}</b></span><span>치안<b>${sec}</b></span>${facilityState.working ? `<span class="role">생산 · ${esc(facilityState.working)}</span>` : ''}</div>
     <div class="cell back"><button class="cs-world" title="지도로 (Esc)">‹ 천하로</button></div></header>
   <aside class="cs-roster"><div class="panel"><h2>인첩</h2><div class="spine">${shown.map((x) => `<button class="entry ${x.level}" data-spot="${x.to}"><span class="who"><b>${esc(x.name || BUILDINGS[x.to]?.name)}</b><span class="where">${BUILDINGS[x.to]?.name ?? ''}</span></span><p><i class="issue-mark"></i>${esc(x.text)}</p></button>`).join('') || '<p class="calm">오늘은 조용합니다.</p>'}</div>${more > 0 ? `<div class="more"><b>+${more}</b> 다른 현안</div>` : ''}</div><div class="hint"><kbd>Alt</kbd>모든 건물 이름 · <kbd>Esc</kbd>천하로</div></aside>
   <nav class="cs-cast">${cast}</nav>${lordHtml}
@@ -133,7 +175,7 @@ export function overviewHtml({v, c, art, people, issues, date, facilityState = {
 }
 
 /** 시설 장면 HTML(명령 칸은 비워 두고 컨트롤러가 성 창을 옮겨 붙인다). */
-export function facilityHtml({c, id, officer, line, bg, art, spot, portraits = {}, others = []}) {
+export function facilityHtml({c, id, officer, line, bg, art, spot, portraits = {}, others = [], roles = {}}) {
   const b = BUILDINGS[id], full = officer && portraits[officer.officerId]?.full;
   const ox = spot ? (spot.x / art.w * 100).toFixed(2) : 50, oy = spot ? (spot.y / art.h * 100).toFixed(2) : 50;
   const scene = bg ? `<img class="cs-bg" src="${esc(bg)}" alt="">` : `<div class="cs-blur"><img src="${esc(art.src)}" alt="" style="transform-origin:${ox}% ${oy}%;transform:translate(${(50 - ox).toFixed(2)}%,${(50 - oy).toFixed(2)}%) scale(3.1)"></div>`;
@@ -142,7 +184,7 @@ export function facilityHtml({c, id, officer, line, bg, art, spot, portraits = {
   ${officer && line ? `<p class="cs-quote">${esc(line)}</p>` : ''}
   ${officer ? `<div class="cs-nameplate"><i class="ln"></i><div><b>${esc(officer.name)}</b><span>${b.name}${officer.wanderer ? ' · 재야' : ''}</span></div></div>` : ''}
   <div class="cs-crumb"><span class="path"><b>${esc(c.name)}</b><i>›</i><b>${b.name}</b></span><span class="sep"></span><button class="cs-back">← 성 <kbd>Esc</kbd></button></div>
-  <div class="cs-ftitle"><h1>${b.name}<small>${b.hanja}</small></h1><div class="sub">${b.sub}</div></div>
+  <div class="cs-ftitle"><h1>${b.name}<small>${b.hanja}</small></h1><div class="sub">${b.sub}</div></div><div class="cs-facility-role">${roleHtml(id,roles,c,true)}</div>
   <div class="cs-commands" data-mark="${b.mark}" data-fac="${id}"><span class="mk">${MARKS[b.mark]}</span></div>
   <div class="cs-others"><span class="k">이곳의 사람</span>${others.map((o) => `<span><b>${esc(o.name)}</b>${o.note ? `<i>${esc(o.note)}</i>` : ''}</span>`).join('') || '<span class="emp">맡은 장수 없음</span>'}</div>`;
 }

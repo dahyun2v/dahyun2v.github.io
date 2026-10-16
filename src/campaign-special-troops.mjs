@@ -1,12 +1,13 @@
+import {troopText,troopDelta} from './troop-display.mjs';
 // C24 trial values; campaign v2/v3 only. Parent rules remain in FIRST3 adapters.
 import {hexDistance} from './map-primitives.mjs';
 export const C24=Object.freeze({chargeDamage:1.1,chargeWeight:15,hubaoProduction:4,hubaoReserve:100,qingzhouCount:1.5,shakenThreshold:.75,aura:.85,baiyiAttack:.9,wudangCount:200,wudangVision:1,jiefanReceived:1.1,danyangTerrain:1.1,danyangMove:-1,catapultAttack:.5,catapultMove:-2,catapultVision:-1,catapultSiege:2.5,aiPeriod:3,catapultCityRange:3});
 const def=(name,parent,factionId,effectLine,costLine,extra={})=>Object.freeze({name,parent,factionId,effectLine,costLine,siegeMultiplier:1,...extra});
 export const SPECIAL_TROOPS=Object.freeze({
- hubao:def('호표기','cavalry','F01','돌격 피해 +10% · 전열 판정 1회 추가','출진 생산 +4 · 예비병 +100'),
+ hubao:def('호표기','cavalry','F01','돌격 피해 +10% · 전열 판정 1회 추가',`추가 예비병 ${troopDelta(100)}`),
  qingzhou:def('청주병','spear','F01','출진 병력 1.5배','예비병 1.5배 · 동요 손실 문턱 0.75배'),
  baiyi:def('백이병','militia','F02','인접 아군 받는 피해 −15% (중첩 없음)','자기 공격 피해 −10%'),
- wudang:def('무당비군','bow','F02','숲·언덕 이동 비용 = 평지 · 시야 +1','출진 병력 200 · 예비병 200'),
+ wudang:def('무당비군','bow','F02','숲·언덕 이동 비용 = 평지 · 시야 +1',`최소 병력 ${troopText(500)} · 예비병 ${troopText(500)}`),
  jiefan:def('해번군','spear','F03','통과 가능한 사이 칸을 넘어 2칸 공격 · 반격 없음','근접 공격으로 받는 피해 +10%'),
  danyang:def('단양병','militia','F03','방어 태세 무시 · 숲·언덕에서 공격·반격 피해 +10%','이동 −1칸'),
  catapult:def('투석기','bow',null,'성 내구 피해 ×2.5 · 사거리 2','부대 피해 −50% · 이동 −2칸 · 시야 −1',{siegeMultiplier:C24.catapultSiege}),

@@ -1,12 +1,12 @@
-import {campaignTacticsEnabled,campaignTacticsView,campaignTacticsWorld,campaignOperationPlan,campaignTacticalMoves} from './campaign-ai-tactics.mjs';
+import {campaignTacticsEnabled,campaignTacticsView,campaignTacticsWorld,campaignCombatProbe,campaignOperationPlan,campaignTacticalMoves} from './campaign-ai-tactics.mjs';
 import {campaignAiRule,campaignAiRulesEnabled,campaignReferencePlan,campaignAiPosture,campaignAiPickTroop,campaignAiArrivalTurns,AI_RULE_GOAL_BONUS,AI_RULE_REVIEW_TURNS,AI_RULE_STALL_TURNS,AI_RULE_GATHER_TURNS} from './campaign-ai-rules.mjs';
 import {injuryReason} from './campaign-injury.mjs';
 import {supplyEnabled,supplyLink,supplyAiMoveAllowed,supplyAiHubSite,armyFoodPerTurn,foodModel,clockFood,troopFoodRate,supplyAiAction} from './campaign-supply.mjs';
 import {combatMovement} from './campaign-rule-registry.mjs';
 import {fatigueReason,fatigueView,recordFatigueBlock} from './campaign-fatigue.mjs';
-import {diplomacyHostile,withdrawalProtection,withdrawalDistances,diplomacyMoveReason} from './campaign-diplomacy.mjs';
+import {diplomacyHostile,diplomacyThreatTarget,withdrawalProtection,withdrawalDistances,diplomacyMoveReason} from './campaign-diplomacy.mjs';
 import {explorationEnabled,explorationView} from './campaign-exploration.mjs';
-import {campaignBannerView} from './campaign-rule-registry.mjs';
+import {campaignBannerView,withCampaignQueries} from './campaign-rule-registry.mjs';
 import {c31Active,c31City} from './campaign-events.mjs';
 import {campaignReachable} from './campaign-morale.mjs';
 import {C24,SPECIAL_TROOPS,c24Enabled,parentTroop} from './campaign-special-troops.mjs';
@@ -28,7 +28,7 @@ export const AI_SIEGE_STALL_TURNS=6;
 export const AI_SIEGE_REPEAT_VISITS=3;
 export const AI_SIEGE_HISTORY_LIMIT=12;
 export const AI_SIEGE_COOLDOWN_TURNS=4;
-// aiProfile: legacy (pre-C140), siege (C140), strategy (C141/default), tactics (C142 — opt-in only).
+// aiProfile: legacy (pre-C140), siege (C140), strategy (C141), tactics (C179 default).
 export const campaignSiegeEnabled=(s,factionId)=>s.trialRules?.aiProfile?.[factionId]!=='legacy'&&s.trialRules?.aiSiege!=='legacy';
 export const campaignStrategyEnabled=(s,factionId)=>['v2','v3'].includes(s.mapId)&&campaignSiegeEnabled(s,factionId)&&s.trialRules?.aiSiege!=='siege'&&!['legacy','siege'].includes(s.trialRules?.aiProfile?.[factionId]);
 
@@ -52,6 +52,10 @@ export const AI_UNKNOWN_TROOPS=1000;
 export const AI_UNREADY_CHANCE=.25;
 export const AI_DEFERRED_SCORE_FACTOR=.05;
 export const AI_DEFENSE_ENEMY_TILES_PER_TURN=2;
+export const AI_WEAK_MAJOR_VALUE=6;
+// Query caches live only during one plan call. Position, ownership, cooldowns
+// and effects are read afresh on the next call, even on the same mutable state.
+let planningScope=null;
 
 // City kind is static, public map information. Ownership is always the view's
 // observation/memory, never the current canonical owner of a remembered city.
@@ -285,14 +289,15 @@ export function campaignStrategyTargets(s,v,candidates,{ranking=campaignKnownRan
   const foodGain=neutralFood?.gain??0;
   const foodValue=foodGain*AI_ECONOMY_CITY_FOOD_VALUE;
   const rule10=campaignAiRule(s,v.factionId,10),canBreak=chance>=.5&&siege<=remaining;
-  const coalitionPenalty=rule10&&leader?.majorCities>=2&&city.ownerFactionId&&city.ownerFactionId!==leader.factionId&&v.factionId!==leader.factionId?.5:1;
-  const value=((major?AI_MAJOR_CITY_VALUE:1)+gain*AI_RANK_GAIN_VALUE+(leader?.factionId===city.ownerFactionId&&(!rule10||canBreak)?AI_LEADER_CITY_VALUE:0)+(critical&&(!rule10||canBreak)?AI_THREE_MAJOR_VALUE:0)+foodValue)*coalitionPenalty;
+  const threat=diplomacyThreatTarget(s),coalitionPenalty=rule10&&threat&&city.ownerFactionId&&city.ownerFactionId!==threat&&v.factionId!==threat?.5:1;
+  const weakMajorValue=major&&city.ownerFactionId&&v.knowledge.tiles[city.tileId]==='VISIBLE'?AI_WEAK_MAJOR_VALUE*Math.max(0,1-defense/Math.max(1,troops)):0;
+  const value=((major?AI_MAJOR_CITY_VALUE:1)+weakMajorValue+gain*AI_RANK_GAIN_VALUE+(leader?.factionId===city.ownerFactionId&&(!rule10||canBreak)?AI_LEADER_CITY_VALUE:0)+(critical&&(!rule10||canBreak)?AI_THREE_MAJOR_VALUE:0)+foodValue)*coalitionPenalty;
   const lateGain=ownRank>0?1+gain*(1-remaining/Math.max(1,turnLimit)):1;
   const deferred=s.aiSiege?.[v.factionId]?.deferred?.[city.cityId]>s.turn;
   const carriedDeadline=!campaignAiRule(s,v.factionId,5)||!supplyEnabled(s)||!clockFood(s)||force.some(a=>(a.supplyFood??0)/Math.max(1,armyFoodPerTurn(a,s))>=siege+gather);
   const bonus=campaignAiRule(s,v.factionId,8)&&city.cityId===memory?.targetCityId?1+AI_RULE_GOAL_BONUS:1;
   const score=carriedDeadline?value*chance*lateGain*bonus/(1+travel+siege+gather+supplyCost)*(deferred?AI_DEFERRED_SCORE_FACTOR:1):0;
-  result.push({city,score,value,foodGain,foodValue,neutralFood,chance,travelTurns:travel,siegeTurns:siege,gatherTurns:gather,supplyRatio,rankGain:gain,critical:!!critical,deferred,routes});
+  result.push({city,score,value,weakMajorValue,foodGain,foodValue,neutralFood,chance,travelTurns:travel,siegeTurns:siege,gatherTurns:gather,supplyRatio,rankGain:gain,critical:!!critical,deferred,routes});
  }
  result.sort((a,b)=>b.score-a.score||a.city.cityId.localeCompare(b.city.cityId));
  const committed=result.find(r=>r.city.cityId===memory?.targetCityId&&!r.deferred),best=result[0];
@@ -400,6 +405,10 @@ export function campaignAiMilitaryReport(s,factionId){
 }
 
 export function campaignAiPlan(world, factionId, {remember=false,turnLimit=26}={}) {
+ const previous=planningScope;planningScope=world.trialRules?.aiPlanCache===false?null:{routes:new Map(),movements:new Map()};
+ try{return withCampaignQueries(world,()=>planCampaignAi(world,factionId,{remember,turnLimit}));}finally{planningScope=previous;}
+}
+function planCampaignAi(world, factionId, {remember=false,turnLimit=26}={}) {
   const v=campaignBannerView(world,getFactionView(world,factionId)),cities=Object.values(v.ownCities);
   const strategic=campaignStrategyEnabled(world,factionId),ranking=strategic?campaignKnownRanking(world,v):null;
   v.knowledge.observedArmies=Object.fromEntries(Object.entries(v.knowledge.observedArmies).filter(([,a])=>diplomacyHostile(world,factionId,a.factionId)&&!withdrawalProtection(world,a.armyId)));
@@ -418,7 +427,7 @@ export function campaignAiPlan(world, factionId, {remember=false,turnLimit=26}={
       moveBudgetTicks:world.time.ticksPerTurn})),
     observedEnemies:Object.values(v.knowledge.observedArmies).filter(a=>!Object.values(v.knowledge.observedArmies).some(b=>c22TargetWeight(world,factionId,b.factionId)>0)||c22TargetWeight(world,factionId,a.factionId)>0).map(a=>({armyId:a.armyId,
       factionId:a.factionId,tileId:a.tileId,troopType:parentTroop(a.troopType)})),
-    tiles:Object.values(v.tiles).map(t=>({...t,knowledge:v.knowledge.tiles[t.tileId]})),
+    tiles:Object.values(v.tiles).map(t=>({tileId:t.tileId,q:t.q,r:t.r,knowledge:v.knowledge.tiles[t.tileId],...(v.knowledge.tiles[t.tileId]==='UNEXPLORED'?{}:{terrainType:t.terrainType})})),
     edges:v.knownEdges,
     frontierTileIds:Object.keys(v.tiles).filter(id=>v.knowledge.tiles[id]!=='UNEXPLORED'&&
       neighbors(v.tiles[id]).some(p=>v.knowledge.tiles[tileId(p)]==='UNEXPLORED')),
@@ -460,14 +469,17 @@ export function campaignAiPlan(world, factionId, {remember=false,turnLimit=26}={
     if(!route||route.totalTicks>world.time.ticksPerTurn)return candidate;
     reserved.add(home.cityId);return {...candidate,type:'MOVE',destinationTileId:home.tileId,pathTileIds:route.pathTileIds,reasonCode:'DEFEND_DAMAGED_CITY'};
   });
-  const defenders=Object.values(v.ownArmies).filter(a=>castleArmyActive(world,a)&&[capital.tileId,...(capital.footprint?.gates??world.cities[capital.cityId].footprint.gates)].includes(a.tileId)).sort((a,b)=>a.troopCount-b.troopCount||b.armyId.localeCompare(a.armyId));
+  // Keep an idle defender before cancelling the planner's only scouting move.
+  // Occluded vision can leave no known castle/enemy and a single frontier scout.
+  const idleDefender=a=>result.candidates.some(c=>c.armyId===a.armyId&&c.type==='HOLD');
+  const defenders=Object.values(v.ownArmies).filter(a=>castleArmyActive(world,a)&&[capital.tileId,...(capital.footprint?.gates??world.cities[capital.cityId].footprint.gates)].includes(a.tileId)).sort((a,b)=>Number(idleDefender(b))-Number(idleDefender(a))||a.troopCount-b.troopCount||b.armyId.localeCompare(a.armyId));
   // Keep one existing capital garrison; it may attack without leaving its tile.
   const deployable=Object.values(v.ownArmies).filter(a=>castleArmyActive(world,a));
   if(!strategic&&deployable.length>=2&&defenders.length&&(!targetCity||siegeForceReady(world,(campaignSiegeEnabled(world,v.factionId)?deployed:deployable).filter(a=>a.armyId!==defenders[0].armyId),durability))){const id=defenders[0].armyId;result.candidates=result.candidates.map(c=>c.armyId===id&&!['DEFEND_DAMAGED_CITY','REPLENISH_ARMY','MUSTER_SIEGE'].includes(c.reasonCode)?{...c,type:'HOLD',destinationTileId:null,pathTileIds:[],reasonCode:'CAPITAL_GARRISON'}:c);}
   result.candidates.sort((a,b)=>(v.ownArmies[b.armyId]?.troopCount??0)-(v.ownArmies[a.armyId]?.troopCount??0)||a.armyId.localeCompare(b.armyId));
   const final=diplomacyWithdrawalPlan(world,supplyAiPlan(world,v,stopAtPublicControlZone(v,explorationAiPlan(world,v,c31AiPlan(world,v,preferCampaignCover(world,v,result))))));
   const supplyWorld=strategyPublicWorld(world,v);
-  let publicCombat;const combatBoard=()=>publicCombat??=campaignTacticsWorld(world,campaignTacticsView(world,factionId));
+  let publicCombat;const combatBoard=()=>publicCombat??=campaignCombatProbe(campaignTacticsWorld(world,campaignTacticsView(world,factionId)));
   if(campaignAiRulesEnabled(world,factionId))campaignReferencePlan(world,v,final,{remember,ranking,turnLimit,api:{route:publicRoute,positions:campaignSiegePositions,move:strategyMove,active:castleArmyActive,cityTargets:cityAttackTargets,attackTargets,goodAttack:id=>attackTargets(world,id).some(t=>{const p=previewAttack(combatBoard(),id,t);return p.enemyLoss>=p.allyLoss*campaignAiPosture(world,v,ranking,turnLimit).lossWeight;}),side:(id,target,to)=>{const w=combatBoard();return attackDirection({...w,armies:{...w.armies,[id]:{...w.armies[id],tileId:to}}},id,target);},reachable:(s,id,ticks)=>campaignReachable(supplyWorld,id,ticks),supplyTurns:a=>(a.supplyFood??0)/Math.max(1,armyFoodPerTurn(a,world)),moveAllowed:(id,t)=>supplyAiMoveAllowed(supplyWorld,id,t),hubs:supplyWorld.supply?.hubs}});
   if(campaignAiRule(world,factionId,11)){const priority=new Map((final.defense?.priorityOrders??[]).map(c=>[c.armyId,c]));final.candidates=final.candidates.map(c=>priority.get(c.armyId)??c);}
   if(campaignAiRule(world,factionId,13)){
@@ -604,13 +616,20 @@ function castleTargets(world,v,plan,options={}) {
 
 function publicRoute(world,v,armyId,destination){
   if(!world.armies[armyId]||!castleArmyActive(world,world.armies[armyId]))return null;
+  const key=`${armyId}|${destination}`;
+  if(planningScope?.routes.has(key))return planningScope.routes.get(key);
   // Restrict FIRST3 path search to observed geometry; hidden terrain is excluded.
-  const knownCities=Object.values({...v.knowledge.cities,...v.ownCities}).filter(c=>world.castleKnowledge?.[v.factionId]?.[c.cityId]);
-  const cities=Object.fromEntries(knownCities.map(c=>[c.cityId,{...c,...world.castleKnowledge[v.factionId][c.cityId]}]));
-  const armies=Object.fromEntries(Object.values({...v.knowledge.observedArmies,...v.ownArmies}).map(a=>[a.armyId,{...a,troopCount:a.troopCount??1,hp:a.hp??1}]));
-  const movement=campaignMovementWorld({...world,cities,armies},armyId);
-  if(!world.tiles[destination]||v.knowledge.tiles[destination]==='UNEXPLORED'||!v.tiles[armies[armyId]?.tileId])return null;
-  const path=findPath({...movement,tiles:Object.fromEntries(Object.entries(world.tiles).filter(([id])=>v.knowledge.tiles[id]!=='UNEXPLORED'))},armyId,destination);return path&&!path.pathTileIds.slice(1).some((to,i)=>diplomacyMoveReason(world,armyId,to,path.pathTileIds[i]))?path:null;
+  let movement=planningScope?.movements.get(armyId);
+  if(!movement){
+   const knownCities=Object.values({...v.knowledge.cities,...v.ownCities}).filter(c=>world.castleKnowledge?.[v.factionId]?.[c.cityId]);
+   const cities=Object.fromEntries(knownCities.map(c=>[c.cityId,{...c,...world.castleKnowledge[v.factionId][c.cityId]}]));
+   const armies=Object.fromEntries(Object.values({...v.knowledge.observedArmies,...v.ownArmies}).map(a=>[a.armyId,{...a,troopCount:a.troopCount??1,hp:a.hp??1}]));
+   movement={...campaignMovementWorld({...world,cities,armies},armyId),tiles:Object.fromEntries(Object.entries(world.tiles).filter(([id])=>v.knowledge.tiles[id]!=='UNEXPLORED'))};
+   planningScope?.movements.set(armyId,movement);
+  }
+  if(!world.tiles[destination]||v.knowledge.tiles[destination]==='UNEXPLORED'||!v.tiles[movement.armies[armyId]?.tileId])return null;
+  const path=findPath(movement,armyId,destination),result=path&&!path.pathTileIds.slice(1).some((to,i)=>diplomacyMoveReason(world,armyId,to,path.pathTileIds[i]))?path:null;
+  planningScope?.routes.set(key,result);return result;
 }
 
 function campaignCitylessPlan(world,v){

@@ -60,12 +60,10 @@ function effect(s,p,q,c){
   }
   case 'APTITUDE':{
    if(!who)return null;
-   const troop=c.troop?who.o.allowedTroops.find(t=>troopToCampaign(t)===c.troop):parentTroop(who.a.troopType);
-   if(['A','S','S+'].includes(who.o.aptitude?.[troop]))return null;
-   const record=s.campaignGrowth?.officers[q.officerId],baseId=troop&&troopToCampaign(troop);
-   const level=({LOW:'C',MEDIUM:'B',HIGH:'A'})[record?.pack.troopAptitude?.[baseId]]??who.o.aptitude?.[troop],next={C:'B',B:'A'}[level];
-   const troopName={BT01:'보병',BT02:'창병',BT03:'궁병',BT04:'기병'}[c.troop??(troop&&troopToCampaign(troop))];
-   return next?{officer:who.o,record,baseId,troop,next,line:`${who.o.name} ${troopName} 적성 ${ {C:'낮음',B:'보통'}[level]} → ${ {B:'보통',A:'높음'}[next]}`} :null;
+   const baseId=c.troop??troopToCampaign(who.o.troopType??parentTroop(who.a.troopType));
+   if(!who.o.allowedTroops.some(t=>troopToCampaign(t)===baseId))return null;
+   const stat=baseId==='BT02'?'leadership':'might',label=stat==='leadership'?'지휘':'무용';
+   return who.o.baseStats[stat]<10000?{officer:who.o,stat,line:`${who.o.name} ${label} +1`}:null;
   }
   case 'REVEAL_PLACE':{
    const other=Object.values(s.exploration.places).find(x=>x.label!==p.label&&x.status!=='RESOLVED'&&!knownPlace(s,q.factionId,x));
@@ -99,8 +97,7 @@ export function chooseExploration(s,command,fid=s.playerFactionId){
   case 'WANDERER_CONTACT':e.officer.locationRef={kind:'CITY',id:e.city.cityId};break;
   case 'RESEARCH':s.factions[fid].science+=e.amount;settleCampaignResearch(s);break;
   case 'APTITUDE':
-   e.officer.aptitude[e.troop]=e.next;
-   if(e.record){e.record.pack=structuredClone(e.record.pack);e.record.pack.troopAptitude??={};e.record.pack.troopAptitude[e.baseId]=({B:'MEDIUM',A:'HIGH'})[e.next];}
+   e.officer.baseStats[e.stat]+=1;
    break;
   case 'REVEAL_PLACE':s.exploration.known[fid].push(e.other.label);if(s.knowledge[fid].tiles[e.other.tileId]!=='VISIBLE')s.knowledge[fid].tiles[e.other.tileId]='REMEMBERED';break;
  }

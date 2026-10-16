@@ -1,3 +1,4 @@
+import {troopText} from './troop-display.mjs';
 import data from '../../docs/design-data/council-v0.1.json' with {type:'json'};
 import {getFactionView} from './knowledge.mjs';
 import {campaignBannerView,combatMovement} from './campaign-rule-registry.mjs';
@@ -64,7 +65,7 @@ function arrivalTurns(s,v,a,destination){
 }
 export function councilReport(s,{foresight=true}={}){
  const {v,cities,armies,enemies}=publicContext(s),found=new Map(),put=(id,values)=>{if(!found.has(id))found.set(id,format(data.report.topics.find(t=>t.id===id).line,values));};
- for(const c of cities)for(const a of enemies)if(hexDistance(s.tiles[c.tileId],s.tiles[a.tileId])<=6)put('THREAT',{'성':cityName(s,c.cityId),'세력':factionName(s,a.factionId),'병력':a.troopCount});
+ for(const c of cities)for(const a of enemies)if(hexDistance(s.tiles[c.tileId],s.tiles[a.tileId])<=6)put('THREAT',{'성':cityName(s,c.cityId),'세력':factionName(s,a.factionId),'병력':troopText(a.troopCount)});
  if(supplyEnabled(s))for(const a of armies){const supply=supplyView(s,s.armies[a.armyId]);if(supply.state==='STARVING')put('STARVING',{'부대장':officerName(s,a.commanderId)});else if(supply.state==='CUT')put('SUPPLY_CUT',{'부대장':officerName(s,a.commanderId),n:Math.floor(supply.turnsLeft)});}
  const delta=cities.reduce((n,c)=>n+cityEconomyRates(s,s.cities[c.cityId]).food-campaignFoodNeed(s,s.cities[c.cityId]),0)-(supplyEnabled(s)?armies.reduce((n,a)=>n+(supplyView(s,s.armies[a.armyId]).perTurn??0),0):0);
  if(delta<0)put('FOOD',{n:Math.ceil(cities.reduce((n,c)=>n+c.foodStock,0)/-delta)});

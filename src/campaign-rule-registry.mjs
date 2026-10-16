@@ -1,3 +1,6 @@
+import C182 from '../data/combat-decisions-v0.1.json' with {type:'json'};
+export {C182};
+import {troopText,troopDelta} from './troop-display.mjs';
 import {diplomacyEnabled,diplomacyArmyHostile,diplomacyMoveReason,diplomacyAttackReason} from './campaign-diplomacy.mjs';
 import {classPostMove,armyClass,CLASS_ABILITIES} from './campaign-classes.mjs';
 import initialBannerWorld from '../../docs/design-data/first3-initial-state-v1.json' with {type:'json'};
@@ -141,7 +144,7 @@ export function c33ApplyTactic({s,id,target,card,damage,heal,attack,cityAttack,l
  case 'FLANK_RAID':strike();changeFormation(s,target,1,log.formationChanges);break;
  case 'VOLLEY':{strike(target,.7);const b=Object.values(s.armies).filter(b=>b.armyId!==target&&b.factionId===t.factionId&&castleArmyActive(s,b)&&distance(s,t.tileId,b.tileId)===1&&s.knowledge[a.factionId].tiles[b.tileId]==='VISIBLE').sort((a,b)=>a.armyId.localeCompare(b.armyId))[0];if(b)strike(b.armyId,.7);break;}
  case 'REPEATER':strike(target,.6);if(castleArmyActive(s,s.armies[target]))strike(target,.6);status(target,'SLOWED');break;
- case 'FIRE_ARROW':case 'INFERNO':{const at=t.tileId,tiles=new Set([at]);let frontier=[at];for(let n=0;n<(rule==='INFERNO'?2:0);n++){frontier=frontier.flatMap(at=>boardNeighbors(s.tiles[at],s.tiles).map(tileId)).filter(at=>!tiles.has(at));frontier.forEach(at=>tiles.add(at));}s.c27??={counts:{}};s.c27.fires??=[];s.c27.fires.push({... (diplomacyEnabled(s)?{source:id}:{}),tiles:[...tiles],until:s.turn});log.fire=true;damage(Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&!diplomacyAttackReason(s,id,b.armyId)&&tiles.has(b.tileId)).map(b=>({targetId:b.armyId,loss:Math.round(b.troopCount*.1)})));if(rule==='FIRE_ARROW')status(target,'ROOTED');else for(const b of Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&!diplomacyAttackReason(s,id,b.armyId)&&tiles.has(b.tileId)))checkMorale(s,b.armyId,card.name,10,log.moraleChanges);break;}
+ case 'FIRE_ARROW':case 'INFERNO':{const at=t.tileId,tiles=new Set([at]);let frontier=[at];for(let n=0;n<(rule==='INFERNO'?2:0);n++){frontier=frontier.flatMap(at=>boardNeighbors(s.tiles[at],s.tiles).map(tileId)).filter(at=>!tiles.has(at));frontier.forEach(at=>tiles.add(at));}s.c27??={counts:{}};s.c27.fires??=[];s.c27.fires.push({... (diplomacyEnabled(s)?{source:id}:{}),tiles:[...tiles],until:s.turn+C182.fire.turns-1});log.fire=true;damage(Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&!diplomacyAttackReason(s,id,b.armyId)&&tiles.has(b.tileId)).map(b=>({targetId:b.armyId,loss:Math.round(b.troopCount*.1)})));if(rule==='FIRE_ARROW')status(target,'ROOTED');else for(const b of Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&!diplomacyAttackReason(s,id,b.armyId)&&tiles.has(b.tileId)))checkMorale(s,b.armyId,card.name,10,log.moraleChanges);break;}
  case 'WARCRY':for(const b of near())buff(b.armyId,'DAMAGE_MOD',-15,2);break;
  case 'SHATTER':buff(target,'DEFENSE_MOD',-20,2);break;
  case 'TAUNT_INSULT':if(strategy()){checkMorale(s,target,card.name,15,log.moraleChanges);buff(target,'DAMAGE_MOD',-10,2);}break;
@@ -414,15 +417,15 @@ export function domesticFinishGranaries(s,pools,rates){
 const domesticHandlers={
  HARVEST_PULSE:({s,c,x,phase})=>{if(phase==='settle'&&c.c26.settlements%Math.max(1,Math.round(x.params.period))===0){c.foodStock+=Math.round(x.params.food);domesticLine(s,c,x,`식량 +${Math.round(x.params.food)}`,'food',Math.round(x.params.food));}},
  CAPTIVE_DEBT:({s,c,x,phase})=>{let n=phase==='release'?x.params.release:phase==='settle'?Object.values(s.terminal?.prisonersById??{}).filter(p=>p.captorFactionId===c.ownerFactionId&&p.disposition==='HELD').length*x.params.perTurn:0;if(n){n=Math.round(n);s.factions[c.ownerFactionId].prestige+=n;domesticLine(s,c,x,`포로 인망 +${n} · 이 성 포로 등용 불가`,'prestige',n);}},
- EMERGENCY_LEVY:({s,c,x,phase})=>{if(phase==='settle'&&c.besieged&&!c.c26.levied){c.c26.levied=true;if(domesticFoodAvailable(s,c)>=Math.round(x.params.food)){domesticSpendFood(s,c,Math.round(x.params.food));domesticReserve(s,c,x.params.reserve);domesticLine(s,c,x,`식량 −${Math.round(x.params.food)} · 예비병 +${Math.trunc(x.params.reserve)}`,'food',-Math.round(x.params.food));}}},
- HARSH_TREATMENT:({s,c,x,phase})=>{if(phase==='settle'&&c.securityLevel>0&&c.reserveTroops>=Math.round(x.params.reserve)){domesticReserve(s,c,-Math.round(x.params.reserve));domesticSecurity(s,c,-1,'TREATMENT');domesticLine(s,c,x,`예비병 −${Math.round(x.params.reserve)} · 치안 회복`,'security',-1);}},
- SURPLUS_TO_TROOPS:({s,c,x,phase,overflow})=>{if(phase==='overflow'&&overflow>0){const n=Math.floor(overflow*x.params.ratio);domesticReserve(s,c,n);domesticLine(s,c,x,`넘친 식량 ${overflow} → 예비병 ${n}`,'reserve',n);}},
+ EMERGENCY_LEVY:({s,c,x,phase})=>{if(phase==='settle'&&c.besieged&&!c.c26.levied){c.c26.levied=true;if(domesticFoodAvailable(s,c)>=Math.round(x.params.food)){domesticSpendFood(s,c,Math.round(x.params.food));domesticReserve(s,c,x.params.reserve);domesticLine(s,c,x,`식량 −${Math.round(x.params.food)} · 예비병 ${troopDelta(Math.trunc(x.params.reserve))}`,'food',-Math.round(x.params.food));}}},
+ HARSH_TREATMENT:({s,c,x,phase})=>{if(phase==='settle'&&c.securityLevel>0&&c.reserveTroops>=Math.round(x.params.reserve)){domesticReserve(s,c,-Math.round(x.params.reserve));domesticSecurity(s,c,-1,'TREATMENT');domesticLine(s,c,x,`예비병 ${troopDelta(-Math.round(x.params.reserve))} · 치안 회복`,'security',-1);}},
+ SURPLUS_TO_TROOPS:({s,c,x,phase,overflow})=>{if(phase==='overflow'&&overflow>0){const n=Math.floor(overflow*x.params.ratio);domesticReserve(s,c,n);domesticLine(s,c,x,`넘친 식량 ${overflow} → 예비병 ${troopText(n)}`,'reserve',n);}},
  PRODUCTION_OVERFLOW:({s,c,x,phase,overflow})=>{if(phase==='job'&&overflow>0){c.c26??={};c.c26.productionCarry=(c.c26.productionCarry??0)+overflow;domesticLine(s,c,x,`다음 작업 생산 +${overflow}`,'production',overflow);}},
  BUILD_CHAIN:({s,c,x,phase})=>{if(phase==='facility'){c.c26??={};c.c26.chain=(c.c26.chain??0)+1;domesticLine(s,c,x,`다음 시설 −${Math.min(x.params.max,c.c26.chain*x.params.step)}%`,'production');}},
  SHARED_BLUEPRINT:({s,c,x,phase,kind})=>{if(phase==='facility'){s.c26??={counts:{},selected:{}};s.c26.blueprints??={};s.c26.blueprints[c.ownerFactionId]??={};const previous=s.c26.blueprints[c.ownerFactionId][kind]??={sources:{}};previous.sources[c.cityId]=Math.max(previous.sources[c.cityId]??0,x.params.discount);domesticLine(s,c,x,`${({farm:'농장',granary:'창고',market:'시장',barracks:'병영',workshop:'공방',clinic:'의원',tuntian:'둔전',mufu:'장막부'})[kind]??'시설'} 설계 공유 −${x.params.discount}%`,'production');}},
  MENTOR_CITY:ctx=>lecture(ctx,false), LECTURE:ctx=>lecture(ctx,true),
  IMPART:({s,c,x,phase})=>{if(phase!=='settle'||c.c26.settlements%Math.max(1,Math.round(x.params.period)))return;const source=domesticOwned(s,x.id).map(x=>x.card).sort((a,b)=>a.id.localeCompare(b.id));for(const o of localOfficers(s,c)){if(o.officerId===x.id)continue;const r=s.campaignGrowth.officers[o.officerId],ranks=r.track.growthStates[o.officerId].ownedTraitRanks;if(Object.keys(ranks).filter(k=>r.cards[k]?.kind==='trait').length>=CAMPAIGN_TRAIT_SLOTS)continue;const card=source.find(c=>!Object.keys(ranks).some(k=>r.cards[k]?.id===c.id));if(!card)continue;const key=`${o.officerId}.career.${card.id}`;r.cards[key]={...structuredClone(card),traitId:key};ranks[key]=1;if(!r.pool.traits.some(t=>t.traitId===key)){r.pool.traits.push({traitId:key,ownershipType:'PUBLIC',rarity:card.rarity,rankMax:5,stageTags:['EARLY','MID','LATE'],affinityTags:[card.classTag],roleTags:[],experienceTags:[],domestic:true,careerCard:true});syncPoolFingerprint(r);}domesticLine(s,c,x,`${o.name}에게 ${card.name} 1단계 전수`);return;}},
- FIELD_DEPOT:({s,c,x,phase,a})=>{if(phase!=='start'||distance(s,c.tileId,a.tileId)>x.params.range)return;const f=s.personnel.formations.find(f=>f.formationId===a.armyId);let left=Math.min(Math.round(x.params.heal),Math.max(0,f.targetStrength-f.field)),healed=0;for(const l of s.personnel.lots.filter(l=>l.kind==='WOUNDED'&&l.originFormationId===a.armyId)){const n=Math.min(left,l.count);l.count-=n;left-=n;healed+=n;}if(healed){f.field+=healed;a.troopCount+=healed;a.woundedCount=Math.max(0,a.woundedCount-healed);a.hp=Math.min(a.maxHp,a.hp+healed*2);domesticLine(s,c,x,`${s.officers[a.commanderId]?.name??'??'} 부상병 ${healed} 복귀`,'reserve',healed);}},
+ FIELD_DEPOT:({s,c,x,phase,a})=>{if(phase!=='start'||distance(s,c.tileId,a.tileId)>x.params.range)return;const f=s.personnel.formations.find(f=>f.formationId===a.armyId);let left=Math.min(Math.round(x.params.heal),Math.max(0,f.targetStrength-f.field)),healed=0;for(const l of s.personnel.lots.filter(l=>l.kind==='WOUNDED'&&l.originFormationId===a.armyId)){const n=Math.min(left,l.count);l.count-=n;left-=n;healed+=n;}if(healed){f.field+=healed;a.troopCount+=healed;a.woundedCount=Math.max(0,a.woundedCount-healed);a.hp=Math.min(a.maxHp,a.hp+healed*2);domesticLine(s,c,x,`${s.officers[a.commanderId]?.name??'??'} 부상병 ${troopText(healed)} 복귀`,'reserve',healed);}},
  RELAY_STATIONS:({s,c,x,phase,a})=>{if(phase==='start'&&roadConnected(s,c,a)&&a.c26.move<x.params.move){a.c26.move=x.params.move;domesticLine(s,c,x,`${s.officers[a.commanderId]?.name??'??'} 이동 +${x.params.move}`,'move',x.params.move);}},
  STRICT_DISCIPLINE:ctx=>discipline(ctx), BLOODLESS_MUSTER:ctx=>discipline(ctx),
  PROCLAMATION:({s,c,x,phase})=>{if(phase==='occupation'){domesticSecurity(s,c,-1,'OCCUPATION');domesticLine(s,c,x,'치안 한 단계 회복','security',-1);}},
@@ -519,7 +522,7 @@ export function combatStartFaction(s,fid){
  }
  for(const c of Object.values(s.cities))if(c.ownerFactionId===fid&&c.c27?.insideUntil<s.turn)delete c.c27.insideUntil;
  if(s.c27?.floods)s.c27.floods=s.c27.floods.filter(e=>e.until>=s.turn);
- if(s.c27?.fires)s.c27.fires=s.c27.fires.filter(e=>e.until>=s.turn);
+ // C182 owns fire expiry, spread and the legacy fire migration.
 }
 export function combatRecordRouts(s,before,attacker,target){
  for(const a of Object.values(s.armies))if(a.morale==='ROUTING'&&before.armies[a.armyId]?.morale!=='ROUTING'&&combatRule(s,a.armyId,'OATH_OF_REVENGE')){
@@ -553,7 +556,7 @@ const titleHandlers={
 // Query handlers return the same params used in damage, targeting and movement.
 for(const rule of COMBAT_TITLE_RULES)registerCampaignRule(rule,ctx=>ctx.phase==='query'?ctx.x:titleHandlers[rule]?.(ctx));
 for(const rule of COMMON_TACTIC_RULES)registerCampaignRule(rule,ctx=>ctx.apply?.(ctx));
-export function combatEmptyStep(s,id,to){const a=s.armies[id];return !!s.tiles[to]&&!diplomacyMoveReason(s,id,to)&&!combatArmyAt(s,to)&&!Object.values(s.cities).some(c=>c.tileId===to&&c.ownerFactionId!==a.factionId)&&edgeTicks(s,a,a.tileId,to)!==null&&!(s.c27?.floods??[]).some(e=>e.until>=s.turn&&e.edges.includes([a.tileId,to].sort().join('|')));}
+export function combatEmptyStep(s,id,to){const a=s.armies[id];return !!s.tiles[to]&&!combatFireAt(s,to)&&!diplomacyMoveReason(s,id,to)&&!combatArmyAt(s,to)&&!Object.values(s.cities).some(c=>c.tileId===to&&c.ownerFactionId!==a.factionId)&&edgeTicks(s,a,a.tileId,to)!==null&&!(s.c27?.floods??[]).some(e=>e.until>=s.turn&&e.edges.includes([a.tileId,to].sort().join('|')));}
 
 // C27 data projection: kept byte-for-value equal to the read-only input in test-campaign-c27.
 // Existing browser allowlist forbids another data route; use the already served registry.
@@ -805,7 +808,7 @@ export function uniqueAfterAttack(s,before,id,target,log,heal,damage){
   apply(id,'U_PLUNDERER',()=>{const c=Object.values(s.cities).filter(c=>c.ownerFactionId===a.factionId).sort((c,d)=>distance(s,c.tileId,a.tileId)-distance(s,d.tileId,a.tileId))[0];if(c)c.foodStock+=20;s.factions[a.factionId].prestige+=10;});
  }
  for(const b of Object.values(s.armies)){if(uniqueOwned(s,b.armyId,'U_FIERCE_PRIDE')&&log.units.some(u=>!u.postBattleCount&&s.armies[u.unitId].factionId===b.factionId))uniqueRecoverMorale(s,b.armyId);}
- if(uniqueOwned(s,id,'U_LINKED_CAMPS')&&(s.c32?.fires??[]).some(f=>f.tileId===t.tileId&&f.until>=s.turn)){for(const b of uniqueNear(s,id,{enemy:true,range:1,center:target}))uniqueIgnite(s,id,b.armyId,1,damage);}
+ if(uniqueOwned(s,id,'U_LINKED_CAMPS')&&combatFireAt(s,t.tileId)){for(const b of uniqueNear(s,id,{enemy:true,range:1,center:target}))uniqueIgnite(s,id,b.armyId,1,damage);}
  delete a.c32.hiddenUntil;delete a.c32.rearTurn;delete a.c32.spellTurn;delete a.c32.rage;
  if(uniqueOwned(s,id,'U_WHITE_HORSE')&&troopToCampaign(a.troopType)==='BT04'){a.c32.postMove=s.turn;a.c27??={};a.c27.cantoTurn=s.turn;a.c27.cantoRemaining=200;a.c27.cantoTicks=200;s.endedArmyIds=s.endedArmyIds.filter(k=>k!==id);s.movedArmyIds=s.movedArmyIds.filter(k=>k!==id);}
  uniqueScheduleRevival(s,before,log);
@@ -849,16 +852,9 @@ export function uniqueLevel(s,id){const x=uniqueOwned(s,id,'U_FRESH_EYES'),r=s.c
 export function uniqueMoraleWeight(s,id,weight){return uniqueNear(s,id).some(b=>uniqueOwned(s,b.armyId,'U_BENEVOLENCE'))&&uniquePercent(s,id)<30?weight*.5:uniqueNear(s,id,{range:1}).some(b=>uniqueOwned(s,b.armyId,'U_FOUR_GENERATIONS'))?weight*.8:weight;}
 export function uniqueIgnite(s,id,target,duration,damage,spread=true){
  const a=s.armies[target];if(!a||diplomacyAttackReason(s,id,target)||uniqueOwned(s,target,'U_FIRE_GOD'))return;
- s.c32??={counts:{},uses:{}};s.c32.fires??=[];s.c32.fires.push({tileId:a.tileId,until:s.turn+duration-1,source:id});
+ s.c32??={counts:{},uses:{}};s.c32.fires??=[];s.c32.fires.push({tileId:a.tileId,until:s.turn+C182.fire.turns-1,source:id});
  damage([{targetId:target,loss:Math.max(1,Math.round(c30ElementDamage(s,id,target,a.troopCount*.1)*(uniqueOwned(s,id,'U_FIRE_GOD')?1.5:1)*(c28Rule(s,target,'FIRE_WARD')?C28.fireReduce:1)))}]);
- if(spread&&c30Spread(s,id)){
-  s.c30.fireSpread??={};
-  for(const b of uniqueNear(s,id,{enemy:true,range:1,center:target}))if(s.tiles[b.tileId].terrainType==='forest'){
-   const key=`${s.battleSequence}.${id}.${b.armyId}`;
-   if(s.c30.fireSpread[key])continue;
-   s.c30.fireSpread[key]=true;uniqueIgnite(s,id,b.armyId,duration,damage,false);
-  }
- }
+
 }
 export function uniqueMetrics(s){return structuredClone(s.c32??{counts:{},uses:{}});}
 
@@ -944,3 +940,52 @@ export const C33_POOL=commonPool;
 archerAttackReason.pointBlank=(s,id)=>!!c33Owned(s,id,'POINT_BLANK');
 for(const c of [...C33_POOL.traits,...C33_POOL.tactics,...C33_POOL.domestic])for(const e of c.effects)if(e.op==='RULE'&&!campaignRuleRegistered(e.rule))registerCampaignRule(e.rule,ctx=>ctx.phase==='query'?ctx.x:ctx.phase==='tactic'?c33ApplyTactic(ctx):ctx.phase==='event'?c33DomesticEvent(ctx.s,ctx.c,ctx.event):undefined);
 export function c33MusterCost(s,c,kind,troop,cost){if(kind!=='muster'||!troop)return cost;if(troopToCampaign(troop)==='BT04'&&c33Governor(s,c,'HORSE_BREEDING'))return Math.ceil(cost*.5);if(troop==='catapult'&&c33Governor(s,c,'INVENTOR'))return Math.ceil(cost*.7);return cost;}
+
+
+// C182: one fire ledger. The old c27/c32 arrays are accepted as staging/old-save input.
+// All random fire decisions use a separate seed hash, never combat RNG.
+function fireHash(s,key){let h=(s.campaignSeed??190919)>>>0;for(const c of key)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;h^=h>>>16;return h>>>0;}
+export function combatWind(s){return fireHash(s,`wind:${s.turn}`)%C182.fire.windNames.length;}
+export function recordCombatWind(s){
+ if(s.mapId==='v1'||s.history?.some(e=>e.type==='WIND'&&e.turn===s.turn))return;
+ (s.history??=[]).push({type:'WIND',turn:s.turn,direction:combatWind(s),text:`지도 바람: ${C182.fire.windNames[combatWind(s)]}`});
+}
+export function combatFireLog(s,kind,text,tiles=[]){s.c182??={version:1,fires:[],burnedForest:[],log:[]};s.c182.log.push({turn:s.turn,kind,text,tiles:[...tiles]});}
+export function initializeCombatFire(s,{recordWind=true}={}){
+ if(recordWind)recordCombatWind(s);
+ const legacy=[...(s.c27?.fires??[]).flatMap(f=>(f.tiles??[]).map(tileId=>({...f,tileId}))),...(s.c32?.fires??[])];
+ if(!s.c182&&!legacy.length)return s;
+ s.c182??={version:1,fires:[],burnedForest:[],log:[]};
+ for(const f of legacy){if(!s.tiles[f.tileId]||f.until<s.turn)continue;const old=s.c182.fires.find(x=>x.tileId===f.tileId),until=Math.max(f.until,s.turn+C182.fire.turns-1);if(old){old.until=Math.max(old.until,until);continue;}s.c182.fires.push({tileId:f.tileId,until,ignitedTurn:s.turn,spreadAttempted:false,...(f.source?{source:f.source}:{})});}
+ if(s.c27?.fires)s.c27.fires=[];if(s.c32?.fires)s.c32.fires=[];
+ for(const id of s.c182.burnedForest)if(s.tiles[id]){s.tiles[id].terrainType='plain';s.tiles[id].burnedForest=true;}
+ if(s.c182.windTurn!==s.turn){s.c182.windTurn=s.turn;s.c182.windDirection=combatWind(s);}
+ return s;
+}
+export function combatFireAt(s,to){return (s.c182?.fires??[]).some(f=>f.tileId===to&&f.until>=s.turn)||(s.c27?.fires??[]).some(f=>f.until>=s.turn&&f.tiles.includes(to))||(s.c32?.fires??[]).some(f=>f.until>=s.turn&&f.tileId===to);}
+export function advanceCombatFire(s){
+ initializeCombatFire(s);if(!s.c182)return s;
+ const x=s.c182;if(x.advancedTurn===s.turn)return s;x.advancedTurn=s.turn;
+ const pending=[];
+ for(const f of x.fires){
+  if(f.until<s.turn){if(s.tiles[f.tileId]?.terrainType==='forest'){s.tiles[f.tileId].terrainType='plain';s.tiles[f.tileId].burnedForest=true;if(!x.burnedForest.includes(f.tileId))x.burnedForest.push(f.tileId);}combatFireLog(s,'EXTINGUISH','불 꺼짐'+(s.tiles[f.tileId]?.burnedForest?' · 불탄 숲':''),[f.tileId]);continue;}
+  if(f.spreadAttempted||f.ignitedTurn>=s.turn)continue;f.spreadAttempted=true;
+  const to=tileId(neighbors(s.tiles[f.tileId])[x.windDirection]),terrain=s.tiles[to]?.terrainType,chance=C182.fire.spreadChance[terrain]??0;
+  if(!s.tiles[to]||combatFireAt(s,to)||pending.some(e=>e.tileId===to)||s.mapRules.riverEdges.includes([f.tileId,to].sort().join('|'))||fireHash(s,`spread:${f.tileId}:${f.ignitedTurn}`)/4294967296>=chance)continue;
+  pending.push({tileId:to,until:s.turn+C182.fire.turns-1,ignitedTurn:s.turn,spreadAttempted:false,...(f.source?{source:f.source}:{})});combatFireLog(s,'SPREAD',`불 번짐 · ${C182.fire.windNames[x.windDirection]}`,[f.tileId,to]);
+ }
+ x.fires=x.fires.filter(f=>f.until>=s.turn).concat(pending);return s;
+}
+export function combatFireMovementWorld(s,id,world){
+ const blocked=new Set(world.mapRules.blockedEdges);
+ for(const t of Object.values(s.tiles))if(t.tileId!==s.armies[id].tileId&&combatFireAt(s,t.tileId))for(const n of boardNeighbors(t,s.tiles))blocked.add([t.tileId,tileId(n)].sort().join('|'));
+ return {...world,mapRules:{...world.mapRules,blockedEdges:[...blocked]}};
+}
+export function validateCombatFire(s){
+ const x=s.c182;if(!x)return;const fail=()=>{throw new Error('INVALID_C182_FIRE');};
+ if(x.version!==1||!Array.isArray(x.fires)||!Array.isArray(x.burnedForest)||!Array.isArray(x.log))fail();
+ if(new Set(x.fires.map(f=>f.tileId)).size!==x.fires.length||new Set(x.burnedForest).size!==x.burnedForest.length)fail();
+ for(const f of x.fires)if(!s.tiles[f.tileId]||!Number.isSafeInteger(f.until)||!Number.isSafeInteger(f.ignitedTurn)||f.ignitedTurn<1||f.ignitedTurn>s.turn||f.until<f.ignitedTurn||typeof f.spreadAttempted!=='boolean'||f.source!==undefined&&!s.armies[f.source])fail();
+ for(const id of x.burnedForest)if(!s.tiles[id]||s.tiles[id].terrainType!=='plain'||s.tiles[id].burnedForest!==true)fail();
+ for(const e of x.log)if(!['SPREAD','EXTINGUISH','DAMAGE'].includes(e.kind)||!Number.isSafeInteger(e.turn)||e.turn<1||e.turn>s.turn||typeof e.text!=='string'||!Array.isArray(e.tiles)||e.tiles.some(id=>!s.tiles[id]))fail();
+}

@@ -1,3 +1,5 @@
+import {troopText,troopDelta} from './troop-display.mjs';
+import {recordAchievementEvent} from './campaign-achievements.mjs';
 import {c34Cost} from './campaign-c34.mjs';
 import {c31RecruitCost} from './campaign-events.mjs';
 import {domesticRecruitCost} from './campaign-rule-registry.mjs';
@@ -66,10 +68,11 @@ function moveRefugees(s,r,c){
 export function preparePolicyCapture(s,payloads){
  initializeCampaignPolicy(s);if(!c20Enabled(s))return;
  for(const p of payloads){recordC22Capture(s,p);const c=s.cities[p.capturedCityId];
+  if(p.formerOwnerFactionId&&p.formerOwnerFactionId!==p.occupierFactionId&&(s.c43?.pairs?.[[p.formerOwnerFactionId,p.occupierFactionId].sort().join('|')]?.state??'WAR')==='WAR')recordAchievementEvent(s,{id:`CAPTURE.${s.turn}.${c.cityId}.${p.occupierFactionId}`,type:'HOSTILE_CAPTURE',factionId:p.occupierFactionId,cityId:c.cityId});
   if(p.occupierFactionId==='F01'&&p.formerOwnerFactionId&&p.formerOwnerFactionId!=='F01'){
-   const top=[...c.facilities].sort((a,b)=>(CITY_JOBS[b.kind]?.cost??0)-(CITY_JOBS[a.kind]?.cost??0)||a.kind.localeCompare(b.kind,'en'))[0];
    const cities=owned(s,'F01').filter(c=>!payloads.some(p=>p.capturedCityId===c.cityId&&p.occupierFactionId!=='F01'));
    const canBuild=kind=>s.c20.unlocks.some(u=>u.kind===kind)||(C20_FACILITIES[kind]?C20_FACILITIES[kind].factionId==='F01':kind==='workshop'?(s.factions.F01.research?.stage??0)>=1:true);
+   const top=c.facilities.filter(f=>CITY_JOBS[f.kind]&&!canBuild(f.kind)).sort((a,b)=>(CITY_JOBS[b.kind]?.cost??0)-(CITY_JOBS[a.kind]?.cost??0)||a.kind.localeCompare(b.kind,'en'))[0];
    if(top&&!canBuild(top.kind)&&cities.length){s.c20.unlocks.push({kind:top.kind,cityIds:cities.map(c=>c.cityId).sort(),turn:s.turn});s.c20.stats.unlocks++;line(s,'F01',`편입제국 — ${(C20_FACILITIES[top.kind]??CITY_JOBS[top.kind]).name} 건설 가능`);}
   }
   if(p.formerOwnerFactionId!=='F02'||p.occupierFactionId==='F02')continue;
@@ -82,7 +85,7 @@ export function preparePolicyCapture(s,payloads){
   r.lotIds=lotIds.map(id=>relocateRefugeeLot(s,id,`C20.REFUGE.${c.cityId}`));
   for(const id of officerIds){s.officers[id].locationRef={kind:'NONE',id:null};if(s.terminal)s.terminal.officersById[id].assignment={kind:'NONE',id:null};}
   moveRefugees(s,r,dest);if(r.population||r.lotIds.length||r.officerIds.length)s.c20.refugees.push(r);
-  s.c20.stats.escapes++;line(s,'F02',`${name(s,c)} 함락 — 주민 ${population}·예비병 ${reserve} 탈출(→ ${dest?name(s,dest):'피란 대열'})`);
+  s.c20.stats.escapes++;line(s,'F02',`${name(s,c)} 함락 — 주민 ${population}·예비병 ${troopText(reserve)} 탈출(→ ${dest?name(s,dest):'피란 대열'})`);
  }
  if(s.terminal)syncCampaignAdministrativeTerminal(s);
 }
@@ -99,7 +102,7 @@ export function settlePolicyRefugees(s){
 const axes=['leadership','might','intelligence','politics','charisma'];
 const axisNames=['지휘','무용','지략','정무','감화'];
 const actionNames={ARMY:['훈련','선봉','정찰','보급','격려'],CITY:['훈련','방비','정찰','증산','포섭']};
-const descriptions={ARMY:['전열·사기 한 단계 회복','다음 공격 1회 피해 +25%(다음 차례 끝까지)','2턴 시야 +3','부상병 40 복귀','인접 아군 사기 한 단계 회복'],CITY:['다음 출진 병력 +100','2턴 성 사격 피해 +10','2턴 성 시야 +3','다음 정산 생산 +3','이번 턴 이 도시 등용 인망 절반']};
+const descriptions={ARMY:['전열·사기 한 단계 회복','다음 공격 1회 피해 +25%(다음 차례 끝까지)','2턴 시야 +3',`부상병 ${troopText(40)} 복귀`,'인접 아군 사기 한 단계 회복'],CITY:[`다음 출진 병력 ${troopDelta(100)}`,'2턴 성 사격 피해 +10','2턴 성 시야 +3','다음 정산 생산 +3','이번 턴 이 도시 등용 인망 절반']};
 export function starAction(s,{armyId,cityId},factionId=s.playerFactionId){
  if(!c20Enabled(s)||factionId!=='F03')return null;
  const role=armyId?'ARMY':'CITY',target=armyId?s.armies[armyId]:s.cities[cityId],officerId=armyId?target?.commanderId:target?.governorId,o=s.officers[officerId];

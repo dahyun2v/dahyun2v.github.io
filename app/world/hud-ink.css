@@ -2995,6 +2995,8 @@ body.hud-band .nb-selected dl>div:last-child dt{float:left}
 body.hud-band .nb-selected dl>div:last-child dd{font-size:calc(15 * var(--ku));line-height:calc(25 * var(--ku))}
 body.hud-band .nb-selected::after{height:calc(263 * var(--ku));width:calc(66 * var(--ku))}
 body.hud-band:has(.nb-band[data-state="unit"]) .wmap .w-move{opacity:0}
+/* C171: selecting a unit must expose this turn's movement immediately. */
+body.hud-band:has(.nb-band[data-state="unit"]) .wmap .w-move{opacity:1}
 body.hud-band:has(.nb-band[data-state="unit"]) #attack-preview:not(.forecast){left:calc(70 * var(--ku))!important;top:calc(120 * var(--ku))!important;max-width:calc(400 * var(--ku));white-space:normal;pointer-events:none}
 body.hud-band .nb-identity{top:86.7dvh}
 body.hud-band .nb-band[data-state="unit"]{background-image:url(/assets/ui-v3/hud/kit-band-fine.png)}
@@ -3128,3 +3130,65 @@ body.hud-band .nb-band[data-state="unit"]{height:calc(139 * var(--ku));backgroun
  body.hud-band .nb-preview-portrait.enemy{height:36.2dvh}
  body.hud-band:has(.nb-band[data-state="forecast"]) .nb-forecast-status{font-size:calc(20 * var(--ku))!important;gap:calc(12 * var(--ku));padding:0 calc(26 * var(--ku))!important}
 }
+/* C170: override older portrait shields only on the new counter. */
+body.ink .wmap .w-unit .plate .unit-marker .frame{fill:#262018;stroke:#a99c83;stroke-width:.5;filter:none}
+body.ink .wmap .w-unit .plate .unit-marker .count text{fill:#eadfc8;font:400 17px var(--serif);stroke:none;letter-spacing:0}
+/* C169b: keep the displayed personnel count legible in the existing footer. */
+body.ink .cs .cs-commands #city-panel .muster-target .sortie-count>span{display:inline-flex;width:auto;flex:none;align-items:center;gap:4px}
+body.ink .cs .cs-commands #city-panel .muster-target .sortie-count input{flex:0 0 6.5em;width:6.5em;min-width:6.5em;letter-spacing:0;color:#efe6d6}
+body.ink .cs .cs-commands #city-panel .muster-target .sortie-count button{flex:none;width:28px;min-width:28px;padding:2px}
+/* C178: signs keep their position but never catch clicks or brighten with the building. */
+body.ink .cs-spot .mk,body.ink .cs-spot:hover .mk,body.ink .cs-spot.on .mk{transform:translateX(-50%);filter:drop-shadow(0 4px 6px rgba(0,0,0,.65));pointer-events:none}
+body.ink .cs-spot .cs-hit{background:none;border:0;box-shadow:none}
+body.ink .cs-spot .label{pointer-events:none}
+body.ink .cs-role{font-family:var(--serif)}
+/* C186: small additions to the existing ink boards. */
+body.hud-band:has(.nb-band[data-state="unit"]) .nb-bookmarks{display:flex!important;top:125px}
+body.hud-band:has(.nb-band[data-state="unit"]) .nb-bookmarks>:not([id^="c186-"]){display:none!important}
+body.hud-band .nb-bookmarks>:is(#c186-danger,#c186-undo){pointer-events:auto;flex:none;box-sizing:border-box;width:112px;min-height:44px;margin:0 0 3px;padding:8px 14px 9px 6px;border:0;border-radius:0;background:url(/assets/ui-v3/hud/kit/tab.png) center/100% 100% no-repeat;color:#eee4ce;font:400 14px/1.3 var(--serif);box-shadow:none}
+body.hud-band .nb-bookmarks>#c186-danger[aria-pressed="true"]{background-image:url(/assets/ui-v3/hud/kit/tab-on.png)}
+body.hud-band .nb-bookmarks>#c186-undo:disabled{color:#a8a294;cursor:default}
+body.hud-band .nb-bookmarks>:is(#c186-danger,#c186-undo):focus-visible{outline:2px solid #eee4ce;outline-offset:2px}
+.c186-band-class{display:block;color:#c8b58c;font-size:11px;line-height:1.3}
+.nb-identity:has(.c186-band-class) .nb-help{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;margin:2px 0 0;max-width:100%}
+.nb-hero .c186-band-seal{position:absolute;bottom:0;left:0;right:0;background:#172022dd;color:#d6bf91;font-size:11px}
+#c186-turn-summary{z-index:190;position:fixed;inset:0;display:grid;place-items:center;background:#070a0bc9}
+#c186-turn-summary[hidden]{display:none!important}
+#c186-turn-summary>section{position:relative;box-sizing:border-box;width:min(620px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overflow:auto;padding:36px 38px 30px;color:#eee4ce;background:url(/assets/ui-v3/hud/kit/panel-info.png) center/100% 100% no-repeat;border:0;border-radius:0;box-shadow:none;filter:drop-shadow(0 18px 30px #0009);font:400 15px/1.6 var(--serif)}
+#c186-turn-summary h2{margin:0 0 20px;padding-right:30px;font-size:21px;color:#eee4ce}
+#c186-turn-summary>section::after{content:'令';position:absolute;right:28px;top:26px;width:28px;height:29px;display:grid;place-items:center;background:#873a2b;color:#ead4b8;font-size:19px;transform:rotate(-5deg)}
+#c186-turn-summary ul{padding-left:20px;margin:0 0 22px}
+#c186-turn-summary li{margin:10px 0;line-height:1.6;overflow-wrap:anywhere}
+#c186-turn-summary button{width:140px;min-height:44px;padding:10px 20px;border:0;border-radius:0;background:url(/assets/ui-v3/hud/kit-button.png) center/100% 100% no-repeat;color:#eee4ce;font:400 15px/1.4 var(--serif);box-shadow:none}
+#c186-undo-reason{display:block;box-sizing:border-box;max-width:175px;padding:8px 12px;font:400 13px/1.5 var(--serif);color:#ddd0b5;white-space:normal;background:url(/assets/ui-v3/hud/kit/panel-info.png) center/100% 100% no-repeat}
+#c186-undo-reason:empty{display:none}
+.fc-targets{box-sizing:border-box;padding:14px 22px;color:#eee4ce;background:url(/assets/ui-v3/hud/kit/panel-info.png) center/100% 100% no-repeat;font:400 14px/1.55 var(--serif);text-align:left;white-space:normal}
+.fc-targets>b{font-size:15px}
+.fc-targets ul{list-style:none;margin:5px 0;padding:0}
+.fc-targets li{margin:3px 0;overflow-wrap:anywhere}
+.fc-targets li span{color:#d89b83;white-space:nowrap}
+.fc-targets p{margin:6px 0 0;font-size:14px;color:#e4cda3}
+body.hud-band .nb-forecast .fc-targets{position:absolute;right:2vw;bottom:calc(100% + 10px);width:max-content;max-width:min(600px,80vw);max-height:43dvh;overflow:auto;pointer-events:auto!important}
+body.hud-band .nb-forecast .fc-targets *{pointer-events:auto!important}
+body.ink #attack-preview>.fc-targets{position:relative;top:100%;width:100%;margin-top:8px}
+@media(max-width:1200px){#c186-turn-summary>section{padding:30px}#c186-turn-summary h2{font-size:19px}body.hud-band .nb-forecast .fc-targets{font-size:13px;padding:12px 18px;max-height:38dvh}.fc-targets p{font-size:13px}}
+#c186-map-guide{max-width:155px;white-space:normal;font-size:11px;line-height:1.5;color:#c9bda2;background:#10191de8;padding:6px}
+#c186-capture-links{max-width:155px;white-space:normal}
+#c186-capture-links button{font-size:11px;white-space:normal}
+.c186-class-seal{position:absolute;bottom:4px;left:4px;z-index:2;padding:5px 8px;border:1px solid #b9aa87;color:#e0d2b0;background:#202728e8;font-size:14px}
+.c186-class-seal small{display:block;font-size:10px}
+.c186-title-progress{padding:10px;border:1px solid #736953;color:#d5c5a1}
+.c186-score{padding:10px 14px;border:1px solid #75684e;background:#161e20}
+body.ink .w-result .c186-score{grid-column:1/-1;order:2}
+.c186-score h3{margin:0 0 6px;color:#dbc295}
+.c186-score p{font-size:12px;line-height:1.6}
+.prod-pop button:disabled{opacity:.48;cursor:default}
+.prod-pop button:disabled small{white-space:normal}
+.wmap .w-c186-facing,.wmap .w-c186-front{pointer-events:none}
+.wmap .w-c186-facing path{fill:#c7b487;fill-opacity:.075;stroke:#b3a079;stroke-opacity:.25;stroke-width:.6}
+.wmap .w-c186-facing.REAR path{fill-opacity:.13}
+.wmap .w-c186-facing text{fill:#d0bf9e;opacity:.8;font-size:8px;text-anchor:middle;paint-order:stroke;stroke:#132022;stroke-width:2px}
+.wmap .w-c186-front{stroke:#d4c7a5;stroke-width:2;marker-end:url(#c186-front-arrow)}
+.wmap .w-intent{stroke:#c95f52;stroke-width:1;stroke-dasharray:4 5;opacity:.65;marker-end:url(#c186-danger-arrow)}
+.wmap .c186-site-goal{display:none;pointer-events:none}
+.wmap.mode-trace .c186-site-goal{display:block;font-size:9px;text-anchor:middle;fill:#ead8ad;paint-order:stroke;stroke:#142021;stroke-width:2px}

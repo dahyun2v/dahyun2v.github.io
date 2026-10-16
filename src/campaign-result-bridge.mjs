@@ -84,6 +84,13 @@ export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLos
     const a=world.armies[u.unitId],v=getFactionView(world,a.factionId);
     if(c33Owned(world,a.armyId,'LUCKY_ESCAPE')||c33Owned(world,a.armyId,'BLOODY_PATH')||escapeCommanderIds.includes(a.armyId)||uniqueGuardedCommander(world,a.armyId)||uniqueOwned(world,a.armyId,'U_NO_SURRENDER')||uniqueOwned(world,a.armyId,'U_RISE_AGAIN')&&(a.c32?.revivals??0)<2)return {transactionId:`RD.${world.battleSequence}.${a.armyId}`,sourceResultId:snapshot.battleId.replaceAll(':','.'),globalTick:world.globalTick,defeatedArmyId:a.armyId,commanderFate:'ESCAPED',captorFactionId:null};
     const occupancy=a=>({armyId:a.armyId,factionId:a.factionId,tileId:a.tileId});
+    // Retreat facts describe occupied tiles. Keep the defeated identity when
+    // allies share its city tile, and retain the original order without stacks.
+    const occupiedTiles=armies=>{
+      const tiles=new Map();
+      for(const army of armies)if(!tiles.has(army.tileId)||army.armyId===a.armyId)tiles.set(army.tileId,occupancy(army));
+      return [...tiles.values()];
+    };
     const surrender=classCaptorId??snapshot.units.find(x=>x.unitId!==u.unitId&&armyClass(world,x.unitId,'CLS_ACCEPT_SURRENDER'))?.unitId;
     if(surrender&&armyClass(world,surrender,'CLS_ACCEPT_SURRENDER')&&Math.min(1,.75*armyClass(world,surrender).ability.params.captureMultiplier)===1){countClass(world,armyClass(world,surrender));return {transactionId:`RD.${world.battleSequence}.${a.armyId}`,sourceResultId:snapshot.battleId.replaceAll(':','.'),globalTick:world.globalTick,defeatedArmyId:a.armyId,commanderFate:'CAPTURED',captorFactionId:world.armies[surrender].factionId};}
     const killer=snapshot.units.find(x=>x.unitId!==u.unitId&&world.armies[x.unitId]?.factionId===(captorByArmyId[a.armyId]??winnerFactionId));
@@ -95,7 +102,7 @@ export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLos
       publicWorld:{format:'first3-retreat-public-facts',version:1,viewerFactionId:a.factionId,
         defeatedArmy:{...occupancy(a),movementClass:parentTroop(a.troopType)==='cavalry'?'cavalry':a.troopType==='engineer'?'engineer':'normal'},
         tiles:Object.values(v.tiles).map(t=>({tileId:t.tileId,q:t.q,r:t.r,knowledge:v.knowledge.tiles[t.tileId]})),edges:v.knownEdges.map((e,i)=>({...e,edgeId:`E.${i}`})),
-        ownArmies:Object.values(v.ownArmies).map(occupancy),observedHostileArmies:Object.values(v.knowledge.observedArmies).map(occupancy),
+        ownArmies:occupiedTiles(Object.values(v.ownArmies)),observedHostileArmies:occupiedTiles(Object.values(v.knowledge.observedArmies)),
         ...(attackingCityId?{observedHostileCities:Object.values(v.knowledge.cities).filter(c=>c.cityId===attackingCityId&&v.knowledge.tiles[c.tileId]==='VISIBLE').map(c=>({cityId:c.cityId,factionId:c.ownerFactionId,tileId:c.tileId}))}:{})},
       entropy:{mode:'SAVED_SEED',savedSeed:world.campaignSeed,rollBasisPoints:null}});
   });
@@ -122,7 +129,12 @@ export function settleCampaignSuccession(world) {
     const inputs=selectCampaignTerminalAiChoiceResolutionInputs({globalTick:world.globalTick,
       world:getFactionView(world,factionId),terminal:publicTerminal},{allowUngovernedNormal:true});
     // Governor selection/normalization belongs to C6; only succession is wired.
-    for(const input of inputs)if(terminal.choicesById[input.choiceId].type==='SUCCESSION')terminal=resolveCampaignTerminalChoice(terminal,input,{allowCitylessAlive:true,allowSupersededOccupation:true,allowUngovernedNormal:true});
+    for(const input of inputs)if(terminal.choicesById[input.choiceId].type==='SUCCESSION'){
+      // Stable ranking does not change the choice's controller. Campaign
+      // succession is automatic for every faction, including the player seat.
+      const resolution={...input,resolutionMode:factionId===terminal.playerFactionId?'PLAYER':input.resolutionMode};
+      terminal=resolveCampaignTerminalChoice(terminal,resolution,{allowCitylessAlive:true,allowSupersededOccupation:true,allowUngovernedNormal:true});
+    }
   }
   return {...applyCampaignTerminalStateToWorld(world,terminal,{allowCitylessAlive:true,allowSupersededOccupation:true,allowUngovernedNormal:true}),terminal};
 }

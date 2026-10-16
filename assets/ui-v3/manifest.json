@@ -6929,7 +6929,76 @@
       "sha256": "f6cd1f8ccf9de7869b642172ff66a1232aceb1be99d3f218268cce33e1689fa5",
       "sourceSheet": "docs/work-integration/20261014/c164/arrow-source/kit-brush-arrow.png",
       "prompt": "내장 image_gen: 흰 먹 오른쪽 거친 붓 화살촉, #808080 바탕, kit-cut 배경 제거"
-    }
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/c170-militia.png",
+      "purpose": "C170 monochrome militia marker",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "38801c64352ce3fd9a6580c99db446a2e60c7b03598329f9f0b9496ef9e33a13",
+      "sourceSheet": "docs/work-integration/20261016/c170/icons-source.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/c170-spear.png",
+      "purpose": "C170 monochrome spear marker",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "5f44b5f3b7e9d1cee5f87d7f1fb3d577ef9bb80057675a64fa51fc2eaa4713ee",
+      "sourceSheet": "docs/work-integration/20261016/c170/icons-source.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/c170-bow.png",
+      "purpose": "C170 monochrome bow marker",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "ef45edec1d0e6996ae190d193a8789c45ad4dea5beb9ec835c65bca00b612ffe",
+      "sourceSheet": "docs/work-integration/20261016/c170/icons-source.png"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/c170-cavalry.png",
+      "purpose": "C170 monochrome cavalry marker",
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "d90de8054be76be6f07ad40ac8b7886867ff1d4158ff3bdc8c00682e41981620",
+      "sourceSheet": "docs/work-integration/20261016/c170/icons-source.png"
+    },
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-barracks.png", "purpose": "C178 A-barracks", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-clinic.png", "purpose": "C178 A-clinic", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-command-tent.png", "purpose": "C178 A-command-tent", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-farm.png", "purpose": "C178 A-farm", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-granary.png", "purpose": "C178 A-granary", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-market.png", "purpose": "C178 A-market", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-tuntian.png", "purpose": "C178 A-tuntian", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/A-workshop.png", "purpose": "C178 A-workshop", "workId": "C178", "size": [512, 384]},
+    {"path": "prototype/assets/ui-v3/dots-1016/city-life/C1-chimney-smoke.png", "purpose": "C178 C1-chimney-smoke", "workId": "C178", "size": [768, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/city-life/C2-flame.png", "purpose": "C178 C2-flame", "workId": "C178", "size": [384, 96]},
+    {"path": "prototype/assets/ui-v3/dots-1016/city-life/C3-red-flag.png", "purpose": "C178 C3-red-flag", "workId": "C178", "size": [384, 128]},
+    {"path": "prototype/assets/ui-v3/dots-1016/city-life/C4-civilian.png", "purpose": "C178 C4-civilian", "workId": "C178", "size": [256, 96]},
+    {"path": "prototype/assets/ui-v3/dots-1016/city-life/C4-soldier.png", "purpose": "C178 C4-soldier", "workId": "C178", "size": [256, 96]},
+    {"path": "prototype/assets/ui-v3/dots-1016/city-life/C5-birds.png", "purpose": "C178 C5-birds", "workId": "C178", "size": [512, 64]},
+    {"path": "prototype/assets/ui-v3/dots-1016/city-life/plate-city.json", "purpose": "C178 plate-city", "workId": "C178"},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-barracks.png", "purpose": "C178 D2-barracks", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-clinic.png", "purpose": "C178 D2-clinic", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-command-tent.png", "purpose": "C178 D2-command-tent", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-farm.png", "purpose": "C178 D2-farm", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-granary.png", "purpose": "C178 D2-granary", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-idle.png", "purpose": "C178 D2-idle", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-market.png", "purpose": "C178 D2-market", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-recruit.png", "purpose": "C178 D2-recruit", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-reorganize.png", "purpose": "C178 D2-reorganize", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-repair.png", "purpose": "C178 D2-repair", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-sortie.png", "purpose": "C178 D2-sortie", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-tuntian.png", "purpose": "C178 D2-tuntian", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/icons/D2-workshop.png", "purpose": "C178 D2-workshop", "workId": "C178", "size": [256, 256]},
+    {"path": "prototype/assets/ui-v3/dots-1016/facilities/painted-water.json", "purpose": "C178 painted-map water clearance; display only", "workId": "C178"}
   ],
   "sources": [
     {

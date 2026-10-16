@@ -108,6 +108,13 @@ export function applyCampaignTerminalStateToWorld(world,terminalState,options={}
 
   for(const factionId of terminalState.factionOrder){
     const source=terminalState.factionsById[factionId],target=next.factions[factionId];
+    // A promoted ruler cannot keep the live strategist/candidate role. Mirror
+    // this office change with succession, before runtime validates the world.
+    // Keep the council's reports, proposals and resolution history intact.
+    if(factionId===next.playerFactionId&&source.rulerId!==null&&source.rulerId!==target.rulerId&&next.council){
+      if(next.council.strategistId===source.rulerId)next.council.strategistId=null;
+      next.council.candidates=next.council.candidates.filter(id=>id!==source.rulerId);
+    }
     target.alive=source.alive;target.rulerId=source.rulerId;
   }
   for(const cityId of terminalState.cityOrder){

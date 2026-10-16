@@ -324,6 +324,42 @@
    "rms": 0.062,
    "peak": 0.825,
    "bytes": 79393
+  },
+  "turn-drum": {
+   "file": "turn-drum.ogg",
+   "seconds": 1.84,
+   "source": "turn-drum-v1.wav",
+   "onset": 0.02,
+   "rms": 0.139,
+   "peak": 0.88,
+   "bytes": 26933
+  },
+  "build-complete": {
+   "file": "build-complete.ogg",
+   "seconds": 0.78,
+   "source": "build-complete-v1.wav",
+   "onset": 0.0,
+   "rms": 0.048,
+   "peak": 0.836,
+   "bytes": 13238
+  },
+  "defeat-dirge": {
+   "file": "defeat-dirge.ogg",
+   "seconds": 4.2,
+   "source": "defeat-dirge-v1.wav",
+   "onset": 0.04,
+   "rms": 0.144,
+   "peak": 0.846,
+   "bytes": 63321
+  },
+  "temple-bell": {
+   "file": "temple-bell.ogg",
+   "seconds": 1.5,
+   "source": "temple-bell-v1.wav",
+   "onset": 0.04,
+   "rms": 0.097,
+   "peak": 0.817,
+   "bytes": 25269
   }
  }
 }

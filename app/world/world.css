@@ -335,6 +335,16 @@ body:has(.w-dock:not([hidden])) .w-advisor{bottom:156px}
 .wmap .w-fog-mem{fill:rgba(8,11,13,.42)}
 .wmap .w-fog{fill:#0b0e10;opacity:.8}
 .wmap .w-move{fill:rgba(174,188,174,.15);stroke:rgba(214,225,211,.55);stroke-width:1}
+.wmap .w-move{fill:#e9eee43d!important;stroke:#f4f5d9!important;stroke-width:1.6!important;paint-order:stroke;filter:drop-shadow(0 1px 1px #080d10)}
+.wmap .w-move-boundary{fill:none;stroke:#f5f4ce;stroke-width:3;paint-order:stroke;filter:drop-shadow(0 0 2px #080d10);pointer-events:none}
+.wmap .w-zoc{fill:url(#c171-zoc);stroke:#e17e74;stroke-width:1.4;pointer-events:none}
+.wmap .w-waypoint,.wmap .w-route-blocked{pointer-events:none}
+.wmap .w-waypoint circle{fill:#f5ecd0;stroke:#17262b;stroke-width:2}
+.wmap .w-waypoint text{fill:#15252a;font:bold 12px sans-serif;text-anchor:middle}
+.wmap .w-route-blocked>path{fill:#c5364466;stroke:#ff8b7e;stroke-width:3}
+.wmap .w-route-blocked rect{fill:#28171bf5;stroke:#ee857b;stroke-width:1}
+.wmap .w-route-blocked text{fill:#fff0d9;font:10px sans-serif}
+.wmap .w-path{stroke:#fff3b8!important;stroke-width:3!important;filter:drop-shadow(0 1px 2px #111)}
 .wmap .w-attack{fill:rgba(163,69,61,.24);stroke:#c95f52;stroke-width:1.4}
 .wmap .w-danger{fill:rgba(196,154,58,.13);stroke:rgba(196,154,58,.4)}
 .wmap .w-side path{fill:none;stroke:#e0c36c;stroke-width:2}.wmap .w-side.s-REAR path{stroke:#c95f52}
@@ -1127,3 +1137,65 @@ body.ink .wmap .w-cityplate .prod.muster rect{fill:#722e28;stroke:#d0ad7d}
 @keyframes ink-map-fx{0%{opacity:1}70%{opacity:.8}100%{opacity:0}}
 @keyframes ink-damage-pop{0%{opacity:0;scale:1.7;translate:0 4px}20%{opacity:1;scale:1.35}100%{opacity:1;scale:1;translate:0 -12px}}
 @media(prefers-reduced-motion:reduce){.ink-toast,.wmap .ink-damage,.wmap .w-tactic-ready.fresh{animation:none}.ink-city-seal{display:none}#tactic-cutin .tactic-art{animation:none}}
+/* C170: unit identity is type + strength; the officer is a 22 screen-pixel aid. */
+.wmap .unit-marker .unit-counter-bg{fill:#211e19d9;stroke:var(--fc);stroke-width:.65}
+.wmap .unit-marker .unit-flag{fill:var(--fc)}
+.wmap .unit-marker .unit-kind{filter:invert(.86) sepia(.18)}
+.wmap .w-unit .plate .unit-marker .unit-count text{fill:#eadfc8;font:400 17px var(--serif);stroke:none;letter-spacing:0;text-anchor:middle}
+.wmap .unit-marker .unit-specs text{fill:#e5dac5;font:400 7.5px var(--serif);stroke:#19150e;stroke-width:1.5;paint-order:stroke;text-anchor:middle}
+.wmap .w-unit .plate .unit-marker .unit-portrait .frame{fill:#262018;stroke:#a99c83;stroke-width:.5;filter:none}
+.wmap .unit-head{border-radius:50%;overflow:hidden;clip-path:circle(50%)}
+.wmap .unit-head-initial{fill:#e5dac5;font:9px var(--serif);text-anchor:middle}
+.wmap .unit-status-mark{cursor:help;pointer-events:all}
+.wmap .unit-status-mark rect{fill:#362a23;stroke:#baa78a;stroke-width:.6}
+.wmap .unit-status-mark text,.wmap .unit-tactic text{fill:#eadfc8;font:7px var(--serif);text-anchor:middle}
+.wmap .w-unit.active .unit-counter-bg{stroke:#f1d69a;stroke-width:1.4}
+.wmap .w-unit.enemy .unit-counter-bg{stroke:#9e5147;stroke-width:1}
+.wmap .w-unit.attack-target .unit-counter-bg{stroke:#e59574;stroke-width:1.5}
+.wmap:is(.zoom-far,.units-far) .unit-marker :is(.unit-specs,.unit-portrait,.unit-status,.unit-tactic,.uname){display:none!important}
+.wmap .unit-marker .uname{font-size:8px;letter-spacing:0}
+.wmap .w-unit:has(.unit-marker){transition:none!important;animation:none!important}
+/* C170b: while choosing an attack/tactic target, friendly art must not cover its tile. */
+.wmap.target-picking .w-unit:not(.enemy),.wmap.target-picking .w-unit:not(.enemy) *{pointer-events:none!important}
+.wmap.target-picking .w-unit:not(.enemy) :is(.uname,.w-selected){display:none}
+/* C177: bitmap sprite windows are decorative and never steal a map click. */
+.wmap :is(.w-fire-ground,.w-fire-layer,.w-ink-fx),.wmap :is(.w-fire-ground,.w-fire-layer,.w-ink-fx) *{pointer-events:none!important}
+.wmap :is(.w-fire-ground,.w-fire-layer,.w-ink-fx)>svg{overflow:hidden;width:revert;max-width:none;min-width:0;display:inline}
+/* C169b: the existing sortie row gains only a compact personnel stepper. */
+.sortie-count>span{display:inline-flex;align-items:center;gap:4px;max-width:100%}
+.sortie-count input{width:6.5em;min-width:0;padding:4px;color:inherit;background:#18211d;border:1px solid #887c66;font:inherit;text-align:center}
+.sortie-count button{min-width:28px;min-height:28px;padding:2px 6px}
+.muster-target select:disabled{opacity:1;color:inherit}
+/* C178: sprite sheets run only while their overview is visible. */
+.cs-life{position:absolute;inset:0;pointer-events:none;overflow:hidden;contain:layout paint}
+.cs-life-path{position:absolute;display:block;height:auto;transform:translate(-50%,-100%);animation-delay:var(--phase)}
+.cs-life-sprite{display:block;width:100%;height:auto;background-repeat:no-repeat;animation:cs-life-frame var(--cycle) steps(var(--frames)) infinite;animation-delay:var(--phase)}
+@keyframes cs-life-frame{from{background-position:0 0}to{background-position:var(--end) 0}}
+.cs-life-path.travels{animation:cs-life-travel var(--journey) linear infinite;animation-delay:var(--phase)}
+.cs-life-path.travels:not(.birds) .cs-life-sprite{animation:cs-life-frame var(--cycle) steps(var(--frames)) infinite,cs-life-turn var(--journey) steps(1) infinite;animation-delay:var(--phase)}
+@keyframes cs-life-travel{0%,100%{translate:0 0}50%{translate:var(--dx) var(--dy)}}
+@keyframes cs-life-turn{0%,100%{scale:var(--facing,1) 1}50%{scale:var(--back,-1) 1}}
+.cs-life-path.birds{animation-name:cs-life-birds}
+@keyframes cs-life-birds{0%{translate:0 0;opacity:0}3%{opacity:.7}24%{translate:var(--dx) var(--dy);opacity:.7}25%,100%{translate:var(--dx) var(--dy);opacity:0}}
+.cs-life.paused :is(.cs-life-path,.cs-life-sprite){animation-play-state:paused}
+.cs-life.reduced :is(.cs-life-path,.cs-life-sprite){animation:none;translate:0 0;scale:1 1;background-position:0 0}
+.cs-life.reduced .birds{display:none}
+.cs-spot{transform:none;pointer-events:none;cursor:default;z-index:2}
+.cs-spot .cs-hit{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;border-radius:0;background:none;pointer-events:auto;cursor:pointer}
+.cs-spot .cs-hit:focus-visible{outline:1px solid var(--bone);outline-offset:2px}
+.cs-spot .cs-building-highlight{position:absolute;inset:0;pointer-events:none;opacity:0;filter:brightness(1.35);transition:opacity .18s}
+.cs-spot:has(.cs-hit:is(:hover,:focus-visible)) .cs-building-highlight{opacity:1}
+.cs-spot .cs-decoration{position:absolute;width:150px;height:96px;transform:translate(-50%,-62%);pointer-events:none}
+.cs-spot :is(.mk,.label,.cs-mark,.cs-role-host){pointer-events:none}
+.cs-spot:has(.cs-hit:is(:hover,:focus-visible)){z-index:5}
+.cs-role-host{position:absolute;left:50%;top:calc(100% + 8px);width:260px;max-width:30vw;transform:translateX(-50%);opacity:0;transition:opacity .15s}
+.cs-spot:has(.cs-hit:is(:hover,:focus-visible)) .cs-role-host{opacity:1}
+.cs-role{display:grid;grid-template-columns:28px 1fr;gap:3px 8px;padding:10px 12px;color:var(--bone,#e6dccb);background:rgba(17,14,12,.96);border:1px solid rgba(230,220,203,.3);box-shadow:0 5px 16px #0008;font:13px/1.5 var(--serif);text-align:left;white-space:normal}
+.cs-role>img{grid-row:1/3;width:28px;height:28px;object-fit:contain}
+.cs-role>b{font-size:14px}
+.cs-role>small{color:var(--ash,#b6ac9a);font-size:11px}
+.cs-role>span{grid-column:1/-1}
+.cs-role.inline{margin-top:10px;max-width:290px}
+.cs-facility-role{position:absolute;left:3vw;top:15vh;z-index:4;pointer-events:none;max-width:290px}
+.w-facility.building{opacity:.55}
+@media(prefers-reduced-motion:reduce){.cs-life :is(.cs-life-path,.cs-life-sprite){animation:none!important;background-position:0 0!important;translate:0 0!important;scale:1 1!important}.cs-life .birds{display:none}}

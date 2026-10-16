@@ -19,6 +19,8 @@ export const SFX = Object.freeze({
   warcry: {gain: 0.6, gap: 900}, 'charge-rumble': {gain: 0.8, gap: 900}, 'clash-heavy': {gain: 0.85, gap: 120}, impact: {gain: 0.9, gap: 120},
   melee: {gain: 0.5, gap: 700}, 'tactic-boom': {gain: 0.9, gap: 600}, 'fire-ignite': {gain: 0.9, gap: 600}, 'fire-burn': {gain: 0.55, gap: 900},
   'town-ambience': {gain: 0.32, gap: 0},
+  // 10-16 닷토리 '소리가 구분됐으면 하는 순간': 차례 시작 · 시설 완공 · 패배 · 성소 발견
+  'turn-drum': {gain: 0.8, gap: 900}, 'build-complete': {gain: 0.9, gap: 600}, 'defeat-dirge': {gain: 0.7, gap: 3000}, 'temple-bell': {gain: 0.75, gap: 1500},
 });
 /** 맞는 순간의 소리에 겹쳐 내는 소리: [이름, 늦춤(ms), 크기 배율]. 한 소리만으로는 '쾅' 하나라 얇다 — 금속(병기) · 묵직한 타격 · 이어지는 난전을 겹친다.
  * @type {Readonly<Record<string, [string, number, number][]>>} */
@@ -44,9 +46,9 @@ export function troopSounds(troop) {
 }
 
 /** 명령 하나가 끝난 뒤 낼 소리들: [이름, 늦춤(ms), 크기 배율]. 순수 함수 — 테스트용으로 밖에 둔다.
- * @param {{request:any, before:any, state:any, combat:any, deferImpact?:boolean, visible?:(armyId:string)=>boolean}} c
+ * @param {{request:any, before:any, state:any, combat:any, deferImpact?:boolean, managedFx?:boolean, visible?:(armyId:string)=>boolean}} c
  * @returns {[string, number, number][]} */
-export function commandSounds({request, before, state, combat, deferImpact = false, visible = () => true}) {
+export function commandSounds({request, before, state, combat, deferImpact = false, managedFx = false, visible = () => true}) {
   /** @type {[string, number, number][]} */ const out = [];
   const type = request?.type, me = state?.playerFactionId, ai = type === 'ADVANCE_AI';
   const army = (/** @type {string|undefined} */ id) => state?.armies?.[id ?? ''] ?? before?.armies?.[id ?? ''];
@@ -56,8 +58,8 @@ export function commandSounds({request, before, state, combat, deferImpact = fal
     if (seen) {
       const k = ai ? 0.7 : 1, city = type === 'ATTACK_CITY' || !!combat.cityId || combat.kind === 'SIEGE';
       const tactic = type === 'USE_TACTIC' || !!combat.tacticName || combat.kind === 'TACTIC';
-      if (tactic) out.push(['tactic', 0, k]);
-      if (tactic && fireTactic(combat.tacticName)) out.push(['fire-ignite', 300, k], ['fire-burn', 900, k]);
+      if (tactic && !managedFx) out.push(['tactic', 0, k]);
+      if (tactic && fireTactic(combat.tacticName) && !managedFx) out.push(['fire-ignite', 300, k], ['fire-burn', 900, k]);
       // 치기 시작할 때 함성(기병은 말발굽 우레) — 맞는 순간의 소리는 world.js 가 따로 낸다(deferImpact)
       else if (!tactic && !city && combat.kind !== 'OVERWATCH' && combat.kind !== 'TACTIC_EFFECT') out.push([troopSounds(atk?.troopType).hit === 'charge' ? 'charge-rumble' : troopSounds(atk?.troopType).hit === 'clash' ? 'warcry' : '', 0, k * 0.8]);
       if(!deferImpact&&combat.kind!=='TACTIC_EFFECT')out.push([combat.kind === 'OVERWATCH' ? 'arrows' : city ? 'siege' : troopSounds(atk?.troopType).hit, type === 'USE_TACTIC' ? 260 : 0, k]);
@@ -84,8 +86,16 @@ export function commandSounds({request, before, state, combat, deferImpact = fal
   }[type];
   if (type === 'CITY_JOB') out.push([request.kind === 'muster' ? 'muster' : 'hammer', 0, 1]);
   else if (simple && !(combat && type !== 'END_TURN')) out.push([simple, 0, type === 'VISIT' ? 0.6 : 1]);
-  // 새 차례: 징 한 번(차례 넘김의 북 뒤에)
-  if ((state?.turn ?? 0) > (before?.turn ?? 0) && !state?.gameResult) out.push(['gong', 750, 1]);
+  // 새 차례: 큰 북 한 번 + 징 여운(차례 넘김의 작은 북 뒤에)
+  if ((state?.turn ?? 0) > (before?.turn ?? 0) && !state?.gameResult) out.push(['turn-drum', 750, 1]);
+  // C177: 완공 · 새 출진 부대 소리. 완공은 10-16 전용 소리(나무 마치 · 작은 종)
+  if ((state?.turn ?? 0) > (before?.turn ?? 0)) {
+    if(Object.values(state?.cities??{}).some((/** @type {any} */ c)=>c.ownerFactionId===me&&before?.cities?.[c.cityId]?.currentProduction&&before.cities[c.cityId].currentProduction.kind!=='muster'&&!c.currentProduction))out.push(['build-complete',950,1]);
+  }
+  if(Object.values(state?.armies??{}).some((/** @type {any} */ a)=>a.armyId&&a.factionId===me&&!before?.armies?.[a.armyId]))out.push(['muster',200,1]);
+  const growthLevel=(/** @type {any} */ s,/** @type {string} */ id)=>s?.campaignGrowth?.officers?.[id]?.track?.growthStates?.[id]?.level??1;
+  if(Object.keys(state?.campaignGrowth?.officers??{}).some(id=>state.officers?.[id]?.allegianceFactionId===me&&growthLevel(state,id)>growthLevel(before,id)))out.push(['levelup',250,1]);
+  if(state?.gameResult&&!before?.gameResult)out.push([state.gameResult.type==='PLAYER_DEFEAT'||state.gameResult.winnerFactionId&&state.gameResult.winnerFactionId!==me?'defeat-dirge':'gong',200,1]);
   return out.filter(([name]) => !!name);
 }
 
@@ -142,18 +152,21 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
     return played;
   }
   /** @type {Map<string, {src:any, g:any}>} */ const loops = new Map();
+  /** @type {Map<string, number>} */ const loopWanted = new Map();
   /** 되풀이해 틀기(서서히 켬). 이미 틀고 있으면 그대로. @param {string} name */
-  function startLoop(name) {
-    const def = SFX[name], v = level(); if (!def || !v || loops.has(name)) return false;
-    const buf = buffers.get(name); if (!buf) { load(name).then((b) => { if (b && !loops.has(name)) startLoop(name); }); return false; }
+  function startLoop(name, {gain=1}={}) {
+    const def = SFX[name], v = level(); if (!def || !v) {stopLoop(name);return false;}if(loops.has(name))return false;
+    const wasWanted=loopWanted.has(name);loopWanted.set(name,gain);
+    const buf = buffers.get(name); if (!buf) { if(!wasWanted)load(name).then((b) => { if (b && loopWanted.has(name) && !loops.has(name)) startLoop(name,{gain:loopWanted.get(name)}); }); return false; }
     try {
       const src = ctx.createBufferSource(), g = ctx.createGain(), t = ctx.currentTime ?? 0;
-      src.buffer = buf; src.loop = true; g.gain.setValueAtTime?.(0, t); g.gain.linearRampToValueAtTime?.(Math.min(1, v * def.gain), t + 1.2);
+      src.buffer = buf; src.loop = true; g.gain.setValueAtTime?.(0, t); g.gain.linearRampToValueAtTime?.(Math.min(1, v * def.gain * gain), t + 1.2);
       src.connect(g).connect(ctx.destination); src.start(); loops.set(name, {src, g}); return true;
     } catch { return false; }
   }
   /** 서서히 끄기. @param {string} name */
   function stopLoop(name) {
+    loopWanted.delete(name);
     const l = loops.get(name); if (!l) return; loops.delete(name);
     try { const t = ctx.currentTime ?? 0; l.g.gain.cancelScheduledValues?.(t); l.g.gain.setValueAtTime?.(l.g.gain.value, t); l.g.gain.linearRampToValueAtTime?.(0, t + 0.6); l.src.stop(t + 0.7); } catch { /* 이미 멈춤 */ }
   }
@@ -169,7 +182,7 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
       last.set(name, now); lastAny = now; return true;
     } catch { return false; }
   }
-  /** 명령 하나가 끝난 뒤 world.js 가 부른다. @param {{request:any, before:any, state:any, combat:any, deferImpact?:boolean, visible?:(armyId:string)=>boolean}} c */
+  /** 명령 하나가 끝난 뒤 world.js 가 부른다. @param {{request:any, before:any, state:any, combat:any, deferImpact?:boolean, managedFx?:boolean, visible?:(armyId:string)=>boolean}} c */
   function command(c) { for (const [name, delay, k] of commandSounds(c)) play(name, {delay, gain: k}); }
   /** 창 여닫이와 단추 누르기를 듣는다. @param {Document} doc */
   function attach(doc) {

@@ -132,7 +132,9 @@ export function validateState(s,{allowCitylessAlive=false}={}){
     const armyState=terminalWorld?.armiesById[id],active=!armyState||armyState.disposition==='ACTIVE';
     need(a.armyId===id && own(s.factions,a.factionId) && own(s.officers,a.commanderId) && own(s.tiles,a.tileId));
     const o=s.officers[a.commanderId];need(o.allegianceFactionId===a.factionId && o.allowedTroops.includes(a.troopType));
-    if(active){need(!occupied.has(a.tileId)&&!assigned.has(a.commanderId)&&o.lifeState==='ALIVE'&&o.captivityState==='FREE'&&o.locationRef.kind==='ARMY'&&o.locationRef.id===id);occupied.add(a.tileId);assigned.add(a.commanderId);}
+    // C173b: only v2/v3 campaign city centers/gates permit same-faction stacks.
+    const cityStack=['v2','v3'].includes(s.mapId)&&s.mapRules.vision.profile==='CAMPAIGN_V1'&&Object.values(s.cities).some(c=>c.tileId===a.tileId||c.footprint?.gates?.includes(a.tileId))&&Object.values(s.armies).filter(b=>b.tileId===a.tileId&&(!terminalWorld||terminalWorld.armiesById[b.armyId]?.disposition==='ACTIVE')).every(b=>b.factionId===a.factionId);
+    if(active){need((!occupied.has(a.tileId)||cityStack)&&!assigned.has(a.commanderId)&&o.lifeState==='ALIVE'&&o.captivityState==='FREE'&&o.locationRef.kind==='ARMY'&&o.locationRef.id===id);occupied.add(a.tileId);assigned.add(a.commanderId);}
     need(integer(a.troopCount) && integer(a.woundedCount) && integer(a.deadCount) && finite(a.hp) && finite(a.maxHp,a.hp) && finite(a.morale,0,100) && finite(a.stamina) && finite(a.maxStamina,a.stamina) && finite(a.supplyFood));
     need(Array.isArray(a.statusEffects) && Array.isArray(a.cooldowns) && Array.isArray(a.engagedArmyIds));
     const order=a.currentOrder,m=a.movementState;

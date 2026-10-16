@@ -1,0 +1,34 @@
+{
+  "image": "scenes/plate-city.webp",
+  "sameGeometry": ["scenes/plate-city-F01.webp", "scenes/plate-city-F03.webp"],
+  "size": [1672, 941],
+  "note": "C178: measured inside-building rectangles in source pixels; never include hanging signs. Feet and smoke origins are normalized painting coordinates.",
+  "hitBoxes": {
+    "office": [738, 210, 160, 88],
+    "granary": [408, 391, 126, 50],
+    "barracks": [1125, 384, 102, 66],
+    "market": [366, 556, 155, 64],
+    "workshop": [1008, 647, 113, 58],
+    "tavern": [1198, 566, 100, 60],
+    "residence": [238, 374, 92, 48],
+    "gate": [839, 741, 88, 67]
+  },
+  "placements": [
+    {"kind":"smoke", "at":[0.586,0.716], "width":0.024},
+    {"kind":"smoke", "at":[0.619,0.701], "width":0.020, "phase":0.28},
+    {"kind":"smoke", "at":[0.297,0.587], "width":0.018, "phase":0.47},
+    {"kind":"flame", "at":[0.585,0.722], "width":0.008},
+    {"kind":"flame", "at":[0.616,0.699], "width":0.007},
+    {"kind":"flame", "at":[0.606,0.655], "width":0.007},
+    {"kind":"flame", "at":[0.490,0.283], "width":0.006},
+    {"kind":"flag", "at":[0.108,0.474], "width":0.016},
+    {"kind":"flag", "at":[0.475,0.695], "width":0.015},
+    {"kind":"flag", "at":[0.717,0.637], "width":0.015},
+    {"kind":"civilian", "at":[0.265,0.685], "to":[0.350,0.701], "width":0.009, "seconds":18},
+    {"kind":"civilian", "at":[0.355,0.655], "to":[0.306,0.634], "width":0.009, "seconds":16},
+    {"kind":"soldier", "at":[0.590,0.505], "to":[0.668,0.530], "width":0.009, "seconds":20},
+    {"kind":"soldier", "at":[0.651,0.570], "to":[0.609,0.551], "width":0.009, "seconds":15},
+    {"kind":"civilian", "at":[0.407,0.825], "to":[0.451,0.850], "width":0.009, "seconds":17},
+    {"kind":"birds", "at":[-0.12,0.160], "to":[1.12,0.120], "width":0.09, "seconds":38}
+  ]
+}

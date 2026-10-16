@@ -1,4 +1,5 @@
 import {injuryReason} from './campaign-injury.mjs';
+import {initializeAchievements,recordAchievementEvent,settleAchievements,achievementCityFactor} from './campaign-achievements.mjs';
 import {campaignScenario} from './campaign-scenario.mjs';
 import {supplyEnabled,settleSupply,armyFoodPerTurn,supplyLink,supplyAiLaunchFood,foodModel,clockFood,troopFoodRate,baseCityFood} from './campaign-supply.mjs';
 import {relationsEnabled,relationSecurity,relationProduction,relationJobComplete} from './campaign-relations.mjs';
@@ -33,7 +34,7 @@ export function specialistOccupationTurns(s,c,turns){return c21Enabled(s)&&c.spe
 export function specialistOutput(s,c,raw){if(!c21Enabled(s))return [];const n=c.specialists??{},causes=[];for(const [kind,resource,unit] of [['artisan','production',C21.artisanProduction],['scholar','science',C21.scholarScience],['logistician','food',C21.logisticianFood]]){const amount=(n[kind]??0)*unit;raw[resource]+=amount;if(amount)causes.push({resource,label:`전문인력 ${SPECIALIST_NAMES[kind]} ${n[kind]}: ${ {production:'생산',science:'과학',food:'식량'}[resource]} +${amount}`,amount});}if(n.official)for(const resource of Object.keys(raw)){const amount=raw[resource]*n.official*C21.officialRate;raw[resource]+=amount;causes.push({resource,label:`전문인력 관료 ${n.official}: ${ {food:'식량',production:'생산',science:'과학',prestige:'인망'}[resource]} +${n.official*C21.officialRate*100}%`,amount});}return causes;}
 
 import {C20,C20_FACILITIES,c20Enabled,initializeCampaignPolicy,uniqueFacilityReason,activeUnique,settlePolicyRefugees} from './campaign-policy.mjs';
-import {musterReason,completeMuster,C19,c19Enabled,researchStage,cityPopulationCapacity,syncResearchCities,settleCampaignResearch} from './campaign-roster.mjs';
+import {officerTroopTypes,sortie,musterReason,completeMuster,C19,c19Enabled,researchStage,cityPopulationCapacity,syncResearchCities,settleCampaignResearch} from './campaign-roster.mjs';
 import {uniqueDomestic,uniqueProgress,uniqueHoldLand,uniqueGovernor,uniqueSupply,uniqueSettlement,uniqueMusterCost,uniqueMusterFactor,domesticMusterAvailable} from './campaign-rule-registry.mjs';
 import {effectModifiers} from './campaign-effects.mjs';
 import {settleOccupationCity} from './campaign-occupation.mjs';
@@ -60,9 +61,30 @@ const ownFormation = (s,f,c) => s.armies[f.formationId]?.factionId === c.ownerFa
 const lotFaction = (s,l) => s.economy?.lotFaction?.[l.lotId] ??
   s.armies[l.originFormationId]?.factionId ?? s.cities[l.nodeId]?.ownerFactionId;
 
+// Trial field rates: 50 replacements and 25 recovered wounded per army/turn.
+export const C174_FIELD=Object.freeze({replenish:50,recovery:25});
+function fieldAccess(s,c,a){
+ if(!supplyEnabled(s)||!a||!castleArmyActive(s,a)||a.factionId!==c.ownerFactionId||c.besieged)return false;
+ const link=supplyLink(s,a);if(link.state!=='SAFE')return false;
+ if(link.sourceCityId)return link.sourceCityId===c.cityId;
+ // A connected hub may relay personnel only from a city with an open route.
+ return supplyLink(s,a,a.tileId,{hubIds:new Set(),limit:Object.keys(s.tiles).length}).sourceCityId===c.cityId;
+}
+export function cityProductionIdle(s,c){
+ if(s.gameResult||!c||c.ownerFactionId===null||!normal(s,c)||c.currentProduction)return false;
+ const left=Math.max(0,27-s.turn);if(!left)return false;
+ return cityJobList(s,c).some(j=>{
+  if(j.blockedReason||j.kind==='reorganize')return false;
+  const estimate=campaignAiJobForecast(s,c,j.kind,{progress:c.jobProgress?.[j.kind]??0});
+  if(j.kind==='recruit'&&campaignMobilization(s,c.ownerFactionId).used+estimate.troops>campaignMobilization(s,c.ownerFactionId).capacity)return false;
+  return estimate.turns!==null&&estimate.turns<=left;
+ });
+}
+
 export function initializeCampaignEconomy(s) {
   // xpEvents is display-only; 120 is a trial history cap, not the XP source ledger.
   initializeCampaignPolicy(s);
+  initializeAchievements(s);
   s.xpEvents ??= [];
   s.economy ??= {lastSettledTurn:null, readyAt:{}, occupationStatus:{}};
   s.economy.lotFaction ??= {};
@@ -99,7 +121,7 @@ export function cityJobReason(s,c,kind){
  if(c19Enabled(s)&&!normal(s,c))return '점령 중 생산·모집 중단';
  return null;
 }
-export function cityJobList(s,c){return Object.entries(CITY_JOBS).filter(([kind])=>c20Enabled(s)||!C20_FACILITIES[kind]).map(([kind,job])=>({kind,name:job.name,...(C20_FACILITIES[kind]?{description:C20_FACILITIES[kind].description}:{}),cost:cityJobCost(s,c,kind),blockedReason:cityJobReason(s,c,kind)}));}
+export function cityJobList(s,c){return Object.entries(CITY_JOBS).filter(([kind])=>kind!=='muster'&&(c20Enabled(s)||!C20_FACILITIES[kind])).map(([kind,job])=>({kind,name:job.name,...(C20_FACILITIES[kind]?{description:C20_FACILITIES[kind].description}:{}),cost:cityJobCost(s,c,kind),blockedReason:cityJobReason(s,c,kind)}));}
 
 export function facilityTiles(s,c) {
   const occupied = new Set(Object.values(s.cities).flatMap(city =>
@@ -142,6 +164,7 @@ export function cityEconomyRates(s,c,{shortage=null,commit=false}={}) {
   const relationOutput=relationProduction(s,c),relationAmount=raw.production*(relationOutput.factor-1);raw.production*=relationOutput.factor;
   if(relationOutput.lines.length)specialistCauses.push({resource:'production',label:relationOutput.lines[0],amount:relationAmount});
   if(c19Enabled(s)&&!normal(s,c)&&!(c.besieged&&uniqueHoldLand(s,c)))for(const key of ['production','science','prestige'])raw[key]*=s.occupations?.[c.cityId]?.classRetention ? .5 : 0;
+  raw.food*=achievementCityFactor(s,c,'food');
   const rounded=Object.fromEntries(Object.entries(raw).map(([key,value])=>[key,Math.floor(value+(c.outputCarry?.[key]??0)+1e-9)]));
   if(commit)c.outputCarry=Object.fromEntries(Object.entries(raw).map(([key,value])=>[key,!normal(s,c)&&key!=='food'?(c.outputCarry?.[key]??0):Math.max(0,value+(c.outputCarry?.[key]??0)-rounded[key])]));
   return {bonus,...rounded,raw,...(relationsEnabled(s)?boundSecurity:{}),...(s.mapId!=='v1'?{specialistCauses:specialistCauses.filter(e=>normal(s,c)||e.resource==='food')} :{}),capacity:80+80*count('granary'),workBonus:count('barracks') ? 0.1 : 0};
@@ -159,11 +182,12 @@ export function campaignMobilization(s,factionId) {
 // C143: read-only estimates for AI decisions; settlement and costs stay above.
 export function campaignAiJobForecast(s,c,kind,{troopType=null,progress=0}={}) {
   const rates=cityEconomyRates(s,c),cost=cityJobCost(s,c,kind,troopType);
+  const factor=!['muster','recruit','reorganize','repair'].includes(kind)?achievementCityFactor(s,c,'production'):1;
   const speed=round((kind==='muster'?c31Muster(s,c.ownerFactionId):1)*
     (c29Aw(s,c.governorId,'AW_TT-V02')&&!['muster','recruit','reorganize','repair'].includes(kind)?1.15:1)*
-    uniqueProgress(s,c,rates.production*(['recruit','reorganize'].includes(kind)?1+rates.workBonus:1)));
+    uniqueProgress(s,c,rates.production*(['recruit','reorganize'].includes(kind)?1+rates.workBonus:1)))*factor;
   const advance=c.c33?.advanceProduction??0;
-  return {cost,speed,turns:speed>0?Math.max(1,Math.ceil(Math.max(0,cost-progress-advance)/speed)):null,
+  return {cost,speed,turns:speed>0?Math.max(1,Math.ceil(Math.max(0,cost-progress-advance-(factor>1?c.c44BuildCarry??0:0))/speed)):null,
     troops:kind==='recruit'?(c33Governor(s,c,'VOLUNTEERS')&&(c.securityLevel??0)===0?650:500):0};
 }
 
@@ -227,15 +251,17 @@ export function campaignAiNeutralFood(s,factionId,cityId,turns){
  return {stock,income,need,gain:stock/turns+Math.max(0,income-need)};
 }
 
-export function selectCityJob(s,{cityId,kind,armyId=null,troopType=null,officerId=null},factionId=s.playerFactionId) {
+export function selectCityJob(s,{cityId,kind,armyId=null,troopType=null,officerId=null,troopCount},factionId=s.playerFactionId) {
   initializeCampaignEconomy(s);
   const c=s.cities[cityId];
   if (!c || c.ownerFactionId!==factionId || !CITY_JOBS[kind]) throw new Error('INVALID_CITY_JOB');
+  // Compatibility entry for existing AI/council callers: same choice, immediate sortie.
+  if(kind==='muster')return sortie(s,{cityId,officerId,troopType:troopType??undefined,troopCount},factionId);
   const blocked=cityJobReason(s,c,kind);if(blocked)throw new Error(blocked);
   if (kind==='reorganize') {
     const a=s.armies[armyId],o=s.officers[a?.commanderId];
     if (!a || !castleArmyActive(s,a) || a.factionId!==c.ownerFactionId || !nearby(s,c,a) ||
-      SPECIAL_TROOPS[troopType] || !o.allowedTroops.includes(troopType)) throw new Error('INVALID_REORGANIZATION');
+      SPECIAL_TROOPS[troopType] || !officerTroopTypes(o).includes(troopType)) throw new Error('INVALID_REORGANIZATION');
     // Wounded identity cannot be changed by reorganizing the field army.
     if (s.personnel.lots.some(l=>l.originFormationId===armyId&&l.count>0)) throw new Error('부상·복귀 인원이 있는 부대는 재편할 수 없습니다.');
   }
@@ -260,15 +286,16 @@ function cityPersonnel(s,c) {
 }
 
 function replenish(s,c) {
+  const fieldUsed={};
   let capacity=createTransportCapacity({periodId:`EC.${s.turn}.${c.cityId}`,resources:[{resourceId:'local',capacity:campaignMobilization(s,c.ownerFactionId).used}]});
   for (const lot of s.personnel.lots.filter(l=>l.nodeId===c.cityId&&lotFaction(s,l)===c.ownerFactionId&&l.kind!=='WOUNDED'&&l.count>0&&
     (s.economy.readyAt[l.lotId]??0)<s.turn)) {
     for (const f of s.personnel.formations.filter(f=>ownFormation(s,f,c)&&
-      castleArmyActive(s,s.armies[f.formationId])&&nearby(s,c,s.armies[f.formationId])&&
+      castleArmyActive(s,s.armies[f.formationId])&&(nearby(s,c,s.armies[f.formationId])||fieldAccess(s,c,s.armies[f.formationId]))&&
       (lot.kind!=='RECOVERED'||lot.originFormationId===f.formationId)&&
       (JSON.stringify(f.identity)===JSON.stringify(lot.identity)||
         (s.economy.recruitedReady[lot.lotId]&&(f.identity.specialTroopId===null||specialTroop(s,s.armies[f.formationId].troopType))))&&f.field<f.targetStrength)) {
-      const count=Math.min(lot.count,f.targetStrength-f.field);
+      const count=Math.min(lot.count,f.targetStrength-f.field,nearby(s,c,s.armies[f.formationId])?Infinity:Math.max(0,C174_FIELD.replenish-(fieldUsed[f.formationId]??0)));
       if (!count) continue;
       const key=`EC.${s.turn}.${c.cityId}.${lot.lotId}.${f.formationId}`;
       let sourceLotId=lot.lotId;
@@ -300,6 +327,7 @@ function replenish(s,c) {
         transportId:key,now:s.globalTick,authorizationRef:key},{canArrive:()=>true}).ledger;
       Object.assign(s.personnel.formations.find(row=>row.formationId===f.formationId),{nodeId:previousNode,specialSupportAvailable:previousSupport});
       s.armies[f.formationId].troopCount+=count;
+      fieldUsed[f.formationId]=(fieldUsed[f.formationId]??0)+count;
       // Each transaction clones the ledger; refresh the remaining source count.
       lot.count=s.personnel.lots.find(l=>l.lotId===lot.lotId).count;
     }
@@ -310,28 +338,53 @@ function recover(s,c,paid) {
   if (!paid || c.besieged || s.economy.combatCities?.[c.cityId]===s.turn-1 ||
     Object.values(s.armies).some(a=>castleArmyActive(s,a)&&a.factionId!==c.ownerFactionId&&nearby(s,c,a))) return;
   let recoveryBudget=c20Enabled(s)?(c33Governor(s,c,'MEDICINE')?1.3:1)*C20.recoveryPerTurn*(activeUnique(s,c,'clinic')?C20.clinicMultiplier:1):Infinity;
-  for (const l of s.personnel.lots.filter(l=>l.kind==='WOUNDED'&&l.nodeId===c.cityId&&l.count>0)) {
+  const fieldUsed={};
+  for (const l of s.personnel.lots.filter(l=>l.kind==='WOUNDED'&&l.nodeId===c.cityId&&lotFaction(s,l)===c.ownerFactionId&&l.count>0)) {
     const a=s.armies[l.originFormationId];
+    if(!c20Enabled(s)&&(!a||!nearby(s,c,a)))continue;
     // Existing C2 lots retain their home node. Do not treat a distant battle's
     // wounded as already evacuated to a safe city.
-    if (!a || a.factionId!==c.ownerFactionId || !nearby(s,c,a)||!recoveryBudget) continue;
-    const recoveryCount=Math.floor(Math.min(l.count,recoveryBudget)*c29Recovery(s,a.armyId)*c28RecoveryFactor(s,a.armyId)*c34Recovery(s,a.armyId));if(!recoveryCount)continue;
+    const alive=a&&castleArmyActive(s,a),near=alive&&nearby(s,c,a),field=alive&&!near&&fieldAccess(s,c,a);
+    if(a&&a.factionId!==c.ownerFactionId)continue;
+    if(alive&&(!near&&!field)||!recoveryBudget)continue;
+    const factor=alive?c29Recovery(s,a.armyId)*c28RecoveryFactor(s,a.armyId)*c34Recovery(s,a.armyId):1;
+    const recoveryCount=Math.min(l.count,recoveryBudget,field?Math.max(0,C174_FIELD.recovery-(fieldUsed[a.armyId]??0)):Infinity,Math.floor(Math.min(l.count,recoveryBudget)*factor));if(!recoveryCount)continue;
     const key=`R.${s.turn}.${l.lotId}`;
     s.personnel=recoverWoundedPersonnel(s.personnel,{operationId:key,expectedRevision:s.personnel.revision,
       woundedLotId:l.lotId,recoveredLotId:key,count:recoveryCount,authorizationRef:key},
-      {canRecover:()=>true,hasReturnRoute:()=>castleArmyActive(s,a)&&nearby(s,c,a)}).ledger;
+      {canRecover:()=>true,hasReturnRoute:()=>!!(near||field)}).ledger;
     s.economy.readyAt[key]=s.turn;
     s.economy.lotFaction[key]=c.ownerFactionId;
-    const recovered=s.personnel.lots.find(l=>l.lotId===key)?.count??0;recoveryBudget-=recovered;if(c28Enabled(s))a.c28Recovered=(a.c28Recovered??0)+recovered;a.woundedCount=Math.max(0,a.woundedCount-recovered);
+    const recovered=s.personnel.lots.find(l=>l.lotId===key)?.count??0;recoveryBudget-=recovered;
+    if(a){fieldUsed[a.armyId]=(fieldUsed[a.armyId]??0)+recovered;if(c28Enabled(s))a.c28Recovered=(a.c28Recovered??0)+recovered;a.woundedCount=Math.max(0,a.woundedCount-recovered);}
+    if(!alive)s.economy.recruitedReady[key]=true;
   }
+}
+
+function evacuateDestroyedWounded(s){
+ if(!c20Enabled(s))return;
+ for(const lot of [...s.personnel.lots])if(lot.kind==='WOUNDED'&&lot.count>0){
+  const a=s.armies[lot.originFormationId];if(a&&castleArmyActive(s,a))continue;
+  const factionId=lotFaction(s,lot),origin=s.tiles[a?.tileId]??s.tiles[s.cities[lot.nodeId]?.tileId];
+  const city=Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).sort((a,b)=>(origin?hexDistance(origin,s.tiles[a.tileId])-hexDistance(origin,s.tiles[b.tileId]):0)||a.cityId.localeCompare(b.cityId))[0];
+  if(!city||lot.nodeId===city.cityId)continue;
+  // Historical transports pin their source node: keep that empty provenance lot.
+  if(s.personnel.transports.some(t=>t.sourceLotId===lot.lotId)){
+   const lotId=`EVAC.${s.turn}.${lot.lotId}`;s.personnel.lots.push({...lot,lotId,nodeId:city.cityId});lot.count=0;s.economy.lotFaction[lotId]=factionId;
+  }else {lot.nodeId=city.cityId;s.economy.lotFaction[lot.lotId]=factionId;}
+ }
 }
 
 export function completeJob(s,c,rates,paid) {
   const job=c.currentProduction;
   if (!job) return;
   const advance=c.c33?.advanceProduction??0;if(advance){c.c33.advanceProduction=0;}
-  const gain=advance+round((job.kind==='muster'?c31Muster(s,c.ownerFactionId):1)*(c29Aw(s,c.governorId,'AW_TT-V02')&&!['muster','recruit','reorganize','repair'].includes(job.kind)?1.15:1)*uniqueProgress(s,c,c.production*(['recruit','reorganize'].includes(job.kind)?1+rates.workBonus:1)));
   if (job.kind==='recruit'&&!paid) return;
+  const baseGain=round((job.kind==='muster'?c31Muster(s,c.ownerFactionId):1)*(c29Aw(s,c.governorId,'AW_TT-V02')&&!['muster','recruit','reorganize','repair'].includes(job.kind)?1.15:1)*uniqueProgress(s,c,c.production*(['recruit','reorganize'].includes(job.kind)?1+rates.workBonus:1)));
+  const boost=!['muster','recruit','reorganize','repair'].includes(job.kind)?achievementCityFactor(s,c,'production')-1:0;
+  const extra=boost?baseGain*boost+(c.c44BuildCarry??0):0,bonus=Math.floor(extra+1e-9);
+  if(boost)c.c44BuildCarry=Math.max(0,extra-bonus);
+  const gain=advance+baseGain+bonus;
   c.jobProgress[job.key]=round((c.jobProgress[job.key]??0)+gain);
   c.productionProgress=c.jobProgress[job.key];
   if (c.productionProgress<cityJobCost(s,c,job.kind)) return;
@@ -350,7 +403,7 @@ export function completeJob(s,c,rates,paid) {
   } else if (job.kind==='reorganize') {
     const a=s.armies[job.armyId],f=s.personnel.formations.find(f=>f.formationId===job.armyId);
     if (!a || !castleArmyActive(s,a) || a.factionId!==c.ownerFactionId || !nearby(s,c,a) ||
-      SPECIAL_TROOPS[job.troopType] || !s.officers[a.commanderId].allowedTroops.includes(job.troopType) ||
+      SPECIAL_TROOPS[job.troopType] || !officerTroopTypes(s.officers[a.commanderId]).includes(job.troopType) ||
       s.personnel.lots.some(l=>l.originFormationId===job.armyId&&l.count>0)) {c.jobBlocked='재편 조건';return;}
     a.troopType=job.troopType;
     f.identity={baseTroopId:troopToCampaign(job.troopType),specialTroopId:null};
@@ -363,6 +416,7 @@ export function completeJob(s,c,rates,paid) {
     const tileId=facilityTiles(s,c)[0];
     if (!tileId || (job.kind==='farm'&&c.facilities.filter(f=>f.kind==='farm').length>=2)) {c.jobBlocked='시설 칸';return;}
     c.facilities.push({kind:job.kind,tileId});creditCampaignDomestic(s,{officerId:c.governorId,eventId:`C25.FACILITY.${s.turn}.${c.cityId}`,kind:'FACILITY_BUILT',counts:{facilitiesBuilt:1}});if(C20_FACILITIES[job.kind])s.c20.stats.facilities++;
+    if(job.kind!=='barracks')recordAchievementEvent(s,{id:`FACILITY.${s.turn}.${c.cityId}.${tileId}`,type:'FACILITY',factionId:c.ownerFactionId,cityId:c.cityId,officerId:c.governorId});
   }
   domesticJobCompleted(s,c,job,overflow);
   relationJobComplete(s,c);
@@ -377,6 +431,7 @@ export function settleCampaignEconomy(s) {
   c30Settle(s);
   initializeCampaignEconomy(s);
   if (s.economy.lastSettledTurn===s.turn) return s;
+  evacuateDestroyedWounded(s);
   for(const c of Object.values(s.cities))if(c.ownerFactionId!==null)domesticBeforeSettlement(s,c);
   const pools=domesticBeginGranaries(s,cityEconomyRates,campaignFoodNeed);
   const support=autoSupportCampaignFood(s,pools);
@@ -459,7 +514,7 @@ export function settleCampaignEconomy(s) {
       s.xpEvents.push({officerId:c.governorId,kind:'GOVERNOR_TURN',amount:5});
       s.xpEvents=s.xpEvents.slice(-120);
       creditCampaignGrowth(s,{eventId:`GOVERNOR.${s.turn}.${c.cityId}`,officerId:c.governorId,kind:'GOVERNOR_TURN',
-        amount:CAMPAIGN_GROWTH_TRIAL.governorXp*(1+governor.baseStats.politics/100)});
+        amount:campaignGrowthTrial(s).governorXp*(1+governor.baseStats.politics/100)});
     }
     settleOccupationCity(s,c,paid,openingSecurity);
     if(c25Enabled(s)&&governor?.lifeState==='ALIVE'&&governor.captivityState==='FREE'&&governor.allegianceFactionId===c.ownerFactionId&&!injuryReason(s,governor.officerId)){
@@ -477,6 +532,7 @@ export function settleCampaignEconomy(s) {
   domesticFinishGranaries(s,pools,cityEconomyRates);
   settleSupply(s);
   settleCampaignResearch(s);settlePolicyRefugees(s);
+  settleAchievements(s);
   s.economy.lastSettledTurn=s.turn;
   validatePersonnelLedger(s.personnel);
   return s;
@@ -513,7 +569,7 @@ export function legacyGovernorValidationView(s) {
   return copy;
 }
 import {C25,c25Enabled} from './campaign-career.mjs';
-import {creditCampaignGrowth,creditCampaignDomestic,CAMPAIGN_GROWTH_TRIAL} from './campaign-growth.mjs';
+import {creditCampaignGrowth,creditCampaignDomestic,campaignGrowthTrial} from './campaign-growth.mjs';
 
 export const securityLabel=c=>['안정','불안','혼란'][c.securityLevel??0];
 export function campaignFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(clockFood(s)?0:(p.field+p.ready+p.wounded)*troopFoodRate(s)/1000));}

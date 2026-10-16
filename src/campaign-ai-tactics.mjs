@@ -1,5 +1,5 @@
 import {hexDistance} from './map-primitives.mjs';
-import {campaignAiRule,campaignAiPosture,campaignAiLaunch,campaignAiExchange,AI_RULE_FOCUS_CANDIDATES,AI_RULE_FOCUS_BEAM} from './campaign-ai-rules.mjs';
+import {campaignAiRule,campaignAiPosture,campaignAiLaunch,campaignAiExchange,campaignAiNearChoice,AI_RULE_FOCUS_CANDIDATES,AI_RULE_FOCUS_BEAM} from './campaign-ai-rules.mjs';
 
 // C142: all constants are trial judgment weights, never game-rule modifiers.
 export const AI_OPERATION_WAIT_TURNS=2;
@@ -30,12 +30,11 @@ export function campaignCapitalCaptureNow(s,v,id,targets){
  const board=campaignTacticsWorld(s,v);
  return capitals.find(cityId=>board.cities[cityId]&&api.cityTargets(board,id).includes(cityId)&&api.previewCity(board,id,cityId).dealt>=board.cities[cityId].durability)??null;
 }
-// 기본은 C141(strategy)이다. 전술 판단은 trialRules.aiSiege / aiProfile 이 'tactics' 일 때만 켜진다 — C142b 측정(시드 6)에서 순위는 기준선과 같고
-// 교환비와 상대하기 어려운 정도는 반반이라 기본으로 올리지 않았다(Claude 2026-10-13). 부대 수가 늘어나는 운영 수정(C143) 뒤에 다시 잰다.
-export const campaignTacticsEnabled=(s,f)=>['v2','v3'].includes(s.mapId)&&(s.trialRules?.aiProfile?.[f]??s.trialRules?.aiSiege)==='tactics';
+// C179: default tactics on modern maps; explicit historical profiles replay.
+export const campaignTacticsEnabled=(s,f)=>['v2','v3'].includes(s.mapId)&&!['legacy','siege','strategy'].includes(s.trialRules?.aiProfile?.[f]??s.trialRules?.aiSiege);
 // C142b: only identified attack/wait orders may be replaced. Unknown future
 // reasons (including defense, supply, withdrawal and scouting) stay untouched.
-const attackOrders=new Set(['OCCUPY_CASTLE_GATE','ENGAGE_OBSERVED_ENEMY','NO_PUBLIC_ACTIONABLE_TARGET','NO_KNOWN_LEGAL_APPROACH','OTHER_ARMY_ASSIGNED_TO_FACTION_GOAL','FRONTIER_ALREADY_REACHED','FRONTIER_OUTSIDE_CURRENT_MOVE_BUDGET']);
+const attackOrders=new Set(['OCCUPY_CASTLE_GATE','ENGAGE_OBSERVED_ENEMY','NO_PUBLIC_ACTIONABLE_TARGET','NO_KNOWN_LEGAL_APPROACH','OTHER_ARMY_ASSIGNED_TO_FACTION_GOAL','FRONTIER_ALREADY_REACHED','FRONTIER_OUTSIDE_CURRENT_MOVE_BUDGET','RULE_CONTACT','RULE_ADVANCE','RULE_FLANK','RULE_TWO_CITIES']);
 export const campaignTacticalOrderAllowed=c=>attackOrders.has(c.reasonCode)&&!c.aiSupplyOrder&&!c.defendCityId&&!c.crisisTargetCityId&&!c.crisisTargetArmyId;
 export const campaignTacticsPart=(s,f,part)=>campaignTacticsEnabled(s,f)&&(s.trialRules?.aiTacticsParts?.[part]??AI_TACTICS_DEFAULT_PARTS[part])!==false;
 
@@ -80,6 +79,21 @@ export function campaignTacticsWorld(s,v){
  probe.campaignTerminalWorld={armiesById:Object.fromEntries(Object.keys(probe.armies).map(id=>[id,{disposition:'ACTIVE'}]))};
  probe.personnel=api.personnel(probe);
  return probe;
+}
+
+// Pure damage/position queries never draft or learn cards. Carry the complete
+// active definitions and bindings, but exclude unowned offers and their large
+// pool fingerprint from the state cloned by prepareAttackEffects. Full tactic
+// simulations still use campaignTacticsWorld, including all growth contracts.
+export function campaignCombatProbe(s){
+ if(s.trialRules?.aiCombatCompact===false)return s;
+ const officers=Object.fromEntries(Object.entries(s.campaignGrowth?.officers??{}).map(([id,r])=>{
+  const keep=new Set([r.coreId,r.representativeId,...Object.keys(r.track.growthStates[id]?.ownedTraitRanks??{}),...(r.equippedTacticIds??[])]);
+  const collect=x=>{if(typeof x==='string'&&r.cards[x])keep.add(x);else if(Array.isArray(x))x.forEach(collect);else if(x&&typeof x==='object')for(const [k,v] of Object.entries(x)){if(r.cards[k])keep.add(k);collect(v);}};
+  collect(r.c29);
+  return [id,{...r,cards:Object.fromEntries(Object.entries(r.cards).filter(([key])=>keep.has(key))),pool:{...r.pool,traits:[]},track:{...r.track,poolFingerprint:'',draftsById:{},draftOrder:[],entitlementsById:{},entitlementOrder:[],processedRequests:{},actionClaims:{}}}];
+ }));
+ return {...s,campaignGrowth:{...s.campaignGrowth,officers}};
 }
 
 export function campaignOperationPlan(s,v,plan,{remember=false,turnLimit=26,route,siegePositions,siegeReady,supplyWorld}={}){
@@ -133,8 +147,9 @@ function scoreAction(w,x){
 }
 export function campaignTacticalActions(w,id){
  if(!w.armies[id]||!api.canAct(w,id)||w.endedArmyIds.includes(id))return [];
- const rows=api.attackTargets(w,id).map(targetId=>({armyId:id,type:'ATTACK',targetId,p:api.previewAttack(w,id,targetId)}));
- for(const targetId of api.cityTargets(w,id))rows.push({armyId:id,type:'CITY',targetId,p:api.previewCity(w,id,targetId)});
+ const probe=campaignCombatProbe(w);
+ const rows=api.attackTargets(probe,id).map(targetId=>({armyId:id,type:'ATTACK',targetId,p:api.previewAttack(probe,id,targetId)}));
+ for(const targetId of api.cityTargets(probe,id))rows.push({armyId:id,type:'CITY',targetId,p:api.previewCity(probe,id,targetId)});
  const timing=campaignTacticsPart(w,w.armies[id].factionId,'tacticTiming');
  const contact=Object.values(w.armies).some(b=>b.factionId!==w.armies[id].factionId&&dist(w,b.tileId,w.armies[id].tileId)<=2);
  if(!timing||contact||rows.some(x=>x.type==='CITY'))for(const c of api.tactics(w,id))for(const targetId of c.targets.filter(t=>api.useful(w,id,c,t)).slice(0,AI_FOCUS_UNITS)){
@@ -203,7 +218,8 @@ export function campaignChooseTacticalAction(s,f,id,preferred=null,goalCityId=nu
  if(siege)return actionCommand(siege);
  const signature=!campaignTacticsPart(s,f,'tacticTiming')&&options.find(x=>x.type==='TACTIC'&&x.signature);
  if(signature)return actionCommand(signature);
- const best=options.find(x=>preferred&&x.type===preferred.type&&x.targetId===preferred.targetId&&x.traitId===preferred.traitId&&x.score>=0)??options[0];
+ const safe=options.filter(x=>x.score>=0&&(x.type!=='ATTACK'||x.p.enemyLoss>=x.p.allyLoss*1.2||x.score>=AI_FINISH_VALUE));
+ const best=options.find(x=>preferred&&x.type===preferred.type&&x.targetId===preferred.targetId&&x.traitId===preferred.traitId&&safe.includes(x))??campaignAiNearChoice(s,f,id,safe,'tactical-action');
  return best&&best.score>=0&&(best.type!=='ATTACK'||best.p.enemyLoss>=best.p.allyLoss*1.2||best.score>=AI_FINISH_VALUE)?actionCommand(best):null;
 }
 
@@ -217,23 +233,27 @@ export function campaignTacticalMoves(s,v,plan,{remember=false,supplyWorld}={}){
   plan.candidates=plan.candidates.map(c=>campaignTacticalOrderAllowed(c)&&c.type==='MOVE'&&hubs.some(h=>c.pathTileIds?.includes(h.tileId))?{...c,aiCutHub:true}:c);
  }
  const foes=Object.values(v.knowledge.observedArmies);if(!foes.length||!parts.flank&&!parts.matchup&&!parts.retreat)return plan;
- const w=campaignTacticsWorld(s,v),memory=structuredClone(s.aiTactics?.[v.factionId]??{badExchanges:{}}),reserved=new Set();memory.badExchanges??={};memory.holds??={};
+ const movementWorld=campaignTacticsWorld(s,v),w=campaignCombatProbe(movementWorld),memory=structuredClone(s.aiTactics?.[v.factionId]??{badExchanges:{}}),reserved=new Set();memory.badExchanges??={};memory.holds??={};
  plan.candidates=plan.candidates.map(c=>{
   const a=v.ownArmies[c.armyId];if(!a||!campaignTacticalOrderAllowed(c)||c.aiOperationWait||!api.active(s,a)||s.movedArmyIds.includes(a.armyId))return c;
   const nearby=foes.filter(b=>dist(s,a.tileId,b.tileId)<=5).sort((b,d)=>dist(s,a.tileId,b.tileId)-dist(s,a.tileId,d.tileId)||b.armyId.localeCompare(d.armyId)).slice(0,AI_FOCUS_UNITS);if(!nearby.length)return c;
   const reach=api.reachable(w,a.armyId,s.time.ticksPerTurn),archer=ranged(a),pursuit=api.disengage(w,a.armyId)?.dealt??0;
   const goal=v.knowledge.cities[plan.goal?.targetCityId]?.tileId??v.knowledge.observedArmies[plan.goal?.targetArmyId]?.tileId??c.destinationTileId??nearby[0].tileId;
+  const evaluations=new Map();
   const evaluate=(to,path)=>{
+   if(evaluations.has(to))return evaluations.get(to);
    const move=to!==a.tileId;if(move&&pursuit>=a.troopCount)return {to,path,lethal:true,score:-Infinity};
-   const loss=move?pursuit+(api.approach(w,a.armyId,to)?.dealt??0):0;if(loss>=a.troopCount)return {to,path,lethal:true,score:-Infinity};
+   // Approach forecasts resolve departure pursuit on a clone, including XP
+   // and level-up contracts. The damage-only compact probe has no such ledger.
+   const loss=move?pursuit+(api.approach(movementWorld,a.armyId,to)?.dealt??0):0;if(loss>=a.troopCount)return {to,path,lethal:true,score:-Infinity};
    const board={...w,armies:{...w.armies,[a.armyId]:{...w.armies[a.armyId],tileId:to,troopCount:a.troopCount-loss,movedTiles:a.movedTiles+path.pathTileIds.length-1,facing:move?api.direction(s.tiles[path.pathTileIds.at(-2)],s.tiles[to],a.facing):a.facing}}};board.personnel=api.personnel(board);
    const hits=api.attackTargets(board,a.armyId).filter(id=>nearby.some(b=>b.armyId===id)).map(targetId=>({armyId:a.armyId,type:'ATTACK',targetId,p:api.previewAttack(board,a.armyId,targetId)})).map(x=>({...x,score:scoreAction(board,x)})).sort((x,y)=>y.score-x.score);
    const hit=hits[0],city=plan.goal?.targetCityId&&api.cityTargets(board,a.armyId).includes(plan.goal.targetCityId);
-   const incoming=nearby.filter(b=>api.attackTargets(board,b.armyId).includes(a.armyId)).reduce((n,b)=>n+(api.threat(board,b.armyId,a.armyId).enemyLoss??0),0);
+   const incoming=nearby.filter(b=>dist(s,to,b.tileId)<=api.attackRange(b,board)&&api.attackTargets(board,b.armyId).includes(a.armyId)).reduce((n,b)=>n+(api.threat(board,b.armyId,a.armyId).enemyLoss??0),0);
    let score=(hit?.score??0)-loss-incoming*AI_EXPOSURE_COST;
    if(city)score=Math.max(score,api.previewCity(board,a.armyId,plan.goal.targetCityId).dealt-loss);
    const poor=!!hit&&hit.p.enemyLoss<hit.p.allyLoss*1.2&&hit.p.enemyLoss<board.armies[hit.targetId].troopCount;
-   return {to,path,loss,hit,city,poor,score,lethal:incoming>=a.troopCount-loss};
+   const result={to,path,loss,hit,city,poor,score,lethal:incoming>=a.troopCount-loss};evaluations.set(to,result);return result;
   };
   const originalTo=c.type==='MOVE'&&reach.has(c.destinationTileId)?c.destinationTileId:a.tileId,originalPath=originalTo===a.tileId?{pathTileIds:[a.tileId],totalTicks:0}:reach.get(originalTo),baseline=evaluate(originalTo,originalPath);
   // P1: a main able to hit its chosen castle this turn keeps that arrival.
@@ -249,7 +269,7 @@ export function campaignTacticalMoves(s,v,plan,{remember=false,supplyWorld}={}){
   const promising=options.sort(([to],[other])=>Math.min(...nearby.map(b=>Math.abs(dist(s,to,b.tileId)-(archer?2:1))))-Math.min(...nearby.map(b=>Math.abs(dist(s,other,b.tileId)-(archer?2:1))))||dist(s,to,goal)-dist(s,other,goal)||to.localeCompare(other)).slice(0,AI_MOVE_OPTIONS);
   const evaluated=promising.map(([to,path])=>evaluate(to,path)).filter(x=>!x.lethal&&(!parts.matchup||!x.poor));
   const lastHold=memory.holds[a.armyId],canHold=lastHold?.turn!==s.turn-1;
-  let best=evaluated.filter(x=>x.hit&&x.score>baseline.score&&(x.to!==a.tileId||c.type!=='MOVE'||canHold)).sort((x,y)=>y.score-x.score)[0];
+  let best=campaignAiNearChoice(s,v.factionId,a.armyId,evaluated.filter(x=>x.hit&&x.score>baseline.score&&(x.to!==a.tileId||c.type!=='MOVE'||canHold)).sort((x,y)=>y.score-x.score),'tactical-move');
   if(!best&&danger){
    const safe=evaluated.filter(x=>x.to!==a.tileId&&dist(s,x.to,goal)<=dist(s,a.tileId,goal));
    best=safe.sort((x,y)=>dist(s,x.to,goal)-dist(s,y.to,goal)||y.score-x.score)[0];

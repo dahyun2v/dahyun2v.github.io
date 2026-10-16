@@ -52,6 +52,13 @@ export function campaignAiRoll(s,f,id,salt='start'){
  for(const c of `${s.campaignSeed??s.seed??0}|${s.turn}|${f}|${id}|${salt}`)h=Math.imul(h^c.charCodeAt(0),16777619);
  return (h>>>0)/4294967296;
 }
+// Shake only near-best choices; seed/turn/unit determine the result without
+// advancing combat RNG. Callers apply legality/safety/finish gates first.
+export function campaignAiNearChoice(s,f,id,rows,salt='choice'){
+ if(!rows.length)return null;
+ const best=Math.max(...rows.map(r=>r.score)),margin=Math.max(1,Math.abs(best)*.02),near=rows.filter(r=>r.score>=best-margin);
+ return near[Math.floor(campaignAiRoll(s,f,id,salt)*near.length)];
+}
 export function campaignAiStartChance(ratio,threshold=AI_RULE_START_RATIO){const relative=ratio/threshold+Number.EPSILON;return relative>=1?1:relative>=.95?.4:relative>=.90?.2:0;}
 export function campaignAiLaunch(s,f,id,ratio,threshold=AI_RULE_START_RATIO){
  const m=s.aiMilitary?.[f]?.units?.[id],failures=m?.blockedTurn===s.turn-1?m.blockedCount??0:0;

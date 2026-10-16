@@ -27,7 +27,12 @@ const handlingHub=s=>armyFoodPerTurn({troopCount:250},s)*data.hub.handlingTurns;
 const hubOpeningCost=(a,s)=>Math.min(maxHub(s),armyFoodPerTurn(a,s)*data.hub.build.costTurns);
 export function initializeSupply(s){
  if(!supplyEnabled(s))return s;
- s.supply??={hubs:[],pending:{},sequence:0,lastSettledTurn:null,cutArmies:[],starvingArmies:[],starvationLoss:0,built:0,captured:0};
+ s.supply??={hubs:[],pending:{},sequence:0,lastSettledTurn:null,cutArmies:[],starvingArmies:[],starvationLoss:0,built:0,captured:0,lootClaims:{}};
+ if(!s.supply.lootClaims){
+  s.supply.lootClaims={};
+  for(const id of Object.keys(s.c22?.captures??{}))s.supply.lootClaims[`CITY:${id}`]=true;
+  for(const h of s.supply.hubs)if(s.supply.captured>0)s.supply.lootClaims[`HUB:${h.hubId}`]=true;
+ }
  for(const a of Object.values(s.armies))if(!a.supplyInitialized){a.supplyFood=supplyMax(s,a);a.supplyInitialized=true;}
  return s;
 }
@@ -39,14 +44,21 @@ export function loadMusterSupply(s,a,c){
  c.foodStock=round(c.foodStock-amount);a.supplyFood=amount;a.supplyInitialized=true;
  (c.economyCauses??=[]).push({resource:'food',label:`출진 군량(${s.officers[a.commanderId]?.name??'새'} 부대)`,amount:0-amount});
 }
-function sources(s,f,exclude=null){return [
+function sources(s,f,exclude=null,hubIds=null){return [
  ...Object.values(s.cities).filter(c=>c.ownerFactionId===f&&!c.besieged).map(c=>({id:c.cityId,city:c,tiles:cityTiles(c),stock:clockFood(s)?0:c.foodStock})),
- ...(s.supply?.hubs??[]).filter(h=>h.factionId===f&&availableHub(s,h)&&h.hubId!==exclude).map(h=>({id:h.hubId,hub:h,tiles:[h.tileId],stock:clockFood(s)?0:h.stock}))
+ ...(s.supply?.hubs??[]).filter(h=>h.factionId===f&&availableHub(s,h)&&h.hubId!==exclude&&(!hubIds||hubIds.has(h.hubId))).map(h=>({id:h.hubId,hub:h,tiles:[h.tileId],stock:clockFood(s)?0:h.stock}))
  ];}
-export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2,ignoreCityId=null}={}){
+// Fixed point rooted at owned cities: isolated hub cycles never seed supply.
+function connectedHubs(s,a){
+ const ids=new Set(),hubs=(s.supply?.hubs??[]).filter(h=>h.factionId===a.factionId&&availableHub(s,h));
+ let changed=true;while(changed){changed=false;for(const h of hubs)if(!ids.has(h.hubId)&&supplyLink(s,a,h.tileId,{hubIds:ids,limit:data.link.range}).state==='SAFE'){ids.add(h.hubId);changed=true;}}
+ return ids;
+}
+export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2,ignoreCityId=null,hubIds=null}={}){
  const inCity=Object.values(s.cities).find(c=>c.ownerFactionId===a.factionId&&cityTiles(c).includes(at));
  if(inCity)return {state:'SAFE',sourceCityId:inCity.cityId,sourceHubId:null,distance:0,source:{id:inCity.cityId,city:inCity}};
- const candidates=sources(s,a.factionId,exclude),targets=new Map();
+ if(hubIds===null&&clockFood(s))hubIds=connectedHubs(s,a);
+ const candidates=sources(s,a.factionId,exclude,hubIds),targets=new Map();
  for(const source of candidates)for(const t of source.tiles){if(!targets.has(t))targets.set(t,[]);targets.get(t).push(source);}
  const blocked=new Set(Object.values(s.armies).filter(b=>active(s,b)&&diplomacyHostile(s,a.factionId,b.factionId)).map(b=>b.tileId));
  for(const c of Object.values(s.cities))if(c.cityId!==ignoreCityId&&diplomacyHostile(s,a.factionId,c.ownerFactionId))cityTiles(c).forEach(t=>blocked.add(t));
@@ -61,7 +73,7 @@ export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2
 }
 export function supplyView(s,a,at=a.tileId){
  const link=supplyLink(s,a,at),perTurn=armyFoodPerTurn(a,s),max=supplyMax(s,a),free=clockFood(s)&&link.state==='SAFE'&&!link.source?.city?.besieged;
- return {state:!free&&at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max,perTurn,turnsLeft:free?supplyStockTurns(s):perTurn?round(a.supplyFood/perTurn):0,sourceCityId:link.sourceCityId,distance:link.distance,model:foodModel(s),draining:clockFood(s)?(!free&&(link.state!=='SAFE'||(link.source?.city?.foodStock??0)-(link.source?.city?.reservedResources?.food??0)<perTurn)):link.state!=='SAFE'||(link.source?.city?link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<perTurn:(link.source?.hub?.stock??0)<perTurn)};
+ return {state:!free&&at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max,perTurn,turnsLeft:free?supplyStockTurns(s):perTurn?round(a.supplyFood/perTurn):0,sourceCityId:link.sourceCityId,sourceHubId:link.sourceHubId,distance:link.distance,model:foodModel(s),draining:clockFood(s)?!free:link.state!=='SAFE'||(link.source?.city?link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<perTurn:(link.source?.hub?.stock??0)<perTurn)};
 }
 function take(s,source,wanted,{protect=true}={}){
  if(!source)return 0;
@@ -92,6 +104,15 @@ export function captureHubs(s,id){
 }
 export function supplyLoot(s,id,kind,details={},log=null){
  const a=s.armies[id];if(!clockFood(s)||!supplyEnabled(s)||!a||!active(s,a))return;
+ initializeSupply(s);
+ if(kind==='CITY'||kind==='HUB'){
+  const asset=kind==='CITY'?details.cityId:details.hubId;if(!asset)return;
+  const key=`${kind}:${asset}`;if(s.supply.lootClaims[key])return;s.supply.lootClaims[key]=true;
+ }
+ grantSupplyLoot(s,id,kind,details,log);
+}
+function grantSupplyLoot(s,id,kind,details,log){
+ const a=s.armies[id];
  const max=supplyMax(s,a),before=Math.min(a.supplyFood,max);a.supplyFood=kind==='ARMY'?Math.min(max,before+armyFoodPerTurn(a,s)*models.clock.killRewardTurns):max;
  const entry={armyId:id,kind,amount:round(a.supplyFood-before),stock:a.supplyFood,max,...details};
  if(log){(log.supplyLoot??=[]).push(entry);(log.effectLines??=[]).push('군량 노획');}
@@ -104,8 +125,9 @@ export function supplyCombatLoot(s,log,sourceId=log.attackerId){
  }
 }
 export function supplyCityLoot(s,id,cityId,log){
- const a=s.armies[id],c=s.cities[cityId];if(!a||!c)return;
- for(const b of Object.values(s.armies))if(b.factionId===a.factionId&&(b.armyId===id||cityTiles(c).includes(b.tileId)))supplyLoot(s,b.armyId,'CITY',{cityId},log);
+ const a=s.armies[id],c=s.cities[cityId];if(!a||!c||!clockFood(s)||!supplyEnabled(s))return;
+ initializeSupply(s);const key=`CITY:${cityId}`;if(s.supply.lootClaims[key])return;s.supply.lootClaims[key]=true;
+ for(const b of Object.values(s.armies))if(active(s,b)&&b.factionId===a.factionId&&(b.armyId===id||cityTiles(c).includes(b.tileId)))grantSupplyLoot(s,b.armyId,'CITY',{cityId},log);
 }
 function starvation(s,a){
  services.morale(s,a.armyId,'굶주림',data.starving.moraleWeight);

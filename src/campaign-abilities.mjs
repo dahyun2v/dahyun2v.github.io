@@ -7,7 +7,7 @@ import abilities from '../../docs/design-data/officer-pack/officer-abilities-v0.
 import {hexDistance,neighbors} from './map-primitives.mjs';
 import {troopToCampaign} from './campaign-adapters.mjs';
 import {createRng} from './rng.mjs';
-export const C23=Object.freeze({aptitudeHigh:10,aptitudeLow:-10,spearChargeCounter:.25,reorganizeRadius:2,reorganizeCost:20});
+export const C23=Object.freeze({aptitudeHigh:0,aptitudeLow:0,spearChargeCounter:.25,reorganizeRadius:2,reorganizeCost:20});
 export function archerEngaged(s,id){const a=s.armies[id];return !!a&&troopToCampaign(a.troopType)==='BT03'&&Object.values(s.armies).some(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&b.troopCount>0&&b.hp>0&&(!s.campaignTerminalWorld||s.campaignTerminalWorld.armiesById[b.armyId]?.disposition==='ACTIVE')&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1);}
 export function archerAttackReason(s,id){return archerEngaged(s,id)&&!archerAttackReason.pointBlank?.(s,id)?'ARCHER_ENGAGED':'';}
 export const C12=Object.freeze({attackBase:50,skill:.5,commandAttack:.3,parry:.25,commandDefense:.25,side:.15,rear:.30,charge:.002,disordered:.15,broken:.30,formationBase:30,maintenance:.6,min:5,max:95,flankWeight:10,rearWeight:25,chargeWeight:15,lossWeight:10,lossThreshold:.2,braceWeight:10,collapseMorale:15,recoveryThreshold:80,counter:.5,moraleBase:50,moraleDivisor:4});
