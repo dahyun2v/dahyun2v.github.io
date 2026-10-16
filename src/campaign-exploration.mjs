@@ -86,7 +86,7 @@ export function chooseExploration(s,command,fid=s.playerFactionId){
  if(!explorationEnabled(s))throw new Error('EXPLORATION_DISABLED');
  const pending=s.exploration.pending[fid];
  if(!pending||pending.placeId!==command.placeId)throw new Error('INVALID_EXPLORATION_PENDING');
- if(withdrawalProtection(s,pending.armyId))throw new Error('?? ?? ??? ??? ? ????.');
+ if(withdrawalProtection(s,pending.armyId))throw new Error('철수 보호 중에는 탐험할 수 없습니다.');
  const p=s.exploration.places[pending.placeId],q={...pending,factionId:fid};
  if(!explorationChoices(s,fid).length){resetPlace(s,p);return s;}
  const c=events.get(q.eventId)?.choices.find(c=>c.id===command.choiceId),e=c&&effect(s,p,q,c);

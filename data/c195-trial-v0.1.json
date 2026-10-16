@@ -1,0 +1,6 @@
+{
+  "status": "WORK_TRIAL",
+  "migration": {"population": 1, "cooldownTurns": 3, "unrestLevel": 1},
+  "council": {"attendees": 3, "adoptionAffinity": 1, "supportThreshold": 0, "bondWeight": 0.2, "axisWeight": 0.1, "axisNeutral": 60, "bondNeutral": 30, "tagWeight": 4},
+  "guardMaximum": 1000
+}

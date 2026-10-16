@@ -1,3 +1,5 @@
+import sceneData from '../data/relation-scenes-v0.2.json' with {type:'json'};
+import visitTalks from '../../docs/design-data/officer-pack/visit-talks-v0.1.json' with {type:'json'};
 import data from '../../docs/design-data/officer-pack/relations-v0.3.json' with {type:'json'};
 import {createRng} from './rng.mjs';
 import {hexDistance} from './map-primitives.mjs';
@@ -19,7 +21,7 @@ const history=new Map(data.pairs.map(p=>[relationKey(p.a,p.b),p]));
 export function relation(s,a,b){const r=s.relations?.[relationKey(a,b)]??{value:data.defaultValue};const tier=r.value<=data.rivalAt?{id:'RIVAL',name:'숙적'}:[...data.tiers].reverse().find(t=>r.value>=t.min);return {...r,tier:tier.id,tierName:tier.name,displayName:tier.id==='BOUND'?(data.boundNames[r.kind]??tier.name):tier.id!=='RIVAL'&&r.kind==='RIVAL'?data.kindNames.RIVAL:tier.name,grudge:!!history.get(relationKey(a,b))?.grudge,rivalEvent:tier.id==='RIVAL'?(data.rivalEvents[s.c38?.rivalEvents?.[relationKey(a,b)]?.event]?.name??null):null};}
 export function initializeRelations(s,addedId=null){
  if(!relationsEnabled(s))return s;
- const fresh=s.relations===undefined;s.relations??={};
+ s.relationScenes??={queue:[],active:null,lastTurn:0};const fresh=s.relations===undefined;s.relations??={};
  s.c38??={turn:s.turn,month:relationMonth(s),hits:[],jointPairs:[],attackEvents:[],feasts:{},visits:{},aiMonths:{},moraleUsed:{},stats:{jointAttacks:0,boundGroups:0,aiFeasts:0,rivals:0},seenGroups:[],outcomes:[]};
  if(s.c38.pastLifeEncounters===undefined)s.c38.pastLifeEncounters=[];if(s.c38.rivalEvents===undefined)s.c38.rivalEvents={};if(s.c38.captiveReleases===undefined)s.c38.captiveReleases=[];if(s.c38.moraleUsed===undefined)s.c38.moraleUsed={};
  if(fresh||addedId){const os=roster(s);for(const p of data.pairs)if(os[p.a]&&os[p.b]&&(!addedId||p.a===addedId||p.b===addedId)){const key=relationKey(p.a,p.b);s.relations[key]??={value:Math.max(data.range[0],Math.min(data.range[1],p.value)),kind:p.kind};}}
@@ -30,6 +32,7 @@ export function gainRelation(s,a,b,amount){
  initializeRelations(s);const before=relation(s,a,b),r={value:Math.max(data.range[0],Math.min(data.range[1],amount<0?Math.max(Math.min(before.value,data.rivalRule.floor),before.value+amount):before.value+amount)),...(before.kind?{kind:before.kind}:{})};
  if(r.value>=min('BOUND')&&!r.kind)r.kind='FRIEND';s.relations[relationKey(a,b)]=r;
  const after=relation(s,a,b);if(before.tier!==after.tier){s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId:[a,b].some(id=>s.officers[id]?.allegianceFactionId===s.playerFactionId)?s.playerFactionId:s.officers[a]?.allegianceFactionId,text:`${pairNames(s,a,b)}의 관계가 ${after.tierName}${after.tier==='BOUND'?`(${after.displayName})`:''}${amount>0?'로 가까워졌다':'로 바뀌었다'}`});if(after.tier==='RIVAL')s.c38.stats.rivals++;}
+ if(after.value>before.value&&after.tier!==before.tier&&[a,b].every(id=>free(s.officers[id])&&s.officers[id].allegianceFactionId===s.playerFactionId))s.relationScenes.queue.push({a,b,tier:after.tier,kind:after.kind??'FRIEND',turn:s.turn});
  observeRelationGroups(s);
 }
 export function relationGroups(s,fid){
@@ -112,6 +115,9 @@ export function relationsView(s,fid,knownIds=Object.keys(s.officers)){
 }
 export function validateRelations(s){
  if(!relationsEnabled(s))return;const fail=()=>{throw new Error('INVALID_CAMPAIGN_RELATIONS');},os=roster(s),x=s.c38,object=v=>v&&typeof v==='object'&&!Array.isArray(v),turn=n=>Number.isSafeInteger(n)&&n>=1&&n<=s.turn;
+ const scenes=s.relationScenes;
+ const validScene=e=>object(e)&&e.a!==e.b&&os[e.a]&&os[e.b]&&sceneData.stages[e.tier]&&Object.hasOwn(data.kindNames,e.kind)&&turn(e.turn);
+ if(!object(scenes)||!Array.isArray(scenes.queue)||scenes.queue.some(e=>!validScene(e))||scenes.active!==null&&!validScene(scenes.active)||!Number.isSafeInteger(scenes.lastTurn)||scenes.lastTurn<0||scenes.lastTurn>s.turn)fail();
  for(const key of ['pastLifeEncounters','captiveReleases'])if(!Array.isArray(x?.[key])||new Set(x[key]).size!==x[key].length||x[key].some(k=>typeof k!=='string'))fail();
  if(!object(x?.rivalEvents))fail();else for(const [key,e] of Object.entries(x.rivalEvents)){const [a,b,...rest]=key.split('|');if(rest.length||a===b||!os[a]||!os[b]||relationKey(a,b)!==key||!object(e)||!data.rivalEvents[e.event]||!turn(e.turn)||Object.keys(e).some(k=>!['event','turn'].includes(k)))fail();}
  for(const key of x.pastLifeEncounters){const p=history.get(key);if(!p?.grudge||!os[p.a]||!os[p.b])fail();}
@@ -169,3 +175,30 @@ export function relationCaptiveReleased(s,p){
  const captor=s.terminal.recordsById[p.captureRecordId]?.details.captorId;return captor?rivalEvent(s,'captiveRelease',captor,p.officerId):false;
 }
 export function settleRelationCaptiveReleases(s){if(relationsEnabled(s))for(const p of Object.values(s.terminal?.prisonersById??{}))if(p.disposition==='RELEASED')relationCaptiveReleased(s,p);}
+
+export function startRelationScene(s){
+ if(!relationsEnabled(s))return;initializeRelations(s);const x=s.relationScenes;if(x.lastTurn===s.turn)return;
+ x.active=null;const ready=x.queue.filter(e=>e.turn<s.turn&&[e.a,e.b].every(id=>free(s.officers[id])&&s.officers[id].allegianceFactionId===s.playerFactionId));
+ x.queue=x.queue.filter(e=>e.turn>=s.turn);x.lastTurn=s.turn;if(ready.length)x.active=ready[0];
+ // All tier changes already have an administration record; excess scenes stay there.
+}
+// The rule's main clause follows its key; parenthesized clauses name the reverse direction.
+export function relationSpeechStyle(speaker,listener,kind,rules=visitTalks.speechRules){
+ const style=text=>/존대/.test(text)?'honorific':/하오체/.test(text)?'hao':/반말|하게체/.test(text)?'casual':null;
+ const mutual=rules[`${speaker}↔${listener}`]??rules[`${listener}↔${speaker}`];
+ if(mutual)return style(mutual)??'hao';
+ for(const [from,to] of [[speaker,listener],[listener,speaker]]){
+  const rule=rules[`${from}→${to}`];if(!rule)continue;
+  const clauses=rule.match(/\(([^)]+)\)/g)??[];
+  for(const clause of clauses){const prefix=`${speaker}→${listener} `,text=clause.slice(1,-1);if(text.startsWith(prefix))return style(text.slice(prefix.length))??'hao';}
+  if(from===speaker)return style(rule.split('(')[0])??'hao';
+ }
+ return ['BLOOD','SWORN','SPOUSE'].includes(kind)?'casual':'hao';
+}
+export function relationSceneView(s,fid=s.playerFactionId){
+ const e=s.relationScenes?.active;if(fid!==s.playerFactionId||!e)return null;
+ // v0.2: 쌍마다 친우(CLOSE) · 결의(BOUND) 장면이 따로 있다. 옛 평면 형식(title/lines)도 읽는다.
+ const stage=sceneData.stages[e.tier]??sceneData.stages.NORMAL,entry=sceneData.pairs[relationKey(e.a,e.b)],pair=entry?.[e.tier]??(entry?.lines?entry:null),ids=pair?.speakerIds??[e.a,e.b];
+ const names=ids.map(id=>name(s,id)),voice=i=>relationSpeechStyle(names[i],names[1-i],e.kind)==='casual'?'casual':'polite';
+ return {...e,title:pair?.title??`${sceneData.kinds[e.kind]??stage.title} · ${stage.title}`,officers:ids.map(id=>({officerId:id,name:name(s,id)})),lines:pair?.lines??[stage[voice(0)][0],stage[voice(1)][1],sceneData.kindLines[e.kind]?.[voice(0)]??stage[voice(0)][2]]};
+}

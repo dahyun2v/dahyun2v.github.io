@@ -1,11 +1,14 @@
+import peopleTrial from '../data/c192-people-trial.json' with {type:'json'};
 import {troopText} from './troop-display.mjs';
 import {diplomacyArmyHostile} from './campaign-diplomacy.mjs';
-import abilities from '../../docs/design-data/officer-pack/class-abilities-v0.1.json' with {type:'json'};
+import abilities from '../../docs/design-data/officer-pack/class-abilities-v0.1.2.json' with {type:'json'};
 import assignments from '../../docs/design-data/officer-pack/class-assignment-v0.1.json' with {type:'json'};
 import redesign from '../../docs/design-data/officer-pack/redesign-51-100-v0.2.json' with {type:'json'};
 import {hexDistance,boardNeighbors,tileId} from './map-primitives.mjs';
 
 export const CLASS_ABILITIES=Object.freeze(abilities.classes);
+let foodCapacity=()=>Infinity;
+export function configureClassSupply(capacity){foodCapacity=capacity;}
 const byId=new Map(CLASS_ABILITIES.map(c=>[c.id,c]));
 const assigned=new Map([...assignments.assignments.map(o=>[o.id,{primaryId:o.primaryId,secondaryId:o.secondaryId}]),...redesign.officers.map(o=>[o.id,o.class])]);
 export const classesEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c37Disabled!==true;
@@ -26,14 +29,13 @@ export function classExtendFire(s,before,id,log){const c=armyClass(s,id,'CLS_FIR
 export function classHidden(s,id,fid){const a=s.armies[id];return !!armyClass(s,id,'CLS_MIRAGE')&&a.factionId!==fid&&a.classState?.hidden===true&&!Object.values(s.armies).some(b=>b.factionId===fid&&b.hp>0&&b.troopCount>0&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1);}
 export function startClasses(s,fid,{heal=()=>{}}={}){if(!classesEnabled(s))return;initializeClasses(s);s.c37.camps=s.c37.camps.filter(c=>c.until>=s.turn);s.c37.hits=s.c37.hits.filter(h=>h.turn>=s.turn-1);for(const a of Object.values(s.armies).filter(a=>a.factionId===fid)){
  const st=a.classState,c=armyClass(s,a.armyId);st.canMoveAfterAttack=false;st.hidden=!!c&&c?.ability.rule==='CLS_MIRAGE'&&c.ability.params.terrains.includes(s.tiles[a.tileId].terrainType);if(st.hidden)countClass(s,c);if(st.prepared&&a.formation!=='ORDERED')st.prepared=false;
- if(c?.ability.rule==='CLS_SUPPLY_LINE'&&a.morale==='STEADY')for(const b of classNear(s,a,c.ability.params.range)){const n=Math.floor((b.woundedCount??0)*c.ability.params.woundedReturn/100);if(n){heal(b.armyId,n);countClass(s,c);}}
+ if(c?.ability.rule==='CLS_SUPPLY_LINE'&&st.supplyShareTurn!==s.turn&&(a.supplyFood??0)>0){const b=classNear(s,a,peopleTrial.supply.range).find(b=>b.armyId!==a.armyId&&(b.supplyFood??0)<=0);if(b){const amount=Math.round(Math.min(a.supplyFood*peopleTrial.supply.shareFraction,foodCapacity(s,b))*1e6)/1e6;if(amount>0){a.supplyFood-=amount;b.supplyFood=amount;st.supplyShareTurn=s.turn;countClass(s,c);actionLine(s,a,c,`${s.officers[b.commanderId].name}에게 군량 ${amount} 나눔`);}}}
 }}
 export function classWait(s,id,type,{formation=()=>{},heal=()=>{},rear=()=>false}={}){const c=armyClass(s,id);if(!classesEnabled(s))return;initializeClasses(s);const a=s.armies[id],p=c?.ability.params??{};
  if(type==='WAIT_UNIT'&&c?.ability.rule==='CLS_PREPARED_ASSAULT'&&!s.attackedArmyIds.includes(id)&&a.formation==='ORDERED'){a.classState.prepared=true;a.classState.preparedTurn=s.turn;countClass(s,c);actionLine(s,a,c,'공격을 쉬고 다음 차례 공세 준비');}
  if(type==='BRACE'&&c?.ability.rule==='CLS_FIELD_CAMP'){s.c37.camps=s.c37.camps.filter(x=>x.tileId!==a.tileId);s.c37.camps.push({tileId:a.tileId,until:s.turn+p.duration-1,formation:p.formation,abilityName:c.ability.name});countClass(s,c);actionLine(s,a,c,`${p.duration}차례 진지 · 적도 점유하면 사용`);}
  if(type==='REGROUP'){
   if(c?.ability.rule==='CLS_RALLY_LINE'){const b=classNear(s,a,p.range).filter(b=>b.armyId!==id&&b.formation!=='ORDERED'&&b.morale!=='ROUTING'&&!rear(b.armyId)).sort((a,b)=>Number(b.formation==='BROKEN')-Number(a.formation==='BROKEN')||a.armyId.localeCompare(b.armyId))[0];if(b){formation(b.armyId,-p.steps);countClass(s,c);actionLine(s,a,c,`${s.officers[b.commanderId].name} 전열 한 단계 회복 · 공격 대신 재정비`);}}
-  for(const b of classNear(s,a,2)){const supply=armyClass(s,b.armyId,'CLS_SUPPLY_LINE');if(supply&&b.morale==='STEADY'&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=supply.ability.params.range){heal(id,Math.floor(a.troopCount*supply.ability.params.regroupHeal/100));countClass(s,supply);break;}}
  }
 }
 export function classAttack(s,id,target,options={},side='FRONT'){
@@ -72,4 +74,10 @@ export function classAfterAttack(s,before,id,target,log,{formation=()=>{},check=
  s.c37.hits.push({source:id,target,fid:a.factionId,turn:s.turn,tileId:t?.tileId??before.armies[target].tileId,follow:r==='CLS_FOLLOW_UP',used:false});
  if(r==='CLS_LEAD_FROM_FRONT'&&log.enemyLoss>0&&st.leadTurn!==s.turn){const b=classNear(s,a,p.range).find(b=>b.morale==='SHAKEN');if(b){morale(b.armyId,'STEADY');st.leadTurn=s.turn;countClass(s,c);log.effectLines.push(classLine(c,'가까운 아군 사기 안정'));}}
 }
-export function validateClasses(s){if(!classesEnabled(s))return;const fail=()=>{throw new Error('INVALID_CAMPAIGN_CLASS_STATE');};if(!s.c37||!Array.isArray(s.c37.camps)||!Array.isArray(s.c37.hits)||!s.c37.counts||Array.isArray(s.c37.counts)||typeof s.c37.counts!=='object')fail();for(const h of s.c37.hits)if(typeof h.source!=='string'||typeof h.target!=='string'||!s.factions[h.fid]||!s.tiles[h.tileId]||!Number.isSafeInteger(h.turn)||h.turn<1||h.turn>s.turn||typeof h.follow!=='boolean'||typeof h.used!=='boolean')fail();for(const a of Object.values(s.armies)){const st=a.classState;if(!st||typeof st!=='object'||Array.isArray(st)||st.prepared&&!Number.isSafeInteger(st.preparedTurn)||st.canMoveAfterAttack&&!Number.isSafeInteger(st.hitAndRunTurn)||st.relentlessTile!==undefined&&!s.tiles[st.relentlessTile]||['prepared','hidden','canMoveAfterAttack'].some(k=>typeof st[k]!=='boolean')||st.relentlessTarget!==null&&!s.armies[st.relentlessTarget])fail();for(const k of ['preparedTurn','relentlessTurn','riposteTurn','hitAndRunTurn','guardTurn','leadTurn'])if(st[k]!==undefined&&(!Number.isSafeInteger(st[k])||st[k]<1||st[k]>s.turn))fail();}for(const c of s.c37.camps)if(!s.tiles[c.tileId]||!Number.isSafeInteger(c.until)||!Number.isFinite(c.formation)||typeof c.abilityName!=='string')fail();for(const n of Object.values(s.c37.counts))if(!Number.isSafeInteger(n)||n<0)fail();}
+export function validateClasses(s){if(!classesEnabled(s))return;const fail=()=>{throw new Error('INVALID_CAMPAIGN_CLASS_STATE');};if(!s.c37||!Array.isArray(s.c37.camps)||!Array.isArray(s.c37.hits)||!s.c37.counts||Array.isArray(s.c37.counts)||typeof s.c37.counts!=='object')fail();for(const h of s.c37.hits)if(typeof h.source!=='string'||typeof h.target!=='string'||!s.factions[h.fid]||!s.tiles[h.tileId]||!Number.isSafeInteger(h.turn)||h.turn<1||h.turn>s.turn||typeof h.follow!=='boolean'||typeof h.used!=='boolean')fail();for(const a of Object.values(s.armies)){const st=a.classState;if(!st||typeof st!=='object'||Array.isArray(st)||st.prepared&&!Number.isSafeInteger(st.preparedTurn)||st.canMoveAfterAttack&&!Number.isSafeInteger(st.hitAndRunTurn)||st.relentlessTile!==undefined&&!s.tiles[st.relentlessTile]||['prepared','hidden','canMoveAfterAttack'].some(k=>typeof st[k]!=='boolean')||st.relentlessTarget!==null&&!s.armies[st.relentlessTarget])fail();for(const k of ['preparedTurn','relentlessTurn','riposteTurn','hitAndRunTurn','guardTurn','leadTurn','supplyShareTurn'])if(st[k]!==undefined&&(!Number.isSafeInteger(st[k])||st[k]<1||st[k]>s.turn))fail();}for(const c of s.c37.camps)if(!s.tiles[c.tileId]||!Number.isSafeInteger(c.until)||!Number.isFinite(c.formation)||typeof c.abilityName!=='string')fail();for(const n of Object.values(s.c37.counts))if(!Number.isSafeInteger(n)||n<0)fail();}
+
+export function classFieldFoodFactor(s,a){
+ if(!classesEnabled(s)||!a)return 1;
+ const source=classNear(s,a,peopleTrial.supply.range).map(b=>armyClass(s,b.armyId,'CLS_SUPPLY_LINE')).find(Boolean);
+ return source?peopleTrial.supply.fieldFactor:1;
+}

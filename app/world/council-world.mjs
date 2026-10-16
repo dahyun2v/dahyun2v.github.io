@@ -1,7 +1,7 @@
 // 평정(council) — /world 화면판. 기준 그림 final-council-v2(2026-10-09 비주얼 디렉션): 위 = 평정 방 장면에 군사·제안한 장수들이 앉고,
 // 아래 = 먹 판(왼쪽 안건 줄 · 가운데 보고/안건 내용 · 오른쪽 큰 인장 = 결의). 엔진은 /src/campaign-council.mjs(C90) 그대로 — 그리기와 명령만.
 // Claude 2026-10-10. 석실 화면(seoksil/screens/council.mjs)의 흐름(군사 고르기 → 안건 고르기 → 결의/보류 → 평정 마침)을 그대로 따른다.
-import {COUNCIL,councilCandidates} from '/src/campaign-council.mjs';
+import {COUNCIL,COUNCIL_ADOPTION_AFFINITY,councilCandidates,councilOpinions} from '/src/campaign-council.mjs';
 import {campaignDate} from '/src/campaign-map-model.mjs';
 import {readableError,campaignHorizonText,noFieldArmyText} from '/app/world/hud-ink.mjs';
 import {CAMPAIGN_TURN_LIMIT} from '/src/campaign-runtime.mjs';
@@ -67,9 +67,11 @@ export function renderCouncilWorld(root, state, ctx) {
   if (u.appoint) {
     detail = `<h3>군사</h3><p class="wc-say">${firstChoice ? `첫 평정이다. 곁에서 보고하고 계책을 낼 군사를 고른다. 고르지 않으면 ${esc(name(c.strategistId))}이(가) 맡는다.` : '군사는 평정마다 한 번 바꿀 수 있다.'}</p><p class="wc-note">지략 ${COUNCIL.strategist.foresight.intelligenceAtLeast} 이상이면 보고에 적의 다음 수를 짐작하는 한 줄이 붙는다.</p>`;
   } else if (selected) {
+    const opinions=councilOpinions(state,selected);
+    const faces=opinions.map(p=>`<div class="wc-opinion ${p.stance==='FOR'?'is-for':'is-against'}"><span class="wc-face">${ctx.face?.(p.officerId)?`<img src="${esc(ctx.face(p.officerId))}" alt="${esc(name(p.officerId))}">`:''}</span><p><b>${esc(name(p.officerId))} · ${p.officerId===selected.proposerId?'제안자':p.stance==='FOR'?'찬성':'반대'}</b><small>${esc(p.reason)}</small></p></div>`).join('');
     detail = `<h3>${esc(KIND[selected.kind]?.label ?? selected.kind)} <small>${esc(name(selected.proposerId))} · ${esc(shortDate(c.turn + 2))}까지</small></h3><p class="wc-say">“${esc(selected.what)}”</p>
       <dl class="wc-facts"><div><dt>기대</dt><dd>${esc(selected.expected)}</dd></div><div><dt>위험</dt><dd>${esc(selected.risk)}</dd></div>
-      <div><dt>지키면</dt><dd>${esc(name(selected.proposerId))} 경험 +${fx.proposerExperience} · 친밀 +${fx.rulerAffinity}</dd></div><div><dt>어기면</dt><dd>군주와 친밀 ${bx.rulerAffinity}</dd></div></dl>`;
+      <div><dt>채택하면</dt><dd>${esc(name(selected.proposerId))} · 군주와 친밀 +${COUNCIL_ADOPTION_AFFINITY}</dd></div><div><dt>지키면</dt><dd>${esc(name(selected.proposerId))} 경험 +${fx.proposerExperience} · 친밀 +${fx.rulerAffinity}</dd></div><div><dt>어기면</dt><dd>군주와 친밀 ${bx.rulerAffinity}</dd></div></dl><div class="wc-opinions" aria-label="참석자 찬반">${faces}</div>`;
   } else {
     const lines = (open ? c.report : [c.advisorLine ?? '변경은 조용합니다.']).map(l=>campaignHorizonText(l,state.turn,CAMPAIGN_TURN_LIMIT));
     const noArmy=noFieldArmyText({ownArmies:Object.fromEntries(Object.entries(state.armies).filter(([,a])=>a.factionId===me&&a.troopCount>0)),ownCities:Object.fromEntries(Object.entries(state.cities).filter(([,c])=>c.ownerFactionId===me))});
@@ -96,7 +98,7 @@ export function renderCouncilWorld(root, state, ctx) {
   }
   const dots = c.resolutions.map((r) => `<i class="wc-res is-${r.status.toLowerCase()}" title="${esc(KIND[r.kind]?.label ?? r.kind)} · ${esc(name(r.proposerId))} — ${r.status === 'ACTIVE' ? `${esc(shortDate(r.deadlineTurn))}까지` : r.status === 'FULFILLED' ? '지킴' : '어김'}"></i>`).join('');
 
-  root.innerHTML = `<section class="wc" style="--council-bg:url(${esc(ctx.bg ?? '')});--fc:${esc(ctx.factionColor ?? '#777')}" aria-label="평정">
+  root.innerHTML = `<section class="wc${selected&&!u.appoint?' is-deliberating':''}" style="--council-bg:url(${esc(ctx.bg ?? '')});--fc:${esc(ctx.factionColor ?? '#777')}" aria-label="평정">
     <div class="wc-scene"><i class="wc-shade"></i>${figures}</div>
     <header class="wc-top"><b>평정</b><span>${esc(state.factions[me]?.name ?? '')} · ${esc(campaignDate(state.turn))}</span><span class="wc-dots" title="결의">${dots}</span><button class="wc-exit" data-act="exit" title="지도로 — 평정은 열어 둔 채 (Esc)">지도로</button></header>
     <div class="wc-panel">

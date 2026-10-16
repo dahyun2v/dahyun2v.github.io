@@ -1,3 +1,5 @@
+import C195 from '../data/c195-trial-v0.1.json' with {type:'json'};
+import {specialSupportAvailable} from './campaign-special-troops.mjs';
 import {injuryReason} from './campaign-injury.mjs';
 import {C184,domesticEngineEnabled,initializeDomesticEngine,autoFillDepartments,departmentOutput,domesticOfficerPresent,cityInfluence,facilitySite} from './campaign-domestic.mjs';
 import {citySupplyRoute} from './campaign-supply.mjs';
@@ -89,6 +91,7 @@ export function initializeCampaignEconomy(s) {
   initializeDomesticEngine(s);
   initializeAchievements(s);
   s.xpEvents ??= [];
+  if(c19Enabled(s))s.economyMigration??={lastTurns:{},handledTurns:{},recent:[],total:0};
   s.economy ??= {lastSettledTurn:null, readyAt:{}, occupationStatus:{}};
   s.economy.lotFaction ??= {};
   s.economy.recruitedReady ??= {};
@@ -313,7 +316,7 @@ function cityPersonnel(s,c) {
   const field=armies.filter(a=>(stationed(a)?.cityId??s.personnel.formations.find(f=>f.formationId===a.armyId)?.nodeId)===c.cityId)
     .reduce((n,a)=>n+a.troopCount,0);
   const lots=s.personnel.lots.filter(l=>l.nodeId===c.cityId);
-  return {field:supplyEnabled(s)?0:field,ready:lots.filter(l=>l.kind!=='WOUNDED').reduce((n,l)=>n+l.count,0),
+  return {field:supplyEnabled(s)?0:field,ready:lots.filter(l=>l.kind!=='WOUNDED'&&!l.identity?.specialTroopId).reduce((n,l)=>n+l.count,0),special:lots.filter(l=>l.kind!=='WOUNDED'&&l.identity?.specialTroopId).reduce((n,l)=>n+l.count,0),
     wounded:lots.filter(l=>l.kind==='WOUNDED').reduce((n,l)=>n+l.count,0)};
 }
 
@@ -326,15 +329,15 @@ function replenish(s,c) {
       castleArmyActive(s,s.armies[f.formationId])&&(nearby(s,c,s.armies[f.formationId])||fieldAccess(s,c,s.armies[f.formationId]))&&
       (lot.kind!=='RECOVERED'||lot.originFormationId===f.formationId)&&
       (JSON.stringify(f.identity)===JSON.stringify(lot.identity)||
-        (s.economy.recruitedReady[lot.lotId]&&(f.identity.specialTroopId===null||specialTroop(s,s.armies[f.formationId].troopType))))&&f.field<f.targetStrength)) {
+        (s.economy.recruitedReady[lot.lotId]&&!lot.identity.specialTroopId&&(f.identity.specialTroopId===null||specialSupportAvailable(s,c,s.armies[f.formationId].troopType))))&&
+      (!f.identity.specialTroopId||lot.kind==='RECOVERED'&&lot.originFormationId===f.formationId||specialSupportAvailable(s,c,s.armies[f.formationId].troopType))&&f.field<f.targetStrength)) {
       const count=Math.min(lot.count,f.targetStrength-f.field,nearby(s,c,s.armies[f.formationId])?Infinity:Math.max(0,C174_FIELD.replenish-(fieldUsed[f.formationId]??0)));
       if (!count) continue;
       const key=`EC.${s.turn}.${c.cityId}.${lot.lotId}.${f.formationId}`;
       let sourceLotId=lot.lotId;
-      if(s.economy.recruitedReady[lot.lotId]) {
-        // The city's unassigned new recruits receive the destination's ordinary
-        // Base identity at allocation. Keep a distinct lot for immutable ledger
-        // provenance; neither recovered troops nor Special support are mixed.
+      if(s.economy.recruitedReady[lot.lotId]&&!lot.identity.specialTroopId) {
+        // Only qualified replacements receive the destination's trained identity.
+        // Keep a distinct lot for ledger provenance; recovered people retain theirs.
         sourceLotId=`Allocated.${key}`;
         const source=s.personnel.lots.find(l=>l.lotId===lot.lotId);
         source.count-=count;
@@ -346,9 +349,9 @@ function replenish(s,c) {
       // completes a distinct departure/arrival; recruitment never fills Field.
       const current=s.personnel.formations.find(row=>row.formationId===f.formationId);
       const previousNode=current.nodeId,previousSupport=current.specialSupportAvailable;
-      // C24 has no replacement penalty beyond its declared cost. The adapter
-      // supplies FIRST3's support authorization for an already mustered unit.
-      if(specialTroop(s,s.armies[f.formationId].troopType))current.specialSupportAvailable=true;
+      // New special replacements require a valid muster basis. FIRST3 admits
+      // the formation's own recovered people independently of this support flag.
+      if(specialTroop(s,s.armies[f.formationId].troopType))current.specialSupportAvailable=specialSupportAvailable(s,c,s.armies[f.formationId].troopType);
       current.nodeId=c.cityId;
       capacity=reserveTransportCapacity(capacity,{reservationId:key,payloadRef:key,loads:[{resourceId:'local',amount:count}]});
       const dispatched=dispatchPersonnelTransport({ledger:s.personnel,capacity},{operationId:`D.${key}`,expectedRevision:s.personnel.revision,
@@ -359,6 +362,7 @@ function replenish(s,c) {
         transportId:key,now:s.globalTick,authorizationRef:key},{canArrive:()=>true}).ledger;
       Object.assign(s.personnel.formations.find(row=>row.formationId===f.formationId),{nodeId:previousNode,specialSupportAvailable:previousSupport});
       s.armies[f.formationId].troopCount+=count;
+      if(c19Enabled(s))(s.economy.reinforcements??=[]).push({armyId:f.formationId,cityId:c.cityId,count,turn:s.turn});
       fieldUsed[f.formationId]=(fieldUsed[f.formationId]??0)+count;
       // Each transaction clones the ledger; refresh the remaining source count.
       lot.count=s.personnel.lots.find(l=>l.lotId===lot.lotId).count;
@@ -465,6 +469,8 @@ export function settleCampaignEconomy(s) {
   c30Settle(s);
   initializeCampaignEconomy(s);
   if (s.economy.lastSettledTurn===s.turn) return s;
+  if(c19Enabled(s))s.economy.reinforcements=[];
+  const migrationCauses={};
   autoFillDepartments(s);
   evacuateDestroyedWounded(s);
   for(const c of Object.values(s.cities))if(c.ownerFactionId!==null)domesticBeforeSettlement(s,c);
@@ -489,7 +495,7 @@ export function settleCampaignEconomy(s) {
       s.xpEvents=s.xpEvents.slice(-120);
     }
     s.economy.occupationStatus[c.cityId]=status;
-    const personnel=cityPersonnel(s,c),civilian=c.population*2,military=(personnel.field+personnel.ready+personnel.wounded)*2/1000;
+    const personnel=cityPersonnel(s,c),civilian=c.population*2,military=(personnel.field+personnel.ready+personnel.special+personnel.wounded)*2/1000;
     const foodEnabled=isNormal||c19Enabled(s);
     const produced=pool?0:foodEnabled?rates.food:0,required=round(civilian+military);
     const reserved=c.reservedResources.food;
@@ -502,6 +508,7 @@ export function settleCampaignEconomy(s) {
       growthResolution:{population:c.population,populationCapacity:cityPopulationCapacity(s,c),foodCost:c.population*6}});
     const paid=result.shortage===0;
     if(foodEnabled){baseline=cityEconomyRates(s,{...c,governorId:null},{shortage:!paid});rates=cityEconomyRates(s,c,{shortage:pool?.shortage??!paid,commit:true});}
+    migrationCauses[c.cityId]={besieged:c.besieged,overcrowded:c.population>=cityPopulationCapacity(s,c)&&result.growthProgressConsumed>0};
     c.population+=result.populationGain;
     c.growthProgress=closing.growthProgress;
     c.production=isNormal?rates.production:0;
@@ -575,7 +582,13 @@ export function settleCampaignEconomy(s) {
   }
   domesticFinishGranaries(s,pools,cityEconomyRates);
   settleSupply(s);
-  settleCampaignResearch(s);settlePolicyRefugees(s);
+  settleCampaignResearch(s);
+  const refugeeBefore=Object.fromEntries(Object.values(s.cities).map(c=>[c.cityId,c.population]));
+  settlePolicyRefugees(s);
+  for(const c of Object.values(s.cities))Object.assign(migrationCauses[c.cityId]??={}, {starving:c.foodStock-c.reservedResources.food<=0,security:c.securityLevel??0});
+  for(const c of Object.values(s.cities))if(c.population!==refugeeBefore[c.cityId])markMigrationHandled(s,c.cityId);
+  for(const c of Object.values(s.cities))if((c.economyCauses??[]).some(e=>e.rule==='REFUGEE_INFLOW'&&e.turn>=s.turn-1))markMigrationHandled(s,c.cityId);
+  settleAutomaticMigration(s,migrationCauses);
   settleAchievements(s);
   s.economy.lastSettledTurn=s.turn;
   validatePersonnelLedger(s.personnel);
@@ -616,10 +629,10 @@ import {C25,c25Enabled} from './campaign-career.mjs';
 import {creditCampaignGrowth,creditCampaignDomestic,campaignGrowthTrial} from './campaign-growth.mjs';
 
 export const securityLabel=c=>['안정','민심 불안','혼란'][c.securityLevel??0];
-export function campaignFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(clockFood(s)?0:(p.field+p.ready+p.wounded)*troopFoodRate(s)/1000));}
+export function campaignFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(clockFood(s)?0:(p.field+p.ready+p.special+p.wounded)*troopFoodRate(s)/1000));}
 // Readout follows the actual settlement debit, including local ready/wounded
 // personnel even when field armies use the clock supply model.
-export function campaignLedgerFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(p.field+p.ready+p.wounded)*2/1000);}
+export function campaignLedgerFoodNeed(s,c){const p=cityPersonnel(s,c);return round(c.population*2+(p.field+p.ready+p.special+p.wounded)*2/1000);}
 export function settleCampaignSecurity(s,c){
  const causes=[];
  if(c.plunderTurn===s.turn||c.plunderTurn===s.turn-1)causes.push('수탈');
@@ -655,4 +668,57 @@ function settleDepartments(s,c){
  const n=Math.min(departmentOutput(s,c).reserve,Math.max(0,campaignMobilization(s,c.ownerFactionId).capacity-campaignMobilization(s,c.ownerFactionId).used));
  if(!n)return;
  const lotId=`C184.Ready.${s.turn}.${c.cityId}`;s.personnel.lots.push({lotId,kind:'READY',nodeId:c.cityId,identity:{baseTroopId:'BT01',specialTroopId:null},originFormationId:null,count:n});s.personnel.initialPersonnel+=n;s.economy.readyAt[lotId]=s.turn;s.economy.lotFaction[lotId]=c.ownerFactionId;
+}
+
+
+// Track existing refugee effects at the committed command boundary, without
+// changing those policy/event handlers or counting their people a second time.
+export function markMigrationHandled(s,cityId){if(s.economyMigration)s.economyMigration.handledTurns[cityId]=s.turn;}
+export function validateDomesticCanon(s){
+ const validTurn=n=>Number.isSafeInteger(n)&&n>=0&&n<=s.turn,object=x=>x&&typeof x==='object'&&!Array.isArray(x);
+ for(const c of Object.values(s.cities))if(c.siegeSinceTurn!=null&&!validTurn(c.siegeSinceTurn)||c.siegeTurns!==undefined&&(!Number.isSafeInteger(c.siegeTurns)||c.siegeTurns<0))throw new Error('INVALID_CAMPAIGN_SIEGE_DURATION');
+ const m=s.economyMigration;if(m===undefined)return;
+ const fail=()=>{throw new Error('INVALID_CAMPAIGN_MIGRATION');};
+ if(!object(m)||!Number.isSafeInteger(m.total)||m.total<0||!Array.isArray(m.recent)||m.recent.length>60||m.total<m.recent.length)fail();
+ for(const key of ['lastTurns','handledTurns'])if(!object(m[key])||Object.entries(m[key]).some(([id,n])=>!s.cities[id]||!validTurn(n)))fail();
+ if(m.recent.some(r=>!object(r)||!s.cities[r.cityId]||r.destinationId!==null&&!s.cities[r.destinationId]||!s.factions[r.factionId]||!validTurn(r.turn)||!Number.isSafeInteger(r.count)||r.count<=0||!['전쟁','기근','치안','과밀'].includes(r.reason)))fail();
+}
+export function observeExistingMigration(s,before){
+ if(!c19Enabled(s))return;
+ const fired=(s.c22?.fired??[]).slice(before.c22?.fired?.length??0).some(e=>['E03','E04'].includes(e.eventId)&&e.choiceId==='a');
+ const policy=(s.c20?.stats?.escapes??0)!==(before.c20?.stats?.escapes??0)||(s.c20?.stats?.resettlements??0)!==(before.c20?.stats?.resettlements??0);
+ for(const c of Object.values(s.cities)){
+  const old=before.cities[c.cityId],inflow=(c.economyCauses??[]).some(e=>e.rule==='REFUGEE_INFLOW'&&e.turn>=before.turn);
+  if(old&&((fired||policy)&&c.population!==old.population||inflow))markMigrationHandled(s,c.cityId);
+ }
+}
+export function settleAutomaticMigration(s,causes){
+ if(!c19Enabled(s))return;
+ const m=s.economyMigration,cfg=C195.migration,rows=Object.values(s.cities).sort((a,b)=>a.cityId.localeCompare(b.cityId,'en'));
+ // Snapshot triggers and destinations before any transfer: arrivals never move twice.
+ const eligible=c=>![s.turn,s.turn-1].includes(m.handledTurns[c.cityId]);
+ const plans=[];const room=Object.fromEntries(rows.map(c=>[c.cityId,Math.max(0,cityPopulationCapacity(s,c)-c.population)]));
+ for(const c of rows){
+  if(!c.ownerFactionId||c.population<=cfg.population||!eligible(c)||s.turn-(m.lastTurns[c.cityId]??-cfg.cooldownTurns)<cfg.cooldownTurns)continue;
+  const x=causes[c.cityId]??{},reason=x.besieged?'전쟁':x.starving?'기근':x.security>=cfg.unrestLevel?'치안':x.overcrowded?'과밀':null;if(!reason)continue;
+  // A besieged origin may lose population, but a closed supply route admits no transfer.
+  const dest=rows.filter(d=>d!==c&&d.ownerFactionId===c.ownerFactionId&&room[d.cityId]>=cfg.population&&eligible(d)&&citySupplyRoute(s,c,d)).sort((a,b)=>hexDistance(s.tiles[c.tileId],s.tiles[a.tileId])-hexDistance(s.tiles[c.tileId],s.tiles[b.tileId])||a.cityId.localeCompare(b.cityId,'en'))[0];
+  if(dest)room[dest.cityId]-=cfg.population;
+  plans.push({cityId:c.cityId,destinationId:dest?.cityId??null,reason});
+ }
+ for(const p of plans){const c=s.cities[p.cityId],dest=s.cities[p.destinationId];c.population-=cfg.population;c.workedTiles=c.workedTiles?.slice(0,c.population)??[];if(dest)dest.population+=cfg.population;m.lastTurns[c.cityId]=s.turn;m.total++;
+  const row={...p,turn:s.turn,factionId:c.ownerFactionId,count:cfg.population};m.recent.push(row);
+  (s.administrationLog??=[]).push({turn:s.turn,factionId:c.ownerFactionId,text:`${p.reason}으로 ${s.cityDisplayNames?.[c.cityId]??c.name}에서 ${dest?(s.cityDisplayNames?.[dest.cityId]??dest.name)+'으로':'갈 곳 없이'} ${cfg.population} 이주${dest?'':' · 인구 감소'}`});
+ }
+ m.recent=m.recent.slice(-60);
+}
+// Same settlement, same lot ordering/caps/recovery timing. Only the disposable
+// public supply world is simulated; unobserved foreign units cannot affect UI.
+export function campaignReinforcementForecast(s,factionId,publicWorld){
+ if(!c19Enabled(s)||s.gameResult)return {};
+ const copy=structuredClone(s);
+ copy.armies=Object.fromEntries(Object.entries(copy.armies).filter(([id,a])=>a.factionId===factionId||publicWorld.knowledge.tiles[a.tileId]==='VISIBLE'&&publicWorld.knowledge.observedArmies[id]));
+ copy.turn++;copy.turnNumber=copy.turn;copy.globalTick+=copy.time.ticksPerTurn;copy.currentDate+=10;
+ settleCampaignEconomy(copy);
+ return Object.fromEntries(Object.values(publicWorld.ownArmies).map(a=>{const sources=(copy.economy.reinforcements??[]).filter(r=>r.armyId===a.armyId).map(({cityId,count})=>({cityId,count}));return [a.armyId,{count:sources.reduce((n,r)=>n+r.count,0),sources}];}));
 }

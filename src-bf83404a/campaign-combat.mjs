@@ -310,7 +310,7 @@ function resolveMovementShot(state,armyId,p,kind){
   fatigueCombat(s,[s.lastCombat.attackerId,s.lastCombat.targetId],s.lastCombat);s.combatLog.push(s.lastCombat);
   supplyCombatLoot(s,s.lastCombat);combatRecordRouts(s,state,p.pursuerId,armyId);
   for(const u of units)if(!u.postBattleCount)triggerEffects(s,u.unitId===s.lastCombat.attackerId?s.lastCombat.targetId:s.lastCombat.attackerId,'ON_KILL',{targetId:u.unitId});
-  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'? ?? ??',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});
+  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'각성 전투 효과',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});
   c30Combat(s,s.lastCombat,{morale:who=>checkMorale(s,who,'여포군 — 인접 적 패주',10,s.lastCombat.moraleChanges)});
   relationCombatResult(s,state,p.pursuerId,armyId,s.lastCombat);creditCampaignCombat(s,s.lastCombat);
   updateKnowledge(s);refreshCampaignSieges(s);
@@ -322,7 +322,7 @@ function calculateAttack(state,attackerId,targetId,tactic=null,options={}) {
   if(archerAttackReason(state,attackerId))throw new Error('ARCHER_ENGAGED');
   if(!options.reaction&&!tactic&&!attackTargets(state,attackerId).includes(targetId))throw new Error(archerAttackReason(state,attackerId)||'INVALID_CAMPAIGN_ATTACK');
   let s=prepareAttackEffects(state,attackerId,targetId,{tactic});
-  if(c29Aw(s,targetId,'DREAD')&&hexDistance(s.tiles[s.armies[attackerId].tileId],s.tiles[s.armies[targetId].tileId])<=2)checkMorale(s,attackerId,'??? ??',5);
+  if(c29Aw(s,targetId,'DREAD')&&hexDistance(s.tiles[s.armies[attackerId].tileId],s.tiles[s.armies[targetId].tileId])<=2)checkMorale(s,attackerId,'보이는 위협',5);
   const prediction=attackNumbers(s,attackerId,targetId,{tactic,...options});if(!options.reaction)delete s.armies[attackerId].starVanguardTurn;
   if(prediction.counter)s=prepareAttackEffects(s,targetId,attackerId,{counter:true,first:false});
   s.battleSequence++;
@@ -380,7 +380,7 @@ function calculateAttack(state,attackerId,targetId,tactic=null,options={}) {
   if(!options.reaction)s.armies[attackerId].effectStates=s.armies[attackerId].effectStates.filter(e=>!e.c29NextAttack);
   supplyCombatLoot(s,s.lastCombat);if(prediction.counter)supplyCombatLoot(s,s.lastCombat,targetId);
   if(!tactic&&!options.reaction){const r=c29Record(s,attackerId);if(r?.c29?.spellbladeTurn===s.turn)delete r.c29.spellbladeTurn;}
-  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'? ?? ??',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});
+  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'각성 전투 효과',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});
   c30Combat(s,s.lastCombat,{morale:who=>checkMorale(s,who,'여포군 — 인접 적 패주',10,s.lastCombat.moraleChanges)});
   if(!options.forecast){relationCombatResult(s,state,attackerId,targetId,s.lastCombat);for(const u of s.lastCombat.units)if(u.unitId!==targetId&&state.armies[u.unitId]?.factionId!==state.armies[attackerId].factionId)relationCombatResult(s,state,attackerId,u.unitId,s.lastCombat,{record:false});creditCampaignCombat(s,s.lastCombat);}
   updateKnowledge(s);refreshCampaignSieges(s);
@@ -544,7 +544,7 @@ export function resolveTactic(state,id,traitId,targetId,{skipPreview=false}={}){
   if(s.lastCombat.enemyLoss>0){const targets=[...new Set((s.lastCombat.units??[]).filter(u=>state.armies[u.unitId]?.factionId!==state.armies[id].factionId).map(u=>u.unitId))];for(const target of targets)relationCombatResult(s,state,id,target,s.lastCombat);}
   if(s.armies[targetId]&&s.armies[targetId].factionId!==s.armies[id].factionId&&s.lastCombat.enemyLoss>0){s.armies[targetId].c27??={};s.armies[targetId].c27.lastHitTactic=structuredClone(card);}
   if(combatTacticRule(card)?.rule==='MIRROR'){const copy=mirroredCombatCard(state,id);s.armies[id].tacticReadyTurns[copy.traitId]=s.turn+copy.cooldown;s.armies[id].tacticReadyTurns[traitId]=s.turn+copy.cooldown;}
-  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'? ?? ??',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});c29Combat(s,s.lastCombat);c29TacticUsed(s,id,card,{gaugePaid:card.signature});c30TacticUsed(s,id,card);
+  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'각성 전투 효과',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});c29Combat(s,s.lastCombat);c29TacticUsed(s,id,card,{gaugePaid:card.signature});c30TacticUsed(s,id,card);
   c30Combat(s,s.lastCombat,{morale:who=>checkMorale(s,who,'여포군 — 인접 적 패주',10,s.lastCombat.moraleChanges)});
   Object.assign(s.lastCombat,targetLosses(state,id,s.lastCombat));
   initializeCombatFire(s);rememberDiplomacyCombat(s,state);return s;
@@ -754,8 +754,8 @@ function turnDefender(s,attackerId,targetId,side){
 function c29ControlSuccess(s,before,id,c,target){
  const a=s.armies[id],t=s.armies[target],old=before.armies[target];
  if(c.id==='CTA-01'||c.id==='CTA-02')return old?.tileId!==t?.tileId;
- if(c.id==='CTA-04')return t?.facing===directionToward(s.tiles[t.tileId],s.tiles[a.tileId])&&!s.lastCombat.effectLines?.some(l=>l.includes('??'));
- if(c.id==='CTA-10')return t?.c27?.rootTurn>=s.turn&&!s.lastCombat.effectLines?.some(l=>l.includes('??'));
+ if(c.id==='CTA-04')return t?.facing===directionToward(s.tiles[t.tileId],s.tiles[a.tileId])&&!s.lastCombat.effectLines?.some(l=>l.includes('무효'));
+ if(c.id==='CTA-10')return t?.c27?.rootTurn>=s.turn&&!s.lastCombat.effectLines?.some(l=>l.includes('무효'));
  return false;
 }
 function finishC29Tactic(s,before,id,c,target){

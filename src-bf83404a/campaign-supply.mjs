@@ -19,7 +19,7 @@ export const troopFoodRate=s=>foodModel(s)==='cheap'?models.cheap.troopFoodPerTh
 export const supplyStockTurns=s=>clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns;
 export const armyFoodPerTurn=(a,s=null)=>Math.round(a.troopCount*troopFoodRate(s))/1000;
 export function fieldDrainTurns(s,a){if(!domesticEngineEnabled(s))return 1;const shown=a.troopCount*TROOP_DISPLAY_SCALE;return C184.fieldDrainTurns[shown<=C184.fieldShownThresholds[0]?0:shown<=C184.fieldShownThresholds[1]?1:2];}
-export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*(link.state==='SAFE'?1:fieldDrainTurns(s,a));}
+export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(services?.classFieldFoodFactor?.(s,a)??1));}
 // City stocks use the same passable land edges, without a last-mile range cap.
 export function citySupplyRoute(s,from,to){
  if(!from||!to||!from.ownerFactionId||from.ownerFactionId!==to.ownerFactionId||from.besieged||to.besieged)return null;

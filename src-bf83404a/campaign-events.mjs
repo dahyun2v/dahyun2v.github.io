@@ -54,7 +54,7 @@ function legacyDeckContext(s,p){
 }
 function definition(s,fid,p){const deck=deckDefinition(s,p);if(deck)return deck;if(p.eventId!=='CRISIS_HEGEMONY')return C22_EVENTS.find(e=>e.eventId===p.eventId);const leader=s.c22.crisis?.factionId===fid;return {eventId:p.eventId,title:'패권 견제',scale:'CRISIS',text:'천하가 패권을 견제하기 위해 움직인다.',ai:['a','b','c'],choices:(leader?['전군을 결집한다','성 방비를 다진다','그대로 밀어붙인다']:['연합에 참가한다','관망한다']).map((label,i)=>({id:'abc'[i],label,preview:(leader?['전 부대 사기 회복 · 수도 식량 −20','전 성 내구도 +20','효과 없음']:['위기 동안 패권 세력 상대 피해 +10% · 인망 +10','효과 없음'])[i]}))};}
 export function eventChoiceReason(s,fid,p,id){
- const e=definition(s,fid,p);if(eventDeckCard(p.eventId)?.origin==='new')return e?.choices.find(c=>c.id===id)?.blockedReason??(e?.choices.some(c=>c.id===id)?null:'? ? ?? ???');if(!e?.choices.some(c=>c.id===id))return '알 수 없는 선택지';const c=s.cities[p.cityId],f=s.factions[fid],key=p.eventId;
+ const e=definition(s,fid,p);if(eventDeckCard(p.eventId)?.origin==='new')return e?.choices.find(c=>c.id===id)?.blockedReason??(e?.choices.some(c=>c.id===id)?null:'알 수 없는 선택지');if(!e?.choices.some(c=>c.id===id))return '알 수 없는 선택지';const c=s.cities[p.cityId],f=s.factions[fid],key=p.eventId;
  const food=key==='E01'&&id==='a'||key==='E03'&&id==='a'?C22.food:key==='E02'&&id==='a'||key==='CRISIS_HEGEMONY'&&s.c22.crisis?.factionId===fid&&id==='a'?C22.foodLarge:key==='E02'&&id==='b'||key==='E03'&&id==='b'?C22.foodSmall:0;
  if(food&&(!c||c.ownerFactionId!==fid||domesticFoodAvailable(s,c)<food))return `식량 ${food} 필요`;
  const cost=key==='E01'&&id==='b'?C22.prestige:key==='E06'&&id==='b'?C22.prestigeSmall:0;

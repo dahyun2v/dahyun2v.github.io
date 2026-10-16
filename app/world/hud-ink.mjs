@@ -21,19 +21,26 @@ export function cityPublicReadout(v,cityId,badge=null){
  const own=v.ownCities?.[cityId],c=own??v.knowledge?.cities?.[cityId];if(!c)return null;
  const visible=v.knowledge?.tiles?.[c.tileId]==='VISIBLE',tiles=new Set([c.tileId,...(c.footprint?.gates??[]),...(c.footprint?.walls??[])]);
  const guards=Object.values(v.knowledge?.observedArmies??{}).filter(a=>a.factionId===c.ownerFactionId&&tiles.has(a.tileId)&&v.knowledge.tiles[a.tileId]==='VISIBLE'&&Number.isFinite(a.troopCount));
- const troops=own?own.reserveTroops:visible&&guards.length?guards.reduce((n,a)=>n+a.troopCount,0):null;
+ const troops=own?(own.reserveTroops??0)+Object.values(own.specialReserves??{}).reduce((n,count)=>n+count,0):visible&&guards.length?guards.reduce((n,a)=>n+a.troopCount,0):null;
  return {id:cityId,name:c.name,factionId:c.ownerFactionId,own:!!own,remembered:!own&&!visible,defense:c.durability,defenseMax:c.durabilityMax,troops,
-  // No reserve strength or siege duration is projected for foreign cities.
+  guardMaximum:own?c.guardMaximum:null,nextReinforcements:own?c.nextReinforcements:[],
   besieged:!!c.besieged,siegeTurns:Number.isFinite(c.siegeTurns)?c.siegeTurns:null,badge:own?badge:null};
 }
-export const citySiegeText = c => c.besieged?`포위${Number.isFinite(c.siegeTurns)?` · ${c.siegeTurns}차례`:''}`:'포위되지 않음';
+export const citySiegeText = c => c.besieged?`포위${Number.isFinite(c.siegeTurns)?` ${c.siegeTurns}차례`:''}`:'포위되지 않음';
+export const recruitmentReasonHtml = quote => `<small class="c192-recruit-reason">인망 ${esc(quote.cost)} · ${esc(quote.reason)}</small>`;
+export const captivePreviewHtml = preview => `<small class="c192-captive-preview">${preview.lines.map(esc).join('<br>')}</small>`;
+export function relationSceneHtml(scene){
+ return `<p class="c192-scene-title">${esc(scene.title)}</p>${scene.lines.map((line,i)=>`<p class="c192-scene-line"><b>${esc(scene.officers[i%2].name)}</b> ${esc(line)}</p>`).join('')}<button class="btn primary" data-relation-next>다음</button>`;
+}
+export function reinforcementText(forecast,cities={}){return `다음 차례 자동 충원 ${troopDelta(forecast?.count??0)}${forecast?.sources?.length?` (${forecast.sources.map(r=>`${cities[r.cityId]?.name??r.cityId}에서 ${troopDelta(r.count)}`).join(' · ')})`:''}`;}
+export function cityReinforcementText(c){return `다음 차례 충원 ${troopDelta((c.nextReinforcements??[]).reduce((n,r)=>n+r.count,0))} · 이 성에서 부대로`;}
 export const cityProductionText = b => !b?'생산 정보 없음':b.idle?'놀고 있음':`${b.name??'생산'} · ${b.turns??'—'}차례`;
 export function cityQuickHtml(c){
  const seal=C190_SEALS[c.factionId],art=seal&&C190_ART[seal.art],num=n=>Number.isFinite(n)?Math.round(n):'?';
  const bar=(label,value,max,text)=>`<div class="cq-meter"><span>${label} <b>${esc(text)}</b></span><i><s style="width:${Number.isFinite(value)&&max>0?Math.max(0,Math.min(100,value/max*100)):0}%"></s></i></div>`;
  return `<header><h2>${esc(c.name)}</h2><span class="cq-seal" aria-label="세력 ${esc(seal?.glyph??'中')}">${art?`<img src="${esc(art)}" alt="${seal.glyph}">`:esc(seal?.glyph??'中')}</span></header>`
   +bar('성벽',c.defense,c.defenseMax,`${num(c.defense)}/${num(c.defenseMax)}`)
-  +bar(c.own?'수비':'보이는 수비',c.troops,c.own?Math.max(1,c.troops??0):null,Number.isFinite(c.troops)?troopText(c.troops):'?')
+  +bar(c.own?'수비':'보이는 수비',c.troops,c.own?c.guardMaximum:null,Number.isFinite(c.troops)?`${troopText(c.troops)}${c.own&&Number.isFinite(c.guardMaximum)?`/${troopText(c.guardMaximum)}`:''}`:'?')
   +(c.own?`<p class="cq-production${c.badge?.idle?' idle':''}">${c.badge?.idle?'●':'⚒'} ${esc(cityProductionText(c.badge))}</p><nav aria-label="성 빠른 명령"><button data-city-quick-action="sortie">출진</button><button data-city-quick-action="production">생산</button><button data-city-quick-action="office">내정</button><button data-city-quick-action="enter">들어가기</button></nav>`:`<p class="cq-siege">${citySiegeText(c)}</p><p class="cq-hint">공격하려면 부대를 고르세요${c.remembered?' · 기억한 정보':''}</p>`);
 }
 // Prefer either side without covering the visible castle; clamp inside the viewport.
@@ -52,7 +59,7 @@ export function campaignHorizonText(text, turn, limit) {
 }
 export function noFieldArmyText(v) {
   if (Object.values(v.ownArmies ?? {}).some(a => a.troopCount > 0)) return '';
-  const reserve = Object.values(v.ownCities ?? {}).reduce((n, c) => n + (c.reserveTroops ?? 0), 0);
+  const reserve = Object.values(v.ownCities ?? {}).reduce((n, c) => n + (c.reserveTroops ?? 0)+Object.values(c.specialReserves??{}).reduce((sum,count)=>sum+count,0), 0);
   return `야전 부대가 없습니다 — 병영에서 다시 내보낼 수 있습니다(예비병 ${troopText(reserve)})`;
 }
 export const ACTION_MEANING = Object.freeze({
@@ -247,6 +254,8 @@ export function garrisonResult(before, after, armyId) {
   const officer=after.officers?.[army.commanderId], location=officer?.locationRef;
   const city=location?.kind==='CITY'?after.ownCities?.[location.id]:null;
   if (!city || !before.ownCities?.[location.id]) return '';
+  const specialAdded=(city.specialReserves?.[army.troopType]??0)-(before.ownCities[location.id].specialReserves?.[army.troopType]??0);
+  if(specialAdded>0)return `${officer.name??'장수'} · ${city.name} 복귀 완료 — ${army.troopDisplayName??'같은 병종'} 특수 예비 +${troopText(specialAdded)}명`;
   const added=city.reserveTroops-before.ownCities[location.id].reserveTroops;
   if (!Number.isFinite(added) || added<=0) return '';
   return `${officer.name??'장수'} · ${city.name} 복귀 완료 — 예비병 +${troopText(added)}명`;
@@ -607,7 +616,11 @@ export function bandForecastHtml(html,colors={}){
  const mods=forecastModifiers([...source.querySelectorAll('.fc-mods li')].map(n=>{const detail=n.querySelector('small')?.textContent.trim()||'',text=n.textContent.trim();return {text:detail&&text.endsWith(detail)?text.slice(0,-detail.length).trim():text,description:detail||n.getAttribute('title')||''};}));
  const risks=[...source.querySelectorAll('.fc-risk')].map(n=>n.textContent.trim());
  const targets=source.querySelector('.fc-targets')?.outerHTML??'';
- return `<div class="nb-forecast" style="--ally-color:${esc(colors.ally)};--enemy-color:${esc(colors.enemy)}" title="${esc([...mods.map(m=>m.text),...risks].join('\n'))}">${side('ally',text(city?'.nb-city-ally b':'.fc-col.ally b'),picture(city?'.nb-city-ally img':'.fc-col.ally img'),ownPair,ownLoss)}<section class="nb-preview-middle"><i aria-hidden="true"></i><b>${esc(kind)}</b><span>${esc([text('.fc-res'),text('.fc-tag')].filter(Boolean).join(' · '))}</span></section>${side('enemy',enemyName,city?'':picture('.fc-col.enemy img'),foePair,foeLoss,city?'내구':'병력')}<aside class="nb-preview-mods">${mods[0]?`<b>${esc(mods[0].text)}</b><p>${esc(mods[0].description||mods[1]?.text||'')}</p>`:''}${risks.length?`<small class="nb-preview-risk" title="${esc(risks.join('\n'))}">${esc(risks[0])}</small>`:''}</aside>${targets}<b class="nb-click">공격 확정<small>적 칸 클릭</small></b><small class="nb-cancel">취소 · Esc</small></div>`;
+ const tacticCommand=text('.fc-command'),confirm=source.querySelector('.fc-tactic-confirm');
+ const confirmHtml=confirm?confirm.outerHTML.replace('class="fc-tactic-confirm"','class="nb-click"'):'<b class="nb-click">공격 확정<small>적 칸 클릭</small></b>';
+ const cancelHtml=confirm?'<button type="button" class="nb-cancel" data-tactic-cancel>취소 · Esc</button>':'<small class="nb-cancel">취소 · Esc</small>';
+ const commandStyle=tacticCommand?' style="display:block;white-space:normal;text-align:center;overflow:visible"':'';
+ return `<div class="nb-forecast" style="--ally-color:${esc(colors.ally)};--enemy-color:${esc(colors.enemy)}" title="${esc([...mods.map(m=>m.text),...risks].join('\n'))}">${side('ally',text(city?'.nb-city-ally b':'.fc-col.ally b'),picture(city?'.nb-city-ally img':'.fc-col.ally img'),ownPair,ownLoss)}<section class="nb-preview-middle"><i aria-hidden="true"></i><b>${esc(tacticCommand&&!title?'전법 예고':kind)}</b><span${commandStyle}>${esc(tacticCommand||[text('.fc-res'),text('.fc-tag')].filter(Boolean).join(' · '))}</span></section>${side('enemy',enemyName,city?'':picture('.fc-col.enemy img'),foePair,foeLoss,city?'내구':'병력')}<aside class="nb-preview-mods">${mods[0]?`<b>${esc(mods[0].text)}</b><p>${esc(mods[0].description||mods[1]?.text||'')}</p>`:''}${risks.length?`<small class="nb-preview-risk" title="${esc(risks.join('\n'))}">${esc(risks[0])}</small>`:''}</aside>${targets}${confirmHtml}${cancelHtml}</div>`;
 }
 // Rank only numbers already present in the public forecast; no combat calculation here.
 export function forecastModifiers(mods){
@@ -625,8 +638,8 @@ export function bandSupplyHtml(d){
 export function selectedUnitHtml(d){
  const a=d.bandSupply,s=a?.supply,r=d.ratings,st=d.bandStatus??{};
  const stock=s?.perTurn>0?s.stock/s.perTurn:null,max=s?.perTurn>0?s.max/s.perTurn:null;
- const rows=[['location','있는 곳',d.unitLocation],['troops','병력',troopText(d.unitTroops??0)],['food','군량',`휴대 ${labelNumber(stock)}/${labelNumber(max)} 차례분`],...['attack','defense','mobility'].map((k,i)=>[k,['공격','방어','기동'][i],r?.[k]]),['status','상태',`${st.morale?.text??'—'} · ${st.formation?.text??'—'}`]];
- return `<h2>선택 부대</h2><dl>${rows.map(([icon,label,value])=>`<div><dt><img aria-hidden="true" alt="" src="/assets/ui-v3/hud/kit-icon-${icon}.png">${label}</dt><dd>${esc(value??'—')}</dd></div>`).join('')}</dl>`;
+ const rows=[['location','있는 곳',d.unitLocation],['troops','병력',troopText(d.unitTroops??0)],['reinforcement','충원',d.unitReinforcement??'다음 차례 자동 충원 +0'],['food','군량',`휴대 ${labelNumber(stock)}/${labelNumber(max)} 차례분`],...['attack','defense','mobility'].map((k,i)=>[k,['공격','방어','기동'][i],r?.[k]]),['status','상태',`${st.morale?.text??'—'} · ${st.formation?.text??'—'}`]];
+ return `<h2>선택 부대</h2><dl>${rows.map(([icon,label,value])=>`<div${icon==='reinforcement'?' class="c195-unit-reinforcement"':''}><dt><img aria-hidden="true" alt="" src="/assets/ui-v3/hud/kit-icon-${icon==='reinforcement'?'troops':icon}.png">${label}</dt><dd>${esc(value??'—')}</dd></div>`).join('')}</dl>`;
 }
 function renderBandSupply(root,d){
  const supply=d.mode==='supply',focus=!!d.unitStatus,title=root.querySelector('.nb-state-title');

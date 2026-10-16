@@ -1,3 +1,5 @@
+import peopleTrial from '../data/c192-people-trial.json' with {type:'json'};
+import {relation,relationsEnabled,RELATIONS} from './campaign-relations.mjs';
 import {troopText,troopDelta} from './troop-display.mjs';
 import {recordAchievementEvent} from './campaign-achievements.mjs';
 import {c34Cost} from './campaign-c34.mjs';
@@ -130,7 +132,7 @@ export function useStarAction(s,command,factionId=s.playerFactionId){
  line(s,factionId,`\uBCC4\uC758 \uAE38 \u2014 ${s.officers[action.officerId].name} ${action.name}`);return s;
 }
 export const starAttackMultiplier=(s,a)=>c20Enabled(s)&&a.starVanguardTurn<=s.turn&&s.turn<=a.starVanguardTurn+1?C20.vanguard:1;
-export const cityRecruitCost=(s,cityId,fid)=>c34Cost(s,s.cities[cityId],'recruit',c31RecruitCost(s,fid,domesticRecruitCost(s,fid,c20Enabled(s)&&fid==='F03'&&s.cities[cityId]?.ownerFactionId===fid&&s.cities[cityId].starRecruitTurn===s.turn?C20.recruitCost*C20.recruitDiscount:C20.recruitCost)));
+const baseCityRecruitCost=(s,cityId,fid)=>c34Cost(s,s.cities[cityId],'recruit',c31RecruitCost(s,fid,domesticRecruitCost(s,fid,c20Enabled(s)&&fid==='F03'&&s.cities[cityId]?.ownerFactionId===fid&&s.cities[cityId].starRecruitTurn===s.turn?C20.recruitCost*C20.recruitDiscount:C20.recruitCost)));
 export function aiStarAction(s,command,fid){
  const act=starAction(s,command,fid);if(!act?.canUse)return false;
  const a=s.armies[command.armyId],c=s.cities[command.cityId];let useful=false;
@@ -151,3 +153,15 @@ export function validateCampaignPolicy(s){
  for(const r of p.refugees)if(!s.tiles[r.originTileId]||!integer(r.population)||!Array.isArray(r.lotIds)||!Array.isArray(r.officerIds)||r.lotIds.some(id=>!s.personnel.lots.some(l=>l.lotId===id))||r.officerIds.some(id=>!s.officers[id]))throw new Error('INVALID_CAMPAIGN_C20_REFUGEES');
  for(const c of Object.values(s.cities))for(const kind of Object.keys(C20_FACILITIES))if(c.facilities.filter(f=>f.kind===kind).length>C20.facilityLimit)throw new Error('INVALID_CAMPAIGN_C20_FACILITIES');
 }
+
+// One pure quote for the UI, reservation, and AI affordability guard.
+export function cityRecruitQuote(s,cityId,fid,targetId=null){
+ const base=baseCityRecruitCost(s,cityId,fid);
+ const candidates=targetId&&relationsEnabled(s)?Object.values(s.officers).filter(o=>o.officerId!==targetId&&o.allegianceFactionId===fid&&o.lifeState==='ALIVE'&&o.captivityState==='FREE').map(o=>({o,r:relation(s,o.officerId,targetId)})):[];
+ // A present rival takes priority over a friendly sponsor; never stack sponsors.
+ const match=candidates.filter(x=>x.r.tier==='RIVAL').sort((a,b)=>a.o.officerId.localeCompare(b.o.officerId))[0]??candidates.filter(x=>x.r.value>=RELATION_CLOSE()).sort((a,b)=>b.r.value-a.r.value||a.o.officerId.localeCompare(b.o.officerId))[0];
+ const tier=match?.r.tier,factor=peopleTrial.recruit[tier]??(match?peopleTrial.recruit.CLOSE:1),cost=Math.ceil(base*factor);
+ return {base,cost,factor,sponsorId:match?.o.officerId??null,reason:match?`${match.o.name}${/[가-힣]/.test(match.o.name.at(-1))&&(match.o.name.at(-1).charCodeAt(0)-0xAC00)%28?'과':'와'} ${tier==='BOUND'?'결의 — 인망 절반':tier==='RIVAL'?'숙적 — 인망 50% 증가':'친분 이상 — 인망 25% 감소'}`:'관계에 따른 인망 변화 없음'};
+}
+const RELATION_CLOSE=()=>RELATIONS.tiers.find(t=>t.id==='CLOSE').min;
+export const cityRecruitCost=(s,cityId,fid,targetId=null)=>cityRecruitQuote(s,cityId,fid,targetId).cost;

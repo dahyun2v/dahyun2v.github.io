@@ -17,6 +17,10 @@ export const SPECIAL_TROOPS=Object.freeze({
 export const c24Enabled=s=>['v2','v3'].includes(s.mapId);
 export const parentTroop=type=>SPECIAL_TROOPS[type]?.parent??type;
 export const specialTroop=(s,type)=>c24Enabled(s)?SPECIAL_TROOPS[type]:undefined;
+// Reserves remain in the conserved personnel ledger, with their trained identity.
+export function specialReserves(s,c){return Object.fromEntries(Object.keys(SPECIAL_TROOPS).map(type=>[type,(s.personnel?.lots??[]).filter(l=>l.nodeId===c.cityId&&l.kind!=='WOUNDED'&&l.identity.specialTroopId===type&&(s.economy?.lotFaction?.[l.lotId]??s.armies[l.originFormationId]?.factionId??c.ownerFactionId)===c.ownerFactionId).reduce((n,l)=>n+l.count,0)]));}
+export const ordinaryReserve=s=>s.personnel.lots.filter(l=>l.kind!=='WOUNDED'&&!l.identity.specialTroopId);
+export const specialSupportAvailable=(s,c,type)=>!!specialTroop(s,type)&&specialMusterReason(s,c,type)===null;
 export const platformState=a=>a?.troopType==='catapult'?(a.platformState??'STOWED'):null;
 export const platformAttackReason=(s,id)=>specialTroop(s,s.armies[id]?.troopType)?.requiresDeployed&&platformState(s.armies[id])!=='DEPLOYED'?'투석기는 전개 후 공격할 수 있습니다':null;
 export function initializePlatforms(s){for(const a of Object.values(s.armies))if(a.troopType==='catapult')a.platformState??='STOWED';}

@@ -144,7 +144,7 @@ function cityBand(city,badge){
     <text class="name" x="-68" y="7">${esc(city.name)}</text>
     <g class="city-details"><title>성벽 ${wall}/${max} · ${city.own?'수비':'보이는 수비'} ${Number.isFinite(city.troops)?troopLabel(city.troops):'?'}</title>
       ${gauge(23,city.defenseMax?city.defense/city.defenseMax:null,`${wall}/${max}`,'wall')}
-      ${gauge(35,city.own&&Number.isFinite(city.troops)?1:null,Number.isFinite(city.troops)?troopLabel(city.troops):'?','guard')}
+      ${gauge(35,city.own&&city.guardMaximum?city.troops/city.guardMaximum:null,Number.isFinite(city.troops)?`${troopLabel(city.troops)}${city.own&&city.guardMaximum?'/'+troopLabel(city.guardMaximum):''}`:'?','guard')}
       ${siege?`<text class="city-siege" x="-68" y="53">${citySiegeText(city)}</text>`:badge?`<g class="prod${badge.idle?' idle':''}" data-prod-city="${esc(city.id)}"><title>${esc(cityProductionText(badge))}</title><text x="-68" y="53">${badge.idle?'●':'⚒'} ${esc(cityProductionText(badge))}</text></g>`:''}
     </g></g>`;
 }

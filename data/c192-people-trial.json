@@ -1,0 +1,13 @@
+{
+  "status": "WORK_TRIAL — C192 2026-10-16",
+  "recruit": {
+    "CLOSE": 0.75,
+    "BOUND": 0.5,
+    "RIVAL": 1.5
+  },
+  "supply": {
+    "range": 2,
+    "fieldFactor": 0.5,
+    "shareFraction": 0.5
+  }
+}

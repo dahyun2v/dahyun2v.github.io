@@ -1,3 +1,4 @@
+import {ordinaryReserve} from './campaign-special-troops.mjs';
 import {combatFireAt} from './campaign-rule-registry.mjs';
 import {selectCityJob,cityJobReason} from './campaign-economy.mjs';
 import {C184,domesticEngineEnabled,initializeDomesticEngine,clearDomesticOfficer,domesticOfficerPresent,DEPARTMENTS} from './campaign-domestic.mjs';
@@ -221,10 +222,16 @@ export function validateCampaignResearch(s){
  for(const c of Object.values(s.cities))if(c.populationCapacity!==cityPopulationCapacity(s,c)||c.population>c.populationCapacity||c.durabilityMax!==cityDurabilityMaximum(s,c)||c.facilities.filter(f=>f.kind==='workshop').length>C19.workshopLimit)throw new Error('INVALID_CAMPAIGN_C19_CITY');
 }
 export function specialMusterReserve(s,c,type){return specialTroop(s,type)?500:musterRequirement(s,c);}
+// Use matching trained reserves first; never consume another special type.
+export function sortieReserveLots(s,c,type){return domesticMusterLots(s,c).filter(l=>!l.identity.specialTroopId||l.identity.specialTroopId===type).sort((a,b)=>Number(b.identity.specialTroopId===type)-Number(a.identity.specialTroopId===type));}
+const sortieReserveAvailable=(s,c,type)=>{
+ const lots=sortieReserveLots(s,c,type),trained=lots.filter(l=>l.identity.specialTroopId).reduce((n,l)=>n+l.count,0);
+ return trained+Math.min(domesticMusterAvailable(s,c),lots.filter(l=>!l.identity.specialTroopId).reduce((n,l)=>n+l.count,0));
+};
 export function sortieTroopRange(s,c,type){
  const bonus=(c20Enabled(s)&&c.ownerFactionId==='F03'?c.starMusterBonus??0:0)+c30MusterBonus(s,c.ownerFactionId,type);
  const target=type==='hubao'?500+bonus+C24.hubaoReserve:type==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):500+bonus;
- return {min:specialTroop(s,type)?500:200,max:Math.floor(Math.min(domesticMusterAvailable(s,c),Math.floor(target*uniqueMusterFactor(s,c)))/50)*50,step:50};
+ return {min:specialTroop(s,type)?500:200,max:Math.floor(Math.min(sortieReserveAvailable(s,c,type),Math.floor(target*uniqueMusterFactor(s,c)))/50)*50,step:50};
 }
 export function assignCityDepartment(s,{cityId,department,officerId=null},factionId=s.playerFactionId){
  initializeDomesticEngine(s);const c=s.cities[cityId];
@@ -275,7 +282,7 @@ export function sortieReason(s,{cityId,officerId,troopType,troopCount,tileId},fa
  const blocked=specialMusterReason(s,c,troopType)??cityJobReason(s,c,'muster');if(blocked)return fail('SORTIE_CONDITION',blocked);
  const range=sortieTroopRange(s,c,troopType);
  if(troopCount!==undefined&&!Number.isSafeInteger(troopCount))return fail('SORTIE_COUNT','병력 수를 정수로 고르십시오.');
- if(domesticMusterAvailable(s,c)<range.min||troopCount>domesticMusterAvailable(s,c))return fail('SORTIE_RESERVE',`예비병 부족 — 최소 ${troopText(range.min)}명 필요`);
+ if(sortieReserveAvailable(s,c,troopType)<range.min||troopCount>sortieReserveAvailable(s,c,troopType))return fail('SORTIE_RESERVE',`예비병 부족 — 최소 ${troopText(range.min)}명 필요`);
  if(troopCount!==undefined&&(!Number.isSafeInteger(troopCount)||troopCount<range.min||troopCount>range.max||troopCount%range.step))return fail('SORTIE_COUNT',`병력은 ${troopText(range.min)}~${troopText(range.max)}명, ${troopText(range.step)}명 단위로 고르십시오.`);
  if(tileId!==undefined&&!sortieTile(s,c,tileId))return fail('SORTIE_GATE',![c.tileId,...(c.footprint?.gates??[])].includes(tileId)?'이 성의 성문이 아닙니다.':combatFireAt(s,tileId)?'불타는 칸':'그 문 앞에 부대가 있음');
  if(!sortieTile(s,c))return fail('SORTIE_TILE','빈 칸 없음 — 성 가운데와 성문이 모두 차 있습니다.');
@@ -305,19 +312,20 @@ export function completeMuster(s,c,job){
  const failure=sortieReason(s,{cityId:c.cityId,...job},c.ownerFactionId),reason=failure?.message;if(reason){recordFatigueBlock(s,job.officerId);c.jobBlocked=reason;return false;}
  const occupied=new Set(Object.values(s.armies).filter(a=>a.troopCount>0&&(!s.terminal||s.terminal.armiesById[a.armyId]?.disposition==='ACTIVE')).map(a=>a.tileId));
  const tileId=[c.tileId,...c.footprint.gates].find(id=>!occupied.has(id)&&!combatFireAt(s,id));if(!tileId){c.jobBlocked='MUSTER_TILE_WAIT';return false;}
- const range=sortieTroopRange(s,c,job.troopType),count=job.troopCount??range.max,bonus=(c20Enabled(s)&&c.ownerFactionId==='F03'?c.starMusterBonus??0:0)+c30MusterBonus(s,c.ownerFactionId,job.troopType),lots=domesticMusterLots(s,c);
+ const range=sortieTroopRange(s,c,job.troopType),count=job.troopCount??range.max,bonus=(c20Enabled(s)&&c.ownerFactionId==='F03'?c.starMusterBonus??0:0)+c30MusterBonus(s,c.ownerFactionId,job.troopType),lots=sortieReserveLots(s,c,job.troopType);
  if(lots.reduce((n,l)=>n+l.count,0)<count){c.jobBlocked='MUSTER_LEDGER_RESERVE_REQUIRED';return false;}
  let remaining=count;for(const l of lots){const n=Math.min(l.count,remaining);l.count-=n;remaining-=n;if(l.kind==='WOUNDED'&&s.armies[l.originFormationId])s.armies[l.originFormationId].woundedCount=Math.max(0,s.armies[l.originFormationId].woundedCount-n);}
  s.musterSequence=(s.musterSequence??0)+1;const id=`U-C16-${s.musterSequence}`,o=s.officers[job.officerId];
  const a=structuredClone(Object.values(initial.world.armies)[0]);
  Object.assign(a,{armyId:id,factionId:c.ownerFactionId,commanderId:o.officerId,troopType:job.troopType,troopCount:count,woundedCount:0,deadCount:0,hp:count*2,maxHp:count*2,stamina:100,maxStamina:100,tileId,facing:null,formation:'ORDERED',morale:'STEADY',braced:false,movedTiles:0,supplyFood:0,statusEffects:[],cooldowns:[],currentOrder:null,movementState:null,retreatState:null,engagedArmyIds:[],effectStates:[],effectFirstAttackTurn:null,tacticReadyTurns:{},bornTurn:s.turn,mainActionTurn:s.turn,mainActionCount:0});
  delete a.movementProgress;delete a.tacticUsedTurn;delete a.ruleMovedTurn;
+ if(job.troopType==='catapult')a.platformState='STOWED';
  c30MusterOrigin(s,c,a);domesticMuster(s,c,a);
  s.armies[id]=a;s.factions[c.ownerFactionId].armyIds.push(id);o.locationRef={kind:'ARMY',id};
  s.personnel.formations.push({formationId:id,nodeId:c.cityId,identity:{baseTroopId:troopToCampaign(job.troopType),specialTroopId:SPECIAL_TROOPS[job.troopType]?job.troopType:null},field:count,targetStrength:Math.max(count,specialTroop(s,job.troopType)?job.troopType==='wudang'?C24.wudangCount:job.troopType==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):job.troopType==='hubao'?500+bonus+C24.hubaoReserve:500+bonus:500+bonus),specialSupportAvailable:false});delete c.starMusterBonus;
  if(c.governorId===o.officerId){if(domesticEngineEnabled(s))c.absentGovernorId=o.officerId;c.governorId=null;if(s.terminal)s.terminal.citiesById[c.cityId].governorId=null;}
  if(s.terminal){s.terminal.armyOrder.push(id);s.terminal.armyOrder.sort();s.terminal.armiesById[id]={armyId:id,factionId:a.factionId,commanderId:o.officerId,disposition:'ACTIVE',terminalAtTick:null,terminalRecordId:null};terminalOfficer(s,o,o.locationRef);syncCampaignAdministrativeTerminal(s);}
- loadMusterSupply(s,a,c);syncResearchCities(s);initializeArmyFacing(s);initializeClasses(s);c.reserveTroops=s.personnel.lots.filter(l=>l.nodeId===c.cityId&&l.kind!=='WOUNDED').reduce((n,l)=>n+l.count,0);if(specialTroop(s,job.troopType)){s.c24Stats??={musters:{},catapultCityDamage:0};s.c24Stats.musters[job.troopType]=(s.c24Stats.musters[job.troopType]??0)+1;}(s.c16Stats??={musters:0,wandererRecruitments:0}).musters++;observeRelationGroups(s);return true;
+ loadMusterSupply(s,a,c);syncResearchCities(s);initializeArmyFacing(s);initializeClasses(s);c.reserveTroops=ordinaryReserve(s).filter(l=>l.nodeId===c.cityId).reduce((n,l)=>n+l.count,0);if(specialTroop(s,job.troopType)){s.c24Stats??={musters:{},catapultCityDamage:0};s.c24Stats.musters[job.troopType]=(s.c24Stats.musters[job.troopType]??0)+1;}(s.c16Stats??={musters:0,wandererRecruitments:0}).musters++;observeRelationGroups(s);return true;
 }
 const garrisonCity=(s,a)=>Object.values(s.cities).find(c=>c.ownerFactionId===a?.factionId&&(c.tileId===a?.tileId||c.footprint?.gates?.includes(a?.tileId)));
 export function garrisonReason(s,id){
@@ -345,8 +353,8 @@ function disbandIntoCity(s,a,c){
  const recordId=`REC.C16.GARRISON.${s.globalTick}.${id}`;
  s.terminal.recordsById[recordId]={recordId,globalTick:s.globalTick,type:'ARMY_DISPOSITION',causeRecordIds:[],refs:{factionIds:[a.factionId],armyIds:[id],officerIds:[a.commanderId],cityIds:[c.cityId],choiceIds:[],prisonerRecordIds:[]},details:{disposition:'DISBANDED'}};
  Object.assign(s.terminal.armiesById[id],{disposition:'DISBANDED',terminalAtTick:s.globalTick,terminalRecordId:recordId});
- const lotId=`C16.GARRISON.${id}`;s.personnel.lots.push({lotId,kind:'READY',nodeId:c.cityId,identity:{baseTroopId:troopToCampaign(a.troopType),specialTroopId:null},originFormationId:null,count:a.troopCount});
- s.economy.lotFaction[lotId]=a.factionId;s.economy.recruitedReady[lotId]=true;s.economy.readyAt[lotId]=s.turn;c.reserveTroops+=a.troopCount;
+ const lotId=`C16.GARRISON.${id}`;s.personnel.lots.push({lotId,kind:'READY',nodeId:c.cityId,identity:{baseTroopId:troopToCampaign(a.troopType),specialTroopId:specialTroop(s,a.troopType)?a.troopType:null},originFormationId:null,count:a.troopCount});
+ s.economy.lotFaction[lotId]=a.factionId;s.economy.recruitedReady[lotId]=!specialTroop(s,a.troopType);s.economy.readyAt[lotId]=s.turn;if(!specialTroop(s,a.troopType))c.reserveTroops+=a.troopCount;
  s.personnel.formations.find(f=>f.formationId===id).field=0;a.troopCount=0;a.hp=0;a.currentOrder=null;a.movementState=null;a.engagedArmyIds=[];
  const o=s.officers[a.commanderId];o.locationRef={kind:'CITY',id:c.cityId};terminalOfficer(s,o);
  if(domesticEngineEnabled(s))for(const city of Object.values(s.cities))if(city.absentGovernorId===o.officerId){city.absentGovernorId=null;if(city===c&&!c.governorId){c.governorId=o.officerId;s.terminal.citiesById[c.cityId].governorId=o.officerId;terminalOfficer(s,o,o.locationRef);}}
@@ -359,7 +367,7 @@ export function recruitWanderer(s,{officerId,cityId},factionId=s.playerFactionId
  if(s.mapId==='v1'||!o||o.locationRef.id!==cityId||c?.ownerFactionId!==factionId||Object.values(s.captiveRecruitment.proposals).some(p=>p.targetOfficerId===officerId&&p.status==='NEGOTIATING'))throw new Error('INVALID_WANDERER_RECRUITMENT');
  for(const [id,f] of Object.entries(s.factions))s.captiveRecruitment.factions[id].prestige=f.prestige;
  s.captiveSequence=(s.captiveSequence??0)+1;
- s.captiveRecruitment=reserveRecruitmentProposal(s.captiveRecruitment,{proposalId:`C16.${s.captiveSequence}`,factionId,...c29RecruitAgent(s,c),targetOfficerId:officerId,sourceFactionId:null,candidateSourceRef:cityId,cost:cityRecruitCost(s,cityId,factionId),tieBreakPriority:s.captiveSequence,createdTurn:s.turn});return s;
+ s.captiveRecruitment=reserveRecruitmentProposal(s.captiveRecruitment,{proposalId:`C16.${s.captiveSequence}`,factionId,...c29RecruitAgent(s,c),targetOfficerId:officerId,sourceFactionId:null,candidateSourceRef:cityId,cost:cityRecruitCost(s,cityId,factionId,officerId),tieBreakPriority:s.captiveSequence,createdTurn:s.turn});return s;
 }
 export function adoptWanderer(s,proposal){
  const o=s.wanderers[proposal.targetOfficerId];const former=s.officers[o.officerId]?.allegianceFactionId;if(former)s.factions[former].officerIds=s.factions[former].officerIds.filter(id=>id!==o.officerId);delete s.wanderers[o.officerId];o.allegianceFactionId=proposal.factionId;s.officers[o.officerId]=o;if(!s.factions[proposal.factionId].officerIds.includes(o.officerId))s.factions[proposal.factionId].officerIds.push(o.officerId);
@@ -380,7 +388,7 @@ export function selectCityStartMuster(s,factionId,chooseTroop=null){
 export function selectAiRoster(s,factionId){
  if(s.mapId==='v1')return;
  for(const o of Object.values(s.wanderers))if(s.cities[o.locationRef.id].ownerFactionId===factionId){
-  const wallet=s.captiveRecruitment.factions[factionId];if(s.factions[factionId].prestige-wallet.reservedPrestige>=cityRecruitCost(s,o.locationRef.id,factionId)&&!Object.values(s.captiveRecruitment.proposals).some(p=>p.targetOfficerId===o.officerId&&p.status==='NEGOTIATING'))recruitWanderer(s,{officerId:o.officerId,cityId:o.locationRef.id},factionId);
+  const wallet=s.captiveRecruitment.factions[factionId];if(s.factions[factionId].prestige-wallet.reservedPrestige>=cityRecruitCost(s,o.locationRef.id,factionId,o.officerId)&&!Object.values(s.captiveRecruitment.proposals).some(p=>p.targetOfficerId===o.officerId&&p.status==='NEGOTIATING'))recruitWanderer(s,{officerId:o.officerId,cityId:o.locationRef.id},factionId);
  }
  for(const c of Object.values(s.cities))if(c.ownerFactionId===factionId&&!c.governorId&&!(domesticEngineEnabled(s)&&c.absentGovernorId)&&c.occupationState==='NORMAL'){
   const o=freeCityOfficers(s,c,{includeGovernor:false}).sort((a,b)=>b.baseStats.politics-a.baseStats.politics||a.officerId.localeCompare(b.officerId))[0];

@@ -1,3 +1,4 @@
+import C195 from '../data/c195-trial-v0.1.json' with {type:'json'};
 import {troopText} from './troop-display.mjs';
 import data from '../../docs/design-data/council-v0.1.json' with {type:'json'};
 import {getFactionView} from './knowledge.mjs';
@@ -12,13 +13,15 @@ import {castleArmyActive,campaignMovementWorld} from './campaign-city-footprint.
 import {findPath,edgeTicks} from './movement.mjs';
 import {campaignSubAbility} from './campaign-abilities.mjs';
 import {C20_FACILITIES} from './campaign-policy.mjs';
-import {gainRelation} from './campaign-relations.mjs';
+import {gainRelation,relation} from './campaign-relations.mjs';
+import {officerClass,CLASS_ABILITIES} from './campaign-classes.mjs';
 import {creditCampaignGrowth} from './campaign-growth.mjs';
 import {explorationEnabled,explorationView} from './campaign-exploration.mjs';
 import {troopInfo} from './campaign-special-troops.mjs';
 import {hexDistance} from './map-primitives.mjs';
 
 export const COUNCIL=data;
+export const COUNCIL_ADOPTION_AFFINITY=C195.council.adoptionAffinity;
 export const councilEnabled=s=>['v2','v3'].includes(s.mapId)&&!s.councilDisabled;
 const own=s=>s.playerFactionId;
 const ruler=s=>s.factions[own(s)].rulerId;
@@ -140,6 +143,24 @@ export function councilProposals(s){
  }
  return {proposals,skippedKinds,limitations:['종류 간 공통 점수 미제공','함락 예상 차례 미제공','탐험 AI 반환값에 원거리 장소 대상 미제공','잘린 방어 경로의 성 대상 미제공']};
 }
+// Deterministic opinions use only existing officer traits, class and relationship.
+export function councilOpinions(s,proposal){
+ const cfg=C195.council,peace=['CITY_DEVELOP','DIPLOMACY','RECRUIT','BUILD_HUB'].includes(proposal.kind),axis=peace?'politics':'leadership';
+ const attendees=councilCandidates(s).filter(o=>o.officerId!==proposal.proposerId).slice(0,cfg.attendees);
+ return [{officerId:proposal.proposerId,stance:'FOR',reason:'이 안건을 제안했습니다.'},...attendees.map(o=>{
+  const assigned=officerClass(s,o.officerId),classTags=CLASS_ABILITIES.filter(c=>[assigned?.primaryId,assigned?.secondaryId].includes(c.id)).flatMap(c=>c.draftTags??[]);
+  const tags=[o.rolePrimary,o.roleSecondary,...classTags,...(o.tags??[]),...(o.personalityTags??[])].filter(Boolean).join(' ');
+  const affinity=relation(s,ruler(s),o.officerId).value;
+  const martial=/무용|지휘|무장|공격|용맹|전투|war|martial/i.test(tags),civil=/정무|지략|민정|신중|문관|civil|scholar/i.test(tags);
+  const tag=(peace?Number(civil)-Number(martial):Number(martial)-Number(civil))*cfg.tagWeight;
+  const experience=((o.baseStats[axis]??cfg.axisNeutral)-cfg.axisNeutral)*cfg.axisWeight,bond=(affinity-cfg.bondNeutral)*cfg.bondWeight,score=experience+bond+tag;
+  const support=score>=cfg.supportThreshold;
+  const driver=[{value:tag,label:'계통과 성향'},{value:bond,label:'군주와의 관계'},{value:experience,label:peace?'내정 경험':'지휘 경험'}].sort((a,b)=>Math.abs(b.value)-Math.abs(a.value)).find(x=>support?x.value>=0:x.value<0);
+  const reason=`${driver?.label??'능력과 관계'}를 바탕으로 ${support?'실행할 만하다고 봅니다':'준비가 더 필요하다고 봅니다'}.`;
+  return {officerId:o.officerId,stance:support?'FOR':'AGAINST',reason};
+ })];
+}
+export function councilOpinionView(s){const c=structuredClone(s.council);for(const p of c.proposals)p.opinions=councilOpinions(s,p);return c;}
 function award(s,id,amount,eventId){if(s.campaignGrowth?.officers[id])creditCampaignGrowth(s,{eventId,officerId:id,kind:'GOVERNOR_TURN',amount,fixed:true});}
 export function startCouncilTurn(s){
  if(!councilEnabled(s)||s.phase!=='PLAYER'||s.gameResult)return s;initializeCouncil(s);
@@ -163,7 +184,7 @@ export function councilCommand(s,cmd){
  }
  if(cmd.type!=='COUNCIL_DECIDE'||!['APPROVE','HOLD'].includes(cmd.decision))throw new Error('INVALID_COUNCIL_DECISION');
  const p=c.proposals.find(p=>p.id===cmd.proposalId);if(!p||p.decision!==null)throw new Error('INVALID_COUNCIL_PROPOSAL');
- p.decision=cmd.decision;if(cmd.decision==='APPROVE')c.resolutions.push({proposalId:p.id,kind:p.kind,target:structuredClone(p.target),proposerId:p.proposerId,deadlineTurn:c.turn+2,status:'ACTIVE'});return s;
+ p.decision=cmd.decision;if(cmd.decision==='APPROVE')gainRelation(s,ruler(s),p.proposerId,C195.council.adoptionAffinity);if(cmd.decision==='APPROVE')c.resolutions.push({proposalId:p.id,kind:p.kind,target:structuredClone(p.target),proposerId:p.proposerId,deadlineTurn:c.turn+2,status:'ACTIVE'});return s;
 }
 function resolve(s,r,status){
  r.status=status;const fulfilled=status==='FULFILLED',effect=data.decision[fulfilled?'fulfilled':'broken'];
