@@ -1,4 +1,5 @@
 // C177: presentation only. Fire lifetime/rules remain in the campaign engine.
+import {fireReadout} from './hud-ink.mjs';
 export const FX_ROOT='/assets/ui-v3/dots-1016/';
 export const FX_SHEETS=Object.freeze({
  flame:{path:'fire/B1-flame.png',frames:8,w:256,h:256},
@@ -14,8 +15,10 @@ const hash=id=>[...id].reduce((n,c)=>(n*31+c.charCodeAt(0))>>>0,0);
 export const spriteFrame=(age,frames,{loop=false,reduced=false,offset=0}={})=>reduced?frames-1:loop?Math.floor(Math.max(0,age)/110+offset)%frames:Math.min(frames-1,Math.floor(Math.max(0,age)/90));
 
 // The canonical fire records are read only here; unseen fires never reach the UI.
-export function visibleFireTiles(state,knowledge=state?.knowledge?.[state?.playerFactionId]?.tiles??{}){
+export function visibleFireTiles(state,knowledge=state?.knowledge?.tiles??state?.knowledge?.[state?.playerFactionId]?.tiles??{}){
  const ids=new Set(),turn=state?.turn??0;
+ for(const f of state?.fire?.tiles??[])if(knowledge[f.tileId]==='VISIBLE')ids.add(f.tileId);
+ for(const f of state?.c182?.fires??[])if(f.until>=turn&&knowledge[f.tileId]==='VISIBLE')ids.add(f.tileId);
  for(const f of state?.c27?.fires??[])if(f.until>=turn)for(const id of f.tiles??[])if(knowledge[id]==='VISIBLE')ids.add(id);
  for(const f of state?.c32?.fires??[])if(f.until>=turn&&knowledge[f.tileId]==='VISIBLE')ids.add(f.tileId);
  return [...ids];
@@ -40,6 +43,7 @@ export function createFireMemory({scorchTurns=3}={}){
  };
 }
 function fireRecords(s,knowledge){
+ if(s.fire)return fireReadout(s).fires.filter(f=>knowledge[f.id]==='VISIBLE');
  const rows=[];for(const f of s?.c27?.fires??[])for(const id of f.tiles??[])if(knowledge[id]==='VISIBLE')rows.push({id,until:f.until});
  for(const f of s?.c32?.fires??[])if(knowledge[f.tileId]==='VISIBLE')rows.push({id:f.tileId,until:f.until});
  // Multiple sources may overlap; remember the last expiry, not array order.
@@ -90,7 +94,7 @@ function sprite(doc,key,width,height,frame,attrs={}){
  n.append(svgNode(doc,'image',{href:FX_ROOT+s.path,width:s.w*s.frames,height:s.h}));return n;
 }
 export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>!!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches,camera=null,clock=()=>performance.now(),raf=fn=>requestAnimationFrame(fn),cancel=id=>cancelAnimationFrame(id),doc=globalThis.document}={}){
- const memory=createFireMemory(),ignitions=new Map(),held=new Set();let fires=[],scorches=[],impacts=[],svg=null,layout=null,frame=0,last=-Infinity,stopped=false,burnLoop=false;
+ const memory=createFireMemory(),ignitions=new Map(),held=new Set();let fires=[],scorches=[],fireTurns=new Map(),impacts=[],svg=null,layout=null,frame=0,last=-Infinity,stopped=false,burnLoop=false;
  const center=id=>{const [q,r]=id.split(',').map(Number);return {x:layout.ox+layout.size*Math.sqrt(3)*(q+r/2),y:layout.oy+layout.size*1.5*r*.62};};
  const cameraFx=camera?createTacticCamera({...camera,reduced,clock,raf,cancel}):null;
  let prepared=null;
@@ -105,12 +109,13 @@ export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>!!
   clearLayers();const ground=svg.querySelector('.w-fire-ground'),flame=svg.querySelector('.w-fire-layer'),fx=svg.querySelector('.w-ink-fx');if(!ground||!flame||!fx)return;
   const visible=id=>withinViewport(center(id),matrix,rect,layout.size*2.6),size=layout.size*1.6;
   let audible=false;
-  for(const id of scorches){if(!visible(id))continue;const p=center(id);ground.append(sprite(doc,'scorch',size,size*2/3,0,{x:p.x-size/2,y:p.y-size/4,'data-scorch':id}));}
+  for(const id of scorches){if(!visible(id))continue;const p=center(id);ground.append(svgNode(doc,'ellipse',{cx:p.x,cy:p.y,rx:size*.55,ry:size*.28,fill:'#151916',opacity:.66,'data-burned-forest':id}));ground.append(sprite(doc,'scorch',size,size*2/3,0,{x:p.x-size/2,y:p.y-size/4,'data-scorch':id}));}
   for(const entry of ignitions.values())if(entry.start===null)entry.start=now+entry.delay;
   for(const e of impacts)if(e.start===null)e.start=now;
   for(const id of fires){if(held.has(id)||!visible(id))continue;const p=center(id),start=ignitions.get(id)?.start,age=start===undefined?Infinity:now-start;if(age<0)continue;audible=true;
    const key=age<540?'ignite':'flame',index=spriteFrame(Number.isFinite(age)?age:now,FX_SHEETS[key].frames,{loop:key==='flame',reduced:reduced(),offset:hash(id)%8});
    flame.append(sprite(doc,key,size,size,index,{x:p.x-size/2,y:p.y-size*.88,'data-fire':id,'data-fx-kind':key}));
+   if(fireTurns.has(id)){const label=svgNode(doc,'text',{x:p.x,y:p.y+size*.34,class:'c206-fire-turns','text-anchor':'middle','data-fire-turns':id});label.textContent=`${fireTurns.get(id)}차례`;flame.append(label);}
    if(age>=300)flame.append(sprite(doc,'smoke',size*.85,size*1.42,spriteFrame(now,6,{loop:true,reduced:reduced(),offset:hash(id)%6}),{x:p.x-size*.4,y:p.y-size*2,opacity:.36,'data-smoke':id}));
   }
   loop(audible);
@@ -121,7 +126,7 @@ export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>!!
  }
  return {
   sync(state,knowledge){svg=root.querySelector('svg');if(!svg)return;layout={size:Number(svg.dataset.size),ox:Number(svg.dataset.ox),oy:Number(svg.dataset.oy)};
-   const rows=fireRecords(state,knowledge),out=memory.update(rows.map(r=>r.id),state.turn,knowledge);memory.remember(rows);fires=out.fires;scorches=out.scorches;
+   const rows=fireRecords(state,knowledge),out=memory.update(rows.map(r=>r.id),state.turn,knowledge);memory.remember(rows);fires=out.fires;fireTurns=new Map(rows.filter(r=>r.turnsLeft!==undefined).map(r=>[r.id,r.turnsLeft]));scorches=[...new Set([...out.scorches,...fireReadout(state).scorches])].filter(id=>knowledge[id]&&knowledge[id]!=='UNEXPLORED');
    const live=new Set(fires);for(const id of ignitions.keys())if(!live.has(id))ignitions.delete(id);
    last=-Infinity;if(!frame)paint();
   },

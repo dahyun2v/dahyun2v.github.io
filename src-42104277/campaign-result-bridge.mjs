@@ -1,4 +1,5 @@
 import {injuryDefeats} from './campaign-injury.mjs';
+import {recordSituationEvent} from './campaign-situations.mjs';
 import {supplyCombat,supplyEnabled} from './campaign-supply.mjs';
 import {dejaVuEvent} from './campaign-deja-vu.mjs';
 import {classWoundedRatio,armyClass,countClass} from './campaign-classes.mjs';
@@ -51,6 +52,12 @@ export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads)
     globalTick:world.globalTick,defeatPayloads,cityCapturePayloads},{deferResult:true,deferExtinction:true,allowRecapture:true,allowUngovernedNormal:true});
   let next=applyCampaignTerminalStateToWorld(world,terminal,{allowCitylessAlive:true,allowSupersededOccupation:true,allowUngovernedNormal:true});
   next.terminal=terminal;
+  for(const p of defeatPayloads)if(terminal.armiesById[p.defeatedArmyId]?.disposition==='DEFEATED')recordSituationEvent(next,'ARMY_DESTROYED',world.armies[p.defeatedArmyId].factionId);
+  for(const p of cityCapturePayloads){
+    recordSituationEvent(next,'FIRST_CAPTURE',p.occupierFactionId);
+    recordSituationEvent(next,'FIRST_CITY_LOST',p.formerOwnerFactionId);
+    if(p.formerOwnerFactionId===next.playerFactionId&&Object.values(next.cities).filter(c=>c.ownerFactionId===next.playerFactionId).length===1)recordSituationEvent(next,'LAST_CITY',next.playerFactionId);
+  }
   for(const p of defeatPayloads)if(p.commanderFate==='CAPTURED')dejaVuEvent(next,'CAPTURED',{officerId:world.armies[p.defeatedArmyId].commanderId});
   next.occupations??={};
   for(const payload of cityCapturePayloads)next.occupations[payload.capturedCityId]={...(payload.formerOwnerFactionId===null?{fromNeutral:true}:{}),state:'OCCUPIED',stage:'CAPTURED',turnsLeft:1,method:null,lastSettledTurn:next.turn,

@@ -47,6 +47,9 @@ const moveTiles=(s,a)=>Math.max(0,Math.min(api.movement(s,a.armyId).max,Math.flo
 // a false banner's displayed count is the count in every hypothetical branch.
 export function campaignTacticsView(s,f){
  const v=api.banner(s,api.publicView(s,f));
+ // UI acknowledgements are not tactical information and must not make this
+ // snapshot depend on which faction happens to be controlled by the player.
+ delete v.situationBarks;delete v.situationEvents;
  for(const b of Object.values(v.knowledge.observedArmies))if(v.knowledge.tiles[b.tileId]==='VISIBLE'){
   const a=s.armies[b.armyId];Object.assign(b,{facing:a.facing,formation:a.formation,morale:a.morale,braced:!!a.braced,...(a.troopType==='catapult'?{platformState:a.platformState??'STOWED'}:{})});
   b.troopCount??=a.troopCount;

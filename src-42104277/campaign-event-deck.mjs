@@ -1,4 +1,5 @@
 import data from '../data/events-deck-v1.json' with {type:'json'};
+import echo from '../data/events-echo-v0.1.json' with {type:'json'};
 import tuning from '../data/events-deck-tuning-v0.1.json' with {type:'json'};
 import {hexDistance} from './map-primitives.mjs';
 import {castleArmyActive} from './campaign-city-footprint.mjs';
@@ -13,7 +14,8 @@ import {officerEventTile,eventPairTogether,eventTruce,eventTruceActive,signCampa
 
 // Content/effects stay in the immutable v1 source. Trial overrides are limited
 // to selection weight, turn window and guards; never spread arbitrary content.
-export const EVENT_DECK=Object.freeze(data.events.map(card=>{
+// 야망 메아리 9장(events-echo-v0.1)은 requiresUnlock 으로 걸러져 해금된 판에만 후보가 된다.
+export const EVENT_DECK=Object.freeze([...data.events,...echo.events].map(card=>{
  const t=tuning.cards[card.id];if(!t)return card;
  return {...card,weight:t.weight??card.weight,trigger:{...card.trigger,turns:t.turns??card.trigger.turns,guards:t.guards??card.trigger.guards}};
 }));
@@ -111,6 +113,7 @@ export function eventGuard(s,guard,p,card,context={}){
  }
 }
 export function deckCandidate(s,card,fid,context){
+ if(card.requiresUnlock&&!(Array.isArray(card.requiresUnlock)?card.requiresUnlock:[card.requiresUnlock]).every(id=>(s.unlocks??[]).includes(id)))return null;
  if(!s.eventDeck||fid!==s.playerFactionId||!s.factions[fid]?.alive||![fid,'ANY','WANDERER'].includes(card.scope)||s.turn<card.trigger.turns[0]||s.turn>card.trigger.turns[1]||context.when!==card.trigger.when)return null;
  if(card.choices.some(c=>c.oath&&s.turn+c.oath.deadline>26))return null;
  if((card.links?.requiresTwist??[]).some(id=>!s.eventDeck.twists.some(t=>t.eventId===id)||!s.eventDeck.tags.includes(cardById.get(id)?.links?.setsTag)))return null;

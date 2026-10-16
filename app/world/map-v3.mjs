@@ -300,7 +300,7 @@ export function renderWorldMap(model, opts = {}) {
   for (const l of hl.intents ?? []) { const a = C(l.from), z = C(l.to), dx = z.x - a.x, dy = z.y - a.y, d = Math.hypot(dx, dy) || 1; svg += `<path class="w-intent" d="M${f(a.x + dx / d * size * .5)} ${f(a.y + dy / d * size * .5)}L${f(z.x - dx / d * size * .45)} ${f(z.y - dy / d * size * .45)}"/>`; }
   for (const l of hl.supply ?? []) { const a = C(l.from), z = C(l.to); svg += `<g class="w-supply s-${esc(String(l.state ?? '').toLowerCase())}"><path d="M${f(a.x)} ${f(a.y)}L${f(z.x)} ${f(z.y)}"/><circle cx="${f(z.x)}" cy="${f(z.y)}" r="5"/><circle class="end" cx="${f(a.x)}" cy="${f(a.y)}" r="3.5"/></g>`; }
   svg += renderMapPreview({path:hl.path,orders:hl.orders,waypoints:hl.waypoints},layout);
-  svg += `<g class="w-hits">${tiles.map((t) => `<path data-tile="${t.id}" d="${hexPath(hexCenter(t, layout), size)}"/>`).join('')}</g>`;
+  svg += `<g class="w-hits">${tiles.map((t) => `<path data-tile="${t.id}" tabindex="-1" aria-label="칸 정보" d="${hexPath(hexCenter(t, layout), size)}"/>`).join('')}</g>`;
 
   // 시설
   for (const [index,fc] of (model.facilities ?? []).entries()) {
@@ -371,7 +371,7 @@ export function renderWorldMap(model, opts = {}) {
       : `<g class="seal neutral" transform="translate(${f(sealX)} 0)"><image href="/assets/ui-v3/emblems/neutral.png" x="${f(-sealR)}" y="${f(-sealR)}" width="${f(sealR * 2)}" height="${f(sealR * 2)}"/></g>`; // 닷토리 C3 중립 문장(구름, 짐승 없음)
     const ribbon = labelAt ? `<image class="rib${ownTone ? ' owned' : ' unowned'}" href="/assets/ui-v3/ink/ribbon-${nameLen > 1 ? 2 : 1}${ownTone ? '-' + ownTone : ''}.png" x="${f(-ribW / 2)}" y="${f(-ribH / 2)}" width="${f(ribW)}" height="${f(ribH)}"/>` : '';
     if (opts.compactLabels) occupied.push({x:lx-iw/2-22,y:ly-50,w:iw+44,h:city.defenseMax?108:88});
-    const status = city.besieged ? '포위' : city.unrest === 'CHAOS' ? '혼란' : city.unrest === 'UNREST' ? '동요' : city.occupation && city.occupation.stage && city.occupation.stage !== 'NORMAL' ? '점령' : '';
+    const status = city.besieged ? '포위' : city.unrest === 'CHAOS' ? '혼란' : city.unrest === 'UNREST' ? '불안' : city.occupation && city.occupation.stage && city.occupation.stage !== 'NORMAL' ? '점령' : '';
     if(opts.unitMarkers){
       plates.push(`<g class="w-cityplate c190-cityplate${city.attackable?' attackable':''}" data-city="${esc(city.id)}" data-camera-tile="${esc(city.center)}" transform="translate(${f(lx)} ${f(ly)})" style="--fc:${fs.color}">${cityBand(city,b)}</g>`);
       continue;

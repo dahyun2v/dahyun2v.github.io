@@ -1,0 +1,104 @@
+{
+  "schema": "sangoku.ambitions.v0.1",
+  "status": "WORK_TRIAL — Claude 기획(사용자 10-16 '나머지는 굿' 으로 확정된 DEEP-PROPOSAL 5절 7번: 사건 덱 다음 야망 1개 + 5차례 군령 3택 + 가로 해금). 수치 · 문구는 시험값",
+  "basis": "docs/work-integration/20261016/deep-ref/E-meta.md §7 · §1-6, DEEP-PROPOSAL.md 1-6 · 1-8",
+  "ambition": {
+    "offerTurn": 1,
+    "chooseUntilTurn": 3,
+    "skipLabel": "뜻을 정하지 않는다",
+    "playerOnly": true,
+    "notAchievedLine": "{title} — 이번 생에도 닿지 못했다. 그래도 끝은 달랐다.",
+    "list": [
+      {
+        "id": "AMB-F01-LAND", "faction": "F01", "kind": "LAND", "title": "하북의 깃발 하나",
+        "goalText": "26차례 끝에 업과 큰 성 하나를 더(계 또는 남피) 가진다",
+        "goal": {"type": "HOLD_AT_END", "cities": ["west"], "plusMajor": 1},
+        "endingLine": "관도라는 이름은 끝내 오지 않았다. 그래도 하북의 깃발은 하나였다."
+      },
+      {
+        "id": "AMB-F01-PERSON", "faction": "F01", "kind": "PERSON", "title": "순욱과 끝까지",
+        "goalText": "순욱이 끝까지 살아 곁에 있고, 조조와 결의에 이른다",
+        "goal": {"type": "PERSON_BOUND", "lord": "G07", "officer": "G04", "tier": "BOUND"},
+        "endingLine": "이번 생에는 빈 그릇을 보내지 않았다. 문약은 끝까지 등불 곁에 있었다."
+      },
+      {
+        "id": "AMB-F01-RECONCILE", "faction": "F01", "kind": "RECONCILE", "title": "원소를 품다",
+        "goalText": "원소를 등용해 끝까지 살아 곁에 둔다",
+        "goal": {"type": "RECRUIT_KEEP", "officer": "G09"},
+        "endingLine": "옛 벗이자 옛 적이 같은 깃발 아래서 늙어 갔다."
+      },
+      {
+        "id": "AMB-F02-LAND", "faction": "F02", "kind": "LAND", "title": "평원에서 다시",
+        "goalText": "26차례 끝에 계 · 평원 · 역경을 모두 가진다",
+        "goal": {"type": "HOLD_AT_END", "cities": ["east", "pingyuan", "yijing"], "plusMajor": 0},
+        "endingLine": "평원의 작은 관아에서 시작한 길이 이번엔 북쪽 끝까지 이어졌다."
+      },
+      {
+        "id": "AMB-F02-PERSON", "faction": "F02", "kind": "PERSON", "title": "도원의 셋",
+        "goalText": "관우 · 장비가 끝까지 살아 곁에 있고, 둘 다 유비와 결의에 이른다",
+        "goal": {"type": "PERSON_BOUND", "lord": "G05", "officers": ["G18", "G19"], "tier": "BOUND"},
+        "endingLine": "같은 날 죽자던 약속은 지킬 필요가 없었다. 셋은 같은 날들을 오래 살았다."
+      },
+      {
+        "id": "AMB-F02-RECONCILE", "faction": "F02", "kind": "RECONCILE", "title": "여포와 다른 끝",
+        "goalText": "여포를 등용해 끝까지 살아 곁에 둔다",
+        "goal": {"type": "RECRUIT_KEEP", "officer": "G01"},
+        "endingLine": "서주의 밤은 다시 오지 않았다. 여포는 끝까지 문 앞을 지켰다."
+      },
+      {
+        "id": "AMB-F03-LAND", "faction": "F03", "kind": "LAND", "title": "강동의 이름으로",
+        "goalText": "26차례 끝에 남피와 큰 성 하나를 더(업 또는 계) 가진다",
+        "goal": {"type": "HOLD_AT_END", "cities": ["south"], "plusMajor": 1},
+        "endingLine": "강을 건너지 않고도 강동의 이름은 북쪽 들판에 섰다."
+      },
+      {
+        "id": "AMB-F03-PERSON", "faction": "F03", "kind": "PERSON", "title": "형님과 함께",
+        "goalText": "손책이 끝까지 살아 곁에 있고, 손권과 결의에 이른다",
+        "goal": {"type": "PERSON_BOUND", "lord": "G08", "officer": "G20", "tier": "BOUND"},
+        "endingLine": "이른 이별은 없었다. 두 형제가 끝까지 같은 지도를 폈다."
+      },
+      {
+        "id": "AMB-F03-RECONCILE", "faction": "F03", "kind": "RECONCILE", "title": "이릉 없는 동맹",
+        "goalText": "유비 세력과 동맹을 맺고 판 끝까지 깨지 않는다(맺은 뒤 공격하지 않음)",
+        "goal": {"type": "ALLIANCE_KEEP", "with": "F02"},
+        "endingLine": "형주를 두고 다투던 기억은 끝내 깨어나지 않았다."
+      }
+    ]
+  },
+  "orders": {
+    "offerTurns": [5, 10, 15, 20],
+    "offerCount": 3,
+    "durationTurns": 5,
+    "skipLabel": "이번엔 군령 없이",
+    "penalty": "없음(포기 · 실패에 벌 없음 — 26차례 판에 벌칙은 과함)",
+    "rewards": {
+      "REPUTATION": {"label": "인망 +10", "amount": 10},
+      "REROLL": {"label": "성장 다시 뽑기 +1", "amount": 1},
+      "TACTIC_CARD": {"label": "전법 카드 한 장(장수 하나의 성장 카드 즉시 고르기)", "amount": 1}
+    },
+    "list": [
+      {"id": "ORD-CAPTURE", "title": "성 하나를 더", "goalText": "5차례 안에 성 하나를 차지한다", "goal": {"type": "CAPTURE_ANY", "count": 1}, "reward": "REPUTATION"},
+      {"id": "ORD-DEFEAT", "title": "적 부대 둘", "goalText": "5차례 안에 적 부대 둘을 무너뜨린다(병력 0)", "goal": {"type": "DEFEAT_ARMIES", "count": 2}, "reward": "REROLL"},
+      {"id": "ORD-HOLD", "title": "한 성도 내주지 않는다", "goalText": "5차례 동안 성을 하나도 잃지 않는다", "goal": {"type": "HOLD_ALL"}, "offerIf": "ENEMY_NEAR_OWN_CITY", "offerRange": 6, "reward": "REPUTATION"},
+      {"id": "ORD-FOOD", "title": "곳간을 채워라", "goalText": "5차례 뒤 모든 성 식량 합이 지금보다 40 많다", "goal": {"type": "FOOD_TOTAL_GAIN", "value": 40}, "reward": "REROLL"},
+      {"id": "ORD-RECRUIT", "title": "새 얼굴", "goalText": "5차례 안에 장수 한 명을 등용한다", "goal": {"type": "RECRUIT_ANY", "count": 1}, "offerIf": "RECRUITABLE_EXISTS", "reward": "TACTIC_CARD"},
+      {"id": "ORD-BUILD", "title": "두 손으로 짓다", "goalText": "5차례 안에 시설 둘을 완성한다", "goal": {"type": "BUILD", "count": 2}, "reward": "REPUTATION"},
+      {"id": "ORD-JOINT", "title": "함께 치다", "goalText": "5차례 안에 두 부대가 같은 차례에 같은 적을 친다(협공)", "goal": {"type": "JOINT_ATTACK", "count": 1}, "reward": "REROLL"},
+      {"id": "ORD-TACTIC", "title": "전법을 펼쳐라", "goalText": "5차례 안에 전법을 세 번 쓴다", "goal": {"type": "TACTICS_USED", "count": 3}, "reward": "TACTIC_CARD"},
+      {"id": "ORD-TRUCE", "title": "칼을 거두는 법", "goalText": "5차례 안에 휴전이나 동맹을 하나 맺는다", "goal": {"type": "DIPLOMACY_AGREED", "count": 1}, "offerIf": "AT_WAR_WITH_ANY", "reward": "REPUTATION"},
+      {"id": "ORD-EXPLORE", "title": "멀리 보는 눈", "goalText": "5차례 안에 탐험 조사를 하나 끝낸다", "goal": {"type": "EXPLORE_DONE", "count": 1}, "offerIf": "EXPLORE_AVAILABLE", "reward": "REROLL"}
+    ]
+  },
+  "unlocks": {
+    "storageNote": "판 사이에 남는 것은 힘이 아닌 가로 해금(새 장수 · 새 사건 · 새 기억 한 줄)만. 도감 화면 없음(사용자 10-09), 결과 화면에 한 줄. 엔진은 createCampaign({unlocks}) 로 받고 결과 view 의 unlocksEarned 로 돌려준다. 저장소는 앱(localStorage, 사건 덱 recentEventIds 와 같은 방식)",
+    "list": [
+      {"id": "U-MEM-01", "kind": "MEMORY", "when": {"type": "RUNS_FINISHED", "count": 1}, "line": "지난번엔 다른 깃발 아래 섰던 것 같다. 이번엔 손이 먼저 길을 안다."},
+      {"id": "U-MEM-02", "kind": "MEMORY", "when": {"type": "RUNS_FINISHED", "count": 2}, "line": "같은 들판, 다른 끝. 누군가 그 끝을 기억하고 있다."},
+      {"id": "U-MEM-03", "kind": "MEMORY", "when": {"type": "RUNS_FINISHED", "count": 3}, "line": "깨어날 때마다 조금씩 덜 낯설다."},
+      {"id": "U-OFF-G21", "kind": "OFFICER", "officer": "G21", "when": {"type": "AMBITIONS_ACHIEVED", "count": 1}, "line": "다음 판부터 방통이 재야에 나타난다."},
+      {"id": "U-OFF-G22", "kind": "OFFICER", "officer": "G22", "when": {"type": "AMBITION_FACTIONS", "count": 2}, "line": "다음 판부터 곽가가 재야에 나타난다."},
+      {"id": "U-OFF-G23", "kind": "OFFICER", "officer": "G23", "when": {"type": "AMBITION_FACTIONS", "count": 3}, "line": "다음 판부터 사마의가 재야에 나타난다."},
+      {"id": "U-EV-AMB", "kind": "EVENT", "when": {"type": "AMBITION_ACHIEVED_ID"}, "line": "다음 판부터 이 야망에서 이어지는 사건이 덱에 들어온다.", "note": "야망마다 U-EV-<야망 ID>. 사건 카드는 requiresUnlock 필드로 묶는다(카드 글은 따로 의뢰 — 지금은 엔진만)"}
+    ]
+  }
+}

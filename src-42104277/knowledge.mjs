@@ -1,4 +1,5 @@
 import {boardNeighbors,hexDistance,movementTicks,tileId} from './map-primitives.mjs';
+import {situationEventsView} from './campaign-situations.mjs';
 // Optional terrain is campaign-only. FIRST3 callers retain distance visibility.
 export function canObserveTile(observer,target,range,tiles=null){
  return hexDistance(observer,target)<=range&&(!tiles||terrainVisible(observer,target,(q,r)=>tiles[`${q},${r}`]));
@@ -83,5 +84,5 @@ export function updateKnowledge(s){
 export function getFactionView(s,factionId=s.playerFactionId){
   if(!s.factions[factionId] || !s.knowledge[factionId])throw new Error('관측할 세력이 없습니다.');
   const k=s.knowledge[factionId],ownArmies=Object.fromEntries(Object.entries(s.armies).filter(([,a])=>a.factionId===factionId&&activeArmy(s,a)));
-  return structuredClone({factionId,turnNumber:s.turnNumber,currentDate:s.currentDate,time:s.time,turnPhase:s.turnPhase,ui:s.ui,faction:s.factions[factionId],officers:Object.fromEntries(Object.entries(s.officers).filter(([,o])=>o.allegianceFactionId===factionId)),ownArmies,ownCities:Object.fromEntries(Object.entries(s.cities).filter(([,c])=>c.ownerFactionId===factionId)),knowledge:k,tiles:Object.fromEntries(Object.entries(s.tiles).map(([id,t])=>[id,k.tiles[id]==='UNEXPLORED'?{tileId:id,q:t.q,r:t.r}:t])),knownEdges:knownEdges(s,k.tiles),contacts:s.history.filter(e=>e.factionIds?.includes(factionId)).slice(-12)});
+  return structuredClone({...(s.situationBarks?{situationEvents:situationEventsView(s,factionId),...(factionId===s.playerFactionId?{situationBarks:s.situationBarks}:{})}:{}),factionId,turnNumber:s.turnNumber,currentDate:s.currentDate,time:s.time,turnPhase:s.turnPhase,ui:s.ui,faction:s.factions[factionId],officers:Object.fromEntries(Object.entries(s.officers).filter(([,o])=>o.allegianceFactionId===factionId)),ownArmies,ownCities:Object.fromEntries(Object.entries(s.cities).filter(([,c])=>c.ownerFactionId===factionId)),knowledge:k,tiles:Object.fromEntries(Object.entries(s.tiles).map(([id,t])=>[id,k.tiles[id]==='UNEXPLORED'?{tileId:id,q:t.q,r:t.r}:t])),knownEdges:knownEdges(s,k.tiles),contacts:s.history.filter(e=>e.factionIds?.includes(factionId)).slice(-12)});
 }

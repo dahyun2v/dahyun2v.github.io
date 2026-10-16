@@ -1,11 +1,11 @@
 import data from '../../docs/design-data/diplomacy-v0.1.json' with {type:'json'};
+import {recordSituationEvent} from './campaign-situations.mjs';
 import axes from '../../docs/design-data/diplomacy-axes-v0.1.json' with {type:'json'};
 import gift from '../../docs/design-data/diplomacy-gift-v0.1.json' with {type:'json'};
 const opinionModifiers={...axes.opinion.modifiers,gift:gift.modifier};
 import {relation} from './campaign-relations.mjs';
 import {hexDistance,boardNeighbors,tileId} from './map-primitives.mjs';
 import {campaignAiRule,AI_RULE_COALITION_BONUS} from './campaign-ai-rules.mjs';
-import {campaignShownCount} from './campaign-rule-registry.mjs';
 import {edgeTicks} from './movement.mjs';
 // The runtime supplies existing campaign services after module initialization.
 // Keep this shared guard module independent of the combat/class import cycle.
@@ -16,6 +16,7 @@ const castleArmyActive=(s,a)=>services.armyActive(s,a);
 const campaignSubAbility=(...args)=>services.subAbility(...args);
 const combatMovement=(s,id)=>services.movement(s,id);
 const cityEconomyRates=(s,c)=>services.cityRates(s,c);
+const campaignShownCount=(s,id,factionId)=>services.shownCount(s,id,factionId);
 
 export const diplomacyEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c43Disabled!==true;
 export const diplomacyPair=(a,b)=>[a,b].sort().join('|');
@@ -266,6 +267,7 @@ export function startDiplomacyTurn(s){
   const [from,to]=key.split('|');
   if(p.pending?.at<=s.turn){const pending=p.pending,renew=p.state===pending.state;delete p.pending;p.state=pending.state;p.since=renew?p.since:s.turn;p.everAgreed=true;delete p.endingAt;
    if(p.state==='TRUCE'){p.until=(renew?Math.max(s.turn-1,p.until):s.turn-1)+data.truce.turns;if(!renew){protectWithdrawal(s,from,to);protectWithdrawal(s,to,from);}}else delete p.until;
+   if(!renew&&p.state==='ALLIANCE'){recordSituationEvent(s,'ALLIANCE_FORMED',from);recordSituationEvent(s,'ALLIANCE_FORMED',to);}
    if(!renew&&p.state==='ALLIANCE'&&diplomacyCoalition(s,from,to)){s.c43.history.push({type:'COALITION',from,to,turn:s.turn});axisLog(s,from,to,`${armyName(s,from)}과 ${armyName(s,to)}이 팽창하는 세력을 견제할 동맹을 맺었다`);}
    record(s,'EFFECTIVE',from,to,p.state,`${armyName(s,from)}과 ${armyName(s,to)} ${kindName(p.state)} — ${p.state==='TRUCE'?`${data.truce.turns}차례(${p.until}턴까지)`:'공격 금지'}`);
   }else if(p.endingAt<=s.turn||p.state==='TRUCE'&&p.until<s.turn){const kind=p.state;x.ended[key]={turn:s.turn,kind};if(kind==='TRUCE'){addDiplomacyOpinion(s,from,to,'keptTruce');addDiplomacyOpinion(s,to,from,'keptTruce');}record(s,kind==='TRUCE'?'EXPIRE':'END',from,to,kind,`${armyName(s,from)}과 ${armyName(s,to)} ${kindName(kind)} ${kind==='TRUCE'?'만료':'종료'}`);Object.assign(p,{state:'WAR',since:s.turn});delete p.until;delete p.endingAt;}

@@ -10,6 +10,53 @@ export function twistHistoryHtml(twists=[],oaths=[]){return `<section class="c19
 export const EVENT_RECENT_KEY='samgukji.event-deck.previous-run.v1';
 export function readRecentEventIds(storage){try{const ids=JSON.parse((storage??globalThis.localStorage).getItem(EVENT_RECENT_KEY)??'[]');return Array.isArray(ids)?ids.filter(id=>typeof id==='string'):[];}catch{return [];}}
 export function writeRecentEventIds(storage,seen){try{(storage??globalThis.localStorage).setItem(EVENT_RECENT_KEY,JSON.stringify(seen.map(e=>e.eventId)));}catch{/* Storage denial does not interrupt play. */}}
+// C205: only public projections and the engine's already accumulated result cross this boundary.
+export const LEGACY_KEY='sangoku.legacy.v1';
+export function readCampaignLegacy(storage){
+ const empty=()=>({unlocks:[],legacy:{runsFinished:0,ambitionsAchieved:[]}});
+ try{const p=JSON.parse((storage??globalThis.localStorage).getItem(LEGACY_KEY)??'null');
+  if(!p||!Array.isArray(p.unlocks)||!p.unlocks.every(id=>typeof id==='string')||!Number.isSafeInteger(p.legacy?.runsFinished)||p.legacy.runsFinished<0||!Array.isArray(p.legacy.ambitionsAchieved)||!p.legacy.ambitionsAchieved.every(id=>typeof id==='string'))return empty();
+  return {unlocks:p.unlocks,legacy:p.legacy};
+ }catch{return empty();}
+}
+export function writeCampaignLegacy(storage,result){
+ if(!result?.legacy||!Array.isArray(result.unlocks))return false;
+ try{const target=storage??globalThis.localStorage,previous=readCampaignLegacy(target);
+  // Reopening a finished save neither increments nor rolls back a newer completed run.
+  if(result.legacy.runsFinished<=previous.legacy.runsFinished)return false;
+  target.setItem(LEGACY_KEY,JSON.stringify({unlocks:result.unlocks,legacy:result.legacy}));return true;
+ }catch{return false;}
+}
+export function ambitionScreenOffer(v,deferred=false,phase='PLAYER'){
+ if(v.gameResult||phase!=='PLAYER')return null;
+ const a=v.ambition;if(!deferred&&a?.canChoose&&a.offered?.length)return {kind:'ambition',key:'ambition',title:'이번 생의 뜻',choices:a.offered,skipLabel:a.skipLabel};
+ const o=v.orders?.offer;return o?.choices?.length?{kind:'order',key:`order.${o.turn}`,title:'이번 차례의 군령',choices:o.choices,skipLabel:o.skipLabel}:null;
+}
+export function ambitionArt(card,portraits={}){
+ if(card.kind==='LAND')return [{src:LEVELUP_ASSETS.art.banner}];
+ if(card.kind==='PERSON'||card.kind==='RECONCILE'){
+  const ids=card.goal?.officers??[card.goal?.officer];
+  const faces=ids.filter(Boolean).map(id=>portraits[id]).filter(Boolean).map(src=>({src,face:true}));
+  if(faces.length)return faces;
+  if(card.goal?.with){const seal=C190_SEALS[card.goal.with];if(seal)return [{src:C190_ART[seal.art]}];}
+  return [{src:LEVELUP_ASSETS.art.seal}];
+ }
+ const category=({CAPTURE:'banner',DEFEAT:'halberd',HOLD:'seal',FOOD:'grain',RECRUIT:'slips',TACTIC:'slips',BUILD:'slips',JOINT:'crossbow',TRUCE:'seal',EXPLORE:'banner'})[card.id?.replace('ORD-','')]??'slips';
+ return [{src:LEVELUP_ASSETS.art[category]}];
+}
+export function ambitionCardsHtml(offer,picked,portraits={},rewards={}){
+ return offer.choices.map(c=>`<button type="button" class="c205-card${picked===c.id?' picked':''}" data-c205-pick="${esc(c.id)}" aria-pressed="${picked===c.id}"><span class="c205-card-art">${ambitionArt(c,portraits).map(p=>`<img src="${esc(p.src)}" alt=""${p.face?' class="person"':''}>`).join('')}</span><b>${esc(c.title)}</b><span class="c205-goal">${esc(c.goalText)}</span>${offer.kind==='order'?`<small class="c205-reward">${esc(rewards[c.reward]?.label??'')}</small>`:''}${picked===c.id?'<span class="c205-selected" aria-hidden="true">선택</span>':''}</button>`).join('');
+}
+export function ambitionBandHtml(v){
+ const a=v.ambition,selected=a?.selected,status=s=>s==='ACHIEVED'?'이룸':s==='FAILED'?'닿지 못함':'진행 중';
+ const ambition=selected?`<details data-c205-detail="${esc(selected.id)}" class="c205-${esc(selected.status.toLowerCase())}"><summary>뜻 · ${esc(selected.title)} — ${esc((selected.conditions??[]).map(c=>`${c.met?'✓':'✗'} ${c.text}`).join(' · '))} <i>${status(selected.status)}</i></summary><ul>${(selected.conditions??[]).map(c=>`<li>${c.met?'✓':'✗'} ${esc(c.text)}</li>`).join('')}</ul></details>`:a?.canChoose&&a.offered?.length?`<button type="button" data-c205-reopen>이번 생의 뜻 고르기 · ${a.chooseUntilTurn}차례까지</button>`:'';
+ return ambition+(v.orders?.history??[]).map(o=>`<details data-c205-detail="${esc(o.id)}.${o.signedTurn}" class="c205-${esc(o.status.toLowerCase())}"><summary>군령 · ${esc(o.title)} ${o.progress.count}/${o.progress.target} · ${o.turnsLeft}차례 <i>${status(o.status)}</i></summary><p>${esc(o.goalText)}</p><p>${esc(o.rewardLine??'')}${o.progress.violated?' · 유지 조건을 지키지 못했습니다.':''}</p></details>`).join('');
+}
+export function ambitionEndingHtml(result){
+ if(!result)return '';
+ const text=`${result.ambition?`<p class="c205-ending">${esc(result.ambition.endingLine)}</p>`:''}${result.unlocksEarned?.length?`<p class="c205-unlocks">다음 판부터: ${result.unlocksEarned.map(u=>esc(u.line)).join(' · ')}</p>`:''}`;
+ return text?`<section class="c205-conclusion">${text}</section>`:'';
+}
 // C199: central U3 paths; SVG fallbacks remain available for missing optional slots.
 export const C190_ART = Object.freeze({"tagAlly":"/assets/ui-v3/u3/map/tag-ally.png","tagAllied":"/assets/ui-v3/u3/map/tag-allied.png","tagEnemy":"/assets/ui-v3/u3/map/tag-enemy.png","statusSeal":"/assets/ui-v3/u3/map/status-seal.png","cityBand":"/assets/ui-v3/u3/map/city-band.png","barTrack":"/assets/ui-v3/u3/map/bar-track.png","barFill":"/assets/ui-v3/u3/map/bar-fill.png","panel":"/assets/ui-v3/u3/cityquick/panel.png","sealCao":"/assets/ui-v3/u3/cityquick/seal-cao.png","sealYuan":"/assets/ui-v3/u3/cityquick/seal-yuan.png","sealLiu":"/assets/ui-v3/u3/cityquick/seal-liu.png","sealSun":"/assets/ui-v3/u3/cityquick/seal-sun.png","btn":"/assets/ui-v3/u3/cityquick/btn.png","btnRed":"/assets/ui-v3/u3/cityquick/btn-red.png"});
 export const C190_SEALS = Object.freeze({F01:{glyph:'曹',art:'sealCao'},F02:{glyph:'劉',art:'sealLiu'},F03:{glyph:'孫',art:'sealSun'},F04:{glyph:'袁',art:'sealYuan'}});
@@ -30,7 +77,7 @@ export const citySiegeText = c => c.besieged?`포위${Number.isFinite(c.siegeTur
 export const recruitmentReasonHtml = quote => `<small class="c192-recruit-reason">인망 ${esc(quote.cost)} · ${esc(quote.reason)}</small>`;
 export const captivePreviewHtml = preview => `<small class="c192-captive-preview">${preview.lines.map(esc).join('<br>')}</small>`;
 export function relationSceneHtml(scene){
- return `<p class="c192-scene-title">${esc(scene.title)}</p>${scene.lines.map((line,i)=>`<p class="c192-scene-line"><b>${esc(scene.officers[i%2].name)}</b> ${esc(line)}</p>`).join('')}<button class="btn primary" data-relation-next>다음</button>`;
+ return `<div class="c207-scene-scroll"><p class="c192-scene-title">${esc(scene.title)}</p>${scene.lines.map((line,i)=>`<p class="c192-scene-line"><b>${esc(scene.officers[i%2].name)}</b> ${esc(line)}</p>`).join('')}</div><button class="btn primary" aria-label="다음 장면" data-relation-next>다음<span aria-hidden="true"> ▶</span></button>`;
 }
 export function reinforcementText(forecast,cities={}){return `다음 차례 자동 충원 ${troopDelta(forecast?.count??0)}${forecast?.sources?.length?` (${forecast.sources.map(r=>`${cities[r.cityId]?.name??r.cityId}에서 ${troopDelta(r.count)}`).join(' · ')})`:''}`;}
 export function cityReinforcementText(c){return `다음 차례 충원 ${troopDelta((c.nextReinforcements??[]).reduce((n,r)=>n+r.count,0))} · 이 성에서 부대로`;}
@@ -494,6 +541,7 @@ export function renderInkHud(root, d) {
   q('.ih-turn').textContent = d.turn ?? '';
   q('.ih-medal').title = d.left ?? '';
   q('.ih-date b').textContent = `${String(d.date ?? '').replace(/^\d+턴\s*·\s*/, '')} · ${d.turn ?? ''}차례 / ${d.turnLimit ?? ''}`; q('.ih-date small').textContent = d.left ?? '';
+  let wind=q('.ih-date .c206-weather');if(!wind){wind=document.createElement('span');wind.className='c206-weather';q('.ih-date').appendChild(wind);}wind.innerHTML=windHtml(d.combatWeather);
   for (const b of root.querySelectorAll('.ih-rb[data-mode]')) b.classList.toggle('on', b.dataset.mode === d.mode);
   { const cb = q('.ih-rb[data-open="council"] .ih-badge'); if (cb) { cb.hidden = !d.council; cb.textContent = d.council || ''; } }
   // 이번 차례(보고) — 마지막 4줄
@@ -664,7 +712,9 @@ function renderCommandBand(root,d,showUnit,menu){
  q('[data-band-goal]').innerHTML=`승리 조건 <span class="nb-goal-dots" aria-label="내 큰 성 ${dots}/3">${[0,1,2].map(i=>i<dots?'●':'○').join('')}</span>`;
  q('.nb-forecast-status').innerHTML=`<span class="nb-status-date">${esc(String(d.date??'').replace(/^\d+턴\s*·\s*/, ''))} · ${esc(d.turn??'')}차례</span>${[...q('.ih-res').querySelectorAll('.ih-chip')].filter(c=>['food','production','troops'].includes(c.dataset.res)).map(c=>`<span>${esc(c.querySelector('.nb-resource-label')?.textContent??'')} ${esc(c.querySelector('b')?.textContent??'')}${c.dataset.res==='production'?' '+esc(c.querySelector('small')?.textContent??''):''}</span>`).join('')}`;
  fitForecastStatus(q('.nb-forecast-status'));
- const advisor=document.querySelector('#w-advisor .face img')?.src,advice=document.querySelector('#campaign-advice:not([hidden])')?.textContent||document.querySelector('#status')?.textContent||d.summary||'전장을 살펴보십시오.';
+ const situation=document.querySelector('#c207-situation:not([hidden])');
+ const advisor=document.querySelector('#w-advisor .face img')?.src,advice=situation?.textContent||document.querySelector('#campaign-advice:not([hidden])')?.textContent||document.querySelector('#status')?.textContent||d.summary||'전장을 살펴보십시오.';
+ if(situation)q('.nb-advisor-box').dataset.situation=situation.dataset.event;else delete q('.nb-advisor-box').dataset.situation;
  q('.nb-advisor-box').innerHTML=`<span class="nb-advisor">${advisor?`<img src="${esc(advisor)}" alt="군사">`:'軍'}</span><div><b>${esc(document.querySelector('#w-advisor .who')?.textContent??'군사')}</b><p title="${esc(advice)}">${esc(advice)}</p><button class="nb-next" data-band-next${!d.remaining?' disabled':''}>다음 부대 · ${d.remaining??0}</button></div>`;
  const selected=q('.nb-selected');selected.hidden=!showUnit;selected.innerHTML=showUnit?selectedUnitHtml(d):'';
  q('.nb-bookmarks [data-band-map] span').textContent=RAIL.find(([m])=>m===d.mode)?.[1]??'지형';q('.nb-badge').textContent=d.council||'';
@@ -863,4 +913,36 @@ export function levelupUpgradeText(card, describe) {
 export function fatigueLineText(f) {
  if(!f||!Number.isFinite(f.value))return '';
  return `피로 ${Math.round(f.value)}${f.levelName?' · '+f.levelName:''}${f.musterBlocked?` — ${f.restTurns}차례 쉬면 출진 가능`:''}`;
+}
+
+// C206: presentation of public campaign projections only.
+export function windHtml(weather){
+ if(!weather)return '';
+ const arrow=['→','↗','↖','←','↙','↘'][weather.direction]??'•';
+ return `<span class="c206-wind" aria-label="바람 ${esc(weather.name)}풍"><span aria-hidden="true">${arrow}</span> ${esc(weather.name)}풍</span>`;
+}
+export const citySecurityName=c=>['안정','불안','혼란'][c?.securityLevel]??String(c?.securityName??'').replace(/동요/g,'불안');
+export function combatEffectLines(p){
+ return [...new Set((p.effectLines??[]).map(line=>line.replace(/^병종 × 지형:\s*/, '지형 — ').replace(/공격 (-?\d+)%/,(_,n)=>`공격 ${Number(n)>0?'+':'−'}${Math.abs(Number(n))}%`).replace(/궁병 성 공격 — 성벽 내구 피해 ×0\.5/,'성벽 피해 절반')))];
+}
+export function fireReadout(v){
+ return {fires:(v.fire?.tiles??[]).map(f=>({id:f.tileId,until:v.turn+f.turnsLeft-1,turnsLeft:f.turnsLeft})),scorches:v.fire?.burnedForest??[]};
+}
+export function combatScreenNews(before,after){
+ const rows=[];
+ if(after.combatWeather?.record&&before.combatWeather?.direction!==after.combatWeather.direction)rows.push({line:`바람 바뀜 — ${after.combatWeather.name}풍`});
+ const oldFire=new Set((before.fire?.log??[]).map(e=>JSON.stringify(e)));
+ for(const e of after.fire?.log??[])if(!oldFire.has(JSON.stringify(e))&&['SPREAD','EXTINGUISH'].includes(e.kind))rows.push({line:e.text});
+ const oldContacts=new Set((before.contacts??[]).map(e=>JSON.stringify(e)));
+ for(const e of after.contacts??[]){
+  if(e.type!=='CONTACT'||oldContacts.has(JSON.stringify(e)))continue;
+  const own=(e.armyIds??[]).map(id=>after.ownArmies?.[id]).find(Boolean);
+  const enemy=(e.armyIds??[]).map(id=>after.knowledge?.observedArmies?.[id]).find(a=>a&&after.knowledge.tiles[a.tileId]==='VISIBLE');
+  if(!own)continue;
+  const name=enemy&&after.officers?.[enemy.commanderId]?.name;
+  rows.push({line:`매복! ${name??'숨은 적'} 앞에서 멈춤`,tileId:own.tileId,contact:true});
+ }
+ const x=after.c31;
+ if(x&&!x.resolved&&(before.c31?.actorId!==x.actorId||before.c31?.startTurn!==x.startTurn))rows.push({line:`${after.officers?.[x.actorId]?.name??'위기 장수'}: ${x.warnText}`});
+ return rows;
 }
