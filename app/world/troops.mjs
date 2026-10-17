@@ -1,3 +1,4 @@
+import {fxPreferences} from './hud-ink.mjs';
 // C155: presentation only. Public map units in, pixels out; no engine/state mutation.
 import {parentTroop} from '../../src/campaign-special-troops.mjs';
 const TYPES = {BT01:'militia', BT02:'spear', BT03:'bow', BT04:'cavalry', engineer:'militia', mystic:'bow'};
@@ -183,7 +184,7 @@ export function createTroopLayer({clock=()=>performance.now(),asset=()=>null,cha
   const canvas=document.createElement('canvas');canvas.className='w-troops-canvas';canvas.setAttribute('aria-hidden','true');
   const ctx=canvas.getContext('2d'), casualties=new Map(), deathKeys=new Map(), hits=new Map();
   let units=[], root=null, mounted=0, raf=0, last=0, drawMs=0, stopped=false;
-  const reduce=()=>globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const reduce=()=>fxPreferences.reduced();
   const foot=Object.fromEntries(['militia','spear','bow','cavalry'].map(k=>[k,loadSheet(`sheet-${k}.png`,9,k==='cavalry'?112:64,96,asset)]));
   // 10-14 R3(관우 기병 돌격 시안): 옷이 세력색인 시트 sheet-<병종>-<red|green|blue|grey>.png — 에셋 목록에 있으면 그것, 없으면 위의 색 없는 시트
   const toned={};const footFor=(u,tone)=>{

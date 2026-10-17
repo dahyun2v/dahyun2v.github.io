@@ -1,4 +1,5 @@
 // @ts-check
+import {fxPreferences} from './hud-ink.mjs';
 // 운명 드래프트 — 세력을 고른 뒤, 군주와 함께 깨어날 다섯 사람을 고르는 화면(기준 그림 final-draft).
 // 규칙은 /src/campaign-officer-draft.mjs 가 맡는다(정본 SG_OFFICER_DRAFT_FACTION_GIMMICKS v0.1 §1 공통 규칙 · §2 세력 기믹). 여기는 그리기와 누르기만.
 //   · 5장을 한 번에 본다 → 카드를 누르면 살펴보고(능력치), '깨운다'를 누르면 그 사람은 확정(잠금) → 남은 자리만 다시 부른다 → 다섯이 그릇(예산) 안이면 시작.
@@ -47,7 +48,7 @@ export function draftOfficerBriefs(input) {
   }));
 }
 
-const fxOn = () => { try { return new URLSearchParams(globalThis.location?.search ?? '').get('fx') !== '0' && !globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches; } catch { return true; } };
+const fxOn = () => { try { return new URLSearchParams(globalThis.location?.search ?? '').get('fx') !== '0' && !fxPreferences.reduced(); } catch { return true; } };
 const reliefOf = (/** @type {string} */ src) => src.replace(/\.\w+(\?.*)?$/, '-relief.webp');
 const bustOf = (/** @type {string} */ id) => `/assets/officer-art/bust/${id}.webp`;
 const sleep = (/** @type {number} */ ms) => new Promise((r) => setTimeout(r, ms));

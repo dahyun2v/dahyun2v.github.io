@@ -1,8 +1,34 @@
 import {troopText,troopDelta,TROOP_DISPLAY_SCALE} from '../../src/troop-display.mjs';
+import {C20_FACILITIES,C20_POLICIES} from '../../src/campaign-policy.mjs';
+import {SPECIAL_TROOPS} from '../../src/campaign-special-troops.mjs';
+import diplomacyAxes from '../../../docs/design-data/diplomacy-axes-v0.1.json' with {type:'json'};
 // 흑묵 지도 HUD — 기준 그림 final-map-v2 를 그대로 새로 짠 화면(2026-10-10, Claude · 사용자 "고치지 말고 새로 · 카드·단추는 에셋으로").
 // 판·단추·깃발·아이콘은 모두 GPT 가 기준 그림에서 한 장씩 뽑아 그린 그림(/assets/ui-v3/hud/). 코드는 자리·글자·숫자·막대 길이만.
 // 게임 처리는 옛 HUD(숨김)의 단추를 그대로 누른다 — 명령 코드는 한 곳(world.js)에만 있다.
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+// C210: presentation preferences never enter campaign state or its save key.
+export const FX_KEY='sangoku.fx.v1';
+export const FX_OPTIONS={aiSpeed:[['normal','보통'],['fast','빠름'],['instant','즉시']],cutin:[['always','매번'],['first','그 전법 처음 한 번'],['off','끄기']],shake:[['on','켬'],['off','끔']],motion:[['system','운영체제 설정'],['on','움직임 줄이기 켬'],['off','움직임 줄이기 끔']]};
+export const FX_DEFAULTS=Object.freeze({aiSpeed:'normal',cutin:'always',shake:'on',motion:'system'});
+export function createFxPreferences({storage=()=>globalThis.localStorage,system=()=>!!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches}={}){
+ const normalize=raw=>Object.fromEntries(Object.entries(FX_DEFAULTS).map(([key,value])=>[key,FX_OPTIONS[key].some(([id])=>id===raw?.[key])?raw[key]:value]));
+ let prefs={...FX_DEFAULTS};try{prefs=normalize(JSON.parse(storage()?.getItem(FX_KEY)??'null'));}catch{}
+ return {get value(){return {...prefs};},reduced(){return prefs.motion==='system'?system():prefs.motion==='on';},shake(){return prefs.shake==='on'&&!this.reduced();},duration(ms,ai=false){return ai?Math.round(ms*({normal:1,fast:.3,instant:0}[prefs.aiSpeed])):ms;},
+  update(patch){prefs=normalize({...prefs,...patch});try{storage()?.setItem(FX_KEY,JSON.stringify(prefs));return true;}catch{return false;}}};
+}
+export const fxPreferences=createFxPreferences();
+export function fxSettingsHtml(prefs=fxPreferences.value){return `<fieldset class="c210-fx"><legend>연출 설정</legend>${Object.entries(FX_OPTIONS).map(([key,options])=>`<label>${{aiSpeed:'AI 차례 속도',cutin:'전법 컷인',shake:'화면 흔들림',motion:'움직임 줄이기'}[key]}<select data-c210-fx="${key}" aria-label="${{aiSpeed:'AI 차례 속도',cutin:'전법 컷인',shake:'화면 흔들림',motion:'움직임 줄이기'}[key]}">${options.map(([id,name])=>`<option value="${id}"${prefs[key]===id?' selected':''}>${name}</option>`).join('')}</select></label>`).join('')}<small data-c210-fx-status role="status">이 기기의 연출에만 적용됩니다</small></fieldset>`;}
+export function shouldShowTacticCutin(mode,seen,key){if(mode==='off'||mode==='first'&&seen.has(key))return false;seen.add(key);return true;}
+export function factionOpeningLine(factionId){return [Object.values(C20_FACILITIES).find(f=>f.factionId===factionId)?.name,C20_POLICIES[factionId]?.name,Object.values(SPECIAL_TROOPS).filter(t=>t.factionId===factionId).map(t=>t.name).join('/')].filter(Boolean).join(' · ');}
+export function factionFacilityTodo(v){
+ if(v.turn<1||v.turn>3||v.gameResult||!v.policy)return null;
+ const entry=Object.entries(C20_FACILITIES).find(([,f])=>f.factionId===v.factionId);if(!entry)return null;const [kind,facility]=entry,cities=Object.values(v.ownCities??{});
+ if(cities.some(c=>(c.facilities??[]).some(f=>f.kind===kind)||c.currentProduction?.kind===kind||c.nextProduction?.kind===kind))return null;
+ const c=cities.find(c=>c.jobs?.some(j=>j.kind===kind&&!j.blockedReason)&&(!c.facilitySites?.[kind]||c.facilitySites[kind].tileId));
+ return c?{cityId:c.cityId,kind,text:`${facility.name} 짓기 · ${c.name} 생산으로`}:null;
+}
+export function cityCaptureThreatText(v,cityId){const c=v.knowledge?.cities?.[cityId],now=v.diplomacy?.me?.threat;if(!c||c.ownerFactionId===v.factionId||!Number.isFinite(now))return '';const rules=diplomacyAxes.threat,gain=rules.gain[c.kind==='major'?'majorCity':'minorCity'],after=Math.max(rules.range[0],Math.min(rules.range[1],now+gain));return `점령하면 우리 위협 +${gain} → ${after} (${rules.coalitionAt} 이상이면 견제 동맹)`;}
+export function cityCaptureThreatHtml(v,cityId){const text=cityCaptureThreatText(v,cityId);return text?`<p class="fc-threat">${esc(text)}</p>`:'';}
 // C197: these helpers consume only the player event projection.
 export function oathGoalText(o){return String(o.goalText??'').replace(/\{([^}]+)\}/g,(_,k)=>o.names?.[k]??k);}
 export function oathBandHtml(oaths=[]){const active=oaths.filter(o=>o.status==='ACTIVE');if(!active.length)return '';const row=o=>`맹세: ${esc(oathGoalText(o))} — ${o.turnsLeft}차례 남음`;return active.length===1?`<p>${row(active[0])}</p>`:`<details><summary>${row(active[0])} · 외 ${active.length-1}건</summary>${active.slice(1).map(o=>`<p>${row(o)}</p>`).join('')}</details>`;}
@@ -616,6 +642,8 @@ function mountCommandBand(root){
  for(const s of ['.ih-faction','.ih-date','.ih-res'])topLeft.append(root.querySelector(s));
  root.querySelector('.ih-menu').insertAdjacentHTML('beforeend','<button data-band-settings aria-label="설정" aria-expanded="false">⚙</button><section class="nb-settings" hidden aria-label="설정 메뉴"></section>');
  for(const s of ['#load-again','#mute'])root.querySelector('.nb-settings').append(root.querySelector(`.ih-menu [data-fwd="${s}"]`));
+ root.querySelector('.nb-settings').insertAdjacentHTML('beforeend',fxSettingsHtml());
+ root.addEventListener('change',e=>{const select=e.target.closest('[data-c210-fx]');if(!select)return;const saved=fxPreferences.update({[select.dataset.c210Fx]:select.value});root.querySelector('[data-c210-fx-status]').textContent=saved?'연출 설정을 저장했습니다':'이 기기에 저장할 수 없어 이번 화면에만 적용됩니다';document.dispatchEvent(new CustomEvent('ink:fx-settings'));});
  root.querySelector('.ih').insertAdjacentHTML('beforeend','<aside class="nb-selected" hidden aria-label="선택 부대"></aside><aside class="nb-advisor-box" aria-label="군사 조언"></aside><p class="nb-forecast-status"></p>');
  root.querySelector('.ih').insertAdjacentHTML('beforeend','<header class="nb-state-title" hidden><h1></h1><p></p></header><aside class="nb-supply" hidden aria-label="선택 부대 보급"></aside><section class="nb-todo-panel" aria-label="이번 차례 할 일"></section>');
  root.querySelector('.nb-todo-panel').append(root.querySelector('.nb-news-tab'));
@@ -663,12 +691,13 @@ export function bandForecastHtml(html,colors={}){
  const title=text('.fc-title'),parts=title.split(' · '),kind=city?(parts.slice(0,-1).join(' · ')||'성벽 공격'):(text('.fc-dir')||title||'정면 공격'),enemyName=city?(parts.at(-1)||title):text('.fc-col.enemy b');
  const mods=forecastModifiers([...source.querySelectorAll('.fc-mods li')].map(n=>{const detail=n.querySelector('small')?.textContent.trim()||'',text=n.textContent.trim();return {text:detail&&text.endsWith(detail)?text.slice(0,-detail.length).trim():text,description:detail||n.getAttribute('title')||''};}));
  const risks=[...source.querySelectorAll('.fc-risk')].map(n=>n.textContent.trim());
+ const threat=source.querySelector('.fc-threat')?.textContent.trim()??'';
  const targets=source.querySelector('.fc-targets')?.outerHTML??'';
  const tacticCommand=text('.fc-command'),confirm=source.querySelector('.fc-tactic-confirm');
  const confirmHtml=confirm?confirm.outerHTML.replace('class="fc-tactic-confirm"','class="nb-click"'):'<b class="nb-click">공격 확정<small>적 칸 클릭</small></b>';
  const cancelHtml=confirm?'<button type="button" class="nb-cancel" data-tactic-cancel>취소 · Esc</button>':'<small class="nb-cancel">취소 · Esc</small>';
  const commandStyle=tacticCommand?' style="display:block;white-space:normal;text-align:center;overflow:visible"':'';
- return `<div class="nb-forecast" style="--ally-color:${esc(colors.ally)};--enemy-color:${esc(colors.enemy)}" title="${esc([...mods.map(m=>m.text),...risks].join('\n'))}">${side('ally',text(city?'.nb-city-ally b':'.fc-col.ally b'),picture(city?'.nb-city-ally img':'.fc-col.ally img'),ownPair,ownLoss)}<section class="nb-preview-middle"><i aria-hidden="true"></i><b>${esc(tacticCommand&&!title?'전법 예고':kind)}</b><span${commandStyle}>${esc(tacticCommand||[text('.fc-res'),text('.fc-tag')].filter(Boolean).join(' · '))}</span></section>${side('enemy',enemyName,city?'':picture('.fc-col.enemy img'),foePair,foeLoss,city?'내구':'병력')}<aside class="nb-preview-mods">${mods[0]?`<b>${esc(mods[0].text)}</b><p>${esc(mods[0].description||mods[1]?.text||'')}</p>`:''}${risks.length?`<small class="nb-preview-risk" title="${esc(risks.join('\n'))}">${esc(risks[0])}</small>`:''}</aside>${targets}${confirmHtml}${cancelHtml}</div>`;
+ return `<div class="nb-forecast" style="--ally-color:${esc(colors.ally)};--enemy-color:${esc(colors.enemy)}" title="${esc([...mods.map(m=>m.text),...risks].join('\n'))}">${side('ally',text(city?'.nb-city-ally b':'.fc-col.ally b'),picture(city?'.nb-city-ally img':'.fc-col.ally img'),ownPair,ownLoss)}<section class="nb-preview-middle"><i aria-hidden="true"></i><b>${esc(tacticCommand&&!title?'전법 예고':kind)}</b><span${commandStyle}>${esc(tacticCommand||[text('.fc-res'),text('.fc-tag')].filter(Boolean).join(' · '))}</span></section>${side('enemy',enemyName,city?'':picture('.fc-col.enemy img'),foePair,foeLoss,city?'내구':'병력')}<aside class="nb-preview-mods">${mods[0]?`<b>${esc(mods[0].text)}</b><p>${esc(mods[0].description||mods[1]?.text||'')}</p>`:''}${risks.length?`<small class="nb-preview-risk" title="${esc(risks.join('\n'))}">${esc(risks[0])}</small>`:''}</aside>${threat?`<p class="nb-preview-threat">${esc(threat)}</p>`:""}${targets}${confirmHtml}${cancelHtml}</div>`;
 }
 // Rank only numbers already present in the public forecast; no combat calculation here.
 export function forecastModifiers(mods){
@@ -722,7 +751,7 @@ function renderCommandBand(root,d,showUnit,menu){
  q('.nb-end-warning').textContent=q('.ih-end small').textContent;q('.nb-end-warning').title=q('.nb-end-warning').textContent;
  q('.ih-end').classList.toggle('ready',d.remaining===0&&!q('.ih-end').disabled);
  const task=Math.max(d.todo??0,d.todoLines?.length??0),news=d.allNews??[],latest=news[0]??'';q('.nb-news-tab').textContent=`이번 차례 · 할 일 ${task}`;
- q('.nb-tasks').hidden=false;q('.nb-tasks').innerHTML=(d.todoLines?.length?d.todoLines:['이번 차례 남은 안건이 없습니다.']).map(t=>`<li><i aria-hidden="true">➜</i><span>${esc(t)}</span><i class="nb-check" aria-hidden="true">○</i></li>`).join('');
+ q('.nb-tasks').hidden=false;q('.nb-tasks').innerHTML=(d.todoLines?.length?d.todoLines:['이번 차례 남은 안건이 없습니다.']).map(t=>`<li><i aria-hidden="true">➜</i>${typeof t==='string'?`<span>${esc(t)}</span>`:`<button type="button" data-c210-facility="${esc(t.cityId)}" data-c210-kind="${esc(t.kind)}">${esc(t.text)}</button>`}<i class="nb-check" aria-hidden="true">○</i></li>`).join('');
  if(band._news!==undefined&&band._news!==latest&&latest){q('.nb-news-peek').textContent=latest;q('.nb-news-peek').hidden=false;clearTimeout(band._peekTimer);band._peekTimer=setTimeout(()=>{q('.nb-news-peek').hidden=true;},2000);}band._news=latest;
  if(band._army!==d.unitStatus?.id){q('.nb-sheet').hidden=true;band._army=d.unitStatus?.id;setBandState(band,showUnit?'unit':'rest');}
  let html;

@@ -1002,7 +1002,7 @@ body:has(.w-dock:not([hidden])) .w-advisor{bottom:150px}
 @keyframes wSiteSpin{to{transform:rotate(360deg)}}
 .wmap .w-site .badge.done rect{fill:#3b3f3d;stroke:#9a9c95;stroke-width:1}
 .wmap .w-site .badge.done text{fill:#e8e3d7}
-@media (prefers-reduced-motion:reduce){.wmap .w-site .beacon,.wmap .w-site .badge.pend .spin{animation:none}}
+@media (prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.wmap .w-site .beacon,.wmap .w-site .badge.pend .spin){animation:none}}
 
 /* 지도 밖: 칠흑 대신 어두운 구름 바다(지도와 함께 움직임) */
 .w-stage{background:radial-gradient(ellipse at 50% 45%,transparent 40%,rgba(4,6,7,.75) 100%),url(/assets/ui-v3/map/edge-mist.webp) 0 0/900px 900px repeat,#0a0d0f;background-attachment:scroll,local,scroll}
@@ -1047,7 +1047,7 @@ body:has(.w-dock:not([hidden])) .w-advisor{bottom:150px}
 .choice-art.scene{display:block;background:#07090a}
 .choice-art.scene img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;filter:saturate(.92) contrast(1.04);animation:w-discover-scene 1.8s cubic-bezier(.2,.7,.2,1) both}
 @keyframes w-discover-scene{0%{opacity:0;transform:scale(1.08);filter:blur(6px) brightness(.3)}60%{opacity:1}100%{opacity:1;transform:scale(1);filter:blur(0) brightness(1) saturate(.92) contrast(1.04)}}
-@media (prefers-reduced-motion:reduce){.choice-art.scene img{animation:none}}
+@media (prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.choice-art.scene img){animation:none}}
 .w-mini .mini-art .mc{position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;transform:rotate(45deg);background:var(--c);border:1px solid #0b0e10;pointer-events:none}
 .w-mini .mini-art .mu{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1px #0b0e10;pointer-events:none}
 .w-mini .mini-art .mu.me{width:6px;height:6px;margin:-3px 0 0 -3px;box-shadow:0 0 0 1.5px #e8e3d7}
@@ -1080,7 +1080,7 @@ html[data-season="3"] .wmap .w-art{filter:saturate(.4) brightness(.95) contrast(
 .wmap .w-site .badge.done[data-layer] rect{fill:var(--lc);stroke:rgba(0,0,0,.4)}
 .wmap .w-site .badge.done[data-layer] text{fill:#f6ebe2}
 .wmap .w-site.s-resolved:has(.badge[data-layer]){filter:grayscale(.55)}
-@media (prefers-reduced-motion:reduce){.trace-seal{animation:none}}
+@media (prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.trace-seal){animation:none}}
 .wmap .w-unit .banner{display:none}
 .cs-cast,.cs-lord,.cs-under,.dp-medal,#visit-lord,.w-bond,.wmap .w-unit .plate .shield{display:none}
 
@@ -1136,7 +1136,7 @@ body.ink .wmap .w-cityplate .prod.muster rect{fill:#722e28;stroke:#d0ad7d}
 @keyframes ink-ready{0%{filter:brightness(2)}100%{filter:brightness(1)}}
 @keyframes ink-map-fx{0%{opacity:1}70%{opacity:.8}100%{opacity:0}}
 @keyframes ink-damage-pop{0%{opacity:0;scale:1.7;translate:0 4px}20%{opacity:1;scale:1.35}100%{opacity:1;scale:1;translate:0 -12px}}
-@media(prefers-reduced-motion:reduce){.ink-toast,.wmap .ink-damage,.wmap .w-tactic-ready.fresh{animation:none}.ink-city-seal{display:none}#tactic-cutin .tactic-art{animation:none}}
+@media(prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.ink-toast,.wmap .ink-damage,.wmap .w-tactic-ready.fresh){animation:none}html:not([data-reduce-motion="false"]) :is(.ink-city-seal){display:none}html:not([data-reduce-motion="false"]) :is(#tactic-cutin .tactic-art){animation:none}}
 /* C170: unit identity is type + strength; the officer is a 22 screen-pixel aid. */
 .wmap .unit-marker .unit-counter-bg{fill:#211e19d9;stroke:var(--fc);stroke-width:.65}
 .wmap .unit-marker .unit-flag{fill:var(--fc)}
@@ -1198,4 +1198,4 @@ body.ink .wmap .w-cityplate .prod.muster rect{fill:#722e28;stroke:#d0ad7d}
 .cs-role.inline{margin-top:10px;max-width:290px}
 .cs-facility-role{position:absolute;left:3vw;top:15vh;z-index:4;pointer-events:none;max-width:290px}
 .w-facility.building{opacity:.55}
-@media(prefers-reduced-motion:reduce){.cs-life :is(.cs-life-path,.cs-life-sprite){animation:none!important;background-position:0 0!important;translate:0 0!important;scale:1 1!important}.cs-life .birds{display:none}}
+@media(prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.cs-life :is(.cs-life-path,.cs-life-sprite)){animation:none!important;background-position:0 0!important;translate:0 0!important;scale:1 1!important}html:not([data-reduce-motion="false"]) :is(.cs-life .birds){display:none}}

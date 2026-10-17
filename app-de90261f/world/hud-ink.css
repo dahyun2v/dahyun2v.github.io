@@ -1415,7 +1415,7 @@ body.ink .wmap .w-unit.moved:not(.active) .plate{filter:none}
 body.ink .wmap .w-unit.ready .rglow{display:inline;fill:none;stroke:#ffe2a0;stroke-width:3.2;stroke-linejoin:round;filter:blur(1.6px);animation:unitReady 1.9s ease-in-out infinite;pointer-events:none}
 body.ink .wmap .w-unit.ready.active .rglow{stroke:#fff3d4;stroke-width:4.2}
 @keyframes unitReady{0%,100%{opacity:.5}50%{opacity:1}}
-@media (prefers-reduced-motion:reduce){body.ink .wmap .w-unit.ready .rglow{animation:none;opacity:.85}}
+@media (prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(body.ink .wmap .w-unit.ready .rglow){animation:none;opacity:.85}}
 /* 2) 성 기본 정보 줄(병력 · 내구) */
 .wmap .w-cityplate .cinfo .ci-bg{fill:rgba(14,13,12,.9);stroke:rgba(230,220,203,.4);stroke-width:.8}
 .wmap .w-cityplate .cinfo .ci-t{fill:#efe6d6;font:700 9px var(--sans);letter-spacing:.02em}
@@ -2472,7 +2472,7 @@ body.ink-hud #victory-guide{display:none}
 .ih-end small{left:-45%;right:0;bottom:-2%;padding:5px;background:#202a27ed;letter-spacing:0;font-size:13px;line-height:1.5}
 .ih-end.ready img,#end-turn.ready{animation:c129-turn-ready 3s ease-in-out infinite}
 @keyframes c129-turn-ready{50%{filter:brightness(1.2) drop-shadow(0 0 12px #e9bc67)}}
-@media(prefers-reduced-motion:reduce){.ih-end.ready img,#end-turn.ready{animation:none;filter:brightness(1.15)}}
+@media(prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.ih-end.ready img,#end-turn.ready){animation:none;filter:brightness(1.15)}}
 .cs-sortie-guide{position:absolute;left:100px;top:90px;z-index:80;margin:0;padding:8px 14px;background:#202a27ee;border:1px solid #89795c;color:#efe6d6;font:15px/1.5 var(--serif);pointer-events:none}
 .cs-sortie-guide[hidden]{display:none}
 /* C130: 선택과 공격 대상은 장식과 구별되는 표지로 남긴다. */
@@ -2955,7 +2955,7 @@ body.hud-band .nb-band.stamp::after{content:'';position:absolute;right:17%;top:5
 @keyframes nb-stamp{0%{opacity:0;transform:translateY(-50%) rotate(-7deg) scale(1.9)}22%{opacity:1;transform:translateY(-50%) rotate(-7deg) scale(.96)}34%{transform:translateY(-50%) rotate(-7deg) scale(1)}78%{opacity:1}100%{opacity:0;transform:translateY(-50%) rotate(-7deg) scale(1)}}
 body.hud-band .nb-wipe .nb-content{animation:nb-wipe 140ms ease-out}
 @keyframes nb-wipe{from{clip-path:inset(-120% 100% 0 0)}to{clip-path:inset(-120% 0 0 0)}}
-@media(prefers-reduced-motion:reduce){body.hud-band .nb-wipe .nb-content{animation:none}body.hud-band .nb-band.stamp::after{display:none}}
+@media(prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(body.hud-band .nb-wipe .nb-content){animation:none}html:not([data-reduce-motion="false"]) :is(body.hud-band .nb-band.stamp::after){display:none}}
 /* C157: target lettering, panel furniture and review-2 small differences. */
 body.hud-band .nb-state-title h1{position:absolute;left:calc(58 * var(--ku));top:calc(20 * var(--ku));width:calc(184 * var(--ku));height:calc(48 * var(--ku));margin:0!important;background:url(/assets/ui-v3/hud/kit-title-focus.png) center/contain no-repeat;color:transparent;-webkit-text-stroke:0;font-size-adjust:none}
 body.hud-band .nb-state-title p{position:absolute;left:calc(70 * var(--ku));top:calc(79 * var(--ku));margin:0}
@@ -3093,7 +3093,7 @@ body.hud-band:has(.nb-supply:not([hidden])) .nb-advisor-box>div{padding-top:calc
 .tactic-meter em{position:absolute;right:0;bottom:3px;font:11px var(--serif);font-style:normal;color:#e4cda5}
 .tactic-ready-flash::after{content:'';position:absolute;inset:-4px;background:url(/assets/ui-v3/hud/kit/hero-brush.png) center/contain no-repeat;mix-blend-mode:screen;pointer-events:none;animation:tactic-ready-sweep .6s ease-out both;z-index:3}
 @keyframes tactic-ready-sweep{0%{opacity:0;clip-path:inset(0 100% 0 0)}40%{opacity:.75;clip-path:inset(0)}100%{opacity:0;clip-path:inset(0)}}
-@media(prefers-reduced-motion:reduce){.tactic-ready-flash::after{display:none}}
+@media(prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.tactic-ready-flash::after){display:none}}
 /* C159: supply route hints occupy the lower map, below its title and description. */
 /* C163: one bounded route hint in every map state, clear of the title and band. */
 body.hud-band #attack-preview:not(.forecast),body.hud-band:has(.nb-band[data-state="unit"]) #attack-preview:not(.forecast),body.hud-band:has(.nb-supply:not([hidden])) #attack-preview:not(.forecast){position:fixed;top:var(--guide-top,80dvh)!important;bottom:auto;left:var(--guide-left,27vw)!important;transform:none;width:var(--guide-width,46vw);max-width:720px;height:28px;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:auto;background:linear-gradient(90deg,transparent,#111c 5%,#111c 95%,transparent);background-size:100% 100%!important;padding:3px 12px;border:0;box-shadow:none;z-index:2;color:#eee4ce;font:400 clamp(12px,1.02vw,17px)/22px var(--serif)}
@@ -3636,6 +3636,11 @@ body.ink .cs:has(.nj-screen) .cs-sortie-guide{display:none}
 #c205-bands>#c197-oath-band{position:static;transform:none;max-width:320px;flex:0 1 auto;pointer-events:auto}
 #c205-band{min-width:0;max-width:660px;max-height:32vh;overflow:auto;padding:5px 16px;border-block:1px solid #8a7850;background:#191c1aee;color:#e4d8b9;font:13px/1.5 var(--sans);box-shadow:0 3px 12px #0008;pointer-events:auto}
 #c205-band[hidden]{display:none}
+/* C209b: notification cards own the map while open; restore all bands on close. */
+body:has(#dejavu:not([hidden]),#c197-event-result:not([hidden]),#c186-turn-summary:not([hidden]),.c206-contact,.ink-toast,#w-advisor.c207-speaking:not([hidden]),.nb-advisor-box[data-situation]) :is(#c205-bands,#c197-oath-band){display:none}
+/* Keep the existing topbar artwork size. Remove the old food-only wrapping cap. */
+body.hud-band .ih-res .ih-chip[data-food-open] small{display:inline;max-width:none;white-space:nowrap;flex-shrink:0}
+body.hud-band .ih-res .ih-chip{flex-shrink:0;font-size:calc(16 * var(--ku));padding-inline:calc(8 * var(--ku));gap:calc(3 * var(--ku))}
 #c205-band summary{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:2px 0}
 #c205-band details>p,#c205-band details>ul{white-space:normal;margin:5px 0;padding-left:16px}
 #c205-band i{font-style:normal;color:#cfb68a}
@@ -3650,4 +3655,27 @@ body.ink .cs:has(.nj-screen) .cs-sortie-guide{display:none}
 .c205-memory{color:#d7c197;font-family:var(--serif);margin-bottom:12px}
 @media(max-width:1250px){.c205-main{padding:24px 12px 16px 0;gap:10px}.c205-cards{gap:4px}.c205-card{padding:10px 14px 22px}.c205-card b{font-size:22px}.c205-selected{width:48px;font-size:15px}.c205-goal{line-height:1.35}.c205-faction-seal img{width:58px;height:58px}}
 @media(max-width:760px){.c205-sheet{grid-template-columns:1fr}.c205-ruler{display:none}.c205-main{padding:30px 12px}.c205-cards{flex-wrap:wrap}.c205-card{flex-basis:220px;max-width:280px}.c205-sheet #c205-title{font-size:32px}#c205-choice[data-kind=order] .c205-sheet{padding:20px 10px}#c205-bands{max-width:90vw;width:90vw;top:114px}#c205-band{padding:4px 8px}}
-@media(prefers-reduced-motion:reduce){.c205-stamp i{animation:none}}
+@media(prefers-reduced-motion:reduce){html:not([data-reduce-motion="false"]) :is(.c205-stamp i){animation:none}}
+/* C210: reuse the existing settings/todo/event surfaces and their art. */
+body.hud-band .nb-settings{width:min(420px,calc(100vw - 24px));max-height:85dvh;overflow:auto;gap:12px;z-index:160;background-color:#171a18}
+body.hud-band .ih-menu:has(.nb-settings:not([hidden])){z-index:161}
+body:has(.nb-settings:not([hidden])) :is(#c205-bands,#c197-oath-band){display:none}
+.c210-fx{width:100%;min-width:0;box-sizing:border-box;margin:0;padding:8px 0 0;border:0;border-top:1px solid #716958}
+.c210-fx legend{font:700 18px var(--serif);color:#eee1c9}
+.c210-fx label{display:grid;grid-template-columns:1fr minmax(130px,1.15fr);align-items:center;gap:10px;margin:10px 0;font:14px/1.4 var(--serif)}
+.c210-fx select{width:100%;min-width:0;padding:6px;background:#24231e;color:#eee1c9;border:1px solid #83745c;font:inherit}
+.c210-fx small{display:block;font:12px/1.5 var(--sans);color:#bcb4a3}
+body.ink .w-lord .c210-faction-line{position:absolute;left:2%;right:2%;bottom:0;z-index:4;font:600 clamp(10px,.78vw,13px)/1.4 var(--serif);color:#eee1c9;text-align:center;white-space:nowrap;text-shadow:0 2px 3px #000}
+body.hud-band .nb-tasks [data-c210-facility]{padding:2px 0;min-width:0;border:0;background:none;color:inherit;text-align:left;font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+body.hud-band .nb-preview-threat{position:fixed;left:24vw;top:67dvh;width:51vw;margin:0;text-align:center;color:#e7c68a;font:600 clamp(12px,1.05vw,17px)/1.5 var(--serif);text-shadow:0 1px 3px #000;pointer-events:none}
+.fc-threat{color:#e7c68a;font-size:12px;line-height:1.5}
+/* Reserve readable body space; choices/portrait strip may not consume it. */
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) .w-event-body{top:8px;bottom:8px;height:auto;grid-template-rows:8% auto minmax(110px,1fr) 54px 2px auto auto auto 2%;row-gap:4px;overflow:hidden}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) .w-event-body #event-text{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) .ev-duo:not([hidden]){height:clamp(46px,7vh,65px);width:75%;aspect-ratio:auto}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face{height:clamp(150px,24vh,225px);aspect-ratio:auto}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face::after{background-size:cover;background-position:center}/* 판 그림은 한 방향으로 늘리지 않는다(C199) */
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-choice small{max-height:72px;overflow:auto;scrollbar-width:thin}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face b{font-size:clamp(10px,.78vw,13px);height:14%;min-height:2.4em}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face b span{display:block;max-height:none;overflow:visible;-webkit-line-clamp:unset}
+html[data-reduce-motion="true"] *,html[data-reduce-motion="true"] *::before,html[data-reduce-motion="true"] *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}

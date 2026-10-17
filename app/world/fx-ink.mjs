@@ -1,5 +1,5 @@
 // C177: presentation only. Fire lifetime/rules remain in the campaign engine.
-import {fireReadout} from './hud-ink.mjs';
+import {fireReadout,fxPreferences} from './hud-ink.mjs';
 export const FX_ROOT='/assets/ui-v3/dots-1016/';
 export const FX_SHEETS=Object.freeze({
  flame:{path:'fire/B1-flame.png',frames:8,w:256,h:256},
@@ -93,7 +93,7 @@ function sprite(doc,key,width,height,frame,attrs={}){
  const s=FX_SHEETS[key],n=svgNode(doc,'svg',{width,height,style:`width:${width}px;height:${height}px`,viewBox:`${frame*s.w} 0 ${s.w} ${s.h}`,overflow:'hidden',...attrs});
  n.append(svgNode(doc,'image',{href:FX_ROOT+s.path,width:s.w*s.frames,height:s.h}));return n;
 }
-export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>!!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches,camera=null,clock=()=>performance.now(),raf=fn=>requestAnimationFrame(fn),cancel=id=>cancelAnimationFrame(id),doc=globalThis.document}={}){
+export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>fxPreferences.reduced(),shake=()=>fxPreferences.shake(),camera=null,clock=()=>performance.now(),raf=fn=>requestAnimationFrame(fn),cancel=id=>cancelAnimationFrame(id),doc=globalThis.document}={}){
  const memory=createFireMemory(),ignitions=new Map(),held=new Set();let fires=[],scorches=[],fireTurns=new Map(),impacts=[],svg=null,layout=null,frame=0,last=-Infinity,stopped=false,burnLoop=false;
  const center=id=>{const [q,r]=id.split(',').map(Number);return {x:layout.ox+layout.size*Math.sqrt(3)*(q+r/2),y:layout.oy+layout.size*1.5*r*.62};};
  const cameraFx=camera?createTacticCamera({...camera,reduced,clock,raf,cancel}):null;
@@ -144,7 +144,7 @@ export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>!!
    for(const [i,id] of info.igniting.entries()){held.delete(id);ignitions.set(id,{start:null,delay:reduced()?0:i*120});}
    for(const tile of info.targets)impacts.push({tile,start:null,big});
    sfx()?.play?.('tactic');if(c.fire||info.igniting.length)sfx()?.play?.('fire-ignite');
-   const frames=shakeFrames({reduced:reduced(),big});if(frames.length)root.animate?.(frames,{duration:big?220:120,easing:'ease-out'});
+   const frames=shakeFrames({reduced:reduced()||!shake(),big});if(frames.length)root.animate?.(frames,{duration:big?220:120,easing:'ease-out'});
    prepared=null;last=-Infinity;
   },
   // Restore before world.js selects/follows the next unit; two concurrent camera

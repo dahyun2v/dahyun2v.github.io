@@ -79,26 +79,28 @@ export function mountGlossary(doc=globalThis.document){
  decorateTerms(doc.body);observer.observe(doc.body,{childList:true,subtree:true,characterData:true});
  return {hide};
 }
-export function situationEvents(before,after){
- if(!before||before.factionId!==after.factionId)return [];
- const events=[],mine=v=>Object.keys(v.ownCities??{}),old=mine(before),now=mine(after);
- if(now.some(id=>!old.includes(id)))events.push('FIRST_CAPTURE');
- if(old.some(id=>!now.includes(id)))events.push('FIRST_CITY_LOST');
- if(old.length>1&&now.length===1)events.push('LAST_CITY');
- // A vanished unit may have garrisoned. Require an explicit total-loss result.
- if((after.combatFeedback??[]).some(e=>e.turn===after.turn&&(e.targetLosses??[]).some(r=>before.ownArmies?.[r.targetId]&&r.loss>=before.ownArmies[r.targetId].troopCount&&(!after.ownArmies?.[r.targetId]||after.ownArmies[r.targetId].troopCount===0))))events.push('ARMY_DESTROYED');
- if(before.c31&&!before.c31.resolved&&['CAPTURED','ELIMINATED','ROUTED'].includes(after.c31?.resolved))events.push('CRISIS_DEFEATED');
- const allies=v=>(v.diplomacy?.factions??[]).filter(f=>f.state==='ALLIANCE').map(f=>f.factionId);
- if(allies(after).some(id=>!allies(before).includes(id)))events.push('ALLIANCE_FORMED');
- return events;
-}
-// Session ledger only until the owner accepts the save contract listed in RESULT.
+// Pending events and used IDs come only from the public engine ledger.
+// Selecting is reversible; acknowledge only after the caller has displayed a line.
 export function createSituationTracker(data=situations){
- let before=null,queue=[],active=null;const usedEvents=new Set(),usedLines=new Set();
- const advance=()=>{if(queue.length){active=queue.shift();usedEvents.add(active.event);usedLines.add(active.line);}return active;};
+ let queue=[],active=null,factionId=null,turn=null,ledger={seenEvents:[],usedLineIds:[]};
+ const advance=()=>{active=queue.shift()??null;return active;};
  return {update(v){
-  if(active&&v.turn!==active.turn)active=null;queue=queue.filter(x=>x.turn===v.turn);
-  for(const event of situationEvents(before,v)){if(usedEvents.has(event)||queue.some(x=>x.event===event))continue;const lines=data.lines[v.factionId]?.[event]??[],line=lines.find(l=>!usedLines.has(l)&&!queue.some(x=>x.line===l));if(line)queue.push({event,line,speakerId:data.speakers[v.factionId],turn:v.turn});}
-  before=v;if(!active)advance();return active;
- },advance,get pending(){return queue.length;},get used(){return {events:[...usedEvents],lines:[...usedLines]};}};
+  if(factionId!==v.factionId){queue=[];active=null;}
+  factionId=v.factionId;
+  ledger=v.situationBarks??{seenEvents:[],usedLineIds:[]};
+  const events=(v.situationEvents??[]).filter(e=>e.factionId===factionId&&!ledger.seenEvents.includes(e.id));
+  if(active&&(turn!==v.turn||!active.displayed&&!events.some(e=>e.id===active.eventId)))active=null;
+  turn=v.turn;queue=[];
+  for(const e of events){
+   if(active?.eventId===e.id||queue.some(x=>x.eventId===e.id))continue;
+   const lines=data.lines[factionId]?.[e.type]??[];
+   const index=lines.findIndex((_,i)=>{const id=`${factionId}:${e.type}:${i}`;return !ledger.usedLineIds.includes(id)&&active?.lineId!==id&&!queue.some(x=>x.lineId===id);});
+   if(index>=0)queue.push({event:e.type,eventId:e.id,lineId:`${factionId}:${e.type}:${index}`,line:lines[index],speakerId:data.speakers[factionId],turn:v.turn,displayed:false});
+  }
+  if(!active)advance();return active;
+ },displayed(send){
+  if(!active||active.displayed)return;
+  send({type:'MARK_SITUATION_LINE',eventId:active.eventId,lineId:active.lineId});
+  active.displayed=true;
+ },advance,get pending(){return queue.length;}};
 }

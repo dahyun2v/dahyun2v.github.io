@@ -1,4 +1,5 @@
 // C178: presentation only; sheets stay byte-for-byte as delivered.
+import {fxPreferences} from './hud-ink.mjs';
 export const LIFE_SHEETS = Object.freeze({
   smoke: {file:'C1-chimney-smoke', frames:6, fps:9, ratio:128/256},
   flame: {file:'C2-flame', frames:6, fps:10, ratio:64/96},
@@ -36,13 +37,14 @@ export function mountCityLife(root) {
   let inViewport=false;
   const update=()=>{
     const layer=root.querySelector('.cs-life');if(!layer)return;
-    layer.classList.toggle('paused',lifeIsPaused({hidden:root.hidden||doc.hidden,inViewport,reduced:!!media?.matches,facility:root.classList.contains('push')||root.classList.contains('facility')}));
-    layer.classList.toggle('reduced',!!media?.matches);
+    layer.classList.toggle('paused',lifeIsPaused({hidden:root.hidden||doc.hidden,inViewport,reduced:fxPreferences.reduced(),facility:root.classList.contains('push')||root.classList.contains('facility')}));
+    layer.classList.toggle('reduced',fxPreferences.reduced());
   };
   if(globalThis.IntersectionObserver){new IntersectionObserver(entries=>{inViewport=entries[0]?.isIntersecting??false;update();}).observe(root);}
   else inViewport=true;
   new MutationObserver(update).observe(root,{attributes:true,attributeFilter:['hidden','class']});
   doc.addEventListener('visibilitychange',update);
   media?.addEventListener?.('change',update);
+  doc.addEventListener('ink:fx-settings',update);
   controllers.set(root,update);update();
 }
