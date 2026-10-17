@@ -14,7 +14,9 @@ export function prologueGuide(s){
  const [heading,text,target]=rows[p.stage];return {heading,text,target,done:p.stage==='DONE'};
 }
 export function prologueHtml(s){
- const g=prologueGuide(s);return `<section class="c225-coach" role="region" aria-label="서장 안내"><header><b>${g.heading}</b><button type="button" data-prologue-skip>건너뛰기</button></header><p>${escapeHtml(g.text)}</p>${g.done?'<ul><li>출진: 장수·병종·병력 선택</li><li>이동: 이동 칸과 통제 구역</li><li>교전: 피해·반격 예고와 측면 +15%</li><li>함락: 내구 0 + 성 공격</li></ul><p>조조 — 이 칼의 무게가 낯설지 않군.</p><button type="button" data-prologue-main>본 판 시작</button> <button type="button" data-prologue-retry>다시 하기</button>':'<button type="button" data-prologue-retry aria-label="다시 하기">다시 하기</button><small>실제 행동을 하면 다음 안내로 이어집니다.</small>'}</section>`;
+ const g=prologueGuide(s);
+ if(g.done)return `<section class="c227-prologue-end" role="dialog" aria-modal="true" aria-labelledby="c227-prologue-title"><img class="c227-cao" src="/assets/officer-art/cutout/G07.png" alt="조조"><div><h2 id="c227-prologue-title">서장 끝</h2><h3>배운 것</h3><ul><li>출진: 장수·병종·병력 선택</li><li>이동: 이동 칸과 통제 구역</li><li>교전: 피해·반격 예고와 측면 +15%</li><li>함락: 내구 0 + 성 공격</li></ul><p>조조 — 이 칼의 무게가 낯설지 않군.</p><button type="button" data-prologue-main>본 판 시작</button><button type="button" data-prologue-retry>다시 하기</button></div></section>`;
+ return `<section class="c225-coach" role="region" aria-label="서장 안내"><header><b>${g.heading}</b><button type="button" data-prologue-skip>건너뛰기</button></header><p>${escapeHtml(g.text)}</p><button type="button" data-prologue-retry aria-label="다시 하기">다시 하기</button><small>실제 행동을 하면 다음 안내로 이어집니다.</small></section>`;
 }
 // C225b: the left rail includes danger/undo controls and may grow after movement.
 export function prologuePlacement({width,coachWidth,headerBottom=0,railRight=0}){
@@ -24,11 +26,12 @@ export function renderPrologue(s,{document:doc=globalThis.document,navigate=url=
  if(!s?.prologue)return;
  let root=doc.querySelector('#c225-prologue');if(!root){root=doc.createElement('aside');root.id='c225-prologue';doc.body.appendChild(root);}
  root.innerHTML=prologueHtml(s);
- root.querySelector('[data-prologue-skip]').onclick=()=>navigate('/world?entry=new');
+ root.querySelector('[data-prologue-skip]')?.addEventListener('click',()=>navigate('/world?entry=new'));
  root.querySelector('[data-prologue-main]')?.addEventListener('click',()=>navigate('/world?entry=new'));
  root.querySelector('[data-prologue-retry]')?.addEventListener('click',()=>navigate('/world?entry=prologue'));
  const save=doc.querySelector('[data-fwd="#save"]');if(save){save.disabled=true;save.title='서장에서는 저장하지 않습니다';}
- if(s.prologue.stage==='DONE')complete();
+ root.dataset.done=String(s.prologue.stage==='DONE');
+ if(s.prologue.stage==='DONE'){complete();root.style.left='0';root.style.top='0';root.style.right='0';root.style.bottom='0';return;}
  const guide=prologueGuide(s);
  // Prefer the open sortie controls over the city beneath the scene.
  const preferred=guide.target?.includes('data-city')?guide.target.replace('[data-city','#map .w-cityplate[data-city'):guide.target;

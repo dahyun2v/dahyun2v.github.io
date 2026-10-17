@@ -3846,3 +3846,36 @@ body.c225-active #c211-rewind,body.c225-active .wind,body.c225-active [data-ih="
 #c225-prologue .c225-arrow{position:fixed;width:38px;height:28px;object-fit:contain;pointer-events:none}
 /* Claude 10-17: 긴 성장 카드 이름(10자 넘음)이 두 줄로 그림 위로 올라가던 것 — 칸을 조금 넓히고 글을 줄임(글자 검사 ip-final/39-t10-levelup) */
 body.ink #growth-cards .draft-card h3[data-long]{top:59.5%;height:10.5%;font-size:clamp(13px,1.02vw,17px);line-height:1.12;align-items:center}
+/* C227: preserve the aspect of existing plates; the lists scroll inside them. */
+#c226-stratagem .c226-controls{width:min(800px,92vw,110vh);aspect-ratio:560/440;max-height:none;padding:44px 60px;background:url('/assets/ui-v3/u3/cityquick/panel.png') center/contain no-repeat;border:0;overflow:auto}
+#c226-stratagem .c227-roster{display:grid;grid-template-columns:1fr 1fr;gap:4px;max-height:148px;overflow:auto;margin-bottom:10px}
+#c226-stratagem .c227-officer{display:flex;align-items:center;gap:8px;box-sizing:border-box;width:100%;aspect-ratio:660/218;margin:0;padding:8px 16px;border:0;background:url('/assets/ui-v3/u3/sortie/roster-row.png') center/contain no-repeat;color:#f4e9d3;text-align:left;font-size:13px;cursor:pointer}
+#c226-stratagem .c227-officer.on{background-image:url('/assets/ui-v3/u3/sortie/roster-row-on.png')}
+#c226-stratagem .c227-officer:disabled{filter:grayscale(1);color:#c0bdb5;cursor:default}
+#c226-stratagem .c227-officer small{display:block;font-size:11px;line-height:1.4}
+#c226-stratagem .c227-face{flex:0 0 46px;height:46px;overflow:hidden}
+.c227-face img,.c227-result-face img{width:100%;height:100%;object-fit:cover}
+.c227-face img[data-hd],.c227-result-face img[data-hd]{object-view-box:var(--ovb-face);object-fit:cover;object-position:center}
+#c226-stratagem .c226-cards{gap:12px}
+#c226-stratagem .c226-card{max-height:310px}
+#c226-stratagem [data-stratagem-close]{display:block;width:140px;height:42px;margin:8px auto 0;border:0;color:#eee4ce;background:url('/assets/ui-v3/u3/cityquick/btn.png') center/contain no-repeat}
+#c226-stratagem button:focus-visible{outline:2px solid #ecbd73;outline-offset:-3px}
+#c226-stratagem[data-stage=target] .c226-controls{aspect-ratio:auto;max-height:calc(100vh - 220px);padding:30px 32px;background-image:url('/assets/ui-v3/u3/sortie/panel.png')}
+#c226-stratagem[data-stage=target] .c227-roster{display:block;max-height:95px}
+#c226-stratagem[data-stage=target] .c227-officer:not(.on){display:none}
+#c226-stratagem .c226-result{width:min(880px,92vw,112vh);aspect-ratio:560/440;max-height:none;padding:70px 85px;display:grid;grid-template-columns:40% 1fr;align-items:center;gap:30px}
+#c226-stratagem .c227-result-face{display:block;aspect-ratio:1;width:100%;overflow:hidden}
+#c226-stratagem .c227-result-face.failed{filter:grayscale(1);opacity:.45}
+#c226-stratagem .c226-result h2{text-align:left;font-size:21px}
+#c226-stratagem .c226-result-art{width:64px;height:52px;margin:0}
+#c225-prologue[data-done=true]{inset:0!important;width:auto;max-width:none;display:grid;place-items:center;background:#070a0bc9;pointer-events:auto}
+#c225-prologue .c227-prologue-end{box-sizing:border-box;position:relative;display:grid;grid-template-columns:43% 1fr;align-items:center;gap:4%;width:min(1100px,94vw);aspect-ratio:1672/941;max-height:94vh;padding:55px;overflow:auto;background:url('/assets/ui-v3/u3/levelup/bg.jpg') center/contain no-repeat;color:#eee4ce;font:16px/1.65 var(--serif)}
+#c225-prologue .c227-cao{width:100%;height:100%;max-height:460px;object-fit:contain;align-self:end}
+#c225-prologue .c227-prologue-end h2{font-size:32px;margin:0 0 12px}
+#c225-prologue .c227-prologue-end h3{margin:0 0 8px;font-size:20px}
+#c225-prologue .c227-prologue-end ul{padding-left:20px;margin:0}
+#c225-prologue .c227-prologue-end button{width:150px;height:46px;border:0;margin:4px;background:url('/assets/ui-v3/u3/cityquick/btn.png') center/contain no-repeat}
+#c225-prologue .c227-prologue-end [data-prologue-main]{background-image:url('/assets/ui-v3/u3/cityquick/btn-red.png')}
+@media(max-height:800px){#c226-stratagem .c226-controls{padding:30px 48px}#c226-stratagem .c227-roster{max-height:105px}#c226-stratagem .c226-card{max-height:270px}#c226-stratagem .c226-result{padding:50px 70px;gap:24px}#c225-prologue .c227-prologue-end{font-size:14px}#c225-prologue .c227-prologue-end h2{font-size:27px}}
+
+body:has(#c226-stratagem:not([hidden])) #c225-prologue{display:none!important}
