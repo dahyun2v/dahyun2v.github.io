@@ -1,4 +1,5 @@
 import sceneData from '../data/relation-scenes-v0.2.json' with {type:'json'};
+import rivalSceneData from '../data/relation-scenes-rival-v0.1.json' with {type:'json'};
 import visitTalks from '../../docs/design-data/officer-pack/visit-talks-v0.1.json' with {type:'json'};
 import data from '../../docs/design-data/officer-pack/relations-v0.3.json' with {type:'json'};
 import {createRng} from './rng.mjs';
@@ -22,6 +23,9 @@ export function relation(s,a,b){const r=s.relations?.[relationKey(a,b)]??{value:
 export function initializeRelations(s,addedId=null){
  if(!relationsEnabled(s))return s;
  s.relationScenes??={queue:[],active:null,lastTurn:0};const fresh=s.relations===undefined;s.relations??={};
+ // C222: old saves acquire a persistent pair ledger; an active scene was already shown.
+ s.relationScenes.seen??=[];
+ if(s.relationScenes.active){const e=s.relationScenes.active,key=relationKey(e.a,e.b);if(!s.relationScenes.seen.includes(key))s.relationScenes.seen.push(key);}
  s.c38??={turn:s.turn,month:relationMonth(s),hits:[],jointPairs:[],attackEvents:[],feasts:{},visits:{},aiMonths:{},moraleUsed:{},stats:{jointAttacks:0,boundGroups:0,aiFeasts:0,rivals:0},seenGroups:[],outcomes:[]};
  if(s.c38.pastLifeEncounters===undefined)s.c38.pastLifeEncounters=[];if(s.c38.rivalEvents===undefined)s.c38.rivalEvents={};if(s.c38.captiveReleases===undefined)s.c38.captiveReleases=[];if(s.c38.moraleUsed===undefined)s.c38.moraleUsed={};
  if(fresh||addedId){const os=roster(s);for(const p of data.pairs)if(os[p.a]&&os[p.b]&&(!addedId||p.a===addedId||p.b===addedId)){const key=relationKey(p.a,p.b);s.relations[key]??={value:Math.max(data.range[0],Math.min(data.range[1],p.value)),kind:p.kind};}}
@@ -32,7 +36,7 @@ export function gainRelation(s,a,b,amount){
  initializeRelations(s);const before=relation(s,a,b),r={value:Math.max(data.range[0],Math.min(data.range[1],amount<0?Math.max(Math.min(before.value,data.rivalRule.floor),before.value+amount):before.value+amount)),...(before.kind?{kind:before.kind}:{})};
  if(r.value>=min('BOUND')&&!r.kind)r.kind='FRIEND';s.relations[relationKey(a,b)]=r;
  const after=relation(s,a,b);if(before.tier!==after.tier){s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId:[a,b].some(id=>s.officers[id]?.allegianceFactionId===s.playerFactionId)?s.playerFactionId:s.officers[a]?.allegianceFactionId,text:`${pairNames(s,a,b)}의 관계가 ${after.tierName}${after.tier==='BOUND'?`(${after.displayName})`:''}${amount>0?'로 가까워졌다':'로 바뀌었다'}`});if(after.tier==='RIVAL')s.c38.stats.rivals++;}
- if(after.value>before.value&&after.tier!==before.tier&&[a,b].every(id=>free(s.officers[id])&&s.officers[id].allegianceFactionId===s.playerFactionId))s.relationScenes.queue.push({a,b,tier:after.tier,kind:after.kind??'FRIEND',turn:s.turn});
+ if(after.value>before.value&&after.tier!==before.tier&&!s.relationScenes.seen.includes(relationKey(a,b))&&[a,b].every(id=>free(s.officers[id])&&s.officers[id].allegianceFactionId===s.playerFactionId))s.relationScenes.queue.push({a,b,tier:after.tier,kind:after.kind??'FRIEND',turn:s.turn});
  observeRelationGroups(s);
 }
 export function relationGroups(s,fid){
@@ -67,6 +71,7 @@ export function recordRelationAttack(s,id,target,options={}){
 }
 export function relationVictory(s,id){const a=s.armies[id];if(a)gainRelation(s,s.factions[a.factionId].rulerId,a.commanderId,data.gains.victoryWithLord.value);}
 export function relationCombatResult(s,before,id,target,log,{record=true}={}){
+ if(record)recordRivalScene(s,before,id,target,log);
  if(!relationsEnabled(s))return;initializeRelations(s);recordRelationCaptors(s,before,id,target);if(record&&['ATTACK','TACTIC'].includes(log.kind))pastLifeEncounter(s,id,target,before);if(record)recordRelationAttack(s,id,target,{event:log.sequence,reaction:log.kind==='OVERWATCH',pursuit:log.kind==='PURSUIT'});
  for(const [victim,killer] of [[target,id],[id,target]]){const old=before.armies[victim],now=s.armies[victim],win=s.armies[killer];if(!old||!now||!win||old.factionId===before.armies[killer]?.factionId)continue;
   const key=log.sequence+':'+victim;if(!s.c38.outcomes.includes(key)&&old.troopCount>0&&(now.troopCount===0||old.morale!=='ROUTING'&&now.morale==='ROUTING'||before.officers[old.commanderId]?.captivityState==='FREE'&&s.officers[old.commanderId]?.captivityState==='PRISONER')){s.c38.outcomes.push(key);gainRelation(s,old.commanderId,before.armies[killer].commanderId,data.gains.defeatedBy.value);relationVictory(s,killer);}}
@@ -116,7 +121,8 @@ export function relationsView(s,fid,knownIds=Object.keys(s.officers)){
 export function validateRelations(s){
  if(!relationsEnabled(s))return;const fail=()=>{throw new Error('INVALID_CAMPAIGN_RELATIONS');},os=roster(s),x=s.c38,object=v=>v&&typeof v==='object'&&!Array.isArray(v),turn=n=>Number.isSafeInteger(n)&&n>=1&&n<=s.turn;
  const scenes=s.relationScenes;
- const validScene=e=>object(e)&&e.a!==e.b&&os[e.a]&&os[e.b]&&sceneData.stages[e.tier]&&Object.hasOwn(data.kindNames,e.kind)&&turn(e.turn);
+ if(scenes?.seen!==undefined&&(!Array.isArray(scenes.seen)||new Set(scenes.seen).size!==scenes.seen.length||scenes.seen.some(k=>typeof k!=='string'||k.split('|').length!==2||!k.split('|').every(id=>os[id])||relationKey(...k.split('|'))!==k)))fail();
+ const validScene=e=>object(e)&&e.a!==e.b&&os[e.a]&&os[e.b]&&(sceneData.stages[e.tier]||e.tier==='RIVAL')&&Object.hasOwn(data.kindNames,e.kind)&&turn(e.turn);
  if(!object(scenes)||!Array.isArray(scenes.queue)||scenes.queue.some(e=>!validScene(e))||scenes.active!==null&&!validScene(scenes.active)||!Number.isSafeInteger(scenes.lastTurn)||scenes.lastTurn<0||scenes.lastTurn>s.turn)fail();
  for(const key of ['pastLifeEncounters','captiveReleases'])if(!Array.isArray(x?.[key])||new Set(x[key]).size!==x[key].length||x[key].some(k=>typeof k!=='string'))fail();
  if(!object(x?.rivalEvents))fail();else for(const [key,e] of Object.entries(x.rivalEvents)){const [a,b,...rest]=key.split('|');if(rest.length||a===b||!os[a]||!os[b]||relationKey(a,b)!==key||!object(e)||!data.rivalEvents[e.event]||!turn(e.turn)||Object.keys(e).some(k=>!['event','turn'].includes(k)))fail();}
@@ -177,10 +183,23 @@ export function relationCaptiveReleased(s,p){
 export function settleRelationCaptiveReleases(s){if(relationsEnabled(s))for(const p of Object.values(s.terminal?.prisonersById??{}))if(p.disposition==='RELEASED')relationCaptiveReleased(s,p);}
 
 export function startRelationScene(s){
- if(!relationsEnabled(s))return;initializeRelations(s);const x=s.relationScenes;if(x.lastTurn===s.turn)return;
- x.active=null;const ready=x.queue.filter(e=>e.turn<s.turn&&[e.a,e.b].every(id=>free(s.officers[id])&&s.officers[id].allegianceFactionId===s.playerFactionId));
+ if(!relationsEnabled(s))return;initializeRelations(s);const x=s.relationScenes;if(x.lastTurn===s.turn||x.active)return;
+ x.active=null;const ready=x.queue.filter(e=>!x.seen.includes(relationKey(e.a,e.b))&&e.turn<s.turn&&[e.a,e.b].every(id=>free(s.officers[id])&&s.officers[id].allegianceFactionId===s.playerFactionId));
  x.queue=x.queue.filter(e=>e.turn>=s.turn);x.lastTurn=s.turn;if(ready.length)x.active=ready[0];
+ if(x.active)x.seen.push(relationKey(x.active.a,x.active.b));
  // All tier changes already have an administration record; excess scenes stay there.
+}
+// C222: rival encounters share the same save-backed ledger as friendly scenes.
+export function recordRivalScene(s,before,id,target,log){
+ if(!relationsEnabled(s)||!['ATTACK','TACTIC','JOINT_TACTIC'].includes(log.kind))return;
+ const a=before.armies[id],b=before.armies[target],fid=s.playerFactionId;
+ if(!a||!b||a.factionId===b.factionId||![a.factionId,b.factionId].includes(fid))return;
+ const visible=x=>x.factionId===fid||before.knowledge?.[fid]?.tiles?.[x.tileId]==='VISIBLE';
+ const key=relationKey(a.commanderId,b.commanderId);
+ if(!visible(a)||!visible(b)||!rivalSceneData.pairs[key]?.RIVAL||relation(before,a.commanderId,b.commanderId).tier!=='RIVAL')return;
+ initializeRelations(s);const x=s.relationScenes;
+ if(x.seen.includes(key)||x.active)return;
+ x.active={a:a.commanderId,b:b.commanderId,tier:'RIVAL',kind:'RIVAL',turn:s.turn};x.seen.push(key);
 }
 // The rule's main clause follows its key; parenthesized clauses name the reverse direction.
 export function relationSpeechStyle(speaker,listener,kind,rules=visitTalks.speechRules){
@@ -198,7 +217,7 @@ export function relationSpeechStyle(speaker,listener,kind,rules=visitTalks.speec
 export function relationSceneView(s,fid=s.playerFactionId){
  const e=s.relationScenes?.active;if(fid!==s.playerFactionId||!e)return null;
  // v0.2: 쌍마다 친우(CLOSE) · 결의(BOUND) 장면이 따로 있다. 옛 평면 형식(title/lines)도 읽는다.
- const stage=sceneData.stages[e.tier]??sceneData.stages.NORMAL,entry=sceneData.pairs[relationKey(e.a,e.b)],pair=entry?.[e.tier]??(entry?.lines?entry:null),ids=pair?.speakerIds??[e.a,e.b];
+ const stage=sceneData.stages[e.tier]??sceneData.stages.NORMAL,entry=(e.tier==='RIVAL'?rivalSceneData:sceneData).pairs[relationKey(e.a,e.b)],pair=entry?.[e.tier]??(entry?.lines?entry:null),ids=pair?.speakerIds??[e.a,e.b];
  const names=ids.map(id=>name(s,id)),voice=i=>relationSpeechStyle(names[i],names[1-i],e.kind)==='casual'?'casual':'polite';
  return {...e,title:pair?.title??`${sceneData.kinds[e.kind]??stage.title} · ${stage.title}`,officers:ids.map(id=>({officerId:id,name:name(s,id)})),lines:pair?.lines??[stage[voice(0)][0],stage[voice(1)][1],sceneData.kindLines[e.kind]?.[voice(0)]??stage[voice(0)][2]]};
 }

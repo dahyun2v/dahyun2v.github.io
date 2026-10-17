@@ -11,7 +11,7 @@ import {startClasses} from './campaign-classes.mjs';
 import {triggerEffects} from './campaign-effects.mjs';
 import {domesticStartFaction,combatStartFaction,c33Start} from './campaign-rule-registry.mjs';
 
-export const OFFICER_DRAFT=Object.freeze({slots:5,offerSize:5,rerolls:2,budget:15,trial:true,baseWeight:100,needWeight:40,homeWeight:60,bondMax:120,axisFloor:80,valueCost:2,costBands:5,initialHomeFloor:2,costOverride:{},faction:{F01:{extraRerolls:1,needWeight:120},F02:{bondWeight:2,chainWeight:150},F03:{delegateWeight:150}}});
+export const OFFICER_DRAFT=Object.freeze({slots:5,minCompanions:2,offerSize:5,rerolls:2,budget:15,trial:true,baseWeight:100,needWeight:40,homeWeight:60,bondMax:120,axisFloor:80,valueCost:2,costBands:5,initialHomeFloor:2,costOverride:{},faction:{F01:{extraRerolls:1,needWeight:120},F02:{bondWeight:2,chainWeight:150},F03:{delegateWeight:150}}});
 const pools=new Map();
 function fail(code){throw Object.assign(new Error(code),{code});}
 function source(factionId,mapId,unlocks=[]){
@@ -49,8 +49,6 @@ function context(d){
 }
 function randomFor(seed,step){let n=Number(seed)>>>0;for(const ch of `officer-draft:${step}`)n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;return createRng(n);}
 function pick(cards,rng,weight){let roll=rng.next()*cards.reduce((n,c)=>n+weight(c),0);return cards.find(c=>(roll-=weight(c))<0)??cards.at(-1);}
-const lowest=(cards,n)=>[...cards].sort((a,b)=>a.cost-b.cost||a.officerId.localeCompare(b.officerId)).slice(0,n);
-const total=cards=>cards.reduce((n,c)=>n+c.cost,0);
 export function createOfficerDraft({factionId,seed=190919,mapId='v3',unlocks=[]}){
  const d={factionId,mapId,seed,unlocks:[...unlocks],slots:OFFICER_DRAFT.slots,budget:OFFICER_DRAFT.budget,rerollsLeft:OFFICER_DRAFT.rerolls,offers:[],locked:[],seen:[],step:0};
  d.rerollsLeft+=OFFICER_DRAFT.faction[factionId]?.extraRerolls??0;
@@ -76,8 +74,11 @@ function matches(x,lane,c,cards){
 export function officerDraftView(draft){
  const x=context(draft),shownCost=draft.offers.reduce((n,id)=>n+x.byId.get(id).cost,0);
  const lanes=composition(x,draft.offers.map(id=>x.byId.get(id)));
- const lockPossible=c=>{const remaining=x.cards.filter(b=>b.officerId!==c.officerId&&!draft.locked.includes(b.officerId)&&(draft.offers.includes(b.officerId)||draft.rerollsLeft>0&&!draft.seen.includes(b.officerId)));const n=draft.slots-draft.locked.length-1;return remaining.length>=n&&x.lockedCost+c.cost+total(lowest(remaining,n))<=draft.budget;};
- return {gimmick:{factionId:draft.factionId,extraRerolls:x.gimmick.extraRerolls??0,canDelegate:draft.factionId==='F03'&&draft.rerollsLeft>0,owners:x.owners},cards:draft.offers.map(id=>{const c=x.byId.get(id),locked=draft.locked.includes(id);return {...structuredClone(c),locked,lane:lanes.get(id)??null,reasonCode:x.reason(c),lockBlocked:locked?'LOCKED':!lockPossible(c)?'BUDGET':null};}),lockedCost:x.lockedCost,shownCost,budget:draft.budget,rerollsLeft:draft.rerollsLeft,canReroll:draft.rerollsLeft>0&&draft.locked.length<draft.offers.length,canConfirm:shownCost<=draft.budget,confirmBlocked:shownCost<=draft.budget?null:'BUDGET'};
+ // C220: only awakened people spend the budget; five is a ceiling.
+ const available=x.cards.filter(c=>!draft.locked.includes(c.officerId)&&(draft.offers.includes(c.officerId)||draft.rerollsLeft>0&&!draft.seen.includes(c.officerId)));
+ const endReason=draft.locked.length>=draft.slots?'SLOTS_FULL':available.every(c=>c.cost>draft.budget-x.lockedCost)?'BUDGET_FULL':null;
+ const ended=endReason!==null,canConfirm=draft.locked.length>=OFFICER_DRAFT.minCompanions&&x.lockedCost<=draft.budget;// C220: a governor and a second commander are required
+ return {gimmick:{factionId:draft.factionId,extraRerolls:x.gimmick.extraRerolls??0,canDelegate:draft.factionId==='F03'&&!ended&&draft.rerollsLeft>0,owners:x.owners},cards:draft.offers.map(id=>{const c=x.byId.get(id),locked=draft.locked.includes(id);return {...structuredClone(c),locked,lane:lanes.get(id)??null,reasonCode:x.reason(c),lockBlocked:locked?'LOCKED':ended?'ENDED':x.lockedCost+c.cost>draft.budget?'BUDGET':null};}),lockedCost:x.lockedCost,shownCost,budget:draft.budget,rerollsLeft:draft.rerollsLeft,ended,endReason,canReroll:!ended&&draft.rerollsLeft>0&&draft.locked.length<draft.offers.length,canConfirm,confirmBlocked:canConfirm?null:draft.locked.length<OFFICER_DRAFT.minCompanions?'TOO_FEW':'BUDGET'};
 }
 export function lockDraftOfficer(draft,officerId){
  if(draft.locked.includes(officerId))fail('DRAFT_ALREADY_LOCKED');
@@ -97,20 +98,12 @@ function propose(d,initial){
  if(initial)d.offers=Array(d.slots).fill(null);
  let candidates=x.cards.filter(c=>!d.seen.includes(c.officerId));
  let positions=d.offers.map((id,i)=>d.locked.includes(id)?-1:i).filter(i=>i>=0);
- // Maximize fresh slots while retaining the cheapest current cards if the
- // unseen pool cannot provide an affordable complete replacement.
- const ordered=[...positions].sort((a,b)=>(x.byId.get(d.offers[a])?.cost??0)-(x.byId.get(d.offers[b])?.cost??0)||a-b);
- let count=Math.min(positions.length,candidates.length);
- while(count>=0){
-  const retained=ordered.slice(0,positions.length-count);
-  const fixed=x.lockedCost+total(retained.map(i=>x.byId.get(d.offers[i])));
-  if(fixed+total(lowest(candidates,count))<=d.budget){positions=[...positions.filter(i=>!retained.includes(i)),...retained];break;}
-  count--;
- }
- if(count<0)fail('DRAFT_BUDGET');
- let remainingBudget=d.budget-x.lockedCost-total(positions.slice(count).map(i=>x.byId.get(d.offers[i])));
- const final=!initial&&d.rerollsLeft===1;
+ // C220: replace as many unlocked slots as possible, without reserving
+ // budget for all five. Retained cards still participate in lane coverage.
+ const count=Math.min(positions.length,candidates.length);
  const fixedCards=d.offers.filter((id,i)=>d.locked.includes(id)||positions.slice(count).includes(i)).map(id=>x.byId.get(id));
+ const affordable=c=>c.cost<=d.budget-x.lockedCost;
+ const needAffordable=[...fixedCards.filter(c=>!d.locked.includes(c.officerId)),...candidates].some(affordable);
  const reference=[...fixedCards,...candidates];
  const masks=new Map(reference.map(c=>[c.officerId,laneNames.reduce((mask,lane,i)=>matches(x,lane,c,reference)?mask|(1<<i):mask,0)]));
  function coverage(cards){
@@ -130,12 +123,13 @@ function propose(d,initial){
   if(selected.length===count){
    const cards=[...fixedCards,...selected];
    if(initial&&cards.filter(c=>c.home).length<Math.min(OFFICER_DRAFT.initialHomeFloor,x.cards.filter(c=>c.home).length))return;
+   if(needAffordable&&!cards.some(c=>!d.locked.includes(c.officerId)&&affordable(c)))return;
    const score=coverage(cards);
    if(score>best){best=score;combinations=[];}
    if(score===best)combinations.push(selected);
    return;
   }
-  for(let i=start;i<=candidates.length-(count-selected.length);i++)if(!final||cost+candidates[i].cost<=remainingBudget)complete(i+1,[...selected,candidates[i]],cost+candidates[i].cost);
+  for(let i=start;i<=candidates.length-(count-selected.length);i++)complete(i+1,[...selected,candidates[i]],cost+candidates[i].cost);
  }
  complete(0,[],0);
  if(!combinations.length)fail('DRAFT_BUDGET');
@@ -149,13 +143,13 @@ function propose(d,initial){
  }
  if(!initial){d.rerollsLeft--;d.step++;}return d;
 }
-export function officerDraftCompanions(draft){if(!officerDraftView(draft).canConfirm)fail('DRAFT_BUDGET');return [...draft.offers];}
+export function officerDraftCompanions(draft){const v=officerDraftView(draft);if(!v.canConfirm)fail(v.confirmBlocked==='TOO_FEW'?'DRAFT_TOO_FEW':'DRAFT_BUDGET');return [...draft.locked];}
 
 // Called only for the opt-in start, after the stock roster has been installed.
 export function applyOfficerDraft(s,companions,unlocks=[]){
  if(companions===undefined)return;
  const pool=source(s.playerFactionId,s.mapId,unlocks),allowed=new Set(pool.cards.map(c=>c.officerId));
- if(!Array.isArray(companions)||companions.length!==5||new Set(companions).size!==5||companions.some(id=>!allowed.has(id)))fail('INVALID_COMPANIONS');
+ if(!Array.isArray(companions)||companions.length<OFFICER_DRAFT.minCompanions||companions.length>5||new Set(companions).size!==companions.length||companions.some(id=>!allowed.has(id)))fail('INVALID_COMPANIONS');
  const f=s.factions[s.playerFactionId],selected=new Set(companions),capital=s.cities[f.capitalCityId];
  const homes=pool.cards.filter(c=>c.home).map(c=>c.officerId),removed=homes.filter(id=>!selected.has(id));
  const freed=companions.filter(id=>s.wanderers[id]).map(id=>s.wanderers[id].locationRef.id);
@@ -172,16 +166,26 @@ export function applyOfficerDraft(s,companions,unlocks=[]){
  const armies=f.armyIds.map(id=>s.armies[id]),other=armies.find(a=>a.commanderId!==f.rulerId);
  const score=(key,id)=>s.officers[id].baseStats[key];
  const rank=(ids,value)=>[...ids].sort((a,b)=>value(b)-value(a)||a.localeCompare(b));
- if(!selected.has(capital.governorId))capital.governorId=rank(companions.filter(id=>id!==other?.commanderId),id=>score('politics',id))[0];
- const replacedCommander=other&&!selected.has(other.commanderId);
+ if(!selected.has(capital.governorId))capital.governorId=rank(companions.filter(id=>companions.length===1||id!==other?.commanderId),id=>score('politics',id))[0]??f.rulerId;
+ let replacedCommander=other&&(!selected.has(other.commanderId)||other.commanderId===capital.governorId);
  if(replacedCommander){
   other.commanderId=rank(companions.filter(id=>id!==capital.governorId),id=>score('leadership',id)+score('might',id))[0];
+  // C220: insufficient officers: preserve all personnel in the capital reserve.
+  if(!other.commanderId){
+   const formation=s.personnel.formations.find(row=>row.formationId===other.armyId),lotId=`C220.RESERVE.${other.armyId}`;
+   s.personnel.lots.push({lotId,kind:'READY',nodeId:capital.cityId,identity:structuredClone(formation.identity),originFormationId:null,count:other.troopCount});
+   s.economy.lotFaction[lotId]=f.factionId;s.economy.recruitedReady[lotId]=true;s.economy.readyAt[lotId]=s.turn;capital.reserveTroops+=other.troopCount;
+   s.personnel.formations=s.personnel.formations.filter(row=>row!==formation);
+   f.armyIds=f.armyIds.filter(id=>id!==other.armyId);delete s.armies[other.armyId];
+   replacedCommander=false;
+  }else{
   const o=s.officers[other.commanderId];if(!o.allowedTroops.includes(other.troopType))other.troopType=o.allowedTroops[0];
   const formation=s.personnel.formations.find(f=>f.formationId===other.armyId);
   formation.identity={baseTroopId:troopToCampaign(other.troopType),specialTroopId:null};
   other.effectStates=[];other.tacticReadyTurns={};other.classState={prepared:false,relentlessTarget:null,canMoveAfterAttack:false,hidden:false};delete other.c26;delete other.c27;delete other.c33;
+  }
  }
- for(const a of armies)s.officers[a.commanderId].locationRef={kind:'ARMY',id:a.armyId};
+ for(const a of armies.filter(a=>s.armies[a.armyId]))s.officers[a.commanderId].locationRef={kind:'ARMY',id:a.armyId};
  initializeCampaignAbilities(s);
  // Growth accepts both roster and FIRST3 pack schemas; its inferred default type
  // describes only the FIRST3 source metadata.

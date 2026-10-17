@@ -2,7 +2,7 @@ import C198 from '../data/c198-special-formation-v0.1.json' with {type:'json'};
 import {weatherView} from './campaign-run-modifiers.mjs';
 import {supplyView} from './campaign-supply.mjs';
 export {C198};
-import {campaignTacticsEnabled,campaignTacticsView,campaignTacticsWorld,campaignCombatProbe,campaignOperationPlan,campaignTacticalMoves} from './campaign-ai-tactics.mjs';
+import {campaignTacticsEnabled,campaignTacticsView,campaignTacticsWorld,campaignCombatProbe,campaignOperationPlan,campaignTacticalMoves,campaignCapitalCaptureNow} from './campaign-ai-tactics.mjs';
 import {campaignAiRule,campaignAiRulesEnabled,campaignReferencePlan,campaignAiPosture,campaignAiPickTroop,campaignAiArrivalTurns,AI_RULE_GOAL_BONUS,AI_RULE_REVIEW_TURNS,AI_RULE_STALL_TURNS,AI_RULE_GATHER_TURNS} from './campaign-ai-rules.mjs';
 import {injuryReason} from './campaign-injury.mjs';
 import {supplyEnabled,supplyLink,supplyAiMoveAllowed,supplyAiHubSite,armyFoodPerTurn,foodModel,clockFood,troopFoodRate,supplyAiAction} from './campaign-supply.mjs';
@@ -419,6 +419,7 @@ export function campaignAiPlan(world, factionId, {remember=false,turnLimit=26}={
 }
 function planCampaignAi(world, factionId, {remember=false,turnLimit=26}={}) {
   const v=campaignBannerView(world,getFactionView(world,factionId)),cities=Object.values(v.ownCities);
+  const observedBeforeDiplomacy=v.knowledge.observedArmies;
   const strategic=campaignStrategyEnabled(world,factionId),ranking=strategic?campaignKnownRanking(world,v):null;
   v.knowledge.observedArmies=Object.fromEntries(Object.entries(v.knowledge.observedArmies).filter(([,a])=>diplomacyHostile(world,factionId,a.factionId)&&!withdrawalProtection(world,a.armyId)));
   v.knowledge.cities=Object.fromEntries(Object.entries(v.knowledge.cities).filter(([,c])=>c.ownerFactionId===factionId||diplomacyHostile(world,factionId,c.ownerFactionId)));
@@ -497,7 +498,42 @@ function planCampaignAi(world, factionId, {remember=false,turnLimit=26}={}) {
   }
   if(!campaignTacticsEnabled(world,factionId))return campaignWeatherPlan(world,v,campaignScoutPlan(world,v,final,{remember}));
   campaignOperationPlan(world,v,final,{remember,turnLimit,route:publicRoute,siegePositions:campaignSiegePositions,siegeReady:siegeForceReady,supplyWorld});
-  return campaignWeatherPlan(world,v,campaignScoutPlan(world,v,campaignTacticalMoves(world,campaignTacticsView(world,factionId),final,{remember,supplyWorld}),{remember}));
+  return campaignTruceDefensePlan(world,{...v,knowledge:{...v.knowledge,observedArmies:observedBeforeDiplomacy}},campaignWeatherPlan(world,v,campaignScoutPlan(world,v,campaignTacticalMoves(world,campaignTacticsView(world,factionId),final,{remember,supplyWorld}),{remember})));
+}
+
+// C223: a short truce is not a safe expedition window when its visible army
+// can reach our last major before it expires. Recall enough available defenders;
+// these observations never enter offensive targeting or combat forecasts.
+export function campaignTruceDefensePlan(s,v,plan){
+ if(!campaignAiRule(s,v.factionId,11))return plan;
+ const expiring=new Set(Object.entries(s.c43?.pairs??{}).filter(([key,p])=>key.split('|').includes(v.factionId)&&p.state==='TRUCE'&&p.until>=s.turn&&p.until-s.turn<AI_RULE_REVIEW_TURNS).map(([key])=>key.split('|').find(f=>f!==v.factionId)));
+ if(!expiring.size)return plan;
+ const observed=Object.fromEntries(Object.entries(v.knowledge.observedArmies).filter(([,a])=>expiring.has(a.factionId)&&v.knowledge.tiles[a.tileId]==='VISIBLE'));
+ if(!Object.keys(observed).length)return plan;
+ const majors=Object.values(v.ownCities).filter(c=>strategyCityKind(s,c)==='major'),assigned=new Set(),orders=new Map();
+ const cities=majors.filter(c=>c.cityId===v.faction.capitalCityId||majors.length===1);
+ for(const city of cities){
+  const inner=[city.tileId,...city.footprint.gates],threats=Object.values(observed).filter(a=>campaignAiArrivalTurns(v,{...a,troopType:parentTroop(a.troopType)},city.footprint.gates,{maxTurns:AI_RULE_REVIEW_TURNS})<=AI_RULE_REVIEW_TURNS);
+  if(!threats.length)continue;
+  const need=threats.reduce((n,a)=>n+(a.troopCount??0),0);
+  // A current war's emergency order has priority over a future truce expiry.
+  if(plan.candidates.some(c=>c.defendCityId===city.cityId))continue;
+  const choices=Object.values(v.ownArmies).filter(a=>!assigned.has(a.armyId)&&castleArmyActive(s,a)&&a.morale!=='ROUTING'&&!injuryReason(s,a.commanderId)&&!withdrawalProtection(s,a.armyId)&&!(s.movedArmyIds??[]).includes(a.armyId)).map(a=>{
+   const candidate=plan.candidates.find(c=>c.armyId===a.armyId);
+   if(!candidate||candidate.defendCityId||candidate.crisisTargetCityId||candidate.crisisTargetArmyId||/WITHDRAW|EXPLORE/.test(candidate.reasonCode??''))return null;
+   if(inner.includes(a.tileId))return {a,candidate,route:{totalTicks:0,pathTileIds:[a.tileId]}};
+   const route=inner.map(id=>publicRoute(s,v,a.armyId,id)).filter(r=>r&&defenseReturnTurns(s,v,a,r)<=AI_RULE_GATHER_TURNS).sort((x,y)=>x.totalTicks-y.totalTicks||x.pathTileIds.at(-1).localeCompare(y.pathTileIds.at(-1)))[0];
+   return route?{a,candidate,route}:null;
+  }).filter(Boolean).sort((x,y)=>x.route.totalTicks-y.route.totalTicks||y.a.troopCount-x.a.troopCount||x.a.armyId.localeCompare(y.a.armyId));
+  let filled=0;
+  for(const {a,candidate,route} of choices){
+   if(filled>=need&&filled>0)break;
+   if(campaignCapitalCaptureNow(s,v,a.armyId,cityAttackTargets(s,a.armyId)))continue;
+   assigned.add(a.armyId);filled+=a.troopCount;orders.set(a.armyId,strategyMove(s,v,candidate,route,'R11_TRUCE_GUARD',{defendCityId:city.cityId,aiCityDefensePriority:true,aiReferenceMove:true,aiTargetCityId:null}));
+  }
+ }
+ if(orders.size){plan.candidates=plan.candidates.map(c=>orders.get(c.armyId)??c);const defense=plan.defense??={assignedArmyIds:[],quotas:[]};defense.assignedArmyIds=[...new Set([...defense.assignedArmyIds,...assigned])];defense.priorityOrders=[...(defense.priorityOrders??[]),...orders.values()];}
+ return plan;
 }
 
 // Only the same announced weather a human can see enters expedition planning.

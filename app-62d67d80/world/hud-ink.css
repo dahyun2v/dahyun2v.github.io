@@ -1283,6 +1283,7 @@ body.ink .od-budget span{font:700 1em var(--disp,var(--serif));letter-spacing:.2
 body.ink .od-budget b{font:900 1.9em var(--disp,var(--serif));color:#f3ecdf;line-height:1}
 body.ink .od-budget i{font-style:normal;font-size:1.1em;color:#b9ae9c}
 body.ink .od-budget small{grid-column:1/-1;font-size:.82em;color:#b9ae9c;letter-spacing:.06em}
+body.ink .od-budget small:last-child{max-width:24em;font-size:max(11px,.74em);letter-spacing:0;line-height:1.4}
 body.ink .od-budget.over b{color:#e0705f}
 body.ink .od-note{position:absolute;left:8.2%;top:4%;width:23.5%;margin:0;font-size:.86em;line-height:1.5;color:#cfc4b2;text-shadow:0 1px 4px #000,0 0 10px #000}
 body.ink .od-cards{position:absolute;left:5.8%;right:5.8%;top:16.6%;height:70.4%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0 1.75%}
@@ -3673,10 +3674,10 @@ body.hud-band .nb-preview-threat{position:fixed;left:24vw;top:67dvh;width:51vw;m
 body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) .w-event-body{top:8px;bottom:8px;height:auto;grid-template-rows:8% auto minmax(110px,1fr) 54px 2px auto auto auto 2%;row-gap:4px;overflow:hidden}
 body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) .w-event-body #event-text{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
 body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) .ev-duo:not([hidden]){height:clamp(46px,7vh,65px);width:75%;aspect-ratio:auto}
-body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face{height:clamp(150px,24vh,225px);aspect-ratio:auto}
-body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face::after{background-size:cover;background-position:center}/* 판 그림은 한 방향으로 늘리지 않는다(C199) */
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face{height:auto;width:min(100%,13vh);aspect-ratio:380/657}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face::after{background-size:contain;background-position:center}/* 판 그림은 한 방향으로 늘리지 않는다(C199) */
 body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-choice small{max-height:72px;overflow:auto;scrollbar-width:thin}
-body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face b{font-size:clamp(10px,.78vw,13px);height:14%;min-height:2.4em}
+body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face b{font-size:11px;line-height:1.3;height:2.6em;min-height:2.6em;overflow:auto;background:#e5dccb;align-items:flex-start}
 body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face b span{display:block;max-height:none;overflow:visible;-webkit-line-clamp:unset}
 html[data-reduce-motion="true"] *,html[data-reduce-motion="true"] *::before,html[data-reduce-motion="true"] *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 /* C212 기시감 확인 — 기존 판 부품을 재사용 */
@@ -3733,3 +3734,63 @@ body.hud-band #attack-preview:has(#c216-swap):not([hidden]){display:block!import
 /* 10-17 사용자: 지도 칸을 누르면 까만 네모 테두리 — 칸 클릭 영역(tabindex=-1)의 브라우저 기본 초점 테두리. 칸은 키보드 이동 대상이 아니라 없앰, 상태 낙관은 마우스 초점일 때만 없앰 */
 .w-hits path:focus,.w-hits path:focus-visible{outline:none}
 .unit-status-mark:focus:not(:focus-visible){outline:none}
+/* C222: summary actions and the domestic ledger's specialist effects. */
+#c186-turn-summary li button {font:inherit;text-align:left;color:inherit;background:transparent;border:1px solid #a9936b80;padding:.4em .6em;cursor:pointer;width:100%}
+#c186-turn-summary li button:focus-visible {outline:2px solid #c8a361;outline-offset:2px}
+.c222-specialist-ledger {display:flex;flex-wrap:wrap;gap:.3em .8em;font-size:12px;max-width:100%}
+.c222-specialist-ledger span {white-space:normal}
+
+/* C221: reserve real text space independently of the illustrated card faces. */
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .w-event-body{
+ top:8px;bottom:8px;height:auto;box-sizing:border-box;display:flex;flex-direction:column;
+ padding-top:max(68px,9vh);padding-bottom:22px;gap:8px;overflow:auto;scrollbar-width:thin;
+}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .w-event-body .text{
+ flex:0 1 auto;min-height:48px;max-height:22vh;margin:0;padding-right:clamp(32px,4vw,64px);box-sizing:border-box;overflow:auto;
+}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .w-event-body .choices{
+ display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:10px;margin:10px 0 0;flex:none;min-width:0;
+}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .w-event-body .choices .ev-choice{
+ width:100%;max-width:none;min-width:0;align-items:center;aspect-ratio:auto;
+}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .choices .ev-choice .ev-card-face{
+ width:min(100%,13vh);height:auto;aspect-ratio:380/657;align-self:center;
+}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .choices:has(.ev-choice:nth-child(4)) .ev-card-face{aspect-ratio:380/907}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .choices .ev-card-face::after{background-size:contain}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .choices .ev-choice small{
+ width:100%;max-height:6em;box-sizing:content-box;padding:5px 0;margin:6px 0 0;font:12px/1.5 var(--serif);
+ overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;word-break:normal;overflow-wrap:anywhere;
+}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .choices .ev-card-face b{
+ font-size:11px;line-height:1.3;height:2.6em;min-height:2.6em;letter-spacing:0;overflow:auto;background:#e5dccb;align-items:flex-start;
+}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .choices .ev-card-face b span{font-size:inherit;max-height:none;overflow:visible;display:block;-webkit-line-clamp:unset}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .w-event-body .ev-duo:not([hidden]){width:75%;height:auto;aspect-ratio:1400/350;flex:none;align-self:center}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-card.w-event:not(.no-art) .w-event-body .ev-scales:not([hidden]){flex:none;margin:0 0 18px}
+body.w.ink :is(#event-modal,#choice-modal:has(.choice-art.scene)) .w-event-body .text b>span{font-size:11px}
+/* Keep notifications pending while a choice owns the screen. */
+body:has(:is(#event-modal,#choice-modal,#growth-modal):not([hidden])) #c215-completions{visibility:hidden;pointer-events:none}
+/* Claude 10-17: 차례 알림 띠는 사건 · 선택 · 성장 창 위에 덮이지 않게(글자 검사 small/04-t2-event) */
+body:has(:is(#event-modal,#choice-modal,#growth-modal):not([hidden])) .turn-banner{display:none}
+body:has(:is(#event-modal,#choice-modal,#growth-modal):not([hidden])) #ink-toasts{left:10vw;top:90px;width:40vw;transform:none}
+body.hud-band .ih-res{gap:8px;min-width:0}
+body.hud-band .ih-res .ih-chip{font-size:max(11px,calc(16 * var(--ku)));padding-inline:6px;gap:4px;flex:none;white-space:nowrap}
+@media(max-width:1250px){
+ body.hud-band .ih-res .ih-chip[data-res="science"],body.hud-band .ih-res .ih-chip[data-res="fame"] small{display:none}
+ body.hud-band .ih-res{gap:6px}
+ body.hud-band .ih-res .ih-chip{padding-inline:4px}
+}
+body.hud-band .nb-selected{padding-left:max(22px,calc(32 * var(--ku)));padding-right:max(48px,calc(65 * var(--ku)));overflow-wrap:anywhere}
+body.hud-band .nb-selected :is(h2,dt,dd){min-width:0;white-space:normal}
+body.hud-band .nb-selected dd,body.hud-band .nb-selected dl>div:last-child dd,body.hud-band .nb-selected .c195-unit-reinforcement dd{font-size:max(11px,calc(15 * var(--ku)));line-height:1.5;max-width:100%}
+body.hud-band .nb-selected dl>.c195-unit-reinforcement{width:100%;box-sizing:border-box}
+body.hud-band .nb-identity{display:flex;flex-direction:column;gap:4px;min-width:0}
+body.hud-band .nb-identity>b{font-size:clamp(12px,1.2vw,20px);line-height:1.35;white-space:normal}
+body.hud-band .nb-identity .c186-band-class{font-size:11px;line-height:1.5;flex:none}
+body.hud-band .nb-identity .nb-help{margin:0;line-height:1.5;font-size:11px}
+body.hud-band .nb-badge,body.hud-band #mini-toggle,body.hud-band .tactic-meter em,.c207-term{font-size:max(11px,1em)}
+body.hud-band #mini-toggle{width:60px;height:32px;white-space:nowrap;font-size:11px}
+body.hud-band .nb-selected h2{line-height:1.35;padding-left:3px}
+body.hud-band .ih-date b,#c186-undo-reason,body.hud-band .nb-forecast-status{background-color:#141915ed;box-shadow:0 0 5px 3px #141915ed}

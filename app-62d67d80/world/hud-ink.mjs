@@ -80,7 +80,7 @@ export function ambitionBandHtml(v){
 }
 export function ambitionEndingHtml(result){
  if(!result)return '';
- const text=`${result.ambition?`<p class="c205-ending">${esc(result.ambition.endingLine)}</p>`:''}${result.unlocksEarned?.length?`<p class="c205-unlocks">다음 판부터: ${result.unlocksEarned.map(u=>esc(u.line)).join(' · ')}</p>`:''}`;
+ const text=`${result.ambition?`<p class="c205-ending">${esc(result.ambition.endingLine)}</p>`:''}${result.unlocksEarned?.length?`<p class="c205-unlocks">${result.unlocksEarned.map(u=>`${u.recalled?'다시 떠오른 기억':'다음 판부터'}: ${esc(u.line)}`).join(' · ')}</p>`:''}`;
  return text?`<section class="c205-conclusion">${text}</section>`:'';
 }
 // C199: central U3 paths; SVG fallbacks remain available for missing optional slots.
@@ -480,6 +480,25 @@ function mountEventScales() {
 }
 
 /** HUD 뼈대를 만든다. opts.has(rel) = v3 manifest 에 그림이 있는지. */
+// Screen-space minimum, including the map's zoom and perspective transform.
+export function mapTextFontSize(matrix,minimum=11){
+ const scale=matrix?Math.hypot(matrix.c,matrix.d):0;
+ return scale>0?Math.max(11,minimum/scale):11;
+}
+function watchMapText(){
+ const map=document.querySelector('#map');if(!map||typeof MutationObserver!=='function')return;
+ let frame=null;
+ const sync=()=>{if(frame!==null)return;frame=requestAnimationFrame(()=>{
+  frame=null;
+  for(const text of map.querySelectorAll('.w-c186-facing text,.w-side text,.w-site>.name,.c186-site-goal')){
+   const size=mapTextFontSize(text.getScreenCTM()).toFixed(3)+'px';
+   if(text.style.fontSize!==size)text.style.fontSize=size;
+  }
+ });};
+ new MutationObserver(records=>{if(records.some(r=>r.type==='childList'||r.target.tagName?.toLowerCase()!=='text'))sync();}).observe(map,{subtree:true,childList:true,attributes:true,attributeFilter:['style','transform']});
+ document.querySelector('.viewport')?.addEventListener('scroll',sync,{passive:true});
+ window.addEventListener('resize',sync);sync();
+}
 export function mountInkHud(root, opts = {}) {
   if (opts.has) has = opts.has;
   mountEventScales();
@@ -506,6 +525,7 @@ export function mountInkHud(root, opts = {}) {
     <button class="ih-end" data-fwd="#end-turn" title="다음 차례 (Enter)"><img src="${H}endturn.png" alt=""><b class="ih-end-name">다음 차례</b><small></small></button>
   </div>`;
   mountCommandBand(root);
+  watchMapText();
   // 지도 눕혀 보기(기준 final-map-v2 의 비스듬한 시점): 기본으로 켠다. 끌기·확대 프레임을 재 보니 눕히지 않은 것과 같았다(tools/smoke/ink-perf.mjs). ?tilt=0 이면 끈다
   try { if (new URLSearchParams(location.search).get('tilt') !== '0') document.body.classList.add('tilt'); } catch { /* 주소를 못 읽으면 그대로 */ }
   // 적 장수 판: world.js 가 공격 예상을 띄울 때 'ink:foe' 로 알려 준다. 예상 창(#attack-preview)이 닫히면 같이 닫는다
@@ -558,10 +578,12 @@ export function renderInkHud(root, d) {
     const k = c.dataset.res, b = c.querySelector('b'), dl = c.querySelector('small.d');
     return `<${k==='food'?'button type="button" data-food-open aria-label="식량 현황" aria-expanded="'+String(!q('.ih-food-sheet').hidden)+'"':'span'} class="ih-chip" data-res="${esc(k)}" title="${esc([c.title,dl?.textContent].filter(Boolean).join(" · "))}"><span class="nb-resource-label">${esc(({food:'식량',production:'생산',science:'과학',fame:'인망',troops:'병력',reserve:'예비'})[k]??k)}</span><b>${b?.innerHTML ?? ''}</b>${dl ? `<small class="${dl.classList.contains('down') ? 'down' : 'up'}">${esc(dl.textContent)}</small>` : ''}</${k==='food'?'button':'span'}>`;
   }).join('');
+  q('.ih-res').title = [...q('.ih-res').querySelectorAll('.ih-chip')].map(c=>`${c.textContent} · ${c.title}`).join(' / ');
   const f=d.food??{}, change=d.foodChange, fmt=n=>Number(n??0).toLocaleString('ko-KR',{maximumFractionDigits:1});
   const emptyIn=foodExhaustion(d.foodView??{});
+  const ledger=foodLedgerTotals(d.foodView??{});
   if(emptyIn!==null)q('.ih-res').querySelector('[data-res="food"]')?.insertAdjacentHTML('beforeend',`<small class="down c215-food-empty">바닥까지 ${emptyIn}차례</small>`);
-  q('.ih-food-sheet > div').innerHTML=`<h3>식량 현황</h3><p>현재 재고 <b>${fmt(f.stock)} / ${fmt(f.capacity)}</b></p><p>다음 정산 산출 <b>+${fmt(f.output)}</b></p><p class="hint">산출량에서 시민 유지·군량·성장 소비 등이 빠져 실제 재고가 정해집니다.</p>${change?`<h4>${esc(change.turn)}턴 진입 · 실제 재고 변화</h4><p><b>${fmt(change.from)} → ${fmt(change.to)} (${change.change>0?'+':''}${fmt(change.change)})</b></p><small>차례가 바뀌는 처리 전후의 보유 도시 재고 합입니다.</small>`:'<small>차례를 넘기면 실제 재고 변화를 함께 보여줍니다.</small>'}`;
+  q('.ih-food-sheet > div').innerHTML=`<h3>식량 현황</h3><p>현재 재고 <b>${fmt(f.stock)} / ${fmt(f.capacity)}</b></p><p>다음 정산 순증 <b>${ledger.net>=0?'+':''}${fmt(ledger.net)}</b> · 산출 +${fmt(f.output)}</p><p>직전 정산 들어옴 +${fmt(ledger.incoming)} / 나감 −${fmt(ledger.outgoing)}</p><p class="hint">순증은 현재 산출·유지비 예상이며, 들어옴/나감은 직전 실제 장부입니다.</p>${change?`<h4>${esc(change.turn)}턴 진입 · 실제 재고 변화</h4><p><b>${fmt(change.from)} → ${fmt(change.to)} (${change.change>0?'+':''}${fmt(change.change)})</b></p><small>차례가 바뀌는 처리 전후의 보유 도시 재고 합입니다.</small>`:'<small>차례를 넘기면 실제 재고 변화를 함께 보여줍니다.</small>'}`;
   const history=q('.ih-combat-history');history.hidden=!d.combatHistory?.length;
   const historyHtml=combatHistoryHtml(d.combatHistory??[]);
   if(history.querySelector('div').innerHTML!==historyHtml)history.querySelector('div').innerHTML=historyHtml;
@@ -849,27 +871,32 @@ export function movementUndoReason(before,after,request,bv,av){
 }
 const publicTroopName=a=>a.troopDisplayName??({militia:'도검병',engineer:'도검병',BT01:'도검병',spear:'창병',BT02:'창병',bow:'궁병',mystic:'궁병',BT03:'궁병',cavalry:'기병',BT04:'기병'})[a.troopType]??'';
 const publicArmyLabel=(v,a,names)=>[v.officers?.[a.commanderId]?.name??names[a.armyId]??'관측 장수',publicTroopName(a)].filter(Boolean).join(' · ');
-export function playerTurnSummary(bv,av,records=[],combats=[],names={}){
+export function playerTurnSummary(bv,av,records=[],combats=[],names={},detailed=false){
  const rows=[],cities=new Map(),own=new Set(Object.keys(bv.ownArmies??{}));
+ const locations=new Map(),at=(text,location)=>{locations.set(text,location);return text;};
  for(const c of Object.values({...bv.ownCities,...av.ownCities})){
   const next=av.ownCities[c.cityId],lost=!next,parts=[];
   if(next?.besieged)parts.push('포위됨');
   cities.set(c.cityId,{c,lost,priority:lost?0:next?.besieged?1:4,parts,damage:0});
  }
- for(const e of combats)if(own.has(e.targetId)&&(e.enemyLoss??0)>0)rows.push(`받은 공격 · ${publicArmyLabel(bv,bv.ownArmies[e.targetId],names)} · 병력 −${troopText(e.enemyLoss)}`);
+ for(const e of combats)if(own.has(e.targetId)&&(e.enemyLoss??0)>0)rows.push(at(`받은 공격 · ${publicArmyLabel(bv,bv.ownArmies[e.targetId],names)} · 병력 −${troopText(e.enemyLoss)}`,{armyId:e.targetId,tileId:bv.ownArmies[e.targetId].tileId}));
  else if(cities.has(e.cityId)&&!own.has(e.attackerId))cities.get(e.cityId).damage+=Math.max(0,e.dealt??0);
  const other=[];
  for(const e of records){const text=e.text;if(!text||/(?:−|-)0(?:\D|$)/.test(text)&&!/(?:−|-)[1-9]/.test(text))continue;
   const row=cities.get(e.cityId)??[...cities.values()].find(r=>text.startsWith(r.c.name+':')||text.startsWith(r.c.name+' ·'));
   if(row){const detail=text.replace(new RegExp('^'+row.c.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[: ·]+'),'');if(!row.parts.includes(detail))row.parts.push(detail);if(/포위/.test(detail))row.priority=Math.min(row.priority,1);}
-  else other.push(text);
+  else other.push(at(text,{cityId:e.cityId,tileId:e.tileId,armyId:e.armyId}));
  }
  for(const row of cities.values()){if(row.damage>0)row.parts.unshift(`받은 공격 · 성 내구 −${row.damage}`);}
  const cityRows=[...cities.values()].filter(r=>r.lost||r.parts.length).sort((a,b)=>a.priority-b.priority);
- const cityText=r=>`${r.lost?'잃은 성 · ':''}${r.c.name}${r.parts.length?' · '+r.parts.join(' · '):''}`;
+ const cityText=r=>at(`${r.lost?'잃은 성 · ':''}${r.c.name}${r.parts.length?' · '+r.parts.join(' · '):''}`,{cityId:r.c.cityId,tileId:r.c.tileId});
  const seen=bv.knowledge?.observedArmies??{},newEnemies=[];
- for(const a of Object.values(av.knowledge?.observedArmies??{}))if(av.knowledge.tiles[a.tileId]==='VISIBLE'&&(!seen[a.armyId]||bv.knowledge.tiles[seen[a.armyId].tileId]!=='VISIBLE'))newEnemies.push(`새로 본 적 · ${publicArmyLabel(av,a,names)}`);
- return [...new Set([...cityRows.filter(r=>r.priority<2).map(cityText),...other.filter(t=>/견제|협상/.test(t)),...rows,...newEnemies,...cityRows.filter(r=>r.priority>=2).map(cityText),...other])].slice(0,5);
+ for(const a of Object.values(av.knowledge?.observedArmies??{}))if(av.knowledge.tiles[a.tileId]==='VISIBLE'&&(!seen[a.armyId]||bv.knowledge.tiles[seen[a.armyId].tileId]!=='VISIBLE'))newEnemies.push(at(`새로 본 적 · ${publicArmyLabel(av,a,names)}`,{armyId:a.armyId,tileId:a.tileId}));
+ const result=[...new Set([...cityRows.filter(r=>r.priority<2).map(cityText),...other.filter(t=>/견제|협상/.test(t)),...rows,...newEnemies,...cityRows.filter(r=>r.priority>=2).map(cityText),...other])].slice(0,5);
+ return detailed?result.map(text=>({text,...locations.get(text)})):result;
+}
+export function turnSummaryHtml(rows){
+ return rows.map(row=>{const r=typeof row==='string'?{text:row}:row;return `<li>${r.tileId||r.armyId||r.cityId?`<button type="button" data-summary-city="${esc(r.cityId??'')}" data-summary-tile="${esc(r.tileId??'')}" data-summary-army="${esc(r.armyId??'')}">${esc(r.text)}</button>`:esc(r.text)}</li>`;}).join('');
 }
 // Rows are resolved only through public entities. Old engines without the array keep their existing preview.
 export function tacticTargetsHtml(p,v,names={},scales={}){
@@ -890,6 +917,8 @@ export function campaignResultScore(v,won,limit=26){
  const count=troops?troops.field+troops.reserve:Object.values(v.ownArmies??{}).reduce((n,a)=>n+(a.troopCount??0),0)+cities.reduce((n,c)=>n+(c.reserveTroops??0),0);
  const left=won?Math.max(0,limit-Math.min(v.turn,limit+1)+1):0;
  const parts=[['큰 성',major,1000],['작은 성',minor,300],['병력 1,000명당',Math.floor(count*TROOP_DISPLAY_SCALE/1000),10],['승리 시 남은 차례',left,100]];
+ const history=v.gameResult?.scoreItems?.find(x=>x.id==='HISTORY_TWISTS');
+ if(history&&Number.isFinite(history.points))parts.push(['비틀린 역사',1,history.points]);
  return {parts,total:parts.reduce((n,[,x,w])=>n+x*w,0)};
 }
 export function titleProgress(g,definitions){
@@ -1022,9 +1051,14 @@ export function updateBestRecord(storage,factionId,score,turn) {
  return best;
 }
 export function resultHistoryHtml(history) {
- if(!Array.isArray(history)||!history.length)return '';
- const rows=history.map(h=>typeof h==='string'?h:h?.text??h?.line??'').filter(Boolean);
- return rows.length?`<section class="c215-history"><h3>비틀린 역사</h3>${rows.map(t=>`<p>${esc(t)}</p>`).join('')}</section>`:'';
+ if(!history||Array.isArray(history)&&!history.length)return '';
+ const rows=(Array.isArray(history)?history:history.twisted??[]).map(h=>typeof h==='string'?h:h?.history!==undefined?`역사에선 ${h.history} / 이번엔 ${h.twisted}`:h?.text??h?.line??'').filter(Boolean);
+ return `<section class="c215-history"><h3>비틀린 역사 ${rows.length}</h3>${rows.slice(0,5).map(t=>`<p>${esc(t)}</p>`).join('')}${rows.length>5?`<p>외 ${rows.length-5}</p>`:''}</section>`;
+}
+export function resultChronicleRows(result,turn){return (result?.chronicle??[]).map(text=>({turn,kind:'history',text}));}
+export function foodLedgerTotals(v){
+ const cities=Object.values(v.ownCities??{}),sum=k=>cities.reduce((n,c)=>n+(c.foodLedger?.[k]??[]).reduce((m,e)=>m+e.amount,0),0);
+ return {net:cities.reduce((n,c)=>n+(c.foodLedger?.forecastNet??0),0),incoming:sum('incoming'),outgoing:-sum('outgoing')};
 }
 export function publicEnemyIntents(v,fallback) {
  if(!Array.isArray(v.enemyIntents))return fallback;

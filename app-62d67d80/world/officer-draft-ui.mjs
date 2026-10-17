@@ -100,7 +100,7 @@ export function openOfficerDraft(host, o) {
       const fresh = fx && !c.locked && !shown.has(c.officerId);
       const stats = STATS.map((k) => `<li><span>${k}</span><i><u style="width:${Math.max(0, Math.min(100, c.stats?.[k] ?? 0))}%"></u></i><b>${c.stats?.[k] ?? '—'}</b></li>`).join('');
       const layers = fx && src ? `<i class="od-slash" aria-hidden="true"></i><img class="od-relief" src="${esc(reliefOf(src))}" alt="" aria-hidden="true" draggable="false" onerror="this.remove()"><img class="od-ink" src="${esc(src)}" alt="" aria-hidden="true" draggable="false">` : '';
-      return `<div class="od-card${c.locked ? ' locked' : ''}${on ? ' focus' : ''}${c.officerId === woke ? ' woke' : ''}${c.home ? ' home' : ''}${fresh ? ' enter' : ''}"${fresh ? ` style="--i:${entering++}"` : ''} data-id="${esc(c.officerId)}" role="button" tabindex="0" aria-pressed="${c.locked}" aria-expanded="${on}" aria-controls="${detailId}" aria-describedby="${benefitId}">
+      return `<div class="od-card${c.locked ? ' locked' : ''}${on ? ' focus' : ''}${c.officerId === woke ? ' woke' : ''}${c.home ? ' home' : ''}${fresh ? ' enter' : ''}"${fresh ? ` style="--i:${entering++}"` : ''} data-id="${esc(c.officerId)}" role="button" tabindex="${v.ended ? -1 : 0}" aria-disabled="${v.ended}" aria-pressed="${c.locked}" aria-expanded="${on}" aria-controls="${detailId}" aria-describedby="${benefitId}">
         <span class="od-why">${esc(REASON[c.reasonCode] ?? REASON.WANDER)}</span>
         <span class="od-art">${layers}${src ? `<img class="od-color" src="${esc(src)}" alt="${esc(c.name)}" draggable="false">` : `<b class="od-initial">${esc(String(c.name).slice(0, 1))}</b>`}</span>
         <span class="od-benefit" id="${benefitId}"><strong>${esc(trait?.name ?? '고유 특기')}</strong><span>${esc(trait?.text ?? '효과 설명 준비 중')}</span><em>눌러서 전법·능력치 보기</em></span>
@@ -109,25 +109,25 @@ export function openOfficerDraft(host, o) {
           ${tactic ? `<p><small>시작 전법 · ${esc(tactic.name)}</small>${esc(tactic.text)}</p>` : '<p>시작 전법 설명 준비 중</p>'}
           <ul class="od-stats">${stats}</ul>
         </div>
-        ${c.locked ? '' : `<button class="od-wake" data-wake="${esc(c.officerId)}"${c.lockBlocked ? ' disabled' : ''}>${c.lockBlocked === 'BUDGET' ? '그릇이 모자라다' : '깨운다'}</button>`}
-        <span class="od-plate"><b>${esc(c.name)}</b><small>${esc(c.style ?? c.role ?? '')}</small><i class="od-cost" title="무게 ${c.cost} — 다섯의 무게 합이 그릇 안이어야 한다">${c.cost}</i>${c.locked ? '<em class="od-seal" aria-hidden="true">印</em>' : ''}</span>
+        ${c.locked || v.ended ? '' : `<button class="od-wake" data-wake="${esc(c.officerId)}"${c.lockBlocked ? ' disabled title="이 사람을 깨우면 그릇을 넘는다"' : ''}>${c.lockBlocked === 'BUDGET' ? '그릇이 모자라다' : '깨운다'}</button>`}
+        <span class="od-plate"><b>${esc(c.name)}</b><small>${esc(c.style ?? c.role ?? '')}</small><i class="od-cost" title="무게 ${c.cost} — 깨운 사람의 무게 합이 그릇 안이어야 한다">${c.cost}</i>${c.locked ? '<em class="od-seal" aria-hidden="true">印</em>' : ''}</span>
       </div>`;
     }).join('');
     const slot = (id, name, cls = '') => { const src = id && o.art(id); return `<li class="${cls}${owner === id && canDelegate ? ' owner' : ''}"${id && canDelegate ? ` data-owner="${esc(id)}" role="button" tabindex="0" title="${esc(name)}에게 찾는 일을 맡긴다"` : name ? ` title="${esc(name)}"` : ''}>${src ? `<i style="--face:url(${esc(src)})"></i>` : ''}</li>`; };
-    const full = draft.locked.length >= draft.slots, justFull = fx && full && !wasFull; wasFull = full;
+    const full = v.ended, justFull = fx && full && !wasFull; wasFull = full;
     const slots = [slot(o.ruler.id, o.ruler.name, `ruler filled${mode === 'first' && d0 ? ' pop late' : ''}`), ...lockedCards.map((c) => slot(c.officerId, c.name, c.officerId === woke ? 'filled pop' : 'filled')), ...Array.from({length: Math.max(0, draft.slots - lockedCards.length)}, () => slot(null, ''))].join('');
-    const left = Math.max(0, draft.slots - draft.locked.length);
+    const endNote = v.endReason === 'SLOTS_FULL' ? '다섯을 모두 깨웠다' : v.ended ? `그릇이 찼다 — ${['', '한 명', '두 명', '세 명', '네 명', '다섯 명'][draft.locked.length]}과 함께 깨어난다` : '';
     const dur = mode === 'reroll' ? T.fast : T.first;
     root.innerHTML = `<section class="od${fx ? ' fx' : ''}${mode === 'reroll' ? ' fast' : ''}" data-faction="${esc(o.factionId)}" style="--dur:${dur}ms;--d0:${d0}ms" aria-label="함께 깨어날 사람 고르기">
       <button class="od-back" data-act="back" title="세력을 다시 고른다">‹ 세력</button>
       <header class="od-head"><h1 id="od-title">누구와 함께 깨어나는가</h1><p>${esc(GIMMICK[o.factionId] ?? '')}</p></header>
-      <p class="od-budget${v.canConfirm ? '' : ' over'}" title="다섯 사람의 무게 합이 그릇을 넘으면 시작할 수 없다(시험값)"><span>그릇</span><b>${v.shownCost}</b><i>/ ${v.budget}</i><small>깨운 사람 ${draft.locked.length} / ${draft.slots}</small></p>
-      <p class="od-note">${note ? esc(note) : v.canConfirm ? (left ? '카드를 눌러 살펴보고, 데려갈 사람은 깨운다. 깨우지 않은 자리는 다시 부를 수 있다.' : '다섯을 모두 깨웠다.') : (v.canReroll ? '보이는 다섯이 그릇을 넘는다 — 가벼운 사람이 오도록 다시 부른다.' : '그릇을 넘는다.')}</p>
+      <p class="od-budget" title="깨운 사람 무게 합 · 다섯까지, 다 채우지 않아도 된다(시험값)"><span>그릇</span><b>${v.lockedCost}</b><i>/ ${v.budget}</i><small>깨운 사람 ${draft.locked.length} / ${draft.slots}</small><small>다섯까지 · 다 채우지 않아도 된다</small></p>
+      <p class="od-note" role="status">${esc(endNote || note || (v.canConfirm ? '깨울 사람을 고른다 · 이대로 시작해도 된다' : '두 사람부터 시작한다(성 · 군대)'))}</p>
       <div class="od-cards">${cards}</div>
       <footer class="od-foot">
         <button class="od-reroll" id="od-reroll" data-act="reroll"${v.canReroll ? '' : ' disabled'} title="깨우지 않은 자리만 새 사람으로 바꾼다. 한 번 물린 사람은 이번에는 다시 나타나지 않는다"><b>다시 부른다</b><small>남은 기회 ${v.rerollsLeft}${g.extraRerolls ? ` (조조 +${g.extraRerolls})` : ''}</small></button>
         <ol class="od-slots${justFull ? ' full' : ''}">${slots}</ol>
-        <button class="od-confirm${fx && full && v.canConfirm ? ' ready' : ''}" id="od-confirm" data-act="confirm"${v.canConfirm ? '' : ' disabled'}><b>이 다섯과 깨어난다</b></button>
+        <button class="od-confirm${fx && full && v.canConfirm ? ' ready' : ''}" id="od-confirm" data-act="confirm"${v.canConfirm ? '' : ' disabled'}><b>이대로 깨어난다</b></button>
       </footer>
     </section>`;
     if (fx && entering) enterUntil = performance.now() + d0 + dur + (entering - 1) * T.stagger + 250;
@@ -220,11 +220,11 @@ export function openOfficerDraft(host, o) {
       }
       draft = next; render('reroll'); return;
     }
-    if (a === 'confirm') { let c; try { c = officerDraftCompanions(draft); } catch { note = '그릇을 넘는다'; render(); return; } if (fx) { awaken(c); return; } close(); o.onConfirm(c); return; }
+    if (a === 'confirm') { let c; try { c = officerDraftCompanions(draft); } catch { note = '두 사람부터 시작한다(성 · 군대)'; render(); return; } if (fx) { awaken(c); return; } close(); o.onConfirm(c); return; }
     if (a === 'back') { close(); o.onBack(); return; }
     if (t.closest?.('.od-details')) return;
     const card = /** @type {HTMLElement|null} */ (t.closest?.('.od-card'));
-    if (card) { const id = card.dataset.id ?? null; focus = focus === id ? null : id; render(); /** @type {HTMLElement|null} */ (root.querySelector(`[data-id="${id}"]`))?.focus(); }
+    if (card && !officerDraftView(draft).ended) { const id = card.dataset.id ?? null; focus = focus === id ? null : id; render(); /** @type {HTMLElement|null} */ (root.querySelector(`[data-id="${id}"]`))?.focus(); }
   };
   const key = (/** @type {KeyboardEvent} */ e) => {
     if (fx && performance.now() < enterUntil && ['Enter', ' ', 'Escape'].includes(e.key)) { e.preventDefault(); skip(); return; }

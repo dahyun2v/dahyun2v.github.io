@@ -26,7 +26,7 @@ const emptyLegacy=()=>({runsFinished:0,ambitionsAchieved:[]});
 export function initializeCampaignAmbitions(s,{unlocks=[],legacy={},runsFinished=legacy.runsFinished??0}={}){
  if(!['v2','v3'].includes(s.mapId))return;
  s.unlocks=[...new Set(unlocks)];
- s.legacy={runsFinished,ambitionsAchieved:[...(legacy.ambitionsAchieved??[])]};
+ s.legacy={runsFinished,ambitionsAchieved:[...(legacy.ambitionsAchieved??[])],memoryLastSeen:clone(legacy.memoryLastSeen??{})};
  s.ambitions={version:1,offeredIds:data.ambition.list.filter(a=>a.faction===s.playerFactionId&&possible(s,a.goal)).map(a=>a.id),closed:false,selected:null,offers:[],orders:[],rerolls:0,finished:false,unlocksEarned:[]};
  s.openingMemory=data.unlocks.list.filter(u=>u.kind==='MEMORY'&&s.unlocks.includes(u.id)).map(u=>u.line);
  initializeUnlockedOfficers(s,s.unlocks);
@@ -154,7 +154,14 @@ export function finishAmbitionRun(s){
   if(w.type==='AMBITION_ACHIEVED_ID'){for(const id of new Set(ids))earned.push({id:`U-EV-${id}`,line:u.line});continue;}
   if(yes)earned.push({id:u.id,line:u.line});
  }
- x.unlocksEarned=earned.filter(u=>!s.unlocks.includes(u.id));s.unlocks.push(...x.unlocksEarned.map(u=>u.id));x.finished=true;
+ x.unlocksEarned=earned.filter(u=>!s.unlocks.includes(u.id));
+ l.memoryLastSeen??={};
+ // C222: migrate old run counts, then rotate the least recently recalled memory.
+ const memories=data.unlocks.list.filter(u=>u.kind==='MEMORY');
+ for(const u of memories)if(s.unlocks.includes(u.id)&&l.memoryLastSeen[u.id]===undefined)l.memoryLastSeen[u.id]=u.when.count;
+ if(!x.unlocksEarned.length){const u=memories.filter(u=>s.unlocks.includes(u.id)).sort((a,b)=>(l.memoryLastSeen[a.id]??0)-(l.memoryLastSeen[b.id]??0))[0];if(u)x.unlocksEarned.push({id:u.id,line:u.line,recalled:true});}
+ for(const u of x.unlocksEarned)if(memories.some(m=>m.id===u.id))l.memoryLastSeen[u.id]=l.runsFinished;
+ s.unlocks=[...new Set([...s.unlocks,...x.unlocksEarned.map(u=>u.id)])];x.finished=true;
 }
 export function ambitionStep(s,{finish=true}={}){observeAmbitions(s);settleOrders(s);if(finish)finishAmbitionRun(s);startAmbitionTurn(s);}
 export function ambitionsView(s,fid){
@@ -184,6 +191,7 @@ export function applyOrderReroll(s,command,applyDraft){
 export function validateAmbitions(s){
  if(s.unlocks!==undefined&&(!Array.isArray(s.unlocks)||s.unlocks.some(id=>typeof id!=='string')||new Set(s.unlocks).size!==s.unlocks.length))throw new Error('INVALID_CAMPAIGN_UNLOCKS');
  if(s.legacy!==undefined&&(!Number.isSafeInteger(s.legacy.runsFinished)||s.legacy.runsFinished<0||!Array.isArray(s.legacy.ambitionsAchieved)||s.legacy.ambitionsAchieved.some(id=>!ambition(id))))throw new Error('INVALID_CAMPAIGN_LEGACY');
+ if(s.legacy?.memoryLastSeen!==undefined){const m=s.legacy.memoryLastSeen;if(!m||typeof m!=='object'||Array.isArray(m)||Object.entries(m).some(([id,n])=>!data.unlocks.list.some(u=>u.id===id&&u.kind==='MEMORY')||!Number.isSafeInteger(n)||n<0||n>s.legacy.runsFinished))throw new Error('INVALID_CAMPAIGN_LEGACY');}
  const x=s.ambitions;if(!x)return;
  if(x.version!==1||!Number.isSafeInteger(x.rerolls)||x.rerolls<0||typeof x.closed!=='boolean'||typeof x.finished!=='boolean'||!Array.isArray(x.offeredIds)||x.offeredIds.some(id=>ambition(id)?.faction!==s.playerFactionId)||x.selected&&(!x.offeredIds.includes(x.selected.id)||!['ACTIVE','ACHIEVED','FAILED'].includes(x.selected.status))||!Array.isArray(x.offers)||!Array.isArray(x.orders)||!Array.isArray(x.unlocksEarned))throw new Error('INVALID_CAMPAIGN_AMBITIONS');
  for(const p of x.offers)if(!data.orders.offerTurns.includes(p.turn)||!Array.isArray(p.ids)||p.ids.length>data.orders.offerCount||new Set(p.ids).size!==p.ids.length||p.ids.some(id=>!order(id))||p.chosenId!==null&&!p.ids.includes(p.chosenId)||typeof p.closed!=='boolean')throw new Error('INVALID_CAMPAIGN_ORDER_OFFER');
