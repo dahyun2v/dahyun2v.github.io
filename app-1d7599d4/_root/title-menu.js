@@ -1,3 +1,4 @@
+import {shouldOfferPrologue} from '/src/campaign-prologue.mjs';
 import {deserialize, CAMPAIGN_SAVE_KEY} from '/src/campaign-runtime.mjs';
 import {loadText,settle,saveMarkerKey} from '/src/save-store.mjs';
 import {createTitleUiAudio} from '/src/title-ui-audio.mjs';
@@ -15,10 +16,10 @@ document.addEventListener?.('visibilitychange',()=>{if(document.visibilityState=
 document.documentElement.style.setProperty('--title-background',`url("${TITLE_BACKGROUND.src}")`);
 document.documentElement.style.setProperty('--title-menu-plaque',`url("${TITLE_MENU_PLAQUE.src}")`);
 // 저장은 IndexedDB(압축) 또는 localStorage(save-store.mjs). IndexedDB 면 비동기라 마지막 결과(lastSaved)를 쓴다.
-let lastSaved=null;
+let lastSaved=null,hasStoredCampaign=false;
 function refreshContinue(){
  const fail=(text='저장을 읽을 수 없습니다')=>{lastSaved=null;$('#continue-game').disabled=true;$('#continue-summary').textContent=typeof text==='string'?text:'저장을 읽을 수 없습니다';return null;};
- const apply=raw=>{try{if(!raw)return fail('저장 없음');
+ const apply=raw=>{hasStoredCampaign=!!raw;try{if(!raw)return fail('저장 없음');
   const saved=deserialize(raw);lastSaved=saved;$('#continue-game').disabled=false;$('#continue-summary').textContent=`${saved.turn}차례 · ${saved.currentDate}일 · ${saved.factions?.[saved.playerFactionId]?.name??saved.playerFactionId}`;return saved;}catch(error){let format=false;try{const x=JSON.parse(raw);format=!x||!x.state||/지원하지 않는/.test(error.message);}catch{format=true;}return fail(format?'저장 형식이 다름':'이 판과 호환 안 됨');}};
  try{const r=settle(loadText(saveKey),apply);if(r&&typeof r.catch==='function'){r.catch(fail);return lastSaved;}return r;}catch{return fail();}
 }
@@ -31,14 +32,18 @@ function go(kind){if(navigating)return;if(kind==='continue'&&!refreshContinue())
 }
 function closeDialog(){if(!opened)return;opened.close();audio.play('close');opened=null;returnFocus?.focus();returnFocus=null;}
 function openDialog(id,trigger,first){if(navigating||opened||trigger.disabled)return;returnFocus=trigger;opened=$('#'+id);opened.showModal();$('#'+first).focus();audio.play('open');}
-for(const id of ['settings-dialog','guide-dialog']){
- const dialog=$('#'+id);dialog.addEventListener('cancel',e=>{e.preventDefault();closeDialog();});
+for(const id of ['settings-dialog','guide-dialog','prologue-dialog']){
+ const dialog=$('#'+id);if(!dialog)continue;dialog.addEventListener('cancel',e=>{e.preventDefault();closeDialog();});
  dialog.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeDialog();return;}if(e.key!=='Tab')return;
   const focusables=[...dialog.querySelectorAll('button,input')].filter(n=>!n.disabled),first=focusables[0],last=focusables.at(-1);
   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
  });
 }
-$('#new-game').addEventListener('click',()=>{if(!$('#new-game').disabled)go('new');});
+// C225: the first-run offer never writes a campaign save or legacy.
+$('#new-game').addEventListener('click',()=>{if($('#new-game').disabled)return;if($('#prologue-dialog')&&shouldOfferPrologue(()=>globalThis.localStorage,hasStoredCampaign))openDialog('prologue-dialog',$('#new-game'),'prologue-accept');else go('new');});
+$('#prologue-game')?.addEventListener('click',()=>go('prologue'));
+$('#prologue-accept')?.addEventListener('click',()=>go('prologue'));
+$('#prologue-direct')?.addEventListener('click',()=>{closeDialog();go('new');});
 $('#continue-game').addEventListener('click',()=>{if(!$('#continue-game').disabled)go('continue');});
 $('#settings').addEventListener('click',()=>openDialog('settings-dialog',$('#settings'),'setting-mute'));
 $('#guide').addEventListener('click',()=>openDialog('guide-dialog',$('#guide'),'guide-back'));

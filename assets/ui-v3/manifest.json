@@ -8152,7 +8152,10 @@
       ],
       "sha256": "83ab6a43e20294375de907b4e077cf8ab6c620e1170f29aed56ab4edf9bd7375",
       "purpose": "C217 horseArcher squad grey"
-    }
+    },
+    {"path": "prototype/assets/ui-v3/u3/stratagem/art-rumor.png", "size": [612, 504], "sha256": "d959629d501595daa63bf6eb627853ba2fde785ae36e2972f75f4adba6f3a716", "purpose": "계략 카드 그림 C226b"},
+    {"path": "prototype/assets/ui-v3/u3/stratagem/art-discord.png", "size": [612, 504], "sha256": "3e82c95ada22c76263e5a1fbf1a35e8a8c84a21bcda5e0c13ab3b431141a73fb", "purpose": "계략 카드 그림 C226b"},
+    {"path": "prototype/assets/ui-v3/u3/stratagem/art-supply.png", "size": [612, 504], "sha256": "7ef0c2dbe1ba2e3389b2d056c20de7c2d0abd890b81d843aa1a4f92c5a33cf56", "purpose": "계략 카드 그림 C226b"}
   ],
   "sources": [
     {

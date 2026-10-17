@@ -3794,3 +3794,55 @@ body.hud-band .nb-badge,body.hud-band #mini-toggle,body.hud-band .tactic-meter e
 body.hud-band #mini-toggle{width:60px;height:32px;white-space:nowrap;font-size:11px}
 body.hud-band .nb-selected h2{line-height:1.35;padding-left:3px}
 body.hud-band .ih-date b,#c186-undo-reason,body.hud-band .nb-forecast-status{background-color:#141915ed;box-shadow:0 0 5px 3px #141915ed}
+
+/* C226: text-only stratagem controls. Existing art keeps its aspect ratio. */
+#c226-stratagem{position:fixed;z-index:120;right:20px;top:90px;width:min(360px,calc(100vw - 40px));max-height:70vh;overflow:auto;padding:18px;background:#191a1c;color:#f4e9d3;border:1px solid #b99a63;font-size:13px;box-shadow:0 8px 30px #0009}
+#c226-stratagem[hidden]{display:none}#c226-stratagem label{display:block;margin:12px 0}#c226-stratagem select{width:100%;font-size:13px}#c226-stratagem button{font-size:13px;padding:8px 14px;margin:6px}.c226-preview{border-top:1px solid #b99a63}.c226-effect{font-size:12px;color:#efb985}.city-quick button:disabled{opacity:.5}
+
+.w-unit .c226-map-effect,.w-cityplate .c226-map-effect{font-size:12px;fill:#f4c38c;paint-order:stroke;stroke:#171719;stroke-width:3px;pointer-events:none}
+/* C226b: stratagem-only card, map picking and event-result presentation. */
+#c226-stratagem{inset:0;transform:none;width:auto;max-height:none;padding:0;border:0;box-shadow:none;background:#070a0b9c;display:grid;place-items:center;overflow:auto;font:14px/1.5 var(--serif)}
+#c226-stratagem[hidden]{display:none!important}
+#c226-stratagem .c226-controls{box-sizing:border-box;width:min(800px,88vw);padding:20px;background:#111713f5;border:1px solid #817356;max-height:88vh;overflow:auto}
+#c226-stratagem h2{font-size:21px;margin:0 0 10px}
+#c226-stratagem label{margin:6px 0 12px}
+#c226-stratagem select{min-height:32px;font-size:13px}
+#c226-stratagem button{font:14px/1.4 var(--serif)}
+#c226-stratagem .c226-cards{display:flex;gap:16px;justify-content:center}
+#c226-stratagem .c226-card{position:relative;flex:1;min-width:0;aspect-ratio:612/840;margin:0;padding:0;background:url(/assets/ui-v3/u3/levelup/card.png) center/contain no-repeat;border:0;box-shadow:none;color:#eae0c8;text-align:left}
+#c226-stratagem .c226-card .art{position:absolute;left:3%;top:0;width:94%;height:60%;overflow:hidden}
+#c226-stratagem .c226-card img{display:block;width:100%;height:100%;object-fit:contain}
+#c226-stratagem .c226-card h3{position:absolute;left:7%;top:61%;width:86%;height:8%;margin:0;font-size:clamp(17px,1.32vw,22px);line-height:1.2}
+#c226-stratagem .c226-card p{position:absolute;left:7%;top:71%;width:86%;height:19%;margin:0;font-size:clamp(12px,.96vw,16px);line-height:1.4}
+#c226-stratagem .c226-card small{position:absolute;left:7%;top:91%;width:86%;font-size:11px;line-height:1.3;color:#c8b98f}
+#c226-stratagem .c226-card:disabled{opacity:1;color:#aaa79e;filter:grayscale(1) brightness(.7)}
+#c226-stratagem .c226-card:disabled small{color:#c4c4c4}
+#c226-stratagem .c226-card:focus-visible{outline:2px solid #ecbd73;outline-offset:2px}
+#c226-stratagem[data-stage=target]{inset:100px auto auto clamp(120px,10vw,170px);transform:none;width:min(360px,66vw);background:none;overflow:visible;pointer-events:none}
+#c226-stratagem[data-stage=target] .c226-controls{width:100%;max-height:calc(100vh - 220px);padding:12px 20px;pointer-events:auto}
+#c226-stratagem[data-stage=target] h2{font-size:17px;margin:0}
+#c226-stratagem[data-stage=target] label{margin:4px 0}
+#c226-stratagem[data-stage=target] p{margin:4px 0;font-size:13px}
+#c226-stratagem .c226-picked{display:flex;align-items:center;gap:10px;margin:2px 0;padding:0;border:0;background:none}
+#c226-stratagem .c226-picked img{box-sizing:border-box;width:52px;height:72px;object-fit:contain;padding-bottom:25px;background:url(/assets/ui-v3/u3/levelup/card-on.png) center/contain no-repeat}
+#c226-stratagem .c226-preview h3{font-size:16px;margin:6px 0}
+#c226-stratagem .c226-result{box-sizing:border-box;width:min(620px,90vw,112vh);aspect-ratio:560/440;padding:8% 11%;padding:48px 68px;max-height:90vh;overflow:auto;background:url(/assets/ui-v3/u3/cityquick/panel.png) center/contain no-repeat;color:#eee4ce;font-size:15px}
+#c226-stratagem .c226-result-art{display:block;width:110px;height:90px;object-fit:contain;margin:0 auto}
+#c226-stratagem .c226-result h2{text-align:center;margin:4px 0 12px}
+#c226-stratagem .c226-result p{margin:8px 0;overflow-wrap:anywhere}
+#c226-stratagem .c226-result button{display:block;width:150px;height:42px;margin:12px auto 0;border:0;background:url(/assets/ui-v3/u3/cityquick/btn.png) center/contain no-repeat;color:#eee4ce}
+body:has(#c226-stratagem:not([hidden])) :is(#c205-bands,#c197-oath-band,#c186-map-guide,.nb-todo-panel,.nb-selected){display:none!important}
+.wmap .c226-range-boundary{fill:none;stroke:#b8a173;stroke-width:1.4;pointer-events:none}
+.wmap .c226-target-border{fill:none;stroke:#f7d493;stroke-width:2;pointer-events:none}
+.wmap .c226-target-marker{font-size:13px;fill:#ffe1a6;stroke:#171719;stroke-width:3px;paint-order:stroke;text-anchor:middle;pointer-events:none}
+@media(max-height:800px){#c226-stratagem .c226-controls{width:min(710px,88vw);padding:14px}#c226-stratagem[data-stage=target] .c226-controls{width:100%}#c226-stratagem .c226-result{width:min(560px,90vw,112vh);padding:34px 58px;font-size:14px}}
+/* C225: 서장 안내 — 기존 판 그림과 붓 화살표 재사용. */
+#c225-prologue{position:fixed;z-index:1500;right:20px;top:100px;width:280px;max-width:calc(100vw - 40px);font-size:13px;color:#f1e5c8;pointer-events:none}
+#c225-prologue .c225-coach{pointer-events:auto;padding:16px 20px;background:#22201beF url('/assets/ui-v3/hud/kit/panel-info.png') center/contain no-repeat;border:1px solid #8e7953;box-shadow:0 3px 18px #0009;line-height:1.6}
+#c225-prologue header{display:flex;gap:8px;align-items:center;justify-content:space-between}#c225-prologue button{font:inherit;min-height:30px;color:#f1e5c8;background:#292720;border:1px solid #8e7953;cursor:pointer}#c225-prologue p{margin:10px 0}#c225-prologue small{font-size:11px}
+.c225-pointed{outline:3px solid #e8bd65!important;outline-offset:4px;filter:drop-shadow(0 0 5px #e8bd65)}
+@media(max-width:1250px){#c225-prologue{right:12px;top:86px;width:250px;font-size:12px}}
+body.c225-active #c211-rewind,body.c225-active .wind,body.c225-active [data-ih="save"],body.c225-active [data-action="save"]{display:none!important}
+#c225-prologue .c225-arrow{position:fixed;width:38px;height:28px;object-fit:contain;pointer-events:none}
+/* Claude 10-17: 긴 성장 카드 이름(10자 넘음)이 두 줄로 그림 위로 올라가던 것 — 칸을 조금 넓히고 글을 줄임(글자 검사 ip-final/39-t10-levelup) */
+body.ink #growth-cards .draft-card h3[data-long]{top:59.5%;height:10.5%;font-size:clamp(13px,1.02vw,17px);line-height:1.12;align-items:center}

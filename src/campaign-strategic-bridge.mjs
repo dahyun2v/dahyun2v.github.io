@@ -791,7 +791,7 @@ function economyContext(s,factionId){
  const food=foodPolicy&&!clockFood(s)?campaignAiFoodForecast(s,factionId,publicWorld):{};
  return {v,own,enemies,trailing,field,enemyField:Math.max(0,...totals.values()),pending,foodPolicy,publicWorld,food};
 }
-function economyOfficers(s,c){return freeCityOfficers(s,c).filter(o=>!injuryReason(s,o.officerId)&&!fatigueReason(s,o.officerId)).sort((a,b)=>fatigueView(s,a.officerId).value-fatigueView(s,b.officerId).value||Number(a.officerId===c.governorId)-Number(b.officerId===c.governorId)||a.officerId.localeCompare(b.officerId));}
+function economyOfficers(s,c){return freeCityOfficers(s,c).filter(o=>!injuryReason(s,o.officerId)&&!fatigueReason(s,o.officerId)).sort((a,b)=>Number(a.officerId===c.governorId)-Number(b.officerId===c.governorId)||a.officerId.localeCompare(b.officerId));}
 
 // One early paid base per faction. Selecting a city is remembered only when
 // production actually starts; read-only reports never reserve or complete it.
@@ -939,7 +939,6 @@ export function campaignAiCityJob(s,c){
  return campaignAiCityJobC141(s,c);
 }
 function campaignAiCityJobC141(s,c){
- if(s.mapId!=='v1'&&c.reserveTroops>=musterRequirement(s,c))for(const o of freeCityOfficers(s,c))recordFatigueBlock(s,o.officerId);
  const rates=cityEconomyRates(s,c),need=campaignFoodNeed(s,c),food=c.foodStock-c.reservedResources.food;
  const count=kind=>c.facilities.filter(f=>f.kind===kind).length;
  if(supplyEnabled(s)&&Object.values(s.armies).some(a=>a.factionId===c.ownerFactionId&&a.supplyStarving&&supplyLink(s,a).sourceCityId===c.cityId)&&food<c.population*2+Object.values(s.armies).filter(a=>a.factionId===c.ownerFactionId).reduce((n,a)=>n+armyFoodPerTurn(a,s),0)){
@@ -1028,6 +1027,8 @@ export function campaignAiMusterTroop(s,c,o){
  return legal.sort((a,b)=>Number(o.aptitude[b]==='A')-Number(o.aptitude[a]==='A')||a.localeCompare(b))[0]??null;
 }
 export function selectCampaignAiJobs(s,factionId){
+ // C224: count rest-blocked candidates in every AI economy profile.
+ for(const c of Object.values(s.cities))if(c.ownerFactionId===factionId&&s.mapId!=='v1'&&c.reserveTroops>=musterRequirement(s,c))for(const o of freeCityOfficers(s,c))recordFatigueBlock(s,o.officerId);
  if(campaignEconomyEnabled(s,factionId)){
   const basePlan=s.c198AiSpecialBases?.[factionId];
   if(basePlan&&!basePlan.completed&&s.cities[basePlan.cityId]?.ownerFactionId===factionId&&s.cities[basePlan.cityId].facilities.some(f=>f.kind==='barracks'))basePlan.completed=true;
@@ -1062,7 +1063,7 @@ export function selectCampaignAiJobs(s,factionId){
   const reform=campaignAiReorganization(s,c);
   if(reform&&!Object.values(s.cities).some(city=>city.currentProduction?.kind==='reorganize'&&city.currentProduction.armyId===reform.armyId)){selectCityJob(s,reform,factionId);s.c23Stats??={archerBlocked:0,aiReorganizations:0};s.c23Stats.aiReorganizations++;continue;}
   const kind=campaignAiCityJob(s,c);if(!kind)continue;
-  if(kind==='muster'){if(c.currentProduction?.kind==='muster')continue;const officers=freeCityOfficers(s,c).filter(o=>!injuryReason(s,o.officerId)&&!fatigueReason(s,o.officerId)).sort((a,b)=>fatigueView(s,a.officerId).value-fatigueView(s,b.officerId).value||Number(a.officerId===c.governorId)-Number(b.officerId===c.governorId)||a.officerId.localeCompare(b.officerId));for(const o of officers){const troopType=campaignAiMusterTroop(s,c,o);if(!troopType)continue;selectCityJob(s,{cityId:c.cityId,kind,officerId:o.officerId,troopType},factionId);if(c24Enabled(s)){s.c24AiMusters??={};s.c24AiMusters[factionId]=(s.c24AiMusters[factionId]??0)+1;}break;}continue;}
+  if(kind==='muster'){if(c.currentProduction?.kind==='muster')continue;const officers=freeCityOfficers(s,c).filter(o=>!injuryReason(s,o.officerId)&&!fatigueReason(s,o.officerId)).sort((a,b)=>Number(a.officerId===c.governorId)-Number(b.officerId===c.governorId)||a.officerId.localeCompare(b.officerId));for(const o of officers){const troopType=campaignAiMusterTroop(s,c,o);if(!troopType)continue;selectCityJob(s,{cityId:c.cityId,kind,officerId:o.officerId,troopType},factionId);if(c24Enabled(s)){s.c24AiMusters??={};s.c24AiMusters[factionId]=(s.c24AiMusters[factionId]??0)+1;}break;}continue;}
   if(c.currentProduction&&(kind===c.currentProduction.kind||!['recruit','farm','granary','repair'].includes(kind)))continue;
   if(['recruit','repair'].includes(kind)||facilityTiles(s,c).length)selectCityJob(s,{cityId:c.cityId,kind},factionId);
  }

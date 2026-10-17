@@ -76,6 +76,7 @@ export function selectOccupationMethod(s,{cityId,method},ai=false) {
     turnsLeft:Math.max(1,(method==='conciliation'?1:2)-effectModifiers(s,cityId,['ON_CAPTURE_CITY','TURN_SETTLE'],{cityId,sources:[{id:occupationGarrison(s,c)?.armyId??c.governorId,whens:['ON_CAPTURE_CITY','TURN_SETTLE']}]}).OCCUPATION_SPEED),selectedTurn:s.turn,lastSettledTurn:s.turn,...(s.mapId!=='v1'?{careerMethod:method}:{})});
   o.turnsLeft=Math.max(1,specialistOccupationTurns(s,c,o.turnsLeft)-(c29Aw(s,c.governorId??occupationGarrison(s,c)?.commanderId,'AW_TT-V04')?1:0));
   domesticOccupation(s,c,method);
+  if(o.stage==='OCCUPATION'&&o.turnsLeft<=0){o.stage='STABILIZING';o.state='STABILIZING';o.turnsLeft=1;}
   administrationLine(s,`${s.cityDisplayNames?.[cityId]??c.name}: ${OCCUPATION_METHODS[method]} 선택 · ${o.turnsLeft}턴`,c.ownerFactionId);
   return s;
 }
@@ -97,7 +98,7 @@ export function settleOccupationCity(s,c,paid,openingSecurity=0) {
   if(o.stage==='CAPTURED')return;
   if(o.stage==='OCCUPATION') {
     if(o.method==='military'&&!occupationGarrison(s,c)){administrationLine(s,`${s.cityDisplayNames?.[c.cityId]??c.name}: 군정 정지 · 주둔 이탈`,c.ownerFactionId);return;}
-    if(--o.turnsLeft===0){o.stage='STABILIZING';o.state='STABILIZING';o.turnsLeft=1;}
+    if(--o.turnsLeft<=0){o.stage='STABILIZING';o.state='STABILIZING';o.turnsLeft=1;}
   } else {
     const engaged=s.economy.combatCities?.[c.cityId]===s.turn-1;
     const besieged=c.besieged||o.besiegedTurn===s.turn-1;

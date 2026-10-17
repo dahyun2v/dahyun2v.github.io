@@ -199,7 +199,7 @@ export function buildCampaignGrowthPool(pack){
   return {representativeId:representative?.traitId??null,coreId,cards,pool:{poolVersion:`C4.${pack.id}.trial-v1`,sourceType:'PROVIDED_FIXTURE',fixture:true,traits}};
 }
 export function initializeCampaignGrowth(s,packs=trialPacks){
- if(['v2','v3'].includes(s.mapId))for(const o of Object.values(s.officers)){o.fatigue??=0;o.injury??=null;}
+ if(['v2','v3'].includes(s.mapId))for(const o of Object.values(s.officers)){o.injury??=null;}
   s.campaignGrowth??={version:1,officers:{},log:[]};
   for(const o of Object.values(s.officers).sort((a,b)=>a.officerId.localeCompare(b.officerId))){
     if(s.campaignGrowth.officers[o.officerId]){migrateGrowthRecord(s,o.officerId);continue;}

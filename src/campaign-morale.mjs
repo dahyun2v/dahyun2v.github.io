@@ -131,7 +131,7 @@ export function startFactionMorale(s,factionId){
 // 정산: 적과 떨어져 있으면 한 단계씩 수습(패주 → 동요 → 안정). 패주 수습은 시험값(Total War 식 재집결) — 정본 다음 개정에 반영.
 export function settleMorale(s){
  for(const a of Object.values(s.armies))if(castleArmyActive(s,a)&&!enemies(s,a).some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1)){
-  if(a.forcedMarchTurn!==s.turn-1){if(a.morale==='SHAKEN')changeMorale(s,a.armyId,'STEADY','정산 회복');else if(a.morale==='ROUTING')changeMorale(s,a.armyId,'SHAKEN','정산 수습');}
+  if(a.forcedMarchTurn!==s.turn-1&&!(a.stratagemDiscord?.until>=s.turn)){if(a.morale==='SHAKEN')changeMorale(s,a.armyId,'STEADY','정산 회복');else if(a.morale==='ROUTING')changeMorale(s,a.armyId,'SHAKEN','정산 수습');}
   changeFormation(s,a.armyId,-1);
  }
 }

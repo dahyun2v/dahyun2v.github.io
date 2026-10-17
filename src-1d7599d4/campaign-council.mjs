@@ -1,3 +1,4 @@
+import {fatigueReason} from './campaign-fatigue.mjs';
 import C195 from '../data/c195-trial-v0.1.json' with {type:'json'};
 import {troopText} from './troop-display.mjs';
 import data from '../../docs/design-data/council-v0.1.json' with {type:'json'};
@@ -82,7 +83,7 @@ export function councilReport(s,{foresight=true}={}){
   if(campaignCityDefense(s,v,c)<a.troopCount&&destinations.some(t=>arrivalTurns(s,v,a,t)<=2))put('OPPORTUNITY',{'성':cityName(s,c.cityId)});
  }
  for(const c of cities)if((c.securityLevel??0)>0)put('SECURITY',{'성':cityName(s,c.cityId)});
- for(const o of Object.values(s.officers).filter(o=>o.allegianceFactionId===own(s)&&o.lifeState==='ALIVE'))if(o.injury||(o.fatigue??0)>=60)put('AVAILABILITY',{'장수':o.name});
+ for(const o of Object.values(s.officers).filter(o=>o.allegianceFactionId===own(s)&&o.lifeState==='ALIVE'))if(o.injury||fatigueReason(s,o.officerId))put('AVAILABILITY',{'장수':o.name});
  if(!found.size)put('CALM',{});
  const topics=data.report.topics.filter(t=>found.has(t.id)).slice(0,data.report.maxLines),lines=topics.map(t=>found.get(t.id));
  const strategist=councilCandidates(s).find(o=>o.officerId===s.council?.strategistId)??councilCandidates(s)[0];

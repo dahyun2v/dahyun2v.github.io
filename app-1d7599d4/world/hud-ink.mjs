@@ -97,7 +97,7 @@ export function cityPublicReadout(v,cityId,badge=null){
  const troops=own?(own.reserveTroops??0)+Object.values(own.specialReserves??{}).reduce((n,count)=>n+count,0):visible&&guards.length?guards.reduce((n,a)=>n+a.troopCount,0):null;
  return {id:cityId,name:c.name,factionId:c.ownerFactionId,own:!!own,remembered:!own&&!visible,defense:c.durability,defenseMax:c.durabilityMax,troops,
   guardMaximum:own?c.guardMaximum:null,nextReinforcements:own?c.nextReinforcements:[],
-  besieged:!!c.besieged,siegeTurns:Number.isFinite(c.siegeTurns)?c.siegeTurns:null,badge:own?badge:null};
+  stratagemText:c.stratagemText,stratagemReason:own?(v.stratagems?.some(o=>o.cityId===cityId&&o.choices.length)?null:'보이는 대상 없음 · 장수 대기 또는 범위 밖'):null,besieged:!!c.besieged,siegeTurns:Number.isFinite(c.siegeTurns)?c.siegeTurns:null,badge:own?badge:null};
 }
 export const citySiegeText = c => c.besieged?`포위${Number.isFinite(c.siegeTurns)?` ${c.siegeTurns}차례`:''}`:'포위되지 않음';
 export const recruitmentReasonHtml = quote => `<small class="c192-recruit-reason">인망 ${esc(quote.cost)} · ${esc(quote.reason)}</small>`;
@@ -111,7 +111,8 @@ export const cityProductionText = b => !b?'생산 정보 없음':b.idle?'놀고 
 export function cityQuickHtml(c){
  const seal=C190_SEALS[c.factionId],art=seal&&C190_ART[seal.art],num=n=>Number.isFinite(n)?Math.round(n):'?';
  const bar=(label,value,max,text)=>`<div class="cq-meter"><span>${label} <b>${esc(text)}</b></span><i><s style="width:${Number.isFinite(value)&&max>0?Math.max(0,Math.min(100,value/max*100)):0}%"></s></i></div>`;
- return `<header><h2>${esc(c.name)}</h2>${c.own?`<button class="c216-reserve-quick" data-reserve-transfer="${esc(c.id)}">예비병 보내기</button>`:''}<span class="cq-seal" aria-label="세력 ${esc(seal?.glyph??'中')}">${art?`<img src="${esc(art)}" alt="${seal.glyph}">`:esc(seal?.glyph??'中')}</span></header>`
+ return `<header><h2>${esc(c.name)}</h2>${c.own?`<button data-stratagem-quick ${c.stratagemReason?'disabled':''} title="${esc(c.stratagemReason??'성에 있는 장수의 주 행동')}">계략</button><button class="c216-reserve-quick" data-reserve-transfer="${esc(c.id)}">예비병 보내기</button>`:''}<span class="cq-seal" aria-label="세력 ${esc(seal?.glyph??'中')}">${art?`<img src="${esc(art)}" alt="${seal.glyph}">`:esc(seal?.glyph??'中')}</span></header>`
+  +(c.stratagemText?`<p class="c226-effect">${esc(c.stratagemText)}</p>`:'')
   +bar('성벽',c.defense,c.defenseMax,`${num(c.defense)}/${num(c.defenseMax)}`)
   +bar(c.own?'수비':'보이는 수비',c.troops,c.own?c.guardMaximum:null,Number.isFinite(c.troops)?`${troopText(c.troops)}${c.own&&Number.isFinite(c.guardMaximum)?`/${troopText(c.guardMaximum)}`:''}`:'?')
   +(c.own?`<p class="cq-production${c.badge?.idle?' idle':''}">${c.badge?.idle?'●':'⚒'} ${esc(cityProductionText(c.badge))}</p><nav aria-label="성 빠른 명령"><button data-city-quick-action="sortie">출진</button><button data-city-quick-action="production">생산</button><button data-city-quick-action="office">내정</button><button data-city-quick-action="enter">들어가기</button></nav>`:`<p class="cq-siege">${citySiegeText(c)}</p><p class="cq-hint">공격하려면 부대를 고르세요${c.remembered?' · 기억한 정보':''}</p>`);
@@ -971,8 +972,8 @@ export function levelupUpgradeText(card, describe) {
  return before===after?`${rank}단계 → ${next}단계 · 효과 그대로(단계만 오름)`:`${rank}단계 → ${next}단계: ${before} → ${after}`;
 }
 export function fatigueLineText(f) {
- if(!f||!Number.isFinite(f.value))return '';
- return `피로 ${Math.round(f.value)}${f.levelName?' · '+f.levelName:''}${f.musterBlocked?` — ${f.restTurns}차례 쉬면 출진 가능`:''}`;
+ // C224: public return-rest deadline only.
+ return f?.musterBlocked&&Number.isFinite(f.restTurns)?`쉬는 중 · ${f.restTurns}차례 뒤 출진`:'';
 }
 
 // C206: presentation of public campaign projections only.
@@ -1094,4 +1095,20 @@ export function publicRivalScene(before,after,record,data,seen){
  if(ids.length!==2||!ids.every(id=>key.split('|').includes(id))||!Array.isArray(pair.lines))return null;
  seen.add(key);
  return {key,tier:'RIVAL',title:pair.title,lines:pair.lines,officers:ids.map(id=>({officerId:id,name:before.officers?.[id]?.name??after.officers?.[id]?.name??(id===a.commanderId?a.commanderName:b.commanderName)??id}))};
+}
+
+export const stratagemReasonText=code=>({STRATAGEM_OFFICER:'성에 있는 자유 장수만 가능',STRATAGEM_COMMANDING:'부대 지휘 중',STRATAGEM_ACTION_USED:'이번 차례 주 행동 사용',STRATAGEM_COOLDOWN:'재사용 대기 중',STRATAGEM_TARGET:'적 대상 종류를 확인하세요',STRATAGEM_NOT_VISIBLE:'지금 보이지 않는 대상',STRATAGEM_RANGE:'범위 밖'})[code]??code;
+const STRATAGEM_CARDS=[
+ {kind:'RUMOR',name:'유언비어',art:'rumor',effect:'성 산출 감소 · 자동 충원 멈춤',blocked:'범위 안 보이는 적 성 없음'},
+ {kind:'SOW_DISCORD',name:'이간',art:'discord',effect:'적 부대의 사기 동요',blocked:'범위 안 보이는 적 부대 없음'},
+ {kind:'DISRUPT_SUPPLY',name:'보급 교란',art:'supply',effect:'적 부대의 휴대 군량 감소',blocked:'범위 안 보이는 적 부대 없음'}
+];
+export function stratagemPanelHtml(options,ui={},result=null){
+ const card=STRATAGEM_CARDS.find(c=>c.kind===(result?.kind??ui.kind));
+ if(result)return `<section class="c226-result" aria-labelledby="c226-result-title"><img class="c226-result-art" src="/assets/ui-v3/u3/stratagem/art-${card?.art??'rumor'}.png" alt=""><h2 id="c226-result-title">${esc(card?.name??'계략')} · ${result.success===undefined?'결과':result.success?'성공':'실패'}</h2><p role="status">${esc(result.text)}</p><p>들킴 · ${result.exposed?'적에게 발각됨':'들키지 않음'}</p><p>${result.success?'효과':'실패 · 효과 없음'}${result.success?' · '+esc(result.effectText??''):''}</p><button data-stratagem-close>닫기</button></section>`;
+ const officer=options.find(o=>o.officerId===ui.officerId),choices=officer?.choices??[],p=choices.find(p=>JSON.stringify(p.cmd)===ui.commandKey);
+ return `<div class="c226-controls"><h2>계략${card?' · '+esc(card.name):''}</h2><label>장수 고르기 <select data-stratagem-officer><option value="">장수를 고르세요</option>${options.map(o=>`<option value="${esc(o.officerId)}" ${o.officerId===ui.officerId?'selected':''} ${o.blockedReason||!o.choices.length?'disabled':''}>${esc(o.name)} · 지략 ${o.intelligence} · 대기 ${o.cooldown}차례${o.blockedReason?' · '+esc(stratagemReasonText(o.blockedReason)):!o.choices.length?' · 보이는 대상 없음':''}</option>`).join('')}</select></label>
+ ${officer&&!ui.kind?`<div class="c226-cards" aria-label="종류 고르기">${STRATAGEM_CARDS.map(c=>{const blocked=!choices.some(p=>p.cmd.kind===c.kind);return `<button class="c226-card" data-stratagem-kind="${c.kind}" ${blocked?'disabled':''}><span class="art"><img src="/assets/ui-v3/u3/stratagem/art-${c.art}.png" alt=""></span><h3>${c.name}</h3><p>${c.effect}</p><small>${blocked?c.blocked:'지도에서 대상을 고릅니다'}</small></button>`;}).join('')}</div>`:''}
+ ${card?`<button class="c226-picked" data-stratagem-repick><img src="/assets/ui-v3/u3/stratagem/art-${card.art}.png" alt="">${card.name} · 다시 고르기</button><p>밝은 테두리의 ‘대상’을 누르세요.</p>`:''}
+ ${p?`<section class="c226-preview"><h3>계략 예고 · ${esc(p.targetName)}</h3><p>성공률 ${p.chance}% · 들킬 위험 ${p.exposedRisk}%</p><p>${esc(p.effectText)}</p><button data-stratagem-execute>실행</button></section>`:''}<button data-stratagem-close>취소</button></div>`;
 }

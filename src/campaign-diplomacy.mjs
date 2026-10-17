@@ -344,3 +344,6 @@ export function validateDiplomacy(s){
  for(const [id,p] of Object.entries(d.protectedArmies))if(!s.armies[id]||!p||!s.factions[p.fromFactionId]||p.fromFactionId===s.armies[id].factionId||!turn(p.until))fail();
  for(const e of d.history)if(!obj(e)||!['ATTACK','CAPTURE','PROPOSE','ACCEPT','REJECT','END_NOTICE','EFFECTIVE','EXPIRE','END','SURPRISE','COALITION','COALITION_WARNING','GIFT'].includes(e.type)||!s.factions[e.from]||!s.factions[e.to]||e.from===e.to||!turn(e.turn)||e.turn>s.turn||e.type==='COALITION_WARNING'&&(!s.factions[e.threatFactionId]||[e.from,e.to].includes(e.threatFactionId)))fail();
 }
+
+// Exposure uses the same public faction threat axis as coalition warnings.
+export function exposeStratagem(s,from,to){if(!diplomacyEnabled(s))return;initializeDiplomacy(s);s.c43.axes.threat[from]=clamp(reputation(s,'threat',from)+10,axes.threat.range);axisLog(s,from,to,'계략이 들켜 공개 위협 +10');}

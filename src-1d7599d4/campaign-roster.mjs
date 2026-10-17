@@ -7,7 +7,7 @@ import {citySupplyRoute,fieldDrainTurns,armyFoodPerTurn} from './campaign-supply
 import troopAssignments from '../data/c169a-troops.json' with {type:'json'};
 import {troopText} from './troop-display.mjs';
 import {injuryReason} from './campaign-injury.mjs';
-import {fatigueReason,recordFatigueBlock} from './campaign-fatigue.mjs';
+import {fatigueReason,recordFatigueBlock,restAfterReturn} from './campaign-fatigue.mjs';
 import {loadMusterSupply} from './campaign-supply.mjs';
 import {observeRelationGroups} from './campaign-relations.mjs';
 import {initializeClasses} from './campaign-classes.mjs';
@@ -141,7 +141,7 @@ export function migrateArmyStructure(s){
 export const rosterPacks=Object.fromEntries([g33,g34,g25,g18,g19,g06,g28,g29,g30,g35,g46,g16,g13,g10,g49,g21,g42,g01,g31,g14,g37,g32,g09,g38,g39].map(p=>[p.id,p]));
 export function officerFromPack(s,p,factionId,cityId){
  const o=structuredClone(Object.values(s.officers)[0]);
- if(['v2','v3'].includes(s.mapId)){o.fatigue=0;o.injury=null;delete o.fatigueCombat;}
+ if(['v2','v3'].includes(s.mapId)){delete o.fatigue;delete o.restUntilTurn;delete o.restPendingReturn;o.injury=null;delete o.fatigueCombat;}
  delete o.c34Abilities;delete o.c26;delete o.c26OriginFaction;delete o.c26OriginCity;
  delete o.troopType;delete o.multiTroopTrait;
  if(s.mapId!=='v1'){o.c26OriginFaction=factionId;o.c26OriginCity=cityId;}
@@ -347,7 +347,7 @@ export function garrisonArmy(s,id){
 }
 export function initializeCityStart(s){
  s.cityStart=true;
- for(const a of Object.values(s.armies))if(a.troopCount>0&&(!s.terminal||s.terminal.armiesById[a.armyId]?.disposition==='ACTIVE'))disbandIntoCity(s,a,s.cities[s.factions[a.factionId].capitalCityId]);
+ for(const a of Object.values(s.armies))if(a.troopCount>0&&(!s.terminal||s.terminal.armiesById[a.armyId]?.disposition==='ACTIVE')){disbandIntoCity(s,a,s.cities[s.factions[a.factionId].capitalCityId]);delete s.officers[a.commanderId].restUntilTurn;}
  return s;
 }
 function disbandIntoCity(s,a,c){
@@ -359,7 +359,7 @@ function disbandIntoCity(s,a,c){
  const lotId=`C16.GARRISON.${id}`;s.personnel.lots.push({lotId,kind:'READY',nodeId:c.cityId,identity:{baseTroopId:troopToCampaign(a.troopType),specialTroopId:specialTroop(s,a.troopType)?a.troopType:null},originFormationId:null,count:a.troopCount});
  s.economy.lotFaction[lotId]=a.factionId;s.economy.recruitedReady[lotId]=!specialTroop(s,a.troopType);s.economy.readyAt[lotId]=s.turn;if(!specialTroop(s,a.troopType))c.reserveTroops+=a.troopCount;
  s.personnel.formations.find(f=>f.formationId===id).field=0;a.troopCount=0;a.hp=0;a.currentOrder=null;a.movementState=null;a.engagedArmyIds=[];
- const o=s.officers[a.commanderId];o.locationRef={kind:'CITY',id:c.cityId};terminalOfficer(s,o);
+ const o=s.officers[a.commanderId];if(o.locationRef.kind==='ARMY')restAfterReturn(s,o);o.locationRef={kind:'CITY',id:c.cityId};terminalOfficer(s,o);
  if(domesticEngineEnabled(s))for(const city of Object.values(s.cities))if(city.absentGovernorId===o.officerId){city.absentGovernorId=null;if(city===c&&!c.governorId){c.governorId=o.officerId;s.terminal.citiesById[c.cityId].governorId=o.officerId;terminalOfficer(s,o,o.locationRef);}}
  delete s.moveOrders[id];s.orderQueue=s.orderQueue.filter(x=>x!==id);if(s.ui?.selectedArmyId===id)s.ui.selectedArmyId=null;
  for(const b of Object.values(s.armies))b.engagedArmyIds=b.engagedArmyIds.filter(x=>x!==id);

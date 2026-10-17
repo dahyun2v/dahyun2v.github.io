@@ -1,3 +1,4 @@
+import {rumorActive,STRATAGEMS} from './campaign-stratagems.mjs';
 import C195 from '../data/c195-trial-v0.1.json' with {type:'json'};
 import {specialSupportAvailable} from './campaign-special-troops.mjs';
 import {injuryReason} from './campaign-injury.mjs';
@@ -160,7 +161,7 @@ export function cityEconomyRates(s,c,{shortage=null,commit=false}={}) {
   const baseFood=influence?influence.food*baseCityFood(s)/4:scale*(baseCityFood(s)+2*Math.min(2,count('farm')))+C19.populationFood*population;
   const foodRaw=(influence?0:activeUnique(s,c,'tuntian')?C20.tuntianFood:0)+(baseFood+department.food)*multiplier*output('FOOD')*(c19Enabled(s)?security:1);
   const specialistFood=s.mapId==='v2'||s.mapId==='v3'?(foodRaw+(c.specialists?.logistician??0)*C21.logisticianFood)*(1+(c.specialists?.official??0)*C21.officialRate):foodRaw;
-  shortage??=c.foodStock-c.reservedResources.food+((normal(s,c)||c19Enabled(s))?Math.floor(specialistFood+(c.outputCarry?.food??0)+1e-9):0)<campaignFoodNeed(s,c);
+  shortage??=c.foodStock-c.reservedResources.food+((normal(s,c)||c19Enabled(s))?Math.floor(specialistFood*(rumorActive(s,c)?STRATAGEMS.kinds.find(k=>k.id==='RUMOR').effect.outputMult:1)+(c.outputCarry?.food??0)+1e-9):0)<campaignFoodNeed(s,c);
   const penalty=Math.min(security,shortage?c34Shortage(s,c):1);
   const raw={food:foodRaw,
     production:(c20Enabled(s)&&c.starProductionTurn===s.turn?C20.production:0)+((influence?influence.production:scale*2+C19.populationProduction*population+(c19Enabled(s)?count('workshop')*C19.workshopProduction:0))+department.production)*multiplier*output('PRODUCTION')*penalty,
@@ -175,6 +176,7 @@ export function cityEconomyRates(s,c,{shortage=null,commit=false}={}) {
   if(relationOutput.lines.length)specialistCauses.push({resource:'production',label:relationOutput.lines[0],amount:relationAmount});
   if(c19Enabled(s)&&!normal(s,c)&&!(c.besieged&&uniqueHoldLand(s,c)))for(const key of ['production','science','prestige'])raw[key]*=s.occupations?.[c.cityId]?.classRetention ? .5 : 0;
   raw.food*=achievementCityFactor(s,c,'food');
+  if(rumorActive(s,c))for(const resource of ['food','production']){const amount=raw[resource]*(STRATAGEMS.kinds.find(k=>k.id==='RUMOR').effect.outputMult-1);raw[resource]+=amount;specialistCauses.push({resource,label:'유언비어 · 산출 감소',amount});}
   const rounded=Object.fromEntries(Object.entries(raw).map(([key,value])=>[key,Math.floor(value+(c.outputCarry?.[key]??0)+1e-9)]));
   if(commit)c.outputCarry=Object.fromEntries(Object.entries(raw).map(([key,value])=>[key,!normal(s,c)&&key!=='food'?(c.outputCarry?.[key]??0):Math.max(0,value+(c.outputCarry?.[key]??0)-rounded[key])]));
   return {bonus,...rounded,raw,...(relationsEnabled(s)?boundSecurity:{}),...(s.mapId!=='v1'?{specialistCauses:specialistCauses.filter(e=>normal(s,c)||e.resource==='food')} :{}),capacity:80+80*count('granary'),workBonus:count('barracks') ? 0.1 : 0};
@@ -321,6 +323,7 @@ function cityPersonnel(s,c) {
 }
 
 function replenish(s,c) {
+  if(rumorActive(s,c)&&STRATAGEMS.kinds.find(k=>k.id==='RUMOR').effect.reserveRefill===false)return;
   const fieldUsed={};
   let capacity=createTransportCapacity({periodId:`EC.${s.turn}.${c.cityId}`,resources:[{resourceId:'local',capacity:campaignMobilization(s,c.ownerFactionId).used}]});
   for (const lot of s.personnel.lots.filter(l=>l.nodeId===c.cityId&&lotFaction(s,l)===c.ownerFactionId&&l.kind!=='WOUNDED'&&l.count>0&&

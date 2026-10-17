@@ -3,7 +3,7 @@ import {hexDistance} from './map-primitives.mjs';
 import {createRng} from './rng.mjs';
 import {gainRelation} from './campaign-relations.mjs';
 import {creditCampaignGrowth} from './campaign-growth.mjs';
-import {initializeFatigue} from './campaign-fatigue.mjs';
+import {initializeFatigue,restAfterReturn,fatigueEnabled} from './campaign-fatigue.mjs';
 import {syncCampaignAdministrativeTerminal} from './campaign-terminal-world-application.mjs';
 import {troopToCampaign} from './campaign-adapters.mjs';
 import {parentTroop} from './campaign-special-troops.mjs';
@@ -34,6 +34,9 @@ export function injuryDefeats(s,payloads){if(!injuryEnabled(s))return payloads;i
  const a=s.armies[p.defeatedArmyId];let result=p;
  if(p.commanderFate==='DEAD'){s.c46.stats.deathBefore++;if(tryInjury(s,a.commanderId,'deathCushion',key,a.tileId)){s.c46.stats.deathSaved++;result={...p,commanderFate:'ESCAPED',captorFactionId:null};}}
  else if(p.commanderFate==='ESCAPED')tryInjury(s,a.commanderId,'eliminated',key,a.tileId);
+ // C224: terminal defeat first releases the commander to NONE; remember the
+ // army origin until the later care/escape return actually reaches a city.
+ if(result.commanderFate==='ESCAPED'&&s.officers[a.commanderId].locationRef.kind==='ARMY'&&fatigueEnabled(s))s.officers[a.commanderId].restPendingReturn=true;
  s.c46.defeats[key]=structuredClone(result);return result;
 });}
 function moveToCare(s,o){
@@ -52,6 +55,7 @@ function moveToCare(s,o){
  }
  // Governors retain their office/location; injury.cityId is their care location.
  const governor=Object.values(s.cities).find(c=>c.governorId===o.officerId);
+ if((o.locationRef.kind==='ARMY'||o.restPendingReturn)&&(governor||c.ownerFactionId===o.allegianceFactionId))restAfterReturn(s,o);
  o.locationRef=governor||c.ownerFactionId===o.allegianceFactionId?{kind:'CITY',id:governor?.cityId??c.cityId}:{kind:'NONE',id:null};o.travelState='STATIONARY';
  if(s.terminal)s.terminal.officersById[o.officerId].assignment=governor?{kind:'CITY',id:governor.cityId}:{kind:'NONE',id:null};
 }
