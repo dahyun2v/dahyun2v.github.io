@@ -1,3 +1,4 @@
+import {validateEngineGaps,reservesInTransit,gapsEnabled,gapsView,transferReserves,settleReserveTransfers,aiTransferReserves,swapArmies,swapReason,finishHistory,varyWanderers} from './campaign-engine-gaps.mjs';
 import {configureRunModifiers,initializeRunModifiers,rememberRewindStart,carryRewindStart,rewindTurn,offerBlessing,chooseBlessing,finishBlessingPlayerTurn,startRunModifierTurn,runModifiersView,validateRunModifiers} from './campaign-run-modifiers.mjs';
 import C195 from '../data/c195-trial-v0.1.json' with {type:'json'};
 import {initializeSituations,validateSituations,markSituationLine} from './campaign-situations.mjs';
@@ -5,7 +6,7 @@ import {specialReserves} from './campaign-special-troops.mjs';
 import {campaignReinforcementForecast,observeExistingMigration,validateDomesticCanon} from './campaign-economy.mjs';
 import {initializeEventDeck,applyDeckEffects} from './campaign-event-deck.mjs';
 import {settleCampaignOaths,observeCampaignOaths} from './campaign-oaths.mjs';
-import {initializeCampaignAmbitions,restoreCampaignAmbitions,startAmbitionTurn,chooseAmbition,chooseOrder,finishAmbitionPlayerTurn,ambitionStep,settleOrders,ambitionsView,ambitionResultView,applyOrderReroll,validateAmbitions} from './campaign-ambitions.mjs';
+import {initializeCampaignAmbitions,initializeUnlockedOfficers,restoreCampaignAmbitions,startAmbitionTurn,chooseAmbition,chooseOrder,finishAmbitionPlayerTurn,ambitionStep,settleOrders,ambitionsView,ambitionResultView,applyOrderReroll,validateAmbitions} from './campaign-ambitions.mjs';
 import {campaignAchievementsView,chooseAchievement,settleAchievements} from './campaign-achievements.mjs';
 import {C182,initializeCombatFire,advanceCombatFire,combatFireAt,combatWind,validateCombatFire} from './campaign-rule-registry.mjs';
 import {startCombatFire} from './campaign-combat.mjs';
@@ -98,7 +99,7 @@ export function campaignTurnLimitRanking(s){
   return Object.values(s.factions).filter(f=>f.alive).map(f=>{
     // Legacy v1 result shape stays readable; v2 ranks major, minor, then troops.
     const cities=Object.values(s.cities).filter(c=>c.ownerFactionId===f.factionId);
-    return {factionId:f.factionId,...(s.mapId!=='v1'?{majorCities:cities.filter(c=>c.kind==='major').length,minorCities:cities.filter(c=>c.kind==='minor').length}:{cities:cities.length}),troops:Object.values(s.armies).filter(a=>a.factionId===f.factionId&&active(s,a.armyId)).reduce((n,a)=>n+a.troopCount,0)+cities.reduce((n,c)=>n+cityReadyTotal(s,c),0)};
+    return {factionId:f.factionId,...(s.mapId!=='v1'?{majorCities:cities.filter(c=>c.kind==='major').length,minorCities:cities.filter(c=>c.kind==='minor').length}:{cities:cities.length}),troops:Object.values(s.armies).filter(a=>a.factionId===f.factionId&&active(s,a.armyId)).reduce((n,a)=>n+a.troopCount,0)+cities.reduce((n,c)=>n+cityReadyTotal(s,c),0)+reservesInTransit(s,f.factionId)};
   }).sort((a,b)=>(b.majorCities??b.cities)-(a.majorCities??a.cities)||(b.minorCities??0)-(a.minorCities??0)||b.troops-a.troops||a.factionId.localeCompare(b.factionId));
 }
 // C148: result-only readout. Tombstones retain historical counts; woundedCount
@@ -107,10 +108,11 @@ const cityReadyTotal=(s,c)=>(c.reserveTroops??0)+Object.values(specialReserves(s
 export function campaignTroopBreakdown(s,factionId){
  const cities=Object.values(s.cities).filter(c=>c.ownerFactionId===factionId);
  const field=Object.values(s.armies).filter(a=>a.factionId===factionId&&active(s,a.armyId)).reduce((n,a)=>n+a.troopCount,0);
- const reserve=cities.reduce((n,c)=>n+cityReadyTotal(s,c),0),wounded=cities.reduce((n,c)=>n+(c.woundedTroops??0),0);
+ const reserve=cities.reduce((n,c)=>n+cityReadyTotal(s,c),0)+reservesInTransit(s,factionId),wounded=cities.reduce((n,c)=>n+(c.woundedTroops??0),0);
  return {field,reserve,wounded,total:field+reserve+wounded};
 }
 function validate(state) {
+  validateEngineGaps(state);
   validateRunModifiers(state);
   validateSituations(state);
   validateAmbitions(state);
@@ -130,10 +132,11 @@ function validate(state) {
   }
   const terminalOptions={allowCitylessAlive:true,allowSupersededOccupation:true,allowUngovernedNormal:true};
   const legacy=legacyGovernorValidationView(state);
+  if(legacy.gameResult?.history){legacy.gameResult={...legacy.gameResult};delete legacy.gameResult.history;}
   // The turn limit is a campaign result; FIRST3's terminal sidecar keeps its original schema.
   if(state.gameResult?.type==='TURN_LIMIT'){
     const r=state.gameResult,ranking=campaignTurnLimitRanking(state);
-    if(state.globalTick!==CAMPAIGN_TURN_LIMIT*TICKS_PER_TURN||state.turn!==CAMPAIGN_TURN_LIMIT+1||state.phase!=='PLAYER'||r.reasonCode!=='TURN_LIMIT_MOST_MAJOR_CITIES'||r.winnerFactionId!==ranking[0]?.factionId||JSON.stringify(r.ranking)!==JSON.stringify(ranking)||Object.keys(r).sort().join(',')!=='ranking,reasonCode,type,winnerFactionId')throw new Error('INVALID_CAMPAIGN_TURN_LIMIT_RESULT');
+    if(state.globalTick!==CAMPAIGN_TURN_LIMIT*TICKS_PER_TURN||state.turn!==CAMPAIGN_TURN_LIMIT+1||state.phase!=='PLAYER'||r.reasonCode!=='TURN_LIMIT_MOST_MAJOR_CITIES'||r.winnerFactionId!==ranking[0]?.factionId||JSON.stringify(r.ranking)!==JSON.stringify(ranking)||Object.keys(r).filter(k=>k!=='history').sort().join(',')!=='ranking,reasonCode,type,winnerFactionId')throw new Error('INVALID_CAMPAIGN_TURN_LIMIT_RESULT');
     legacy.gameResult=null;
   }
   for(const a of Object.values(state.armies))if(!['STEADY','SHAKEN','ROUTING'].includes(a.morale)||typeof a.braced!=='boolean')throw new Error('INVALID_CAMPAIGN_MORALE');
@@ -151,7 +154,7 @@ function validate(state) {
   validatePersonnelLedger(state.personnel);
   if(state.personnel.formations.length!==Object.keys(state.armies).length)throw new Error('CAMPAIGN_PERSONNEL_COVERAGE');
   for(const formation of state.personnel.formations)if(formation.field!==state.armies[formation.formationId]?.troopCount)throw new Error('CAMPAIGN_PERSONNEL_MISMATCH');
-  if(state.terminal){validateCampaignTerminalState(state.terminal,terminalOptions);validateCampaignTerminalWorldApplication(state.gameResult?.type==='TURN_LIMIT'?{...state,gameResult:null}:state,state.terminal,terminalOptions);}
+  if(state.terminal){validateCampaignTerminalState(state.terminal,terminalOptions);validateCampaignTerminalWorldApplication(state.gameResult?.type==='TURN_LIMIT'?{...state,gameResult:null}:(state.gameResult?.history?{...state,gameResult:Object.fromEntries(Object.entries(state.gameResult).filter(([key])=>key!=='history'))}:state),state.terminal,terminalOptions);}
   if(state.moveOrders!==undefined){
     if(!state.moveOrders||Array.isArray(state.moveOrders)||!Array.isArray(state.orderQueue)||!Array.isArray(state.orderLog)||new Set(state.orderQueue).size!==state.orderQueue.length||state.orderQueue.some(id=>!state.moveOrders[id]))throw new Error('INVALID_CAMPAIGN_ORDERS');
     for(const [id,o] of Object.entries(state.moveOrders))if(!state.armies[id]||(state.mapId==='v1'&&state.armies[id].factionId!==state.playerFactionId)||!state.factions[state.armies[id].factionId]||!state.tiles[o?.destinationTileId])throw new Error('INVALID_CAMPAIGN_ORDERS');
@@ -190,7 +193,7 @@ export function createCampaign({factionId = 'F01', seed = 190919, map:mapId = 'v
   initializeArmyFacing(world);applyCampaignVision(world);if(mapId!=='v1')refreshCampaignSieges(world);
   const result=startFactionEffects(initializeCampaignEffects(initializeCampaignCaptives(initializeCampaignOccupation(initializeCampaignGrowth(initializeCampaignEconomy({...world, turn: 1, globalTick: 0,...(manualEndTurn!==false?{manualEndTurn}:{}),remainingTicks:null,attackedArmyIds:[],endedArmyIds:[],
     moveOrders:{},orderQueue:[],orderLog:[],battleSequence:0,terminal:null,occupations:{},phase:'PLAYER',movedArmyIds:[],aiQueue:[],mapId,...(!c31?{c31Disabled:true}:{}),cityDisplayNames:mapId!=='v1'?Object.fromEntries(map.cities.map(c=>[c.id,c.label])):initialCityNames(),personnel:campaignPersonnel(world)}))))),factionId);
-  if(!c46)result.c46Disabled=true;if(!c45)result.c45Disabled=true;if(!council)result.councilDisabled=true;initializeSupply(result);initializeDiplomacy(result);initializeDejaVu(result);initializeClasses(result);startClasses(result,factionId);initializeCampaignRoster(result);applyOfficerDraft(result,companions);initializeCampaignAmbitions(result,{unlocks,legacy,runsFinished});normalizeCampaignTroopNames(result,mapId);migrateArmyStructure(result);if(fieldArmies===false)initializeCityStart(result);initializeRelations(result);c30Start(result,factionId,{force:true});startFactionPolicy(result,factionId);updateKnowledge(result);initializeCampaignEvents(result);initializeEventDeck(result,recentEventIds);startFactionEvents(result,factionId);initializeExploration(result);initializeInjury(result);startCouncilTurn(result);if(mapId!=='v1')result.c182RulesVersion=1;initializeCombatFire(result);initializeSituations(result);initializeRunModifiers(result);startRunModifierTurn(result);rememberRewindStart(result);return validate(result);
+  if(!c46)result.c46Disabled=true;if(!c45)result.c45Disabled=true;if(!council)result.councilDisabled=true;initializeSupply(result);initializeDiplomacy(result);initializeDejaVu(result);initializeClasses(result);startClasses(result,factionId);initializeCampaignRoster(result);initializeUnlockedOfficers(result,unlocks);applyOfficerDraft(result,companions,unlocks);initializeCampaignAmbitions(result,{unlocks,legacy,runsFinished});varyWanderers(result,companions);normalizeCampaignTroopNames(result,mapId);migrateArmyStructure(result);if(fieldArmies===false)initializeCityStart(result);initializeRelations(result);c30Start(result,factionId,{force:true});startFactionPolicy(result,factionId);updateKnowledge(result);initializeCampaignEvents(result);initializeEventDeck(result,recentEventIds);startFactionEvents(result,factionId);initializeExploration(result);initializeInjury(result);startCouncilTurn(result);if(mapId!=='v1')result.c182RulesVersion=1;initializeCombatFire(result);initializeSituations(result);initializeRunModifiers(result);startRunModifierTurn(result);refreshEnemyPlans(result);rememberRewindStart(result);return validate(result);
 }
 
 // C143b: migrate campaign aliases only. FIRST3/tactical source data stays intact.
@@ -211,12 +214,42 @@ export function normalizeCampaignTroopNames(s,mapId=s.mapId){
  return s;
 }
 
+// Freeze the same public-information plan that execution will consume. No
+// planner runs inside view(), and unobserved enemy plans never leave this state.
+export function refreshEnemyPlans(s){
+ if(!gapsEnabled(s))return;const v=getFactionView(s,s.playerFactionId);s.enemyPlans={turn:s.turn,entries:[]};
+ for(const fid of Object.keys(s.factions).sort()){
+  if(fid===s.playerFactionId||!s.factions[fid].alive)continue;
+  const plan=campaignAiPlan(s,fid,{remember:false,turnLimit:CAMPAIGN_TURN_LIMIT});
+  for(const candidate of plan?.candidates??[]){
+   const seen=v.knowledge.observedArmies[candidate.armyId];if(!seen||v.knowledge.tiles[seen.tileId]!=='VISIBLE')continue;
+   const sandbox=campaignTacticsWorld(s,campaignTacticsView(s,fid)),id=candidate.armyId;if(!sandbox?.armies[id])continue;
+   if(candidate.type==='MOVE'&&candidate.destinationTileId&&!s.movedArmyIds.includes(id)){
+    sandbox.armies[id].tileId=candidate.destinationTileId;sandbox.armies[id].movedTiles=Math.max(0,(candidate.pathTileIds?.length??1)-1);
+   }
+   const action=campaignChooseTacticalAction(sandbox,fid,id,null,candidate.aiTargetCityId??plan.goal?.targetCityId??null);
+   if(!action||!['ATTACK','CITY','TACTIC'].includes(action.type))continue;
+   const target=s.armies[action.targetId]??s.cities[action.targetId];
+   if((target?.factionId??target?.ownerFactionId)!==s.playerFactionId)continue;
+   s.enemyPlans.entries.push({armyId:id,factionId:fid,candidate:structuredClone(candidate),action});
+  }
+ }
+}
+function enemyIntentsView(s,fid){
+ if(fid!==s.playerFactionId||s.enemyPlans?.turn!==s.turn)return [];
+ return s.enemyPlans.entries.filter(e=>{const a=s.armies[e.armyId],t=s.armies[e.action.targetId]??s.cities[e.action.targetId];return a&&castleArmyActive(s,a)&&!ambushHidden(s,e.armyId,fid)&&s.knowledge[fid]?.tiles[a.tileId]==='VISIBLE'&&(t?.factionId??t?.ownerFactionId)===fid;}).map(e=>({armyId:e.armyId,targetId:e.action.targetId,kind:e.action.type}));
+}
+function committedEnemyAction(s,id){
+ const e=s.enemyPlans?.turn===s.turn?s.enemyPlans.entries.find(e=>e.armyId===id):null;if(!e)return undefined;
+ const a=e.action,legal=a.type==='ATTACK'?attackTargets(s,id).includes(a.targetId):a.type==='CITY'?cityAttackTargets(s,id).includes(a.targetId):campaignTactics(s,id).some(t=>t.traitId===a.traitId&&t.targets.includes(a.targetId));
+ return legal?a:null;
+}
 const viewCache=new WeakMap();
 export function view(state, factionId = state.playerFactionId) {
   const cached=viewCache.get(state)?.get(factionId);
   if(cached)return cached;
   validate(state);
-  const publicSource=structuredClone(state);if(publicSource.gameResult?.type==='TURN_LIMIT')publicSource.gameResult=null;updateKnowledge(publicSource);
+  const publicSource=structuredClone(state);if(publicSource.gameResult?.type==='TURN_LIMIT')publicSource.gameResult=null;else if(publicSource.gameResult)delete publicSource.gameResult.history;updateKnowledge(publicSource);
   const projected = getFactionView(publicSource, factionId);
   for(const a of Object.values(projected.ownArmies))if(a.troopType==='catapult')a.platformState=platformState(state.armies[a.armyId]);
   for(const a of Object.values(projected.knowledge.observedArmies)){
@@ -302,8 +335,9 @@ export function view(state, factionId = state.playerFactionId) {
   for (const tile of Object.values(projected.tiles)) {
     if (tileId(tile) !== tile.tileId) throw new Error('지도 좌표가 올바르지 않습니다.');
   }
-  const result={...projected,...runModifiersView(state,factionId),...(c34KnownTraits(state,factionId).length?{knownUniqueTraits:c34KnownTraits(state,factionId)}:{}),...(uniqueRevealedWanderers(state,factionId).length?{revealedWanderers:uniqueRevealedWanderers(state,factionId)}:{}),...campaignEventsView(state,factionId),...ambitionsView(state,factionId),...(state.mapId!=='v1'?{mapId:state.mapId}:{}), ...(state.gameResult?{gameResult:structuredClone(state.gameResult)}:{}), turn: state.turn, globalTick: state.globalTick};
+  const result={...projected,...(state.mapId!=='v1'?{enemyIntents:enemyIntentsView(state,factionId)}:{}),...gapsView(state,factionId),...runModifiersView(state,factionId),...(c34KnownTraits(state,factionId).length?{knownUniqueTraits:c34KnownTraits(state,factionId)}:{}),...(uniqueRevealedWanderers(state,factionId).length?{revealedWanderers:uniqueRevealedWanderers(state,factionId)}:{}),...campaignEventsView(state,factionId),...ambitionsView(state,factionId),...(state.mapId!=='v1'?{mapId:state.mapId}:{}), ...(state.gameResult?{gameResult:structuredClone(state.gameResult)}:{}), turn: state.turn, globalTick: state.globalTick};
   if(result.gameResult){
+   if(state.historyScore)Object.assign(result.gameResult,{scoreItems:[{id:'HISTORY_TWISTS',...structuredClone(state.historyScore)}],chronicle:[...state.historyChronicle]});
    if(factionId===state.playerFactionId&&state.mapId!=='v1')Object.assign(result.gameResult,ambitionResultView(state));
    const troops=Object.fromEntries(Object.keys(state.factions).sort().map(fid=>[fid,campaignTroopBreakdown(state,fid)]));
    result.gameResult.troopBreakdownByFactionId=troops;
@@ -450,9 +484,9 @@ function run(s, incremental=false) {
         startDiplomacyAi(s,entry.factionId,{autoPlayer:s.autoPlayer});aiRelationFeast(s,entry.factionId);if(explorationEnabled(s))resolveAiExploration(s,entry.factionId);
         selectAiOccupations(s,{autoPlayer:s.autoPlayer});
         startFactionPolicy(s,entry.factionId);for(const c of Object.values(s.cities).filter(c=>c.ownerFactionId===entry.factionId))aiStarAction(s,{cityId:c.cityId},entry.factionId);startFactionEffects(s,entry.factionId);startUniqueFaction(s,entry.factionId);startFactionMorale(s,entry.factionId);s=startCombatFire(s,entry.factionId);startClasses(s,entry.factionId,{heal:(id,n)=>healCampaignTroops(s,id,n)});updateKnowledge(s);startFactionEvents(s,entry.factionId,{auto:true});s=strikeCampaignCities(s,entry.factionId);updateKnowledge(s);refreshCampaignSieges(s);
-        selectAiRoster(s,entry.factionId);selectCampaignAiJobs(s,entry.factionId);if(!campaignEconomyEnabled(s,entry.factionId))selectCityStartMuster(s,entry.factionId,campaignSiegeEnabled(s,entry.factionId)?campaignAiMusterTroop:null);checkDejaVuLocations(s);
+        aiTransferReserves(s,entry.factionId,getFactionView(s,entry.factionId),campaignAiSupplyWorld(s,entry.factionId));selectAiRoster(s,entry.factionId);selectCampaignAiJobs(s,entry.factionId);if(!campaignEconomyEnabled(s,entry.factionId))selectCityStartMuster(s,entry.factionId,campaignSiegeEnabled(s,entry.factionId)?campaignAiMusterTroop:null);checkDejaVuLocations(s);
         const plan=campaignAiPlan(s,entry.factionId,{remember:true,turnLimit:CAMPAIGN_TURN_LIMIT});
-        const entries=(plan?.candidates??[]).filter(c=>!s.movedArmyIds.includes(c.armyId)).map(c=>({candidate:c,faction:entry.factionId,...(supplyEnabled(s)||campaignTacticsEnabled(s,entry.factionId)?{targetCityId:c.aiTargetCityId??plan?.goal?.targetCityId??null}:{})}));
+        const entries=(plan?.candidates??[]).filter(c=>!s.movedArmyIds.includes(c.armyId)).map(c=>({candidate:s.enemyPlans?.turn===s.turn?s.enemyPlans.entries.find(e=>e.armyId===c.armyId)?.candidate??c:c,faction:entry.factionId,...(supplyEnabled(s)||campaignTacticsEnabled(s,entry.factionId)?{targetCityId:c.aiTargetCityId??plan?.goal?.targetCityId??null}:{})}));
         s.aiQueue.unshift(...entries,...(campaignTacticsEnabled(s,entry.factionId)||campaignAiRule(s,entry.factionId,9)?[{tacticsFaction:entry.factionId,entries}]:[]));
         if(incremental)return s;
         continue;
@@ -481,7 +515,12 @@ function run(s, incremental=false) {
       if((s.armies[id].morale==='SHAKEN'||s.armies[id].formation!=='ORDERED')&&!regroupReason(s,id)&&canMainAction(s,id)){changeMorale(s,id,'STEADY','재정비');changeFormation(s,id,campaignSubAbility(s,s.armies[id].commanderId,'지휘','수습')>=C12.recoveryThreshold?-2:-1);classWait(s,id,'REGROUP',{formation:(who,n)=>changeFormation(s,who,n),heal:(who,n)=>healCampaignTroops(s,who,n),rear:who=>Object.values(s.armies).some(b=>b.factionId!==s.armies[who].factionId&&b.hp>0&&hexDistance(s.tiles[b.tileId],s.tiles[s.armies[who].tileId])===1&&attackDirection(s,b.armyId,who)==='REAR')});consumeMainAction(s,id);if(incremental)return s;continue;}
       if(entry.attack){
         const previousActions=s.armies[id].mainActionTurn===s.turn?s.armies[id].mainActionCount??0:0;
-        if(tactical){
+        const committed=committedEnemyAction(s,id);
+        if(committed!==undefined){
+          if(committed?.type==='TACTIC')s=resolveTactic(s,id,committed.traitId,committed.targetId);
+          else if(committed?.type==='CITY')s=resolveCityAttack(s,id,committed.targetId);
+          else if(committed?.type==='ATTACK')s=resolveAttack(s,id,committed.targetId);
+        }else if(tactical){
           const action=campaignChooseTacticalAction(s,entry.faction,id,entry.candidate.aiDefendArmyId?{targetId:entry.candidate.aiDefendArmyId,defendGate:true}:entry.plannedAction,campaignTacticalOrderAllowed(entry.candidate)?entry.targetCityId:null);
           if(action?.type==='TACTIC')s=resolveTactic(s,id,action.traitId,action.targetId);
           else if(action?.type==='CITY')s=resolveCityAttack(s,id,action.targetId);
@@ -521,16 +560,16 @@ function run(s, incremental=false) {
     // Injury care can disband a still-observed field army at this boundary.
     // Refresh public observations before projecting the terminal settlement.
     updateKnowledge(s);
-    refreshCampaignSieges(s);s=settleCampaignTurnEnd(s);settleOfficerTransfers(s);observeExistingMigration(s,migrationOpening);s=settleCampaignEconomy(s);settleExploration(s,{autoPlayer:s.autoPlayer});settleCampaignEvents(s);settleCampaignOaths(s,applyDeckEffects,{endedTurn:s.turn-1});if(!s.gameResult)s=settleCampaignCaptives(s);settleAchievements(s);recoverCampaignCities(s);if(!s.gameResult&&s.turn>CAMPAIGN_TURN_LIMIT){const ranking=campaignTurnLimitRanking(s);s.gameResult={type:'TURN_LIMIT',winnerFactionId:ranking[0].factionId,ranking,reasonCode:'TURN_LIMIT_MOST_MAJOR_CITIES'};}settleOrders(s,{atEnd:true,endedTurn:s.turn-1});settleC31(s);s.remainingTicks=null;s.phase='PLAYER';s.movedArmyIds=Object.values(s.armies).filter(a=>a.bornTurn===s.turn).map(a=>a.armyId);s.attackedArmyIds=[];s.endedArmyIds=[...s.movedArmyIds];s.lastCombat=null;s.autoPlayer=false;
+    refreshCampaignSieges(s);s=settleCampaignTurnEnd(s);settleOfficerTransfers(s);settleReserveTransfers(s);observeExistingMigration(s,migrationOpening);s=settleCampaignEconomy(s);settleExploration(s,{autoPlayer:s.autoPlayer});settleCampaignEvents(s);settleCampaignOaths(s,applyDeckEffects,{endedTurn:s.turn-1});if(!s.gameResult)s=settleCampaignCaptives(s);settleAchievements(s);recoverCampaignCities(s);if(!s.gameResult&&s.turn>CAMPAIGN_TURN_LIMIT){const ranking=campaignTurnLimitRanking(s);s.gameResult={type:'TURN_LIMIT',winnerFactionId:ranking[0].factionId,ranking,reasonCode:'TURN_LIMIT_MOST_MAJOR_CITIES'};}settleOrders(s,{atEnd:true,endedTurn:s.turn-1});settleC31(s);s.remainingTicks=null;s.phase='PLAYER';s.movedArmyIds=Object.values(s.armies).filter(a=>a.bornTurn===s.turn).map(a=>a.armyId);s.attackedArmyIds=[];s.endedArmyIds=[...s.movedArmyIds];s.lastCombat=null;s.autoPlayer=false;
     if(!s.gameResult){startFactionPolicy(s,s.playerFactionId);startFactionEffects(s,s.playerFactionId);startUniqueFaction(s,s.playerFactionId);startFactionMorale(s,s.playerFactionId);s=startCombatFire(s,s.playerFactionId);startClasses(s,s.playerFactionId,{heal:(id,n)=>healCampaignTroops(s,id,n)});updateKnowledge(s);startFactionEvents(s,s.playerFactionId);s=strikeCampaignCities(s,s.playerFactionId);updateKnowledge(s);refreshCampaignSieges(s);}startAmbitionTurn(s);startRunModifierTurn(s);updateKnowledge(s);checkDejaVuLocations(s);finishCampaignSummary(s);s.orderQueue=s.gameResult?[]:Object.keys(s.moveOrders??{}).filter(id=>s.armies[id]?.factionId===s.playerFactionId).sort();return s;
   }
 }
 
 export function step(state,command){
  if(command?.type==='REWIND_TURN'){validate(state);return validate(rewindTurn(state,command));}
- let next=stepImpl(state,command);offerBlessing(next);
+ let next=stepImpl(state,command);finishHistory(next,campaignTurnLimitRanking(next));offerBlessing(next);
  if(next.phase==='PLAYER'&&!next.gameResult&&(next.turn!==state.turn||state.phase!=='PLAYER')){
-  rememberRewindStart(next);const start=next;
+  refreshEnemyPlans(next);rememberRewindStart(next);const start=next;
   if(!command?.incremental)while(next.orderQueue?.length&&!pendingCampaignDraft(next))next=advanceOrder(next);
   carryRewindStart(start,next);
  }
@@ -594,6 +633,8 @@ function stepCommand(state,command) {
   if(next.orderQueue?.length)throw new Error('ORDER_EXECUTION_PENDING');
   if(command?.type==='CITY_GOVERNOR'){selectCampaignGovernor(next,command);if(domesticEngineEnabled(next)){clearDomesticOfficer(next,command.officerId);next.cities[command.cityId].absentGovernorId=null;}return validate(next);}
   if(command?.type==='CITY_DEPARTMENT')return validate(assignCityDepartment(next,command));
+  if(command?.type==='TRANSFER_RESERVES')return validate(transferReserves(next,command));
+  if(command?.type==='SWAP_ARMIES'){swapArmies(next,command);updateKnowledge(next);return validate(next);}
   if(command?.type==='OFFICER_TRANSFER')return validate(transferCityOfficer(next,command));
   if(command?.type==='CITY_RESERVE_JOB')return validate(reserveCityJob(next,command));
   if(['CITY_POLICY','CITY_AUTO_DEPARTMENTS','CITY_FOOD_PRIORITY'].includes(command?.type)){

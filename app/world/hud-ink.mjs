@@ -111,7 +111,7 @@ export const cityProductionText = b => !b?'생산 정보 없음':b.idle?'놀고 
 export function cityQuickHtml(c){
  const seal=C190_SEALS[c.factionId],art=seal&&C190_ART[seal.art],num=n=>Number.isFinite(n)?Math.round(n):'?';
  const bar=(label,value,max,text)=>`<div class="cq-meter"><span>${label} <b>${esc(text)}</b></span><i><s style="width:${Number.isFinite(value)&&max>0?Math.max(0,Math.min(100,value/max*100)):0}%"></s></i></div>`;
- return `<header><h2>${esc(c.name)}</h2><span class="cq-seal" aria-label="세력 ${esc(seal?.glyph??'中')}">${art?`<img src="${esc(art)}" alt="${seal.glyph}">`:esc(seal?.glyph??'中')}</span></header>`
+ return `<header><h2>${esc(c.name)}</h2>${c.own?`<button class="c216-reserve-quick" data-reserve-transfer="${esc(c.id)}">예비병 보내기</button>`:''}<span class="cq-seal" aria-label="세력 ${esc(seal?.glyph??'中')}">${art?`<img src="${esc(art)}" alt="${seal.glyph}">`:esc(seal?.glyph??'中')}</span></header>`
   +bar('성벽',c.defense,c.defenseMax,`${num(c.defense)}/${num(c.defenseMax)}`)
   +bar(c.own?'수비':'보이는 수비',c.troops,c.own?c.guardMaximum:null,Number.isFinite(c.troops)?`${troopText(c.troops)}${c.own&&Number.isFinite(c.guardMaximum)?`/${troopText(c.guardMaximum)}`:''}`:'?')
   +(c.own?`<p class="cq-production${c.badge?.idle?' idle':''}">${c.badge?.idle?'●':'⚒'} ${esc(cityProductionText(c.badge))}</p><nav aria-label="성 빠른 명령"><button data-city-quick-action="sortie">출진</button><button data-city-quick-action="production">생산</button><button data-city-quick-action="office">내정</button><button data-city-quick-action="enter">들어가기</button></nav>`:`<p class="cq-siege">${citySiegeText(c)}</p><p class="cq-hint">공격하려면 부대를 고르세요${c.remembered?' · 기억한 정보':''}</p>`);
@@ -559,6 +559,8 @@ export function renderInkHud(root, d) {
     return `<${k==='food'?'button type="button" data-food-open aria-label="식량 현황" aria-expanded="'+String(!q('.ih-food-sheet').hidden)+'"':'span'} class="ih-chip" data-res="${esc(k)}" title="${esc([c.title,dl?.textContent].filter(Boolean).join(" · "))}"><span class="nb-resource-label">${esc(({food:'식량',production:'생산',science:'과학',fame:'인망',troops:'병력',reserve:'예비'})[k]??k)}</span><b>${b?.innerHTML ?? ''}</b>${dl ? `<small class="${dl.classList.contains('down') ? 'down' : 'up'}">${esc(dl.textContent)}</small>` : ''}</${k==='food'?'button':'span'}>`;
   }).join('');
   const f=d.food??{}, change=d.foodChange, fmt=n=>Number(n??0).toLocaleString('ko-KR',{maximumFractionDigits:1});
+  const emptyIn=foodExhaustion(d.foodView??{});
+  if(emptyIn!==null)q('.ih-res').querySelector('[data-res="food"]')?.insertAdjacentHTML('beforeend',`<small class="down c215-food-empty">바닥까지 ${emptyIn}차례</small>`);
   q('.ih-food-sheet > div').innerHTML=`<h3>식량 현황</h3><p>현재 재고 <b>${fmt(f.stock)} / ${fmt(f.capacity)}</b></p><p>다음 정산 산출 <b>+${fmt(f.output)}</b></p><p class="hint">산출량에서 시민 유지·군량·성장 소비 등이 빠져 실제 재고가 정해집니다.</p>${change?`<h4>${esc(change.turn)}턴 진입 · 실제 재고 변화</h4><p><b>${fmt(change.from)} → ${fmt(change.to)} (${change.change>0?'+':''}${fmt(change.change)})</b></p><small>차례가 바뀌는 처리 전후의 보유 도시 재고 합입니다.</small>`:'<small>차례를 넘기면 실제 재고 변화를 함께 보여줍니다.</small>'}`;
   const history=q('.ih-combat-history');history.hidden=!d.combatHistory?.length;
   const historyHtml=combatHistoryHtml(d.combatHistory??[]);
@@ -974,4 +976,88 @@ export function combatScreenNews(before,after){
  const x=after.c31;
  if(x&&!x.resolved&&(before.c31?.actorId!==x.actorId||before.c31?.startTurn!==x.startTurn))rows.push({line:`${after.officers?.[x.actorId]?.name??'위기 장수'}: ${x.warnText}`});
  return rows;
+}
+
+// C215: display helpers consume public projections only.
+export function combatBonusLabels(record) {
+ return [...new Set((record?.appliedTactics??[]).flatMap(r=>[
+  ...(r.sideMultiplier>1&&r.side==='FLANK'?[`측면 +${Math.round((r.sideMultiplier-1)*100)}%`]:[]),
+  ...(r.sideMultiplier>1&&r.side==='REAR'?[`후방 +${Math.round((r.sideMultiplier-1)*100)}%`]:[]),
+  ...(r.charge&&r.chargeMultiplier>1?['돌격!']:[])
+ ]))];
+}
+export function productionCompletions(before,after,names={}) {
+ if(before.factionId!==after.factionId||after.turn<before.turn||after.turn>before.turn+1)return [];
+ return Object.entries(after.ownCities??{}).flatMap(([cityId,c])=>{
+  const prev=before.ownCities?.[cityId],job=prev?.currentProduction;if(!job||c.jobBlocked)return [];
+  const facilities=(c.facilities??[]).filter(f=>f.kind===job.kind).length>(prev.facilities??[]).filter(f=>f.kind===job.kind).length;
+  const reset=!c.currentProduction||c.currentProduction.key!==job.key||(c.productionProgress??0)<(prev.productionProgress??0);
+  const estimate=prev.jobs?.find(j=>j.kind===job.kind)?.estimate;
+  const due=estimate&&estimate.progress+estimate.advance+estimate.gain>=estimate.cost;
+  const recruit=job.kind==='recruit'&&(reset||due)&&c.reserveTroops>prev.reserveTroops;
+  const repair=job.kind==='repair'&&(c.facilities??[]).filter(f=>f.damaged).length<(prev.facilities??[]).filter(f=>f.damaged).length;
+  const muster=job.kind==='muster'&&Object.values(after.ownArmies??{}).some(a=>!before.ownArmies?.[a.armyId]&&a.commanderId===job.officerId);
+  const reorganize=job.kind==='reorganize'&&before.ownArmies?.[job.armyId]&&after.ownArmies?.[job.armyId]&&after.ownArmies[job.armyId].troopType!==before.ownArmies[job.armyId].troopType;
+  return facilities||recruit||repair||muster||reorganize?[{cityId,text:`${c.name??cityId} — ${names[job.kind]??job.kind} ${facilities||repair?'완공':'완료'} · 다음 생산 고르기`}]:[];
+ });
+}
+export function foodExhaustion(v) {
+ const cities=Object.values(v.ownCities??{});
+ if(!cities.length||cities.some(c=>!Number.isFinite(c.foodLedger?.forecastNet)))return null;
+ const net=cities.reduce((n,c)=>n+c.foodLedger.forecastNet,0);
+ const stock=cities.reduce((n,c)=>n+Math.max(0,(c.foodStock??0)-(c.reservedResources?.food??0)),0);
+ return net<0?Math.ceil(stock/-net):null;
+}
+export function saveAvailability(raw,decode) {
+ if(!raw)return {saved:null,text:'저장 없음'};
+ try {const saved=decode(raw);return {saved,text:`${saved.turn}차례 · ${saved.currentDate}일 · ${saved.factions?.[saved.playerFactionId]?.name??saved.playerFactionId}`};}
+ catch(error){let format=false;try{const x=JSON.parse(raw);format=!x||!x.state||/지원하지 않는/.test(error.message);}catch{format=true;}
+ return {saved:null,text:format?'저장 형식이 다름':'이 판과 호환 안 됨'};}
+}
+export function updateBestRecord(storage,factionId,score,turn) {
+ let records={};try{const raw=JSON.parse(storage?.getItem('sangoku.best.v1')??'{}');if(raw&&typeof raw==='object'&&!Array.isArray(raw))records=raw;}catch{}
+ const old=records[factionId],valid=Number.isFinite(old?.score)&&Number.isInteger(old?.turn)&&old.turn>=1;
+ const best=valid&&(old.score>score||old.score===score&&old.turn<=turn)?old:{score,turn};
+ try{storage?.setItem('sangoku.best.v1',JSON.stringify({...records,[factionId]:best}));}catch{}
+ return best;
+}
+export function resultHistoryHtml(history) {
+ if(!Array.isArray(history)||!history.length)return '';
+ const rows=history.map(h=>typeof h==='string'?h:h?.text??h?.line??'').filter(Boolean);
+ return rows.length?`<section class="c215-history"><h3>비틀린 역사</h3>${rows.map(t=>`<p>${esc(t)}</p>`).join('')}</section>`:'';
+}
+export function publicEnemyIntents(v,fallback) {
+ if(!Array.isArray(v.enemyIntents))return fallback;
+ return v.enemyIntents.flatMap(i=>{
+  const enemy=v.knowledge?.observedArmies?.[i.armyId],target=v.ownArmies?.[i.targetId]??v.ownCities?.[i.targetId];
+  const from=enemy?.tileId??i.from,to=target?.tileId??i.to;
+  return typeof from==='string'&&typeof to==='string'&&v.knowledge?.tiles?.[from]==='VISIBLE'&&(target||v.knowledge?.tiles?.[to]==='VISIBLE')?[{from,to}]:[];
+ });
+}
+
+export function commandLimitText(range){
+ if(!Number.isFinite(range?.commandLimit))return '';
+ return `지휘 상한 ${troopText(range.commandLimit)}${range.titleBonus?` (칭호 ${range.titleReasons?.map(x=>typeof x==='string'?x:x.name??x.title??'').filter(Boolean).join(' · ')||'보유'} +${troopText(range.titleBonus)})`:''}`;
+}
+export function characterHistoryHtml(v,id){
+ const rows=(v.characterHistory?.[id]??[]).slice(-3).reverse();
+ return `<section class="c216-history"><h3>지난 일</h3>${rows.length?rows.map(r=>`<p><small>${esc(r.turn)}차례</small> ${esc(r.text??`${r.title} — ${r.choice}: ${r.result}`)}</p>`).join(''):'<p class="muted">아직 기록된 사건·맹세가 없습니다.</p>'}</section>`;
+}
+export function reserveTransferLines(v){
+ return (v.reserveTransfers??[]).filter(t=>t.state!=='ARRIVED').map(t=>({cityId:t.toCityId,text:`예비병 ${troopText(t.count)} · ${v.ownCities?.[t.fromCityId]?.name??'출발 성'} → ${v.ownCities?.[t.toCityId]?.name??'도착 성'} · ${t.state==='BLOCKED'?'이동 막힘':`${Math.max(0,t.arrivalTurn-v.turn)}차례 뒤 도착`}`}));
+}
+// Only public, visible combatants can open a rival scene. The set belongs to the UI session.
+export function publicRivalScene(before,after,record,data,seen){
+ const armies={...before.knowledge?.observedArmies,...before.ownArmies,...after.ownArmies};
+ const a=armies[record.attackerId],b=armies[record.targetId];
+ if(!a||!b||a.factionId===b.factionId||!['ATTACK','TACTIC','JOINT_TACTIC'].includes(record.kind))return null;
+ const visible=x=>!!before.ownArmies?.[x.armyId]||before.knowledge?.tiles?.[x.tileId]==='VISIBLE';
+ if(!visible(a)||!visible(b))return null;
+ const key=[a.commanderId,b.commanderId].sort().join('|'),pair=data?.pairs?.[key]?.RIVAL;
+ const rel=before.social?.officers?.[a.commanderId]?.relations?.find(r=>r.officerId===b.commanderId)??before.social?.officers?.[b.commanderId]?.relations?.find(r=>r.officerId===a.commanderId);
+ if(seen.has(key)||!pair||rel?.tier!=='RIVAL')return null;
+ const ids=pair.speakerIds??key.split('|');
+ if(ids.length!==2||!ids.every(id=>key.split('|').includes(id))||!Array.isArray(pair.lines))return null;
+ seen.add(key);
+ return {key,tier:'RIVAL',title:pair.title,lines:pair.lines,officers:ids.map(id=>({officerId:id,name:before.officers?.[id]?.name??after.officers?.[id]?.name??(id===a.commanderId?a.commanderName:b.commanderName)??id}))};
 }

@@ -360,6 +360,15 @@
    "rms": 0.097,
    "peak": 0.817,
    "bytes": 25269
+  },
+  "fire-out": {
+   "file": "fire-out.ogg",
+   "seconds": 2.1,
+   "source": "fire-out-v1.wav",
+   "onset": 0.02,
+   "rms": 0.072,
+   "peak": 0.807,
+   "bytes": 38528
   }
  }
 }

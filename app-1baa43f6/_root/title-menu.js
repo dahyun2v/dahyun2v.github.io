@@ -17,9 +17,9 @@ document.documentElement.style.setProperty('--title-menu-plaque',`url("${TITLE_M
 // 저장은 IndexedDB(압축) 또는 localStorage(save-store.mjs). IndexedDB 면 비동기라 마지막 결과(lastSaved)를 쓴다.
 let lastSaved=null;
 function refreshContinue(){
- const fail=()=>{lastSaved=null;$('#continue-game').disabled=true;$('#continue-summary').textContent='저장을 읽을 수 없습니다';return null;};
- const apply=raw=>{try{if(!raw){lastSaved=null;$('#continue-game').disabled=true;$('#continue-summary').textContent='저장된 캠페인 없음';return null;}
-  const saved=deserialize(raw);lastSaved=saved;$('#continue-game').disabled=false;$('#continue-summary').textContent=`${saved.turn}턴 · ${saved.currentDate}일`;return saved;}catch{return fail();}};
+ const fail=(text='저장을 읽을 수 없습니다')=>{lastSaved=null;$('#continue-game').disabled=true;$('#continue-summary').textContent=typeof text==='string'?text:'저장을 읽을 수 없습니다';return null;};
+ const apply=raw=>{try{if(!raw)return fail('저장 없음');
+  const saved=deserialize(raw);lastSaved=saved;$('#continue-game').disabled=false;$('#continue-summary').textContent=`${saved.turn}차례 · ${saved.currentDate}일 · ${saved.factions?.[saved.playerFactionId]?.name??saved.playerFactionId}`;return saved;}catch(error){let format=false;try{const x=JSON.parse(raw);format=!x||!x.state||/지원하지 않는/.test(error.message);}catch{format=true;}return fail(format?'저장 형식이 다름':'이 판과 호환 안 됨');}};
  try{const r=settle(loadText(saveKey),apply);if(r&&typeof r.catch==='function'){r.catch(fail);return lastSaved;}return r;}catch{return fail();}
 }
 function go(kind){if(navigating)return;if(kind==='continue'&&!refreshContinue()){$('#title-status').textContent='유효한 캠페인 저장을 찾지 못했습니다. 기존 저장은 보존했습니다.';return;}

@@ -4,7 +4,7 @@ import g22 from '../../docs/design-data/officer-pack/trial/G22.json' with {type:
 import g23 from '../../docs/design-data/officer-pack/trial/G23.json' with {type:'json'};
 import {relation,RELATIONS} from './campaign-relations.mjs';
 import {officerFromPack} from './campaign-roster.mjs';
-import {campaignOfficerGrowth,pendingCampaignDraft,campaignDraftConfig} from './campaign-growth.mjs';
+import {campaignOfficerGrowth,pendingCampaignDraft,campaignDraftConfig,grantCampaignTacticDraft} from './campaign-growth.mjs';
 import {rerollGrowthDraft} from './campaign-draft.mjs';
 import {applyDeckEffects} from './campaign-event-deck.mjs';
 import {campaignGoalBaseline,campaignGoalProgress} from './campaign-oaths.mjs';
@@ -29,14 +29,17 @@ export function initializeCampaignAmbitions(s,{unlocks=[],legacy={},runsFinished
  s.legacy={runsFinished,ambitionsAchieved:[...(legacy.ambitionsAchieved??[])]};
  s.ambitions={version:1,offeredIds:data.ambition.list.filter(a=>a.faction===s.playerFactionId&&possible(s,a.goal)).map(a=>a.id),closed:false,selected:null,offers:[],orders:[],rerolls:0,finished:false,unlocksEarned:[]};
  s.openingMemory=data.unlocks.list.filter(u=>u.kind==='MEMORY'&&s.unlocks.includes(u.id)).map(u=>u.line);
+ initializeUnlockedOfficers(s,s.unlocks);
+ startAmbitionTurn(s);
+}
+export function initializeUnlockedOfficers(s,unlocks=[]){
  const packs={G21:g21,G22:g22,G23:g23};
- for(const u of data.unlocks.list.filter(u=>u.kind==='OFFICER'&&s.unlocks.includes(u.id))){
+ for(const u of data.unlocks.list.filter(u=>u.kind==='OFFICER'&&unlocks.includes(u.id))){
   if(person(s,u.officer))continue;
   const cityId=s.factions[s.playerFactionId].capitalCityId,p=packs[u.officer];
   // As with the existing wanderer pool, growth is initialized on recruitment.
   s.wanderers[u.officer]=officerFromPack(s,p,null,cityId);
  }
- startAmbitionTurn(s);
 }
 export function restoreCampaignAmbitions(s){
  // Legacy saves never acquire a new objective/offer retroactively.
@@ -119,12 +122,9 @@ function payOrder(s,o){
  const reward=order(o.id).reward,fid=s.playerFactionId,source=`ORDER.${o.signedTurn}.${o.id}`;
  if(reward==='REPUTATION')return applyDeckEffects(s,[{prestige:data.orders.rewards.REPUTATION.amount}],{factionId:fid,roles:{},names:{}},source).text;
  if(reward==='REROLL'){s.ambitions.rerolls+=data.orders.rewards.REROLL.amount;return data.orders.rewards.REROLL.label;}
- // There is no API for granting a one-off tactic draft without levelling.
- // Reuse the existing XP -> growth draft path, as allowed by the delegation.
- const id=values(s.officers).filter(o=>friendly(s,o.officerId)).sort((a,b)=>Number(b.officerId===s.factions[fid].rulerId)-Number(a.officerId===s.factions[fid].rulerId)||a.officerId.localeCompare(b.officerId)).find(o=>campaignOfficerGrowth(s,o.officerId)?.level<30)?.officerId;
- if(!id)return '성장 가능한 장수 없음';
- const g=campaignOfficerGrowth(s,id),amount=Math.max(1,g.nextXp-g.xp);
- return `전법 카드 대체 — ${applyDeckEffects(s,[{xp:{officer:'recipient',delta:amount}}],{factionId:fid,roles:{recipient:id},names:{recipient:s.officers[id].name}},source).text}`;
+ const candidates=values(s.officers).filter(o=>friendly(s,o.officerId)).sort((a,b)=>Number(b.officerId===s.factions[fid].rulerId)-Number(a.officerId===s.factions[fid].rulerId)||a.officerId.localeCompare(b.officerId));
+ for(const o of candidates)if(grantCampaignTacticDraft(s,o.officerId,source))return `전법 카드 — ${o.name} 선택 대기`;
+ return '고를 수 있는 전법 카드 없음';
 }
 export function settleOrders(s,{atEnd=false,endedTurn=s.turn}={}){
  for(const o of s.ambitions?.orders??[]){if(o.status!=='ACTIVE')continue;

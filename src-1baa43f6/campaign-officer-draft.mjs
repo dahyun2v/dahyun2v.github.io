@@ -1,3 +1,4 @@
+import {seededPool,requiredPoolIds} from './campaign-engine-gaps.mjs';
 // @ts-check
 import {relation,RELATIONS} from './campaign-relations.mjs';
 import {createRng} from './rng.mjs';
@@ -13,10 +14,10 @@ import {domesticStartFaction,combatStartFaction,c33Start} from './campaign-rule-
 export const OFFICER_DRAFT=Object.freeze({slots:5,offerSize:5,rerolls:2,budget:15,trial:true,baseWeight:100,needWeight:40,homeWeight:60,bondMax:120,axisFloor:80,valueCost:2,costBands:5,initialHomeFloor:2,costOverride:{},faction:{F01:{extraRerolls:1,needWeight:120},F02:{bondWeight:2,chainWeight:150},F03:{delegateWeight:150}}});
 const pools=new Map();
 function fail(code){throw Object.assign(new Error(code),{code});}
-function source(factionId,mapId){
- const key=`${mapId}:${factionId}`;
+function source(factionId,mapId,unlocks=[]){
+ const key=`${mapId}:${factionId}:${[...unlocks].sort().join()}`;
  if(!pools.has(key)){
-  const s=createCampaign({factionId,map:mapId}),f=s.factions[factionId];
+  const s=createCampaign({factionId,map:mapId,unlocks,trialRules:{engineGaps:false}}),f=s.factions[factionId];
   const rulers=new Set(Object.values(s.factions).map(f=>f.rulerId));
   const home=new Set(f.officerIds);
   const officers=[...f.officerIds.filter(id=>!rulers.has(id)).map(id=>s.officers[id]),...Object.values(s.wanderers??{}).filter(o=>!rulers.has(o.officerId))];
@@ -26,10 +27,10 @@ function source(factionId,mapId){
  }
  return pools.get(key);
 }
-export function officerDraftPool({factionId,mapId='v3'}){return structuredClone(source(factionId,mapId).cards).map(c=>({...c,cost:OFFICER_DRAFT.costOverride[c.officerId]??c.cost}));}
+export function officerDraftPool({factionId,mapId='v3',seed=190919,unlocks=[]}){const cards=structuredClone(source(factionId,mapId,unlocks).cards),keep=seededPool(cards.map(c=>c.officerId),seed,[...requiredPoolIds(),...cards.filter(c=>c.home).map(c=>c.officerId),...unlocks]);return cards.filter(c=>mapId==='v1'||keep.has(c.officerId)).map(c=>({...c,cost:OFFICER_DRAFT.costOverride[c.officerId]??c.cost}));}
 const axes=[['politics','NEED_GOVERN'],['leadership','NEED_COMMAND'],['intelligence','NEED_INTELLECT'],['might','NEED_MIGHT'],['charisma','NEED_CHARISMA']];
 function context(d){
- const data=source(d.factionId,d.mapId),cards=officerDraftPool(d),byId=new Map(cards.map(c=>[c.officerId,c]));
+ const data=source(d.factionId,d.mapId,d.unlocks),cards=officerDraftPool(d),byId=new Map(cards.map(c=>[c.officerId,c]));
  const locked=d.locked.map(id=>byId.get(id));
  const originals=new Map([...data.officers,data.state.officers[data.rulerId]].map(o=>[o.officerId,o]));
  const owners=[data.rulerId,...d.locked];
@@ -50,8 +51,8 @@ function randomFor(seed,step){let n=Number(seed)>>>0;for(const ch of `officer-dr
 function pick(cards,rng,weight){let roll=rng.next()*cards.reduce((n,c)=>n+weight(c),0);return cards.find(c=>(roll-=weight(c))<0)??cards.at(-1);}
 const lowest=(cards,n)=>[...cards].sort((a,b)=>a.cost-b.cost||a.officerId.localeCompare(b.officerId)).slice(0,n);
 const total=cards=>cards.reduce((n,c)=>n+c.cost,0);
-export function createOfficerDraft({factionId,seed=190919,mapId='v3'}){
- const d={factionId,mapId,seed,slots:OFFICER_DRAFT.slots,budget:OFFICER_DRAFT.budget,rerollsLeft:OFFICER_DRAFT.rerolls,offers:[],locked:[],seen:[],step:0};
+export function createOfficerDraft({factionId,seed=190919,mapId='v3',unlocks=[]}){
+ const d={factionId,mapId,seed,unlocks:[...unlocks],slots:OFFICER_DRAFT.slots,budget:OFFICER_DRAFT.budget,rerollsLeft:OFFICER_DRAFT.rerolls,offers:[],locked:[],seen:[],step:0};
  d.rerollsLeft+=OFFICER_DRAFT.faction[factionId]?.extraRerolls??0;
  return propose(d,true);
 }
@@ -151,9 +152,9 @@ function propose(d,initial){
 export function officerDraftCompanions(draft){if(!officerDraftView(draft).canConfirm)fail('DRAFT_BUDGET');return [...draft.offers];}
 
 // Called only for the opt-in start, after the stock roster has been installed.
-export function applyOfficerDraft(s,companions){
+export function applyOfficerDraft(s,companions,unlocks=[]){
  if(companions===undefined)return;
- const pool=source(s.playerFactionId,s.mapId),allowed=new Set(pool.cards.map(c=>c.officerId));
+ const pool=source(s.playerFactionId,s.mapId,unlocks),allowed=new Set(pool.cards.map(c=>c.officerId));
  if(!Array.isArray(companions)||companions.length!==5||new Set(companions).size!==5||companions.some(id=>!allowed.has(id)))fail('INVALID_COMPANIONS');
  const f=s.factions[s.playerFactionId],selected=new Set(companions),capital=s.cities[f.capitalCityId];
  const homes=pool.cards.filter(c=>c.home).map(c=>c.officerId),removed=homes.filter(id=>!selected.has(id));

@@ -3691,3 +3691,41 @@ html[data-reduce-motion="true"] *,html[data-reduce-motion="true"] *::before,html
 #c212-rewind-confirm button:focus-visible{outline:3px solid #e3c78a;outline-offset:3px}
 #c212-rewind-confirm #c212-rewind-error:empty{display:none}
 #c212-rewind-confirm #c212-rewind-error:not(:empty){margin:16px 0 0}
+
+/* C215: original ruler art beside the ending; keep its aspect ratio. */
+body.ink #result .w-result{grid-template-columns:minmax(180px,28%) minmax(0,1fr)}
+body.ink #result .rs-art{display:flex;position:relative;inset:auto;z-index:1;overflow:hidden;align-items:center;justify-content:center;flex-direction:column;min-width:0}
+body.ink #result .rs-art::before{display:none}
+body.ink #result .rs-art .rs-ruler{display:block!important;width:100%;height:min(76vh,780px);object-fit:contain;filter:brightness(1.12) drop-shadow(0 12px 18px #000)}
+body.ink #result[data-outcome="lose"] .rs-ruler,body.ink #result[data-outcome="fall"] .rs-ruler{filter:grayscale(.9) brightness(.48) blur(.5px)}
+body.ink #result .rs-art .rs-ruler-name{display:block!important;font-size:clamp(18px,2vw,30px)}
+body.ink #result .rs-art .emblem-art{display:none!important}
+#c215-seed{width:120px;max-width:100%;color:inherit;background:#211f1c;border:1px solid #817664;padding:5px}
+.c215-history{grid-column:1/-1;order:6}
+#c215-completions{position:fixed;z-index:115;right:18px;bottom:82px;max-width:min(440px,calc(100vw - 36px));max-height:30vh;overflow:auto;background:#211f1c;color:#efe6d6;box-shadow:0 5px 20px #000;border:1px solid #817664}
+#c215-completions:empty{display:none}
+#c215-completions>div{display:flex;border-bottom:1px solid #635b4b}
+#c215-completions button{font:inherit;color:inherit;background:none;border:0;text-align:left;padding:12px;cursor:pointer}
+#c215-completions button[data-city]{flex:1}
+.c215-food-empty{color:#ed806f!important;white-space:nowrap}
+#c215-continue-summary{display:block;flex-basis:100%;color:#c4b59b;font-size:13px}
+@media(max-width:700px){body.ink #result .w-result{grid-template-columns:minmax(110px,24%) minmax(0,1fr)}body.ink #result .rs-art .rs-ruler{height:50vh}}
+/* C216: use the cutout without a plate, including on defeat. */
+body.ink #result .rs-art{background:transparent;filter:none}
+body.ink #result .rs-art .rs-ruler{background:transparent}
+body.ink #result[data-outcome="lose"] .rs-art .rs-ruler,body.ink #result[data-outcome="fall"] .rs-art .rs-ruler{filter:brightness(.48) drop-shadow(0 12px 18px #000)}
+#c216-transfer{position:fixed;inset:0;z-index:130;display:grid;place-items:center;background:#090b0dc4;pointer-events:auto}
+#c216-transfer .panel{box-sizing:border-box;width:min(440px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;padding:24px;background:#191a17;color:#eee3cd;border:1px solid #847554;box-shadow:0 16px 50px #000b}
+#c216-transfer label{display:block;margin:18px 0}
+#c216-transfer select,#c216-transfer input{display:block;width:100%;margin-top:8px}
+#c216-transfer button:disabled,#c216-swap:disabled{opacity:.45;cursor:not-allowed}
+.c216-history p{margin:8px 0;line-height:1.6}
+.c216-history small{color:var(--ash)}
+.wmap .c216-intent-note{fill:#ff796b;font:bold 12px sans-serif;paint-order:stroke;stroke:#181412;stroke-width:3px;pointer-events:none}
+.wmap .c216-transfer-note{fill:#ded4ba;font:9px sans-serif;paint-order:stroke;stroke:#181412;stroke-width:3px;pointer-events:none}
+#attack-preview:has(#c216-swap){pointer-events:auto}
+body.hud-band #attack-preview:has(#c216-swap):not([hidden]){display:block!important;height:auto;overflow:visible;white-space:normal;pointer-events:auto;z-index:90}
+#attack-preview:has(#c216-swap) p{display:inline;margin:0 12px 0 0}
+.city-quick header{display:flex;align-items:center;gap:8px}
+.city-quick header h2{flex:1}
+.city-quick button.c216-reserve-quick{height:24px;font-size:11px;white-space:nowrap;padding:0 4px}

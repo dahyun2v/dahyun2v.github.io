@@ -21,6 +21,7 @@ export const SFX = Object.freeze({
   'town-ambience': {gain: 0.32, gap: 0},
   // 10-16 닷토리 '소리가 구분됐으면 하는 순간': 차례 시작 · 시설 완공 · 패배 · 성소 발견
   'turn-drum': {gain: 0.8, gap: 900}, 'build-complete': {gain: 0.9, gap: 600}, 'defeat-dirge': {gain: 0.7, gap: 3000}, 'temple-bell': {gain: 0.75, gap: 1500},
+  'fire-out': {gain: 0.65, gap: 900},
 });
 /** 맞는 순간의 소리에 겹쳐 내는 소리: [이름, 늦춤(ms), 크기 배율]. 한 소리만으로는 '쾅' 하나라 얇다 — 금속(병기) · 묵직한 타격 · 이어지는 난전을 겹친다.
  * @type {Readonly<Record<string, [string, number, number][]>>} */
@@ -99,6 +100,19 @@ export function commandSounds({request, before, state, combat, deferImpact = fal
   return out.filter(([name]) => !!name);
 }
 
+/** Public before/after projections; disappearance into fog is not an extinguished fire.
+ * @param {any} before @param {any} after @returns {string[]} */
+export function transitionSounds(before,after){
+ const names=new Set();
+ if((after.exploration?.places??[]).some(p=>/성소/.test(p.label)&&p.status!=='UNKNOWN'&&before.exploration?.places?.find(x=>x.placeId===p.placeId)?.status==='UNKNOWN'))names.add('temple-bell');
+ const cities={...after.knowledge?.cities,...after.ownCities},oldCities={...before.knowledge?.cities,...before.ownCities};
+ if(Object.values(cities).some((/** @type {any} */ c)=>c.besieged&&!oldCities[c.cityId]?.besieged&&(after.ownCities?.[c.cityId]||after.knowledge?.tiles?.[c.tileId]==='VISIBLE')))names.add('siege');
+ if((after.diplomacy?.factions??[]).some(f=>['TRUCE','ALLIANCE'].includes(f.state)&&before.diplomacy?.factions?.find(x=>x.factionId===f.factionId)?.state!==f.state))names.add('stamp');
+ if((before.fire?.tiles??[]).some(f=>after.knowledge?.tiles?.[f.tileId]==='VISIBLE'&&!(after.fire?.tiles??[]).some(x=>x.tileId===f.tileId)))names.add('fire-out');
+ if(Object.values(after.ownArmies??{}).some((/** @type {any} */ a)=>a.morale!=='ROUTING'&&before.ownArmies?.[a.armyId]?.morale==='ROUTING'))names.add('warcry');
+ return [...names];
+}
+
 /** 창이 열릴 때 · 닫힐 때의 소리(창의 id → [열림, 닫힘]) */
 export const PANEL_SOUNDS = Object.freeze({
   'city-stage': ['gate', 'paper-close'], 'event-modal': ['guqin', null], 'choice-modal': ['guqin', null], 'growth-modal': ['levelup', null],
@@ -126,6 +140,9 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
   /** @type {Map<string, any>} */ const buffers = new Map();
   /** @type {Map<string, Promise<any>>} */ const loading = new Map();
   /** @type {Map<string, number>} */ const last = new Map();
+  const eventTurns=new Set();
+  /** @param {string} name @param {string} turn @param {number} [gain] */
+  function once(name,turn,gain=1){const key=`${turn}:${name}`;if(eventTurns.has(key))return;eventTurns.add(key);if(eventTurns.size>256)eventTurns.delete(eventTurns.values().next().value);play(name,{gain,duration:name==='warcry'?0.9:undefined});}
   let lastAny = -Infinity;
   const level = () => { const s = getSettings?.() ?? {}; return ctx && ctx.state === 'running' && !s.muted && (s.volume ?? 0) > 0 ? Math.min(1, /** @type {number} */ (s.volume) * 2.4) : 0; };
   /** @param {string} name */
@@ -143,11 +160,11 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
     try { ctx ??= contextFactory(); if (ctx.state === 'suspended') Promise.resolve(ctx.resume()).catch(() => {}); } catch { return; }
     for (const name of Object.keys(SFX)) load(name);   // 첫 손짓에 한꺼번에 받아 둔다(모두 합쳐 0.7MB)
   }
-  /** @param {string} name @param {{gain?: number, delay?: number, layers?: boolean}} [o] */
-  function play(name, {gain = 1, delay = 0, layers = true} = {}) {
+  /** @param {string} name @param {{gain?: number, delay?: number, layers?: boolean, duration?:number}} [o] */
+  function play(name, {gain = 1, delay = 0, layers = true, duration} = {}) {
     const def = SFX[name]; if (!def) return false;
-    if (delay > 0) { timer(() => play(name, {gain, layers}), delay); return true; }
-    const played = playNow(name, def, gain);
+    if (delay > 0) { timer(() => play(name, {gain, layers, duration}), delay); return true; }
+    const played = playNow(name, def, gain, duration);
     if (played && layers) for (const [layer, d, k] of SFX_LAYERS[name] ?? []) play(layer, {gain: gain * k, delay: d, layers: false});
     return played;
   }
@@ -170,20 +187,26 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
     const l = loops.get(name); if (!l) return; loops.delete(name);
     try { const t = ctx.currentTime ?? 0; l.g.gain.cancelScheduledValues?.(t); l.g.gain.setValueAtTime?.(l.g.gain.value, t); l.g.gain.linearRampToValueAtTime?.(0, t + 0.6); l.src.stop(t + 0.7); } catch { /* 이미 멈춤 */ }
   }
-  /** @param {string} name @param {SfxDef} def @param {number} gain */
-  function playNow(name, def, gain) {
+  /** @param {string} name @param {SfxDef} def @param {number} gain @param {number} [duration] */
+  function playNow(name, def, gain, duration) {
     const v = level(), now = clock();
     if (!v || now - (last.get(name) ?? -Infinity) < def.gap || (name === 'click' && now - lastAny < 90)) return false;
     const buf = buffers.get(name); if (!buf) { load(name); return false; }
     try {
       const src = ctx.createBufferSource(), g = ctx.createGain();
       src.buffer = buf; src.playbackRate.value = 0.97 + random() * 0.06;   // 같은 소리가 되풀이돼도 조금씩 다르게
-      g.gain.value = Math.min(1, v * def.gain * gain); src.connect(g).connect(ctx.destination); src.start();
+      g.gain.value = Math.min(1, v * def.gain * gain); src.connect(g).connect(ctx.destination);
+      if(duration>0){const t=ctx.currentTime??0;g.gain.setValueAtTime?.(g.gain.value,t);g.gain.setValueAtTime?.(g.gain.value,t+Math.max(0,duration-0.12));g.gain.linearRampToValueAtTime?.(0,t+duration);src.start(0,0,duration);}else src.start();
       last.set(name, now); lastAny = now; return true;
     } catch { return false; }
   }
-  /** 명령 하나가 끝난 뒤 world.js 가 부른다. @param {{request:any, before:any, state:any, combat:any, deferImpact?:boolean, managedFx?:boolean, visible?:(armyId:string)=>boolean}} c */
-  function command(c) { for (const [name, delay, k] of commandSounds(c)) play(name, {delay, gain: k}); }
+  /** 명령 하나가 끝난 뒤 world.js 가 부른다. @param {{request:any, before:any, state:any, combat:any, beforeView?:any, afterView?:any, deferImpact?:boolean, managedFx?:boolean, visible?:(armyId:string)=>boolean}} c */
+  function command(c) {
+    const events=c.beforeView&&c.afterView?transitionSounds(c.beforeView,c.afterView):[],turn=`${c.state?.campaignSeed}:${c.state?.turn}`;
+    if(Object.values(c.state?.factions??{}).some((/** @type {any} */ f)=>f.alive===false&&c.before?.factions?.[f.factionId]?.alive))events.push('gong');
+    for (const [name, delay, k] of commandSounds(c)) if(!events.includes(name))play(name, {delay, gain: k});
+    for(const name of events)once(name,turn,name==='warcry'?0.5:1);
+  }
   /** 창 여닫이와 단추 누르기를 듣는다. @param {Document} doc */
   function attach(doc) {
     doc.addEventListener('pointerdown', unlock, {capture: true, passive: true}); doc.addEventListener('keydown', unlock, {capture: true, passive: true});
@@ -204,5 +227,5 @@ export function createWorldSfx(getSettings, {contextFactory = () => new (globalT
     new MutationObserver((list) => { for (const m of list) if (m.type === 'attributes' && m.target instanceof Element) check(m.target); })
       .observe(doc.body, {attributes: true, attributeFilter: ['hidden'], subtree: true});
   }
-  return {unlock, play, command, attach, startLoop, stopLoop, get ready() { return buffers.size; }};
+  return {unlock, play, once, command, attach, startLoop, stopLoop, get ready() { return buffers.size; }};
 }

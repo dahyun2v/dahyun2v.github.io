@@ -222,6 +222,17 @@ export function campaignOfficerGrowth(s,id){
   return {potential:r.potential,status:r.status,cards:[...officerEffectCards(s,id),...officerEffectCards(s,id,{tactics:true}).map(c=>c29TacticCard(s,id,c))],level:growthState(r,id).level,xp:r.xp,
     ...(c25Enabled(s)?{trace:clone(r.trace),titles:clone(r.titles),c28:clone(r.c28),...(r.c29?{signature:{traitId:r.representativeId,gauge:r.c29.gauge,max:100},awakenings:r.c29.awakenings.map(({id,name,text})=>({id,name,text}))}:{} )}:{}),totalXp:r.totalXp,nextXp:campaignNextXp(r,growthState(r,id).level),ownedTraitRanks:clone(growthState(r,id).ownedTraitRanks),traitSlots:CAMPAIGN_TRAIT_SLOTS,traitCount:officerEffectCards(s,id).length,equippedTacticIds:[...r.equippedTacticIds]};
 }
+// A military-order draft is a confirmed reward, not a synthetic level entitlement.
+export function grantCampaignTacticDraft(s,id,sourceEventId){
+ const r=s.campaignGrowth.officers[id];if(!r)return false;
+ const draftId=`REWARD.${id}.${sourceEventId}`;if(r.track.draftsById[draftId])return true;
+ const current=growthState(r,id),level=current.level;
+ const pool={...r.pool,traits:r.pool.traits.filter(t=>r.cards[t.traitId]?.kind==='tactic'&&c33Eligible(r,r.cards[t.traitId])&&t.traitId!==r.representativeId&&(t.rarity!=='MYTHIC'||level>=10))};
+ const generated=createGrowthDraft({draftId,sourceEventId,character:r.track.characterProfiles[id],state:current,context:{levelAfter:Math.max(2,level),roleTags:[],situationTags:['ORDER_REWARD'],experienceTraces:[]},pool,seed:s.campaignSeed,rngState:r.track.draftsById[r.track.draftOrder.at(-1)]?.drawState.after??null,config:campaignDraftConfig(r.potential)});
+ if(generated.draft.state!=='OFFERED')return false;
+ generated.draft.orderReward=true;r.track.draftsById[draftId]=generated.draft;r.track.draftOrder.push(draftId);r.track.growthStates[id]=generated.nextState;
+ validateGrowthTrack(r.track);return true;
+}
 export function pendingCampaignDraft(s){
   if(s.phase!=='PLAYER')return null;
   for(const [id,r] of Object.entries(s.campaignGrowth?.officers??{})){
@@ -272,8 +283,8 @@ function pick(s,id,draft,traitId,resolution=null,tacticId=null){
     if(queued.state!=='OFFERED'||!queued.offeredIds.some(k=>(current.ownedTraitRanks[k]??0)>=5)&&!resolution)continue;
     const generated=createGrowthDraft({draftId:queued.draftId,sourceEventId:queued.sourceEventId,
       character:r.track.characterProfiles[id],state:{...current,nextDraftIndex:queued.draftIndex,traitOfferCooldowns:{}},
-      context:queued.contextSnapshot,pool:c28Enabled(s)?c28Eligible(s,id,draftPoolForLevel(r,queued.contextSnapshot.levelAfter),queued.contextSnapshot.levelAfter,c=>!(c.effects??[]).some(e=>e.op==='RULE'&&!campaignEffectValid(e,c))):draftPoolForLevel(r,queued.contextSnapshot.levelAfter),seed:queued.drawState.seed,rngState:queued.drawState.before,config:{...campaignDraftConfig(r.potential,queued.ruleDoubleDraft),...(queued.c26Extra?{candidateCount:campaignDraftConfig(r.potential,queued.ruleDoubleDraft).candidateCount+queued.c26Extra}:{}),...(queued.contextSnapshot.civilRatio!==undefined&&draftKindForLevel(queued.contextSnapshot.levelAfter)==='trait'?{civilRatio:queued.contextSnapshot.civilRatio}:{})}});
-    if(c28Enabled(s)){generated.draft.ruleDoubleDraft=queued.ruleDoubleDraft;generated.draft.c26Extra=queued.c26Extra;composeC28Draft(s,id,generated.draft);composeC29Draft(s,id,generated.draft);}
+      context:queued.contextSnapshot,pool:c28Enabled(s)?c28Eligible(s,id,(queued.orderReward?{...r.pool,traits:r.pool.traits.filter(t=>r.cards[t.traitId]?.kind==='tactic'&&t.traitId!==r.representativeId&&c33Eligible(r,r.cards[t.traitId])&&(t.rarity!=='MYTHIC'||current.level>=10))}:draftPoolForLevel(r,queued.contextSnapshot.levelAfter)),queued.contextSnapshot.levelAfter,c=>!(c.effects??[]).some(e=>e.op==='RULE'&&!campaignEffectValid(e,c))):(queued.orderReward?{...r.pool,traits:r.pool.traits.filter(t=>r.cards[t.traitId]?.kind==='tactic'&&t.traitId!==r.representativeId&&c33Eligible(r,r.cards[t.traitId])&&(t.rarity!=='MYTHIC'||current.level>=10))}:draftPoolForLevel(r,queued.contextSnapshot.levelAfter)),seed:queued.drawState.seed,rngState:queued.drawState.before,config:{...campaignDraftConfig(r.potential,queued.ruleDoubleDraft),...(queued.c26Extra?{candidateCount:campaignDraftConfig(r.potential,queued.ruleDoubleDraft).candidateCount+queued.c26Extra}:{}),...(queued.contextSnapshot.civilRatio!==undefined&&draftKindForLevel(queued.contextSnapshot.levelAfter)==='trait'?{civilRatio:queued.contextSnapshot.civilRatio}:{})}});
+    if(c28Enabled(s)&&!queued.orderReward){generated.draft.ruleDoubleDraft=queued.ruleDoubleDraft;generated.draft.c26Extra=queued.c26Extra;composeC28Draft(s,id,generated.draft);composeC29Draft(s,id,generated.draft);}
     for(const field of ['offered','offeredIds','eligibleCandidateSnapshot','drawState',...(generated.draft.c28?['c28','rerollLimit']:[])])queued[field]=generated.draft[field];
   }
 }

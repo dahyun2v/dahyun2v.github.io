@@ -1,3 +1,4 @@
+import c214 from '../data/c214-trial-v0.1.json' with {type:'json'};
 import {ordinaryReserve} from './campaign-special-troops.mjs';
 import {combatFireAt} from './campaign-rule-registry.mjs';
 import {selectCityJob,cityJobReason} from './campaign-economy.mjs';
@@ -228,10 +229,12 @@ const sortieReserveAvailable=(s,c,type)=>{
  const lots=sortieReserveLots(s,c,type),trained=lots.filter(l=>l.identity.specialTroopId).reduce((n,l)=>n+l.count,0);
  return trained+Math.min(domesticMusterAvailable(s,c),lots.filter(l=>!l.identity.specialTroopId).reduce((n,l)=>n+l.count,0));
 };
-export function sortieTroopRange(s,c,type){
+export function sortieTroopRange(s,c,type,officerId=null){
  const bonus=(c20Enabled(s)&&c.ownerFactionId==='F03'?c.starMusterBonus??0:0)+c30MusterBonus(s,c.ownerFactionId,type);
- const target=type==='hubao'?500+bonus+C24.hubaoReserve:type==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):500+bonus;
- return {min:specialTroop(s,type)?500:200,max:Math.floor(Math.min(sortieReserveAvailable(s,c,type),Math.floor(target*uniqueMusterFactor(s,c)))/50)*50,step:50};
+ const titles=s.trialRules?.engineGaps===false?[]:s.campaignGrowth?.officers[officerId]?.titles??[],titleBonus=titles.length*c214.titleTroops;
+ const target=(type==='hubao'?500+bonus+C24.hubaoReserve:type==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):500+bonus);
+ const commandLimit=Math.floor(target*uniqueMusterFactor(s,c))+titleBonus;
+ return {min:specialTroop(s,type)?500:200,max:Math.floor(Math.min(sortieReserveAvailable(s,c,type),commandLimit)/50)*50,step:50,commandLimit,titleBonus,titleReasons:titles.map(t=>t.name)};
 }
 export function assignCityDepartment(s,{cityId,department,officerId=null},factionId=s.playerFactionId){
  initializeDomesticEngine(s);const c=s.cities[cityId];
@@ -280,7 +283,7 @@ export function sortieReason(s,{cityId,officerId,troopType,troopCount,tileId},fa
  troopType??=o.troopType;
  if(!officerTroopTypes(o).includes(parentTroop(troopType)))return fail('SORTIE_TROOP','이 장수는 해당 병종으로 출진할 수 없습니다.');
  const blocked=specialMusterReason(s,c,troopType)??cityJobReason(s,c,'muster');if(blocked)return fail('SORTIE_CONDITION',blocked);
- const range=sortieTroopRange(s,c,troopType);
+ const range=sortieTroopRange(s,c,troopType,officerId);
  if(troopCount!==undefined&&!Number.isSafeInteger(troopCount))return fail('SORTIE_COUNT','병력 수를 정수로 고르십시오.');
  if(sortieReserveAvailable(s,c,troopType)<range.min||troopCount>sortieReserveAvailable(s,c,troopType))return fail('SORTIE_RESERVE',`예비병 부족 — 최소 ${troopText(range.min)}명 필요`);
  if(troopCount!==undefined&&(!Number.isSafeInteger(troopCount)||troopCount<range.min||troopCount>range.max||troopCount%range.step))return fail('SORTIE_COUNT',`병력은 ${troopText(range.min)}~${troopText(range.max)}명, ${troopText(range.step)}명 단위로 고르십시오.`);
@@ -292,7 +295,7 @@ export function sortie(s,command,factionId=s.playerFactionId){
  const c=s.cities[command.cityId],o=s.officers[command.officerId],troopType=command.troopType??o?.troopType;
  const reason=sortieReason(s,{...command,troopType},factionId);
  if(reason)throw Object.assign(new Error(`${reason.code}: ${reason.message}`),{code:reason.code});
- const troopCount=command.troopCount??sortieTroopRange(s,c,troopType).max;
+ const troopCount=command.troopCount??sortieTroopRange(s,c,troopType,command.officerId).max;
  const tileId=sortieTile(s,c,command.tileId);
  if(!completeMuster(s,c,{officerId:command.officerId,troopType,troopCount}))throw new Error(c.jobBlocked);
  // Keep legacy muster/AI placement intact; only the explicit SORTIE chooses a gate.
@@ -301,7 +304,7 @@ export function sortie(s,command,factionId=s.playerFactionId){
  return s;
 }
 export function musterTroopOptions(s,c,officerId){return [...(s.officers[officerId]?.allowedTroops??[]),...Object.keys(SPECIAL_TROOPS)].map(type=>{
- const range=sortieTroopRange(s,c,type),reason=sortieReason(s,{cityId:c.cityId,officerId,troopType:type},c.ownerFactionId);
+ const range=sortieTroopRange(s,c,type,officerId),reason=sortieReason(s,{cityId:c.cityId,officerId,troopType:type},c.ownerFactionId);
  const count=range.max,perTurn=armyFoodPerTurn({troopCount:count},s)*fieldDrainTurns(s,{troopCount:count});
  return {...troopInfo(s,type),blockedReason:reason?.message??null,reasonCode:reason?.code??null,reserveRequired:range.min,troopCountRange:range,...(domesticEngineEnabled(s)?{fieldConsumption:{troopCount:count,perTurn,drainTurns:fieldDrainTurns(s,{troopCount:count}),label:'최대 병력으로 보급권 밖에서 차례당 소모'}}:{})};
 });}
@@ -312,7 +315,7 @@ export function completeMuster(s,c,job){
  const failure=sortieReason(s,{cityId:c.cityId,...job},c.ownerFactionId),reason=failure?.message;if(reason){recordFatigueBlock(s,job.officerId);c.jobBlocked=reason;return false;}
  const occupied=new Set(Object.values(s.armies).filter(a=>a.troopCount>0&&(!s.terminal||s.terminal.armiesById[a.armyId]?.disposition==='ACTIVE')).map(a=>a.tileId));
  const tileId=[c.tileId,...c.footprint.gates].find(id=>!occupied.has(id)&&!combatFireAt(s,id));if(!tileId){c.jobBlocked='MUSTER_TILE_WAIT';return false;}
- const range=sortieTroopRange(s,c,job.troopType),count=job.troopCount??range.max,bonus=(c20Enabled(s)&&c.ownerFactionId==='F03'?c.starMusterBonus??0:0)+c30MusterBonus(s,c.ownerFactionId,job.troopType),lots=sortieReserveLots(s,c,job.troopType);
+ const range=sortieTroopRange(s,c,job.troopType,job.officerId),count=job.troopCount??range.max,bonus=(c20Enabled(s)&&c.ownerFactionId==='F03'?c.starMusterBonus??0:0)+c30MusterBonus(s,c.ownerFactionId,job.troopType),lots=sortieReserveLots(s,c,job.troopType);
  if(lots.reduce((n,l)=>n+l.count,0)<count){c.jobBlocked='MUSTER_LEDGER_RESERVE_REQUIRED';return false;}
  let remaining=count;for(const l of lots){const n=Math.min(l.count,remaining);l.count-=n;remaining-=n;if(l.kind==='WOUNDED'&&s.armies[l.originFormationId])s.armies[l.originFormationId].woundedCount=Math.max(0,s.armies[l.originFormationId].woundedCount-n);}
  s.musterSequence=(s.musterSequence??0)+1;const id=`U-C16-${s.musterSequence}`,o=s.officers[job.officerId];

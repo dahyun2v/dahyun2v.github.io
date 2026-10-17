@@ -1,3 +1,4 @@
+import {recordEventHistory} from './campaign-engine-gaps.mjs';
 import {hexDistance} from './map-primitives.mjs';
 import {castleArmyActive} from './campaign-city-footprint.mjs';
 
@@ -91,6 +92,7 @@ export function settleCampaignOaths(s,applyEffects,{endedTurn=s.turn}={}){
   if(achieved||endedTurn>=o.deadline){
    o.status=achieved?'SUCCESS':'FAILED';o.resolvedTurn=endedTurn;
    o.result=applyEffects(s,achieved?o.reward:o.penalty,o,`OATH.${o.id}.${o.status}`);
+   recordEventHistory(s,o,achieved?'맹세 성공':'맹세 실패',o.result.text,`OATH.${o.id}.${o.status}`);
    if(o.result.missing.length)o.settlement='PENDING_TARGET_REVIEW';
    (s.administrationLog??=[]).push({turn:s.turn,factionId:o.factionId,text:`맹세 ${achieved?'성공':'실패'} — ${o.title}: ${o.result.text}`});
   }

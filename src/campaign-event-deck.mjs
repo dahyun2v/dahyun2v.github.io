@@ -1,3 +1,4 @@
+import {recordEventHistory} from './campaign-engine-gaps.mjs';
 import data from '../data/events-deck-v1.json' with {type:'json'};
 import echo from '../data/events-echo-v0.1.json' with {type:'json'};
 import tuning from '../data/events-deck-tuning-v0.1.json' with {type:'json'};
@@ -177,7 +178,7 @@ export function deckDefinition(s,p){
 }
 export function chooseDeckEvent(s,p,choiceId){
  const card=cardById.get(p.eventId),ch=card?.choices.find(c=>c.id===choiceId);if(!ch)throw new Error('INVALID_EVENT_CHOICE');const reason=deckChoiceReason(s,p,ch);if(reason)throw new Error(reason);
- const result=applyDeckEffects(s,ch.effects,p,`${card.id}.${p.turn}.${choiceId}`);signCampaignOath(s,card,ch,p);
+ const result=applyDeckEffects(s,ch.effects,p,`${card.id}.${p.turn}.${choiceId}`);signCampaignOath(s,card,ch,p);recordEventHistory(s,{...p,title:card.title},ch.label,result.text,`EVENT.${card.id}.${p.turn}.${choiceId}`);
  if(ch.oath){s.eventDeck.twists.push({eventId:card.id,title:card.title,turn:s.turn});const tag=ch.setsTag??card.links?.setsTag;if(tag&&!s.eventDeck.tags.includes(tag))s.eventDeck.tags.push(tag);}
  s.eventDeck.lastResult={eventId:card.id,title:card.title,turn:s.turn,choiceId,text:result.text,dejaVu:ch.dejaVu?eventText(ch.dejaVu,p.names):null};
  s.c22.fired.push({eventId:card.id,factionId:p.factionId,turn:s.turn,choiceId});delete s.c22.pending[p.factionId];(s.administrationLog??=[]).push({turn:s.turn,factionId:p.factionId,text:`사건 — ${card.title}: ${ch.label} (${result.text})${ch.dejaVu?` · 기시감: ${eventText(ch.dejaVu,p.names)}`:''}`});return s;
