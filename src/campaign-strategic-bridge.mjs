@@ -1,4 +1,6 @@
 import C198 from '../data/c198-special-formation-v0.1.json' with {type:'json'};
+import {weatherView} from './campaign-run-modifiers.mjs';
+import {supplyView} from './campaign-supply.mjs';
 export {C198};
 import {campaignTacticsEnabled,campaignTacticsView,campaignTacticsWorld,campaignCombatProbe,campaignOperationPlan,campaignTacticalMoves} from './campaign-ai-tactics.mjs';
 import {campaignAiRule,campaignAiRulesEnabled,campaignReferencePlan,campaignAiPosture,campaignAiPickTroop,campaignAiArrivalTurns,AI_RULE_GOAL_BONUS,AI_RULE_REVIEW_TURNS,AI_RULE_STALL_TURNS,AI_RULE_GATHER_TURNS} from './campaign-ai-rules.mjs';
@@ -493,9 +495,28 @@ function planCampaignAi(world, factionId, {remember=false,turnLimit=26}={}) {
    const defense=new Map((final.defense?.capitalOrders??[]).map(c=>[c.armyId,c]));final.candidates=final.candidates.map(c=>defense.get(c.armyId)??c);
    const empty=v.knowledge.cities[final.capitalCounterCityId];if(empty)final.candidates=final.candidates.map(c=>{if(c.defendCityId)return c;const a=v.ownArmies[c.armyId],route=campaignSiegePositions(world,v,a,empty,{capability:true}).map(id=>publicRoute(world,v,a.armyId,id)).filter(Boolean).sort((x,y)=>x.totalTicks-y.totalTicks)[0];return route?strategyMove(world,v,c,route,'R13_COUNTER_EMPTY_CITY',{aiTargetCityId:empty.cityId,aiReferenceMove:true}):c;});
   }
-  if(!campaignTacticsEnabled(world,factionId))return campaignScoutPlan(world,v,final,{remember});
+  if(!campaignTacticsEnabled(world,factionId))return campaignWeatherPlan(world,v,campaignScoutPlan(world,v,final,{remember}));
   campaignOperationPlan(world,v,final,{remember,turnLimit,route:publicRoute,siegePositions:campaignSiegePositions,siegeReady:siegeForceReady,supplyWorld});
-  return campaignScoutPlan(world,v,campaignTacticalMoves(world,campaignTacticsView(world,factionId),final,{remember,supplyWorld}),{remember});
+  return campaignWeatherPlan(world,v,campaignScoutPlan(world,v,campaignTacticalMoves(world,campaignTacticsView(world,factionId),final,{remember,supplyWorld}),{remember}));
+}
+
+// Only the same announced weather a human can see enters expedition planning.
+export function campaignWeatherPlan(s,v,plan){
+ const weather=weatherView(s),event=weather.upcoming[0]??(weather.active?{kind:weather.active.kind,startTurn:s.turn}:null);if(!event)return plan;
+ const publicWorld=strategyPublicWorld(s,v),future={...publicWorld,turn:event.startTurn};
+ plan.candidates=plan.candidates.map(c=>{
+  const a=v.ownArmies[c.armyId];if(!a||c.type!=='MOVE'||c.defendCityId||c.aiCityDefensePriority||c.aiCapitalDefense||!c.destinationTileId)return c;
+  const route=publicRoute(publicWorld,v,a.armyId,c.destinationTileId);if(!route)return c;
+  const arrival=Math.max(1,Math.ceil(route.totalTicks/s.time.ticksPerTurn));if(event.startTurn>s.turn+arrival)return c;
+  if(event.kind==='RAIN'){
+   const adjusted=publicRoute(future,v,a.armyId,c.destinationTileId);
+   return adjusted?{...strategyMove(s,v,c,adjusted,'WEATHER_RAIN_ROUTE'),aiReferenceMove:true}:{...c,type:'HOLD',destinationTileId:null,pathTileIds:[],reasonCode:'WEATHER_RAIN_WAIT',aiOperationWait:true};
+  }
+  const supply=supplyView(publicWorld,publicWorld.armies[a.armyId],c.destinationTileId);
+  if(supply.state==='SAFE'||supply.turnsLeft>=arrival*(weather.active?.kind==='COLD'?1:2))return c;
+  const home=Object.values(v.ownCities).map(city=>publicRoute(publicWorld,v,a.armyId,city.tileId)).filter(Boolean).sort((a,b)=>a.totalTicks-b.totalTicks)[0];
+  return home?{...strategyMove(s,v,c,home,'WEATHER_COLD_RETURN'),aiReferenceMove:true}:{...c,type:'HOLD',destinationTileId:null,pathTileIds:[],reasonCode:'WEATHER_COLD_WAIT',aiOperationWait:true};
+ });return plan;
 }
 
 // Occlusion leaves a frontier even at the scout's current position. Walk to a
@@ -660,16 +681,16 @@ function castleTargets(world,v,plan,options={}) {
 
 function publicRoute(world,v,armyId,destination){
   if(!world.armies[armyId]||!castleArmyActive(world,world.armies[armyId]))return null;
-  const key=`${armyId}|${destination}`;
+  const movementKey=`${world.turn}:${weatherView(world).active?.kind??''}:${armyId}`,key=`${movementKey}|${destination}`;
   if(planningScope?.routes.has(key))return planningScope.routes.get(key);
   // Restrict FIRST3 path search to observed geometry; hidden terrain is excluded.
-  let movement=planningScope?.movements.get(armyId);
+  let movement=planningScope?.movements.get(movementKey);
   if(!movement){
    const knownCities=Object.values({...v.knowledge.cities,...v.ownCities}).filter(c=>world.castleKnowledge?.[v.factionId]?.[c.cityId]);
    const cities=Object.fromEntries(knownCities.map(c=>[c.cityId,{...c,...world.castleKnowledge[v.factionId][c.cityId]}]));
    const armies=Object.fromEntries(Object.values({...v.knowledge.observedArmies,...v.ownArmies}).map(a=>[a.armyId,{...a,troopCount:a.troopCount??1,hp:a.hp??1}]));
    movement={...campaignMovementWorld({...world,cities,armies},armyId),tiles:Object.fromEntries(Object.entries(world.tiles).filter(([id])=>v.knowledge.tiles[id]!=='UNEXPLORED'))};
-   planningScope?.movements.set(armyId,movement);
+   planningScope?.movements.set(movementKey,movement);
   }
   if(!world.tiles[destination]||v.knowledge.tiles[destination]==='UNEXPLORED'||!v.tiles[movement.armies[armyId]?.tileId])return null;
   const path=findPath(movement,armyId,destination),result=path&&!path.pathTileIds.slice(1).some((to,i)=>diplomacyMoveReason(world,armyId,to,path.pathTileIds[i]))?path:null;

@@ -3679,3 +3679,15 @@ body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-
 body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face b{font-size:clamp(10px,.78vw,13px);height:14%;min-height:2.4em}
 body.w.ink #event-modal.w-modal .w-card.w-event:not(.no-art) #event-choices .ev-card-face b span{display:block;max-height:none;overflow:visible;-webkit-line-clamp:unset}
 html[data-reduce-motion="true"] *,html[data-reduce-motion="true"] *::before,html[data-reduce-motion="true"] *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+/* C212 기시감 확인 — 기존 판 부품을 재사용 */
+#c212-rewind-confirm{position:fixed;inset:0;z-index:220;display:grid;place-items:center;background:#070a0bbd}
+#c212-rewind-confirm[hidden]{display:none!important}
+#c212-rewind-confirm>section{box-sizing:border-box;width:min(500px,calc(100vw - 24px));aspect-ratio:384/230;max-height:calc(100dvh - 32px);display:flex;flex-direction:column;justify-content:center;overflow:auto;padding:clamp(20px,3vw,34px);color:#eee4ce;background:#191b18 url('/assets/ui-v3/hud/kit/panel-info.png') center/contain no-repeat;filter:drop-shadow(0 18px 30px #0009);font:15px/1.6 var(--serif)}
+#c212-rewind-confirm h2{margin:0 0 12px;font-size:24px;color:#f0d49b}
+#c212-rewind-confirm p{margin:0 0 20px;overflow-wrap:anywhere}
+#c212-rewind-confirm footer{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:12px}
+#c212-rewind-confirm button{min-height:44px;padding:8px 20px;border:1px solid #8b7853;background:#252721;color:#f0d49b;font:inherit;cursor:pointer}
+#c212-rewind-confirm #c212-rewind-accept{background:#71372e}
+#c212-rewind-confirm button:focus-visible{outline:3px solid #e3c78a;outline-offset:3px}
+#c212-rewind-confirm #c212-rewind-error:empty{display:none}
+#c212-rewind-confirm #c212-rewind-error:not(:empty){margin:16px 0 0}

@@ -1,3 +1,4 @@
+import {blessingSight} from './campaign-run-modifiers.mjs';
 import {classHidden} from './campaign-classes.mjs';
 import {c34Enabled} from './campaign-c34.mjs';
 import {c29Wind} from './campaign-c29.mjs';
@@ -35,8 +36,11 @@ export function applyCampaignVision(s) {
 export function updateCampaignKnowledge(s){
  const armies=Object.fromEntries(Object.entries(s.armies).map(([id,a])=>[id,c29Wind(s,id)||c28Rule(s,id,'SCOUT_EYE')||hasCampaignRule(s,id,'EAGLE_EYE')||c20Enabled(s)&&a.starVisionUntil>=s.turn?{...a,troopType:`EAGLE.${id}`} :a]));
  const byTroop={...s.mapRules.vision.byTroop};if(c24Enabled(s))for(const [type,d] of Object.entries(SPECIAL_TROOPS))byTroop[type]=(byTroop[d.parent]??s.mapRules.vision.field)+(type==='wudang'?C24.wudangVision:type==='catapult'?C24.catapultVision:0);for(const [id,a] of Object.entries(armies))if(a.troopType.startsWith('EAGLE.'))byTroop[a.troopType]=(hasCampaignRule(s,id,'EAGLE_EYE')?10-(s.tiles[a.tileId].terrainType==='hill'?(s.mapRules.vision.hillBonus??0):0):(byTroop[s.armies[id].troopType]??s.mapRules.vision.field))+(c20Enabled(s)&&a.starVisionUntil>=s.turn?C20.vision:0)+(c28Rule(s,id,'SCOUT_EYE')?C28.scoutVision:0)+(c29Wind(s,id)?1:0);
- for(const c of Object.values(s.cities)){const star=c20Enabled(s)&&c.ownerFactionId==='F03'&&c.starVisionUntil>=s.turn?C20.vision:0,spy=domesticRule(s,c,'COUNTER_SPY')?.params.vision??0;if(star||spy){const id=`STAR.CITY.${c.cityId}`;armies[id]={armyId:id,factionId:c.ownerFactionId,tileId:c.tileId,troopType:id,hp:1,troopCount:1};byTroop[id]=s.mapRules.vision.city+star+spy;}}
+ for(const c of Object.values(s.cities)){const star=c20Enabled(s)&&c.ownerFactionId==='F03'&&c.starVisionUntil>=s.turn?C20.vision:0,spy=domesticRule(s,c,'COUNTER_SPY')?.params.vision??0;if(star||spy){const id=`STAR.CITY.${c.cityId}`;armies[id]={armyId:id,factionId:c.ownerFactionId,tileId:c.tileId,troopType:id,hp:1,troopCount:1};byTroop[id]=s.mapRules.vision.city+star+spy+blessingSight(s,c.ownerFactionId);}}
  if(c34Enabled(s))for(const [n,m] of (s.c34?.maps??[]).entries())if(m.until>=s.turn&&s.cities[m.cityId]){const id=`STAR.CITY.C34.${n}`;armies[id]={armyId:id,factionId:m.fid,tileId:s.cities[m.cityId].tileId,troopType:id,hp:1,troopCount:1};byTroop[id]=m.range;}
+ // Add radius using per-army vision aliases, preserving LOS and all other rules.
+ for(const [id,a] of Object.entries(armies))if(!id.startsWith('STAR.CITY.')&&blessingSight(s,a.factionId)){const type=`BLESSING.${id}`;byTroop[type]=(byTroop[a.troopType]??s.mapRules.vision.field)+blessingSight(s,a.factionId);armies[id]={...a,troopType:type};}
+ for(const c of Object.values(s.cities))if(blessingSight(s,c.ownerFactionId)){const id=`STAR.CITY.BLESSING.${c.cityId}`;armies[id]={armyId:id,factionId:c.ownerFactionId,tileId:c.tileId,troopType:id,hp:1,troopCount:1};byTroop[id]=s.mapRules.vision.city+blessingSight(s,c.ownerFactionId);}
  const campaignTerminalWorld=s.campaignTerminalWorld?{...s.campaignTerminalWorld,armiesById:{...s.campaignTerminalWorld.armiesById,...Object.fromEntries(Object.keys(armies).filter(id=>id.startsWith('STAR.CITY.')).map(id=>[id,{disposition:'ACTIVE'}]))}}:undefined;
  updateKnowledge({...s,armies,...(campaignTerminalWorld?{campaignTerminalWorld}:{}),mapRules:{...s.mapRules,vision:{...s.mapRules.vision,byTroop}}});
  for(const k of Object.values(s.knowledge))for(const id of Object.keys(armies).filter(id=>id.startsWith('STAR.CITY.'))){delete k.observedArmies[id];delete k.lastSeenArmies[id];}

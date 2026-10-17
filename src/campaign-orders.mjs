@@ -1,4 +1,5 @@
 import {combatFireAt} from './campaign-rule-registry.mjs';
+import {weatherEdgeReason} from './campaign-run-modifiers.mjs';
 import {diplomacyMoveReason} from './campaign-diplomacy.mjs';
 import {campaignPath,campaignPaths,campaignReachable,inControlZone} from './campaign-morale.mjs';
 import {combatMovement,combatCanPostMove} from './campaign-rule-registry.mjs';
@@ -82,6 +83,7 @@ export function inspectOrderPath(s,id,path,{budget=200}={}){
   if(occupant)return fail(to,'다른 부대가 있습니다');
   if(Object.values(s.cities).some(c=>c.tileId===to&&!campaignCenterEntryAllowed(s,id,c)))return fail(to,'적 성 중심은 성 공격으로 진입합니다');
   const cost=edgeTicks(world,world.armies[id],from,to),edge=edgeKey(from,to);
+  if(weatherEdgeReason(s,from,to))return fail(to,'장마 — 여울 막힘');
   if(cost===null)return fail(to,['mountain','water'].includes(s.tiles[to].terrainType)?s.tiles[to].terrainType==='mountain'?'산은 통과할 수 없습니다':'물 위로 이동할 수 없습니다':world.mapRules.riverEdges.includes(edge)&&!['ford','bridge'].includes(world.mapRules.crossings[edge])?'강 — 여울 아님':'통과할 수 없는 길입니다');
   ticks+=cost;
   if(ticks>budget||i>combatMovement(s,id).max)return fail(to,'이동력 부족');

@@ -3,6 +3,7 @@ import {reinforcementText,cityReinforcementText} from './hud-ink.mjs';
 import {oathBandHtml,twistHistoryHtml,readRecentEventIds,writeRecentEventIds} from './hud-ink.mjs';
 import {ambitionScreenOffer,ambitionCardsHtml,ambitionBandHtml,ambitionEndingHtml,readCampaignLegacy,writeCampaignLegacy,C190_SEALS} from './hud-ink.mjs';
 import {AMBITIONS} from '/src/campaign-ambitions.mjs';
+import {renderRunModifiers} from './c211-run-ui.mjs';
 import {levelupReadout,levelupQueue,levelupArtCategory,LEVELUP_ASSETS,levelupUpgradeText,fatigueLineText} from '/app/world/hud-ink.mjs';
 // 천하재결 새 화면 컨트롤러(UI v3, 2026-10-08) — 게임 흐름 로직은 옛 campaign.js 에서 갈라 왔고, 보이는 것(마크업·지도·아이콘)은 새로 쓴다.
 // 옛 화면(/campaign)은 그대로 둔다. 지도: /app/world/map-v3.mjs, 스타일: /app/world/world.css
@@ -214,7 +215,7 @@ const START_ZOOM=new URLSearchParams(location.search).get('hud')==='old'?1.7:2.1
 let motions={},attackAnims={},facings={},fxList=[],motionSeq=0,redrawTimer=null;
 const factionName=id=>({F01:"조조군",F02:"유비군",F03:"손권군"}[id]??id);
 let cameraMoving=false,cameraTimer=null;
-function inputLocked(){return $('#c205-choice')?.hidden===false||$('#c197-event-result')?.hidden===false||!$('#save-confirm')?.hidden||$('#attack-confirm')?.hidden===false||cameraMoving||(state?.orderQueue?.length>0)||combatAnimating||state?.phase==='AI'||!!(state&&pendingCampaignDraft(state));}
+function inputLocked(){return $('#c212-rewind-confirm')?.hidden===false||$('#c211-blessing')?.hidden===false||$('#c205-choice')?.hidden===false||$('#c197-event-result')?.hidden===false||!$('#save-confirm')?.hidden||$('#attack-confirm')?.hidden===false||cameraMoving||(state?.orderQueue?.length>0)||combatAnimating||state?.phase==='AI'||!!(state&&pendingCampaignDraft(state));}
 function scheduleOrders(){
  clearTimeout(orderTimer);
  if(!state?.gameResult&&state?.phase==='PLAYER'&&queuedOrderUnit(state)&&!combatAnimating&&!pendingCampaignDraft(state))orderTimer=setTimeout(()=>command({type:'ADVANCE_ORDER'}),Math.max(10,motionRemaining()+60));
@@ -789,6 +790,7 @@ function render() {
   else $('#officers').innerHTML=Object.values(v.officers).filter(o=>o.allegianceFactionId===v.factionId).map(o=>{const g=o.growth??{},role=officerRole(v,o.officerId),face=faceOf(o.officerId),st=statsToOfficerPack(o.baseStats),pct=g.nextXp?Math.round(g.xp/g.nextXp*100):100;return `<article class="ro-card" style="--fc:${FACTION_STYLE[v.factionId]?.color}"><button class="ro-face" data-officer="${esc(o.officerId)}" title="장수 정보">${face?`<img src="${esc(face)}" alt="">`:faceFallback(o.name)}</button><div class="ro-body"><header><button class="ro-name" data-officer="${esc(o.officerId)}">${esc(o.name)}</button><span class="potential" data-rank="${g.potential??''}">${g.potential??''}</span><span class="ro-lv">Lv ${g.level??1}</span></header>${role?`<p class="ro-role">${esc(role)}</p>`:''}<div class="ro-xp"><i style="width:${pct}%"></i></div><dl class="ro-stats">${Object.entries(st).map(([k,x])=>`<dt>${esc({command:'지휘',valor:'무용',intellect:'지략',politics:'정무',charisma:'감화'}[k]??k)}</dt><dd>${esc(x)}</dd>`).join('')}</dl><p class="ro-cards">${(g.cards??[]).slice(0,4).map(c=>`<small>${c.kind==='trait'?traitChip(c,o.officerId):`${esc(c.name)} ${c.rank}단계`}</small>`).join('')}</p></div></article>`;}).join('');
   renderVisit();renderGrowthDraft();renderEventCard(v);renderChoiceCard(v);renderTraitChoice();renderOfficerCard();renderFactionModal();renderDiplo();renderCouncil();
   renderShell(v);
+  if(typeof renderRunModifiers==='function')renderRunModifiers(v,{phase:state.phase,face:faceOf,locked:combatAnimating,choose:id=>{state=step(state,{type:'CHOOSE_BLESSING',blessingId:id});uiSfx.play('bell');render();scheduleOrders();scheduleAi();},rewind:()=>{state=step(state,{type:'REWIND_TURN'});resetAmbitionUi();moveUndo=null;queuedUndoStart=null;c197ResultSeen=null;draftPick=null;motions={};attackAnims={};fxList=[];rivalTurnBaseline=null;turnSummaryPending=null;recordNotices=[];recentCombats=[];lastUnitResult=null;lastFoodChange=null;lastFacilityResults=[];turnLog=[];newsArchive=[];selectedArmyId=null;selectedArmyIds=[];moveMode=false;attackMode=false;cancelAttackConfirmation();c207Tracker=c207Info?.createSituationTracker()??null;uiSfx.play('bell');render();scheduleOrders();scheduleAi();}});
   refreshOverlapAttack();
   if(stage.city)renderStage(v);
   bgm.scene(bgmScene(v));

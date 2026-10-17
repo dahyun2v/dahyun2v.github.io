@@ -1,3 +1,4 @@
+import {weatherKind,weatherEdgeReason,RUN_MODIFIERS} from './campaign-run-modifiers.mjs';
 import {boardNeighbors,tileId,movementTicks} from './map-primitives.mjs';
 import {parentTroop} from './campaign-special-troops.mjs'; // 특수 병종(투석기 등)은 부모 병종의 이동 규칙으로 — 원래 부대를 그대로 넘기는 호출(예약 이동 등)에서 '알 수 없는 병종'으로 판 전체가 멈췄다(2026-10-12)
 export const edgeKey=(a,b)=>[a,b].sort().join('|');
@@ -11,7 +12,10 @@ export function buildMapRules(map,data){
 export function edgeTicks(s,a,fromId,toId){
   const from=s.tiles[fromId],to=s.tiles[toId];if(!from || !to)return null;
   const key=edgeKey(fromId,toId),r=s.mapRules;
-  return movementTicks({from,to,troopType:parentTroop(a.troopType),maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:r.roads.includes(key),river:r.riverEdges.includes(key),crossing:r.crossings[key]??'none',blocked:r.blockedEdges.includes(key)},tuning:r.tuning,tickDays:s.time.tickDays});
+  if(weatherEdgeReason(s,fromId,toId))return null;
+  let tuning=r.tuning;
+  if(weatherKind(s)==='RAIN'&&to.terrainType==='plain'){const type=parentTroop(a.troopType),base=tuning.byTroop?.[type]??tuning[type==='cavalry'?'cavalry':type==='engineer'?'engineer':'normal'],plus=RUN_MODIFIERS.weather.kinds.find(k=>k.id==='RAIN').effect.plainMoveCostPlus;tuning={...tuning,byTroop:{...tuning.byTroop,[type]:{...base,plain:base.plain+plus,rough:base.rough+plus,road:base.road+plus}}};}
+  return movementTicks({from,to,troopType:parentTroop(a.troopType),maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:r.roads.includes(key),river:r.riverEdges.includes(key),crossing:r.crossings[key]??'none',blocked:r.blockedEdges.includes(key)},tuning,tickDays:s.time.tickDays});
 }
 // Static geometry only: no enemy or friendly occupancy is used for path search.
 export function findPath(s,armyId,destination){

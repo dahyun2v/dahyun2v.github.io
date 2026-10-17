@@ -1,3 +1,4 @@
+import {blessingEffect,weatherKind,weatherEdgeReason,RUN_MODIFIERS} from './campaign-run-modifiers.mjs';
 import data from '../../docs/design-data/supply-v0.1.json' with {type:'json'};
 import models from '../../docs/design-data/supply-v0.2.json' with {type:'json'};
 import {C184,domesticEngineEnabled} from './campaign-domestic.mjs';
@@ -16,10 +17,10 @@ export const foodModel=s=>['v2','v3'].includes(s?.mapId)?s.trialRules?.foodModel
 export const clockFood=s=>foodModel(s)==='clock';
 export const baseCityFood=s=>foodModel(s)==='cheap'?models.cheap.cityBaseFood:4;
 export const troopFoodRate=s=>foodModel(s)==='cheap'?models.cheap.troopFoodPerThousand:2;
-export const supplyStockTurns=s=>clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns;
+export const supplyStockTurns=(s,a=null)=>((a?.factionId??s.playerFactionId)===s.playerFactionId?blessingEffect(s,'CARRIED_FOOD_MAX')?.value:null)??(clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns);
 export const armyFoodPerTurn=(a,s=null)=>Math.round(a.troopCount*troopFoodRate(s))/1000;
 export function fieldDrainTurns(s,a){if(!domesticEngineEnabled(s))return 1;const shown=a.troopCount*TROOP_DISPLAY_SCALE;return C184.fieldDrainTurns[shown<=C184.fieldShownThresholds[0]?0:shown<=C184.fieldShownThresholds[1]?1:2];}
-export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(services?.classFieldFoodFactor?.(s,a)??1));}
+export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(services?.classFieldFoodFactor?.(s,a)??1)*(weatherKind(s)==='COLD'?RUN_MODIFIERS.weather.kinds.find(k=>k.id==='COLD').effect.outOfSupplyFoodMultiplier:1));}
 // City stocks use the same passable land edges, without a last-mile range cap.
 export function citySupplyRoute(s,from,to){
  if(!from||!to||!from.ownerFactionId||from.ownerFactionId!==to.ownerFactionId||from.besieged||to.besieged)return null;
@@ -31,13 +32,13 @@ export function citySupplyRoute(s,from,to){
   const path=queue[i],id=path.at(-1);if(goals.has(id))return path;
   for(const p of boardNeighbors(s.tiles[id],s.tiles)){
    const next=tileId(p),key=[id,next].sort().join('|');
-   if(seen.has(next)||blocked.has(next)||['mountain','water'].includes(s.tiles[next].terrainType)||s.mapRules.blockedEdges.includes(key)||s.mapRules.riverEdges.includes(key)&&!s.mapRules.crossings[key])continue;
+   if(seen.has(next)||blocked.has(next)||['mountain','water'].includes(s.tiles[next].terrainType)||s.mapRules.blockedEdges.includes(key)||weatherEdgeReason(s,id,next)||s.mapRules.riverEdges.includes(key)&&!s.mapRules.crossings[key])continue;
    seen.add(next);queue.push([...path,next]);
   }
  }
  return null;
 }
-export const supplyMax=(s,a)=>armyFoodPerTurn(a,s)*supplyStockTurns(s);
+export const supplyMax=(s,a)=>armyFoodPerTurn(a,s)*supplyStockTurns(s,a);
 const round=n=>Math.round(n*1e6)/1e6;
 const active=(s,a)=>services?.active?services.active(s,a):a.troopCount>0&&a.hp>0;
 const cityTiles=c=>[c.tileId,...(c.footprint?.gates??[]),...(c.footprint?.walls??[])];
@@ -95,7 +96,7 @@ export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2
 export function supplyView(s,a,at=a.tileId){
  const link=supplyLink(s,a,at),perTurn=armyFieldConsumption(s,a,link),max=supplyMax(s,a),free=clockFood(s)&&link.state==='SAFE'&&!link.source?.city?.besieged;
  const drain=free?0:clockFood(s)&&!link.source?.city?.besieged?perTurn*(link.state==='DISRUPTED'?.5:1):perTurn;
- return {state:!free&&at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max,perTurn,...(domesticEngineEnabled(s)?{drainPerTurn:drain,drainTurns:link.state==='SAFE'?0:fieldDrainTurns(s,a)}:{}),turnsLeft:free?supplyStockTurns(s):drain?round(a.supplyFood/drain):0,sourceCityId:link.sourceCityId,sourceHubId:link.sourceHubId,distance:link.distance,model:foodModel(s),draining:clockFood(s)?!free:link.state!=='SAFE'||(link.source?.city?link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<perTurn:(link.source?.hub?.stock??0)<perTurn)};
+ return {state:!free&&at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max,perTurn,...(domesticEngineEnabled(s)?{drainPerTurn:drain,drainTurns:link.state==='SAFE'?0:fieldDrainTurns(s,a)}:{}),turnsLeft:free?supplyStockTurns(s,a):drain?round(a.supplyFood/drain):0,sourceCityId:link.sourceCityId,sourceHubId:link.sourceHubId,distance:link.distance,model:foodModel(s),draining:clockFood(s)?!free:link.state!=='SAFE'||(link.source?.city?link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<perTurn:(link.source?.hub?.stock??0)<perTurn)};
 }
 function take(s,source,wanted,{protect=true}={}){
  if(!source)return 0;

@@ -46,7 +46,7 @@ export function tileReadout(s,v,id,selected=null){
   if(supplyEnabled(p)){const link=supplyLink(p,a,id);lines.push(`보급권 ${link.state==='SAFE'?'안':'밖'} · 관측한 길 기준`);}
   if(visibleControlZones(p,a.armyId).includes(id))lines.push('통제 구역 · 관측한 적');
  }else lines.push('이동 비용 · 부대를 고르면 표시','보급권 · 부대를 고르면 표시');
- if(Object.entries(s.mapRules.crossings??{}).some(([edge,kind])=>kind==='ford'&&edge.split('|').includes(id)))lines.push('여울 · 건널목');
+ if(Object.entries(s.mapRules.crossings??{}).some(([edge,kind])=>kind==='ford'&&edge.split('|').includes(id)))lines.push(v.weather?.active?.kind==='RAIN'?'장마 · 여울 막힘':'여울 · 건널목');
  const fire=known==='VISIBLE'&&v.fire?.tiles?.find(f=>f.tileId===id);if(fire)lines.push(`불 · ${fire.turnsLeft}차례 남음`);
  if(v.fire?.burnedForest?.includes(id))lines.push('불탄 숲');
  return {title:terrainNames[terrain]??'지형 미확인',lines,tileId:id};

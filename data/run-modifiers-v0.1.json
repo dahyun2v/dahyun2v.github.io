@@ -1,0 +1,53 @@
+{
+  "schema": "sangoku.run-modifiers.v0.1",
+  "status": "WORK_TRIAL — Claude 설계(사용자 10-17 결정: 기시감 되감기 · 출발 축복 3택 · 천시 · 날씨 예고). 수치 · 문구는 시험값",
+  "basis": "docs/user-input/20261017/README.md, docs/work-integration/20261016/PROPOSAL-GAPS.md 1-14 · 1-17 · 1-18",
+  "rewind": {
+    "chargesPerRun": 2,
+    "playerOnly": true,
+    "rule": "플레이어 차례가 시작된 순간(상대 차례 · 차례 시작 사건 정산이 끝난 뒤)의 상태로 되돌린다. 되감은 뒤 같은 행동은 같은 결과(결정론). 그 차례에 이미 되감았으면 같은 차례에 또 쓸 수 있다(횟수만 줄어듦). 판이 끝난 뒤 · 불러온 직후(그 차례 시작 상태가 없을 때)는 못 씀",
+    "label": "기시감 — 이번 차례 처음으로",
+    "lines": [
+      "{officer}: 이 장면, 본 적 있다. 이번엔 다르게 가자.",
+      "{officer}: 꿈에서 이 길 끝을 봤습니다. 다시 생각해 보시지요.",
+      "{officer}: 손이 먼저 멈춥니다. 여기서 한 번 틀렸던 것 같습니다.",
+      "{officer}: 낯익은 연기 냄새… 아직 늦지 않았습니다.",
+      "{officer}: 같은 깃발을 두 번 잃을 수는 없지요.",
+      "{officer}: 기억이 먼저 앞서 갑니다. 처음부터 다시."
+    ]
+  },
+  "blessing": {
+    "title": "깨어날 때 손에 쥔 것",
+    "offerTurn": 1,
+    "afterAmbition": true,
+    "offerCount": 3,
+    "playerOnly": true,
+    "skipAllowed": false,
+    "list": [
+      {"id": "BLS-FOOD", "title": "넉넉한 군량 자루", "text": "이번 판 야전 부대의 휴대 군량 한도 5 → 6차례분", "effect": {"type": "CARRIED_FOOD_MAX", "value": 6}},
+      {"id": "BLS-SIGHT", "title": "먼저 본 들판", "text": "첫 3차례 동안 모든 아군 부대 · 성의 시야 +2", "effect": {"type": "SIGHT_BONUS", "value": 2, "turns": 3}},
+      {"id": "BLS-WANDERER", "title": "먼저 찾아온 이", "text": "재야 장수 한 명이 수도로 찾아와 바로 합류", "effect": {"type": "RECRUIT_WANDERER", "count": 1}},
+      {"id": "BLS-FACILITY", "title": "이미 선 터", "text": "수도에 그 세력 고유 시설(둔전 · 의원 · 장막부)이 지어진 채 시작", "effect": {"type": "FREE_UNIQUE_FACILITY"}}
+    ]
+  },
+  "heaven": {
+    "turns": [9, 18],
+    "rankBy": "인망",
+    "durationTurns": 3,
+    "favored": {"title": "천시", "text": "하늘이 이 세력의 편 — 3차례 동안 모든 부대 공격 +10%", "effect": {"attackPct": 10}},
+    "underdog": {"title": "역전의 기세", "text": "밀린 세력이 이를 악문다 — 3차례 동안 모든 부대 방어 +15%, 성 내구 차례마다 +10", "effect": {"defensePct": 15, "durabilityPerTurn": 10}},
+    "tie": "인망이 같으면 큰 성 수 → 작은 성 수 → 세력 ID 순",
+    "appliesTo": "모든 세력(플레이어 · AI 똑같이 — 숫자 보너스가 아니라 공개 규칙)"
+  },
+  "weather": {
+    "eventsPerRun": 2,
+    "warnTurnsAhead": 2,
+    "windows": [[7, 12], [15, 21]],
+    "durationTurns": 3,
+    "kinds": [
+      {"id": "RAIN", "title": "장마", "text": "여울을 건널 수 없고, 평지 · 풀 이동 비용 +1", "effect": {"fordsBlocked": true, "plainMoveCostPlus": 1}},
+      {"id": "COLD", "title": "한파", "text": "보급권 밖 부대의 군량 소모 2배", "effect": {"outOfSupplyFoodMultiplier": 2}}
+    ],
+    "pick": "판 시드로 창마다 차례 하나 · 종류 하나(두 창이 같은 종류여도 됨). 시작 2차례 전 공개 예고(모든 세력이 같이 봄)"
+  }
+}

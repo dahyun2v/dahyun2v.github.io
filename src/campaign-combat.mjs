@@ -1,3 +1,4 @@
+import {heavenCombat} from './campaign-run-modifiers.mjs';
 import {C182,combatFireAt,initializeCombatFire,combatFireLog} from './campaign-rule-registry.mjs';
 import {c31IgnoreControlZone} from './campaign-events.mjs';
 import {troopText,troopDelta} from './troop-display.mjs';
@@ -162,6 +163,7 @@ function attackFormula(s,attackerId,targetId,troopCount=s.armies[attackerId].tro
   const brace=t.braced&&!options.ignoreBrace&&!(specialTroop(s,a.troopType)&&a.troopType==='danyang')?1+.25*guardRatio:1,shaken=a.morale==='SHAKEN'?.8:1;
   const effect=damageEffects(s,attackerId,targetId,{...options,charge,classDamage:cls.damage});
   const social=relationAttack(s,attackerId,targetId,options);effect.factor*=social.factor;effect.lines.push(...social.lines);
+  const heaven=heavenCombat(s,a.factionId,t.factionId);effect.factor*=heaven.factor;effect.lines.push(...heaven.lines);
   const oath=a.c27?.oath&&combatRule(s,attackerId,'OATH_OF_REVENGE'),penalty=oath?Math.max(0,1-oath.params.penalty/100):1;
   const damage=platformAttackReason(s,attackerId)?0:Math.max(1,Math.round((hold?Math.min(1/(1-hold.ability.params.frontReduce/100),brace)/ (1/(1-hold.ability.params.frontReduce/100)):1)*(options.tactic&&a.c33?.doubleTurn===s.turn?2:1)*(t.c33?.smokeUntil>=s.turn&&at==='BT03'?.6:1)*(c33Owned(s,attackerId,'POINT_BLANK')&&archerEngagedC33(s,attackerId)? .7:1)*(options.tactic?1:uniqueOrdinaryDamageFactor(s,attackerId))*(1-(options.reaction&&uniqueOwned(s,targetId,'U_SUPERVISE')?30:0)/100)*penalty*(s.armies[attackerId].c28ExposeTurn===s.turn?1-C28.exposePenalty/100:1)*c24DamageFactor(s,a,t,charge)*effect.factor*c31DamageFactor(s,a,t,options)*c22AttackMultiplier(s,a,t.factionId,options)*(!options.counter&&!options.reaction?starAttackMultiplier(s,a):1)*terrainAttack*troopCount*.12*attack*matchup*river*(flank+sideMultiplier-1)*chargeMultiplier*formation*shaken/(defense*terrain*castle*brace)));
   const ruleLines=[...(momentum&&extra?[combatRuleLine(s,attackerId,'CHARGE_MOMENTUM',`돌격 +${extra*100}%`)]:[]),...(noFront?[combatRuleLine(s,attackerId,'NO_FRONT','최소 측면 · 대가 후방 보너스 0')]:[]),...(ambusher?[combatRuleLine(s,attackerId,'AMBUSHER','시야 밖 첫 공격 후방')]:[]),...(square?[combatRuleLine(s,targetId,'SQUARE','측면·후방 보너스 무효 · 이동 1칸')]:[]),...(hedge?[combatRuleLine(s,targetId,'HEDGEHOG','정돈 측면 무효')]:[]),...(stakes?['말뚝 박고 버티기 — 측면·돌격 보너스 무효 · 다음 이동 불가']:[]),...(oath?[combatRuleLine(s,attackerId,'OATH_OF_REVENGE',`피해 −${oath.params.penalty}% · ${a.c27.oath.left}회 남음`)]:[]),...(a.c27?.ambush&&first?['매복 — 첫 공격 후방']:[])];
@@ -413,6 +415,7 @@ export function previewCityAttack(s,id,cityId) {
   const a=s.armies[id],stats=s.officers[a.commanderId].baseStats;
   const effect=damageEffects(s,id,cityId);
   const social=relationAttack(s,id,cityId);effect.factor*=social.factor;effect.lines.push(...social.lines);
+  const heaven=heavenCombat(s,a.factionId,s.cities[cityId].ownerFactionId);effect.factor*=heaven.factor;effect.lines.push(...heaven.lines);
   const attack=campaignAttackPower(s,a.commanderId)*(a.morale==='SHAKEN'?.8:1);
   const garrison=Object.values(s.armies).find(b=>b.factionId===s.cities[cityId].ownerFactionId&&b.tileId===s.cities[cityId].tileId&&castleArmyActive(s,b)&&hasCampaignRule(s,b.armyId,'GARRISON_WALL'));
   const archerWall=troopToCampaign(a.troopType)==='BT03'&&!specialTroop(s,a.troopType)?C182.archerWallRatio:1;
