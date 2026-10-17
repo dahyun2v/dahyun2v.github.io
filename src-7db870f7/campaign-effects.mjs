@@ -1,3 +1,4 @@
+import {repairCityReason} from './campaign-special-troops.mjs';
 import {troopText} from './troop-display.mjs';
 import {memoCampaignQuery} from './campaign-rule-registry.mjs';
 import {diplomacyArmyHostile,diplomacyAttackReason,withdrawalProtection} from './campaign-diplomacy.mjs';
@@ -446,3 +447,5 @@ export function cityAttackTargets(s,id) {
   return Object.values(s.cities).filter(c=>s.knowledge[a.factionId].tiles[c.tileId]==='VISIBLE'&&(a.troopType!=='catapult'||canObserveTile(s.tiles[a.tileId],s.tiles[c.tileId],range,s.tiles))&&(troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])>1&&(!(specialTroop(s,a.troopType)&&a.troopType==='catapult')? !c.footprint.gates.some(g=>hexDistance(s.tiles[a.tileId],s.tiles[g])<=1):true))&&!diplomacyAttackReason(s,id,c.cityId)&&c.ownerFactionId!==a.factionId&&(c.footprint.gates.includes(a.tileId)||wallSiege(s,id,c)||specialTroop(s,a.troopType)&&a.troopType==='catapult'&&hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])<=range)&&
     (wallSiege(s,id,c)||specialTroop(s,a.troopType)&&a.troopType==='catapult'||!Object.values(s.armies).some(d=>d.tileId===c.tileId&&castleArmyActive(s,d)))).map(c=>c.cityId).sort();
 }
+
+export function repairCityActionReason(s,id){return repairCityReason(s,id)??(attackConfused(s,id)?'혼란 상태에서는 보수할 수 없습니다':!canMainAction(s,id)?'이번 차례 주 행동을 이미 썼습니다':null);}

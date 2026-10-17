@@ -127,7 +127,7 @@ let crisisData=null,crisisSeen=new Set(),bondsData=null,hoverSide=null,dangerMod
 const ERROR_TEXT={C26_COMMAND_UNAVAILABLE:'지금은 이 내정 명령을 쓸 수 없습니다.',INVALID_C26_CITY:'우리 성에서만 쓸 수 있습니다.',INVALID_ORDER_UNITS:'이미 움직였거나 행동을 마친 부대에는 이동 명령을 줄 수 없습니다.',INVALID_ORDER_DESTINATION:'갈 수 없는 칸입니다.',INVALID_CAMPAIGN_ATTACK:'지금 공격할 수 없는 대상입니다.',INVALID_CAMPAIGN_CITY_ATTACK:'지금 이 성은 공격할 수 없습니다.',INVALID_CAMPAIGN_FACE:'이동하기 전에만 정면을 돌릴 수 있습니다.',INVALID_MUSTER_OFFICER_OR_TROOP:'출진할 장수와 병종을 확인하세요.',MUSTER_RESERVE_200_REQUIRED:`예비병이 ${troopText(200)}명 이상 있어야 출진할 수 있습니다.`,INVALID_WANDERER_RECRUITMENT:'지금은 등용할 수 없습니다(이미 협의 중이거나 성의 주인이 아님).',INVALID_GARRISON:'적과 붙어 있지 않은 상태로 자기 성 중심에 있어야 주둔할 수 있습니다.',MAIN_ACTION_USED:'이번 턴 행동을 이미 썼습니다.',EVENT_PENDING:'사건 카드를 먼저 정하세요.',UNIQUE_FACILITY_LIMIT:'고유 시설은 도시당 1개입니다.',UNIQUE_FACILITY_LOCKED:'다른 세력의 고유 시설입니다.',NO_DAMAGED_FACILITY:'손상된 시설이 없습니다.',MINOR_CITY_NO_FACILITIES:'작은 성에는 지을 수 없습니다.',STAR_COOLDOWN:'재사용 대기 중입니다.',STAR_UNAVAILABLE:'패주 중이라 쓸 수 없습니다.',STAR_OCCUPIED:'점령 처리 중인 성입니다.'};
 const reasonText=code=>code?(/^MUSTER_RESERVE_(\d+)_REQUIRED$/.test(code)?`예비병 ${troopText(Number(code.match(/\d+/)[0]))}명 이상 필요`:/[가-힣]/.test(code)?code:ERROR_TEXT[code]??'조건 미충족'):'';
 // engineer · mystic: 옛 초기 자료(조조 · 순욱 · 제갈량 · 주유)에 남은 이름 — 병종은 넷뿐이고 엔진에서는 각각 근접보병 · 원거리보병으로 돈다. 영문이 그대로 보이지 않게 그 이름으로 읽는다(닷토리 새 판 13회차 'engineer 영문')
-const troopName=type=>troopInfo(state,({engineer:'militia',mystic:'bow',BT01:'militia',BT02:'spear',BT03:'bow',BT04:'cavalry'})[type]??type).troopDisplayName;
+const troopName=type=>troopInfo(state,({engineer:state?.mapId==='v1'?'militia':'engineer',mystic:'bow',BT01:'militia',BT02:'spear',BT03:'bow',BT04:'cavalry'})[type]??type).troopDisplayName;
 const statLine=o=>o?.baseStats?`지휘 ${o.baseStats.leadership} · 무용 ${o.baseStats.might} · 지략 ${o.baseStats.intelligence}`:'';
 ERROR_TEXT.INVALID_CAMPAIGN_TACTIC='닿지 않습니다 — 더 다가가야 합니다';
 ERROR_TEXT.INVALID_CAMPAIGN_CITY_ATTACK='수비대가 성을 지키고 있습니다 — 먼저 수비대를 물리쳐야 합니다';
@@ -546,7 +546,7 @@ function animateCombat(before,c,id){
  if(c.kind==='TACTIC_EFFECT'){animateTacticEffect(before,c,id);return;}
  if(c.kind==='CITY'||c.kind==='CITY_STRIKE'){animateCityCombat(before,c,id);return;}
  combatAnimating=true;
- const approach=c.kind==='APPROACH_FIRE',pursuit=c.kind==='PURSUIT',movementShot=pursuit||approach,attackTroop=troopToCampaign(before.armies[c.attackerId].troopType),ranged=attackTroop==='BT03'&&!pursuit;
+ const approach=c.kind==='APPROACH_FIRE',pursuit=c.kind==='PURSUIT',movementShot=pursuit||approach,attackTroop=troopToCampaign(before.armies[c.attackerId].troopType),ranged=(attackTroop==='BT03'||before.armies[c.attackerId].troopType==='horseArcher'&&hexGap(before.armies[c.attackerId].tileId,before.armies[c.targetId].tileId)>1)&&!pursuit;
  const leadSound=['BT03','BT04'].includes(attackTroop);
  const fromTile=before.armies[c.attackerId].tileId,targetTile=c.fromTileId??before.armies[c.targetId].tileId;
  if(leadSound)combatAudio.play(attackTroop,id+':lead',{heavyLoss:c.enemyLoss/c.units.find(u=>u.unitId===c.targetId).preBattleCount>=.3});
@@ -1927,6 +1927,7 @@ function renderSortie(){
  let root=$('#sortie-screen');if(!root){root=document.createElement('section');root.id='sortie-screen';root.className='u3-sortie';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','출진 편성');document.body.appendChild(root);bindSortie(root);}
  root.dataset.tileId=sortieUi.tileId??'';
  root.innerHTML=sortieHtml({city:c,officer:o,art:o?fullArt(o.officerId)?.src:null,roster,troops,selectedType,gates,selectedGate:sortieUi.tileId,sequence:sortieUi.sequence,keep:sortieUi.keep,face:faceOf});
+ root.querySelector('select')?.setAttribute('data-no-glossary','');
  refreshMusterRange(v);
 }
 function refreshSortieReadout(request,reason){
@@ -1984,6 +1985,7 @@ function refreshMusterRange(v=view(state)){
 function refreshMusterTroops(v=view(state)){
  const id=$('#city-job-officer')?.value,select=$('#city-job-muster-troop');if(!select){refreshMusterButton();return;}
  const o=v.officers[id],opts=musterTroopChoices(v,v.ownCities[selectedCityId],id);
+ select.setAttribute('data-no-glossary','');
  select.innerHTML=sortieTroopOptionsHtml(opts,select.value);
  select.disabled=opts.length<2;select.title=o?.multiTroopTrait?'겸병 · 병종과 편성 선택':'같은 병종 계열의 편성 선택';
  select.onchange=()=>refreshMusterRange();refreshMusterRange(v);
@@ -2349,11 +2351,14 @@ function starvingAdvice(army,v){
  return `${source.name}의 식량 중 주민·예약 몫을 뺀 군량이 부족합니다 — 복귀해 예비병으로 합류하거나 식량이 있는 내 성으로 이동하세요.`;
 }
 function platformButton(armyId){
- const a=state.armies[armyId];if(a?.troopType!=='catapult')return '';
+ const a=state.armies[armyId];
+ if(a?.troopType==='engineer'){const reason=view(state).ownArmies[armyId]?.repairCityReason;return `<button class="platform-command" data-menu="repair_city" ${reason?'disabled':''} title="${esc(reason||'보수 — 주 행동 1회 · 내구 +15')}">보수</button>${reason?`<small class="platform-reason">${esc(reason)}</small>`:''}`;}
+ if(a?.troopType!=='catapult')return '';
  const type=platformState(a)==='DEPLOYED'?'STOW':'DEPLOY',reason=platformActionReason(state,armyId,type),label=type==='DEPLOY'?'전개':'거두기';
  return `<button class="platform-command" data-menu="${type.toLowerCase()}" ${reason?'disabled':''} title="${esc(reason||`${label} — 주 행동 1회`)}">${label}</button>${reason?`<small class="platform-reason">${esc(reason)}</small>`:''}`;
 }
 function platformCommand(action){
+ if(action==='repair_city'){if(!view(state).ownArmies[selectedArmyId]?.repairCityReason)command({type:'REPAIR_CITY',armyId:selectedArmyId});return true;}
  if(!['deploy','stow'].includes(action))return false;
  const type=action.toUpperCase();if(platformActionReason(state,selectedArmyId,type))return true;
  command({type,armyId:selectedArmyId});return true;

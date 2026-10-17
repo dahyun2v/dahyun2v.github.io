@@ -939,9 +939,19 @@ function campaignAiCatapultTarget(s,c,v=campaignBannerView(s,getFactionView(s,c.
  const targetId=s.aiStrategy?.[c.ownerFactionId]?.targetCityId??s.aiSiege?.[c.ownerFactionId]?.targetCityId,target=v.knowledge.cities[targetId];
  return !!target&&!!target.ownerFactionId&&target.ownerFactionId!==c.ownerFactionId&&diplomacyHostile(s,c.ownerFactionId,target.ownerFactionId)&&v.knowledge.tiles[target.tileId]==='VISIBLE'&&hexDistance(v.tiles[c.tileId],v.tiles[target.tileId])<=C198.catapultTargetDistance;
 }
+// C217 uses only the faction projection, with no numeric preference bonus.
+export function campaignAiSeedUseful(s,c,type){
+ if(!['engineer','phalanx','horseArcher'].includes(type))return true;
+ if(type==='engineer')return campaignAiCatapultTarget(s,c);
+ const v=campaignBannerView(s,getFactionView(s,c.ownerFactionId));
+ const enemies=Object.values(v.knowledge.observedArmies).filter(a=>v.knowledge.tiles[a.tileId]==='VISIBLE'&&diplomacyHostile(s,c.ownerFactionId,a.factionId)&&a.hp>0&&a.troopCount>0);
+ if(type==='phalanx')return enemies.some(a=>parentTroop(a.troopType)==='cavalry');
+ if(type==='horseArcher')return enemies.some(a=>v.tiles[a.tileId]?.terrainType==='plain');
+ return true;
+}
 export function campaignAiSpecialFormation(s,c,o){
  if(!c24Enabled(s))return null;
- const legal=musterTroopOptions(s,c,o.officerId).filter(t=>SPECIAL_TROOPS[t.troopType]&&!t.blockedReason&&t.troopCountRange.max>=t.troopCountRange.min);
+ const legal=musterTroopOptions(s,c,o.officerId).filter(t=>SPECIAL_TROOPS[t.troopType]&&!t.blockedReason&&t.troopCountRange.max>=t.troopCountRange.min&&campaignAiSeedUseful(s,c,t.troopType));
  if(legal.some(t=>t.troopType==='catapult')&&campaignAiCatapultTarget(s,c))return 'catapult';
  const trained=specialReserves(s,c),reuse=legal.find(t=>t.troopType!=='catapult'&&trained[t.troopType]>0);
  if(reuse)return reuse.troopType;
@@ -955,7 +965,7 @@ export function campaignAiSpecialFormation(s,c,o){
 export function campaignAiSpecialReservePlan(s,c,officers=economyOfficers(s,c)){
  if(!c24Enabled(s))return false;
  const due=((s.c24AiMusters?.[c.ownerFactionId]??0)+(s.campaignSeed??s.seed??0))%C198.factionSpecialPeriod===0;
- return Object.entries(SPECIAL_TROOPS).some(([type,d])=>(d.factionId?due&&d.factionId===c.ownerFactionId:campaignAiCatapultTarget(s,c))&&sortieTroopRange(s,c,type).max<500&&officers.some(o=>sortieReason(s,{cityId:c.cityId,officerId:o.officerId,troopType:type},c.ownerFactionId)?.code==='SORTIE_RESERVE'));
+ return Object.entries(SPECIAL_TROOPS).some(([type,d])=>(d.factionId?due&&d.factionId===c.ownerFactionId:type==='catapult'?campaignAiCatapultTarget(s,c):due&&campaignAiSeedUseful(s,c,type))&&sortieTroopRange(s,c,type).max<500&&officers.some(o=>sortieReason(s,{cityId:c.cityId,officerId:o.officerId,troopType:type},c.ownerFactionId)?.code==='SORTIE_RESERVE'));
 }
 export function campaignAiMusterTroop(s,c,o){
  if(!c24Enabled(s))return [...o.allowedTroops].sort((a,b)=>Number(o.aptitude[b]==='A')-Number(o.aptitude[a]==='A')||a.localeCompare(b))[0];

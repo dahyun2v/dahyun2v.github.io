@@ -99,7 +99,7 @@ export function campaignMovementWorld(s,armyId) {
   const original=s.armies[armyId],parent=parentTroop(original.troopType),a={...original,troopType:parent},special=specialTroop(s,original.troopType),effect=movementEffect(s,armyId);
     const base=s.mapRules.tuning?.byTroop?.[a.troopType]??s.mapRules.tuning?.[a.troopType==='cavalry'?'cavalry':'normal'];
     const plain=base?.plain??(a.troopType==='cavalry'?1.25:a.troopType==='bow'?2.5:2);
-    const ratio=(10/plain)/Math.max(.01,10/plain+effect.delta+(special?(original.troopType==='danyang'?C24.danyangMove:original.troopType==='catapult'?C24.catapultMove:0):0))/(hasCampaignRule(s,armyId,'FORCED_MARCH')?2:1);
+    const ratio=(10/plain)/Math.max(.01,10/plain+effect.delta+(special?(special.rules?.moveDelta??(original.troopType==='danyang'?C24.danyangMove:original.troopType==='catapult'?C24.catapultMove:0)):0))/(hasCampaignRule(s,armyId,'FORCED_MARCH')?2:1);
     const rough=!!c33Owned(s,armyId,'ROUGH_MARCH')||!!c33Formation(s,armyId,'FORMATION_SNAKE');
     let tuning=rough||special||effect.delta||hasCampaignRule(s,armyId,'FORCED_MARCH')||hasCampaignRule(s,armyId,'TERRAIN_WALKER')?{...s.mapRules.tuning,byTroop:{...s.mapRules.tuning?.byTroop,[a.troopType]:Object.fromEntries(Object.entries(base??{plain,rough:plain+1,road:plain*.7,crossingExtra:2}).map(([key,value])=>[key,((hasCampaignRule(s,armyId,'TERRAIN_WALKER')||special&&original.troopType==='wudang')&&key==='rough'?plain:rough&&key==='rough'?Math.max(plain,value-1):value)*ratio]))}}:s.mapRules.tuning;
     for(const flood of s.c27?.floods??[])if(flood.until>=s.turn)for(const edge of flood.edges)blocked.add(edge);

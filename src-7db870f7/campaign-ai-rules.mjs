@@ -124,7 +124,7 @@ export function campaignAiCityReach(s,v){
  }
  const cities=Object.values({...v.knowledge.cities,...v.ownCities}),friends=Object.values(v.ownArmies),budget=s.time.ticksPerTurn;
  return Object.values(v.knowledge.observedArmies).filter(a=>known[a.tileId]==='VISIBLE').map(a=>{
-  const troop=parentTroop(a.troopType),cls=troop==='cavalry'?'cavalry':troop==='engineer'?'engineer':'normal',range=['bow','archer'].includes(troop)?2:1;
+  const troop=parentTroop(a.troopType),cls=troop==='cavalry'?'cavalry':troop==='engineer'?'engineer':'normal',range=['bow','archer'].includes(troop)||a.troopType==='horseArcher'?2:1;
   const distance=new Map([[a.tileId,0]]),queue=new Set([a.tileId]);
   const centers=new Set(cities.filter(c=>c.ownerFactionId!==a.factionId).map(c=>c.tileId));
   while(queue.size){

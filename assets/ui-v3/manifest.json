@@ -7936,6 +7936,222 @@
         1520
       ],
       "sha256": "2894f3d2a53ce7a98eec22d9f95470fbfe6f451469963bf07b2baa5d3a61e571"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-engineer-red.png",
+      "size": [
+        1197,
+        96
+      ],
+      "sha256": "40f8abb6bc9f2fa54ce871537cb3fa490fafed5bf463a928b68c5c05f2ce5991",
+      "purpose": "C217 engineer sheet red"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-red.webp",
+      "size": [
+        192,
+        102
+      ],
+      "sha256": "884a8ab19be88d459b8f1b964857b8a33a0e9419554e1b35c3aaa456575b59f6",
+      "purpose": "C217 engineer squad red"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-engineer-green.png",
+      "size": [
+        1197,
+        96
+      ],
+      "sha256": "63e4cff494e8e98cd8974369c61b08205a1f98c8cd0df2b170b95e7022e92504",
+      "purpose": "C217 engineer sheet green"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-green.webp",
+      "size": [
+        192,
+        102
+      ],
+      "sha256": "fadf1bbeda099494233230a25ba211c24e71ad8afa5245f8f16ca3566b361a4b",
+      "purpose": "C217 engineer squad green"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-engineer-blue.png",
+      "size": [
+        1197,
+        96
+      ],
+      "sha256": "0001a2ffb0f2c0c848395ab1aef2120a141b0c652ddd04f66f78380ce2ba69f4",
+      "purpose": "C217 engineer sheet blue"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-blue.webp",
+      "size": [
+        192,
+        102
+      ],
+      "sha256": "7154db779f918ad2cebe5a2e28f29b04b5e02c315250f7bdd3b9d7511d8c1c71",
+      "purpose": "C217 engineer squad blue"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-engineer-grey.png",
+      "size": [
+        1197,
+        96
+      ],
+      "sha256": "f17916bea8e0ad5006166680f15be24b70dbb1b757e750d7839f943269343079",
+      "purpose": "C217 engineer sheet grey"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-engineer-grey.webp",
+      "size": [
+        192,
+        102
+      ],
+      "sha256": "6fabe0291bc225891d472b74a421141f709a6145827365706f42a32db44731bb",
+      "purpose": "C217 engineer squad grey"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-phalanx-red.png",
+      "size": [
+        1341,
+        96
+      ],
+      "sha256": "d8948df44fae923a48628f8128d473cd5e40a3e6587a51783347cb591e3c9dd0",
+      "purpose": "C217 phalanx sheet red"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-phalanx-red.webp",
+      "size": [
+        139,
+        113
+      ],
+      "sha256": "ae041d1ac62026c46dd32aeceeb7cf8ee89aa491fe79cb9b7f7da4dfb369f875",
+      "purpose": "C217 phalanx squad red"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-phalanx-green.png",
+      "size": [
+        1341,
+        96
+      ],
+      "sha256": "4239c2059d444c2da4da5b220ed4e38004593e07bce02f5a78c9b0fc27506dfb",
+      "purpose": "C217 phalanx sheet green"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-phalanx-green.webp",
+      "size": [
+        139,
+        113
+      ],
+      "sha256": "df9a7ad5317e8d1750badad813bcf41866d462c3fbbbeb174e68bba38428fd81",
+      "purpose": "C217 phalanx squad green"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-phalanx-blue.png",
+      "size": [
+        1341,
+        96
+      ],
+      "sha256": "3ceb7cb6948db412029225f65822319281ebb11c190fcf39fcbd3821a7b40f3a",
+      "purpose": "C217 phalanx sheet blue"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-phalanx-blue.webp",
+      "size": [
+        139,
+        113
+      ],
+      "sha256": "b5a29ce3823ce743b260a47efc1cb9c8c9352d4918490749a33c65cd380f52e2",
+      "purpose": "C217 phalanx squad blue"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-phalanx-grey.png",
+      "size": [
+        1341,
+        96
+      ],
+      "sha256": "ab8d4eb94e4ae7d3d79488e61864ffd5b3550495c35397c56769f997f852e432",
+      "purpose": "C217 phalanx sheet grey"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-phalanx-grey.webp",
+      "size": [
+        139,
+        113
+      ],
+      "sha256": "950148a107176719b72964701d492359cd7b055b5416e95c54dcfdbaf22ca88a",
+      "purpose": "C217 phalanx squad grey"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-horseArcher-red.png",
+      "size": [
+        1170,
+        96
+      ],
+      "sha256": "e3adda2713cf839691fd5aa9a3dd3d7537e1d819163b141388918fc78573b6ed",
+      "purpose": "C217 horseArcher sheet red"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-horseArcher-red.webp",
+      "size": [
+        215,
+        103
+      ],
+      "sha256": "99cc6f8c70a34a66c6e24f3bbe54ff4ee0b8704cee9cd478e6db40aa49840598",
+      "purpose": "C217 horseArcher squad red"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-horseArcher-green.png",
+      "size": [
+        1170,
+        96
+      ],
+      "sha256": "242ad3d0e90e0524b3e476c53136f99d376a96f18226b682cff4ec639427f561",
+      "purpose": "C217 horseArcher sheet green"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-horseArcher-green.webp",
+      "size": [
+        215,
+        103
+      ],
+      "sha256": "c7da92dc91b51bbfefda8e9e0e039b79ef1d6418fd15cbf649995083f0133c77",
+      "purpose": "C217 horseArcher squad green"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-horseArcher-blue.png",
+      "size": [
+        1170,
+        96
+      ],
+      "sha256": "32ee74e8892e360fe3e2786b9f361b286aa531cbc16be4779adf72cdd3f64cc2",
+      "purpose": "C217 horseArcher sheet blue"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-horseArcher-blue.webp",
+      "size": [
+        215,
+        103
+      ],
+      "sha256": "a53cb03ab9fa6fd44d140bd1e7c152b925069776bc7e3127b3684622dc718fde",
+      "purpose": "C217 horseArcher squad blue"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/sheet-horseArcher-grey.png",
+      "size": [
+        1170,
+        96
+      ],
+      "sha256": "89ee3a694e9ea6f0090497d7e0833116f8a5bd2c35844da92d9fceae35e1e767",
+      "purpose": "C217 horseArcher sheet grey"
+    },
+    {
+      "path": "prototype/assets/ui-v3/units-ink/squad-horseArcher-grey.webp",
+      "size": [
+        215,
+        103
+      ],
+      "sha256": "83ab6a43e20294375de907b4e077cf8ab6c620e1170f29aed56ab4edf9bd7375",
+      "purpose": "C217 horseArcher squad grey"
     }
   ],
   "sources": [

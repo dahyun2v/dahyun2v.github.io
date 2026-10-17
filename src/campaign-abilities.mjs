@@ -43,7 +43,7 @@ export function attackDirection(s,attacker,target){
  return delta===3?'REAR':[2,4].includes(delta)?'FLANK':'FRONT';
 }
 export function isCharge(s,id,target,side=attackDirection(s,id,target)){
- const a=s.armies[id],t=s.armies[target];return !!a&&!!t&&troopToCampaign(a.troopType)==='BT04'&&(a.movedTiles??0)>=2&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===1&&!(troopToCampaign(t.troopType)==='BT02'&&side==='FRONT');
+ const a=s.armies[id],t=s.armies[target];return !!a&&!!t&&a.troopType!=='horseArcher'&&troopToCampaign(a.troopType)==='BT04'&&(a.movedTiles??0)>=2&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===1&&!(troopToCampaign(t.troopType)==='BT02'&&side==='FRONT');
 }
 export function initializeArmyFacing(s){for(const a of Object.values(s.armies)){
  if(a.facing==null){const c=Object.values(s.cities).filter(c=>c.ownerFactionId!==a.factionId).sort((x,y)=>hexDistance(s.tiles[a.tileId],s.tiles[x.tileId])-hexDistance(s.tiles[a.tileId],s.tiles[y.tileId])||x.cityId.localeCompare(y.cityId))[0];a.facing=c?directionToward(s.tiles[a.tileId],s.tiles[c.tileId]):0;}

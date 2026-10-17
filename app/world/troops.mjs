@@ -12,6 +12,9 @@ export const troopKind = u => TYPES[u.troop] ?? parentTroop(u.troop);
 export const troopSpriteKind = u => u.special ?? u.troop;
 // C194: sheet pixels (96px high); equipment is one machine with two crew.
 export const SPECIAL_SPRITE_METRICS = Object.freeze({
+  engineer:Object.freeze({width:133,head:19,height:20,cap:7}),
+  phalanx:Object.freeze({width:149,head:27,height:20,cap:7,spread:1.0}),
+  horseArcher:Object.freeze({width:130,head:18,height:20,cap:5}),
   hubao:Object.freeze({width:137,head:19,height:20,cap:5}),
   catapult:Object.freeze({width:125,head:29,height:28,cap:1}),
   qingzhou:Object.freeze({width:158,head:24,height:20,cap:7,spread:1.15}),

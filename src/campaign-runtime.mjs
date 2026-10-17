@@ -45,7 +45,7 @@ import {startUniqueFaction} from './campaign-combat.mjs';
 import {domesticCommands,domesticCommand,domesticMusterReason,domesticGranaryView,initializeDomestic,combatRule,combatCanPostMove,combatRival,combatMoveAllowed,combatMovement} from './campaign-rule-registry.mjs';
 import {cityJobCost} from './campaign-economy.mjs';
 import {cityRecruitCost,cityRecruitQuote} from './campaign-policy.mjs';
-import {parentTroop,troopInfo,validateSpecialTroops,c24Enabled,platformState,initializePlatforms} from './campaign-special-troops.mjs';
+import {C217,parentTroop,troopInfo,validateSpecialTroops,c24Enabled,platformState,initializePlatforms} from './campaign-special-troops.mjs';
 import {archerAttackReason} from './campaign-abilities.mjs';
 import {initializeCampaignEvents,validateCampaignEvents,startFactionEvents,settleCampaignEvents,chooseCampaignEvent,resolveAiEvent,queueCrisisCard,campaignEventsView,c22TargetWeight} from './campaign-events.mjs';
 import {specialistView,validateSpecialists} from './campaign-economy.mjs';
@@ -53,7 +53,7 @@ import {C20_FACILITIES,validateCampaignPolicy,initializeCampaignPolicy,startFact
 import {adoptWanderer,sortie,migrateArmyStructure,validateCampaignResearch,cityDurabilityMaximum,campaignResearchView,initializeCampaignRoster,musterTroopOptions,freeCityOfficers,garrisonArmy,initializeCityStart,recruitWanderer,selectAiRoster,selectCityStartMuster} from './campaign-roster.mjs';
 import {C12,initializeCampaignAbilities,initializeArmyFacing,directionToward,campaignSubAbility,changeFormation,turnFacing} from './campaign-abilities.mjs';
 import {assignGroupDestinations,orderRoute,orderSegment,orderEligible,requireOrderPath} from './campaign-orders.mjs';
-import {initializeCampaignEffects,startFactionEffects,settleEffects,campaignTactics,tacticIsDamage,unitStatuses,consumeMainAction,canMainAction,finishFactionRules,hasCampaignRule,recallReason,recallDestination,ambushHidden,commonTacticAiUseful,platformActionReason} from './campaign-effects.mjs';
+import {initializeCampaignEffects,startFactionEffects,settleEffects,campaignTactics,tacticIsDamage,unitStatuses,consumeMainAction,canMainAction,finishFactionRules,hasCampaignRule,recallReason,recallDestination,ambushHidden,commonTacticAiUseful,repairCityActionReason,platformActionReason} from './campaign-effects.mjs';
 import {campaignReachable,campaignPath,inControlZone,gateMorale,startFactionMorale,settleMorale,regroupReason,changeMorale,checkMorale} from './campaign-morale.mjs';
 import {initializeCampaignCastles,refreshCampaignSieges as refreshBaseSieges,castleArmyActive,campaignMovementWorld,campaignCenterEntryAllowed,moveCampaignOneTick,campaignDestinationAllowed} from './campaign-city-footprint.mjs';
 import {campaignScenario,campaignFingerprint,campaignMapData} from './campaign-scenario.mjs';
@@ -204,7 +204,7 @@ export function normalizeCampaignTroopNames(s,mapId=s.mapId){
   o.allowedTroops=[...new Set(o.allowedTroops.map(name))];
   const aptitude={};for(const [type,value] of Object.entries(o.aptitude)){const key=name(type);if(aptitude[key]===undefined||(rank[value]??-1)>(rank[aptitude[key]]??-1))aptitude[key]=value;}o.aptitude=aptitude;
  }
- for(const a of Object.values(s.armies))a.troopType=name(a.troopType);
+ for(const a of Object.values(s.armies))if(!(a.troopType==='engineer'&&s.personnel?.formations?.some(f=>f.formationId===a.armyId&&f.identity.specialTroopId==='engineer')))a.troopType=name(a.troopType);
  // A queued old-save sortie/reorganization must not reintroduce an alias.
  for(const c of Object.values(s.cities))if(c.currentProduction?.troopType){
   const job=c.currentProduction,old=job.key;job.troopType=name(job.troopType);
@@ -251,6 +251,7 @@ export function view(state, factionId = state.playerFactionId) {
   validate(state);
   const publicSource=structuredClone(state);if(publicSource.gameResult?.type==='TURN_LIMIT')publicSource.gameResult=null;else if(publicSource.gameResult)delete publicSource.gameResult.history;updateKnowledge(publicSource);
   const projected = getFactionView(publicSource, factionId);
+  for(const a of Object.values(projected.ownArmies))if(a.troopType==='engineer')a.repairCityReason=repairCityActionReason(state,a.armyId);
   for(const a of Object.values(projected.ownArmies))if(a.troopType==='catapult')a.platformState=platformState(state.armies[a.armyId]);
   for(const a of Object.values(projected.knowledge.observedArmies)){
     if(projected.knowledge.tiles[a.tileId]==='VISIBLE'){a.braced=!!state.armies[a.armyId].braced;if(a.troopType==='catapult')a.platformState=platformState(state.armies[a.armyId]);}
@@ -656,6 +657,13 @@ function stepCommand(state,command) {
   if(command?.type==='FACE'){
     const a=next.armies[command.armyId];if(a?.factionId!==next.playerFactionId||!castleArmyActiveForAction(next,command.armyId)||armyActionEnded(next,command.armyId)||next.movedArmyIds.includes(command.armyId)||!Number.isInteger(command.facing)||command.facing<0||command.facing>5)throw new Error('INVALID_CAMPAIGN_FACE');
     a.facing=command.facing;next.movedArmyIds.push(command.armyId);return validate(next);
+  }
+  if(command?.type==='REPAIR_CITY'){
+    const id=command.armyId,a=next.armies[id];if(a?.factionId!==next.playerFactionId)throw new Error('내 공병대만 명령할 수 있습니다');
+    const reason=repairCityActionReason(next,id);if(reason)throw new Error(reason);
+    const c=Object.values(next.cities).find(c=>c.ownerFactionId===a.factionId&&c.tileId===a.tileId);
+    c.durability=Math.min(c.durabilityMax,c.durability+C217.troops.engineer.rules.repairAction.durability);
+    consumeMainAction(next,id);return completePlayerAction(next,command);
   }
   if(['DEPLOY','STOW'].includes(command?.type)){
     if(next.armies[command.armyId]?.factionId!==next.playerFactionId)throw new Error('내 투석기만 명령할 수 있습니다');

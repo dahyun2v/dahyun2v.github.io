@@ -1,4 +1,7 @@
 import {troopText,troopDelta} from './troop-display.mjs';
+// C217 runtime projection: protected server uses an explicit module/data allowlist.
+// Parity with the JSON source is verified by test-campaign-c217.
+export const C217={"troops":{"engineer":{"name":"공병대","seed":"STS03","parent":"militia","factionId":null,"effectLine":"성 공격 내구 피해 ×1.5 · 주 행동 '보수'로 자기 성(성 칸 위) 내구 +15","costLine":"부대 공격 피해 −20%","rules":{"siegeMultiplier":1.5,"repairAction":{"durability":15,"onOwnCityTile":true,"mainAction":true},"unitDamageMultiplier":0.8},"base":{"facility":"workshop"}},"phalanx":{"name":"방진대","seed":"STS05","parent":"spear","factionId":null,"effectLine":"옆에 아군 창병 계열이 있으면 정면에서 받는 피해 −15%(한 번만) · 정면 기병 돌격 무효","costLine":"이동 −1칸","rules":{"interlock":{"adjacentFamily":"spear","frontDamageTaken":0.85},"frontChargeImmune":true,"moveDelta":-1},"base":{"facility":"barracks","researchStage":1}},"horseArcher":{"name":"기마궁","seed":"STS12","parent":"cavalry","factionId":null,"effectLine":"사거리 2 사격(반격 없음) · 이동한 뒤에도 사격","costLine":"근접으로 칠 때 피해 −30% · 원거리 사격으로 받는 피해 +15% · 돌격 없음","rules":{"range":2,"rangedNoCounter":true,"fireAfterMove":true,"meleeDamageMultiplier":0.7,"rangedDamageTaken":1.15,"noCharge":true},"base":{"facility":"barracks","researchStage":2}}},"aiUse":"AI 는 같은 계열 장수 · 기반이 있을 때 C198 특수 편성 판단에 그대로 포함(숫자 보너스 없음): 공병대 = 공성 목표가 보일 때, 방진대 = 적 기병이 보일 때, 기마궁 = 들판 교전"};
 import C193 from '../data/c193-siege-v0.1.json' with {type:'json'};
 export {C193};
 // C24 trial values; campaign v2/v3 only. Parent rules remain in FIRST3 adapters.
@@ -6,6 +9,7 @@ import {hexDistance} from './map-primitives.mjs';
 export const C24=Object.freeze({chargeDamage:1.1,chargeWeight:15,hubaoProduction:4,hubaoReserve:100,qingzhouCount:1.5,shakenThreshold:.75,aura:.85,baiyiAttack:.9,wudangCount:200,wudangVision:1,jiefanReceived:1.1,danyangTerrain:1.1,danyangMove:-1,catapultAttack:C193.catapult.unitDamageMultiplier,catapultMove:-2,catapultVision:-1,catapultSiege:C193.catapult.siegeMultiplier,aiPeriod:3,catapultCityRange:C193.catapult.range});
 const def=(name,parent,factionId,effectLine,costLine,extra={})=>Object.freeze({name,parent,factionId,effectLine,costLine,siegeMultiplier:1,...extra});
 export const SPECIAL_TROOPS=Object.freeze({
+ ...Object.fromEntries(Object.entries(C217.troops).map(([type,d])=>[type,def(d.name,d.parent,d.factionId,d.effectLine,d.costLine,{rules:d.rules,base:d.base,siegeMultiplier:d.rules.siegeMultiplier??1})])),
  hubao:def('호표기','cavalry','F01','돌격 피해 +10% · 전열 판정 1회 추가',`추가 예비병 ${troopDelta(100)}`),
  qingzhou:def('청주병','spear','F01','출진 병력 1.5배','예비병 1.5배 · 동요 손실 문턱 0.75배'),
  baiyi:def('백이병','militia','F02','인접 아군 받는 피해 −15% (중첩 없음)','자기 공격 피해 −10%'),
@@ -43,13 +47,18 @@ export function specialMusterReason(s,c,type){
  if(!c24Enabled(s))return '특수 병종은 v2·v3에서만 출진 가능';
  if(d.factionId&&d.factionId!==c.ownerFactionId)return '다른 세력의 특수 병종은 출진 불가';
  if(c.kind!=='major')return '큰 성에서만 특수 병종 출진 가능';
- const facility=type==='catapult'?'workshop':'barracks';
+ const facility=d.base?.facility??(type==='catapult'?'workshop':'barracks');
+ if((s.factions[c.ownerFactionId]?.research?.stage??0)<(d.base?.researchStage??0))return `연구 ${d.base.researchStage}단계 필요`;
  return c.facilities.some(f=>f.kind===facility&&!f.damaged&&!f.disabled)?null:`${facility==='workshop'?'공방':'병영'} 필요`;
 }
 export const lossMoraleThreshold=(s,a)=>.3*(specialTroop(s,a.troopType)&&a.troopType==='qingzhou'&&a.morale!=='SHAKEN'?C24.shakenThreshold:1);
-export function c24DamageFactor(s,a,t,charge=false,{ranged=false}={}){
+export function c24DamageFactor(s,a,t,charge=false,{ranged=false,side='FRONT'}={}){
  if(!c24Enabled(s))return 1;
  let factor=a.troopType==='baiyi'?C24.baiyiAttack:a.troopType==='catapult'?C193.catapult.unitDamageMultiplier:1;
+ if(a.troopType==='engineer')factor*=C217.troops.engineer.rules.unitDamageMultiplier;
+ if(a.troopType==='horseArcher'&&!ranged)factor*=C217.troops.horseArcher.rules.meleeDamageMultiplier;
+ if(t.troopType==='horseArcher'&&ranged)factor*=C217.troops.horseArcher.rules.rangedDamageTaken;
+ if(t.troopType==='phalanx'&&side==='FRONT'&&phalanxInterlock(s,t))factor*=C217.troops.phalanx.rules.interlock.frontDamageTaken;
  if(a.troopType==='hubao'&&charge)factor*=C24.chargeDamage;
  if(a.troopType==='danyang'&&['forest','hill'].includes(s.tiles[a.tileId].terrainType))factor*=C24.danyangTerrain;
  if(!ranged&&t.troopType==='jiefan'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===1)factor*=C24.jiefanReceived;
@@ -68,4 +77,20 @@ export function validateSpecialTroops(s){
  }
  if(s.c24Stats){if(!Number.isSafeInteger(s.c24Stats.catapultCityDamage)||s.c24Stats.catapultCityDamage<0||Object.values(s.c24Stats.musters).some(n=>!Number.isSafeInteger(n)||n<0))throw new Error('INVALID_C24_STATS');}
  if(s.c24AiMusters&&Object.values(s.c24AiMusters).some(n=>!Number.isSafeInteger(n)||n<0))throw new Error('INVALID_C24_AI_MUSTERS');
+}
+
+// C217: living adjacent allied spear-family units; one boolean prevents stacking.
+export function phalanxInterlock(s,t){return !!specialTroop(s,t.troopType)&&t.troopType==='phalanx'&&Object.values(s.armies).some(b=>b.armyId!==t.armyId&&b.factionId===t.factionId&&parentTroop(b.troopType)==='spear'&&b.hp>0&&b.troopCount>0&&(!s.campaignTerminalWorld||s.campaignTerminalWorld.armiesById[b.armyId]?.disposition==='ACTIVE')&&hexDistance(s.tiles[b.tileId],s.tiles[t.tileId])===1);}
+export const isRangedAttack=(s,a,t)=>parentTroop(a.troopType)==='bow'||!!specialTroop(s,a.troopType)&&a.troopType==='horseArcher'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])>1;
+export function c217DamageLines(s,a,t,{ranged=false,side='FRONT'}={}){
+ if(!c24Enabled(s))return [];
+ return [...(a.troopType==='engineer'?['공병대 부대 피해 ×0.8']:[]),...(a.troopType==='horseArcher'?[ranged?'기마궁 사격 — 반격 없음':'기마궁 근접 피해 ×0.7','기마궁 — 돌격 없음']:[]),...(t.troopType==='horseArcher'&&ranged?['기마궁 원거리 받는 피해 ×1.15']:[]),...(t.troopType==='phalanx'&&side==='FRONT'&&phalanxInterlock(s,t)?['방진대 인접 창병 — 정면 받는 피해 ×0.85 (중첩 없음)']:[])];
+}
+export function repairCityReason(s,id){
+ const a=s.armies[id];
+ if(!a||!specialTroop(s,a.troopType)||a.troopType!=='engineer')return '공병대만 보수할 수 있습니다';
+ if(a.hp<=0||a.troopCount<=0||a.morale==='ROUTING'||s.campaignTerminalWorld&&s.campaignTerminalWorld.armiesById[id]?.disposition!=='ACTIVE')return '명령할 수 없는 부대입니다';
+ const c=Object.values(s.cities).find(c=>c.ownerFactionId===a.factionId&&c.tileId===a.tileId);
+ if(!c)return '자기 성 칸 위에서만 보수할 수 있습니다';
+ return c.durability>=c.durabilityMax?'성 내구가 이미 가득합니다':null;
 }
