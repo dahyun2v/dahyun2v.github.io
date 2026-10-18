@@ -5,7 +5,8 @@ import diplomacyAxes from '../../../docs/design-data/diplomacy-axes-v0.1.json' w
 // 흑묵 지도 HUD — 기준 그림 final-map-v2 를 그대로 새로 짠 화면(2026-10-10, Claude · 사용자 "고치지 말고 새로 · 카드·단추는 에셋으로").
 // 판·단추·깃발·아이콘은 모두 GPT 가 기준 그림에서 한 장씩 뽑아 그린 그림(/assets/ui-v3/hud/). 코드는 자리·글자·숫자·막대 길이만.
 // 게임 처리는 옛 HUD(숨김)의 단추를 그대로 누른다 — 명령 코드는 한 곳(world.js)에만 있다.
-const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+export const worldDisplayText = value => String(value ?? '').replaceAll('과학','학문').replaceAll('출발 특전','깨어날 때 지닌 것').replace(/혼자\s+(\d+(?:\.\d+)?\/\d+(?:\.\d+)?)\s*차례\s*충분/g,'휴대 군량 $1 차례');
+const esc = (s) => worldDisplayText(s).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 // C210: presentation preferences never enter campaign state or its save key.
 export const FX_KEY='sangoku.fx.v1';
 export const FX_OPTIONS={aiSpeed:[['normal','보통'],['fast','빠름'],['instant','즉시']],cutin:[['always','매번'],['first','그 전법 처음 한 번'],['off','끄기']],shake:[['on','켬'],['off','끔']],motion:[['system','운영체제 설정'],['on','움직임 줄이기 켬'],['off','움직임 줄이기 끔']]};
@@ -17,7 +18,7 @@ export function createFxPreferences({storage=()=>globalThis.localStorage,system=
   update(patch){prefs=normalize({...prefs,...patch});try{storage()?.setItem(FX_KEY,JSON.stringify(prefs));return true;}catch{return false;}}};
 }
 export const fxPreferences=createFxPreferences();
-export function fxSettingsHtml(prefs=fxPreferences.value){return `<fieldset class="c210-fx"><legend>연출 설정</legend>${Object.entries(FX_OPTIONS).map(([key,options])=>`<label>${{aiSpeed:'AI 차례 속도',cutin:'전법 컷인',shake:'화면 흔들림',motion:'움직임 줄이기'}[key]}<select data-c210-fx="${key}" aria-label="${{aiSpeed:'AI 차례 속도',cutin:'전법 컷인',shake:'화면 흔들림',motion:'움직임 줄이기'}[key]}">${options.map(([id,name])=>`<option value="${id}"${prefs[key]===id?' selected':''}>${name}</option>`).join('')}</select></label>`).join('')}<small data-c210-fx-status role="status">이 기기의 연출에만 적용됩니다</small></fieldset>`;}
+export function fxSettingsHtml(prefs=fxPreferences.value){return `<fieldset class="c210-fx"><legend>연출 설정</legend>${Object.entries(FX_OPTIONS).map(([key,options])=>`<label>${{aiSpeed:'상대 차례 속도',cutin:'전법 컷인',shake:'화면 흔들림',motion:'움직임 줄이기'}[key]}<select data-c210-fx="${key}" aria-label="${{aiSpeed:'상대 차례 속도',cutin:'전법 컷인',shake:'화면 흔들림',motion:'움직임 줄이기'}[key]}">${options.map(([id,name])=>`<option value="${id}"${prefs[key]===id?' selected':''}>${name}</option>`).join('')}</select></label>`).join('')}<small data-c210-fx-status role="status">이 기기의 연출에만 적용됩니다</small></fieldset>`;}
 export function shouldShowTacticCutin(mode,seen,key){if(mode==='off'||mode==='first'&&seen.has(key))return false;seen.add(key);return true;}
 export function factionOpeningLine(factionId){return [Object.values(C20_FACILITIES).find(f=>f.factionId===factionId)?.name,C20_POLICIES[factionId]?.name,Object.values(SPECIAL_TROOPS).filter(t=>t.factionId===factionId).map(t=>t.name).join('/')].filter(Boolean).join(' · ');}
 export function factionFacilityTodo(v){
@@ -577,7 +578,7 @@ export function renderInkHud(root, d) {
   // 자원: 옛 위 띠 칩(값·증감·설명)을 그대로
   q('.ih-res').innerHTML = [...document.querySelectorAll('#resources .chip')].map((c) => {
     const k = c.dataset.res, b = c.querySelector('b'), dl = c.querySelector('small.d');
-    return `<${k==='food'?'button type="button" data-food-open aria-label="식량 현황" aria-expanded="'+String(!q('.ih-food-sheet').hidden)+'"':'span'} class="ih-chip" data-res="${esc(k)}" title="${esc([c.title,dl?.textContent].filter(Boolean).join(" · "))}"><span class="nb-resource-label">${esc(({food:'식량',production:'생산',science:'과학',fame:'인망',troops:'병력',reserve:'예비'})[k]??k)}</span><b>${b?.innerHTML ?? ''}</b>${dl ? `<small class="${dl.classList.contains('down') ? 'down' : 'up'}">${esc(dl.textContent)}</small>` : ''}</${k==='food'?'button':'span'}>`;
+    return `<${k==='food'?'button type="button" data-food-open aria-label="식량 현황" aria-expanded="'+String(!q('.ih-food-sheet').hidden)+'"':'span'} class="ih-chip" data-res="${esc(k)}" title="${esc([c.title,dl?.textContent].filter(Boolean).join(" · "))}"><span class="nb-resource-label">${esc(({food:'식량',production:'생산',science:'학문',fame:'인망',troops:'병력',reserve:'예비'})[k]??k)}</span><b>${b?.innerHTML ?? ''}</b>${dl ? `<small class="${dl.classList.contains('down') ? 'down' : 'up'}">${esc(dl.textContent)}</small>` : ''}</${k==='food'?'button':'span'}>`;
   }).join('');
   q('.ih-res').title = [...q('.ih-res').querySelectorAll('.ih-chip')].map(c=>`${c.textContent} · ${c.title}`).join(' / ');
   const f=d.food??{}, change=d.foodChange, fmt=n=>Number(n??0).toLocaleString('ko-KR',{maximumFractionDigits:1});

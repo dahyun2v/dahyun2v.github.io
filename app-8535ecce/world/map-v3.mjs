@@ -209,7 +209,7 @@ export function renderMapPreview(hl,layout){
  const size=layout.size,C=id=>hexCenter(parse(id),layout);let svg='';
  for(const mark of hl.facing??[]){const p=C(mark.tile);if(mark.arrow){const a=C(mark.from),dx=p.x-a.x,dy=p.y-a.y;svg+=`<path class="w-c186-front" d="M${f(a.x+dx*.2)} ${f(a.y+dy*.2)}L${f(a.x+dx*.72)} ${f(a.y+dy*.72)}"/>`;}else if(mark.side!=='FRONT')svg+=`<g class="w-c186-facing ${mark.side}"><path d="${hexPath(p,size*.82)}"/><text x="${f(p.x)}" y="${f(p.y)}">${mark.side==='REAR'?'뒤 +30%':'옆 +15%'}</text></g>`;}
  for(const [i,id] of (hl.waypoints??[]).entries()){const p=C(id);svg+=`<g class="w-waypoint" transform="translate(${f(p.x)} ${f(p.y)})"><circle r="9"/><text y="4">${i+1}</text></g>`;}
- if(hl.blocked?.blockedTileId){const p=C(hl.blocked.blockedTileId),text=hl.blocked.reason;svg+=`<g class="w-route-blocked"><path d="${hexPath(p,size*.94)}"/><g transform="translate(${f(p.x)} ${f(p.y-size)})"><rect x="-8" y="-16" width="${text.length*9+16}" height="23" rx="3"/><text y="0">${esc(text)}</text></g></g>`;}
+ if(hl.blocked?.blockedTileId){const p=C(hl.blocked.blockedTileId),text=hl.blocked.reason;svg+=`<g class="w-route-blocked"><path d="${hexPath(p,size*.94)}"/>${hl.blockedTextInBand?'':`<g transform="translate(${f(p.x)} ${f(p.y-size)})"><rect x="-8" y="-16" width="${text.length*9+16}" height="23" rx="3"/><text y="0">${esc(text)}</text></g>`}</g>`;}
   if (hl.side?.tile) { const p = C(hl.side.tile), name = {FRONT: '정면', FLANK: '옆 +15%', REAR: '뒤 +30%'}[hl.side.side] ?? ''; svg += `<g class="w-side s-${esc(hl.side.side ?? '')}"><path d="${hexPath(p, size * 0.98)}"/>${name ? `<text x="${f(p.x)}" y="${f(p.y - size * 1.0)}">${name}</text>` : ''}</g>`; }
   if (hl.path?.length > 1) svg += `<path class="w-path" d="M${hl.path.map((id) => { const p = C(id); return `${f(p.x)} ${f(p.y)}`; }).join('L')}"/>`;
   for (const o of hl.orders ?? []) {
@@ -455,7 +455,7 @@ export function renderWorldMap(model, opts = {}) {
    if(fx.label)svg+=`<text class="effect-label" y="-28">${esc(fx.label)}</text>`;
    svg+='</g>';
   }
-  return svg + renderMapPreview({blocked:hl.blocked},layout) + '</svg>';
+  return svg + renderMapPreview({blocked:hl.blocked,blockedTextInBand:hl.blockedTextInBand},layout) + '</svg>';
 }
 
 // 부대 이동: 다시 그린 뒤 지난 자리에서 새 자리로 미끄러지게(Web Animations). 순간이동 거리(12칸 이상)는 건너뜀.

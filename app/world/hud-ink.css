@@ -3879,3 +3879,11 @@ body.ink #growth-cards .draft-card h3[data-long]{top:59.5%;height:10.5%;font-siz
 @media(max-height:800px){#c226-stratagem .c226-controls{padding:30px 48px}#c226-stratagem .c227-roster{max-height:105px}#c226-stratagem .c226-card{max-height:270px}#c226-stratagem .c226-result{padding:50px 70px;gap:24px}#c225-prologue .c227-prologue-end{font-size:14px}#c225-prologue .c227-prologue-end h2{font-size:27px}}
 
 body:has(#c226-stratagem:not([hidden])) #c225-prologue{display:none!important}
+
+/* C228: 차례 잠금과 알림이 목표 표를 가리지 않도록 한다. */
+body.hud-band .ih-end:disabled{opacity:.4;filter:grayscale(1);cursor:not-allowed;animation:none}
+body.hud-band .ih-end:disabled b{color:#aaa196}
+body.hud-band #ink-toasts{top:auto;bottom:calc(17dvh + 12px);width:min(620px,70vw)}
+body.hud-band #dejavu{top:auto;bottom:calc(17dvh + 12px);width:min(680px,70vw);box-sizing:border-box;max-height:28dvh;overflow:auto}
+body.hud-band #ink-toasts:has([data-kind="quiet-turn"]){top:154px;bottom:auto;width:min(400px,65vw)}
+body:has(.w-modal:not([hidden]),.modal-backdrop:not([hidden]),#city-stage:not([hidden]),#sortie-screen:not([hidden]),#c226-stratagem:not([hidden])) :is(#ink-toasts,#dejavu){display:none!important}
