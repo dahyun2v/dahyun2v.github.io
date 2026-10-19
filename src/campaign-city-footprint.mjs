@@ -1,3 +1,4 @@
+import {engineMovementWorld} from './campaign-engines.mjs';
 import {diplomacyEnabled,diplomacyState,diplomacyTerritory,withdrawalProtection,diplomacyHostile} from './campaign-diplomacy.mjs';
 import {c33Owned,c33Formation} from './campaign-rule-registry.mjs';
 import {c31Sync} from './campaign-events.mjs';
@@ -103,7 +104,7 @@ export function campaignMovementWorld(s,armyId) {
     const rough=!!c33Owned(s,armyId,'ROUGH_MARCH')||!!c33Formation(s,armyId,'FORMATION_SNAKE');
     let tuning=rough||special||effect.delta||hasCampaignRule(s,armyId,'FORCED_MARCH')||hasCampaignRule(s,armyId,'TERRAIN_WALKER')?{...s.mapRules.tuning,byTroop:{...s.mapRules.tuning?.byTroop,[a.troopType]:Object.fromEntries(Object.entries(base??{plain,rough:plain+1,road:plain*.7,crossingExtra:2}).map(([key,value])=>[key,((hasCampaignRule(s,armyId,'TERRAIN_WALKER')||special&&original.troopType==='wudang')&&key==='rough'?plain:rough&&key==='rough'?Math.max(plain,value-1):value)*ratio]))}}:s.mapRules.tuning;
     for(const flood of s.c27?.floods??[])if(flood.until>=s.turn)for(const edge of flood.edges)blocked.add(edge);
-    return {...s,...(special?{armies:{...s.armies,[armyId]:a}}:{}),mapRules:{...s.mapRules,tuning,...((hasCampaignRule(s,armyId,'TERRAIN_WALKER')||original.c32?.freeRiverUntil>=s.turn)?{riverEdges:[]}:{}),blockedEdges:[...blocked]}};
+    return engineMovementWorld(s,armyId,{...s,...(special?{armies:{...s.armies,[armyId]:a}}:{}),mapRules:{...s.mapRules,tuning,...((hasCampaignRule(s,armyId,'TERRAIN_WALKER')||original.c32?.freeRiverUntil>=s.turn)?{riverEdges:[]}:{}),blockedEdges:[...blocked]}});
 }
 
 export function campaignCastleDefense(s,army) {

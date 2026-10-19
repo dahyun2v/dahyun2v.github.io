@@ -126,7 +126,7 @@ function unitMarker(u) {
   const h=headOf(u.portrait),box=mapHeadBox(h),side=u.side??(u.enemy?'enemy':'ally'),status=primaryUnitStatus(u);
   const portrait=u.portrait&&box?`<foreignObject class="unit-head" x="-66" y="0" width="24" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="width:24px;height:24px;background-image:url(&quot;${esc(u.portrait)}&quot;);background-size:${24*h.size[0]/box[2]}px ${24*h.size[1]/box[3]}px;background-position:${-24*box[0]/box[2]}px ${-24*box[1]/box[3]}px"></div></foreignObject>`:`<text class="unit-head-initial" x="-54" y="17">${esc(String(u.name??'').slice(0,1))}</text>`;
   const art=C190_ART[{ally:'tagAlly',allied:'tagAllied',enemy:'tagEnemy'}[side]],count=u.remembered?'?':troopLabel(u.count);
-  return `<g class="unit-marker c190-marker side-${side}${u.remembered?' remembered':''}"><title>${esc(u.name)} · ${esc(label)} · 병력 ${count}${u.remembered?' · 기억한 위치':''}</title>
+  return `<g class="unit-marker c190-marker side-${side}${u.remembered?' remembered':''}${u.actionEnded?' action-ended':''}"><title>${esc(u.name)} · ${esc(label)} · 병력 ${count}${u.remembered?' · 기억한 위치':''}</title>
     <rect class="unit-counter-bg" x="-40" y="0" width="80" height="24"/>
     ${art?`<image data-side="${side}" href="${esc(art)}" x="-40" y="0" width="80" height="24"/>`:`<path class="unit-side-border" data-side="${side}" d="${labelBorder(side)}"/>`}
     <image class="unit-kind" href="/assets/ui-v3/units-ink/c170-${esc(key)}.png" x="-38" y="2" width="20" height="20"><title>${esc(label)}</title></image>

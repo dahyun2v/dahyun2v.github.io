@@ -1,0 +1,238 @@
+{
+ "schema": "engines-v1.0",
+ "status": "정본 50_OFFICER_CLASS_ENGINE_STANDARD_v1.0 의 데이터. 규칙 문장은 정본이 가지고, 여기 숫자는 모두 시험값.",
+ "standard": "docs/user-input/20261018/50_OFFICER_CLASS_ENGINE_STANDARD_v1.0.md",
+ "common": {
+  "resourceMax": 3,
+  "baseKeepMax": 4,
+  "meritToUnlock": 3
+ },
+ "engines": [
+  {
+   "id": "MAENG",
+   "name": "맹장",
+   "resource": "기세",
+   "params": {
+    "flurryHitRatio": 0.6
+   },
+   "archerVariant": "연사",
+   "branches": [
+    {
+     "id": "MAENG.GWANGJANG",
+     "name": "광장",
+     "axis": "소비"
+    },
+    {
+     "id": "MAENG.YONGJANG",
+     "name": "용장",
+     "axis": "대상"
+    }
+   ]
+  },
+  {
+   "id": "GANG",
+   "name": "강장",
+   "resource": "버팀",
+   "params": {
+    "frontReduce": 20,
+    "flankIncrease": 15,
+    "counterRatio": 0.5
+   },
+   "archerVariant": "포대",
+   "branches": [
+    {
+     "id": "GANG.BAESU",
+     "name": "배수장",
+     "axis": "생성"
+    },
+    {
+     "id": "GANG.YEOKSEUP",
+     "name": "역습장",
+     "axis": "시점"
+    }
+   ]
+  },
+  {
+   "id": "HOWI",
+   "name": "호위",
+   "resource": "충의",
+   "params": {
+    "shareRatio": 30,
+    "linkRange": 2
+   },
+   "archerVariant": null,
+   "branches": [
+    {
+     "id": "HOWI.GUWON",
+     "name": "구원장",
+     "axis": "대상"
+    },
+    {
+     "id": "HOWI.EUNGJING",
+     "name": "응징장",
+     "axis": "소비"
+    }
+   ]
+  },
+  {
+   "id": "TU",
+   "name": "투장",
+   "resource": "투지",
+   "params": {
+    "pursuitMultiplier": 2
+   },
+   "archerVariant": "조준",
+   "branches": [
+    {
+     "id": "TU.GYEONJE",
+     "name": "견제장",
+     "axis": "소비"
+    },
+    {
+     "id": "TU.SEONBONG",
+     "name": "선봉장",
+     "axis": "대상"
+    }
+   ]
+  },
+  {
+   "id": "JANGGUN",
+   "name": "장군",
+   "resource": "지휘령",
+   "params": {
+    "range": 2,
+    "rangeAt3": 3,
+    "guardReduce": 15,
+    "hitGainPerPeriod": 2
+   },
+   "archerVariant": null,
+   "branches": [
+    {
+     "id": "JANGGUN.GUNGI",
+     "name": "군기장",
+     "axis": "원점"
+    },
+    {
+     "id": "JANGGUN.DOKJEON",
+     "name": "독전장",
+     "axis": "대상"
+    }
+   ]
+  },
+  {
+   "id": "CHAEK",
+   "name": "책사",
+   "resource": "계책",
+   "params": {
+    "range": 3,
+    "powerPerPoint": 1.0,
+    "cooldown": 1
+   },
+   "archerVariant": null,
+   "branches": [
+    {
+     "id": "CHAEK.GWEGYE",
+     "name": "궤계",
+     "axis": "시점"
+    },
+    {
+     "id": "CHAEK.GUNSA",
+     "name": "군사",
+     "axis": "대상"
+    }
+   ]
+  },
+  {
+   "id": "CHUKSEONG",
+   "name": "축성장",
+   "resource": "자재",
+   "params": {
+    "costPalisade": 1,
+    "costCamp": 2,
+    "costBridge": 2,
+    "demolishGain": 2,
+    "chipPerPoint": 10
+   },
+   "archerVariant": null,
+   "branches": [
+    {
+     "id": "CHUKSEONG.GONGSEONG",
+     "name": "공성장",
+     "axis": "생성·대상"
+    },
+    {
+     "id": "CHUKSEONG.GONGBYEONG",
+     "name": "공병장",
+     "axis": "대상"
+    }
+   ]
+  },
+  {
+   "id": "CHEOK",
+   "name": "척후",
+   "resource": "숨음",
+   "params": {
+    "stealthMove": 2,
+    "markRange": 4
+   },
+   "archerVariant": null,
+   "branches": [
+    {
+     "id": "CHEOK.TAMMA",
+     "name": "탐마",
+     "axis": "소비"
+    },
+    {
+     "id": "CHEOK.BOKBYEONG",
+     "name": "복병장",
+     "axis": "대상"
+    }
+   ]
+  },
+  {
+   "id": "JEONNONG",
+   "name": "전농",
+   "resource": "보급",
+   "params": {
+    "linkGain": 2,
+    "cartHealPerPoint": 15,
+    "foodReduce": 25
+   },
+   "archerVariant": null,
+   "branches": [
+    {
+     "id": "JEONNONG.HUSONG",
+     "name": "후송장",
+     "axis": "시점"
+    },
+    {
+     "id": "JEONNONG.DUNJEON",
+     "name": "둔전장",
+     "axis": "형태"
+    }
+   ]
+  },
+  {
+   "id": "GUKSA",
+   "name": "국사",
+   "resource": "인망",
+   "params": {
+    "auraRange": 2,
+    "auraRangeAt2": 3
+   },
+   "archerVariant": null,
+   "branches": [
+    {
+     "id": "GUKSA.GEUNSIN",
+     "name": "근신",
+     "axis": "대상"
+    },
+    {
+     "id": "GUKSA.SEGAEK",
+     "name": "세객",
+     "axis": "대상"
+    }
+   ]
+  }
+ ]
+}

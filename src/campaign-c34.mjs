@@ -27,7 +27,9 @@ const allies=(s,id,range=2)=>[s.armies[id],...c34Near(s,id,range)];
 const lower=(s,id,n=1,log=[])=>{for(let i=0;i<n;i++)changeMorale(s,id,s.armies[id].morale==='STEADY'?'SHAKEN':'ROUTING','고유 효과',log);};
 export const c34Rally=(s,id,n=1)=>{if(c34Near(s,id,1).some(b=>owned(s,b.armyId,'U_STRICT_LAW')))return;for(let i=0;i<n;i++)changeMorale(s,id,s.armies[id].morale==='ROUTING'?'SHAKEN':'STEADY','고유 효과');};
 const once=(s,id,key)=>{const x=state(s,id),stamp=`${s.turn}.${s.activeFactionId}`;if(x[key]===stamp)return false;x[key]=stamp;return true;};
-const cooldown=(s,id,n)=>{const a=s.armies[id],key=Object.keys(a.tacticReadyTurns??{}).sort()[0];if(key)a.tacticReadyTurns[key]+=n;};
+let gaugeCooldown=null;
+export function configureC34Gauge(fn){gaugeCooldown=fn;}
+const cooldown=(s,id,n)=>{if(gaugeCooldown?.(s,id,n))return;const a=s.armies[id],key=Object.keys(a.tacticReadyTurns??{}).sort()[0];if(key)a.tacticReadyTurns[key]+=n;};
 const leader=(s,id)=>Object.values(s.armies).filter(b=>b.factionId===s.armies[id].factionId&&castleArmyActive(s,b)).sort((a,b)=>Object.values(s.officers[b.commanderId].baseStats).reduce((n,v)=>n+v,0)-Object.values(s.officers[a.commanderId].baseStats).reduce((n,v)=>n+v,0)||a.armyId.localeCompare(b.armyId))[0];
 const lostLord=(s,id)=>Object.values(s.armies).some(b=>b.factionId===s.armies[id].factionId&&b.commanderId===s.factions[b.factionId].rulerId&&(!b.troopCount||b.morale==='ROUTING'))||(s.combatLog??[]).some(l=>l.captureLine&&s.armies[l.attackerId]?.factionId!==s.armies[id].factionId);
 

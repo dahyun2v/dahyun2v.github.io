@@ -1,4 +1,3 @@
-import {classDraftWeight} from './campaign-classes.mjs';
 import {c33Eligible} from './campaign-rule-registry.mjs';
 import {c29BindingTargets,c29Hidden} from './campaign-c29.mjs';
 import {createRng} from './rng.mjs';
@@ -112,7 +111,7 @@ export function c28Eligible(s,id,pool,level,ready){
    if(matching<(c.rarity==='MYTHIC'?2:1))return false;
   }
   return true;
- }).map(t=>classDraftWeight(s,id,r.cards[t.traitId])===1?t:{...t,weightMultiplier:(t.weightMultiplier??1)*1.5})};
+ })};
 }
 export function composeC28Draft(s,id,draft){
  if(!c28Enabled(s)||draft.state!=='OFFERED')return draft;
@@ -149,7 +148,7 @@ export function rerollC28Draft(s,id,draft,traitId){
  const r=c28Record(s,id),i=draft.offeredIds.indexOf(traitId);if(i<0)throw new Error('REROLL_CARD_REQUIRED');
  const old=draft.offered[i];if(!old.rerollsRemaining&&!draft.c28.bonusRerolls)throw new Error('REROLL_LIMIT_REACHED');
  const alternatives=draft.c28.slotPools[i].filter(k=>!draft.offeredIds.includes(k));if(!alternatives.length)throw new Error('REROLL_NO_ALTERNATIVES');
- const rng=createRng(draft.drawState.after);let roll=rng.next()*alternatives.reduce((n,k)=>n+classDraftWeight(s,id,r.cards[k]),0);const key=alternatives.find(k=>(roll-=classDraftWeight(s,id,r.cards[k]))<0)??alternatives.at(-1),card=structuredClone(draft.eligibleCandidateSnapshot.find(t=>t.traitId===key));
+ const rng=createRng(draft.drawState.after);let roll=rng.next()*alternatives.length;const key=alternatives.find(k=>(roll-=1)<0)??alternatives.at(-1),card=structuredClone(draft.eligibleCandidateSnapshot.find(t=>t.traitId===key));
  if(!card)throw new Error('REROLL_NO_ALTERNATIVES');
  (draft.offerHistory??=[]).push({offerRevision:draft.offerRevision,offered:structuredClone(draft.offered),drawState:structuredClone(draft.drawState)});
  if(old.rerollsRemaining)old.rerollsRemaining--;else draft.c28.bonusRerolls--;

@@ -1,3 +1,4 @@
+import {initializeEngineTrust,initializeEngines} from './campaign-engines.mjs';
 import c214 from '../data/c214-trial-v0.1.json' with {type:'json'};
 import {ordinaryReserve} from './campaign-special-troops.mjs';
 import {combatFireAt} from './campaign-rule-registry.mjs';
@@ -10,7 +11,6 @@ import {injuryReason} from './campaign-injury.mjs';
 import {fatigueReason,recordFatigueBlock,restAfterReturn} from './campaign-fatigue.mjs';
 import {loadMusterSupply} from './campaign-supply.mjs';
 import {observeRelationGroups} from './campaign-relations.mjs';
-import {initializeClasses} from './campaign-classes.mjs';
 import {c34Cost,c34Joined} from './campaign-c34.mjs';
 import {uniqueGovernor as uniqueGovernorForC34Rule} from './campaign-rule-registry.mjs';
 const uniqueGovernorForC34=(s,c)=>uniqueGovernorForC34Rule(s,c,'U_SCHOLAR_BUILDER');
@@ -295,9 +295,11 @@ export function sortie(s,command,factionId=s.playerFactionId){
  const c=s.cities[command.cityId],o=s.officers[command.officerId],troopType=command.troopType??o?.troopType;
  const reason=sortieReason(s,{...command,troopType},factionId);
  if(reason)throw Object.assign(new Error(`${reason.code}: ${reason.message}`),{code:reason.code});
+ if(command.trustArmyId!==undefined){const t=s.armies[command.trustArmyId];if(s.campaignGrowth?.officers[o.officerId]?.c50?.path!=='GUKSA.GEUNSIN'||!t||t.factionId!==factionId||t.troopCount<=0||t.morale==='ROUTING')throw new Error('INVALID_TRUST_TARGET');}
  const troopCount=command.troopCount??sortieTroopRange(s,c,troopType,command.officerId).max;
  const tileId=sortieTile(s,c,command.tileId);
  if(!completeMuster(s,c,{officerId:command.officerId,troopType,troopCount}))throw new Error(c.jobBlocked);
+ initializeEngineTrust(s,o.locationRef.id,command.trustArmyId??null);
  // Keep legacy muster/AI placement intact; only the explicit SORTIE chooses a gate.
  if(command.tileId!==undefined){const a=s.armies[o.locationRef.id];a.tileId=tileId;a.facing=null;initializeArmyFacing(s);}
  s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId,text:`${o.name} 출진 — ${troopInfo(s,troopType).troopDisplayName} ${troopText(troopCount)}명`});
@@ -328,7 +330,7 @@ export function completeMuster(s,c,job){
  s.personnel.formations.push({formationId:id,nodeId:c.cityId,identity:{baseTroopId:troopToCampaign(job.troopType),specialTroopId:SPECIAL_TROOPS[job.troopType]?job.troopType:null},field:count,targetStrength:Math.max(count,specialTroop(s,job.troopType)?job.troopType==='wudang'?C24.wudangCount:job.troopType==='qingzhou'?Math.floor((500+bonus)*C24.qingzhouCount):job.troopType==='hubao'?500+bonus+C24.hubaoReserve:500+bonus:500+bonus),specialSupportAvailable:false});delete c.starMusterBonus;
  if(c.governorId===o.officerId){if(domesticEngineEnabled(s))c.absentGovernorId=o.officerId;c.governorId=null;if(s.terminal)s.terminal.citiesById[c.cityId].governorId=null;}
  if(s.terminal){s.terminal.armyOrder.push(id);s.terminal.armyOrder.sort();s.terminal.armiesById[id]={armyId:id,factionId:a.factionId,commanderId:o.officerId,disposition:'ACTIVE',terminalAtTick:null,terminalRecordId:null};terminalOfficer(s,o,o.locationRef);syncCampaignAdministrativeTerminal(s);}
- loadMusterSupply(s,a,c);syncResearchCities(s);initializeArmyFacing(s);initializeClasses(s);c.reserveTroops=ordinaryReserve(s).filter(l=>l.nodeId===c.cityId).reduce((n,l)=>n+l.count,0);if(specialTroop(s,job.troopType)){s.c24Stats??={musters:{},catapultCityDamage:0};s.c24Stats.musters[job.troopType]=(s.c24Stats.musters[job.troopType]??0)+1;}(s.c16Stats??={musters:0,wandererRecruitments:0}).musters++;observeRelationGroups(s);return true;
+ loadMusterSupply(s,a,c);syncResearchCities(s);initializeArmyFacing(s);initializeEngines(s);c.reserveTroops=ordinaryReserve(s).filter(l=>l.nodeId===c.cityId).reduce((n,l)=>n+l.count,0);if(specialTroop(s,job.troopType)){s.c24Stats??={musters:{},catapultCityDamage:0};s.c24Stats.musters[job.troopType]=(s.c24Stats.musters[job.troopType]??0)+1;}(s.c16Stats??={musters:0,wandererRecruitments:0}).musters++;observeRelationGroups(s);return true;
 }
 const garrisonCity=(s,a)=>Object.values(s.cities).find(c=>c.ownerFactionId===a?.factionId&&(c.tileId===a?.tileId||c.footprint?.gates?.includes(a?.tileId)));
 export function garrisonReason(s,id){

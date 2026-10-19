@@ -1,0 +1,750 @@
+{
+ "schema": "engine-assignment-v1.0",
+ "status": "Claude 배정 시안(2026-10-18) — 정본 50 v1.0 엔진 10. 옛 계통 primary → 새 엔진 기본 대응 + 사용자와 상의한 장수 지정(override). 궁병이면 맹장 · 강장 · 투장은 궁병판(연사 · 포대 · 조준)이 런타임에 자동.",
+ "mapFromOld": {
+  "TMP-CLASS-B01-001": "MAENG",
+  "TMP-CLASS-B01-002": "CHAEK",
+  "TMP-CLASS-B01-003": "TU",
+  "TMP-CLASS-B01-004": "MAENG",
+  "TMP-CLASS-B01-005": "GANG",
+  "TMP-CLASS-B01-006": "GANG",
+  "TMP-CLASS-B01-007": "CHEOK",
+  "TMP-CLASS-B01-008": "CHAEK",
+  "TMP-CLASS-B01-009": "CHAEK",
+  "TMP-CLASS-B01-010": "JANGGUN",
+  "TMP-CLASS-B01-011": "HOWI",
+  "TMP-CLASS-B01-012": "GUKSA",
+  "TMP-CLASS-B01-013": "JANGGUN",
+  "TMP-CLASS-B01-014": "JEONNONG",
+  "TMP-CLASS-B01-015": "JEONNONG",
+  "TMP-CLASS-B01-016": "CHUKSEONG",
+  "TMP-CLASS-B01-017": "CHUKSEONG",
+  "TMP-CLASS-B01-018": "GUKSA"
+ },
+ "engineNames": {
+  "MAENG": "맹장",
+  "GANG": "강장",
+  "HOWI": "호위",
+  "TU": "투장",
+  "JANGGUN": "장군",
+  "CHAEK": "책사",
+  "CHUKSEONG": "축성장",
+  "CHEOK": "척후",
+  "JEONNONG": "전농",
+  "GUKSA": "국사"
+ },
+ "counts": {
+  "책사": 15,
+  "장군": 15,
+  "강장": 15,
+  "맹장": 11,
+  "국사": 10,
+  "전농": 9,
+  "투장": 7,
+  "척후": 7,
+  "호위": 6,
+  "축성장": 5
+ },
+ "assignments": [
+  {
+   "id": "G01",
+   "name": "여포",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-004",
+   "override": false
+  },
+  {
+   "id": "G02",
+   "name": "조운",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-014",
+   "override": false
+  },
+  {
+   "id": "G03",
+   "name": "제갈량",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-002",
+   "override": true
+  },
+  {
+   "id": "G04",
+   "name": "순욱",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-016",
+   "override": true
+  },
+  {
+   "id": "G05",
+   "name": "유비",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-012",
+   "override": false
+  },
+  {
+   "id": "G06",
+   "name": "황충",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-001",
+   "override": false
+  },
+  {
+   "id": "G07",
+   "name": "조조",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-002",
+   "override": false
+  },
+  {
+   "id": "G08",
+   "name": "손권",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G09",
+   "name": "원소",
+   "engine": "CHUKSEONG",
+   "from": "TMP-CLASS-B01-016",
+   "override": false
+  },
+  {
+   "id": "G10",
+   "name": "원술",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-015",
+   "override": false
+  },
+  {
+   "id": "G11",
+   "name": "동탁",
+   "engine": "TU",
+   "from": "TMP-CLASS-B01-003",
+   "override": false
+  },
+  {
+   "id": "G12",
+   "name": "마등",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-013",
+   "override": false
+  },
+  {
+   "id": "G13",
+   "name": "마초",
+   "engine": "TU",
+   "from": "TMP-CLASS-B01-003",
+   "override": false
+  },
+  {
+   "id": "G14",
+   "name": "공손찬",
+   "engine": "CHEOK",
+   "from": "TMP-CLASS-B01-007",
+   "override": false
+  },
+  {
+   "id": "G15",
+   "name": "유장",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G16",
+   "name": "장로",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-015",
+   "override": false
+  },
+  {
+   "id": "G17",
+   "name": "맹획",
+   "engine": "TU",
+   "from": "TMP-CLASS-B01-003",
+   "override": false
+  },
+  {
+   "id": "G18",
+   "name": "관우",
+   "engine": "TU",
+   "from": "TMP-CLASS-B01-013",
+   "override": true
+  },
+  {
+   "id": "G19",
+   "name": "장비",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G20",
+   "name": "손책",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-013",
+   "override": false
+  },
+  {
+   "id": "G21",
+   "name": "방통",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-008",
+   "override": true
+  },
+  {
+   "id": "G22",
+   "name": "곽가",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-002",
+   "override": true
+  },
+  {
+   "id": "G23",
+   "name": "사마의",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-005",
+   "override": true
+  },
+  {
+   "id": "G24",
+   "name": "장료",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-001",
+   "override": false
+  },
+  {
+   "id": "G25",
+   "name": "허저",
+   "engine": "HOWI",
+   "from": "TMP-CLASS-B01-011",
+   "override": false
+  },
+  {
+   "id": "G26",
+   "name": "초선",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-008",
+   "override": false
+  },
+  {
+   "id": "G27",
+   "name": "주유",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-009",
+   "override": true
+  },
+  {
+   "id": "G28",
+   "name": "육손",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-009",
+   "override": false
+  },
+  {
+   "id": "G29",
+   "name": "감녕",
+   "engine": "CHEOK",
+   "from": "TMP-CLASS-B01-007",
+   "override": false
+  },
+  {
+   "id": "G30",
+   "name": "태사자",
+   "engine": "CHEOK",
+   "from": "TMP-CLASS-B01-007",
+   "override": false
+  },
+  {
+   "id": "G31",
+   "name": "진궁",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G32",
+   "name": "고순",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-004",
+   "override": false
+  },
+  {
+   "id": "G33",
+   "name": "하후돈",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-006",
+   "override": false
+  },
+  {
+   "id": "G34",
+   "name": "조인",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G35",
+   "name": "가후",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-008",
+   "override": false
+  },
+  {
+   "id": "G36",
+   "name": "순유",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-002",
+   "override": false
+  },
+  {
+   "id": "G37",
+   "name": "장합",
+   "engine": "CHEOK",
+   "from": "TMP-CLASS-B01-007",
+   "override": false
+  },
+  {
+   "id": "G38",
+   "name": "전풍",
+   "engine": "CHUKSEONG",
+   "from": "TMP-CLASS-B01-016",
+   "override": false
+  },
+  {
+   "id": "G39",
+   "name": "저수",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-015",
+   "override": false
+  },
+  {
+   "id": "G40",
+   "name": "여몽",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-008",
+   "override": false
+  },
+  {
+   "id": "G41",
+   "name": "노숙",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-018",
+   "override": true
+  },
+  {
+   "id": "G42",
+   "name": "위연",
+   "engine": "CHEOK",
+   "from": "TMP-CLASS-B01-007",
+   "override": false
+  },
+  {
+   "id": "G43",
+   "name": "법정",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-010",
+   "override": true
+  },
+  {
+   "id": "G44",
+   "name": "한수",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-018",
+   "override": false
+  },
+  {
+   "id": "G45",
+   "name": "방덕",
+   "engine": "TU",
+   "from": "TMP-CLASS-B01-003",
+   "override": false
+  },
+  {
+   "id": "G46",
+   "name": "이각",
+   "engine": "CHEOK",
+   "from": "TMP-CLASS-B01-007",
+   "override": false
+  },
+  {
+   "id": "G47",
+   "name": "장임",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-008",
+   "override": false
+  },
+  {
+   "id": "G48",
+   "name": "염포",
+   "engine": "CHUKSEONG",
+   "from": "TMP-CLASS-B01-017",
+   "override": false
+  },
+  {
+   "id": "G49",
+   "name": "기령",
+   "engine": "HOWI",
+   "from": "TMP-CLASS-B01-011",
+   "override": false
+  },
+  {
+   "id": "G50",
+   "name": "황개",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-009",
+   "override": false
+  },
+  {
+   "id": "G51",
+   "name": "하후연",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G52",
+   "name": "서황",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-002",
+   "override": false
+  },
+  {
+   "id": "G53",
+   "name": "우금",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-012",
+   "override": false
+  },
+  {
+   "id": "G54",
+   "name": "악진",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-004",
+   "override": false
+  },
+  {
+   "id": "G55",
+   "name": "이전",
+   "engine": "HOWI",
+   "from": "TMP-CLASS-B01-011",
+   "override": false
+  },
+  {
+   "id": "G56",
+   "name": "전위",
+   "engine": "HOWI",
+   "from": "TMP-CLASS-B01-005",
+   "override": true
+  },
+  {
+   "id": "G57",
+   "name": "정욱",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-008",
+   "override": true
+  },
+  {
+   "id": "G58",
+   "name": "만총",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-006",
+   "override": false
+  },
+  {
+   "id": "G59",
+   "name": "강유",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-003",
+   "override": true
+  },
+  {
+   "id": "G60",
+   "name": "마량",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-013",
+   "override": false
+  },
+  {
+   "id": "G61",
+   "name": "마속",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-018",
+   "override": false
+  },
+  {
+   "id": "G62",
+   "name": "장완",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-010",
+   "override": true
+  },
+  {
+   "id": "G63",
+   "name": "비의",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-012",
+   "override": true
+  },
+  {
+   "id": "G64",
+   "name": "이엄",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-015",
+   "override": false
+  },
+  {
+   "id": "G65",
+   "name": "미축",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-015",
+   "override": false
+  },
+  {
+   "id": "G66",
+   "name": "손견",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-004",
+   "override": false
+  },
+  {
+   "id": "G67",
+   "name": "장소",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-005",
+   "override": true
+  },
+  {
+   "id": "G68",
+   "name": "장굉",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-018",
+   "override": true
+  },
+  {
+   "id": "G69",
+   "name": "정보",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G70",
+   "name": "한당",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G71",
+   "name": "주태",
+   "engine": "HOWI",
+   "from": "TMP-CLASS-B01-011",
+   "override": false
+  },
+  {
+   "id": "G72",
+   "name": "능통",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-001",
+   "override": false
+  },
+  {
+   "id": "G73",
+   "name": "안량",
+   "engine": "TU",
+   "from": "TMP-CLASS-B01-003",
+   "override": false
+  },
+  {
+   "id": "G74",
+   "name": "문추",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-001",
+   "override": false
+  },
+  {
+   "id": "G75",
+   "name": "국의",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-006",
+   "override": false
+  },
+  {
+   "id": "G76",
+   "name": "허유",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G77",
+   "name": "진등",
+   "engine": "CHUKSEONG",
+   "from": "TMP-CLASS-B01-017",
+   "override": false
+  },
+  {
+   "id": "G78",
+   "name": "장패",
+   "engine": "HOWI",
+   "from": "TMP-CLASS-B01-011",
+   "override": false
+  },
+  {
+   "id": "G79",
+   "name": "후성",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-012",
+   "override": false
+  },
+  {
+   "id": "G80",
+   "name": "마대",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-001",
+   "override": false
+  },
+  {
+   "id": "G81",
+   "name": "성공영",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-006",
+   "override": false
+  },
+  {
+   "id": "G82",
+   "name": "염행",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-004",
+   "override": false
+  },
+  {
+   "id": "G83",
+   "name": "곽사",
+   "engine": "TU",
+   "from": "TMP-CLASS-B01-003",
+   "override": false
+  },
+  {
+   "id": "G84",
+   "name": "이유",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G85",
+   "name": "서영",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G86",
+   "name": "장송",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-015",
+   "override": false
+  },
+  {
+   "id": "G87",
+   "name": "황권",
+   "engine": "JEONNONG",
+   "from": "TMP-CLASS-B01-014",
+   "override": false
+  },
+  {
+   "id": "G88",
+   "name": "엄안",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G89",
+   "name": "유파",
+   "engine": "CHUKSEONG",
+   "from": "TMP-CLASS-B01-017",
+   "override": false
+  },
+  {
+   "id": "G90",
+   "name": "장위",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G91",
+   "name": "양앙",
+   "engine": "MAENG",
+   "from": "TMP-CLASS-B01-001",
+   "override": false
+  },
+  {
+   "id": "G92",
+   "name": "양송",
+   "engine": "CHAEK",
+   "from": "TMP-CLASS-B01-008",
+   "override": false
+  },
+  {
+   "id": "G93",
+   "name": "축융부인",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-006",
+   "override": false
+  },
+  {
+   "id": "G94",
+   "name": "옹개",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G95",
+   "name": "고정",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G96",
+   "name": "전예",
+   "engine": "CHEOK",
+   "from": "TMP-CLASS-B01-007",
+   "override": false
+  },
+  {
+   "id": "G97",
+   "name": "관정",
+   "engine": "GANG",
+   "from": "TMP-CLASS-B01-005",
+   "override": false
+  },
+  {
+   "id": "G98",
+   "name": "염상",
+   "engine": "GUKSA",
+   "from": "TMP-CLASS-B01-018",
+   "override": false
+  },
+  {
+   "id": "G99",
+   "name": "장훈",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-010",
+   "override": false
+  },
+  {
+   "id": "G100",
+   "name": "유훈",
+   "engine": "JANGGUN",
+   "from": "TMP-CLASS-B01-013",
+   "override": false
+  }
+ ]
+}

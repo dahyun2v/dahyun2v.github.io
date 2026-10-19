@@ -7,6 +7,11 @@ import diplomacyAxes from '../../../docs/design-data/diplomacy-axes-v0.1.json' w
 // 게임 처리는 옛 HUD(숨김)의 단추를 그대로 누른다 — 명령 코드는 한 곳(world.js)에만 있다.
 export const worldDisplayText = value => String(value ?? '').replaceAll('과학','학문').replaceAll('출발 특전','깨어날 때 지닌 것').replace(/혼자\s+(\d+(?:\.\d+)?\/\d+(?:\.\d+)?)\s*차례\s*충분/g,'휴대 군량 $1 차례');
 const esc = (s) => worldDisplayText(s).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+export function engineStatusMarkup(engine){
+ if(!engine)return '';
+ const slots=Array.from({length:engine.max},(_,i)=>i<engine.resource?'●':'○').join('');
+ return `<span class="c230-engine" title="${esc(engine.judgment)}"><b>${esc(engine.name)}</b><small>${esc(engine.resourceName)} <span aria-label="${esc(engine.resourceName)} ${engine.resource}/${engine.max}">${slots}</span></small>${(engine.merits??[]).map(b=>`<small>${esc(b.name)} ${b.count}/${b.goal}</small>`).join('')}</span>`;
+}
 // C210: presentation preferences never enter campaign state or its save key.
 export const FX_KEY='sangoku.fx.v1';
 export const FX_OPTIONS={aiSpeed:[['normal','보통'],['fast','빠름'],['instant','즉시']],cutin:[['always','매번'],['first','그 전법 처음 한 번'],['off','끄기']],shake:[['on','켬'],['off','끔']],motion:[['system','운영체제 설정'],['on','움직임 줄이기 켬'],['off','움직임 줄이기 끔']]};
@@ -76,8 +81,8 @@ export function ambitionCardsHtml(offer,picked,portraits={},rewards={}){
 }
 export function ambitionBandHtml(v){
  const a=v.ambition,selected=a?.selected,status=s=>s==='ACHIEVED'?'이룸':s==='FAILED'?'닿지 못함':'진행 중';
- const ambition=selected?`<details data-c205-detail="${esc(selected.id)}" class="c205-${esc(selected.status.toLowerCase())}"><summary>뜻 · ${esc(selected.title)} — ${esc((selected.conditions??[]).map(c=>`${c.met?'✓':'✗'} ${c.text}`).join(' · '))} <i>${status(selected.status)}</i></summary><ul>${(selected.conditions??[]).map(c=>`<li>${c.met?'✓':'✗'} ${esc(c.text)}</li>`).join('')}</ul></details>`:a?.canChoose&&a.offered?.length?`<button type="button" data-c205-reopen>이번 생의 뜻 고르기 · ${a.chooseUntilTurn}차례까지</button>`:'';
- return ambition+(v.orders?.history??[]).map(o=>`<details data-c205-detail="${esc(o.id)}.${o.signedTurn}" class="c205-${esc(o.status.toLowerCase())}"><summary>군령 · ${esc(o.title)} ${o.progress.count}/${o.progress.target} · ${o.turnsLeft}차례 <i>${status(o.status)}</i></summary><p>${esc(o.goalText)}</p><p>${esc(o.rewardLine??'')}${o.progress.violated?' · 유지 조건을 지키지 못했습니다.':''}</p></details>`).join('');
+ const ambition=selected?`<details data-c205-detail="${esc(selected.id)}" class="c205-${esc(selected.status.toLowerCase())}"><summary><span class="c236-goal-name">뜻 · ${esc(selected.title)}</span><span>${(selected.conditions??[]).filter(c=>c.met).length}/${(selected.conditions??[]).length} · ${v.turnLimit??'—'}차례까지</span><i>${status(selected.status)}</i></summary><ul>${(selected.conditions??[]).map(c=>`<li>${c.met?'✓':'✗'} ${esc(c.text)}</li>`).join('')}</ul></details>`:a?.canChoose&&a.offered?.length?`<button type="button" data-c205-reopen>이번 생의 뜻 고르기 · ${a.chooseUntilTurn}차례까지</button>`:'';
+ return ambition+(v.orders?.history??[]).map(o=>`<details data-c205-detail="${esc(o.id)}.${o.signedTurn}" class="c205-${esc(o.status.toLowerCase())}"><summary><span class="c236-goal-name">군령 · ${esc(o.title)}</span><span>${o.progress.count}/${o.progress.target} · ${o.turnsLeft}차례</span><i>${status(o.status)}</i></summary><p>${esc(o.goalText)}</p><p>${esc(o.rewardLine??'')}${o.progress.violated?' · 유지 조건을 지키지 못했습니다.':''}</p></details>`).join('');
 }
 export function ambitionEndingHtml(result){
  if(!result)return '';
@@ -619,7 +624,7 @@ export function renderInkHud(root, d) {
   if (cmd) { cmd.hidden = !showCmd; root.classList.toggle('cmd', showCmd); }
   if (showCmd) {
     cmd.querySelector('.atk').disabled = !atkOld || atkOld.disabled;
-    cmd.querySelector('.tac').innerHTML = tacOld.map((b, i) => { const name = (b.childNodes.length ? [...b.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('') : b.textContent).trim() || b.textContent.trim(); return `<button class="ring tactic-face r${i + 1}${b.dataset.cooldown>0?' cooling':''}" data-cooldown="${b.dataset.cooldown??0}" data-act="tactic" data-tactic="${esc(b.dataset.tactic)}"${b.disabled ? ' disabled' : ''} title="${esc(b.title || b.textContent.trim())}">${icon('cmd-tactic', name[0] ?? '·')}${tacticFaceMarkup(Number(b.dataset.cooldown??0),b.dataset.gauge===undefined?null:Number(b.dataset.gauge))}<small>${esc(name.slice(0, 4))}</small></button>`; }).join('');
+    cmd.querySelector('.tac').innerHTML = tacOld.map((b, i) => { const name = (b.childNodes.length ? [...b.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('') : b.textContent).trim() || b.textContent.trim(); return `<button class="ring tactic-face r${i + 1}${b.dataset.cooldown>0?' cooling':''}" data-cooldown="${b.dataset.cooldown??0}" data-act="tactic" data-tactic="${esc(b.dataset.tactic)}"${b.disabled ? ' disabled' : ''} title="${esc(b.title || b.textContent.trim())}">${icon('cmd-tactic', name[0] ?? '·')}${tacticFaceMarkup(Number(b.dataset.cooldown??0),b.dataset.gauge===undefined?null:Number(b.dataset.gauge),b.dataset.cost===undefined?null:Number(b.dataset.cost))}<small>${esc(name.slice(0, 4))}</small></button>`; }).join('');
   }
   if (showUnit) {
     q('.ih-unit .ih-panel').src = `${H}officer-${tone}.png`;
@@ -652,7 +657,7 @@ export function renderInkHud(root, d) {
   q('.ih-end').classList.toggle('blocked', !!end?.classList.contains('blocked'));
   q('.ih-end').classList.toggle('ready', !!end?.classList.contains('ready'));
   const goal=old('#victory-guide');q('.ih-victory').textContent=goal?.textContent??'';q('.ih-victory').title=goal?.title??'';
-  q('.ih-end small').textContent = old('#remaining')?.textContent ?? '';
+  q('.ih-end small').textContent = `남은 부대 ${d.remaining??0}`;
   renderCommandBand(root,d,showUnit,menu);
 }
 
@@ -661,6 +666,7 @@ function mountCommandBand(root){
  document.body.classList.add('hud-band');
  root.querySelector('.ih').insertAdjacentHTML('beforeend',`<nav class="nb-bookmarks" aria-label="갈피"><button data-band-map aria-expanded="false">지도 보기 ▸ <span>지형</span></button><div class="nb-map-options" hidden>${RAIL.map(([m,label])=>`<button data-mode="${m}">${label}</button>`).join('')}</div><button data-fwd="#roster-open">장수</button><button data-open="council">평정 <b class="nb-badge"></b></button></nav><button class="nb-news-tab" data-band-news aria-expanded="false">소식 0</button><p class="nb-news-peek" hidden></p><section class="nb-sheet" hidden aria-label="부대 상세 설명"><button data-band-info aria-label="설명 닫기">닫기</button><div></div></section><section class="nb-band" data-state="rest" aria-label="군령 띠"><div class="nb-content"></div></section>`);
  root.querySelector('.nb-bookmarks').insertAdjacentHTML('afterbegin',`<div class="nb-map-tabs">${RAIL.map(([m,label])=>`<button data-mode="${m}">${label}</button>`).join('')}</div>`);
+ root.querySelector('.ih-menu').prepend(...root.querySelectorAll('.nb-bookmarks > [data-fwd],.nb-bookmarks > [data-open]'));
  root.querySelector('.ih-menu').insertAdjacentHTML('afterbegin','<button data-band-goal aria-expanded="false">승리 조건</button>');
  root.querySelector('.ih-menu [data-fwd="#load-again"]').textContent='불러오기';
  const topLeft=document.createElement('div');topLeft.className='nb-top-left';
@@ -675,6 +681,7 @@ function mountCommandBand(root){
  root.querySelector('.nb-todo-panel').append(root.querySelector('.nb-news-tab'));
  root.querySelector('.nb-todo-panel').insertAdjacentHTML('beforeend','<ol class="nb-tasks" hidden></ol>');
  root.querySelector('.nb-band').append(root.querySelector('.ih-end'));
+ mountCommandScreen(root);
  root.querySelector('.nb-band').insertAdjacentHTML('beforeend','<p class="nb-end-warning"></p>');
  const toggle=(selector,button)=>{const panel=root.querySelector(selector);panel.hidden=!panel.hidden;button?.setAttribute('aria-expanded',String(!panel.hidden));document.dispatchEvent(new CustomEvent('ink:uncover'));};
  root.addEventListener('click',e=>{
@@ -745,7 +752,7 @@ export function selectedUnitHtml(d){
  return `<h2>선택 부대</h2><dl>${rows.map(([icon,label,value])=>`<div${icon==='reinforcement'?' class="c195-unit-reinforcement"':''}><dt><img aria-hidden="true" alt="" src="/assets/ui-v3/hud/kit-icon-${icon==='reinforcement'?'troops':icon}.png">${label}</dt><dd>${esc(value??'—')}</dd></div>`).join('')}</dl>`;
 }
 function renderBandSupply(root,d){
- const supply=d.mode==='supply',focus=!!d.unitStatus,title=root.querySelector('.nb-state-title');
+ const supply=d.mode==='supply'&&!root.querySelector('.c236-map-switches'),focus=!!d.unitStatus,title=root.querySelector('.nb-state-title');
  title.hidden=!supply&&!focus;title.querySelector('h1').textContent=supply?'지도 · 보급':focus?'전장 집중':'';
  title.querySelector('p').innerHTML=supply?(d.bandSupply?.supply?.model==='clock'||d.foodModel==='clock'?`보급권 ${labelNumber(d.supplyRange)}칸 안은 군량이 줄지 않습니다.<br>권 밖에서는 휴대 군량으로 버팁니다.`:'보급선과 휴대 군량을 확인하십시오.<br>길이 끊기면 휴대 군량으로 버팁니다.')+'<br><button data-mode="world">Esc · 지형으로</button>' : focus?'대상을 선택하고 명령을 내리세요.':'';
  const panel=root.querySelector('.nb-supply'),face=d.bandSupply?root.querySelector('.ih-face img')?.getAttribute('src'):'';
@@ -774,7 +781,8 @@ function renderCommandBand(root,d,showUnit,menu){
  const selected=q('.nb-selected');selected.hidden=!showUnit;selected.innerHTML=showUnit?selectedUnitHtml(d):'';
  q('.nb-bookmarks [data-band-map] span').textContent=RAIL.find(([m])=>m===d.mode)?.[1]??'지형';q('.nb-badge').textContent=d.council||'';
  for(const button of root.querySelectorAll('.nb-bookmarks [data-mode]'))button.classList.toggle('on',button.dataset.mode===d.mode);
- q('.nb-end-warning').textContent=q('.ih-end small').textContent;q('.nb-end-warning').title=q('.nb-end-warning').textContent;
+ renderCommandScreen(root,d);
+ q('.nb-end-warning').textContent=d.remaining?`남은 부대 ${d.remaining} · 이번 차례 넘기기`:'';q('.nb-end-warning').title=q('.nb-end-warning').textContent;
  q('.ih-end').classList.toggle('ready',d.remaining===0&&!q('.ih-end').disabled);
  const task=Math.max(d.todo??0,d.todoLines?.length??0),news=d.allNews??[],latest=news[0]??'';q('.nb-news-tab').textContent=`이번 차례 · 할 일 ${task}`;
  q('.nb-tasks').hidden=false;q('.nb-tasks').innerHTML=(d.todoLines?.length?d.todoLines:['이번 차례 남은 안건이 없습니다.']).map(t=>`<li><i aria-hidden="true">➜</i>${typeof t==='string'?`<span>${esc(t)}</span>`:`<button type="button" data-c210-facility="${esc(t.cityId)}" data-c210-kind="${esc(t.kind)}">${esc(t.text)}</button>`}<i class="nb-check" aria-hidden="true">○</i></li>`).join('');
@@ -783,17 +791,17 @@ function renderCommandBand(root,d,showUnit,menu){
  let html;
  if(showUnit){
   const name=menu.querySelector('.dk-id h2')?.textContent??'',face=menu.querySelector('.dk-face img')?.src??'',r=d.ratings,st=d.bandStatus??{};
-  const button=(b,display=null)=>{const label=b.cloneNode(true);label.querySelectorAll('.gi,kbd,.tactic-wait,.tactic-meter').forEach(n=>n.remove());const reason=b.title||label.textContent.trim();label.querySelectorAll('small').forEach(n=>n.remove());return `<button${tacticFaceCopy(b)} data-act="${esc(b.dataset.menu??'tactic')}"${b.dataset.tactic?` data-tactic="${esc(b.dataset.tactic)}"`:''}${b.disabled?' disabled':''}${d.bandSelected===(b.dataset.tactic??b.dataset.menu)?' aria-pressed="true"':''} title="${esc(reason)}">${esc(display??label.textContent.trim())}${b.dataset.tactic?tacticFaceMarkup(Number(b.dataset.cooldown??0),b.dataset.gauge===undefined?null:Number(b.dataset.gauge)):''}</button>`;};
+  const button=(b,display=null)=>{const label=b.cloneNode(true);label.querySelectorAll('.gi,kbd,.tactic-wait,.tactic-meter').forEach(n=>n.remove());const reason=b.title||label.textContent.trim();label.querySelectorAll('small').forEach(n=>n.remove());return `<button${tacticFaceCopy(b)} data-act="${esc(b.dataset.menu??'tactic')}"${b.dataset.tactic?` data-tactic="${esc(b.dataset.tactic)}"`:''}${b.disabled?' disabled':''}${d.bandSelected===(b.dataset.tactic??b.dataset.menu)?' aria-pressed="true"':''} title="${esc(reason)}">${esc(display??label.textContent.trim())}${b.dataset.tactic?tacticFaceMarkup(Number(b.dataset.cooldown??0),b.dataset.gauge===undefined?null:Number(b.dataset.gauge),b.dataset.cost===undefined?null:Number(b.dataset.cost)):''}</button>`;};
   const all=[...menu.querySelectorAll('.dk-acts button')],more=['face','garrison','wait','hub','officer','recall','star','cancel-order'];
   const fallback=(action,label,reason)=>{if(all.some(b=>b.dataset.menu===action))return;const b=document.createElement('button');b.dataset.menu=action;b.disabled=true;b.title=reason;b.textContent=label;all.push(b);};
   fallback('move','이동',d.unitStatus?.actions?.reason||'이번 차례 이동을 쓸 수 없습니다');
   fallback('attack','공격',d.unitStatus?.actions?.main.available?'지금 칠 수 있는 적이나 성이 없습니다':'주 행동을 쓸 수 없습니다');
   fallback('brace','방어','이번 차례 주 행동을 마쳤습니다');fallback('regroup','재정비','이번 차례 주 행동을 마쳤습니다');
   fallback('face','정면','이번 차례 이동을 썼습니다');fallback('garrison','주둔',d.garrisonWhy||'아군 성 주변에서 복귀할 수 있습니다');fallback('wait','대기','이번 차례 명령을 마쳤습니다');fallback('hub','거점','지금은 거점을 지을 수 없습니다');
-  const ordered=[...all.filter(b=>['move','attack'].includes(b.dataset.menu)),...all.filter(b=>b.dataset.tactic),...all.filter(b=>['brace','regroup'].includes(b.dataset.menu))];
+  const ordered=[...all.filter(b=>['move','attack'].includes(b.dataset.menu)),...all.filter(b=>b.dataset.tactic),...all.filter(b=>['engine','disengage','brace','regroup'].includes(b.dataset.menu))];
   ordered.sort((a,b)=>({move:0,attack:1,brace:3,regroup:4}[a.dataset.menu]??2)-({move:0,attack:1,brace:3,regroup:4}[b.dataset.menu]??2));
   const reasons=ordered.filter(b=>b.disabled).map(b=>b.title).filter(Boolean);
-  html=`<button class="nb-hero" data-act="officer" title="장수 정보"><img src="${esc(face)}" alt="${esc(name)}"><small class="c186-band-seal">${esc(d.unitClass??'')}</small></button><div class="nb-identity"><b>${esc(name)} · 병력 ${troopText(d.unitTroops??0)}</b><small class="c186-band-class">${esc(d.bandMeta?.replace(/ · 병력.*$/,'')??'')}</small><p class="nb-help" title="${esc(reasons.join(' · '))}">${esc(d.commandIntent||'행동을 선택하세요.')}</p></div><div class="nb-orders"><div class="nb-order-row">${ordered.slice(0,3).map((b,i)=>button(b,i===2&&b.dataset.tactic?'전법':null)).join('')}<button data-band-more aria-expanded="false">더 보기</button></div><div class="nb-more" hidden>${[...ordered.slice(3),...all.filter(b=>more.includes(b.dataset.menu))].map(b=>button(b)).join('')}</div></div>`;
+  html=`<button class="nb-hero" data-act="officer" title="장수 정보"><img src="${esc(face)}" alt="${esc(name)}"></button><div class="nb-identity"><b>${esc(name)} · 병력 ${troopText(d.unitTroops??0)}</b><small class="c186-band-class">${esc(d.bandMeta?.replace(/ · 병력.*$/,'')??'')}</small>${engineStatusMarkup(d.unitEngine)}<p class="nb-help" title="${esc(reasons.join(' · '))}">${esc(d.commandIntent||'행동을 선택하세요.')}</p></div><div class="nb-orders"><div class="nb-order-row">${ordered.slice(0,3).map((b,i)=>button(b,null)).join('')}<button data-band-more aria-expanded="false">더 보기</button></div><div class="nb-more" hidden>${[...ordered.slice(3),...all.filter(b=>more.includes(b.dataset.menu))].map(b=>button(b)).join('')}</div></div>`;
   q('.nb-sheet > div').innerHTML=q('.ih-readout').innerHTML;
  }else{
   html='';
@@ -856,8 +864,8 @@ export function overlapSelection(units, tileId, point, rectangles, previous=null
 }
 
 // C159: face adornments survive the hidden menu -> ink HUD bridge.
-export function tacticFaceMarkup(cooldown=0,gauge=null){return `${cooldown>0?`<span class="tactic-wait" aria-label="${cooldown}차례 대기">${cooldown}</span>`:''}${gauge===null?'':`<span class="tactic-meter" style="--tactic-gauge:${gauge}%" aria-label="고유 전법 게이지 ${gauge}/100"><i></i><em>${Math.round(gauge)}</em></span>`}`;}
-function tacticFaceCopy(b){return b.dataset.tactic?` data-cooldown="${b.dataset.cooldown??0}"${b.dataset.gauge===undefined?'':` data-gauge="${b.dataset.gauge}"`} class="tactic-face${b.dataset.cooldown>0||b.dataset.gauge!==undefined&&b.dataset.gauge<100?' cooling':''}"`:'';}
+export function tacticFaceMarkup(cooldown=0,gauge=null,cost=null){return `${cooldown>0?`<span class="tactic-wait" aria-label="${cooldown}차례 대기">${cooldown}</span>`:''}${gauge===null?'':`<span class="tactic-meter" style="--tactic-gauge:${gauge}%" aria-label="전법 게이지 ${gauge}/100"><i></i>${cost===null?'':`<b class="tactic-cost" style="left:${cost}%" aria-label="비용 ${cost}"></b>`}<em>${Math.round(gauge)}/100</em></span>`}`;}
+function tacticFaceCopy(b){return b.dataset.tactic?` data-cooldown="${b.dataset.cooldown??0}" data-cost="${b.dataset.cost??100}"${b.dataset.gauge===undefined?'':` data-gauge="${b.dataset.gauge}"`} class="tactic-face${b.dataset.cooldown>0||b.dataset.gauge!==undefined&&b.dataset.gauge<Number(b.dataset.cost??100)?' cooling':''}"`:'';}
 // C186: presentation helpers. Inputs are public views except the undo guard,
 // which compares the two immutable engine snapshots without displaying secrets.
 export function movementUndoReason(before,after,request,bv,av){
@@ -1112,4 +1120,44 @@ export function stratagemPanelHtml(options,ui={},result=null,faces={}){
  ${officer&&!ui.kind?`<div class="c226-cards" aria-label="종류 고르기">${STRATAGEM_CARDS.map(c=>{const blocked=!choices.some(p=>p.cmd.kind===c.kind);return `<button class="c226-card" data-stratagem-kind="${c.kind}" ${blocked?'disabled':''}><span class="art"><img src="/assets/ui-v3/u3/stratagem/art-${c.art}.png" alt=""></span><h3>${c.name}</h3><p>${c.effect}</p><small>${blocked?c.blocked:'지도에서 대상을 고릅니다'}</small></button>`;}).join('')}</div>`:''}
  ${card?`<button class="c226-picked" data-stratagem-repick><img src="/assets/ui-v3/u3/stratagem/art-${card.art}.png" alt="">${card.name} · 다시 고르기</button><p>밝은 테두리의 ‘대상’을 누르세요.</p>`:''}
  ${p?`<section class="c226-preview"><h3>계략 예고 · ${esc(p.targetName)}</h3><p>성공률 ${p.chance}% · 들킬 위험 ${p.exposedRisk}%</p><p>${esc(p.effectText)}</p><button data-stratagem-execute>실행</button></section>`:''}<button data-stratagem-close>취소</button></div>`;
+}
+
+// Promotion cards consume only the public pending growth projection.
+export function promotionCardsMarkup(pending,picked=null){
+ return pending.cards.map(c=>`<button class="draft-card c233-promotion${c.traitId===picked?' picked':''}" data-rarity="LEGENDARY" data-draft-pick="${esc(c.traitId)}" aria-pressed="${c.traitId===picked}"><span class="kind">2차 전직 · ${esc(c.axis??'기본')}</span><h3>${esc(c.name)}</h3>${c.seal?`<p class="c233-seal">봉인 · ${esc(c.seal)}</p>`:''}<p class="c233-rule">${esc(c.text)}</p><span class="foot">${c.count!==undefined?`실적 ${c.count}/${c.goal}`:'W 칸 그대로'}</span></button>`).join('');
+}
+
+// C236: stable command rows. Faces use the shared heads.json crop observer.
+export function commandRowsHtml(rows=[],kind='unit',selected=null){
+ return rows.map(r=>`<button type="button" class="c236-row${r.ended?' spent':''}${r.id===selected?' selected':''}" data-command-kind="${kind}" data-command-id="${esc(r.id)}" aria-pressed="${r.id===selected}"><span class="c236-face">${r.face?`<img src="${esc(r.face)}" alt="${esc(kind==='city'?r.governor:r.name)}">`:'城'}</span><span class="c236-row-text"><b>${esc(r.name)}</b>${kind==='unit'?`<span><img class="c236-troop-icon" src="/assets/ui-v3/units-ink/c170-${esc(({bow:'bow',cavalry:'cavalry',spear:'spear'})[r.type]??'militia')}.png" alt="${esc(r.typeName)}"> ${esc(r.typeName)} · ${troopText(r.troops)}</span><small class="c236-actions">이동 <span class="${r.actions.move.available?'':'used'}">${r.actions.move.available?'가능':'사용함'}</span> · 주 행동 <span class="${r.actions.main.available?'':'used'}">${r.actions.main.available?'가능':'사용함'}</span></small><small>${esc(r.risk)}</small>`:`<span>${esc(cityProductionText(r.production))}</span><small>군량 ${r.food===null?'유지':`${r.food}차례 뒤 바닥`} · ${esc(r.threat)}</small>`}</span></button>`).join('')||`<p>${kind==='unit'?'출진한 부대가 없습니다.':'내 성이 없습니다.'}</p>`;
+}
+function mountCommandScreen(root){
+ root.querySelector('.ih').insertAdjacentHTML('beforeend',`<aside class="c236-command-list" aria-label="출진 부대와 성"><header><b class="c236-list-count"></b><button data-command-collapse aria-expanded="true">접기</button></header><nav aria-label="목록 종류"><button data-command-tab="unit" aria-pressed="true">출진 부대</button><button data-command-tab="city" aria-pressed="false">성</button></nav><div class="c236-rows"></div></aside><nav class="c236-map-switches" aria-label="지도 보기">${RAIL.map(([m,label])=>`<button data-mode="${m}" aria-pressed="false">${label}</button>`).join('')}</nav><aside class="c236-layer-key" hidden></aside><aside class="c236-objectives" aria-label="목표와 이번 차례 할 일"></aside><div class="c236-undo"></div>`);
+ root.querySelector('.c236-objectives').append(root.querySelector('.nb-todo-panel'));
+ root.querySelector('.ih-date').insertAdjacentHTML('beforeend','<span class="c236-phase"></span>');
+ root.addEventListener('click',e=>{
+  const tab=e.target.closest('[data-command-tab]'),collapse=e.target.closest('[data-command-collapse]'),row=e.target.closest('[data-command-id]');
+  if(tab){root.dataset.commandTab=tab.dataset.commandTab;renderCommandScreen(root,root._commandData??{});}
+  if(collapse){const panel=root.querySelector('.c236-command-list'),closed=panel.classList.toggle('collapsed');collapse.textContent=closed?'펼치기':'접기';collapse.setAttribute('aria-expanded',String(!closed));document.dispatchEvent(new CustomEvent('ink:uncover'));}
+  if(row)document.dispatchEvent(new CustomEvent('ink:command-select',{detail:{kind:row.dataset.commandKind,id:row.dataset.commandId}}));
+ });
+ root.querySelector('.c236-command-list').addEventListener('keydown',e=>{
+  if(!['ArrowUp','ArrowDown'].includes(e.key))return;
+  const rows=[...root.querySelectorAll('[data-command-id]')];if(!rows.length)return;e.preventDefault();
+  const i=rows.indexOf(e.target.closest('[data-command-id]')),next=rows[(i+(e.key==='ArrowDown'?1:-1)+rows.length)%rows.length];next.focus();next.click();
+ });
+}
+function renderCommandScreen(root,d){
+ root._commandData=d;
+ root.querySelector('.c236-phase').textContent=String(d.summary??'').split(' · ')[0];
+ const rows=d.commandRows??{units:[],cities:[]},kind=root.dataset.commandTab??'unit',host=root.querySelector('.c236-rows');
+ root.querySelector('.c236-list-count').textContent=`부대 ${rows.units.length} · 남은 ${d.remaining??0}`;
+ for(const b of root.querySelectorAll('[data-command-tab]'))b.setAttribute('aria-pressed',String(b.dataset.commandTab===kind));
+ const html=commandRowsHtml(kind==='unit'?rows.units:rows.cities,kind,kind==='unit'?d.unitStatus?.id:d.selectedCity);
+ if(host._html!==html){const id=document.activeElement?.dataset.commandId,scroll=host.scrollTop;host.innerHTML=html;host._html=html;host.scrollTop=scroll;if(id)[...host.querySelectorAll('[data-command-id]')].find(b=>b.dataset.commandId===id)?.focus({preventScroll:true});}
+ const objectives=root.querySelector('.c236-objectives'),bands=document.querySelector('#c205-bands');if(bands&&bands.parentElement!==objectives)objectives.prepend(bands);
+ for(const b of root.querySelectorAll('.c236-map-switches [data-mode]'))b.setAttribute('aria-pressed',String(b.dataset.mode===d.mode));
+ const layer=root.querySelector('.c236-layer-key');layer.hidden=!d.mode||d.mode==='world';
+ const legends={supply:`보급 · 보급권 ${d.supplyRange??'—'}칸 · 선은 연결`,faction:'세력 · 영역색은 소속 세력',diplomacy:'외교 · 색과 선은 관계',trace:'탐험 · 점선 원과 돋보기는 조사 목표'};
+ layer.innerHTML=layer.hidden?'':`<span>${esc(legends[d.mode]??'지형')}</span><button data-mode="world">기본 보기</button>`;
 }

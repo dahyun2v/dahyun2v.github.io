@@ -1,7 +1,9 @@
+import {SAMPLE4} from './campaign-rule-registry.mjs';
+import {offerPromotion,pendingPromotion,selectPromotion,aiPromotionChoice,initializeOfficerEngine,validateOfficerEngine,engineCombatHit} from './campaign-engines.mjs';
 import {installC33,c33Eligible} from './campaign-rule-registry.mjs';
 import {c31Combat} from './campaign-events.mjs';
 import {c30Learn,c30Combat} from './campaign-c29.mjs';
-import {initializeC29,c29Enabled,c29BindingTargets,c29Bind,c29AiBinding,composeC29Draft,selectedC29,rerollC29,c29AiChoice,c29Combat,c29EvolutionCandidates,c29XpFactor,validateC29,c29TacticCard} from './campaign-c29.mjs';
+import {initializeC29,c29Text,c29Enabled,c29BindingTargets,c29Bind,c29AiBinding,composeC29Draft,selectedC29,rerollC29,c29AiChoice,c29Combat,c29EvolutionCandidates,c29XpFactor,validateC29,c29TacticCard} from './campaign-c29.mjs';
 import {initializeC28,c28Eligible,composeC28Draft,rerollC28Draft,selectedC28,recordC28Combat,c28Enabled,validateC28} from './campaign-career.mjs';
 import {domesticGovernance,installCommonCombatTactics} from './campaign-rule-registry.mjs';
 import {overlayUniquePack,uniqueLevel,uniqueXpFactor} from './campaign-rule-registry.mjs';
@@ -113,17 +115,19 @@ export function resolveTraitSpace(s,id,resolution){
   syncPoolFingerprint(r);return result;
 }
 export function syncPoolFingerprint(r){const stable=v=>Array.isArray(v)?`[${v.map(stable).join(',')}]`:v&&typeof v==='object'?`{${Object.keys(v).sort().map(k=>`${JSON.stringify(k)}:${stable(v[k])}`).join(',')}}`:JSON.stringify(v);r.track.poolFingerprint=stable(r.pool);}
-export function autoEquipCampaignTactics(s,id){const r=s.campaignGrowth.officers[id];r.equippedTacticIds=officerEffectCards(s,id,{tactics:true}).filter(c=>!r.c29||c.traitId!==r.representativeId).sort((a,b)=>Number(tacticIsDamage(b))-Number(tacticIsDamage(a))||Number(b.traitId===r.representativeId)-Number(a.traitId===r.representativeId)||a.traitId.localeCompare(b.traitId)).slice(0,CAMPAIGN_TACTIC_SLOTS).map(c=>c.traitId);}
+export function autoEquipCampaignTactics(s,id){const r=s.campaignGrowth.officers[id];if(c29Enabled(s)&&r.equippedTacticIds?.length&&Object.values(s.armies).some(a=>a.commanderId===id&&castleArmyActive(s,a)&&!Object.values(s.cities).some(c=>c.tileId===a.tileId)))return;r.equippedTacticIds=officerEffectCards(s,id,{tactics:true}).filter(c=>!r.c29||c.traitId!==r.representativeId).sort((a,b)=>Number(tacticIsDamage(b))-Number(tacticIsDamage(a))||Number(b.traitId===r.representativeId)-Number(a.traitId===r.representativeId)||a.traitId.localeCompare(b.traitId)).slice(0,c29Enabled(s)?1:CAMPAIGN_TACTIC_SLOTS).map(c=>c.traitId);}
 export function tacticLoadoutReason(s,id){
   const o=s.officers[id];if(s.phase!=='PLAYER'||s.gameResult||o?.allegianceFactionId!==s.playerFactionId||o.lifeState!=='ALIVE'||o.captivityState!=='FREE')return '내 차례의 소속 장수만 변경 가능';
+  if(c29Enabled(s)&&Object.values(s.armies).some(a=>a.commanderId===id&&castleArmyActive(s,a)&&!Object.values(s.cities).some(c=>c.tileId===a.tileId)))return 'TACTIC_LOADOUT_DEPLOYED';
   if(Object.values(s.armies).some(a=>a.commanderId===id&&a.tacticUsedTurn===s.turn))return '이번 턴 전법을 이미 사용함';
   return null;
 }
 export function applyTacticLoadout(s,{officerId:id,traitId,equip}){
-  const r=s.campaignGrowth.officers[id];if(tacticLoadoutReason(s,id))fail('TACTIC_LOADOUT_LOCKED');
+  const r=s.campaignGrowth.officers[id];if(tacticLoadoutReason(s,id))fail(tacticLoadoutReason(s,id)==='TACTIC_LOADOUT_DEPLOYED'?'TACTIC_LOADOUT_DEPLOYED':'TACTIC_LOADOUT_LOCKED');
   if(r?.c29&&traitId===r.representativeId)fail('C29_SIGNATURE_SEPARATE_SLOT');
   if(!r||!officerEffectCards(s,id,{tactics:true}).some(c=>c.traitId===traitId))fail('TACTIC_NOT_LEARNED');
   if(typeof equip!=='boolean')fail('INVALID_TACTIC_LOADOUT');
+  if(equip&&c29Enabled(s))r.equippedTacticIds=[traitId];
   if(equip&&!r.equippedTacticIds.includes(traitId)){if(r.equippedTacticIds.length>=CAMPAIGN_TACTIC_SLOTS)fail('TACTIC_SLOTS_FULL');r.equippedTacticIds.push(traitId);}
   if(!equip)r.equippedTacticIds=r.equippedTacticIds.filter(k=>k!==traitId);
   return s;
@@ -149,8 +153,10 @@ function migrateGrowthRecord(s,id){
     syncPoolFingerprint(r);r.commonTraitsVersion=2;
   }
   if(c25Enabled(s)){initializeCareer(r);initializeC28(r);const count=r.pool.traits.length;installCareerCards(r);installCommonCombatTactics(r);r.c33Troops??=s.officers[r.pack.id]?.allowedTroops??[];installC33(r);if(count!==r.pool.traits.length)syncPoolFingerprint(r);}
-  initializeC29(s,id);syncPoolFingerprint(r);
-  if(!r.equippedTacticIds)r.equippedTacticIds=officerEffectCards(s,id,{tactics:true}).slice(0,CAMPAIGN_TACTIC_SLOTS).map(c=>c.traitId);
+  initializeC29(s,id);initializeOfficerEngine(s,id);installSample4(s,id);
+  if(c29Enabled(s)&&r.tacticLoadoutVersion!==2){r.equippedTacticIds=(r.equippedTacticIds??[]).filter(k=>k!==r.representativeId).slice(0,1);r.tacticLoadoutVersion=2;}
+  syncPoolFingerprint(r);
+  if(!r.equippedTacticIds)r.equippedTacticIds=officerEffectCards(s,id,{tactics:true}).slice(0,c29Enabled(s)?1:CAMPAIGN_TACTIC_SLOTS).map(c=>c.traitId);
 }
 
 export function potentialAt(value){
@@ -212,14 +218,14 @@ export function initializeCampaignGrowth(s,packs=trialPacks){
       track:createGrowthTrack({campaignId:`C4.${s.campaignSeed}`,pool:built.pool,characters:{[o.officerId]:profile}})};
     const r=s.campaignGrowth.officers[o.officerId];if(r.representativeId)r.track.growthStates[o.officerId].ownedTraitRanks[r.representativeId]=1;
     if(c25Enabled(s)){initializeCareer(r);initializeC28(r);const count=r.pool.traits.length;installCareerCards(r);installCommonCombatTactics(r);r.c33Troops=o.allowedTroops??[];installC33(r);if(count!==r.pool.traits.length)syncPoolFingerprint(r);}
-    r.commonTraitsVersion=2;r.rarityVersion=2;r.equippedTacticIds=r.representativeId?[r.representativeId]:[];initializeC29(s,o.officerId);syncPoolFingerprint(r);
+    initializeOfficerEngine(s,o.officerId);r.commonTraitsVersion=2;r.rarityVersion=2;r.equippedTacticIds=r.representativeId?[r.representativeId]:[];initializeC29(s,o.officerId);if(c29Enabled(s))r.tacticLoadoutVersion=2;installSample4(s,o.officerId);syncPoolFingerprint(r);
   }
   return s;
 }
 const growthState=(record,id)=>record.track.growthStates[id];
 export function campaignOfficerGrowth(s,id){
   const r=s.campaignGrowth?.officers[id];if(!r)return null;
-  return {potential:r.potential,status:r.status,cards:[...officerEffectCards(s,id),...officerEffectCards(s,id,{tactics:true}).map(c=>c29TacticCard(s,id,c))],level:growthState(r,id).level,xp:r.xp,
+  return {potential:r.potential,status:r.status,cards:[...officerEffectCards(s,id),...officerEffectCards(s,id,{tactics:true}).map(c=>c29TacticCard(s,id,c))].map(c=>r.c29?{...c,text:c29Text(c.text)}:c),level:growthState(r,id).level,xp:r.xp,
     ...(c25Enabled(s)?{trace:clone(r.trace),titles:clone(r.titles),c28:clone(r.c28),...(r.c29?{signature:{traitId:r.representativeId,gauge:r.c29.gauge,max:100},awakenings:r.c29.awakenings.map(({id,name,text})=>({id,name,text}))}:{} )}:{}),totalXp:r.totalXp,nextXp:campaignNextXp(r,growthState(r,id).level),ownedTraitRanks:clone(growthState(r,id).ownedTraitRanks),traitSlots:CAMPAIGN_TRAIT_SLOTS,traitCount:officerEffectCards(s,id).length,equippedTacticIds:[...r.equippedTacticIds]};
 }
 // A military-order draft is a confirmed reward, not a synthetic level entitlement.
@@ -239,8 +245,9 @@ export function pendingCampaignDraft(s){
     if(s.wanderers?.[id])continue;
     const o=s.officers[id];
     if(o.allegianceFactionId!==s.playerFactionId||o.lifeState!=='ALIVE'||o.captivityState!=='FREE')continue;
+    const promotion=pendingPromotion(s,id);if(promotion)return promotion;
     const draft=r.track.draftOrder.map(k=>r.track.draftsById[k]).find(d=>d.state==='OFFERED');
-    if(draft)return {officerId:id,draft:clone(draft),cards:draft.offeredIds.map(k=>({...clone(r.cards[k]),
+    if(draft)return {officerId:id,draft:clone(draft),cards:draft.offeredIds.map(k=>({...clone(r.cards[k]),...(r.c29&&typeof r.cards[k].text==='string'?{text:c29Text(r.cards[k].text)}:{}),
       ...(c25Enabled(s)?{sourceText:r.cards[k].sourceText??(r.cards[k].kind==='tactic'?'전투 전법':k===r.coreId?'고유 특기':'공용 전투 특기')} :{}),
       ...(r.cards[k].modifier?{bindingTargets:c29BindingTargets(s,id,r.cards[k])}:{}),...(draft.c29?.awakening?{slot:r.cards[k].branch,rerollsRemaining:r.cards[k].branch==='wild'&&!draft.c29.rerolled?1:0}:{}),
       ...(draft.c28?{slot:draft.offered.find(t=>t.traitId===k)?.slot,sourceText:draft.offered.find(t=>t.traitId===k)?.sourceText,rerollsRemaining:(draft.offered.find(t=>t.traitId===k)?.rerollsRemaining??0)+draft.c28.bonusRerolls,replace:!!draft.offered.find(t=>t.traitId===k)?.replace}:{}),rank:growthState(r,id).ownedTraitRanks[k]??0})),status:r.status};
@@ -265,7 +272,7 @@ function pick(s,id,draft,traitId,resolution=null,tacticId=null){
     s.officers[id].baseStats[key]=s.mapId==='v1'?Math.min(100,s.officers[id].baseStats[key]+card.amount):s.officers[id].baseStats[key]+card.amount;
   }
   if(!result.replayed&&card.kind==='tactic'){
-    if(r.equippedTacticIds.length<CAMPAIGN_TACTIC_SLOTS&&!r.equippedTacticIds.includes(traitId))r.equippedTacticIds.push(traitId);
+    if(r.equippedTacticIds.length<(c29Enabled(s)?1:CAMPAIGN_TACTIC_SLOTS)&&!r.equippedTacticIds.includes(traitId))r.equippedTacticIds.push(traitId);
     else if(!r.equippedTacticIds.includes(traitId))s.campaignGrowth.log.push({turn:s.turn,officerId:id,text:`${card.name}: 전법 보관 (장착 칸이 가득 참)`});
   }
   if(!result.replayed&&card.c33){s.c33??={};s.c33.selected??={};s.c33.selected[card.id]=(s.c33.selected[card.id]??0)+1;}
@@ -297,6 +304,7 @@ export function resolveCampaignAiDrafts(s,{autoPlayer=false}={}){
   for(const [id,r] of Object.entries(s.campaignGrowth?.officers??{})){
     if(s.wanderers?.[id])continue;
     if(!autoPlayer&&s.officers[id].allegianceFactionId===s.playerFactionId&&s.officers[id].lifeState==='ALIVE'&&s.officers[id].captivityState==='FREE')continue;
+    if(r.c50?.promotion)selectPromotion(s,id,aiPromotionChoice(s,id));
     for(const key of r.track.draftOrder){
       const d=r.track.draftsById[key];if(d.state!=='OFFERED')continue;
       // Stable trial choice; trait overflow merges the lowest-ranked two.
@@ -313,6 +321,7 @@ export function applyCampaignDraftCommand(s,command){
   const pending=pendingCampaignDraft(s);
   if(!pending||command.draftId!==pending.draft.draftId)fail('INVALID_CAMPAIGN_DRAFT');
   const {officerId:id,draft}=pending,r=s.campaignGrowth.officers[id];
+  if(draft.promotion){if(command.type!=='DRAFT_PICK')fail('INVALID_PROMOTION_COMMAND');selectPromotion(s,id,command.traitId);return s;}
   if(command.type==='DRAFT_PICK')pick(s,id,draft,command.traitId,command.resolution,command.tacticId);
   else if(command.type==='DRAFT_REROLL'&&draft.c29?.awakening){rerollC29(s,id,r.track.draftsById[draft.draftId],command.traitId);syncPoolFingerprint(r);validateGrowthTrack(r.track);}
   else if(command.type==='DRAFT_REROLL'&&draft.c28){
@@ -323,7 +332,7 @@ export function applyCampaignDraftCommand(s,command){
     if(draft.eligibleCandidateSnapshot.filter(c=>!draft.offeredIds.includes(c.traitId)).length<1)fail('REROLL_NO_ALTERNATIVES');
     const result=rerollGrowthDraft({draft,state:growthState(r,id),config});
     r.track.draftsById[draft.draftId]=result.draft;r.track.growthStates[id]=result.nextState;
-    validateGrowthTrack(r.track);
+    validateOfficerEngine(s,id);validateGrowthTrack(r.track);
   }else fail('INVALID_CAMPAIGN_DRAFT_COMMAND');
   return s;
 }
@@ -373,6 +382,7 @@ export function creditCampaignGrowth(s,{eventId,officerId,kind,amount,fixed=fals
       state:{...previous,aptitudePoints:previous.aptitudePoints+1},context,pool:c28Enabled(s)?c28Eligible(s,officerId,draftPoolForLevel(r,levelAfter),levelAfter,c=>!(c.effects??[]).some(e=>e.op==='RULE'&&!campaignEffectValid(e,c))):draftPoolForLevel(r,levelAfter),seed:s.campaignSeed,rngState:entitlement.rngState,config});
     r.track=granted.state;generated.nextState.level=levelAfter;generated.draft.ruleDoubleDraft=double;generated.draft.rerollLimit=double?2:1;if(config.candidateCount>campaignDraftConfig(r.potential,double).candidateCount)generated.draft.c26Extra=config.candidateCount-campaignDraftConfig(r.potential,double).candidateCount;
     if(c28Enabled(s)){composeC28Draft(s,officerId,generated.draft);composeC29Draft(s,officerId,generated.draft);syncPoolFingerprint(r);}
+    offerPromotion(s,officerId,levelAfter);
     const statsBefore=clone(s.officers[officerId].baseStats);
     applyAutomaticStats(s,officerId,levelAfter);
     uniqueLevel(s,officerId);
@@ -390,6 +400,8 @@ export function creditCampaignGrowth(s,{eventId,officerId,kind,amount,fixed=fals
   return resolveCampaignAiDrafts(s,{autoPlayer:s.autoPlayer===true});
 }
 export function creditCampaignCombat(s,combat){
+  if(s.disengageResolving)return s;
+  engineCombatHit(s,combat);
   c31Combat(s,combat);
   c30Combat(s,combat);
   if(!combat.tacticId)c29Combat(s,combat);
@@ -413,8 +425,8 @@ export function creditCampaignCombat(s,combat){
 export function validateCampaignGrowth(s){
   if(!s.campaignGrowth||s.campaignGrowth.version!==1)fail('INVALID_CAMPAIGN_GROWTH');
   for(const [id,r] of Object.entries(s.campaignGrowth.officers)){
-    validateGrowthTrack(r.track);potentialMultiplier(r.potential);
-    if(!Array.isArray(r.equippedTacticIds)||r.equippedTacticIds.length>CAMPAIGN_TACTIC_SLOTS||new Set(r.equippedTacticIds).size!==r.equippedTacticIds.length||r.equippedTacticIds.some(k=>r.cards[k]?.kind!=='tactic'||!growthState(r,id).ownedTraitRanks[k]))fail('INVALID_TACTIC_LOADOUT');
+    validateOfficerEngine(s,id);validateGrowthTrack(r.track);potentialMultiplier(r.potential);
+    if(!Array.isArray(r.equippedTacticIds)||r.equippedTacticIds.length>(c29Enabled(s)?1:CAMPAIGN_TACTIC_SLOTS)||new Set(r.equippedTacticIds).size!==r.equippedTacticIds.length||r.equippedTacticIds.some(k=>r.cards[k]?.kind!=='tactic'||!growthState(r,id).ownedTraitRanks[k]))fail('INVALID_TACTIC_LOADOUT');
     if(c25Enabled(s))validateCareer(s,id,r);validateC28(s,id,r);validateC29(s,id);
     const level=growthState(r,id).level;
     if(!(s.officers[id]??s.wanderers?.[id])||level>30||!Number.isSafeInteger(r.xp)||r.xp<0||
@@ -512,4 +524,15 @@ export function recordCampaignCombatCareer(s,c){
   }
  }
  for(const change of c.moraleChanges??[])if(change.to==='ROUTING'&&change.from!=='ROUTING')recordCareer(s,s.armies[change.armyId]?.commanderId,`${key}.routed.${change.armyId}`,{routed:1});
+}
+
+function installSample4(s,id){
+ if(!['v2','v3'].includes(s.mapId))return;
+ const o=SAMPLE4.find(o=>o.id===id),r=s.campaignGrowth.officers[id];if(!o||r.sample4Version===1)return;
+ const key=`${id}.sample4.E`,owned=r.track.growthStates[id].ownedTraitRanks;
+ r.cards[r.coreId]={...structuredClone(o.uniqueTrait),traitId:r.coreId,core:true};
+ r.cards[r.representativeId]={...structuredClone(o.signatureTactic),traitId:r.representativeId};
+ r.cards[key]={...structuredClone(o.signatureE),traitId:key,signatureE:true,core:false};
+ r.pool.traits.push({traitId:key,ownershipType:'PUBLIC',rarity:'LEGENDARY',rankMax:5,stageTags:['EARLY','MID','LATE'],affinityTags:[],roleTags:[],experienceTags:[]});
+ owned[key]=1;if(!r.equippedTacticIds?.length)r.equippedTacticIds=[key];r.signatureEId=key;r.sample4Version=1;syncPoolFingerprint(r);
 }

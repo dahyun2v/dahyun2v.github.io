@@ -1,8 +1,8 @@
+import {engineEvent} from './campaign-engines.mjs';
 import {injuryDefeats} from './campaign-injury.mjs';
 import {recordSituationEvent} from './campaign-situations.mjs';
 import {supplyCombat,supplyEnabled} from './campaign-supply.mjs';
 import {dejaVuEvent} from './campaign-deja-vu.mjs';
-import {classWoundedRatio,armyClass,countClass} from './campaign-classes.mjs';
 import {c34Capture} from './campaign-c34.mjs';
 import {c33Owned} from './campaign-rule-registry.mjs';
 import {domesticCaptured,domesticWelcomeCapture} from './campaign-rule-registry.mjs';
@@ -37,7 +37,6 @@ export function campaignPersonnel(world) {
 export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads) {
   if(!defeatPayloads.length&&!cityCapturePayloads.length)return world;
   defeatPayloads=injuryDefeats(world,defeatPayloads);
-  const classCaptures=cityCapturePayloads.map(p=>{const c=world.cities[p.capturedCityId],a=Object.values(world.armies).find(a=>a.factionId===p.occupierFactionId&&a.tileId===c.tileId&&armyClass(world,a.armyId,'CLS_TAKE_CITY'));return a?{id:c.cityId,armyId:a.armyId,facilities:structuredClone(c.facilities)}:null;}).filter(Boolean);
   const welcome=domesticWelcomeCapture(world,cityCapturePayloads);
   preparePolicyCapture(world,cityCapturePayloads);
   const base=supplyEnabled(world)&&world.terminal?structuredClone(world.terminal):world.terminal??createCampaignTerminalStateFromWorld(world);
@@ -54,7 +53,7 @@ export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads)
   next.terminal=terminal;
   for(const p of defeatPayloads)if(terminal.armiesById[p.defeatedArmyId]?.disposition==='DEFEATED')recordSituationEvent(next,'ARMY_DESTROYED',world.armies[p.defeatedArmyId].factionId);
   for(const p of cityCapturePayloads){
-    recordSituationEvent(next,'FIRST_CAPTURE',p.occupierFactionId);
+    engineEvent(next,'CAPTURE',p);recordSituationEvent(next,'FIRST_CAPTURE',p.occupierFactionId);
     recordSituationEvent(next,'FIRST_CITY_LOST',p.formerOwnerFactionId);
     if(p.formerOwnerFactionId===next.playerFactionId&&Object.values(next.cities).filter(c=>c.ownerFactionId===next.playerFactionId).length===1)recordSituationEvent(next,'LAST_CITY',next.playerFactionId);
   }
@@ -72,12 +71,11 @@ export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads)
   }
   for(const payload of cityCapturePayloads){domesticCaptured(next,payload);c34Capture(next,payload.formerOwnerFactionId);}
   domesticWelcomeCapture(next,cityCapturePayloads,welcome);
-  for(const row of classCaptures){const c=next.cities[row.id];c.facilities=row.facilities;c.securityLevel=Math.max(0,c.securityLevel-1);next.occupations[row.id].classRetention=true;countClass(next,armyClass(next,row.armyId));}
   syncResearchCities(next);
   return finishC22Crisis(refreshCampaignSieges(next));
 }
 
-export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLossRatio=0,captorByArmyId={},attackingCityId=null,escapeCommanderIds=[],classCaptorId=null}={}) {
+export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLossRatio=0,captorByArmyId={},attackingCityId=null,escapeCommanderIds=[]}={}) {
   supplyCombat(world,snapshot.units.map(u=>u.unitId));
   world.economy??={lastSettledTurn:null,readyAt:{},occupationStatus:{}};
   world.economy.combatCities??={};
@@ -98,8 +96,6 @@ export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLos
       for(const army of armies)if(!tiles.has(army.tileId)||army.armyId===a.armyId)tiles.set(army.tileId,occupancy(army));
       return [...tiles.values()];
     };
-    const surrender=classCaptorId??snapshot.units.find(x=>x.unitId!==u.unitId&&armyClass(world,x.unitId,'CLS_ACCEPT_SURRENDER'))?.unitId;
-    if(surrender&&armyClass(world,surrender,'CLS_ACCEPT_SURRENDER')&&Math.min(1,.75*armyClass(world,surrender).ability.params.captureMultiplier)===1){countClass(world,armyClass(world,surrender));return {transactionId:`RD.${world.battleSequence}.${a.armyId}`,sourceResultId:snapshot.battleId.replaceAll(':','.'),globalTick:world.globalTick,defeatedArmyId:a.armyId,commanderFate:'CAPTURED',captorFactionId:world.armies[surrender].factionId};}
     const killer=snapshot.units.find(x=>x.unitId!==u.unitId&&world.armies[x.unitId]?.factionId===(captorByArmyId[a.armyId]??winnerFactionId));
     if(killer&&hasCampaignRule(world,killer.unitId,'CAPTURE_ALWAYS',['ON_KILL'],{targetId:a.armyId}))return {transactionId:`RD.${world.battleSequence}.${a.armyId}`,sourceResultId:snapshot.battleId.replaceAll(':','.'),globalTick:world.globalTick,defeatedArmyId:a.armyId,commanderFate:'CAPTURED',captorFactionId:world.armies[killer.unitId].factionId};
     return adjudicateCampaignRetreatFate({format:'sangoku-campaign-retreat-fate-adjudicator',version:1,
@@ -113,18 +109,21 @@ export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLos
         ...(attackingCityId?{observedHostileCities:Object.values(v.knowledge.cities).filter(c=>c.cityId===attackingCityId&&v.knowledge.tiles[c.tileId]==='VISIBLE').map(c=>({cityId:c.cityId,factionId:c.ownerFactionId,tileId:c.tileId}))}:{})},
       entropy:{mode:'SAVED_SEED',savedSeed:world.campaignSeed,rollBasisPoints:null}});
   });
-  const lossRatio=id=>Math.max(permanentLossRatio===0||classWoundedRatio(world,id)<1?0:.05,permanentLossRatio-effectModifiers(world,id,['ON_DEFEND']).CASUALTY_SHIFT/100-(1-classWoundedRatio(world,id)));
+  const lossRatio=id=>Math.max(permanentLossRatio===0?0:.05,permanentLossRatio-effectModifiers(world,id,['ON_DEFEND']).CASUALTY_SHIFT/100);
   const allocations=snapshot.units.map(u=>{const f=world.personnel.formations.find(f=>f.formationId===u.unitId);
     // Legacy callers retain all wounds; direct-map combat supplies the 30% split.
     const dead=Math.round(u.casualties*lossRatio(u.unitId));
     return {unitId:u.unitId,formationId:u.unitId,wounded:u.casualties-dead,permanentLoss:dead,
       recoveryNodeId:f.nodeId,woundedLotId:`W.${world.battleSequence}.${u.unitId}`,lossId:`L.${world.battleSequence}.${u.unitId}`};});
+  engineEvent(world,'BEFORE_DAMAGE',{units:snapshot.units});
   world.personnel=classifyBattleCasualties(world.personnel,{operationId:`B.${world.battleSequence}`,
     expectedRevision:world.personnel.revision,snapshot,allocations}).ledger;
   for(const u of snapshot.units){const a=world.armies[u.unitId];a.troopCount=u.postBattleCount;a.woundedCount+=u.casualties-Math.round(u.casualties*lossRatio(u.unitId));
     a.deadCount+=Math.round(u.casualties*lossRatio(u.unitId));
     if(u.postBattleCount===0)a.hp=0;
     else if(['CONTACT','EDGE_CONTACT'].includes(a.currentOrder?.status))a.currentOrder.status='ACTIVE';}
+  engineEvent(world,'AFTER_DAMAGE',{units:snapshot.units});
+  for(const u of snapshot.units)if(!u.postBattleCount&&u.preBattleCount>0)engineEvent(world,'KILL',{armyId:u.unitId,winnerFactionId});
   return settleCampaignPayloads(world,defeatPayloads,capturePayloads);
 }
 

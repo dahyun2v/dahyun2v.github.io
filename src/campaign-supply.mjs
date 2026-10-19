@@ -1,3 +1,4 @@
+import {engineFoodFactor,engineMovementWorld} from './campaign-engines.mjs';
 import {blessingEffect,weatherKind,weatherEdgeReason,RUN_MODIFIERS} from './campaign-run-modifiers.mjs';
 import data from '../../docs/design-data/supply-v0.1.json' with {type:'json'};
 import models from '../../docs/design-data/supply-v0.2.json' with {type:'json'};
@@ -20,9 +21,10 @@ export const troopFoodRate=s=>foodModel(s)==='cheap'?models.cheap.troopFoodPerTh
 export const supplyStockTurns=(s,a=null)=>((a?.factionId??s.playerFactionId)===s.playerFactionId?blessingEffect(s,'CARRIED_FOOD_MAX')?.value:null)??(clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns);
 export const armyFoodPerTurn=(a,s=null)=>Math.round(a.troopCount*troopFoodRate(s))/1000;
 export function fieldDrainTurns(s,a){if(!domesticEngineEnabled(s))return 1;const shown=a.troopCount*TROOP_DISPLAY_SCALE;return C184.fieldDrainTurns[shown<=C184.fieldShownThresholds[0]?0:shown<=C184.fieldShownThresholds[1]?1:2];}
-export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(services?.classFieldFoodFactor?.(s,a)??1)*(weatherKind(s)==='COLD'?RUN_MODIFIERS.weather.kinds.find(k=>k.id==='COLD').effect.outOfSupplyFoodMultiplier:1));}
+export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*engineFoodFactor(s,a)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(weatherKind(s)==='COLD'?RUN_MODIFIERS.weather.kinds.find(k=>k.id==='COLD').effect.outOfSupplyFoodMultiplier:1));}
 // City stocks use the same passable land edges, without a last-mile range cap.
 export function citySupplyRoute(s,from,to){
+ s=engineMovementWorld(s,null,s);
  if(!from||!to||!from.ownerFactionId||from.ownerFactionId!==to.ownerFactionId||from.besieged||to.besieged)return null;
  const blocked=new Set(Object.values(s.armies).filter(a=>active(s,a)&&diplomacyHostile(s,from.ownerFactionId,a.factionId)).map(a=>a.tileId));
  for(const c of Object.values(s.cities))if(c!==from&&c!==to&&diplomacyHostile(s,from.ownerFactionId,c.ownerFactionId))cityTiles(c).forEach(id=>blocked.add(id));

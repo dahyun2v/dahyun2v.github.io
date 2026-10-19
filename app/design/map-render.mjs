@@ -473,6 +473,7 @@ ${PLACE_STATUS[p.status] ?? PLACE_STATUS.KNOWN}</title><circle class="halo" r="$
     }
   }
 
+  svg += renderEngineMapLayer(model,{size,center:C});
   // 보급 거점(C45) — 糧 인장 + 재고 막대. 부대 그림 위·이름표 아래 층(같은 칸에 부대가 서도 보이게)
   for (const h of model.hubs ?? []) {
     const c = C(h.tileId), style = FACTION_STYLE[h.factionId] ?? {color: '#7d7a6a'}, r = h.max ? Math.max(0, Math.min(1, h.stock / h.max)) : 0;
@@ -528,4 +529,18 @@ export function renderMinimap(model, {size = 6, theme} = {}) {
   for (const city of model.cities ?? []) { const c = hexCenter(parse(city.center), layout); s += `<rect x="${fmt(c.x - 4)}" y="${fmt(c.y - 4)}" width="8" height="8" fill="${FACTION_STYLE[city.factionId]?.color ?? '#8a8576'}" stroke="#fff" stroke-width="1.5"/>`; }
   for (const u of model.units ?? []) { const c = hexCenter(parse(u.tileId), layout); s += `<circle cx="${fmt(c.x)}" cy="${fmt(c.y)}" r="2.6" fill="${FACTION_STYLE[u.factionId]?.color}" stroke="#fff" stroke-width=".8"/>`; }
   return s + '</svg>';
+}
+
+export function renderEngineMapLayer(model,{size,center,...layout}){
+ const C=center??(at=>{const [q,r]=at.split(',').map(Number);return hexCenter({q,r},{size,...layout});});
+ let svg='';
+  for(const w of model.engineMap?.warnings??[])for(const at of w.tiles){
+    const c=C(at);svg+=`<g data-engine-warning="${esc(w.sourceId)}" pointer-events="none"><circle cx="${fmt(c.x)}" cy="${fmt(c.y)}" r="${fmt(size*.74)}" fill="#a45232" fill-opacity=".12" stroke="#c87248" stroke-width="2" stroke-dasharray="5 4"/><text x="${fmt(c.x)}" y="${fmt(c.y+size*.58)}" fill="#f3c49b" font-size="12" text-anchor="middle">${esc(w.name)}</text></g>`;
+  }
+  for(const m of model.engineMap?.marks??[]){const c=C(m.tileId);svg+=`<g data-engine-mark="${esc(m.targetId)}" pointer-events="none"><text x="${fmt(c.x)}" y="${fmt(c.y-size*.65)}" fill="#e8bd88" stroke="#211e1b" stroke-width=".4" font-size="14" text-anchor="middle">표식</text></g>`;}
+  for(const o of model.engineMap?.structures??[]){
+    const c=C(o.tileId),glyph={PALISADE:'柵',CAMP:'陣',BRIDGE:'橋',CART:'糧'}[o.type]??'工';
+    svg+=`<g data-engine-structure="${esc(o.id)}" transform="translate(${fmt(c.x-size*.48)} ${fmt(c.y-size*.36)})" pointer-events="none"><title>${esc(o.name)} · 내구 ${o.hp}/${o.maxHp}</title><rect x="-13" y="-15" width="26" height="28" rx="3" fill="#292a25" stroke="#c3ab76"/><text y="5" text-anchor="middle" fill="#eadab2" font-size="18">${glyph}</text></g>`;
+  }
+ return svg;
 }

@@ -1,3 +1,6 @@
+import {sample4EntryAllowed,sample4FireImmune} from './campaign-rule-registry.mjs';
+import {resolveForcedArrival} from './campaign-combat.mjs';
+import {engineEvent,engineMoraleGuard} from './campaign-engines.mjs';
 import {c31IgnoreControlZone} from './campaign-events.mjs';
 import {combatFireAt,combatFireMovementWorld} from './campaign-rule-registry.mjs';
 import {withCampaignQueries,memoCampaignQuery} from './campaign-rule-registry.mjs';
@@ -5,7 +8,6 @@ import {tryInjury} from './campaign-injury.mjs';
 import {diplomacyArmyHostile,diplomacyMoveReason,diplomacyState,withdrawalProtection} from './campaign-diplomacy.mjs';
 import {dejaVuEvent} from './campaign-deja-vu.mjs';
 import {ignoreBoundRout,ignoreRelationMorale,relationMoraleWeight,markRelationMorale} from './campaign-relations.mjs';
-import {classCamp,classPostMove,classOnRout} from './campaign-classes.mjs';
 import {c34Near,c34MoraleWeight,c34IgnoreMorale} from './campaign-c34.mjs';
 import {c33Owned,c33Formation,UNIQUE_OFFICERS} from './campaign-rule-registry.mjs';
 import {c30IgnoreMorale,c30MoraleWeight} from './campaign-c29.mjs';
@@ -80,7 +82,7 @@ export function retreatRouting(s,id){
  const choices=boardNeighbors(s.tiles[a.tileId],s.tiles).map(tileId).filter(to=>edgeTicks(world,world.armies[id],a.tileId,to)!==null&&!diplomacyMoveReason(s,id,to)&&!Object.values(s.armies).some(b=>b.armyId!==id&&castleArmyActive(s,b)&&b.tileId===to)&&distance(to)>distance(a.tileId))
   .sort((x,y)=>distance(y)-distance(x)||home(x)-home(y)||x.localeCompare(y,'en'));
  if(!choices.length)return null;
- const from=a.tileId;a.tileId=choices[0];a.facing=directionToward(s.tiles[from],s.tiles[a.tileId],a.facing);a.currentOrder=null;a.movementState=null;return {armyId:id,from,to:a.tileId};
+ const from=a.tileId;a.tileId=choices[0];a.facing=directionToward(s.tiles[from],s.tiles[a.tileId],a.facing);a.currentOrder=null;a.movementState=null;resolveForcedArrival(s,id,from);return {armyId:id,from,to:s.armies[id].tileId};
 }
 // 사기 기록 줄: 이유가 규칙 코드(U_AWE 등)면 그 카드 이름으로 보여 준다(기록의 reason 값은 그대로)
 let ruleNames=null;
@@ -93,21 +95,27 @@ export function changeMorale(s,id,to,reason,changes=[]){
  if(c28Enabled(s)&&survival?.name==='철의 의지'&&survival.until>=s.turn&&survival.uses>0&&['STEADY','SHAKEN','ROUTING'].indexOf(to)>['STEADY','SHAKEN','ROUTING'].indexOf(from)){survival.uses--;markRelationMorale(s,id);return changes;}
  if(a.c33?.moraleFixedUntil>=s.turn)return changes;
  if(['STEADY','SHAKEN','ROUTING'].indexOf(to)>['STEADY','SHAKEN','ROUTING'].indexOf(from)&&ignoreRelationMorale(s,id))return changes;
+ if(engineMoraleGuard(s,id,from,to))return changes;
  a.morale=to;if(to==='ROUTING')tryInjury(s,a.commanderId,'routed',`${s.turn}:${id}:${s.battleSequence}:${s.moraleLog?.length??0}`,a.tileId);if(to==='ROUTING')dejaVuEvent(s,'ROUT_TERRAIN',{officerId:a.commanderId,tileId:a.tileId});const event={armyId:id,from,to,reason,text:`${s.officers[a.commanderId].name}: ${labels[from]} → ${labels[to]} (${reasonText(reason)})`};
- changes.push(event);s.moraleLog??=[];s.moraleLog.push({turn:s.turn,...event});
- if(to==='ROUTING'){changeFormation(s,id,2);classOnRout(s,id,(who,n,name)=>{if(!ignoreBoundRout(s,who,a))checkMorale(s,who,name+' — 아군 패주',n,changes);}); }
+ engineEvent(s,'MORALE_CHANGE',event);changes.push(event);s.moraleLog??=[];s.moraleLog.push({turn:s.turn,...event});
+ if(to==='ROUTING'){changeFormation(s,id,2);}
  if(to==='ROUTING')event.retreat=retreatRouting(s,id);
  return changes;
 }
-export function checkMorale(s,id,reason,weight,changes=[]){if(c34IgnoreMorale(s,id,reason))return changes;
- if(s.armies[id]?.c33?.moraleFixedUntil>=s.turn)return changes;
+function moralePassThreshold(s,id,reason,weight){
  weight=relationMoraleWeight(s,id,c30MoraleWeight(s,id,weight))-(c33Owned(s,id,'MORALE_WARD')?5:0);
  if(c29Aw(s,id,'CROSSOVER')&&c29Record(s,id).cards[c29Record(s,id).coreId]?.domestic)weight*=.9;
  weight=c34MoraleWeight(s,id,weight,reason);weight=uniqueMoraleWeight(s,id,weight)*(c28Rule(s,id,'COOL_HEAD')?C28.coolHeadRatio:1);
 
- const a=s.armies[id];if(!castleArmyActive(s,a)||a.morale==='ROUTING')return changes;
+ const a=s.armies[id];if(!castleArmyActive(s,a)||a.morale==='ROUTING')return 100;
  const stats=s.officers[a.commanderId].baseStats;
  const probability=Math.max(0,Math.min(100,C12.moraleBase+(stats.leadership+campaignSubAbility(s,a.commanderId,'감화','결집'))/C12.moraleDivisor-weight/domesticMoraleThreshold(s,a)))*(c28Enabled(s)&&c28Record(s,id)?.c28?.survival?.name==='겁먹음'?C28.woundThreshold:1);
+ return probability;
+}
+export function moraleDropChance(s,id,reason,weight){return Math.max(0,Math.min(1,1-moralePassThreshold(s,id,reason,weight)/100));}
+export function checkMorale(s,id,reason,weight,changes=[]){if(/불|화계/.test(reason)&&sample4FireImmune(s,id))return changes;if(c34IgnoreMorale(s,id,reason))return changes;
+ if(s.armies[id]?.c33?.moraleFixedUntil>=s.turn)return changes;
+ const a=s.armies[id],probability=moralePassThreshold(s,id,reason,weight);if(!castleArmyActive(s,a)||a.morale==='ROUTING')return changes;
  const rng=createRng();rng.restore(s.rng.value);const roll=rng.next()*100;s.rng.value=rng.state();s.rng.draws++;
  if(roll>=probability)changeMorale(s,id,a.morale==='SHAKEN'?'ROUTING':'SHAKEN',reason,changes);
  return changes;
@@ -131,14 +139,14 @@ export function startFactionMorale(s,factionId){
 // 정산: 적과 떨어져 있으면 한 단계씩 수습(패주 → 동요 → 안정). 패주 수습은 시험값(Total War 식 재집결) — 정본 다음 개정에 반영.
 export function settleMorale(s){
  for(const a of Object.values(s.armies))if(castleArmyActive(s,a)&&!enemies(s,a).some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1)){
-  if(a.forcedMarchTurn!==s.turn-1&&!(a.stratagemDiscord?.until>=s.turn)){if(a.morale==='SHAKEN')changeMorale(s,a.armyId,'STEADY','정산 회복');else if(a.morale==='ROUTING')changeMorale(s,a.armyId,'SHAKEN','정산 수습');}
+  if(!(a.c234?.noRegroupSettlement>=s.turn)&&a.forcedMarchTurn!==s.turn-1&&!(a.stratagemDiscord?.until>=s.turn)){if(a.morale==='SHAKEN')changeMorale(s,a.armyId,'STEADY','정산 회복');else if(a.morale==='ROUTING')changeMorale(s,a.armyId,'SHAKEN','정산 수습');}
   changeFormation(s,a.armyId,-1);
  }
 }
-export function regroupReason(s,id){const a=s.armies[id];return a?.morale!=='SHAKEN'&&a?.formation==='ORDERED'?'동요 상태에서만 가능':enemies(s,a).some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1)&&(!classCamp(s,id)||enemies(s,a).some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1&&directionToward(s.tiles[a.tileId],s.tiles[b.tileId])===(a.facing+3)%6))?'적과 인접하여 재정비 불가':'';}
+export function regroupReason(s,id){const a=s.armies[id];return a?.morale!=='SHAKEN'&&a?.formation==='ORDERED'?'동요 상태에서만 가능':enemies(s,a).some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1)?'적과 인접하여 재정비 불가':'';}
 function combatDestinationAllowed(s,id,to){
- if(combatFireAt(s,to)||!campaignDestinationAllowed(s,id,to))return false;
+ if(!sample4EntryAllowed(s,id,to)||combatFireAt(s,to)&&!sample4FireImmune(s,id)||!campaignDestinationAllowed(s,id,to))return false;
  if(!combatMoveAllowed(s,id,to))return false;
- if(combatCanPostMove(s,id)&&!classPostMove(s,id)&&s.armies[id].c32?.postMove!==s.turn){const a=s.armies[id],foes=enemies(s,a);const distance=tile=>Math.min(...foes.map(b=>hexDistance(s.tiles[tile],s.tiles[b.tileId])));if(foes.length&&distance(to)<=distance(a.tileId))return false;}
+ if(combatCanPostMove(s,id)&&s.armies[id].c32?.postMove!==s.turn){const a=s.armies[id],foes=enemies(s,a);const distance=tile=>Math.min(...foes.map(b=>hexDistance(s.tiles[tile],s.tiles[b.tileId])));if(foes.length&&distance(to)<=distance(a.tileId))return false;}
  return true;
 }

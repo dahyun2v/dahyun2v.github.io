@@ -69,7 +69,7 @@ export function selectOccupationMethod(s,{cityId,method},ai=false) {
       else {s.factions[c.ownerFactionId].occupationSpecialLoot??={};s.factions[c.ownerFactionId].occupationSpecialLoot[key]=(s.factions[c.ownerFactionId].occupationSpecialLoot[key]??0)+taken;}
     }
     s.factions[c.ownerFactionId].prestige=Math.max(0,s.factions[c.ownerFactionId].prestige-20);
-    const facility=c.facilities.find(f=>!f.damaged);if(facility&&!o.classRetention)facility.damaged=true;
+    const facility=c.facilities.find(f=>!f.damaged);if(facility)facility.damaged=true;
     domesticSecurity(s,c,1,'PLUNDER');c.plunderTurn=s.turn;o.plundered=true;
   }
   Object.assign(o,{stage:'OCCUPATION',state:'PACIFICATION',method:method==='plunder'?'military':method,

@@ -1,5 +1,4 @@
 import {blessingSight} from './campaign-run-modifiers.mjs';
-import {classHidden} from './campaign-classes.mjs';
 import {c34Enabled} from './campaign-c34.mjs';
 import {c29Wind} from './campaign-c29.mjs';
 import {C28,c28Rule} from './campaign-career.mjs';
@@ -45,7 +44,7 @@ export function updateCampaignKnowledge(s){
  updateKnowledge({...s,armies,...(campaignTerminalWorld?{campaignTerminalWorld}:{}),mapRules:{...s.mapRules,vision:{...s.mapRules.vision,byTroop}}});
  for(const k of Object.values(s.knowledge))for(const id of Object.keys(armies).filter(id=>id.startsWith('STAR.CITY.'))){delete k.observedArmies[id];delete k.lastSeenArmies[id];}
  for(const [f,k] of Object.entries(s.knowledge))for(const [id,a] of Object.entries(s.armies)){
-   if(ambushHidden(s,id,f)||classHidden(s,id,f)){delete k.observedArmies[id];delete k.lastSeenArmies[id];}
+   if(ambushHidden(s,id,f)){delete k.observedArmies[id];delete k.lastSeenArmies[id];}
    else {if(k.observedArmies[id])k.observedArmies[id].troopType=a.troopType;if(k.lastSeenArmies[id])k.lastSeenArmies[id].troopType=a.troopType;}
  }
  return s;

@@ -1,5 +1,9 @@
+// C229 browser snapshot of tactic-gauge-v0.2.json; parity tested.
+const gauge={"schema":"tactic-gauge-v0.2","status":"TRIAL — C229 게이지 비용과 충전 수치는 시험값. 기존 카드 효과와 문구 유지.","base":5,"dealt":10,"taken":10,"result":15,"periodCap":30,"storeMax":100,"cost":{"E":[40,60],"R":[80,100]}};
+import {castleArmyActive} from './campaign-city-footprint.mjs';
+import {diplomacyArmyHostile} from './campaign-diplomacy.mjs';
 import {relationGaugeFactor} from './campaign-relations.mjs';
-import {c34Strategy} from './campaign-c34.mjs';
+import {c34Strategy,configureC34Gauge} from './campaign-c34.mjs';
 import data from '../../docs/design-data/officer-pack/bonds-v0.1.json' with {type:'json'};
 import mods from '../../docs/design-data/officer-pack/tactic-mods-v0.1.json' with {type:'json'};
 import awakening from '../../docs/design-data/officer-pack/awakening-v0.1.json' with {type:'json'};
@@ -19,7 +23,7 @@ export function c29Add(r,c){
  return traitId;
 }
 export function initializeC29(s,id){
- if(!c29Enabled(s))return;const r=c29Record(s,id);
+ if(!c29Enabled(s))return;configureC34Gauge(c29Cooldown);const r=c29Record(s,id);
  r.c29??={bindings:{},forks:{},awakenings:[],uses:{},gauge:0,crisisMultiplier:1,events:{}};
  for(const m of mods.modifiers)c29Add(r,{...m,kind:'trait',modifier:true,effects:[{op:'RULE',rule:m.rule,params:m.params,when:'PASSIVE',target:'SELF'}]});
  for(const c of mods.evolutions.extraTraits)c29Add(r,c);
@@ -93,23 +97,45 @@ export function selectedC29(s,id,d,key,tacticId){
 }
 export function c29AiChoice(r,d,ranked){return d.c29?.awakening?d.offeredIds.find(k=>r.cards[k].branch==='narrative')??d.offeredIds[0]:ranked.find(k=>r.cards[k].kind!=='fork'||r.cards[k].branch==='a');}
 export function c29AiBinding(s,id,key){const r=c29Record(s,id);return Object.entries(r.c29.bindings).find(([,v])=>v===key)?.[0]??c29BindingTargets(s,id,r.cards[key]).sort((a,b)=>(r.c29.uses[b]??0)-(r.c29.uses[a]??0)||a.localeCompare(b))[0];}
-export function c29Gain(s,id,amount,event){
- const r=c29Record(s,id);if(!r?.c29||r.c29.events[event])return;r.c29.events[event]=true;
- r.c29.gauge=Math.min(mods.signature.gauge.max,r.c29.gauge+Math.floor(amount*r.c29.crisisMultiplier*c30GaugeFactor(s,id)*relationGaugeFactor(s,id)));
+export const C229_GAUGE=gauge;
+const deployed=(s,id)=>{const a=s.armies[id]??Object.values(s.armies).find(a=>a.commanderId===id&&castleArmyActive(s,a));return a&&castleArmyActive(s,a)?a:null;};
+export function c29Gain(s,id,amount,event,{fixed=false}={}){
+ const r=c29Record(s,id),x=r?.c29;if(s.disengageResolving||!c29Enabled(s)||!x||!deployed(s,id)||x.spentPeriod||x.events[event])return;
+ x.events[event]=true;x.periodGain??=0;
+ const gain=Math.max(0,Math.min(gauge.periodCap-x.periodGain,Math.floor(amount*(fixed?1:x.crisisMultiplier*c30GaugeFactor(s,id)*relationGaugeFactor(s,id)))));
+ x.periodGain+=gain;x.gauge=Math.min(gauge.storeMax,x.gauge+gain);
 }
-export function c29Start(s,fid){for(const [id,r] of Object.entries(s.campaignGrowth?.officers??{}))if(r.c29&&s.officers[id].allegianceFactionId===fid)c29Gain(s,id,mods.signature.gauge.perTurn,`turn.${s.turn}.${fid}`);}
+export function c29Start(s,fid){for(const [id,r] of Object.entries(s.campaignGrowth?.officers??{}))if(r.c29&&s.officers[id].allegianceFactionId===fid){
+ const x=r.c29,key=`${s.turn}.${fid}`;if(x.periodKey===key)continue;
+ x.periodKey=key;x.periodGain=0;x.spentPeriod=false;x.events={};c29Gain(s,id,gauge.base,'base');
+}}
 export function c29Combat(s,c){
- if(!c29Enabled(s))return;const source=c29Record(s,c.attackerId),signature=c.tacticId===source?.representativeId;
- if(signature)return;
- const losses=new Map();for(const u of c.units??[])losses.set(u.unitId,(losses.get(u.unitId)??0)+u.casualties);for(const [unitId,casualties] of losses){c29Gain(s,unitId,Math.floor(casualties/10),`damage.received.${c.sequence}.${unitId}`);if(s.armies[unitId]?.factionId!==s.armies[c.attackerId]?.factionId)c29Gain(s,c.attackerId,Math.floor(casualties/10),`damage.given.${c.sequence}.${unitId}`);else if(c.counter&&unitId===c.attackerId)c29Gain(s,c.targetId,Math.floor(casualties/10),`damage.counter.${c.sequence}.${unitId}`);}
- for(const [type,changes] of [['rout',c.moraleChanges??[]],['break',c.formationChanges??[]]])for(const e of changes){if(type==='rout'?e.to!=='ROUTING':e.to!=='BROKEN')continue;const victim=s.armies[e.armyId];if(!victim)continue;for(const a of Object.values(s.armies))if((type==='rout'?a.factionId!==victim.factionId:a.factionId===victim.factionId)&&s.tiles[a.tileId]&&hexDistance(s.tiles[a.tileId],s.tiles[victim.tileId])<=mods.signature.gauge.nearbyRange)c29Gain(s,a.armyId,type==='rout'?mods.signature.gauge.onNearbyEnemyRout:mods.signature.gauge.onNearbyAllyBreak,`${type}.${c.sequence}.${e.armyId}.${a.armyId}`);}
+ if(!c29Enabled(s))return;
+ if(c.kind==='CITY_STRIKE'){for(const u of c.units??[])if(u.casualties>0&&s.cities[c.cityId]?.ownerFactionId!==s.armies[u.unitId]?.factionId)c29Gain(s,u.unitId,gauge.taken,'taken');return;}
+ const source=c.attackerId,reaction=['OVERWATCH','PURSUIT','APPROACH_FIRE'].includes(c.kind)&&!c.enginePaid,hostile=id=>s.armies[source]&&s.armies[id]&&diplomacyArmyHostile(s,source,id);
+ // A receiver gets credit for hostile reactions too; the counter victim is the original attacker.
+ for(const u of c.units??[])if(u.casualties>0&&!c.fire&&c.kind!=='FIRE'){
+  if(hostile(u.unitId))c29Gain(s,u.unitId,gauge.taken,'taken');
+  else if(u.unitId===source&&c.counter&&(s.armies[c.targetId]&&diplomacyArmyHostile(s,c.targetId,source)||s.cities[c.cityId]?.ownerFactionId&&s.cities[c.cityId].ownerFactionId!==s.armies[source]?.factionId))c29Gain(s,source,gauge.taken,'taken');
+ }
+ if(reaction)return;
+ if((c.units??[]).some(u=>u.casualties>0&&hostile(u.unitId)))c29Gain(s,source,gauge.dealt,`dealt.${c.actionId??c.sequence}`);
+ const results=new Set([...(c.eliminatedIds??[]),...(c.formationChanges??[]).filter(e=>['ORDERED','DISORDERED','BROKEN'].indexOf(e.to)>['ORDERED','DISORDERED','BROKEN'].indexOf(e.from)).map(e=>e.armyId),...(c.moraleChanges??[]).filter(e=>e.to==='ROUTING').map(e=>e.armyId)]);
+ for(const id of results)if(hostile(id))c29Gain(s,source,gauge.result,`result.${id}`);
+ if(c.captureLine&&c.cityId)c29Gain(s,source,gauge.result,`result.${c.cityId}`);
 }
-export function c29TacticUsed(s,id,c,{gaugePaid=false}={}){const r=c29Record(s,id);if(!r?.c29)return;r.c29.uses[c.traitId]=(r.c29.uses[c.traitId]??0)+1;if(c.signature){if(!gaugePaid)r.c29.gauge=0;}else c29Gain(s,id,mods.signature.gauge.onOtherTactic,`tactic.${s.battleSequence}.${id}`);r.c29.tacticTurn=s.turn;}
+export function c29TacticUsed(s,id,c,{gaugePaid=false}={}){const r=c29Record(s,id);if(!r?.c29)return;r.c29.uses[c.traitId]=(r.c29.uses[c.traitId]??0)+1;if(!gaugePaid)r.c29.gauge=Math.max(0,r.c29.gauge-c29Cost(s,id,c));r.c29.spentPeriod=true;r.c29.tacticTurn=s.turn;}
+export function c29Cost(s,id,c){if(c29Enabled(s)&&!c.mirrorCostResolved&&c.effects?.some(e=>e.rule==='MIRROR')){const copy=s.armies[id]?.c27?.lastHitTactic;if(copy&&!copy.effects?.some(e=>e.rule==='MIRROR'))c=copy;}const r=c29Record(s,id),signature=c.signature||c.traitId===r?.representativeId;return Math.max(0,(c.gaugeCost??(signature?gauge.cost.R[1]:c.jointArmyIds?gauge.cost.E[1]:gauge.cost.E[Number(['EPIC','LEGENDARY','MYTHIC'].includes(c.rarity))])));}
+// Cooldown effects become costs for allies and gauge loss for hostile targets (trial).
+export function c29Cooldown(s,id,n){const r=c29Record(s,id);if(!r?.c29)return false;if(n>0)r.c29.gauge=Math.max(0,r.c29.gauge-10*n);else {r.c29.costAdjustments??={};for(const key of [...(r.equippedTacticIds??[]),r.representativeId].filter(Boolean))r.c29.costAdjustments[key]=(r.c29.costAdjustments[key]??0)+10*n;}return true;}
+export function c29Text(text=''){
+ return String(text??'').replace(/재사용 대기(?:시간)? 초기화|대기 초기화/g,'게이지 +20').replace(/전법 하나의 재사용 대기 \+1/g,'전법 게이지 −10').replace(/재사용 대기(?:시간)?\s*([+−-])\s*(\d+)/g,(_,sign,n)=>`게이지 비용 ${sign}${Number(n)*10}`).replace(/\+1 대기/g,'비용 +10').replace(/재사용 대기(?:시간)?/g,'게이지 비용');
+}
 export function c29TacticCard(s,id,card){
- const r=c29Record(s,id);if(!r?.c29)return card;const c=structuredClone(card),m=r.cards[r.c29.bindings[c.traitId]],branch=r.c29.forks[c.traitId];c.modifier=m??null;c.modifierSlot=m?{id:m.id,name:m.name,text:m.text}:null;c.fork=branch??null;const fork=mods.forks.list.find(f=>f.tactic===c.id);if(branch&&fork)c.forkInfo={branch,...fork[branch]};
- c.cooldown=(c.cooldown??2)+(m?1+(m.params.extraCooldown??0):0);
+ const r=c29Record(s,id);if(!r?.c29)return card;const c=structuredClone(card),m=r.cards[r.c29.bindings[c.traitId]],branch=r.c29.forks[c.traitId];c.text=c29Text(c.text);c.modifier=m?{...m,text:c29Text(m.text)}:null;c.modifierSlot=m?{id:m.id,name:m.name,text:m.text}:null;c.fork=branch??null;const fork=mods.forks.list.find(f=>f.tactic===c.id);if(branch&&fork)c.forkInfo={branch,...fork[branch]};
+ c.gaugeCost=Math.max(0,c29Cost(s,id,c)+(r.c29.costAdjustments?.[c.traitId]??0)+(m?10*(1+(m.params.extraCooldown??0)):0));c.cooldown=0;if(c.effects?.some(e=>e.rule==='MIRROR'))c.mirrorCostResolved=true;
  if(m?.rule==='RANGE_PLUS')c.range=(c.range??0)+m.params.extra;
- if(c29Tag(s,id,c,'FIRE')&&Object.entries(ranks(r)).some(([k,n])=>n&&r.cards[k]?.id==='TR-WIND'))c.cooldown=Math.max(1,c.cooldown-1);
+ if(c29Tag(s,id,c,'FIRE')&&Object.entries(ranks(r)).some(([k,n])=>n&&r.cards[k]?.id==='TR-WIND'))c.gaugeCost=Math.max(0,c.gaugeCost-10);
  if(c.id==='CTA-12')for(const e of c.effects)if(e.rule==='FIRE_ATTACK'){e.params.spread+=(m?.rule==='FIRE_SPREAD'?m.params.extra:0)+(branch==='a'?1:0);e.params.turns=branch==='b'?2:1;}
  if(c.id==='CTA-01'&&branch==='a')for(const e of c.effects)if(e.rule==='SHOVE')e.params.push=2;
  if(c.id==='CTA-09'&&branch==='b')for(const e of c.effects)if(e.rule==='MORALE_CONTEST')e.params.loseWeight=0;
@@ -125,7 +151,7 @@ export function c29Wind(s,id){const r=c29Record(s,id),a=s.armies[id];return !!r?
 export function c29XpFactor(s,id){const a=Object.values(s.armies).find(a=>a.commanderId===id),mentor=a&&Object.values(s.armies).some(b=>b.factionId===a.factionId&&b.armyId!==a.armyId&&b.troopCount>0&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1&&c29Aw(s,b.armyId,'MENTOR_AURA'));return (mentor?1.2:1)*(c29Aw(s,id,'AW_TT-V03')?1.1:1);}
 export function c29CityOutput(s,c,raw){const id=c.governorId;if(!id)return;const x=c29Aw(s,id,'CROSSOVER'),r=c29Record(s,id);if(x&&!r.cards[r.coreId]?.domestic)for(const k of Object.keys(raw))if(typeof raw[k]==='number')raw[k]*=1+x.params.city/100;if(c29Aw(s,id,'AW_TT-V01'))raw.food*=1.1;if(c29Aw(s,id,'AW_TT-V03'))raw.science*=1.1;}
 export function c29Recovery(s,id){const x=c29Aw(s,id,'BLOOD_PRICE'),a=s.armies[id];if(!x||!a)return 1;const strength=a.deploymentStrength??s.personnel.formations.find(f=>f.formationId===id)?.targetStrength??a.troopCount;return a.troopCount*100/strength<x.params.at?0:1;}
-export function c29TraitTriggered(s,source,e,targets){const r=c29Record(s,source);if(!r?.c29||e.traitId!==r.coreId||!targets.length)return;r.c29.traitTurn=s.turn;if(c29Aw(s,source,'GAUGE_ON_TRAIT'))c29Gain(s,source,10,`trait.${s.turn}.${source}`);if(c29Aw(s,source,'EXPOSE_ON_TRAIT'))for(const id of targets)if(s.armies[id]&&s.armies[id].factionId!==s.armies[source]?.factionId){const a=s.armies[id];a.effectStates??=[];if(!a.effectStates.some(e=>e.c29Expose===source&&e.expiresTurn>=s.turn))a.effectStates.push({op:'DEFENSE_MOD',value:-10,startsTurn:s.turn,expiresTurn:s.turn+1,c29Expose:source});}}
+export function c29TraitTriggered(s,source,e,targets){const r=c29Record(s,source);if(!r?.c29||e.traitId!==r.coreId||!targets.length)return;r.c29.traitTurn=s.turn;if(c29Aw(s,source,'GAUGE_ON_TRAIT'))c29Gain(s,source,10,'trait',{fixed:true});if(c29Aw(s,source,'EXPOSE_ON_TRAIT'))for(const id of targets)if(s.armies[id]&&s.armies[id].factionId!==s.armies[source]?.factionId){const a=s.armies[id];a.effectStates??=[];if(!a.effectStates.some(e=>e.c29Expose===source&&e.expiresTurn>=s.turn))a.effectStates.push({op:'DEFENSE_MOD',value:-10,startsTurn:s.turn,expiresTurn:s.turn+1,c29Expose:source});}}
 export function c29PostCombat(s,c,{morale,formation}={}){
  for(const u of c.units??[]){const r=c29Record(s,u.unitId),a=s.armies[u.unitId];if(!r?.c29||!a)continue;
   const x=c29Aw(s,u.unitId,'SECOND_WIND'),strength=a.deploymentStrength??s.personnel.formations.find(f=>f.formationId===u.unitId)?.targetStrength??u.preBattleCount;
@@ -139,7 +165,7 @@ export function c29PostCombat(s,c,{morale,formation}={}){
   if(card){const key=c29Add(winner,{...card,id:`stolen.${other.pack.id}.${card.id??card.traitId}`,core:false});winner.c28.pending.push({traitId:key,slot:'배움',sourceText:`${s.officers[other.pack.id].name}에게서 배움`});}
  }
 }
-export function validateC29(s,id){const r=c29Record(s,id),x=r?.c29;if(!x)return;if(!c29Enabled(s)||!Number.isFinite(x.gauge)||x.gauge<0||x.gauge>100||!Number.isFinite(x.crisisMultiplier)||x.crisisMultiplier<0||x.awakenings.length>3||new Set(x.awakenings.filter(a=>a.branch==='wild').map(a=>a.id)).size!==x.awakenings.filter(a=>a.branch==='wild').length||Object.entries(x.bindings).some(([k,v])=>r.cards[k]?.kind!=='tactic'||!r.cards[v]?.modifier||!ranks(r)[v])||Object.values(x.forks).some(v=>!['a','b'].includes(v))||!Number.isSafeInteger(x.xpDebt??0)||(x.xpDebt??0)<0)error('INVALID_C29_RECORD');}
+export function validateC29(s,id){const r=c29Record(s,id),x=r?.c29;if(!x)return;if(!Number.isFinite(x.periodGain??0)||(x.periodGain??0)<0||(x.periodGain??0)>gauge.periodCap||x.spentPeriod!==undefined&&typeof x.spentPeriod!=='boolean'||!c29Enabled(s)||!Number.isFinite(x.gauge)||x.gauge<0||x.gauge>100||!Number.isFinite(x.crisisMultiplier)||x.crisisMultiplier<0||x.awakenings.length>3||new Set(x.awakenings.filter(a=>a.branch==='wild').map(a=>a.id)).size!==x.awakenings.filter(a=>a.branch==='wild').length||Object.entries(x.bindings).some(([k,v])=>r.cards[k]?.kind!=='tactic'||!r.cards[v]?.modifier||!ranks(r)[v])||Object.values(x.forks).some(v=>!['a','b'].includes(v))||!Number.isSafeInteger(x.xpDebt??0)||(x.xpDebt??0)<0)error('INVALID_C29_RECORD');}
 export function c29CoreFactor(s,id,ctx={}){
  const r=c29Record(s,id);if(!r?.c29?.awakenings.length)return 1;const a=s.armies[id]??Object.values(s.armies).find(a=>a.commanderId===id),target=s.armies[ctx.targetId];
  const strength=a?.deploymentStrength??s.personnel?.formations.find(f=>f.formationId===a?.armyId)?.targetStrength??a?.troopCount??1,percent=100*(a?.troopCount??strength)/strength;
@@ -212,7 +238,7 @@ export function c30Start(s,fid,{force=false}={}){
  for(const a of own)for(const id of snapshot.armies[a.armyId].teamUps){const b=data.teamUps.find(b=>b.id===id);s.c30.log.push({turn:s.turn,factionId:fid,armyId:a.armyId,text:`${b.name} — ${s.officers[a.commanderId].name}: ${b.text}`});}
  s.c30.log=s.c30.log.slice(-120);
  // JT cost delays every available tactic, including ready tactics, on the next own turn.
- for(const a of own)if(a.c30Delay){const r=c29Record(s,a.armyId),keys=new Set([...Object.keys(a.tacticReadyTurns??{}),...(r?.equippedTacticIds??[]),...(r?.representativeId?[r.representativeId]:[]),'JT-01']);for(const key of keys)a.tacticReadyTurns[key]=Math.max(s.turn,a.tacticReadyTurns[key]??0)+a.c30Delay;delete a.c30Delay;}
+ for(const a of own)if(a.c30Delay){if(c29Enabled(s)){delete a.c30Delay;continue;}const r=c29Record(s,a.armyId),keys=new Set([...Object.keys(a.tacticReadyTurns??{}),...(r?.equippedTacticIds??[]),...(r?.representativeId?[r.representativeId]:[]),'JT-01']);for(const key of keys)a.tacticReadyTurns[key]=Math.max(s.turn,a.tacticReadyTurns[key]??0)+a.c30Delay;delete a.c30Delay;}
  return s;
 }
 export function c30Joint(s,id){const a=s.armies[id];if(!c30Enabled(s)||a?.commanderId!=='G05'||!active(s,a))return null;const allies=armies(s,a.factionId),pair=['G18','G19'].map(id=>allies.find(a=>a.commanderId===id));if(pair.some(b=>!b)||[distance(s,a,pair[0]),distance(s,a,pair[1]),distance(s,pair[0],pair[1])].some(n=>n>2))return null;return {...data.teamUps[0].jointTactic,traitId:'JT-01',kind:'tactic',rank:1,jointArmyIds:pair.map(a=>a.armyId),effects:[{op:'DAMAGE_MOD',when:'ON_TACTIC_USE',target:'TARGET',value:0}]};}
@@ -236,8 +262,8 @@ export function c30Damage(s,id,target,ctx={}){
  return {damage,defense,lines};
 }
 export function c30ElementDamage(s,id,target,value,kind='FIRE'){const b=c30Damage(s,id,target);return value*Math.max(0,1+(b.damage+c30Element(s,id,kind))/100)*Math.max(0,1-b.defense/100);}
-export function c30TacticCard(s,id,card){const c=structuredClone(card),x=c30State(s,id);if(x&&!x.firstTacticUsed&&!c.signature&&!c.jointArmyIds&&(c30Bond(s,id,'BD-07')||c30ArmyTier(s,id,'ST-02')>=3))c.cooldown=Math.max(1,c.cooldown-1);if(c30Spread(s,id))for(const e of c.effects??[])if(e.rule==='FIRE_ATTACK')e.params.spread+=1;return c;}
-export function c30TacticUsed(s,id,card){const x=c30State(s,id);if(x)x.firstTacticUsed=true;if(c30Bond(s,id,'BD-02'))for(const b of armies(s,s.armies[id].factionId))if(b.armyId!==id&&['G20','G27'].includes(b.commanderId)&&c30Bond(s,b.armyId,'BD-02'))for(const [key,ready] of Object.entries(b.tacticReadyTurns))b.tacticReadyTurns[key]=Math.max(s.turn,ready-1);}
+export function c30TacticCard(s,id,card){const c=structuredClone(card),x=c30State(s,id);if(x&&!x.firstTacticUsed&&!c.signature&&!c.jointArmyIds&&(c30Bond(s,id,'BD-07')||c30ArmyTier(s,id,'ST-02')>=3))c.gaugeCost=Math.max(0,(c.gaugeCost??c29Cost(s,id,c))-10);if(c30Spread(s,id))for(const e of c.effects??[])if(e.rule==='FIRE_ATTACK')e.params.spread+=1;return c;}
+export function c30TacticUsed(s,id,card){const x=c30State(s,id);if(x)x.firstTacticUsed=true;if(c30Bond(s,id,'BD-02'))for(const b of armies(s,s.armies[id].factionId))if(b.armyId!==id&&['G20','G27'].includes(b.commanderId)&&c30Bond(s,b.armyId,'BD-02')){if(c29Cooldown(s,b.armyId,-1))continue;for(const [key,ready] of Object.entries(b.tacticReadyTurns))b.tacticReadyTurns[key]=Math.max(s.turn,ready-1);}}
 export function c30Combat(s,c,{morale}={}){
  if(!c30Enabled(s))return;for(const u of c.units??[])if(u.casualties>0&&s.armies[u.unitId])s.armies[u.unitId].c30DamagedTurn=s.turn;
  if(morale&&c30ArmyTier(s,c.attackerId,'ST-05')>=3)for(const e of [...(c.moraleChanges??[])])if(e.to==='ROUTING'){const key=`${c.sequence}.${e.armyId}`;s.c30.routEvents??={};if(s.c30.routEvents[key])continue;s.c30.routEvents[key]=true;const victim=s.armies[e.armyId];if(!victim||victim.factionId===s.armies[c.attackerId].factionId)continue;for(const b of armies(s,victim.factionId))if(b.armyId!==victim.armyId&&distance(s,b,victim)===1)morale?.(b.armyId);}

@@ -174,7 +174,7 @@ export function cityEconomyRates(s,c,{shortage=null,commit=false}={}) {
   if(!injuryReason(s,c.governorId))c30CityOutput(s,c,raw);raw.production*=c31Production(s,c.ownerFactionId);
   const relationOutput=relationProduction(s,c),relationAmount=raw.production*(relationOutput.factor-1);raw.production*=relationOutput.factor;
   if(relationOutput.lines.length)specialistCauses.push({resource:'production',label:relationOutput.lines[0],amount:relationAmount});
-  if(c19Enabled(s)&&!normal(s,c)&&!(c.besieged&&uniqueHoldLand(s,c)))for(const key of ['production','science','prestige'])raw[key]*=s.occupations?.[c.cityId]?.classRetention ? .5 : 0;
+  if(c19Enabled(s)&&!normal(s,c)&&!(c.besieged&&uniqueHoldLand(s,c)))for(const key of ['production','science','prestige'])raw[key]*=0;
   raw.food*=achievementCityFactor(s,c,'food');
   if(rumorActive(s,c))for(const resource of ['food','production']){const amount=raw[resource]*(STRATAGEMS.kinds.find(k=>k.id==='RUMOR').effect.outputMult-1);raw[resource]+=amount;specialistCauses.push({resource,label:'유언비어 · 산출 감소',amount});}
   const rounded=Object.fromEntries(Object.entries(raw).map(([key,value])=>[key,Math.floor(value+(c.outputCarry?.[key]??0)+1e-9)]));

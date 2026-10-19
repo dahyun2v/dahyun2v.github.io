@@ -1,3 +1,5 @@
+import {sample4AiValue,sample4PublicState} from './campaign-rule-registry.mjs';
+import {publicArmyEngine,engineAiActions,engineMapView,engineAiCoverValue,engineAiCoverDestination,armyEngine} from './campaign-engines.mjs';
 import {hexDistance} from './map-primitives.mjs';
 import {campaignAiRule,campaignAiPosture,campaignAiLaunch,campaignAiExchange,campaignAiNearChoice,AI_RULE_FOCUS_CANDIDATES,AI_RULE_FOCUS_BEAM} from './campaign-ai-rules.mjs';
 
@@ -49,9 +51,10 @@ export function campaignTacticsView(s,f){
  const v=api.banner(s,api.publicView(s,f));
  // UI acknowledgements are not tactical information and must not make this
  // snapshot depend on which faction happens to be controlled by the player.
- delete v.situationBarks;delete v.situationEvents;
+ delete v.situationBarks;delete v.situationEvents;v.engineMap=engineMapView(s,f);
+ for(const a of Object.values(v.ownArmies)){a.c50=structuredClone(s.armies[a.armyId].c50??null);a.c50CommanderId=a.commanderId;a.c234=sample4PublicState(s,a.armyId,f);a.woundedCount=s.armies[a.armyId].woundedCount??0;}
  for(const b of Object.values(v.knowledge.observedArmies))if(v.knowledge.tiles[b.tileId]==='VISIBLE'){
-  const a=s.armies[b.armyId];Object.assign(b,{facing:a.facing,formation:a.formation,morale:a.morale,braced:!!a.braced,...(a.troopType==='catapult'?{platformState:a.platformState??'STOWED'}:{})});
+  const a=s.armies[b.armyId];Object.assign(b,{facing:a.facing,formation:a.formation,morale:a.morale,braced:!!a.braced,c234:sample4PublicState(s,b.armyId,f),c50:publicArmyEngine(s,b.armyId,f),...(a.troopType==='catapult'?{platformState:a.platformState??'STOWED'}:{})});
   b.troopCount??=a.troopCount;
  }
  v.knowledge.observedArmies=Object.fromEntries(Object.entries(v.knowledge.observedArmies).filter(([,b])=>v.knowledge.tiles[b.tileId]==='VISIBLE'&&api.hostile(s,f,b.factionId)&&!api.withdrawal(s,b.armyId)));
@@ -61,7 +64,7 @@ export function campaignTacticsWorld(s,v){
  const own=Object.values(v.ownArmies),template=own[0];if(!template)return null;
  const probe={...s,armies:structuredClone(v.ownArmies),officers:structuredClone(v.officers),tiles:Object.fromEntries(Object.entries(v.tiles).map(([id,t])=>[id,v.knowledge.tiles[id]==='UNEXPLORED'?{...t,terrainType:'mountain'}:t])),history:[],combatLog:[],lastCombat:null,terminal:null,aiQueue:[],gameResult:null,
   campaignGrowth:{...s.campaignGrowth,officers:Object.fromEntries(Object.entries(s.campaignGrowth.officers).filter(([id])=>v.officers[id]).map(([id,r])=>[id,structuredClone(r)]))},
-  c31Disabled:true,c45Disabled:true,c46Disabled:true,dejaVuDisabled:true,cities:{},knowledge:{},factions:structuredClone(s.factions)};
+  c50:{finishedTurns:{},structures:structuredClone(v.engineMap?.structures??[]),publicMarks:structuredClone(v.engineMap?.marks??[]),publicTraps:structuredClone(v.engineMap?.traps??[]),publicWarnings:structuredClone((v.engineMap?.warnings??[]).filter(w=>w.name.endsWith('예고')))},c31Disabled:true,c45Disabled:true,c46Disabled:true,dejaVuDisabled:true,cities:{},knowledge:{},factions:structuredClone(s.factions)};
  const cityTemplate=Object.values(v.ownCities)[0]??Object.values(s.cities)[0];
  for(const c of Object.values(s.cities)){
   const known=v.ownCities[c.cityId]??v.knowledge.cities[c.cityId],castle=s.castleKnowledge?.[v.factionId]?.[c.cityId];
@@ -71,7 +74,7 @@ export function campaignTacticsWorld(s,v){
   const commanderId=`AI.PUBLIC.${b.armyId}`,o=structuredClone(v.officers[template.commanderId]);
   Object.assign(o,{officerId:commanderId,name:b.armyId,allegianceFactionId:b.factionId,locationRef:{kind:'ARMY',id:b.armyId},uniqueTrait:null,acquiredTraits:[],activeTraits:[],tactics:[],c34Abilities:null,baseStats:Object.fromEntries(Object.keys(o.baseStats).map(k=>[k,AI_PUBLIC_STAT])),aptitude:{militia:'B',spear:'B',bow:'B',archer:'B',cavalry:'B'},allowedTroops:[b.troopType]});
   probe.officers[commanderId]=o;
-  probe.armies[b.armyId]={...structuredClone(template),...b,commanderId,troopCount:b.troopCount,hp:Math.max(1,b.troopCount*2),maxHp:Math.max(1,b.troopCount*2),effectStates:[],c27:null,c28:null,c29:null,c32:null,c33:null,c34:null,classState:null,tacticReadyTurns:{},mainActionTurn:0,mainActionCount:0,movedTiles:0,braced:!!b.braced};
+  probe.armies[b.armyId]={...structuredClone(template),...b,commanderId,troopCount:b.troopCount,hp:Math.max(1,b.troopCount*2),maxHp:Math.max(1,b.troopCount*2),effectStates:[],c234:b.c234??null,c27:null,c28:null,c29:null,c32:null,c33:null,c34:null,c50:b.c50?{...Object.fromEntries(['frenzy','flag','passage','depot','grudge','trust','direct','persuaded'].filter(k=>b.c50[k]!==undefined).map(k=>[k,structuredClone(b.c50[k])])),engineId:b.c50.engineId,path:b.c50.path??null,max:b.c50.max,resource:b.c50.resource,reservations:Object.fromEntries(b.c50.reservations.map(k=>[k,b.c50.reservationDetails?.[k]??true])),relation:b.c50.relation??null,...(b.c50.order?{order:b.c50.order}:{})}:null,c50CommanderId:commanderId,tacticReadyTurns:{},mainActionTurn:0,mainActionCount:0,movedTiles:0,braced:!!b.braced};
  }
  // Every hypothetical observer sees just the actor's public board. No hidden
  // unit can become a counter, assist, pursuit or approach-fire source.
@@ -140,13 +143,13 @@ function predictedFormation(p,targetId){
  const changes=[...(p.earlyFormationChanges??[]),...(p.formationChanges??[])].filter(f=>f.armyId===targetId);
  return changes.at(-1)?.to;
 }
-const actionCommand=x=>({type:x.type,targetId:x.targetId,...(x.traitId?{traitId:x.traitId}:{})});
+const actionCommand=x=>({type:x.type,targetId:x.targetId,...(x.traitId?{traitId:x.traitId}:{}),...(x.action?{action:x.action}:{})});
 function scoreAction(w,x){
  const t=w.armies[x.targetId],city=w.cities[x.targetId],p=x.p,enemy=p.enemyLoss??p.dealt??0,ally=p.allyLoss??0;
  const finish=t?enemy>=t.troopCount:city&&(p.dealt??enemy)>=city.durability;
  const formation=predictedFormation(p,x.targetId),disrupt=formation&&formation!==t?.formation;
  const f=w.armies[x.armyId].factionId,view=campaignAiRule(w,f,6)?api.publicView(w,f):null,posture=view?campaignAiPosture(w,view,[]):null;
- return (finish?AI_FINISH_VALUE:0)+enemy-ally*(posture?.lossWeight??1.2)+(disrupt?AI_FORMATION_VALUE:0)+(p.formationRisk?.check?AI_FORMATION_VALUE*(1-p.formationRisk.successProbability):0)-(x.type==='TACTIC'?AI_TACTIC_RESERVE_COST:0);
+ return (finish?AI_FINISH_VALUE:0)+enemy-ally*(posture?.lossWeight??1.2)+(disrupt?AI_FORMATION_VALUE:0)+(p.formationRisk?.check?AI_FORMATION_VALUE*(1-p.formationRisk.successProbability):0)+(x.strategicValue??0)-(x.type==='TACTIC'?AI_TACTIC_RESERVE_COST:0);
 }
 export function campaignTacticalActions(w,id){
  if(!w.armies[id]||!api.canAct(w,id)||w.endedArmyIds.includes(id))return [];
@@ -155,7 +158,7 @@ export function campaignTacticalActions(w,id){
  for(const targetId of api.cityTargets(probe,id))rows.push({armyId:id,type:'CITY',targetId,p:api.previewCity(probe,id,targetId)});
  const timing=campaignTacticsPart(w,w.armies[id].factionId,'tacticTiming');
  const contact=Object.values(w.armies).some(b=>b.factionId!==w.armies[id].factionId&&dist(w,b.tileId,w.armies[id].tileId)<=2);
- if(!timing||contact||rows.some(x=>x.type==='CITY'))for(const c of api.tactics(w,id))for(const targetId of c.targets.filter(t=>api.useful(w,id,c,t)).slice(0,AI_FOCUS_UNITS)){
+ if(!timing||contact||rows.some(x=>x.type==='CITY')||api.tactics(w,id).some(c=>c.effects?.some(e=>e.rule?.startsWith('U_S4_'))&&c.canUse))for(const c of api.tactics(w,id))for(const targetId of c.targets.filter(t=>api.useful(w,id,c,t)).slice(0,AI_FOCUS_UNITS)){
   let p;
   try{p=api.previewTactic(w,id,c.traitId,targetId);}
   catch(error){
@@ -164,20 +167,31 @@ export function campaignTacticalActions(w,id){
    // Do not fall back to canonical enemy data: omit that tactic explicitly.
    const reason=String(error.message);previewDiagnostics.skipped++;previewDiagnostics.reasons[reason]=(previewDiagnostics.reasons[reason]??0)+1;continue;
   }
-  const x={armyId:id,type:'TACTIC',traitId:c.traitId,targetId,p,signature:!!c.signature};
+  const strategicValue=sample4AiValue(w,id,c,targetId);const x={strategicValue,armyId:id,type:'TACTIC',traitId:c.traitId,targetId,p,signature:!!c.signature};
   const basic=rows.find(x=>x.targetId===targetId),formation=predictedFormation(p,targetId),enemy=w.armies[targetId];
   // Preserve cooldown for marginal damage. Controls/formation, a finish,
   // capture or the last safe shot before engagement justify spending it.
   const loss=p.enemyLoss??0,opportunity=ranged(w.armies[id])&&enemy&&dist(w,w.armies[id].tileId,enemy.tileId)===2;
-  if(!timing||formation&&formation!==enemy?.formation||loss>=(enemy?.troopCount??Infinity)||p.cityId&&(p.dealt??loss)>=(w.cities[p.cityId]?.durability??Infinity)||loss>(basic?.p.enemyLoss??0)+AI_TACTIC_RESERVE_COST||opportunity&&loss>0||(p.moraleChanges??[]).some(m=>m.to==='ROUTING'))rows.push(x);
+  if(strategicValue>0||!timing||formation&&formation!==enemy?.formation||loss>=(enemy?.troopCount??Infinity)||p.cityId&&(p.dealt??loss)>=(w.cities[p.cityId]?.durability??Infinity)||loss>(basic?.p.enemyLoss??0)+AI_TACTIC_RESERVE_COST||opportunity&&loss>0||(p.moraleChanges??[]).some(m=>m.to==='ROUTING'))rows.push(x);
  }
  const f=w.armies[id].factionId,unit=w.armies[id];
+ const top=Math.max(0,...rows.filter(x=>x.type!=='TACTIC').map(x=>scoreAction(w,x))),cards=api.tactics(w,id),signature=cards.find(c=>c.signature);
+ for(const x of rows.filter(x=>x.type==='TACTIC'&&x.strategicValue>0)){
+  const card=cards.find(c=>c.traitId===x.traitId),nextGain=5+(api.attackTargets(w,id).length?20:0);
+  const refill=signature&&card&&!card.signature&&(card.gauge??0)-(card.gaugeCost??0)+nextGain>=(signature.gaugeCost??100);
+  // Useful control/support must compete with damage; reserve R only when E
+  // would delay it beyond the next combat period. No gauge/rule changes.
+  x.engineScore=Math.max(scoreAction(w,x),top+(refill?8:x.signature?6:4));
+ }
+ const engine=armyEngine(w,id),capBonus=engine?.resource===engine?.max?3:0;
+ for(const choice of engineAiActions(w,id))rows.push({armyId:id,type:'ENGINE_ACTION',...choice,p:{enemyLoss:0,allyLoss:0},engineScore:top+1+capBonus});
  return rows.filter(x=>{
+  if(x.type==='ENGINE_ACTION'||x.strategicValue>0&&!(x.p.enemyLoss>0))return true;
   if(campaignTacticsEnabled(w,f)&&campaignAiRule(w,f,6)&&w.armies[x.targetId]&&(x.p.allyLoss??0)>0&&campaignAiExchange(x.p)<.7)return false;
   if(!campaignAiRule(w,f,2)||x.type==='CITY'||!w.armies[x.targetId])return true;
   const mine=Object.values(w.armies).filter(a=>a.factionId===f&&dist(w,a.tileId,w.armies[x.targetId].tileId)<=3).reduce((n,a)=>n+a.troopCount,0),foe=Object.values(w.armies).filter(a=>a.factionId!==f&&dist(w,a.tileId,unit.tileId)<=3).reduce((n,a)=>n+a.troopCount,0);
   return campaignAiExchange(x.p)>=1.2||campaignAiLaunch(w,f,id,mine/Math.max(1,foe));
- }).map(x=>({...x,score:scoreAction(w,x)})).sort((a,b)=>b.score-a.score||a.type.localeCompare(b.type)||a.targetId.localeCompare(b.targetId)||String(a.traitId).localeCompare(String(b.traitId)));
+ }).map(x=>({...x,score:x.engineScore??scoreAction(w,x)})).sort((a,b)=>b.score-a.score||a.type.localeCompare(b.type)||a.targetId.localeCompare(b.targetId)||String(a.traitId).localeCompare(String(b.traitId)));
 }
 function applyPrediction(w,x){
  const next={...w,armies:structuredClone(w.armies),cities:structuredClone(w.cities),endedArmyIds:[...w.endedArmyIds,x.armyId]},p=x.p;
@@ -192,7 +206,11 @@ function applyPrediction(w,x){
 }
 export function campaignFocusOrder(w,ids){
  const rule9=campaignAiRule(w,w.armies[ids[0]]?.factionId,9),candidates=rule9?AI_RULE_FOCUS_CANDIDATES:AI_FOCUS_BEAM,width=rule9?AI_RULE_FOCUS_BEAM:AI_FOCUS_BEAM;
- const active=ids.filter(id=>api.canAct(w,id)&&!w.endedArmyIds.includes(id)),near=active.filter(id=>api.attackTargets(w,id).length||api.cityTargets(w,id).length).slice(0,AI_FOCUS_UNITS);
+ const active=ids.filter(id=>api.canAct(w,id)&&!w.endedArmyIds.includes(id)),supportActions=new Set(['ORDER','SCOUT','RELEASE','CART','DIRECT_FLANK','LEND','DEPOT']);
+ // Orders and marks must precede the recipient's attack. The damage-only beam
+ // cannot model those benefits and used to append non-attacking supports last.
+ const supports=active.flatMap(id=>{const choice=engineAiActions(w,id).find(x=>supportActions.has(x.action));return choice?[{armyId:id,action:{type:'ENGINE_ACTION',...choice}}]:[];}),supportIds=new Set(supports.map(x=>x.armyId));
+ const near=active.filter(id=>!supportIds.has(id)&&(api.attackTargets(w,id).length||api.cityTargets(w,id).length)).slice(0,AI_FOCUS_UNITS);
  let best={score:0,actions:[]},beam=[{board:w,left:near,actions:[],score:0}];
  // A global beam bounds the entire search, including permutations, rather
  // than branching twice at every node of a factorial tree.
@@ -205,23 +223,30 @@ export function campaignFocusOrder(w,ids){
   }
   beam=next.sort((a,b)=>b.score-a.score).slice(0,width);if(!beam.length)break;
  }
- return [...best.actions.map(x=>({armyId:x.armyId,action:actionCommand(x)})),...active.filter(id=>!best.actions.some(x=>x.armyId===id)).map(armyId=>({armyId,action:null}))];
+ return [...supports,...best.actions.map(x=>({armyId:x.armyId,action:actionCommand(x)})),...active.filter(id=>!supportIds.has(id)&&!best.actions.some(x=>x.armyId===id)).map(armyId=>({armyId,action:null}))];
 }
 export function campaignChooseTacticalAction(s,f,id,preferred=null,goalCityId=null){
  const a=s.armies[id];if(!a||!api.canAct(s,id)||s.endedArmyIds.includes(id))return null;
  // A distant idle/rear unit cannot fire, use a contact tactic or hit a
  // castle. Avoid rebuilding its public board and the static known-edge list.
- if(!api.attackTargets(s,id).length&&!api.cityTargets(s,id).length&&!Object.values(s.knowledge[f].observedArmies).some(b=>s.knowledge[f].tiles[b.tileId]==='VISIBLE'&&dist(s,a.tileId,b.tileId)<=2))return null;
+ if(!engineAiActions(s,id).length&&!api.attackTargets(s,id).length&&!api.cityTargets(s,id).length&&!Object.values(s.knowledge[f].observedArmies).some(b=>s.knowledge[f].tiles[b.tileId]==='VISIBLE'&&dist(s,a.tileId,b.tileId)<=2))return null;
  const w=campaignTacticsWorld(s,campaignTacticsView(s,f));if(!w)return null;
  const options=campaignTacticalActions(w,id);
  if(preferred?.defendGate){const defense=options.find(x=>x.targetId===preferred.targetId&&x.score>=0&&(x.type!=='ATTACK'||x.p.enemyLoss>=x.p.allyLoss*1.2||x.score>=AI_FINISH_VALUE));if(defense)return actionCommand(defense);}
  // A legal castle hit was the strategic purpose of this main's arrival.
  // Field finishing must not consume that capture opportunity instead.
  const siege=goalCityId&&options.filter(x=>x.targetId===goalCityId&&w.cities[x.targetId]).sort((a,b)=>b.score-a.score)[0];
- if(siege)return actionCommand(siege);
+ if(siege){
+  const timely=options.find(x=>(x.type==='ENGINE_ACTION'||x.strategicValue>0||w.armies[id].c50?.engineId==='CHEOK'&&w.armies[id].c50.hidden&&x.type==='ATTACK')&&x.score>=siege.score);
+  if(timely&&siege.score<AI_FINISH_VALUE)return actionCommand(timely);
+  return actionCommand(siege);
+ }
  const signature=!campaignTacticsPart(s,f,'tacticTiming')&&options.find(x=>x.type==='TACTIC'&&x.signature);
  if(signature)return actionCommand(signature);
  const safe=options.filter(x=>x.score>=0&&(x.type!=='ATTACK'||x.p.enemyLoss>=x.p.allyLoss*1.2||x.score>=AI_FINISH_VALUE));
+ // Focus forecasts cannot anticipate resources gained by earlier allied hits.
+ // Recheck ready W/control before retaining a stale preferred normal attack.
+ const ready=safe[0];if(ready&&(ready.type==='ENGINE_ACTION'||ready.type==='TACTIC'&&ready.strategicValue>0))return actionCommand(ready);
  const best=options.find(x=>preferred&&x.type===preferred.type&&x.targetId===preferred.targetId&&x.traitId===preferred.traitId&&safe.includes(x))??campaignAiNearChoice(s,f,id,safe,'tactical-action');
  return best&&best.score>=0&&(best.type!=='ATTACK'||best.p.enemyLoss>=best.p.allyLoss*1.2||best.score>=AI_FINISH_VALUE)?actionCommand(best):null;
 }
@@ -234,6 +259,25 @@ export function campaignTacticalMoves(s,v,plan,{remember=false,supplyWorld}={}){
  // route added delay without gaining anything; keep destination and path.
  if(parts.cutHub){const hubs=(supplyWorld?.supply?.hubs??[]).filter(h=>v.knowledge.tiles[h.tileId]==='VISIBLE'&&api.hostile(s,v.factionId,h.factionId));
   plan.candidates=plan.candidates.map(c=>campaignTacticalOrderAllowed(c)&&c.type==='MOVE'&&hubs.some(h=>c.pathTileIds?.includes(h.tileId))?{...c,aiCutHub:true}:c);
+ }
+ // A cart heals on arrival. Route a wounded recipient through an existing
+ // public friendly cart, rather than spending W on a tile nobody will enter.
+ const carts=(v.engineMap?.structures??[]).filter(o=>o.type==='CART'&&o.factionId===v.factionId),claimed=new Set();
+ if(carts.length){const board=campaignTacticsWorld(s,v);plan.candidates=plan.candidates.map(c=>{
+  const a=v.ownArmies[c.armyId];if(!a?.woundedCount||!campaignTacticalOrderAllowed(c)||s.movedArmyIds.includes(c.armyId))return c;
+  const reach=api.reachable(board,c.armyId,s.time.ticksPerTurn),cart=carts.find(o=>!claimed.has(o.tileId)&&reach.has(o.tileId)&&dist(s,a.tileId,o.tileId)<=1&&!Object.values(v.knowledge.observedArmies).some(b=>dist(s,o.tileId,b.tileId)<=1));
+  if(!cart)return c;claimed.add(cart.tileId);return {...c,type:'MOVE',destinationTileId:cart.tileId,pathTileIds:reach.get(cart.tileId).pathTileIds,reasonCode:'ENGINE_CART_RECOVERY',aiTacticalMove:true};
+ });}
+ // A nearby concealment stop may bend the strategic path by at most two hexes.
+ // Use only known cities/visible enemies; actual concealment is still settled by rules.
+ if(Object.values(v.ownArmies).some(a=>a.c50?.engineId==='CHEOK')){
+  const coverWorld=campaignTacticsWorld(s,v);
+  plan.candidates=plan.candidates.map(c=>{
+   if(c.type!=='MOVE'||!campaignTacticalOrderAllowed(c)||c.aiOperationWait||s.movedArmyIds.includes(c.armyId))return c;
+   const a=v.ownArmies[c.armyId];if(a?.c50?.engineId!=='CHEOK')return c;
+   const reach=api.reachable(coverWorld,c.armyId,s.time.ticksPerTurn),to=engineAiCoverDestination(coverWorld,c.armyId,c.pathTileIds,reach);
+   return to?{...c,destinationTileId:to,pathTileIds:reach.get(to).pathTileIds,reasonCode:'ENGINE_COVER',aiTacticalMove:true}:c;
+  });
  }
  const foes=Object.values(v.knowledge.observedArmies);if(!foes.length||!parts.flank&&!parts.matchup&&!parts.retreat)return plan;
  const movementWorld=campaignTacticsWorld(s,v),w=campaignCombatProbe(movementWorld),memory=structuredClone(s.aiTactics?.[v.factionId]??{badExchanges:{}}),reserved=new Set();memory.badExchanges??={};memory.holds??={};
@@ -253,10 +297,11 @@ export function campaignTacticalMoves(s,v,plan,{remember=false,supplyWorld}={}){
    const hits=api.attackTargets(board,a.armyId).filter(id=>nearby.some(b=>b.armyId===id)).map(targetId=>({armyId:a.armyId,type:'ATTACK',targetId,p:api.previewAttack(board,a.armyId,targetId)})).map(x=>({...x,score:scoreAction(board,x)})).sort((x,y)=>y.score-x.score);
    const hit=hits[0],city=plan.goal?.targetCityId&&api.cityTargets(board,a.armyId).includes(plan.goal.targetCityId);
    const incoming=nearby.filter(b=>dist(s,to,b.tileId)<=api.attackRange(b,board)&&api.attackTargets(board,b.armyId).includes(a.armyId)).reduce((n,b)=>n+(api.threat(board,b.armyId,a.armyId).enemyLoss??0),0);
-   let score=(hit?.score??0)-loss-incoming*AI_EXPOSURE_COST;
+   const cover=engineAiCoverValue(board,a.armyId,to);
+   let score=(hit?.score??0)-loss-incoming*AI_EXPOSURE_COST+cover;
    if(city)score=Math.max(score,api.previewCity(board,a.armyId,plan.goal.targetCityId).dealt-loss);
    const poor=!!hit&&hit.p.enemyLoss<hit.p.allyLoss*1.2&&hit.p.enemyLoss<board.armies[hit.targetId].troopCount;
-   const result={to,path,loss,hit,city,poor,score,lethal:incoming>=a.troopCount-loss};evaluations.set(to,result);return result;
+   const result={to,path,loss,hit,city,poor,score,cover,lethal:incoming>=a.troopCount-loss};evaluations.set(to,result);return result;
   };
   const originalTo=c.type==='MOVE'&&reach.has(c.destinationTileId)?c.destinationTileId:a.tileId,originalPath=originalTo===a.tileId?{pathTileIds:[a.tileId],totalTicks:0}:reach.get(originalTo),baseline=evaluate(originalTo,originalPath);
   // P1: a main able to hit its chosen castle this turn keeps that arrival.
@@ -269,10 +314,10 @@ export function campaignTacticalMoves(s,v,plan,{remember=false,supplyWorld}={}){
   const retreat=parts.retreat&&danger&&(memory.badExchanges[a.armyId]?.count??0)>=AI_BAD_EXCHANGE_TURNS&&(!campaignAiRule(s,v.factionId,4)||localOwn/Math.max(1,localEnemy)<.8);
   if(!parts.flank&&!danger)return c;
   const options=[[a.tileId,{pathTileIds:[a.tileId],totalTicks:0}],...reach].filter(([to,path])=>!reserved.has(to)&&path.pathTileIds.every(id=>v.knowledge.tiles[id]!=='UNEXPLORED')&&(!retreat||path.pathTileIds.length<=2)&&(!archer||nearby.every(b=>dist(s,to,b.tileId)>1)));
-  const promising=options.sort(([to],[other])=>Math.min(...nearby.map(b=>Math.abs(dist(s,to,b.tileId)-(archer?2:1))))-Math.min(...nearby.map(b=>Math.abs(dist(s,other,b.tileId)-(archer?2:1))))||dist(s,to,goal)-dist(s,other,goal)||to.localeCompare(other)).slice(0,AI_MOVE_OPTIONS);
+   const promising=options.sort(([to],[other])=>engineAiCoverValue(w,a.armyId,other)-engineAiCoverValue(w,a.armyId,to)||Math.min(...nearby.map(b=>Math.abs(dist(s,to,b.tileId)-(archer?2:1))))-Math.min(...nearby.map(b=>Math.abs(dist(s,other,b.tileId)-(archer?2:1))))||dist(s,to,goal)-dist(s,other,goal)||to.localeCompare(other)).slice(0,AI_MOVE_OPTIONS);
   const evaluated=promising.map(([to,path])=>evaluate(to,path)).filter(x=>!x.lethal&&(!parts.matchup||!x.poor));
   const lastHold=memory.holds[a.armyId],canHold=lastHold?.turn!==s.turn-1;
-  let best=campaignAiNearChoice(s,v.factionId,a.armyId,evaluated.filter(x=>x.hit&&x.score>baseline.score&&(x.to!==a.tileId||c.type!=='MOVE'||canHold)).sort((x,y)=>y.score-x.score),'tactical-move');
+   let best=campaignAiNearChoice(s,v.factionId,a.armyId,evaluated.filter(x=>(x.hit||x.cover&&dist(s,x.to,goal)<=dist(s,a.tileId,goal))&&x.score>baseline.score&&(x.to!==a.tileId||c.type!=='MOVE'||canHold)).sort((x,y)=>y.score-x.score),'tactical-move');
   if(!best&&danger){
    const safe=evaluated.filter(x=>x.to!==a.tileId&&dist(s,x.to,goal)<=dist(s,a.tileId,goal));
    best=safe.sort((x,y)=>dist(s,x.to,goal)-dist(s,y.to,goal)||y.score-x.score)[0];

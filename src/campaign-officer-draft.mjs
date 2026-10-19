@@ -1,3 +1,4 @@
+import {initializeEngines} from './campaign-engines.mjs';
 import {seededPool,requiredPoolIds} from './campaign-engine-gaps.mjs';
 // @ts-check
 import {relation,RELATIONS} from './campaign-relations.mjs';
@@ -7,7 +8,6 @@ import {statsToOfficerPack,troopToCampaign} from './campaign-adapters.mjs';
 import {officerFromPack,rosterPacks} from './campaign-roster.mjs';
 import {initializeCampaignGrowth} from './campaign-growth.mjs';
 import {initializeCampaignAbilities} from './campaign-abilities.mjs';
-import {startClasses} from './campaign-classes.mjs';
 import {triggerEffects} from './campaign-effects.mjs';
 import {domesticStartFaction,combatStartFaction,c33Start} from './campaign-rule-registry.mjs';
 
@@ -182,7 +182,7 @@ export function applyOfficerDraft(s,companions,unlocks=[]){
   const o=s.officers[other.commanderId];if(!o.allowedTroops.includes(other.troopType))other.troopType=o.allowedTroops[0];
   const formation=s.personnel.formations.find(f=>f.formationId===other.armyId);
   formation.identity={baseTroopId:troopToCampaign(other.troopType),specialTroopId:null};
-  other.effectStates=[];other.tacticReadyTurns={};other.classState={prepared:false,relentlessTarget:null,canMoveAfterAttack:false,hidden:false};delete other.c26;delete other.c27;delete other.c33;
+  other.effectStates=[];other.tacticReadyTurns={};delete other.c50;delete other.c50CommanderId;delete other.c26;delete other.c27;delete other.c33;
   }
  }
  for(const a of armies.filter(a=>s.armies[a.armyId]))s.officers[a.commanderId].locationRef={kind:'ARMY',id:a.armyId};
@@ -192,6 +192,6 @@ export function applyOfficerDraft(s,companions,unlocks=[]){
  initializeCampaignGrowth(s,/** @type {Parameters<typeof initializeCampaignGrowth>[1]} */ (/** @type {unknown} */ (rosterPacks)));
  if(replacedCommander){triggerEffects(s,other.armyId,'PASSIVE');triggerEffects(s,other.armyId,'ROUND_START');}
  domesticStartFaction(s,f.factionId);combatStartFaction(s,f.factionId);c33Start(s,f.factionId);
- startClasses(s,f.factionId);
+ initializeEngines(s);
  s.officerDraft={companions:[...companions]};
 }

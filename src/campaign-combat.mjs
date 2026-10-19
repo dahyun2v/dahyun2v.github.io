@@ -1,3 +1,6 @@
+import {c29Cost} from './campaign-c29.mjs';
+import {sample4AfterAttack,sample4FireImmune,sample4CanPush,sample4Separated} from './campaign-rule-registry.mjs';
+import {engineFormationDamage,engineAttackBlocked,engineWallDisabled,engineNoPursuit,engineEvent,engineAttackOptions,engineDamageFactor,engineSuppressReaction,engineShareRows,engineAfterAttack,enginePursuit,enginePursuitMerit,engineCounterReservation,engineCounterRatio,engineFirstStrike,engineReactionUsed,armyEngine,engineShotLegal,engineArriveReaction} from './campaign-engines.mjs';
 import {heavenCombat} from './campaign-run-modifiers.mjs';
 import {C182,combatFireAt,initializeCombatFire,combatFireLog} from './campaign-rule-registry.mjs';
 import {c31IgnoreControlZone} from './campaign-events.mjs';
@@ -6,13 +9,12 @@ import {supplyCombat,supplyCombatLoot,supplyCityLoot} from './campaign-supply.mj
 import {rememberDiplomacyCombat,diplomacyEnabled,diplomacyArmyHostile,diplomacyAttackReason,diplomacyHostile,withdrawalProtection} from './campaign-diplomacy.mjs';
 import {dejaVuEvent} from './campaign-deja-vu.mjs';
 import {relationAttack,relationCombatResult,recordRelationAttack,relationVictory,relationMoraleWeight} from './campaign-relations.mjs';
-import {armyClass,classAttack,classHold,classAfterAttack,classShare,classLine,classHidden,classExtendFire,countClass,classSurrenderReady,classSurrenderReserve,classGuardedLoss,classWoundedLines,classCamp} from './campaign-classes.mjs';
 import {campaignShownCount,campaignShownScale} from './campaign-rule-registry.mjs';
 import {c34AfterCity,c34AfterTactic,c34Movement,c34Recovery,c34Range,c34Near,c34ShareRows,c34CounterFactor,c34FlushPoison} from './campaign-c34.mjs';
 import {c33Card,c33Owned,c33Range,c33Formation,c33ApplyTactic,c33AfterAttack,c33Limit,c33PullTile,c33Immune,c33Governor,c33FormationCard} from './campaign-rule-registry.mjs';
 import {c31DamageFactor,c31CityCounter,c31Combat,c31ExtendStatuses} from './campaign-events.mjs';
 import {c30Combat,c30TacticUsed,c30Strategy,c30ElementDamage,c30ChargeWeight,c30ChargeGuard,c30State,c30MoraleWeight} from './campaign-c29.mjs';
-import {c29Record,c29TacticUsed,c29Combat,c29Aw,c29PostCombat} from './campaign-c29.mjs';
+import {c29Record,c29Enabled,c29TacticUsed,c29Combat,c29Aw,c29PostCombat} from './campaign-c29.mjs';
 import {C28,c28Rule,recordC28Combat,recordC28Tactic,c28ControlGuard} from './campaign-career.mjs';
 import {domesticWall,domesticStrike,combatRule,combatRuleLine,combatParams,combatCount,combatTacticRule,combatAlly,combatArmyAt,oppositeCombatTile,combatEmptyStep,combatFinishAttack,combatRecordRouts,runCombatRule,executeCampaignRule,combatCanPostMove} from './campaign-rule-registry.mjs';
 import {C193,C24,isRangedAttack,c217DamageLines,specialTroop,c24DamageFactor,jiefanLine,lossMoraleThreshold,platformState,platformAttackReason} from './campaign-special-troops.mjs';
@@ -110,12 +112,12 @@ function combatFollowups(s,id,target,hit,options){
 }
 export function attackTargets(s,id) {
   const a=s.armies[id];
-  if(platformAttackReason(s,id))return [];
+  if(platformAttackReason(s,id)||engineAttackBlocked(s,id))return [];
   if(!a||a.c34?.disarmUntil>=s.turn||a.c32?.disarmUntil>=s.turn||a.c33?.bideUntil>=s.turn||archerAttackReason(s,id)||attackConfused(s,id)||a.morale==='ROUTING'||!castleArmyActive(s,a)||!canMainAction(s,id))return [];
   const v={knowledge:s.knowledge[a.factionId]};
   return Object.values(v.knowledge.observedArmies).filter(t=>s.knowledge[a.factionId].tiles[t.tileId]==='VISIBLE'&&
-    s.armies[t.armyId]&&diplomacyArmyHostile(s,id,t.armyId)&&!ambushHidden(s,t.armyId,a.factionId)&&!classHidden(s,t.armyId,a.factionId)&&castleArmyActive(s,s.armies[t.armyId])&&
-    hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])<=attackRange(a,s)&&jiefanLine(s,a,t)&&(troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])>1)).map(t=>t.armyId).sort();
+    s.armies[t.armyId]&&diplomacyArmyHostile(s,id,t.armyId)&&!ambushHidden(s,t.armyId,a.factionId)&&castleArmyActive(s,s.armies[t.armyId])&&
+    hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])<=attackRange(a,s)&&jiefanLine(s,a,t)&&(troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])>1&&(!armyEngine(s,id)?.archer||engineShotLegal(s,id,t.armyId)))).map(t=>t.armyId).sort();
 }
 export function previewAttackThreat(s,attackerId,targetId){const reason=diplomacyAttackReason(s,attackerId,targetId);if(reason)throw new Error(reason);return attackNumbers(prepareAttackEffects(s,attackerId,targetId,{first:false}),attackerId,targetId,{reaction:true,first:false});}
 export function previewAttack(s,attackerId,targetId) {
@@ -127,7 +129,7 @@ export function previewAttack(s,attackerId,targetId) {
   const compactProbe=Object.values(s.campaignGrowth?.officers??{}).some(r=>r.track?.poolFingerprint==='');
   const fields=new Map((s.personnel?.formations??[]).map(f=>[f.formationId,f.field]));
   const hypotheticalCounts=Object.values(s.armies).some(a=>fields.get(a.armyId)!==a.troopCount);
-  if(s.mapId==='v1'||publicProbe||compactProbe||hypotheticalCounts)return shownPrediction(s,attackerId,targetId,attackNumbers(prepareAttackEffects(s,attackerId,targetId),attackerId,targetId));
+  if(s.mapId==='v1'||publicProbe||compactProbe||hypotheticalCounts)return shownPrediction(s,attackerId,targetId,enginePublicForecast(s,attackerId,targetId,attackNumbers(prepareAttackEffects(s,attackerId,targetId),attackerId,targetId)));
   // The same isolated combat transaction supplies committed casualties, including
   // guarding, reflection and after-hit effects. Never advance a turn/AI in a preview.
   const resolved=calculateAttack(s,attackerId,targetId,null,{forecast:true}),log=resolved.lastCombat;
@@ -136,20 +138,19 @@ export function previewAttack(s,attackerId,targetId) {
 }
 // 피해 수치만 계산한다(사거리·시야·행동 자격은 호출한 쪽이 확인).
 function attackFormula(s,attackerId,targetId,troopCount=s.armies[attackerId].troopCount,options={}) {
-  options=uniqueAttackOptions(s,attackerId,targetId,options);if(c33Formation(s,targetId,'FORMATION_RING'))options={...options,noFlank:true};
+  options=engineAttackOptions(s,attackerId,targetId,uniqueAttackOptions(s,attackerId,targetId,options));if(c33Formation(s,targetId,'FORMATION_RING'))options={...options,noFlank:true};
   const a=s.armies[attackerId],t=s.armies[targetId];
   const at=troopToCampaign(a.troopType),dt=troopToCampaign(t.troopType);
   const terrainAttack=C182.terrainAttack[at]?.[s.tiles[a.tileId].terrainType]??1;
-  const terrain=({forest:1.15,hill:1.25})[s.tiles[t.tileId].terrainType]??1;
-  const castleRaw=campaignCastleDefense(s,t),castle=1+(castleRaw-1)*(c28Rule(s,attackerId,'BREACH_GUARD')?C28.breachRatio:1);
+  const terrain=options.ignoreCover?1:({forest:1.15,hill:1.25})[s.tiles[t.tileId].terrainType]??1;
+  const castleRaw=engineWallDisabled(s,t)?1:campaignCastleDefense(s,t),castle=1+(castleRaw-1)*(c28Rule(s,attackerId,'BREACH_GUARD')?C28.breachRatio:1);
   const river=s.mapRules.riverEdges.includes([a.tileId,t.tileId].sort().join('|'))?.75:1;
-  const allies=Object.values(s.armies).filter(u=>u.armyId!==attackerId&&u.factionId===a.factionId&&u.morale!=='ROUTING'&&castleArmyActive(s,u)&&hexDistance(s.tiles[u.tileId],s.tiles[t.tileId])===1).length;
+  const allies=Object.values(s.armies).filter(u=>u.armyId!==attackerId&&!sample4Separated(s,u.armyId,attackerId)&&u.factionId===a.factionId&&u.morale!=='ROUTING'&&castleArmyActive(s,u)&&hexDistance(s.tiles[u.tileId],s.tiles[t.tileId])===1).length;
   const flank=options.noFlank?1:1+Math.min(3,allies)*.1;
   let side=options.forceSide??(options.counter?'FRONT':attackDirection(s,attackerId,targetId));
   const first=a.effectFirstAttackTurn!==s.turn&&!options.counter&&!options.reaction,ambusher=first&&combatRule(s,attackerId,'AMBUSHER')&&a.c27?.hiddenFrom?.includes(t.factionId);
   if(t.c27?.feignedFlankUntil>=s.turn&&side==='FRONT')side='FLANK';
   if(first&&(ambusher||a.c27?.ambush)&&!options.forceSide)side='REAR';
-  const cls=classAttack(s,attackerId,targetId,options,side);if(cls.forceSide)side=cls.forceSide;
   const noFront=!options.counter&&combatRule(s,attackerId,'NO_FRONT');if(noFront&&side==='FRONT')side='FLANK';
   const matchup=troopMatchup(s,at,dt,side);
   const square=options.noFlank||combatRule(s,targetId,'SQUARE'),hedge=side==='FLANK'&&t.formation==='ORDERED'&&combatRule(s,targetId,'HEDGEHOG'),stakes=t.c27?.stakes&&t.c27.stakes.until>=s.turn;
@@ -158,15 +159,15 @@ function attackFormula(s,attackerId,targetId,troopCount=s.armies[attackerId].tro
   const sideMultiplier=square||hedge||stakes&&side==='FLANK'?1:side==='REAR'?noFront?1:1+C12.rear*sideRatio:side==='FLANK'?1+C12.side*sideRatio:1,chargeMultiplier=charge?1+campaignSubAbility(s,a.commanderId,'무용','힘')*C12.charge+extra:1,formation=t.formation==='BROKEN'?1+C12.broken:t.formation==='DISORDERED'?1+C12.disordered:1;
   const attack=campaignAttackPower(s,a.commanderId,options.counter),defense=campaignDefensePower(s,t.commanderId);
   const guardRatio=c28Rule(s,attackerId,'BREACH_GUARD')?C28.breachRatio:1;
-  const hold=classHold(s,targetId,side);
   const brace=t.braced&&!options.ignoreBrace&&!(specialTroop(s,a.troopType)&&a.troopType==='danyang')?1+.25*guardRatio:1,shaken=a.morale==='SHAKEN'?.8:1;
-  const effect=damageEffects(s,attackerId,targetId,{...options,charge,classDamage:cls.damage});
+  const effect=damageEffects(s,attackerId,targetId,{...options,charge});
   const social=relationAttack(s,attackerId,targetId,options);effect.factor*=social.factor;effect.lines.push(...social.lines);
   const heaven=heavenCombat(s,a.factionId,t.factionId);effect.factor*=heaven.factor;effect.lines.push(...heaven.lines);
   const oath=a.c27?.oath&&combatRule(s,attackerId,'OATH_OF_REVENGE'),penalty=oath?Math.max(0,1-oath.params.penalty/100):1;
-  const damage=platformAttackReason(s,attackerId)?0:Math.max(1,Math.round((hold?Math.min(1/(1-hold.ability.params.frontReduce/100),brace)/ (1/(1-hold.ability.params.frontReduce/100)):1)*(options.tactic&&a.c33?.doubleTurn===s.turn?2:1)*(t.c33?.smokeUntil>=s.turn&&at==='BT03'?.6:1)*(c33Owned(s,attackerId,'POINT_BLANK')&&archerEngagedC33(s,attackerId)? .7:1)*(options.tactic?1:uniqueOrdinaryDamageFactor(s,attackerId))*(1-(options.reaction&&uniqueOwned(s,targetId,'U_SUPERVISE')?30:0)/100)*penalty*(s.armies[attackerId].c28ExposeTurn===s.turn?1-C28.exposePenalty/100:1)*c24DamageFactor(s,a,t,charge,{ranged:isRangedAttack(s,a,t),side})*effect.factor*c31DamageFactor(s,a,t,options)*c22AttackMultiplier(s,a,t.factionId,options)*(!options.counter&&!options.reaction?starAttackMultiplier(s,a):1)*terrainAttack*troopCount*.12*attack*matchup*river*(flank+sideMultiplier-1)*chargeMultiplier*formation*shaken/(defense*terrain*castle*brace)));
+  effect.factor*=engineDamageFactor(s,attackerId,targetId,side,options);
+  const damage=platformAttackReason(s,attackerId)?0:Math.max(1,Math.round((options.tactic&&a.c33?.doubleTurn===s.turn?2:1)*(t.c33?.smokeUntil>=s.turn&&at==='BT03'?.6:1)*(c33Owned(s,attackerId,'POINT_BLANK')&&archerEngagedC33(s,attackerId)? .7:1)*(options.tactic?1:uniqueOrdinaryDamageFactor(s,attackerId))*(1-(options.reaction&&uniqueOwned(s,targetId,'U_SUPERVISE')?30:0)/100)*penalty*(s.armies[attackerId].c28ExposeTurn===s.turn?1-C28.exposePenalty/100:1)*c24DamageFactor(s,a,t,charge,{ranged:isRangedAttack(s,a,t),side})*effect.factor*c31DamageFactor(s,a,t,options)*c22AttackMultiplier(s,a,t.factionId,options)*(!options.counter&&!options.reaction?starAttackMultiplier(s,a):1)*terrainAttack*troopCount*.12*attack*matchup*river*(flank+sideMultiplier-1)*chargeMultiplier*formation*shaken/(defense*terrain*castle*brace)));
   const ruleLines=[...(momentum&&extra?[combatRuleLine(s,attackerId,'CHARGE_MOMENTUM',`돌격 +${extra*100}%`)]:[]),...(noFront?[combatRuleLine(s,attackerId,'NO_FRONT','최소 측면 · 대가 후방 보너스 0')]:[]),...(ambusher?[combatRuleLine(s,attackerId,'AMBUSHER','시야 밖 첫 공격 후방')]:[]),...(square?[combatRuleLine(s,targetId,'SQUARE','측면·후방 보너스 무효 · 이동 1칸')]:[]),...(hedge?[combatRuleLine(s,targetId,'HEDGEHOG','정돈 측면 무효')]:[]),...(stakes?['말뚝 박고 버티기 — 측면·돌격 보너스 무효 · 다음 이동 불가']:[]),...(oath?[combatRuleLine(s,attackerId,'OATH_OF_REVENGE',`피해 −${oath.params.penalty}% · ${a.c27.oath.left}회 남음`)]:[]),...(a.c27?.ambush&&first?['매복 — 첫 공격 후방']:[])];
-  return {damage,side,charge,sideWeight:square||hedge||stakes&&side==='FLANK'?0:side==='REAR'?C12.rearWeight:side==='FLANK'?C12.flankWeight:0,multipliers:{...(terrainAttack!==1?{terrainAttack}:{}),...(['v2','v3'].includes(s.mapId)?{relations:social.factor}:{}),c24:c24DamageFactor(s,a,t,charge,{ranged:isRangedAttack(s,a,t),side}),side:sideMultiplier,charge:chargeMultiplier,formation,matchup,terrain,castle,river,flank,brace,shaken,effects:effect.special,aptitude:effect.aptitude,traitDefense:effect.defense},effectLines:[...(terrainAttack!==1?[`병종 × 지형: ${at==='BT04'?'기병':'궁병'} ${s.tiles[a.tileId].terrainType==='forest'?'숲':'언덕'} 공격 ${Math.round((terrainAttack-1)*100)}%`]:[]),...((c31IgnoreControlZone(s,attackerId)||c31IgnoreControlZone(s,targetId))?['위기 장수 — 통제 구역에 멈추지 않음 · 대응: 빈 길을 부대로 막거나 집중 공격']:[]),...c217DamageLines(s,a,t,{ranged:isRangedAttack(s,a,t),side}),...cls.lines,...(hold?[classLine(hold,'정면 피해 −20% · 전열 유지')]:[]),...effect.lines,...ruleLines,...(brace>1?['방어 태세 ×1.25']:[]),...(a.morale==='SHAKEN'?['동요 공격 −20%']:[]),...(sideMultiplier>1?[side==='REAR'?'후방 +30%':'측면 +15%']:[]),...(charge?[`돌격 +${Math.round((chargeMultiplier-1)*10000)/100}%`]:[]),...(t.formation==='BROKEN'?['붕괴 +30%']:t.formation==='DISORDERED'?['흐트러짐 +15%']:[])]};
+  return {damage,side,charge,sideWeight:square||hedge||stakes&&side==='FLANK'?0:side==='REAR'?C12.rearWeight:side==='FLANK'?C12.flankWeight:0,multipliers:{...(terrainAttack!==1?{terrainAttack}:{}),...(['v2','v3'].includes(s.mapId)?{relations:social.factor}:{}),c24:c24DamageFactor(s,a,t,charge,{ranged:isRangedAttack(s,a,t),side}),side:sideMultiplier,charge:chargeMultiplier,formation,matchup,terrain,castle,river,flank,brace,shaken,effects:effect.special,aptitude:effect.aptitude,traitDefense:effect.defense},effectLines:[...(terrainAttack!==1?[`병종 × 지형: ${at==='BT04'?'기병':'궁병'} ${s.tiles[a.tileId].terrainType==='forest'?'숲':'언덕'} 공격 ${Math.round((terrainAttack-1)*100)}%`]:[]),...((c31IgnoreControlZone(s,attackerId)||c31IgnoreControlZone(s,targetId))?['위기 장수 — 통제 구역에 멈추지 않음 · 대응: 빈 길을 부대로 막거나 집중 공격']:[]),...c217DamageLines(s,a,t,{ranged:isRangedAttack(s,a,t),side}),...effect.lines,...ruleLines,...(brace>1?['방어 태세 ×1.25']:[]),...(a.morale==='SHAKEN'?['동요 공격 −20%']:[]),...(sideMultiplier>1?[side==='REAR'?'후방 +30%':'측면 +15%']:[]),...(charge?[`돌격 +${Math.round((chargeMultiplier-1)*10000)/100}%`]:[]),...(t.formation==='BROKEN'?['붕괴 +30%']:t.formation==='DISORDERED'?['흐트러짐 +15%']:[])]};
 }
 const c30BondFirstFormation=(s,id)=>{const x=c30State(s,id);return !!x&&x.teamUps.includes('BD-06')&&!x.formationUsed;};
 function attackNumbers(s,attackerId,targetId,options={}) {
@@ -176,14 +177,13 @@ function attackNumbers(s,attackerId,targetId,options={}) {
   const spearPreempt=dt==='BT02'&&at!=='BT03'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===1&&c27Side==='FRONT'&&!options.pursuit&&(!options.reaction||!!options.joint);
   const chargeStopped=a.troopType!=='horseArcher'&&spearPreempt&&at==='BT04'&&(a.movedTiles??0)>=C193.brace.momentumTiles;
   const bracedChargeStopped=chargeStopped&&t.braced&&!ignoreBrace;
-  const firstStrike=spearPreempt||dt==='BT02'&&c27Side==='FLANK'&&!!c33Owned(s,targetId,'FLANK_FIRST_STRIKE')||!options.pursuit&&hasCampaignRule(s,targetId,'FIRST_STRIKE',['ON_DEFEND'],{targetId:attackerId});
+  const firstStrike=!engineSuppressReaction(s,targetId,attackerId)&&(engineFirstStrike(s,targetId)&&c27Side==='FRONT'&&at!=='BT03'&&!options.reaction||spearPreempt||dt==='BT02'&&c27Side==='FLANK'&&!!c33Owned(s,targetId,'FLANK_FIRST_STRIKE')||!options.pursuit&&hasCampaignRule(s,targetId,'FIRST_STRIKE',['ON_DEFEND'],{targetId:attackerId}));
   const flankStop=c27Side!=='FRONT'&&combatRule(s,attackerId,'NO_COUNTER_ON_FLANK'),shatter=combatTacticRule(options.tactic)?.rule==='SHATTER_LINE';
-  const cls=classAttack(s,attackerId,targetId,options,c27Side);
-  const canCounter=!(a.troopType==='horseArcher'&&isRangedAttack(s,a,t))&&(!diplomacyEnabled(s)||diplomacyArmyHostile(s,targetId,attackerId))&&!cls.noCounter&&!flankStop&&!shatter&&!(t.c27?.noCounterUntil>=s.turn)&&!(specialTroop(s,a.troopType)&&a.troopType==='jiefan'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===2)&&dt!=='BT03'&&t.formation!=='BROKEN'&&!options.pursuit&&(!options.reaction||!!options.joint)&&!hasCampaignRule(s,attackerId,'NO_COUNTER_TAKEN',['ON_ATTACK'],{targetId})&&!attackConfused(s,targetId)&&(at!=='BT03'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===1||hasCampaignRule(s,targetId,'COUNTER_ALL')&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])<=2)&&t.morale!=='ROUTING';
+  options=engineAttackOptions(s,attackerId,targetId,options);
+  const canCounter=(!options.noCounter||firstStrike)&&!engineSuppressReaction(s,targetId,attackerId)&&!(a.troopType==='horseArcher'&&isRangedAttack(s,a,t))&&(!diplomacyEnabled(s)||diplomacyArmyHostile(s,targetId,attackerId))&&!flankStop&&!shatter&&!(t.c27?.noCounterUntil>=s.turn)&&!(specialTroop(s,a.troopType)&&a.troopType==='jiefan'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===2)&&dt!=='BT03'&&t.formation!=='BROKEN'&&!options.pursuit&&(!options.reaction||!!options.joint)&&!hasCampaignRule(s,attackerId,'NO_COUNTER_TAKEN',['ON_ATTACK'],{targetId})&&!attackConfused(s,targetId)&&(at!=='BT03'&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===1||hasCampaignRule(s,targetId,'COUNTER_ALL')&&hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])<=2)&&t.morale!=='ROUTING';
   const counterState=canCounter?prepareAttackEffects(s,targetId,attackerId,{counter:true,first:false}):s;
   let preCounter=0;
-  if(canCounter&&firstStrike)preCounter=attackFormula(counterState,targetId,attackerId,t.troopCount,{counter:true,first:false,classCounter:c27Side==='FRONT'}).damage;
-  const riposte=armyClass(s,targetId,'CLS_RIPOSTE');
+  if(canCounter&&firstStrike)preCounter=attackFormula(counterState,targetId,attackerId,t.troopCount,{counter:true,first:false}).damage;
   const rate=c34CounterFactor(s,targetId,attackerId)*C12.counter*(t.formation==='DISORDERED'?C12.counter:1)*(dt==='BT03'&&!hasCampaignRule(s,targetId,'COUNTER_ALL')?.6:1)*(t.braced&&!ignoreBrace?1.2:1)*(chargeStopped?1+C23.spearChargeCounter:1)*(bracedChargeStopped?C193.brace.preemptMultiplier:1);
   const earlyLoss=surviveRule(s,attackerId,Math.min(a.troopCount,Math.round(preCounter*rate)),false);
   const earlyFormationChanges=[],earlyMoraleChanges=[];
@@ -197,20 +197,20 @@ function attackNumbers(s,attackerId,targetId,options={}) {
   const damage=firstStrike&&a.troopCount===earlyLoss?0:hit.damage;
   const c27Followups=combatFollowups(s,attackerId,targetId,hit,options),followLoss=c27Followups.filter(f=>f.targetId===targetId).reduce((n,f)=>n+f.loss,0);
   const survivalLines=[];
-  const rawEnemyLoss=Math.min(t.troopCount,damage+followLoss,c33Owned(s,targetId,'DAMAGE_CAP')&&hit.side==='FRONT'?Math.floor(t.troopCount*.08):Infinity),enemyLoss=surviveRule(s,targetId,classGuardedLoss(s,targetId,rawEnemyLoss).loss,false,survivalLines);
+  const rawEnemyLoss=Math.min(t.troopCount,damage+followLoss,c33Owned(s,targetId,'DAMAGE_CAP')&&hit.side==='FRONT'?Math.floor(t.troopCount*.08):Infinity),enemyLoss=surviveRule(s,targetId,rawEnemyLoss,false,survivalLines);
   const counter=canCounter&&(firstStrike||t.troopCount>enemyLoss);
-  const counterDamage=counter?(firstStrike?preCounter:attackFormula(counterState,targetId,attackerId,t.troopCount-enemyLoss,{counter:true,first:false,classCounter:c27Side==='FRONT'}).damage):0;
+  const counterDamage=counter?(firstStrike?preCounter:attackFormula(counterState,targetId,attackerId,t.troopCount-enemyLoss,{counter:true,first:false}).damage):0;
   const reflectRule=a.troopType!=='horseArcher'&&!options.counter&&!options.reaction&&!options.pursuit&&at==='BT04'&&(a.movedTiles??0)>=2&&hit.side==='FRONT'&&!(t.movedTiles??0)&&combatRule(s,targetId,'SET_SPEARS'),reflect=reflectRule?Math.round(damage*reflectRule.params.reflect/100):0;
-  const rawAllyLoss=Math.min(a.troopCount,(counter?Math.round(counterDamage*rate):0)+reflect,c33Owned(s,attackerId,'DAMAGE_CAP')?Math.floor(a.troopCount*.08):Infinity),allyLoss=surviveRule(s,attackerId,classGuardedLoss(s,attackerId,rawAllyLoss).loss,false,survivalLines);
-  let weight=cls.formationWeight+(t.formationWeight??0)+hit.sideWeight+(hit.charge&&!c30ChargeGuard(s,targetId)?C12.chargeWeight+c30ChargeWeight(s,attackerId):0)+(enemyLoss/t.troopCount>=C12.lossThreshold?C12.lossWeight:0);
+  const rawAllyLoss=Math.min(a.troopCount,(counter?Math.round(counterDamage*rate):0)+reflect,c33Owned(s,attackerId,'DAMAGE_CAP')?Math.floor(a.troopCount*.08):Infinity),allyLoss=surviveRule(s,attackerId,rawAllyLoss,false,survivalLines);
+  let weight=(t.formationWeight??0)+hit.sideWeight+(hit.charge&&!c30ChargeGuard(s,targetId)?C12.chargeWeight+c30ChargeWeight(s,attackerId):0)+(enemyLoss/t.troopCount>=C12.lossThreshold?C12.lossWeight:0);
   if(ignoreBrace&&weight>0)weight+=C12.braceWeight;
   const hubaoExtra=hit.charge&&!c30ChargeGuard(s,targetId)&&specialTroop(s,a.troopType)&&a.troopType==='hubao';
-  const formationRisk={extraCheck:!!hubaoExtra,extraSuccessProbability:hubaoExtra?formationProbability(s,targetId,C24.chargeWeight)/100:1,check:!classHold(s,targetId,hit.side)&&enemyLoss<t.troopCount&&weight>0&&!(hit.charge&&c30ChargeGuard(s,targetId))&&!(c30BondFirstFormation(s,targetId)),successProbability:formationProbability(s,targetId,weight)/100};
+  const formationRisk={extraCheck:!!hubaoExtra,extraSuccessProbability:hubaoExtra?formationProbability(s,targetId,C24.chargeWeight)/100:1,check:enemyLoss<t.troopCount&&weight>0&&!(hit.charge&&c30ChargeGuard(s,targetId))&&!(c30BondFirstFormation(s,targetId)),successProbability:formationProbability(s,targetId,weight)/100};
   const moraleWeights=[...(enemyLoss/t.troopCount>=lossMoraleThreshold(s,t)?[15]:[]),...(hit.multipliers.flank>=1.1?[10]:[]),...(t.combatMoraleEffects??[]).filter(e=>e.value<0).map(e=>Math.abs(e.value))];
   const collapse=formationRisk.check&&t.formation==='DISORDERED';
   const chance=w=>Math.max(0,Math.min(100,C12.moraleBase+(s.officers[t.commanderId].baseStats.leadership+campaignSubAbility(s,t.commanderId,'감화','결집'))/C12.moraleDivisor-relationMoraleWeight(s,targetId,c30MoraleWeight(s,targetId,w))))/100;
   const moraleRisk={check:enemyLoss<t.troopCount&&t.morale!=='ROUTING'&&(moraleWeights.length>0||collapse),conditionalOnCollapse:collapse,successProbability:moraleWeights.reduce((p,w)=>p*chance(w),1)*(collapse?formationRisk.successProbability+(1-formationRisk.successProbability)*chance(C12.collapseMorale):1)};
-  const prediction={c27Followups,reflect,sideWeight:hit.sideWeight,ignoreBrace,spearPreempt:counter&&spearPreempt,chargeStopped:counter&&chargeStopped,earlyFormationChanges,earlyMoraleChanges,moraleRisk,formationRisk,side:hit.side,charge:hit.charge,allyLoss,enemyLoss,rawAllyLoss,rawEnemyLoss,counter,firstStrike:counter&&firstStrike,damage,counterDamage,multipliers:hit.multipliers,effectLines:[...(chargeStopped&&t.troopType==='phalanx'?['방진대 정면 — 기병 돌격 무효']:[]),...(counter&&bracedChargeStopped?['방어 태세 창병 — 돌격 막힘',`정면 선제 피해 ×${C193.brace.preemptMultiplier}`]:[]),...(counter&&spearPreempt?['\uC815\uBA74 \uCC3D\uBCD1 \uC120\uC81C \uBC18\uACA9',...(chargeStopped?['\uB3CC\uACA9 \uBCF4\uB108\uC2A4 \uBB34\uD6A8 \u00B7 \uCC3D\uBCD1 \uBC18\uACA9 +25%']:[])]:[]),...hit.effectLines,...classWoundedLines(s,targetId,enemyLoss),...classWoundedLines(s,attackerId,allyLoss),...(classCamp(s,targetId)&&weight>0?[`[${classCamp(s,targetId).abilityName}] 진지 전열 판정 +${classCamp(s,targetId).formation}`]:[]),...classGuardedLoss(s,targetId,rawEnemyLoss).lines,...classGuardedLoss(s,attackerId,rawAllyLoss).lines,...(counter&&riposte&&c27Side==='FRONT'?[classLine(riposte,`정면 반격 +${riposte.ability.params.counter}%`)]:[]),...c27Followups.map(f=>f.line),...(reflect?[combatRuleLine(s,targetId,'SET_SPEARS','반사 '+troopDelta(-reflect))]:[]),...(flankStop?[combatRuleLine(s,attackerId,'NO_COUNTER_ON_FLANK','측면·후방 반격 없음')]:[]),...(shatter?['전열 깨기 — 반격 없음 · 정돈 → 흐트러짐']:[]),...(hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===2&&hasCampaignRule(s,attackerId,'REACH_2')?[ruleLine(s,attackerId,'REACH_2','2\uCE78 \uACF5\uACA9')]:[]),...(counter&&hasCampaignRule(s,targetId,'COUNTER_ALL')?[ruleLine(s,targetId,'COUNTER_ALL','\uC6D0\uAC70\uB9AC \uBC18\uACA9')]:[])]};
+  const prediction={c27Followups,reflect,sideWeight:hit.sideWeight,ignoreBrace,spearPreempt:counter&&spearPreempt,chargeStopped:counter&&chargeStopped,earlyFormationChanges,earlyMoraleChanges,moraleRisk,formationRisk,side:hit.side,charge:hit.charge,allyLoss,enemyLoss,rawAllyLoss,rawEnemyLoss,counter,firstStrike:counter&&firstStrike,damage,counterDamage,multipliers:hit.multipliers,effectLines:[...(chargeStopped&&t.troopType==='phalanx'?['방진대 정면 — 기병 돌격 무효']:[]),...(counter&&bracedChargeStopped?['방어 태세 창병 — 돌격 막힘',`정면 선제 피해 ×${C193.brace.preemptMultiplier}`]:[]),...(counter&&spearPreempt?['\uC815\uBA74 \uCC3D\uBCD1 \uC120\uC81C \uBC18\uACA9',...(chargeStopped?['\uB3CC\uACA9 \uBCF4\uB108\uC2A4 \uBB34\uD6A8 \u00B7 \uCC3D\uBCD1 \uBC18\uACA9 +25%']:[])]:[]),...hit.effectLines,...c27Followups.map(f=>f.line),...(reflect?[combatRuleLine(s,targetId,'SET_SPEARS','반사 '+troopDelta(-reflect))]:[]),...(flankStop?[combatRuleLine(s,attackerId,'NO_COUNTER_ON_FLANK','측면·후방 반격 없음')]:[]),...(shatter?['전열 깨기 — 반격 없음 · 정돈 → 흐트러짐']:[]),...(hexDistance(s.tiles[a.tileId],s.tiles[t.tileId])===2&&hasCampaignRule(s,attackerId,'REACH_2')?[ruleLine(s,attackerId,'REACH_2','2\uCE78 \uACF5\uACA9')]:[]),...(counter&&hasCampaignRule(s,targetId,'COUNTER_ALL')?[ruleLine(s,targetId,'COUNTER_ALL','\uC6D0\uAC70\uB9AC \uBC18\uACA9')]:[])]};
   prediction.appliedTactics=[appliedTactic(attackerId,targetId,hit)];
   prediction.effectLines.push(...survivalLines);Object.defineProperty(prediction,'survivalLines',{value:survivalLines});
   if(hit.charge&&!options.reaction&&!options.pursuit){for(const [rule,detail] of [['BREAKTHROUGH','대가: 자기 전열 한 단계'],['CANTO','남은 이동으로 후퇴 가능 · 추격 적용']])if(combatRule(s,attackerId,rule))prediction.effectLines.push(combatRuleLine(s,attackerId,rule,detail));}
@@ -222,20 +222,22 @@ function attackNumbers(s,attackerId,targetId,options={}) {
 export const PURSUIT_RATE=.5;
 export function previewDisengage(s,armyId) {
   const a=s.armies[armyId];
-  if(!a||!castleArmyActive(s,a)||a.troopCount<=0||hasCampaignRule(s,armyId,'NO_PURSUIT'))return null;
+  if(!a||engineNoPursuit(s,armyId)||!castleArmyActive(s,a)||a.troopCount<=0||hasCampaignRule(s,armyId,'NO_PURSUIT'))return null;
   let best=null;
   for(const b of Object.values(s.armies).sort((x,y)=>x.armyId.localeCompare(y.armyId,'en'))){
-    if(troopToCampaign(b.troopType)==='BT03'||!diplomacyArmyHostile(s,a.armyId,b.armyId)||attackConfused(s,b.armyId)||!castleArmyActive(s,b)||b.morale==='ROUTING'||b.troopCount<=0||hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])!==1)continue;
-    const prepared=prepareAttackEffects(s,b.armyId,armyId,{first:false}),p=attackNumbers(prepared,b.armyId,armyId,{pursuit:true,first:false}),dealt=Math.min(a.troopCount,Math.max(1,Math.round(p.damage*(c33Owned(s,armyId,'REARGUARD')?.25:PURSUIT_RATE))));
+    if(engineSuppressReaction(s,b.armyId)||troopToCampaign(b.troopType)==='BT03'||!diplomacyArmyHostile(s,a.armyId,b.armyId)||attackConfused(s,b.armyId)||!castleArmyActive(s,b)||b.morale==='ROUTING'||b.troopCount<=0||hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])!==1)continue;
+    const prepared=prepareAttackEffects(s,b.armyId,armyId,{first:false}),p=attackNumbers(prepared,b.armyId,armyId,{pursuit:true,first:false}),dealt=Math.min(a.troopCount,Math.max(1,Math.round(p.damage*(c33Owned(s,armyId,'REARGUARD')?.25:PURSUIT_RATE)*(enginePursuit(s,b.armyId,armyId)?.multiplier??1))));
     const survivalLines=[],actual=surviveRule(prepared,armyId,dealt,false,survivalLines);
     const effectLines=[...p.effectLines.filter(l=>!p.survivalLines.includes(l)),...survivalLines];
-    if(!best||actual>best.dealt){best={side:p.side,charge:p.charge,pursuerId:b.armyId,dealt:actual,rawDealt:dealt,multipliers:p.multipliers,effectLines};Object.defineProperty(best,'survivalLines',{value:survivalLines});}
+    if(!best||actual>best.dealt){best={enginePursuit:enginePursuit(s,b.armyId,armyId),side:p.side,charge:p.charge,pursuerId:b.armyId,dealt:actual,rawDealt:dealt,multipliers:p.multipliers,effectLines};Object.defineProperty(best,'survivalLines',{value:survivalLines});}
   }
   return best;
 }
 export function resolvePursuit(state,armyId) {
   const p=previewDisengage(state,armyId);if(!p)return state;
-  return resolveMovementShot(state,armyId,p,'PURSUIT');
+  let out=resolveMovementShot(state,armyId,p,'PURSUIT');
+  if(p.enginePursuit){const a=out.armies[p.pursuerId];a.c50.resource=0;if(a.c50.relation)a.c50.relation.pursued=true;changeFormation(out,armyId,p.enginePursuit.n,out.lastCombat.formationChanges);if(p.enginePursuit.n>0)enginePursuitMerit(out,p.pursuerId,armyId);}
+  return out;
 }
 // Eligibility belongs to the start of the normal move; damage/vision
 // belong to its arrival. No per-turn ledger or action/cooldown consumption.
@@ -254,10 +256,10 @@ function approachFirePrediction(s,armyId,start){
   let best=null;
   for(const b of Object.values(s.armies).sort((x,y)=>x.armyId.localeCompare(y.armyId,'en'))){
     const was=start.armies[b.armyId];
-    if(platformAttackReason(s,b.armyId))continue;
+    if(b.c27?.overwatch?.perArmy&&b.c27.overwatch.until>=s.turn||platformAttackReason(s,b.armyId)||engineReactionUsed(s,b.armyId,armyId))continue;
     if(!was||troopToCampaign(b.troopType)!=='BT03'||!castleArmyActive(s,b)||b.troopCount<=0||b.morale==='ROUTING'||b.formation==='BROKEN'||(was.engaged??archerEngaged(start,b.armyId))||
       !diplomacyArmyHostile(s,b.armyId,armyId)||hexDistance(start.tiles[was.tileId],start.tiles[old.tileId])===1||hexDistance(s.tiles[b.tileId],s.tiles[a.tileId])!==1||
-      s.knowledge[b.factionId]?.tiles[a.tileId]!=='VISIBLE'||ambushHidden(s,armyId,b.factionId)||classHidden(s,armyId,b.factionId))continue;
+      s.knowledge[b.factionId]?.tiles[a.tileId]!=='VISIBLE'||ambushHidden(s,armyId,b.factionId))continue;
     const prepared=prepareAttackEffects(s,b.armyId,armyId,{first:false}),p=attackFormula(prepared,b.armyId,armyId,undefined,{reaction:true,first:false});
     const survivalLines=[],dealt=Math.min(a.troopCount,Math.max(1,Math.round(p.damage*rate))),damage=surviveRule(prepared,armyId,dealt,false,survivalLines);
     if(!best||damage>best.damage){best={...p,archerId:b.armyId,pursuerId:b.armyId,dealt:damage,rawDealt:dealt,damage,normalDamage:p.damage,rate,effectLines:[...p.effectLines,...survivalLines]};Object.defineProperty(best,'survivalLines',{value:survivalLines});}
@@ -292,10 +294,10 @@ function resolveMovementShot(state,armyId,p,kind){
   dejaVuEvent(s,'ATTACKED_BY',{officerId:s.armies[armyId].commanderId,by:s.armies[p.pursuerId].commanderId});
   s.battleSequence++;
   const effectLines=p.effectLines.filter(l=>!p.survivalLines?.includes(l));
-  const battleId=`MC.${s.battleSequence}`,pursuer=s.armies[p.pursuerId],pre=s.armies[armyId].troopCount,post=pre-surviveRule(s,armyId,p.rawDealt??p.dealt,true,effectLines);
+  const battleId=`MC.${s.battleSequence}`,pursuer=s.armies[p.pursuerId],pre=s.armies[armyId].troopCount;let post=pre-surviveRule(s,armyId,p.rawDealt??p.dealt,true,effectLines);
   const units=[{unitId:p.pursuerId,preBattleCount:pursuer.troopCount,postBattleCount:pursuer.troopCount,casualties:0,unitState:'COMMANDABLE'},
     {unitId:armyId,preBattleCount:pre,postBattleCount:post,casualties:pre-post,unitState:post?'COMMANDABLE':'ELIMINATED'}];
-  s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},pursuer.factionId,
+  engineShareUnits(s,units);post=units.find(u=>u.unitId===armyId).postBattleCount;s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},pursuer.factionId,
     {permanentLossRatio:.3,captorByArmyId:{[p.pursuerId]:s.armies[armyId].factionId,[armyId]:pursuer.factionId}});
   if(!post&&hasCampaignRule(s,p.pursuerId,'ABSORB')){absorbCampaignPersonnel(s,p.pursuerId,armyId,pre);effectLines.push(ruleLine(s,p.pursuerId,'ABSORB'));}
   const moraleChanges=[],formationChanges=[];
@@ -315,17 +317,17 @@ function resolveMovementShot(state,armyId,p,kind){
   c30Combat(s,s.lastCombat,{morale:who=>checkMorale(s,who,'여포군 — 인접 적 패주',10,s.lastCombat.moraleChanges)});
   relationCombatResult(s,state,p.pursuerId,armyId,s.lastCombat);creditCampaignCombat(s,s.lastCombat);
   updateKnowledge(s);refreshCampaignSieges(s);
-  rememberDiplomacyCombat(s,state);return s;
+  if(s.c50){delete s.c50.context;delete s.c50.sharedDamage;}rememberDiplomacyCombat(s,state);return s;
 }
 export function resolveAttack(state,attackerId,targetId,tactic=null,options={}) {return calculateAttack(state,attackerId,targetId,tactic,options);}
 function calculateAttack(state,attackerId,targetId,tactic=null,options={}) {
   const reason=diplomacyAttackReason(state,attackerId,targetId);if(reason)throw new Error(reason);
   if(archerAttackReason(state,attackerId))throw new Error('ARCHER_ENGAGED');
-  if(!options.reaction&&!tactic&&!attackTargets(state,attackerId).includes(targetId))throw new Error(archerAttackReason(state,attackerId)||'INVALID_CAMPAIGN_ATTACK');
-  let s=prepareAttackEffects(state,attackerId,targetId,{tactic});
+  if(!options.reaction&&!options.enginePaid&&!tactic&&!attackTargets(state,attackerId).includes(targetId))throw new Error(archerAttackReason(state,attackerId)||'INVALID_CAMPAIGN_ATTACK');
+  let s=structuredClone(state);if(s.c50)s.c50.context={attackerId,origin:options.engineOrigin??state.c50?.context?.origin??`attack:${s.turn}:${s.battleSequence+1}`};engineEvent(s,'ATTACK_DECLARE',{attackerId,targetId,reaction:!!options.reaction});s=prepareAttackEffects(s,attackerId,targetId,{tactic});
   if(c29Aw(s,targetId,'DREAD')&&hexDistance(s.tiles[s.armies[attackerId].tileId],s.tiles[s.armies[targetId].tileId])<=2)checkMorale(s,attackerId,'보이는 위협',5);
   const prediction=attackNumbers(s,attackerId,targetId,{tactic,...options});if(!options.reaction)delete s.armies[attackerId].starVanguardTurn;
-  if(prediction.counter)s=prepareAttackEffects(s,targetId,attackerId,{counter:true,first:false});
+  if(prediction.counter){engineEvent(s,'COUNTER',{attackerId:targetId,targetId:attackerId});s=prepareAttackEffects(s,targetId,attackerId,{counter:true,first:false});}
   s.battleSequence++;
   const battleId=`MC.${s.battleSequence}`;
   dejaVuEvent(s,'ATTACKED_BY',{officerId:s.armies[targetId].commanderId,by:s.armies[attackerId].commanderId});
@@ -337,7 +339,7 @@ function calculateAttack(state,attackerId,targetId,tactic=null,options={}) {
   if(hasCampaignRule(s,attackerId,'SPLASH')){const other=Object.values(s.armies).filter(b=>b.armyId!==targetId&&diplomacyArmyHostile(s,attackerId,b.armyId)&&castleArmyActive(s,b)&&hexDistance(s.tiles[b.tileId],s.tiles[s.armies[targetId].tileId])===1).sort((a,b)=>b.troopCount-a.troopCount||a.armyId.localeCompare(b.armyId))[0];if(other){losses.push({id:other.armyId,loss:Math.floor(prediction.damage/2)});prediction.effectLines.push(ruleLine(s,attackerId,'SPLASH','\uC778\uC811 \uC801 \uD53C\uD574 \uC808\uBC18'));}}
   for(const row of losses)if(row.id!==attackerId&&row.id!==targetId&&s.armies[row.id]?.factionId!==s.armies[attackerId].factionId)dejaVuEvent(s,'ATTACKED_BY',{officerId:s.armies[row.id].commanderId,by:s.armies[attackerId].commanderId});
   const defect=prediction.enemyLoss>=s.armies[targetId].troopCount&&prediction.allyLoss<s.armies[attackerId].troopCount&&hasCampaignRule(s,attackerId,'DEFECTION')&&defectionEligible(s,targetId);
-  uniqueChainRows(s,losses);c34ShareRows(s,losses);classShare(s,losses,prediction.effectLines);
+  uniqueChainRows(s,losses);c34ShareRows(s,losses);engineShareRows(s,losses);
   prediction.effectLines=prediction.effectLines.filter(l=>!prediction.survivalLines.includes(l));
   const units=losses.map(({id,loss})=>{
     const pre=s.armies[id].troopCount,actual=surviveRule(s,id,Math.min(pre,loss),true,prediction.effectLines),post=id===targetId&&defect?pre:pre-actual;
@@ -350,13 +352,13 @@ function calculateAttack(state,attackerId,targetId,tactic=null,options={}) {
   for(const u of units)if(!u.postBattleCount){const killer=u.unitId===attackerId?targetId:attackerId;if(s.armies[killer].troopCount>0&&hasCampaignRule(s,killer,'ABSORB')){absorbCampaignPersonnel(s,killer,u.unitId,u.preBattleCount);prediction.effectLines.push(ruleLine(s,killer,'ABSORB','\uC6D0\uB798 \uBCD1\uB825 20% \uD761\uC218'));}}
   prediction.enemyLoss=units.find(u=>u.unitId===targetId).casualties;prediction.allyLoss=units.find(u=>u.unitId===attackerId).casualties;
   s.armies[attackerId].effectFirstAttackTurn=s.turn;
-  if(!options.reaction){consumeMainAction(s,attackerId,{attack:true});consumeC22Attack(s,attackerId);}
+  if(!options.reaction&&!options.enginePaid){consumeMainAction(s,attackerId,{attack:true});consumeC22Attack(s,attackerId);}
   const moraleChanges=[...prediction.earlyMoraleChanges],formationChanges=[...prediction.earlyFormationChanges];
   for(const u of units)if(s.armies[u.unitId].c27?.saved){delete s.armies[u.unitId].c27.saved;changeMorale(s,u.unitId,'ROUTING','아홉 목숨',moraleChanges);}
   if(prediction.earlyState){s.rng=structuredClone(prediction.earlyState.rng);s.armies[attackerId].formation=prediction.earlyState.formation;s.armies[attackerId].morale=prediction.earlyState.morale;delete s.armies[attackerId].formationWeight;delete s.armies[attackerId].formationRecovery;delete s.armies[attackerId].combatMoraleEffects;}
   combatFormation(s,units.filter(u=>!prediction.firstStrike||u.unitId!==attackerId),attackerId,targetId,prediction,formationChanges,moraleChanges);
   for(const u of units){
-    if((!prediction.firstStrike||u.unitId!==attackerId)&&u.postBattleCount&&u.casualties/u.preBattleCount>=lossMoraleThreshold(s,s.armies[u.unitId]))checkMorale(s,u.unitId,'대손실',15,moraleChanges);
+    if(!engineSharedVictim(s,u.unitId)&&(!prediction.firstStrike||u.unitId!==attackerId)&&u.postBattleCount&&u.casualties/u.preBattleCount>=lossMoraleThreshold(s,s.armies[u.unitId]))checkMorale(s,u.unitId,'대손실',15,moraleChanges);
     if(u.unitId===targetId&&u.postBattleCount&&prediction.multipliers.flank>=1.1)checkMorale(s,u.unitId,'협공',10,moraleChanges);
   }
   const sources=units.filter(u=>!u.postBattleCount||s.armies[u.unitId].morale==='ROUTING'&&state.armies[u.unitId].morale!=='ROUTING').map(u=>state.armies[u.unitId]);
@@ -365,16 +367,13 @@ function calculateAttack(state,attackerId,targetId,tactic=null,options={}) {
   for(const a of Object.values(s.armies))if(a.morale==='ROUTING'&&!formationChanges.some(f=>f.armyId===a.armyId&&f.to==='BROKEN')&&state.armies[a.armyId].formation!=='BROKEN')formationChanges.push({armyId:a.armyId,from:state.armies[a.armyId].formation,to:'BROKEN'});
   const facingTurned=turnDefender(s,attackerId,targetId,prediction.side);
   s.combatLog??=[];
-  s.lastCombat={formationChanges,facingTurned,kind:options.reaction?'OVERWATCH':tactic?'TACTIC':'ATTACK',...(tactic?{tacticName:tactic.name,tacticId:tactic.traitId}:{}),turn:s.turn,moraleChanges,eliminatedIds:units.filter(u=>!u.postBattleCount).map(u=>u.unitId),sequence:s.battleSequence,attackerId,targetId,...prediction,units};
+  s.lastCombat={...(options.enginePaid?{enginePaid:true}:{}),...(options.engineOrigin?{engineOrigin:options.engineOrigin}:{}),formationChanges,facingTurned,kind:options.reaction?'OVERWATCH':tactic?'TACTIC':'ATTACK',...(tactic?{tacticName:tactic.name,tacticId:tactic.traitId}:{}),turn:s.turn,moraleChanges,eliminatedIds:units.filter(u=>!u.postBattleCount).map(u=>u.unitId),sequence:s.battleSequence,attackerId,targetId,...prediction,units};
   recordDamageSources(s,s.lastCombat,units.map(u=>({targetId:u.unitId,loss:u.casualties,sourceId:u.unitId===attackerId?targetId:attackerId})));
   s.combatLog.push(s.lastCombat);
-  if(classSurrenderReady(s,attackerId)&&s.armies[targetId].morale==='ROUTING'&&state.armies[targetId].morale!=='ROUTING'&&s.armies[targetId].troopCount>0){const pre=s.armies[targetId].troopCount,extra={unitId:targetId,preBattleCount:pre,postBattleCount:0,casualties:pre,unitState:'ELIMINATED'},log=s.lastCombat;s.battleSequence++;const key='SURRENDER.'+s.battleSequence;s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId:key,decisionRef:key,sourceRevision:s.battleSequence,units:[extra]},s.armies[attackerId].factionId,{permanentLossRatio:0,captorByArmyId:{[targetId]:s.armies[attackerId].factionId},classCaptorId:attackerId});log.units.push(extra);log.eliminatedIds.push(targetId);log.enemyLoss+=pre;s.lastCombat=log;}
-  if(armyClass(s,attackerId,'CLS_ACCEPT_SURRENDER')&&!s.armies[targetId].troopCount)classSurrenderReserve(s,attackerId,targetId,state.armies[targetId].troopCount,s.lastCombat.effectLines);
   if(c33Formation(s,attackerId,'FORMATION_CRANE')&&combatAlly(s,attackerId,targetId))checkFormation(s,targetId,10,s.lastCombat.formationChanges);
-  if(!options.reaction)classAfterAttack(s,state,attackerId,targetId,s.lastCombat,{formation:(id,n)=>changeFormation(s,id,n,s.lastCombat.formationChanges),check:(id,n)=>checkFormation(s,id,n,s.lastCombat.formationChanges),morale:(id,to)=>changeMorale(s,id,to,'클래스 능력',s.lastCombat.moraleChanges),canPush:(id,to)=>combatEmptyStep(s,id,to),moraleCheck:(id,n)=>checkMorale(s,id,'클래스 능력',n,s.lastCombat.moraleChanges)});
   if(!options.reaction)c33AfterAttack(s,state,attackerId,targetId,s.lastCombat,(who,n)=>healCampaignTroops(s,who,n));
   if(!options.reaction)uniqueAfterAttack(s,state,attackerId,targetId,s.lastCombat,(who,n)=>healCampaignTroops(s,who,n),rows=>{s.battleSequence++;s=uniqueAdoptState(s,combatEffectDamage(s,attackerId,rows,s.lastCombat));});
-  if(!options.reaction){combatFinishAttack(s,state,attackerId,targetId,s.lastCombat);for(const rule of ['CHARGE_MOMENTUM','NO_FRONT','AMBUSHER','NO_COUNTER_ON_FLANK'])if(combatRule(s,attackerId,rule)&&prediction.effectLines.some(l=>l.includes(combatRule(s,attackerId,rule).card.name)))combatCount(s,rule);}
+  if(!options.reaction){sample4AfterAttack(s,state,attackerId,targetId,s.lastCombat);combatFinishAttack(s,state,attackerId,targetId,s.lastCombat);for(const rule of ['CHARGE_MOMENTUM','NO_FRONT','AMBUSHER','NO_COUNTER_ON_FLANK'])if(combatRule(s,attackerId,rule)&&prediction.effectLines.some(l=>l.includes(combatRule(s,attackerId,rule).card.name)))combatCount(s,rule);}
   if(prediction.reflect)combatCount(s,'SET_SPEARS');
   for(const rule of ['HEDGEHOG','SQUARE'])if(combatRule(s,targetId,rule)&&prediction.effectLines.some(l=>l.includes(combatRule(s,targetId,rule).card.name)))combatCount(s,rule);
   for(const u of units)if(!u.postBattleCount)triggerEffects(s,u.unitId===s.lastCombat.attackerId?s.lastCombat.targetId:s.lastCombat.attackerId,'ON_KILL',{targetId:u.unitId});
@@ -385,11 +384,12 @@ function calculateAttack(state,attackerId,targetId,tactic=null,options={}) {
   c30Combat(s,s.lastCombat,{morale:who=>checkMorale(s,who,'여포군 — 인접 적 패주',10,s.lastCombat.moraleChanges)});
   if(!options.forecast){relationCombatResult(s,state,attackerId,targetId,s.lastCombat);for(const u of s.lastCombat.units)if(u.unitId!==targetId&&state.armies[u.unitId]?.factionId!==state.armies[attackerId].factionId)relationCombatResult(s,state,attackerId,u.unitId,s.lastCombat,{record:false});creditCampaignCombat(s,s.lastCombat);}
   updateKnowledge(s);refreshCampaignSieges(s);
+  engineAfterAttack(s,state,attackerId,targetId,s.lastCombat,{tactic,...options});if(s.c50){delete s.c50.context;delete s.c50.sharedDamage;}
   initializeCombatFire(s);rememberDiplomacyCombat(s,state);return s;
 }
 export function cityAttackTargets(s,id){
  const a=s.armies[id];if(!a||troopToCampaign(a.troopType)!=='BT03'||specialTroop(s,a.troopType))return legacyCityAttackTargets(s,id);
- if(a.c34?.disarmUntil>=s.turn||a.c32?.disarmUntil>=s.turn||archerAttackReason(s,id)||attackConfused(s,id)||!castleArmyActive(s,a)||a.morale==='ROUTING'||!canMainAction(s,id))return [];
+ if(engineAttackBlocked(s,id)||a.c34?.disarmUntil>=s.turn||a.c32?.disarmUntil>=s.turn||archerAttackReason(s,id)||attackConfused(s,id)||!castleArmyActive(s,a)||a.morale==='ROUTING'||!canMainAction(s,id))return [];
  return Object.values(s.cities).filter(c=>c.durability>0&&c.ownerFactionId!==a.factionId&&!diplomacyAttackReason(s,id,c.cityId)&&s.knowledge[a.factionId].tiles[c.tileId]==='VISIBLE'&&hexDistance(s.tiles[a.tileId],s.tiles[c.tileId])===attackRange(a,s)&&canObserveTile(s.tiles[a.tileId],s.tiles[c.tileId],attackRange(a,s),s.tiles)).map(c=>c.cityId).sort();
 }
 function reserveCounterPrediction(s,id,cityId){
@@ -418,10 +418,10 @@ export function previewCityAttack(s,id,cityId) {
   const attack=campaignAttackPower(s,a.commanderId)*(a.morale==='SHAKEN'?.8:1);
   const garrison=Object.values(s.armies).find(b=>b.factionId===s.cities[cityId].ownerFactionId&&b.tileId===s.cities[cityId].tileId&&castleArmyActive(s,b)&&hasCampaignRule(s,b.armyId,'GARRISON_WALL'));
   const archerWall=troopToCampaign(a.troopType)==='BT03'&&!specialTroop(s,a.troopType)?C182.archerWallRatio:1;
-  const rawDamage=garrison?0:Math.min(s.cities[cityId].durability,hasCampaignRule(s,id,'BREACH')&&s.cities[cityId].durability<=50?s.cities[cityId].durability:Math.max(1,Math.round((c33Owned(s,id,'SIEGE_BONUS')?1.2:1)*c33InventorSiege(s,s.armies[id].factionId)*(1+(armyClass(s,id,'CLS_TAKE_CITY')?.ability.params.siegeDamage??0)/100)*uniqueSiegeFactor(s,id)*(specialTroop(s,a.troopType)?.siegeMultiplier??1)*effect.factor*c31DamageFactor(s,a,{factionId:s.cities[cityId].ownerFactionId,tileId:s.cities[cityId].tileId})*c22AttackMultiplier(s,a,s.cities[cityId].ownerFactionId)*starAttackMultiplier(s,a)*archerWall*a.troopCount*.1*attack/100)));
+  const rawDamage=garrison?0:Math.min(s.cities[cityId].durability,hasCampaignRule(s,id,'BREACH')&&s.cities[cityId].durability<=50?s.cities[cityId].durability:Math.max(1,Math.round((c33Owned(s,id,'SIEGE_BONUS')?1.2:1)*c33InventorSiege(s,s.armies[id].factionId)*uniqueSiegeFactor(s,id)*(specialTroop(s,a.troopType)?.siegeMultiplier??1)*effect.factor*c31DamageFactor(s,a,{factionId:s.cities[cityId].ownerFactionId,tileId:s.cities[cityId].tileId})*c22AttackMultiplier(s,a,s.cities[cityId].ownerFactionId)*starAttackMultiplier(s,a)*archerWall*a.troopCount*.1*attack/100)));
   const {reserveDefense,allyLoss}=reserveCounterPrediction(s,id,cityId);
   const guardedDamage=Math.round(rawDamage*reserveDefense.wallMultiplier),dealt=domesticWall(s,s.cities[cityId],guardedDamage);
-  return {dealt,allyLoss,counter:allyLoss>0,reserveDefense,archerWall,...(['v2','v3'].includes(s.mapId)?{multipliers:{relations:social.factor}}:{}),...(dealt!==guardedDamage?{wallDamage:guardedDamage}:{}),effectLines:[...(a.troopType==='engineer'?['공병대 성 내구 피해 ×1.5']:[]),...(archerWall!==1?[`궁병 성 공격 — 성벽 내구 피해 ×${archerWall}`]:[]),...(reserveDefense.wallMultiplier<1?[`성 예비병 수비 — 내구 피해 ×${reserveDefense.wallMultiplier.toFixed(2)} · 반격 ${troopDelta(-allyLoss)}`]:[]),...(armyClass(s,id,'CLS_TAKE_CITY')?[classLine(armyClass(s,id,'CLS_TAKE_CITY'),`성 내구도 피해 +${armyClass(s,id,'CLS_TAKE_CITY').ability.params.siegeDamage}%`)]:[]),...effect.lines,...(dealt>0&&dealt===s.cities[cityId].durability&&combatRule(s,id,'BREACH_RALLY')?[combatRuleLine(s,id,'BREACH_RALLY','자기 사기 한 단계 회복')]:[]),...(garrison?[ruleLine(s,garrison.armyId,'GARRISON_WALL','\uC131 \uB0B4\uAD6C \uD53C\uD574 0')]:[]),...(hasCampaignRule(s,id,'SIEGE_FROM_WALL')?[ruleLine(s,id,'SIEGE_FROM_WALL','\uC131\uBCBD \uACF5\uACA9')]:[])]};
+  return {dealt,allyLoss,counter:allyLoss>0,reserveDefense,archerWall,...(['v2','v3'].includes(s.mapId)?{multipliers:{relations:social.factor}}:{}),...(dealt!==guardedDamage?{wallDamage:guardedDamage}:{}),effectLines:[...(a.troopType==='engineer'?['공병대 성 내구 피해 ×1.5']:[]),...(archerWall!==1?[`궁병 성 공격 — 성벽 내구 피해 ×${archerWall}`]:[]),...(reserveDefense.wallMultiplier<1?[`성 예비병 수비 — 내구 피해 ×${reserveDefense.wallMultiplier.toFixed(2)} · 반격 ${troopDelta(-allyLoss)}`]:[]),...effect.lines,...(dealt>0&&dealt===s.cities[cityId].durability&&combatRule(s,id,'BREACH_RALLY')?[combatRuleLine(s,id,'BREACH_RALLY','자기 사기 한 단계 회복')]:[]),...(garrison?[ruleLine(s,garrison.armyId,'GARRISON_WALL','\uC131 \uB0B4\uAD6C \uD53C\uD574 0')]:[]),...(hasCampaignRule(s,id,'SIEGE_FROM_WALL')?[ruleLine(s,id,'SIEGE_FROM_WALL','\uC131\uBCBD \uACF5\uACA9')]:[])]};
 }
 export function resolveCityAttack(state,id,cityId) {
   state=structuredClone(state);supplyCombat(state,[id]);
@@ -435,12 +435,12 @@ export function resolveCityAttack(state,id,cityId) {
   if(p.allyLoss){
     const pre=s.armies[id].troopCount,loss=surviveRule(s,id,p.allyLoss,true,p.effectLines),post=pre-loss,battleId=`MC.${s.battleSequence}`;
     units.push({unitId:id,preBattleCount:pre,postBattleCount:post,casualties:loss,unitState:post?'COMMANDABLE':'ELIMINATED'});
-    s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},s.cities[cityId].ownerFactionId,{permanentLossRatio:.3,captorByArmyId:{[id]:s.cities[cityId].ownerFactionId},attackingCityId:cityId});
+    engineShareUnits(s,units);s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},s.cities[cityId].ownerFactionId,{permanentLossRatio:.3,captorByArmyId:{[id]:s.cities[cityId].ownerFactionId},attackingCityId:cityId});
   }
   s.lastCombat={kind:'CITY',turn:s.turn,sequence:s.battleSequence,attackerId:id,cityId,dealt:p.dealt,effectLines:p.effectLines,enemyLoss:p.dealt,allyLoss:units.reduce((n,u)=>n+u.casualties,0),counter:p.counter,reserveDefense:p.reserveDefense,units,moraleChanges:[],eliminatedIds:units.filter(u=>!u.postBattleCount).map(u=>u.unitId)};
   if(p.dealt>0&&s.cities[cityId].durability===0&&combatRule(s,id,'BREACH_RALLY')){const a=s.armies[id];changeMorale(s,id,a.morale==='ROUTING'?'SHAKEN':'STEADY','성문을 부순다',s.lastCombat.moraleChanges);s.lastCombat.effectLines.push(combatRuleLine(s,id,'BREACH_RALLY','자기 사기 한 단계 회복'));combatCount(s,'BREACH_RALLY');}
   s.combatLog??=[];s.combatLog.push(s.lastCombat);
-  recordCampaignCombatCareer(s,s.lastCombat);c31Combat(s,s.lastCombat);
+  recordCampaignCombatCareer(s,s.lastCombat);c31Combat(s,s.lastCombat);c29Combat(s,s.lastCombat);
   turnFacing(s,id,cityId);
   if(castleArmyActive(s,s.armies[id])&&s.cities[cityId].durability===0&&!Object.values(s.armies).some(d=>d.tileId===s.cities[cityId].tileId&&castleArmyActive(s,d))){
     s=captureAttackedCity(s,id,cityId,s.lastCombat);
@@ -473,10 +473,10 @@ export function strikeCampaignCities(state,factionId) {
     const pre=target.troopCount,loss=surviveRule(s,target.armyId,Math.min(Math.max(strike===0?0:1,Math.round((20+(c20Enabled(s)&&c.ownerFactionId==='F03'&&c.starDefenseUntil>=s.turn?C20.cityDamage:0))*c31CityCounter(s,c)*(target.c33?.smokeUntil>=s.turn?.6:1)*c24DamageFactor(s,{tileId:c.tileId},target,false,{ranged:true})*effect.factor*strike)),pre)),post=pre-loss;
     s.battleSequence++;const battleId=`MC.${s.battleSequence}`;
     const units=[{unitId:target.armyId,preBattleCount:pre,postBattleCount:post,casualties:loss,unitState:post?'COMMANDABLE':'ELIMINATED'}];
-    s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},factionId,{permanentLossRatio:.3,captorByArmyId:{[target.armyId]:factionId},attackingCityId:c.cityId});
+    engineShareUnits(s,units);s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},factionId,{permanentLossRatio:.3,captorByArmyId:{[target.armyId]:factionId},attackingCityId:c.cityId});
     s.lastCombat={kind:'CITY_STRIKE',turn:s.turn,sequence:s.battleSequence,cityId:c.cityId,targetId:target.armyId,enemyLoss:loss,allyLoss:0,counter:false,units,moraleChanges:[],eliminatedIds:post?[]:[target.armyId]};
     if(s.armies[target.armyId].c27?.saved){delete s.armies[target.armyId].c27.saved;changeMorale(s,target.armyId,'ROUTING','아홉 목숨',s.lastCombat.moraleChanges);s.lastCombat.effectLines=[combatRuleLine(s,target.armyId,'NINE_LIVES','병력 5%로 패주')];}
-    s.combatLog??=[];s.combatLog.push(s.lastCombat);recordCampaignCombatCareer(s,s.lastCombat);c31Combat(s,s.lastCombat);
+    s.combatLog??=[];s.combatLog.push(s.lastCombat);recordCampaignCombatCareer(s,s.lastCombat);c31Combat(s,s.lastCombat);c29Combat(s,s.lastCombat);
   }
   updateKnowledge(s);refreshCampaignSieges(s);rememberDiplomacyCombat(s,state);return s;
 }
@@ -487,7 +487,7 @@ export function recoverCampaignCities(s) {
 }
 export function armyActionEnded(s,id) {
   return !s.armies[id]||s.armies[id].morale==='ROUTING'||!castleArmyActive(s,s.armies[id])||(s.endedArmyIds??[]).includes(id)||
-    (!canMainAction(s,id)&&!(hasCampaignRule(s,id,'MOVE_AFTER_ATTACK')&&!s.movedArmyIds.includes(id))&&!combatCanPostMove(s,id));
+    (!canMainAction(s,id)&&!(s.armies[id].disengageTurn===s.turn&&!s.movedArmyIds.includes(id))&&!(hasCampaignRule(s,id,'MOVE_AFTER_ATTACK')&&!s.movedArmyIds.includes(id))&&!combatCanPostMove(s,id));
 }
 export const allPlayerActionsEnded=s=>Object.values(s.armies).filter(a=>a.factionId===s.playerFactionId&&castleArmyActive(s,a)).every(a=>armyActionEnded(s,a.armyId));
 
@@ -515,12 +515,13 @@ function previewTacticNumbers(s,id,traitId,targetId){
 }
 export function resolveTactic(state,id,traitId,targetId,{skipPreview=false}={}){
   const reason=diplomacyAttackReason(state,id,targetId);if(reason)throw new Error(reason);
+  if(state.c50){state=structuredClone(state);state.c50.context={attackerId:id,origin:`tactic:${state.turn}:${state.battleSequence+1}`};}
   if(!skipPreview)previewTactic(state,id,traitId,targetId);
   const card=campaignTactics(state,id).find(c=>c.traitId===traitId);
   const check=card&&tacticAvailability(state,id,card,targetId);
   if(!card||check.reason)throw new Error(`${check?.reasonCode??'INVALID_CAMPAIGN_TACTIC'}: ${check?.reasonText??'장착한 전법을 확인하십시오.'}`);
-  // Pay before effects, so capture/awakening gains survive the signature cost.
-  if(card.signature){state=structuredClone(state);c29Record(state,id).c29.gauge=0;}
+  // Pay before effects and suppress charging for the remainder of this period.
+  if(c29Enabled(state)){state=structuredClone(state);const x=c29Record(state,id).c29;x.gauge-=card.gaugeCost;x.spentPeriod=true;delete x.costAdjustments?.[traitId];x.tacticTurn=state.turn;state.armies[id].tacticUsedTurn=state.turn;}
   let s;
   if(c33Card(card))s=resolveC33Tactic(state,id,card,targetId);
   else if(card.jointArmyIds)s=resolveJointTactic(state,id,card,targetId);
@@ -537,43 +538,45 @@ export function resolveTactic(state,id,traitId,targetId,{skipPreview=false}={}){
   recordC28Combat(s,s.lastCombat);
   const hitTargets=[...new Set([targetId,...(s.lastCombat.units??[]).map(u=>u.unitId)])];for(const hit of hitTargets)recordC28Tactic(s,id,hit,card,`TACTIC.${s.battleSequence}`);
   recordCareer(s,s.armies[id].commanderId,`CAREER.TACTIC.${s.battleSequence}`,{tactic:1});
-  s=finishC29Tactic(s,state,id,card,targetId);classExtendFire(s,state,id,s.lastCombat);
-  c31ExtendStatuses(s,state,id);s.armies[id].tacticReadyTurns[traitId]=s.turn+card.cooldown-(card.modifier?.rule==='REFUND_ON_SUCCESS'&&c29ControlSuccess(s,state,id,card,targetId)?card.modifier.params.refund:0);s.armies[id].tacticUsedTurn=s.turn;
+  s=finishC29Tactic(s,state,id,card,targetId);if(c29Enabled(s)&&card.modifier?.rule==='REFUND_ON_SUCCESS'&&c29ControlSuccess(s,state,id,card,targetId))c29Record(s,id).c29.gauge=Math.min(100,c29Record(s,id).c29.gauge+Math.min(card.gaugeCost,10*(card.modifier.params.refund??1)));
+  c31ExtendStatuses(s,state,id);if(!c29Enabled(s))s.armies[id].tacticReadyTurns[traitId]=s.turn+card.cooldown-(card.modifier?.rule==='REFUND_ON_SUCCESS'&&c29ControlSuccess(s,state,id,card,targetId)?card.modifier.params.refund:0);s.armies[id].tacticUsedTurn=s.turn;
   if(uniqueOwned(s,id,'U_FIRE_GOD')&&s.lastCombat.enemyLoss>0){const burning=Object.values(s.armies).filter(b=>diplomacyArmyHostile(s,id,b.armyId)&&castleArmyActive(s,b)&&((s.c32?.fires??[]).some(f=>f.until>=s.turn&&f.tileId===b.tileId)||(s.c27?.fires??[]).some(f=>f.until>=s.turn&&f.tiles.includes(b.tileId))));if(burning.length){s.battleSequence++;s=combatEffectDamage(s,id,burning.map(b=>({targetId:b.armyId,loss:Math.max(1,Math.round(b.troopCount*.05))})),s.lastCombat);}}
   uniqueAfterTactic(s,id,card,healCampaignTroops);c34AfterTactic(s,id,card,targetId);c34FlushPoison(s,(source,rows)=>{s.battleSequence++;uniqueAdoptState(s,combatEffectDamage(s,source,rows,s.lastCombat));});
   c31Combat(s,s.lastCombat);
   if(tacticIsDamage(card)&&s.lastCombat.enemyLoss>0)delete s.armies[id].starVanguardTurn;
   if(s.lastCombat.enemyLoss>0){const targets=[...new Set((s.lastCombat.units??[]).filter(u=>state.armies[u.unitId]?.factionId!==state.armies[id].factionId).map(u=>u.unitId))];for(const target of targets)relationCombatResult(s,state,id,target,s.lastCombat);}
   if(s.armies[targetId]&&s.armies[targetId].factionId!==s.armies[id].factionId&&s.lastCombat.enemyLoss>0){s.armies[targetId].c27??={};s.armies[targetId].c27.lastHitTactic=structuredClone(card);}
-  if(combatTacticRule(card)?.rule==='MIRROR'){const copy=mirroredCombatCard(state,id);s.armies[id].tacticReadyTurns[copy.traitId]=s.turn+copy.cooldown;s.armies[id].tacticReadyTurns[traitId]=s.turn+copy.cooldown;}
-  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'각성 전투 효과',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});c29Combat(s,s.lastCombat);c29TacticUsed(s,id,card,{gaugePaid:card.signature});c30TacticUsed(s,id,card);
+  if(!c29Enabled(s)&&combatTacticRule(card)?.rule==='MIRROR'){const copy=mirroredCombatCard(state,id);s.armies[id].tacticReadyTurns[copy.traitId]=s.turn+copy.cooldown;s.armies[id].tacticReadyTurns[traitId]=s.turn+copy.cooldown;}
+  c29PostCombat(s,s.lastCombat,{morale:(who,to)=>changeMorale(s,who,to,'각성 전투 효과',s.lastCombat.moraleChanges),formation:(who,n)=>changeFormation(s,who,n,s.lastCombat.formationChanges)});c29Combat(s,s.lastCombat);c29TacticUsed(s,id,card,{gaugePaid:c29Enabled(s)});c30TacticUsed(s,id,card);
   c30Combat(s,s.lastCombat,{morale:who=>checkMorale(s,who,'여포군 — 인접 적 패주',10,s.lastCombat.moraleChanges)});
+  if(s.armies[targetId]&&tacticIsDamage(card))engineAfterAttack(s,state,id,targetId,s.lastCombat,{tactic:card});
   Object.assign(s.lastCombat,targetLosses(state,id,s.lastCombat));
+  if(s.c50){delete s.c50.context;delete s.c50.sharedDamage;}
   initializeCombatFire(s);rememberDiplomacyCombat(s,state);return s;
 }
 
 function resolveJointTactic(state,id,card,targetId){
  let s=resolveAttack(state,id,targetId,card),logs=[structuredClone(s.lastCombat)];
  for(const ally of card.jointArmyIds){if(!s.armies[targetId]?.troopCount||!s.armies[ally]?.troopCount||!castleArmyActive(s,s.armies[ally]))continue;s=resolveAttack(s,ally,targetId,null,{reaction:true,joint:true});logs.push(structuredClone(s.lastCombat));}
- for(const who of [id,...card.jointArmyIds])s.armies[who].c30Delay=(s.armies[who].c30Delay??0)+1;
- s.lastCombat={...logs[0],kind:'JOINT_TACTIC',jointAttacks:logs,units:logs.flatMap(c=>c.units),appliedTactics:logs.flatMap(c=>c.appliedTactics??[]),enemyLoss:logs.reduce((n,c)=>n+c.enemyLoss,0),allyLoss:logs.reduce((n,c)=>n+c.allyLoss,0),effectLines:[...logs.flatMap(c=>c.effectLines),'도원 돌격 — 셋 모두 다음 차례 전법 대기 +1']};
+ if(!c29Enabled(s))for(const who of [id,...card.jointArmyIds])s.armies[who].c30Delay=(s.armies[who].c30Delay??0)+1;
+ s.lastCombat={...logs[0],kind:'JOINT_TACTIC',jointAttacks:logs,units:logs.flatMap(c=>c.units),appliedTactics:logs.flatMap(c=>c.appliedTactics??[]),enemyLoss:logs.reduce((n,c)=>n+c.enemyLoss,0),allyLoss:logs.reduce((n,c)=>n+c.allyLoss,0),effectLines:[...logs.flatMap(c=>c.effectLines),c29Enabled(s)?'도원 돌격 — 게이지 비용 60(시험값)':'도원 돌격 — 셋 모두 다음 차례 전법 대기 +1']};
  return s;
 }
 
 function combatEffectDamage(state,id,rows,log){
  const relationBefore={armies:structuredClone(state.armies),officers:structuredClone(state.officers),prisonerIds:Object.keys(state.terminal?.prisonersById??{})};
- rows=rows.filter(row=>!diplomacyAttackReason(state,id,row.targetId));if(!rows.length)return state;
+ rows=rows.filter(row=>log.engineFriendly&&state.armies[row.targetId]?.factionId===state.armies[id].factionId||!diplomacyAttackReason(state,id,row.targetId));if(!rows.length)return state;
  const socialLines=[];rows=rows.map(row=>{if(row.c31Applied||state.armies[row.targetId]?.factionId===state.armies[id]?.factionId)return row;const social=relationAttack(state,id,row.targetId,{reaction:!['TACTIC','TACTIC_EFFECT'].includes(log.kind)});socialLines.push(...social.lines);return {...row,loss:Math.round(row.loss*social.factor)};});log.effectLines.push(...socialLines.filter(l=>!log.effectLines.includes(l)));
  rows=rows.map(row=>({...row,loss:(log.fire&&c33Owned(state,row.targetId,'RATTAN_ARMOR')?2:1)*(row.c31Applied?row.loss:Math.round(row.loss*c31DamageFactor(state,state.armies[id],state.armies[row.targetId])))}));
  const sourceByTarget=new Map(rows.map(r=>[r.targetId,r.sourceId??id]));
  if(uniqueEnabled(state))rows=uniqueChainRows(state,rows.map(r=>({id:r.targetId,loss:r.loss}))).map(r=>({targetId:r.id,loss:r.loss}));
- rows=classShare(state,c34ShareRows(state,rows.map(r=>({id:r.targetId,loss:r.loss}))),log.effectLines).map(r=>({targetId:r.id,loss:r.loss}));
+ rows=c34ShareRows(state,rows.map(r=>({id:r.targetId,loss:r.loss}))).map(r=>({targetId:r.id,loss:r.loss}));
  let s=state;const losses=new Map();for(const {targetId,loss} of rows)losses.set(targetId,(losses.get(targetId)??0)+loss);
  const units=[...losses].filter(([target])=>castleArmyActive(s,s.armies[target])).map(([target,loss])=>{const pre=s.armies[target].troopCount,actual=surviveRule(s,target,Math.min(pre,loss),true,log.effectLines);return {unitId:target,preBattleCount:pre,postBattleCount:pre-actual,casualties:actual,unitState:pre>actual?'COMMANDABLE':'ELIMINATED'};});
  if(!units.length)return s;
  recordDamageSources(s,log,units.map(u=>({targetId:u.unitId,loss:u.casualties,sourceId:sourceByTarget.get(u.unitId)??id})));
  for(const u of units)if(s.armies[u.unitId].factionId!==s.armies[id].factionId)dejaVuEvent(s,'ATTACKED_BY',{officerId:s.armies[u.unitId].commanderId,by:s.armies[id].commanderId});
- const battleId=`C27.${s.battleSequence}.${s.personnel.revision}`;s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},s.armies[id].factionId,{permanentLossRatio:.3,captorByArmyId:Object.fromEntries(units.map(u=>[u.unitId,s.armies[u.unitId].factionId!==s.armies[id].factionId?s.armies[id].factionId:s.armies[log.targetId]?.factionId])),escapeCommanderIds:units.filter(u=>s.armies[u.unitId].factionId===s.armies[id].factionId&&(!s.armies[log.targetId]||s.armies[log.targetId].factionId===s.armies[id].factionId)).map(u=>u.unitId)});
+ const battleId=`C27.${s.battleSequence}.${s.personnel.revision}`;engineShareUnits(s,units);s=settleCampaignRound(s,{format:'combat-battle-result-v1',battleId,decisionRef:battleId,sourceRevision:s.battleSequence,units},s.armies[id].factionId,{permanentLossRatio:.3,captorByArmyId:Object.fromEntries(units.map(u=>[u.unitId,s.armies[u.unitId].factionId!==s.armies[id].factionId?s.armies[id].factionId:s.armies[log.targetId]?.factionId])),escapeCommanderIds:units.filter(u=>s.armies[u.unitId].factionId===s.armies[id].factionId&&(!s.armies[log.targetId]||s.armies[log.targetId].factionId===s.armies[id].factionId)).map(u=>u.unitId)});
  log.units.push(...units);log.enemyLoss+=units.filter(u=>s.armies[u.unitId].factionId!==s.armies[id].factionId).reduce((n,u)=>n+u.casualties,0);log.allyLoss+=units.filter(u=>s.armies[u.unitId].factionId===s.armies[id].factionId).reduce((n,u)=>n+u.casualties,0);log.eliminatedIds.push(...units.filter(u=>!u.postBattleCount).map(u=>u.unitId));
  for(const u of units)if(s.armies[u.unitId].c27?.saved){delete s.armies[u.unitId].c27.saved;changeMorale(s,u.unitId,'ROUTING','아홉 목숨',log.moraleChanges);}
  supplyCombatLoot(s,log,id);s.lastCombat=log;s.combatLog[s.combatLog.length-1]=log;for(const u of units)relationCombatResult(s,relationBefore,id,u.unitId,log,{record:false});return s;
@@ -593,23 +596,26 @@ function resolveUniqueCombatTactic(state,id,card,target){
  s.combatLog??=[];(s.combatLog??=[]).push(log);s.lastCombat=log;
  const e=card.effects.find(e=>e.rule?.startsWith('U_'));
  const damage=rows=>{s.battleSequence++;uniqueAdoptState(s,combatEffectDamage(s,id,rows.map(row=>({...row,loss:Math.round(row.loss*(card.signatureScale??1))})),log));};
- const hit=(source,to,ratio)=>{
-  if(diplomacyAttackReason(s,source,to)||!castleArmyActive(s,s.armies[source])||!castleArmyActive(s,s.armies[to]))return;
-  const noCounter=['U_TRIPLE_ASSAULT','U_NIGHT_RAID','U_ESTRANGE','U_DRIVE_TIGER'].includes(e.rule)||log.hits.length>0;
-  const prepared=prepareAttackEffects(s,source,to,{first:log.hits.length===0}),p=attackNumbers(prepared,source,to,{reaction:noCounter,first:log.hits.length===0});
+ const hit=(source,to,ratio,options={})=>{
+  if((e.rule!=='U_S4_TIGER_COMMAND'&&diplomacyAttackReason(s,source,to))||!castleArmyActive(s,s.armies[source])||!castleArmyActive(s,s.armies[to]))return;
+  const noCounter=['U_S4_TIGER_COMMAND','U_TRIPLE_ASSAULT','U_NIGHT_RAID','U_ESTRANGE','U_DRIVE_TIGER'].includes(e.rule)||log.hits.length>0;
+  const prepared=prepareAttackEffects(s,source,to,{first:log.hits.length===0}),p=attackNumbers(prepared,source,to,{reaction:noCounter,first:log.hits.length===0,...options});
   dejaVuEvent(s,'ATTACKED_BY',{officerId:s.armies[to].commanderId,by:s.armies[source].commanderId});if(!noCounter&&p.counter)dejaVuEvent(s,'ATTACKED_BY',{officerId:s.armies[source].commanderId,by:s.armies[to].commanderId});
   s.rng=prepared.rng;const loss=Math.round(p.damage*ratio/100);
   damage([{targetId:to,sourceId:source,loss,c31Applied:true},...(!noCounter&&p.allyLoss?[{targetId:source,sourceId:to,loss:p.allyLoss,c31Applied:true}]:[])]);
   (log.appliedTactics??=[]).push(appliedTactic(source,to,p));
-  log.hits.push({sourceId:source,targetId:to,damage:loss,counter:!noCounter&&p.counter});log.counter||=!noCounter&&p.counter;log.side=p.side;log.charge=p.charge;
+  log.hits.push({sourceId:source,targetId:to,damage:loss,counter:!noCounter&&p.counter});if(options.engineFormation&&castleArmyActive(s,s.armies[to]))engineFormationDamage(s,to,options.engineFormation,log);log.counter||=!noCounter&&p.counter;log.side=p.side;log.charge=p.charge;
  };
  const cancel=uniqueCancelTactic(s,id,target,card);
+ const forcedStarts=Object.fromEntries(Object.values(s.armies).map(a=>[a.armyId,a.tileId]));
  if(cancel==='REFLECT')executeCampaignRule(e.rule,{phase:'tactic',s,id:target,target:id,card,attack:hit,damage,heal:(who,n)=>healCampaignTroops(s,who,Math.round(n*(card.signatureScale??1))),retreat:()=>[],cityAttack:()=>{}});
- else if(!cancel)executeCampaignRule(e.rule,{phase:'tactic',s,id,target,card,attack:hit,damage,heal:(who,n)=>healCampaignTroops(s,who,Math.round(n*(card.signatureScale??1))),retreat:n=>combatRetreatPath(s,id,n),cityAttack:ratio=>{
+ else if(!cancel)executeCampaignRule(e.rule,{phase:'tactic',s,id,target,card,attack:hit,damage,heal:(who,n)=>healCampaignTroops(s,who,Math.round(n*(card.signatureScale??1))),retreat:n=>{const path=combatRetreatPath(s,id,n);if(e.rule!=='U_SMOKE_RETREAT')return path;const moved=[];for(const to of path){const traps=s.c33?.traps?.length??0;forceArmyTo(s,id,to);moved.push(to);if(!castleArmyActive(s,s.armies[id])||(s.c33?.traps?.length??0)<traps)break;}return moved;},cityAttack:ratio=>{
   const c=s.cities[target],p=previewCityAttack(s,id,target),dealt=Math.min(c.durability,Math.round(p.dealt*ratio));c.durability-=dealt;log.dealt=dealt;log.enemyLoss=dealt;log.cityId=target;
   uniqueAdoptState(s,resolveTacticCityCounter(s,id,target,log,p));
   if(castleArmyActive(s,s.armies[id])&&!s.cities[target].durability&&!Object.values(s.armies).some(b=>castleArmyActive(s,b)&&b.tileId===c.tileId))uniqueAdoptState(s,captureAttackedCity(s,id,target,log));
  }});
+ if(e.rule==='U_DRIVE_DEEP')for(const who of [target,id])if(s.armies[who]&&s.armies[who].tileId!==forcedStarts[who])resolveForcedArrival(s,who,forcedStarts[who]);
+ s.lastCombat=log;
  if(cancel)log.effectLines.push(cancel==='REFLECT'?'계략 반사':'전법 무효');
  if(log.hits.length&&s.armies[target])uniqueAfterAttack(s,state,id,target,log,(who,n)=>healCampaignTroops(s,who,n),damage);
  uniqueSpreadTactic(s,id,target,card,log,damage);
@@ -633,7 +639,7 @@ function resolveCommonCombatTactic(state,id,card,target){
  if(e?.rule==='MIRROR'){
   const copy=mirroredCombatCard(state,id);if(!copy)throw new Error('C27_NO_MIRROR_TACTIC');
   let s=resolveCommonCombatTactic(state,id,copy,target);
-  s.lastCombat.effectLines.push(`${card.name} — ${copy.name} 복제 · 대기 공유 ${copy.cooldown}턴`);s.lastCombat.tacticName=card.name;s.lastCombat.tacticId=card.traitId;combatCount(s,'MIRROR');return s;
+  s.lastCombat.effectLines.push(c29Enabled(s)?`${card.name} — ${copy.name} 복제 · 게이지 비용 ${c29Cost(state,id,copy)}`:`${card.name} — ${copy.name} 복제 · 대기 공유 ${copy.cooldown}턴`);s.lastCombat.tacticName=card.name;s.lastCombat.tacticId=card.traitId;combatCount(s,'MIRROR');return s;
  }
  let s=tacticIsDamage(card)?resolveAttack(state,id,target,card):structuredClone(state);
  if(!tacticIsDamage(card)){
@@ -667,25 +673,26 @@ function applyCommonCombatRule({s,id,card,target,e,before}){
  if(['TAUNT','FALSE_ORDERS'].includes(e.rule)&&c33Immune(s,target,e.rule==='FALSE_ORDERS'?'ROOTED':'TAUNT',id)){line('통제 효과 무시');return s;}
  if(['SHOVE','TAUNT','FALSE_ORDERS'].includes(e.rule)&&c28ControlGuard(s,target,e.rule==='FALSE_ORDERS'?'ROOTED':e.rule)){line('교훈 — 통제 효과 무시');return s;}
  switch(e.rule){
-  case 'SHOVE':{let moved=0;for(let n=0;n<(card.fork==='a'?2:Math.floor(p.push));n++){const to=oppositeCombatTile(s,id,target);if(!combatEmptyStep(s,target,to))break;t.tileId=to;moved++;}if(!moved)checkFormation(s,target,p.blockedFormation,log.formationChanges);line(moved?`${moved}칸 밀기`:`막힘 · 전열 판정 ${p.blockedFormation}`);break;}
-  case 'SWAP':{const from=a.tileId;a.tileId=t.tileId;t.tileId=from;line('인접 아군 자리 교환 · 정면 유지');break;}
+  case 'MASS_RALLY':{for(const b of Object.values(s.armies).filter(b=>b.factionId===a.factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=p.range)){changeMorale(s,b.armyId,b.morale==='ROUTING'?'SHAKEN':'STEADY',card.name,log.moraleChanges);b.c234??={};b.c234.rallyUntil=s.turn+1;}line('총결집 · 다음 적 구간 패주 방지');break;}
+  case 'SHOVE':{let moved=0;const start=t.tileId; if(!sample4CanPush(s,target))break;for(let n=0;n<(card.fork==='a'?2:Math.floor(p.push));n++){const to=oppositeCombatTile(s,id,target);if(!combatEmptyStep(s,target,to))break;const traps=s.c33?.traps?.length??0;forceArmyTo(s,target,to);moved++;if(!castleArmyActive(s,t)||t.morale==='ROUTING'||(s.c33?.traps?.length??0)<traps)break;}if(moved<Math.floor(p.push))checkFormation(s,target,p.blockedFormation,log.formationChanges);if(p.arrivalFormation&&t.tileId!==start)for(const b of Object.values(s.armies).filter(b=>b.armyId!==target&&diplomacyArmyHostile(s,id,b.armyId)&&castleArmyActive(s,b)&&hexDistance(s.tiles[t.tileId],s.tiles[b.tileId])===1))checkFormation(s,b.armyId,p.arrivalFormation,log.formationChanges);line(moved?`${moved}칸 밀기`:`막힘 · 전열 판정 ${p.blockedFormation}`);break;}
+  case 'SWAP':{const from=a.tileId,other=t.tileId;a.tileId=other;t.tileId=from;resolveForcedArrival(s,id,from);resolveForcedArrival(s,target,other);line('인접 아군 자리 교환 · 정면 유지');break;}
   case 'SHATTER_LINE':if(t.troopCount>0){if(t.formation==='ORDERED')changeFormation(s,target,1,log.formationChanges);t.c27??={};t.c27.noCounterUntil=s.turn+(s.campaignEffects.startedTurns[t.factionId]===s.turn?1:0);line('흐트러짐 · 다음 차례까지 반격 불가');}break;
   case 'TAUNT':if(!uniqueImmune(s,target,'TAUNT'))turnFacing(s,target,id);line('대상 정면을 이쪽으로');break;
-  case 'OVERWATCH':a.c27.overwatch={until:s.turn+1,range:p.range,used:false};line('다음 내 차례까지 정면 2칸 첫 진입 1회 사격');break;
+  case 'OVERWATCH':a.c27.overwatch={until:s.turn+1,range:p.range,used:false,perArmy:!!p.perArmy,hitIds:[]};line('다음 내 차례까지 정면 2칸 첫 진입 1회 사격');break;
   case 'PIERCE':case 'DUAL_STRIKE':break; // Already settled in attackNumbers.
   case 'MORALE_CONTEST':if(s.officers[a.commanderId].baseStats.leadership>s.officers[t.commanderId].baseStats.leadership){lower(t,card.name);line('지휘 승리 · 대상 사기 한 단계');}else {if(p.loseWeight>0)checkMorale(s,id,card.name,p.loseWeight,log.moraleChanges);line(`지휘 실패 · 자기 사기 판정 ${p.loseWeight}`);}break;
   case 'FALSE_ORDERS':if(!uniqueImmune(s,target,'ROOTED')&&(c33Owned(s,id,'DIVINE_CALC')||s.officers[a.commanderId].baseStats.intelligence+c30Strategy(s,id)>s.officers[t.commanderId].baseStats.intelligence)){t.c27??={};t.c27.rootTurn=s.turn+(s.campaignEffects.startedTurns[t.factionId]===s.turn?1:0);line('지략 승리 · 대상 ROOTED 1차례');}else line('지략 비교 실패');break;
   case 'STAKES':a.c27.stakes={until:s.turn+1};a.c27.rootTurn=s.turn+1;line('측면·돌격 보너스 무효 · 대가 다음 차례 이동 불가');break;
-  case 'FIRE_ATTACK':{log.fire=true;const tiles=new Set([target]);s.c27??={counts:{}};s.c27.fires??=[];s.c27.fires.push({... (diplomacyEnabled(s)?{source:id}:{}),tiles:[...tiles],until:s.turn+C182.fire.turns-1});const rows=[...tiles].map(at=>combatArmyAt(s,at)).filter(b=>b&&!diplomacyAttackReason(s,id,b.armyId)&&!uniqueOwned(s,b.armyId,'U_FIRE_GOD')).map(b=>({targetId:b.armyId,loss:Math.max(1,Math.round(c30ElementDamage(s,id,b.armyId,b.troopCount*.1)*(uniqueOwned(s,id,'U_FIRE_GOD')?1.5:1)*(c28Rule(s,b.armyId,'FIRE_WARD')?C28.fireReduce:1)))}));s=combatEffectDamage(s,id,rows,log);for(const row of rows)if(!c28Rule(s,row.targetId,'FIRE_WARD'))checkFormation(s,row.targetId,p.formation,log.formationChanges);line(`불 ${tiles.size}칸 · 즉시 피해 10% · 불 ${C182.fire.turns}차례 · 바람 따라 번짐 · 진입 불가`);break;}
-  case 'AMBUSH':a.c27.ambush=true;line('숲에서 첫 공격까지 숨김 · 첫 공격 후방');break;
-  case 'FEIGNED_RETREAT':{const path=combatRetreatPath(s,id,p.back);if(path.length){a.tileId=path.at(-1);a.movedTiles+=path.length;}a.c27.feigned={until:s.turn+1};line(`추격 없이 ${path.length}칸 후퇴`);break;}
+  case 'FIRE_ATTACK':{log.fire=true;const tiles=new Set([target]);s.c27??={counts:{}};s.c27.fires??=[];s.c27.fires.push({... (diplomacyEnabled(s)?{source:id}:{}),tiles:[...tiles],until:s.turn+C182.fire.turns-1});const rows=[...tiles].map(at=>combatArmyAt(s,at)).filter(b=>b&&!diplomacyAttackReason(s,id,b.armyId)&&!sample4FireImmune(s,b.armyId)&&!uniqueOwned(s,b.armyId,'U_FIRE_GOD')).map(b=>({targetId:b.armyId,loss:Math.max(1,Math.round(c30ElementDamage(s,id,b.armyId,b.troopCount*.1)*(uniqueOwned(s,id,'U_FIRE_GOD')?1.5:1)*(c28Rule(s,b.armyId,'FIRE_WARD')?C28.fireReduce:1)))}));s=combatEffectDamage(s,id,rows,log);for(const row of rows)if(!c28Rule(s,row.targetId,'FIRE_WARD'))checkFormation(s,row.targetId,p.formation,log.formationChanges);line(`불 ${tiles.size}칸 · 즉시 피해 10% · 불 ${C182.fire.turns}차례 · 바람 따라 번짐 · 진입 불가`);break;}
+  case 'AMBUSH':if(p.anyTerrain&&card.id!=='EVO-04'){a.c50.hidden=true;a.c234??={};a.c234.concealUntil=s.turn+1;line('잠복 · 다음 내 차례 끝까지 · 첫 공격 반격 없음');}else {a.c27.ambush=true;line('숲에서 첫 공격까지 숨김 · 첫 공격 후방');}break;
+  case 'FEIGNED_RETREAT':{const path=combatRetreatPath(s,id,p.back);let moved=0;for(const to of path){const traps=s.c33?.traps?.length??0;forceArmyTo(s,id,to);a.movedTiles++;moved++;if(!castleArmyActive(s,a)||a.morale==='ROUTING'||(s.c33?.traps?.length??0)<traps)break;}a.c27.feigned={until:s.turn+1};line(`추격 없이 ${moved}칸 후퇴`);break;}
   case 'INSIDE_AGENT':{const c=s.cities[target],governor=s.officers[c.governorId],command=governor?.baseStats.intelligence??50;if(s.officers[a.commanderId].baseStats.intelligence+c30Strategy(s,id)>command){c.c27??={};c.c27.insideUntil=s.turn+(s.campaignEffects.startedTurns[c.ownerFactionId]===s.turn?1:0);line('내통 성공 · 성 사격·회복 1차례 없음');}else {lower(a,card.name);line('대가: 지략 실패 · 자기 사기 한 단계');}break;}
   case 'FLOOD':{const ends=target.split('|'),next=s.mapRules.riverEdges.filter(edge=>edge!==target&&edge.split('|').some(t=>ends.includes(t))).sort()[0],edges=[target,...(next?[next]:[])];s.c27??={counts:{}};s.c27.floods??=[];s.c27.floods.push({edges,until:s.turn+Math.floor(p.turns)-1});for(const b of Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&edges.flatMap(e=>e.split('|')).includes(b.tileId)))checkFormation(s,b.armyId,10,log.formationChanges);a.c27.floodCostTurn=s.turn+1;line(`강 변 ${edges.length}개 ${Math.floor(p.turns)}차례 통행 불가 · 대가 다음 이동 −2`);break;}
-  case 'WOODPECKER':{const ally=combatAlly(s,id,target,{behind:true});if(!ally)throw new Error('C27_WOODPECKER_ALLY_REQUIRED');const loss=attackFormula(s,ally.armyId,target,undefined,{reaction:true,forceSide:'REAR',first:false}).damage;s=combatEffectDamage(s,id,[{targetId:target,loss,c31Applied:true}],log);if(s.armies[target].troopCount){const ray=neighbors(s.tiles[t.tileId])[directionToward(s.tiles[t.tileId],s.tiles[a.tileId])],to=tileId(ray);if(combatEmptyStep(s,target,to))s.armies[target].tileId=to;}if(!s.endedArmyIds.includes(ally.armyId))s.endedArmyIds.push(ally.armyId);line(`${s.officers[ally.commanderId].name} 후방 공격 ${troopDelta(-loss)} · 대가 아군 행동 종료`);break;}
+  case 'WOODPECKER':{const ally=combatAlly(s,id,target,{behind:true});if(!ally)throw new Error('C27_WOODPECKER_ALLY_REQUIRED');const sequence=s.battleSequence,loss=attackFormula(s,ally.armyId,target,undefined,{reaction:true,forceSide:'REAR',first:false}).damage;if(s.armies[target].troopCount){const ray=neighbors(s.tiles[t.tileId])[directionToward(s.tiles[t.tileId],s.tiles[a.tileId])],to=tileId(ray);if(combatEmptyStep(s,target,to))forceArmyTo(s,target,to);}if(s.battleSequence!==sequence)s.battleSequence++;s=combatEffectDamage(s,id,[{targetId:target,loss,c31Applied:true}],log);if(!s.endedArmyIds.includes(ally.armyId))s.endedArmyIds.push(ally.armyId);line(`${s.officers[ally.commanderId].name} 후방 공격 ${troopDelta(-loss)} · 대가 아군 행동 종료`);break;}
   case 'GALEFORCE':if(t.morale==='ROUTING'&&before.armies[target].morale!=='ROUTING'&&s.armies[id].c27.extraTurn!==s.turn){a.c27.extraTurn=s.turn;s.endedArmyIds=s.endedArmyIds.filter(k=>k!==id);line('패주 성공 · 차례당 1회 추가 행동');}else if(t.morale!=='ROUTING'){if(a.formation==='ORDERED')changeFormation(s,id,1,log.formationChanges);line('대가: 패주 실패 · 자기 흐트러짐');}break;
  }
  if(!tacticIsDamage(card))creditCampaignCombat(s,log);
- return s;
+ s.lastCombat=log;return s;
 }
 
 export function defectionEligible(s,id){
@@ -693,12 +700,45 @@ export function defectionEligible(s,id){
  const capital=s.cities[f.capitalCityId];
  return a.troopCount<=strength*.3&&a.commanderId!==f.rulerId&&(!capital||![capital.tileId,...capital.footprint.gates].includes(a.tileId));
 }
-export function resolveOverwatch(state,moverId,fromTileId,{stopped=true}={}){
- let s=resolveC27MovementEffects(state,moverId,fromTileId,stopped);c34Movement(s,moverId,fromTileId,{damage:(source,rows)=>{s.battleSequence++;const log={kind:'C34_MOVEMENT',turn:s.turn,sequence:s.battleSequence,attackerId:source,targetId:moverId,units:[],enemyLoss:0,allyLoss:0,moraleChanges:[],formationChanges:[],eliminatedIds:[],effectLines:[]};(s.combatLog??=[]).push(log);uniqueAdoptState(s,combatEffectDamage(s,source,rows,log));}});const mover=s.armies[moverId];
- const trap=(s.c33?.traps??[]).find(t=>t.tileId===mover.tileId&&diplomacyHostile(s,t.factionId,mover.factionId)&&!withdrawalProtection(s,moverId));if(trap&&fromTileId!==mover.tileId){s.c33.traps=s.c33.traps.filter(t=>t!==trap);s.battleSequence++;const log={kind:'TRAP',turn:s.turn,sequence:s.battleSequence,attackerId:trap.source,targetId:moverId,units:[],enemyLoss:0,allyLoss:0,moraleChanges:[],formationChanges:[],eliminatedIds:[],effectLines:['덧 놓기']};(s.combatLog??=[]).push(log);s=combatEffectDamage(s,trap.source,[{targetId:moverId,loss:30}],log);s.armies[moverId].movementState=null;if(s.armies[moverId].currentOrder)s.armies[moverId].currentOrder.status='COMPLETED';if(!s.movedArmyIds.includes(moverId))s.movedArmyIds.push(moverId);}
+export function disengageOptions(s,id){
+ const a=s.armies[id];if(!c29Enabled(s)||!a||troopToCampaign(a.troopType)!=='BT03'||!castleArmyActive(s,a)||a.morale==='ROUTING'||!canMainAction(s,id)||Object.values(s.cities).some(c=>c.tileId===a.tileId)||withdrawalProtection(s,id))return [];
+ const out=[];
+ for(const b of Object.values(s.armies).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
+  if(!castleArmyActive(s,b)||!diplomacyArmyHostile(s,id,b.armyId)||hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])!==1||s.knowledge[a.factionId].tiles[b.tileId]!=='VISIBLE'||ambushHidden(s,b.armyId,a.factionId))continue;
+  for(const mode of ['PUSH','RETREAT']){const mover=mode==='PUSH'?b.armyId:id,to=mode==='PUSH'?oppositeCombatTile(s,id,b.armyId):oppositeCombatTile(s,b.armyId,id);
+   if(combatEmptyStep(s,mover,to))out.push({mode,targetId:b.armyId,destinationTileId:to});
+  }
+ }return out;
+}
+export function disengageReason(s,id){const a=s.armies[id];return !c29Enabled(s)?'DISENGAGE_UNAVAILABLE':!a||troopToCampaign(a.troopType)!=='BT03'?'DISENGAGE_ARCHER_ONLY':!castleArmyActive(s,a)||Object.values(s.cities).some(c=>c.tileId===a.tileId)?'DISENGAGE_FIELD_ONLY':a.morale==='ROUTING'?'DISENGAGE_ROUTING':!canMainAction(s,id)?'MAIN_ACTION_USED':!archerEngaged(s,id)?'DISENGAGE_NO_ADJACENT_ENEMY':!disengageOptions(s,id).length?'DISENGAGE_BLOCKED':'';}
+export function resolveDisengage(state,id,targetId,mode){
+ const option=disengageOptions(state,id).find(o=>o.targetId===targetId&&o.mode===mode);if(!option)throw new Error(disengageReason(state,id)||'DISENGAGE_BLOCKED');
+ let s=structuredClone(state);s.disengageResolving=true;const mover=mode==='PUSH'?targetId:id,from=s.armies[mover].tileId;
+ consumeMainAction(s,id);s.armies[id].disengageTurn=s.turn;if(!s.movedArmyIds.includes(id))s.endedArmyIds=s.endedArmyIds.filter(k=>k!==id);s.armies[mover].tileId=option.destinationTileId;s.armies[mover].movementState=null;s.armies[mover].currentOrder=null;if(s.moveOrders)delete s.moveOrders[mover];if(s.orderQueue)s.orderQueue=s.orderQueue.filter(k=>k!==mover);updateKnowledge(s);
+ s=mode==='PUSH'?resolveArrivalEffects(s,mover,from):resolveApproachFire(resolveOverwatch(s,mover,from),mover,approachFireStart(state,mover));
+ delete s.disengageResolving;s.lastDisengage={armyId:id,targetId,mode,fromTileId:from,destinationTileId:option.destinationTileId,text:mode==='PUSH'?'이탈 사격 — 적을 1칸 밀어냈습니다.':'이탈 사격 — 1칸 물러났습니다.'};
+ updateKnowledge(s);refreshCampaignSieges(s);return s;
+}
+export function resolveArrivalEffects(state,moverId,fromTileId){let s=state;const mover=s.armies[moverId];
+ if(!mover||fromTileId===mover.tileId||!castleArmyActive(s,mover))return s;
+ engineEvent(s,'ARRIVE',{armyId:moverId,fromTileId,tileId:mover.tileId});
+ const trap=(s.c33?.traps??[]).find(t=>t.tileId===mover.tileId&&diplomacyHostile(s,t.factionId,mover.factionId)&&!withdrawalProtection(s,moverId));if(trap&&fromTileId!==mover.tileId){s.c33.traps=s.c33.traps.filter(t=>t!==trap);s.battleSequence++;const log={kind:'TRAP',turn:s.turn,sequence:s.battleSequence,attackerId:trap.source,targetId:moverId,units:[],enemyLoss:0,allyLoss:0,moraleChanges:[],formationChanges:[],eliminatedIds:[],effectLines:['덧 놓기']};(s.combatLog??=[]).push(log);s=combatEffectDamage(s,trap.source,[{targetId:moverId,loss:30}],log);c29Combat(s,log);s.armies[moverId].movementState=null;if(s.armies[moverId].currentOrder)s.armies[moverId].currentOrder.status='COMPLETED';if(!s.movedArmyIds.includes(moverId))s.movedArmyIds.push(moverId);}
 for(const maze of s.c29Mazes??[])if(maze.until>=s.turn&&diplomacyHostile(s,maze.factionId,mover.factionId)&&!withdrawalProtection(s,moverId)&&maze.tiles.includes(mover.tileId)){mover.c29??={};mover.c29.rootedUntil=s.turn+1;}
+return uniqueAdoptState(state,s);}
+export function resolveForcedArrival(s,id,from){
+ const a=s.armies[id];if(a.tileId!==from)engineEvent(s,'FORCED_MOVE',{armyId:id,fromTileId:from,tileId:a.tileId});a.currentOrder=null;a.movementState=null;if(s.moveOrders)delete s.moveOrders[id];if(s.orderQueue)s.orderQueue=s.orderQueue.filter(k=>k!==id);
+ return resolveArrivalEffects(s,id,from);
+}
+export function forceArmyTo(s,id,to){const from=s.armies[id].tileId;s.armies[id].tileId=to;return resolveForcedArrival(s,id,from);}
+export function resolveOverwatch(state,moverId,fromTileId,{stopped=true,arrival=true}={}){
+ let s=resolveC27MovementEffects(state,moverId,fromTileId,stopped);
+ const reactionStarts=Object.fromEntries(Object.values(s.armies).map(a=>[a.armyId,a.tileId]));
+ c34Movement(s,moverId,fromTileId,{damage:(source,rows)=>{s.battleSequence++;const log={kind:'C34_MOVEMENT',turn:s.turn,sequence:s.battleSequence,attackerId:source,targetId:moverId,units:[],enemyLoss:0,allyLoss:0,moraleChanges:[],formationChanges:[],eliminatedIds:[],effectLines:[]};(s.combatLog??=[]).push(log);uniqueAdoptState(s,combatEffectDamage(s,source,rows,log));c29Combat(s,log);}});
+ for(const [id,from] of Object.entries(reactionStarts))if(id!==moverId&&s.armies[id]?.tileId!==from)resolveForcedArrival(s,id,from);
+ if(arrival){s=resolveArrivalEffects(s,moverId,fromTileId);s=engineArriveReaction(s,moverId,fromTileId);}
+ const mover=s.armies[moverId];
  for(const guard of Object.values(s.armies).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
-  if(!castleArmyActive(s,mover)||!castleArmyActive(s,guard)||!diplomacyArmyHostile(s,guard.armyId,mover.armyId)||!guard.braced||!hasCampaignRule(s,guard.armyId,'OVERWATCH')||guard.overwatchKey===`${s.turn}.${mover.factionId}`||ambushHidden(s,moverId,guard.factionId))continue;
+  if(engineReactionUsed(s,guard.armyId,moverId)||!castleArmyActive(s,mover)||!castleArmyActive(s,guard)||!diplomacyArmyHostile(s,guard.armyId,mover.armyId)||!guard.braced||!hasCampaignRule(s,guard.armyId,'OVERWATCH')||guard.overwatchKey===`${s.turn}.${mover.factionId}`||ambushHidden(s,moverId,guard.factionId))continue;
   if(platformAttackReason(s,guard.armyId)||archerAttackReason(s,guard.armyId)||troopToCampaign(guard.troopType)==='BT03'&&hexDistance(s.tiles[guard.tileId],s.tiles[mover.tileId])<=1)continue;
   const range=attackRange(guard,s);if(hexDistance(s.tiles[guard.tileId],s.tiles[fromTileId])<=range||hexDistance(s.tiles[guard.tileId],s.tiles[mover.tileId])>range||s.knowledge[guard.factionId].tiles[mover.tileId]!=='VISIBLE')continue;
   s.armies[guard.armyId].overwatchKey=`${s.turn}.${mover.factionId}`;
@@ -714,9 +754,9 @@ function resolveC27MovementEffects(state,id,from,stopped){
   const guard=s.armies[original.armyId],mover=s.armies[id];if(!castleArmyActive(s,guard)||!castleArmyActive(s,mover)||guard.morale==='ROUTING'||mover.morale==='ROUTING'||!diplomacyArmyHostile(s,guard.armyId,mover.armyId)||ambushHidden(s,id,guard.factionId))continue;
   const blade=stopped&&combatRule(s,guard.armyId,'BLADESTORM')&&hexDistance(s.tiles[guard.tileId],s.tiles[mover.tileId])===1&&hexDistance(s.tiles[guard.tileId],s.tiles[from])>1&&guard.c27?.bladeTurn!==s.turn;
   const watch=guard.c27?.overwatch,front=at=>{const d=(directionToward(s.tiles[guard.tileId],s.tiles[at],guard.facing)-guard.facing+6)%6;return [0,1,5].includes(d)&&hexDistance(s.tiles[guard.tileId],s.tiles[at])<=watch.range;};
-  const shot=watch&&!watch.used&&watch.until>=s.turn&&front(mover.tileId)&&!front(from)&&s.knowledge[guard.factionId].tiles[mover.tileId]==='VISIBLE'&&!archerAttackReason(s,guard.armyId);
+  const shot=!engineReactionUsed(s,guard.armyId,id)&&watch&&(!watch.used||watch.perArmy)&&!watch.hitIds?.includes(id)&&watch.until>=s.turn&&front(mover.tileId)&&!front(from)&&s.knowledge[guard.factionId].tiles[mover.tileId]==='VISIBLE'&&!archerAttackReason(s,guard.armyId);
   if((blade||shot)&&!archerAttackReason(s,guard.armyId)){
-   guard.c27??={};if(blade)guard.c27.bladeTurn=s.turn;if(shot)watch.used=true;
+   guard.c27??={};if(blade)guard.c27.bladeTurn=s.turn;if(shot){watch.used=true;(watch.hitIds??=[]).push(id);}
    s=resolveAttack(s,guard.armyId,id,null,{reaction:true,first:false});s.lastCombat.effectLines.push(blade?combatRuleLine(s,guard.armyId,'BLADESTORM','통제 구역 정지 첫 적 즉시 공격 · 반격 없음'):'경계 사격 — 정면 진입 첫 적 · 반격 없음');combatCount(s,blade?'BLADESTORM':'OVERWATCH_SHOT');
   }
  }
@@ -731,14 +771,13 @@ function combatFormation(s,units,attackerId,targetId,p,formationChanges,moraleCh
  const collapsed=[];
  const events=[...units,...(onlyUnits?[]:Object.values(s.armies)).filter(a=>(a.formationWeight||a.formationRecovery)&&!units.some(u=>u.unitId===a.armyId)).map(a=>({unitId:a.armyId,preBattleCount:a.troopCount,postBattleCount:a.troopCount,casualties:0}))];
  for(const u of events){
-  const a=s.armies[u.unitId];if(!u.postBattleCount){delete a.formationWeight;delete a.formationRecovery;continue;}
+  const a=s.armies[u.unitId];if(engineSharedVictim(s,u.unitId))continue;if(!u.postBattleCount){delete a.formationWeight;delete a.formationRecovery;continue;}
   let weight=a.formationWeight??0;
   if(u.unitId===targetId){weight+=p.sideWeight??(p.side==='REAR'?C12.rearWeight:p.side==='FLANK'?C12.flankWeight:0);if(p.charge&&!c30ChargeGuard(s,u.unitId))weight+=C12.chargeWeight+c30ChargeWeight(s,attackerId);}
   if(u.casualties/u.preBattleCount>=C12.lossThreshold)weight+=C12.lossWeight;
   if(u.unitId===targetId&&p.ignoreBrace&&weight>0)weight+=C12.braceWeight;
   const start=formationChanges.length;
-  if(u.unitId===targetId)weight+=classAttack(s,attackerId,targetId,{},p.side).formationWeight;
-  if(weight>0&&!classHold(s,u.unitId,u.unitId===targetId?p.side:'FRONT')&&!(u.unitId===targetId&&p.charge&&c30ChargeGuard(s,u.unitId)))checkFormation(s,u.unitId,weight,formationChanges);
+  if(weight>0&&!(u.unitId===targetId&&p.charge&&c30ChargeGuard(s,u.unitId)))checkFormation(s,u.unitId,weight,formationChanges);
   if(formationChanges.slice(start).some(f=>f.to==='BROKEN'))collapsed.push(u.unitId);
   if(u.unitId===targetId&&p.charge&&!c30ChargeGuard(s,u.unitId)&&specialTroop(s,s.armies[attackerId].troopType)&&s.armies[attackerId].troopType==='hubao')checkFormation(s,u.unitId,C24.chargeWeight,formationChanges);
   if(formationChanges.slice(start).some(f=>f.to==='BROKEN')&&!collapsed.includes(u.unitId))collapsed.push(u.unitId);
@@ -778,7 +817,7 @@ function finishC29Tactic(s,before,id,c,target){
  if(c.id==='CTA-09'&&c.fork==='a'&&t&&s.officers[a.commanderId].baseStats.leadership>s.officers[t.commanderId].baseStats.leadership&&t.formation==='ORDERED')changeFormation(s,target,1,log.formationChanges);
  if(c.id==='CTA-07'&&c.fork==='b'&&t){t.c27??={};t.c27.noCounterUntil=s.turn+1;}
  if(c.evolution){
-  if(c.id==='EVO-01'){const from=s.tiles[target],direction=a.facing??0,tiles=[target];let at=from;for(let n=0;n<3;n++){const next=neighbors(at)[direction],key=tileId(next);if(!s.tiles[key])break;tiles.push(key);at=s.tiles[key];}for(const b of near(a,1,a.factionId))tiles.push(b.tileId);s.c27??={counts:{}};s.c27.fires??=[];s.c27.fires.push({... (diplomacyEnabled(s)?{source:id}:{}),tiles:[...new Set(tiles)],until:s.turn+1});s.battleSequence++;s=combatEffectDamage(s,id,[...new Set(tiles)].map(at=>combatArmyAt(s,at)).filter(Boolean).map(b=>({targetId:b.armyId,loss:Math.round(b.troopCount*.1)})),log);}
+  if(c.id==='EVO-01'){const from=s.tiles[target],direction=a.facing??0,tiles=[target];let at=from;for(let n=0;n<3;n++){const next=neighbors(at)[direction],key=tileId(next);if(!s.tiles[key])break;tiles.push(key);at=s.tiles[key];}for(const b of near(a,1,a.factionId))tiles.push(b.tileId);s.c27??={counts:{}};s.c27.fires??=[];s.c27.fires.push({... (diplomacyEnabled(s)?{source:id}:{}),tiles:[...new Set(tiles)],until:s.turn+1});s.battleSequence++;s=combatEffectDamage(s,id,[...new Set(tiles)].map(at=>combatArmyAt(s,at)).filter(b=>b&&!sample4FireImmune(s,b.armyId)).map(b=>({targetId:b.armyId,loss:Math.round(b.troopCount*.1)})),log);}
   if(c.id==='EVO-02'){const from=s.tiles[before.armies[id].tileId],to=s.tiles[t.tileId],length=hexDistance(from,to);for(const b of Object.values(s.armies).filter(b=>diplomacyArmyHostile(s,id,b.armyId)&&b.troopCount>0&&hexDistance(from,s.tiles[b.tileId])+hexDistance(s.tiles[b.tileId],to)===length))checkFormation(s,b.armyId,15,log.formationChanges);s.battleSequence++;s=combatEffectDamage(s,id,[{targetId:id,loss:Math.round(a.troopCount*.1)}],log);}
   if(c.id==='EVO-03')for(const b of near(a,2,a.factionId)){b.c29??={};b.c29.noRoutTurn=s.turn;b.effectStates.push({op:'DAMAGE_MOD',value:15,startsTurn:s.turn,expiresTurn:s.turn});b.c27??={};b.c27.rootTurn=s.turn+1;}
   if(c.id==='EVO-04'){const tiles=Object.values(s.tiles).filter(tile=>tile.terrainType==='forest'&&hexDistance(s.tiles[a.tileId],tile)<=2).sort((x,y)=>x.tileId.localeCompare(y.tileId)).slice(0,3).map(tile=>tile.tileId);s.c29Mazes??=[];s.c29Mazes.push({tiles,factionId:a.factionId,until:s.turn+1});a.c27??={};a.c27.rootTurn=s.turn;}
@@ -804,13 +843,45 @@ function resolveC33Tactic(state,id,card,target){
 export function startCombatFire(s,factionId){
  initializeCombatFire(s);if(!s.c182)return s;
  for(const old of Object.values(s.armies).filter(a=>a.factionId===factionId&&castleArmyActive(s,a)).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
-  const a=s.armies[old.armyId];if(!combatFireAt(s,a.tileId)||a.c182FireTurn===s.turn||uniqueOwned(s,a.armyId,'U_FIRE_GOD'))continue;
+  const a=s.armies[old.armyId];if(!combatFireAt(s,a.tileId)||a.c182FireTurn===s.turn||sample4FireImmune(s,a.armyId)||uniqueOwned(s,a.armyId,'U_FIRE_GOD'))continue;
   a.c182FireTurn=s.turn;const fire=s.c182.fires.find(f=>f.tileId===a.tileId),source=s.armies[fire.source]?fire.source:a.armyId;
   s.battleSequence++;const log={kind:'FIRE',fire:true,turn:s.turn,sequence:s.battleSequence,attackerId:source,targetId:a.armyId,enemyLoss:0,allyLoss:0,units:[],moraleChanges:[],formationChanges:[],eliminatedIds:[],effectLines:[`불 — 차례 시작 병력 ${C182.fire.damageRatio*100}% 피해 · 동요`]};
   (s.combatLog??=[]).push(log);s.lastCombat=log;
   s=combatEffectDamage(s,source,[{targetId:a.armyId,loss:Math.max(1,Math.round(a.troopCount*C182.fire.damageRatio*(c28Rule(s,a.armyId,'FIRE_WARD')?C28.fireReduce:1))),c31Applied:true}],log);
   if(castleArmyActive(s,s.armies[a.armyId])&&!c28Rule(s,a.armyId,'FIRE_WARD')&&s.armies[a.armyId].morale==='STEADY')changeMorale(s,a.armyId,'SHAKEN','불',log.moraleChanges);
+  c29Combat(s,{...log,actionId:`fire.${fire.source}.${fire.startedTurn??fire.until}.${s.turn}.${factionId}`});
   combatFireLog(s,'DAMAGE',log.effectLines[0],[a.tileId]);
  }
  updateKnowledge(s);refreshCampaignSieges(s);return s;
+}
+
+// Share only troop losses. Formation/morale still belong to the original hit rows.
+function engineShareUnits(s,units){
+ const rows=units.map(u=>({id:u.unitId,loss:u.casualties}));engineShareRows(s,rows);
+ for(const row of rows){let u=units.find(u=>u.unitId===row.id);if(!u){u={unitId:row.id,preBattleCount:s.armies[row.id].troopCount};units.push(u);}u.casualties=Math.min(u.preBattleCount,row.loss);u.postBattleCount=u.preBattleCount-u.casualties;u.unitState=u.postBattleCount?'COMMANDABLE':'ELIMINATED';}
+}
+
+function enginePublicForecast(s,id,targetId,p){
+ const r=engineCounterReservation(s,targetId,id);
+ if(r&&Number.isFinite(r.n)&&s.armies[targetId].troopCount>p.enemyLoss){const hit=attackFormula(s,targetId,id,s.armies[targetId].troopCount-p.enemyLoss,{reaction:true,damageRatio:r.n*engineCounterRatio()});p.allyLoss=Math.min(s.armies[id].troopCount,p.allyLoss+hit.damage);}
+ if(s.c50){const copy=structuredClone(s),rows=[{id,loss:p.allyLoss},{id:targetId,loss:p.enemyLoss}];engineShareRows(copy,rows);p.allyLoss=rows.find(r=>r.id===id).loss;p.enemyLoss=rows.find(r=>r.id===targetId).loss;}
+ return p;
+}
+
+function engineSharedVictim(s,id){return s.c50?.sharedDamage?.sequence===s.battleSequence&&s.c50.sharedDamage.ids.includes(id);}
+
+// Shared by W, ordinary shots and movement reservations. Aiming ignores the
+// sword screen, but never terrain LOS or the adjacent-enemy restriction.
+export function engineShotLine(s,id,targetId,at=s.armies[targetId]?.tileId){
+ const a=s.armies[id],t=s.armies[targetId];if(!a||!s.tiles[at])return false;
+ const aim=armyEngine(s,id)?.engineId==='TU'&&a.c50?.relation?.targetId===targetId;
+ const mids=neighbors(s.tiles[a.tileId]).map(tileId).filter(mid=>s.tiles[mid]&&hexDistance(s.tiles[mid],s.tiles[at])===1);
+ return mids.some(mid=>!['mountain','forest','hill'].includes(s.tiles[mid].terrainType)&&!s.mapRules.blockedEdges.includes([a.tileId,mid].sort().join('|'))&&!s.mapRules.blockedEdges.includes([mid,at].sort().join('|'))&&(aim||!Object.values(s.armies).some(b=>b.tileId===mid&&b.factionId===t?.factionId&&troopToCampaign(b.troopType)==='BT01'&&castleArmyActive(s,b))));
+}
+export function engineStructureLine(s,id,at){return troopToCampaign(s.armies[id].troopType)!=='BT03'||!archerAttackReason(s,id)&&engineShotLine(s,id,null,at);}
+export function engineBaseDamage(s,id,targetId){return attackFormula(s,id,targetId,undefined,{reaction:true}).damage;}
+export function engineStructureDamage(s,id){return Math.max(1,Math.round(s.armies[id].troopCount*.12));}
+export function engineDamageRows(s,id,rows,kind,engineFriendly=false){
+ s.battleSequence++;const log={kind,enginePaid:true,engineFriendly,turn:s.turn,sequence:s.battleSequence,attackerId:id,targetId:rows[0]?.targetId,units:[],enemyLoss:0,allyLoss:0,moraleChanges:[],formationChanges:[],eliminatedIds:[],effectLines:[]};
+ (s.combatLog??=[]).push(log);uniqueAdoptState(s,combatEffectDamage(s,id,rows,log));c29Combat(s,log);return s;
 }
