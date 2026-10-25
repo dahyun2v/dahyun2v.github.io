@@ -298,7 +298,14 @@ export function settleV3GoldUpkeep(s){
 const cities=s=>Object.values(s.cities).sort((a,b)=>a.cityId.localeCompare(b.cityId,'en'));
 export const syncPeople=c=>c.population=Math.max(1,Math.floor(c.people/trial.populationUnit));
 const normal=(s,c)=>(s.occupations?.[c.cityId]?.state??(c.occupationState==='TEMPORARY_OCCUPATION'?'OCCUPIED':'NORMAL'))==='NORMAL';
-export function v3Terrain(s,t){return t.terrainType==='plain'&&(s.mapRules?.riverEdges??[]).some(e=>e.split('|').includes(t.tileId))?'riverside':t.terrainType;}
+let riverTerrainIndex=null;
+export function v3Terrain(s,t){
+ if(t.terrainType!=='plain')return t.terrainType;
+ const edges=s.mapRules?.riverEdges??[],signature=JSON.stringify(edges);
+ // Content key observes same-length edits as well as cloned map rules.
+ if(riverTerrainIndex?.signature!==signature)riverTerrainIndex={signature,tiles:new Set(edges.flatMap(e=>e.split('|')))};
+ return riverTerrainIndex.tiles.has(t.tileId)?'riverside':t.terrainType;
+}
 const blocked=(s,c,id)=>Object.values(s.armies??{}).some(a=>a.tileId===id&&a.factionId!==c.ownerFactionId&&a.troopCount>0&&a.hp>0&&(!s.campaignTerminalWorld||s.campaignTerminalWorld.armiesById[a.armyId]?.disposition==='ACTIVE'));
 export function v3Tile(s,c,id){
  const terrain=v3Terrain(s,s.tiles[id]),base=trial.terrain[terrain]??{},value={food:0,production:0,gold:0,capacity:0,...base};

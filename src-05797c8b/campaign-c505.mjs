@@ -1,4 +1,4 @@
-import {registerCampaignMech,campaignMechShield,campaignMechRemoveStatuses} from './campaign-mech-contracts.mjs';
+import {registerCampaignMech,campaignMechShield,campaignMechRemoveStatuses,memoCampaignMechRead} from './campaign-mech-contracts.mjs';
 import {cloneCampaign} from './campaign-clone.mjs';
 import {hexDistance,neighbors,tileId,movementTicks} from './map-primitives.mjs';
 import {castleArmyActive,campaignDestinationAllowed} from './campaign-city-footprint.mjs';
@@ -235,7 +235,10 @@ export function c505Install(s,id){
 let arrivalsInstalled=false;
 function installArrivals(){
  if(arrivalsInstalled)return;arrivalsInstalled=true;
- registerCampaignMech('H12','c505-arrivals',{operations:['engineEvent'],commit:({state:s,operation,type,payload})=>{
+ registerCampaignMech('H12','c505-arrivals',{
+  commitWhen:({state:s,operation,type,payload})=>enabled(s)&&operation==='engineEvent'&&['ARRIVE','FORCED_MOVE'].includes(type)&&!!s.armies[payload.armyId]&&
+   (!!read(s.armies[payload.armyId]).debt||live(s).some(g=>owns(s,g,'G57')&&(read(g).traps??[]).length||owns(s,g,'G96'))),
+  operations:['engineEvent'],commit:({state:s,operation,type,payload})=>{
   if(!enabled(s))return;let out;
   if(operation==='engineEvent'&&['ARRIVE','FORCED_MOVE'].includes(type)){
    const a=s.armies[payload.armyId];if(!a)return;
@@ -255,7 +258,7 @@ function installZones(){if(zonesInstalled)return;zonesInstalled=true;
 }
 function installTerrain(){if(terrainInstalled)return;terrainInstalled=true;
  registerCampaignMech('H07','c505-terrain',{operations:['edgeCost'],query:({state:s,sourceId,from,to},v)=>{
-  if(!enabled(s))return;const a=s.armies[sourceId];if(!a||!s.tiles[to])return;const sources=Object.values(s.armies).filter(g=>g.factionId===a.factionId&&(read(g).valley||read(g).map||read(g).ladder)&&g.troopCount>0&&castleArmyActive(s,g));
+  if(!enabled(s))return;const a=s.armies[sourceId];if(!a||!s.tiles[to])return;const sources=memoCampaignMechRead(s,'c505:terrain:'+a.factionId,()=>Object.values(s.armies).filter(g=>g.factionId===a.factionId&&(read(g).valley||read(g).map||read(g).ladder)&&g.troopCount>0&&castleArmyActive(s,g)));
   const normal=sources.some(g=>read(g).valley?.tiles.includes(to)||read(g).map&&dist(s,to,s.cities[read(g).map.cityId])<=3);
   const ladder=sources.some(g=>{const r=read(g).ladder,c=r&&s.cities[r.cityId];return c&&r.from===from&&cityTiles(c).includes(to);});
   if(!normal&&!ladder)return;

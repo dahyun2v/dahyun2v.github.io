@@ -4,6 +4,11 @@ import {cloneCampaign} from './campaign-clone.mjs';
 // registering module. No registration means identity, including object identity.
 export const MECH_CONTRACTS=Object.freeze(Object.fromEntries(Array.from({length:18},(_,i)=>[`H${String(i+1).padStart(2,'0')}`,i+1])));
 const registrations=new Map();
+const readMemo=new WeakMap();
+export function memoCampaignMechRead(s,key,read){
+ const values=readMemo.get(s);if(!values)return read();
+ if(!values.has(key))values.set(key,read());return values.get(key);
+}
 let revision=0;
 export const campaignMechRevision=()=>revision;
 const numericBounds=new Map([
@@ -18,12 +23,11 @@ export function hasCampaignMechCommit(contract){const entries=registrations.get(
 function freeze(value,seen=new Set()){
  if(value&&typeof value==='object'&&!seen.has(value)){seen.add(value);for(const v of Object.values(value))freeze(v,seen);Object.freeze(value);}return value;
 }
-// A fresh membrane per invocation: no state-identity cache can survive an
-// in-place write by an owned transaction. Only visited containers are wrapped.
+// Ordinary calls use a fresh membrane; explicitly read-only searches may share
+// it only until the search ends. Only visited containers are wrapped.
 // Frozen accessor shells also support frozen source properties without Proxy
 // get-invariant violations, and never expose a raw value through descriptors.
-function queryView(value){
- const seen=new WeakMap();
+function queryView(value,seen=new WeakMap()){
  const deny=()=>{throw new TypeError('READ_ONLY_MECH_QUERY');};
  function wrap(source){
   if(typeof source==='function'||typeof source==='symbol')return cloneCampaign(source);
@@ -32,30 +36,57 @@ function queryView(value){
   const array=Array.isArray(source),proto=Object.getPrototypeOf(source);
   if(!array&&proto!==Object.prototype&&proto!==null){const copy=freeze(cloneCampaign(source));seen.set(source,copy);return copy;}
   const shell=array?new Array(source.length):{};
-  const view=new Proxy(shell,{set:deny,deleteProperty:deny,defineProperty:deny,setPrototypeOf:deny});
-  seen.set(source,view);
-  for(const key of Object.keys(source)){
-   Object.defineProperty(shell,key,{enumerable:true,configurable:false,get:()=>wrap(source[key])});
-  }
-  Object.freeze(shell);return view;
+  // Most queries read one army or tile. Build the frozen accessor shell only
+  // for reflection/enumeration, instead of defining every map key up front.
+  // The proxy never exposes source descriptors or writable source containers.
+  let sealed=false;
+  const seal=()=>{
+   if(sealed)return;
+   for(const key of Object.keys(source))Object.defineProperty(shell,key,{enumerable:true,configurable:false,get:()=>wrap(source[key])});
+   Object.freeze(shell);sealed=true;
+  };
+  const view=new Proxy(shell,{
+   get(target,key,receiver){
+    if(Object.prototype.propertyIsEnumerable.call(source,key))return wrap(source[key]);
+    return Reflect.get(target,key,receiver);
+   },
+   has(target,key){return Object.prototype.propertyIsEnumerable.call(source,key)||Reflect.has(target,key);},
+   ownKeys(){seal();return Reflect.ownKeys(shell);},
+   getOwnPropertyDescriptor(target,key){seal();return Reflect.getOwnPropertyDescriptor(target,key);},
+   isExtensible(){seal();return false;},
+   preventExtensions(){seal();return true;},
+   set:deny,deleteProperty:deny,defineProperty:deny,setPrototypeOf:deny
+  });
+  seen.set(source,view);return view;
  }
  return wrap(value);
 }
 export function registerCampaignMech(contract,key,handler){
- const query=typeof handler==='function'?handler:handler?.query,commit=handler?.commit;
+ const query=typeof handler==='function'?handler:handler?.query,commit=handler?.commit,commitWhen=handler?.commitWhen;
+ if(commitWhen!==undefined&&typeof commitWhen!=='function')throw new Error('INVALID_MECH_COMMIT_FILTER');
  const operations=handler?.operations;
  if(operations!==undefined&&(!Array.isArray(operations)||operations.some(op=>typeof op!=='string')))throw new Error('INVALID_MECH_OPERATIONS');
  if(!Object.hasOwn(MECH_CONTRACTS,contract)||typeof key!=='string'||!key||query!==undefined&&typeof query!=='function'||commit!==undefined&&typeof commit!=='function'||!query&&!commit)throw new Error('INVALID_MECH_REGISTRATION');
  const entries=registrations.get(contract)??new Map();if(entries.has(key))throw new Error('DUPLICATE_MECH_REGISTRATION');
- const entry={query,commit,operations:operations&&new Set(operations)};entries.set(key,entry);registrations.set(contract,entries);revision++;
+ const entry={query,commit,commitWhen,operations:operations&&new Set(operations)};entries.set(key,entry);registrations.set(contract,entries);revision++;
  return ()=>{if(entries.get(key)===entry){entries.delete(key);revision++;}if(!entries.size&&registrations.get(contract)===entries)registrations.delete(contract);};
 }
 // Every callback is a pure plan transformer. Input is read-only; returned plans
 // are detached. Commit callbacks below retain their complete frozen copies.
 export function campaignMechQuery(s,contract,operation,context,value){
+ return mechQuery(s,contract,operation,context,value);
+}
+// A synchronous read-only search may reuse wrappers and derived indexes;
+// handler outputs stay fresh. Discard the reader before any world mutation.
+export function campaignMechQueriesForRead(s){
+ const seen=new WeakMap();
+ readMemo.set(queryView(s,seen),new Map());
+ return (contract,operation,context,value)=>mechQuery(s,contract,operation,context,value,seen);
+}
+function mechQuery(s,contract,operation,context,value,seen){
  const entries=registrations.get(contract);if(!entries?.size)return value;
  const handlers=[...entries.values()].filter(e=>e.query&&(!e.operations||e.operations.has(operation)));if(!handlers.length)return value;
- const input=queryView({state:s,operation,...context});
+ const input=queryView({state:s,operation,...context},seen);
  let result=cloneCampaign(value);
  for(const {query} of handlers){
   if(!query)continue;
@@ -71,7 +102,8 @@ export function campaignMechQuery(s,contract,operation,context,value){
 export function campaignMechCommit(s,contract,operation,context){
  const entries=registrations.get(contract);if(!entries?.size)return s;
  let result=s;
- for(const {commit,operations} of entries.values())if(commit&&(!operations||operations.has(operation))){
+ for(const {commit,commitWhen,operations} of entries.values())if(commit&&(!operations||operations.has(operation))){
+  if(commitWhen&&!commitWhen(queryView({state:result,operation,...context})))continue;
   const next=commit(freeze(cloneCampaign({state:result,operation,...context})));
   if(next!==undefined){if(!next||typeof next!=='object')throw new Error('INVALID_MECH_COMMIT');result=cloneCampaign(next);}
  }

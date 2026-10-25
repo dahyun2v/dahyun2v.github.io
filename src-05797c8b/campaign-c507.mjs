@@ -1,5 +1,5 @@
 import {createRng} from './rng.mjs';
-import {registerCampaignMech,campaignMechQuery} from './campaign-mech-contracts.mjs';
+import {registerCampaignMech,campaignMechQuery,memoCampaignMechRead} from './campaign-mech-contracts.mjs';
 import {cloneCampaign} from './campaign-clone.mjs';
 import {hexDistance,neighbors,tileId,movementTicks} from './map-primitives.mjs';
 import {castleArmyActive,campaignDestinationAllowed} from './campaign-city-footprint.mjs';
@@ -18,13 +18,22 @@ const enabled=s=>s?.trialRules?.mechanics==='v2'&&s.trialRules.mechanicsBatch===
 const read=a=>a?.mechV2?.c507??{};
 const book=a=>(a.mechV2??={}).c507??={};
 const owns=(s,a,g)=>enabled(s)&&a?.commanderId===g&&s.campaignGrowth?.officers[g]?.mechanicsV2===true;
-const live=s=>Object.values(s.armies).filter(a=>a.troopCount>0&&castleArmyActive(s,a));
+const live=s=>memoCampaignMechRead(s,'c507:live',()=>Object.values(s.armies).filter(a=>a.troopCount>0&&castleArmyActive(s,a)));
 const distance=(s,a,b)=>hexDistance(s.tiles[a.tileId??a],s.tiles[b.tileId??b]);
 const seen=(s,a,b)=>s.knowledge[a.factionId]?.tiles[b.tileId??b]==='VISIBLE'&&(!b.armyId||!ambushHidden(s,b.armyId,a.factionId));
 const enemies=(s,a,n=Infinity)=>live(s).filter(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&distance(s,a,b)<=n&&seen(s,a,b)).sort((a,b)=>a.armyId.localeCompare(b.armyId));
 const friends=(s,a,n=2)=>live(s).filter(b=>b.factionId===a.factionId&&distance(s,a,b)<=n).sort((a,b)=>a.armyId.localeCompare(b.armyId));
 const tiles=c=>[c.tileId,...c.footprint?.gates??[],...c.footprint?.walls??[]];
 const cityAt=(s,a)=>Object.values(s.cities).find(c=>c.ownerFactionId===a.factionId&&tiles(c).includes(a.tileId));
+// Same conditions as the reducer below; unrelated engine events need no full
+// frozen world copy. Accepted events still use the original detached reducer.
+function forecastCommitNeeded({state:s,operation,sourceId,type,payload}){
+ if(!enabled(s))return false;
+ if(operation==='forecastResolved')return ['G21','G22'].some(g=>owns(s,s.armies[sourceId],g));
+ if(operation!=='engineEvent'||!['ARRIVE','FORCED_MOVE'].includes(type))return false;
+ const a=s.armies[payload.armyId];
+ return !!a&&live(s).some(g=>g.factionId===a.factionId&&read(g).gate?.gates.includes(a.tileId)&&read(g).gate.expires>=s.turn);
+}
 const enemyCities=(s,a,n=Infinity)=>Object.values(s.cities).filter(c=>diplomacyHostile(s,a.factionId,c.ownerFactionId)&&seen(s,a,c)&&distance(s,a,c)<=n).sort((a,b)=>a.cityId.localeCompare(b.cityId));
 const hidden=a=>!!(a.c50?.hidden||read(a).conceal);
 const recognized=(s,c)=>enabled(s)&&C507_IDS.some(g=>c.rule===`P417_${g}_${c.slot}`);
@@ -97,7 +106,7 @@ export function c507Install(){
  }});
  registerCampaignMech('H04','c507-permissions',{operations:['attackAllowed'],query:({state:s,sourceId,targetId},v)=>{if(!enabled(s))return;const a=s.armies[sourceId],b=s.armies[targetId],duel=read(a).duel,other=read(b).duel;if(duel&&duel.other!==targetId||other&&other.other!==sourceId||read(a).bewitched&&read(a).bewitched.source===targetId)return false;}});
  registerCampaignMech('H03','c507-reactions',{operations:['reactionPlan','reactionAllowed'],query:({state:s,operation,sourceId,targetId,kind},v)=>{if(!enabled(s))return;if(operation==='reactionPlan'&&read(s.armies[sourceId]).firstRear)return {...v,forceSide:'REAR'};if(kind==='APPROACH_FIRE'&&owns(s,s.armies[targetId],'G40')&&hidden(s.armies[targetId]))return false;}});
- registerCampaignMech('H05','c507-movement',{operations:['controlZone','moveAllowed'],query:({state:s,operation,sourceId,targetId,to},v)=>{if(!enabled(s))return;const a=s.armies[sourceId];if(operation==='controlZone'&&owns(s,s.armies[targetId],'G40')&&hidden(s.armies[targetId]))return false;if(operation==='moveAllowed'&&a&&live(s).some(g=>read(g).closed?.gates.includes(to)&&g.factionId!==a.factionId))return false;}});
+ registerCampaignMech('H05','c507-movement',{operations:['controlZone','moveAllowed'],query:({state:s,operation,sourceId,targetId,to},v)=>{if(!enabled(s))return;const a=s.armies[sourceId];if(operation==='controlZone'&&owns(s,s.armies[targetId],'G40')&&hidden(s.armies[targetId]))return false;if(operation==='moveAllowed'&&a&&memoCampaignMechRead(s,'c507:closed',()=>live(s).filter(g=>read(g).closed)).some(g=>read(g).closed.gates.includes(to)&&g.factionId!==a.factionId))return false;}});
  registerCampaignMech('H07','c507-river',{operations:['edgeCost'],query:({state:s,sourceId,from,to},v)=>{const a=s.armies[sourceId];if(!enabled(s)||read(a).riverUntil!==s.turn||!s.tiles[to]||!s.tiles[from]||![s.tiles[to].terrainType,s.tiles[from].terrainType].includes('water'))return;return movementTicks({from:{...s.tiles[from],terrainType:'plain'},to:{...s.tiles[to],terrainType:'plain'},troopType:parentTroop(a.troopType),maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:false,river:false,crossing:'none',blocked:false},tuning:s.mapRules.tuning,tickDays:s.time.tickDays});}});
  registerCampaignMech('H13','c507-hidden',{operations:['hidden'],query:({state:s,targetId,viewerFactionId},v)=>enabled(s)&&read(s.armies[targetId]).conceal&&s.armies[targetId].factionId!==viewerFactionId?true:v});
  registerCampaignMech('H13','c507-labels',{operations:['armyDisplay'],query:({state:s,targetId},v)=>{if(!enabled(s))return;const x=read(s.armies[targetId]),labels=[v.statusLabel,...(x.chain&&x.chain.expires>s.turn?['연환']:[]),...(x.duel?['일기당선']:[]),...(x.bewitched?['연환미계']:[])].filter(Boolean);return labels.length?{...v,statusLabel:labels.join(' · ')}:v;}});
@@ -113,7 +122,7 @@ export function c507Install(){
   if(operation==='cityShotAllowed'&&s.cities[cityId]?.mechV2?.c507Silent)return false;
   if(operation==='centerEntry'&&a&&live(s).some(g=>g.factionId===a.factionId&&read(g).gate?.cityId===cityId&&read(g).gate.expires>=s.turn&&read(g).gate.gates.includes(a.tileId)))return true;
  },commit:({state:s,operation,sourceId,cityId})=>{if(!enabled(s)||operation!=='cityAttackCommitted')return;const a=s.armies[sourceId],city=s.cities[cityId];const defenders=live(s).filter(g=>cityAt(s,g)?.cityId===cityId);const raid=live(s).some(g=>g.factionId===a.factionId&&read(g).cityRaid?.cityId===cityId&&read(g).cityRaid.expires>s.turn);if(!raid&&!read(a).firstRear&&!read(a).gateStrike&&!defenders.some(g=>owns(s,g,'G15')))return;const out=cloneCampaign(s);for(const g of defenders){if(owns(s,g,'G15'))book(out.armies[g.armyId]).cityHit=a.factionId;if(raid&&g.factionId===city.ownerFactionId)checkMorale(out,g.armyId,'기습오소',5,out.lastCombat.moraleChanges);}delete out.armies[sourceId].mechV2?.c507?.firstRear;delete out.armies[sourceId].mechV2?.c507?.gateStrike;return out;}});
- registerCampaignMech('H12','c507-forecasts',{operations:['scheduledPlan','forecastResolved','engineEvent'],query:({state:s,sourceId},p)=>owns(s,s.armies[sourceId],'G22')?{...p,independent:true}:p,commit:({state:s,operation,sourceId,targetIds,type,payload})=>{
+ registerCampaignMech('H12','c507-forecasts',{commitWhen:forecastCommitNeeded,operations:['scheduledPlan','forecastResolved','engineEvent'],query:({state:s,sourceId},p)=>owns(s,s.armies[sourceId],'G22')?{...p,independent:true}:p,commit:({state:s,operation,sourceId,targetIds,type,payload})=>{
   if(!enabled(s))return;
   if(operation==='forecastResolved'&&['G21','G22'].some(g=>owns(s,s.armies[sourceId],g))){const out=cloneCampaign(s),ids=(targetIds??[]).filter(id=>out.armies[id]?.troopCount>0);if(owns(s,s.armies[sourceId],'G21')&&ids.some(id=>ids.some(other=>id!==other&&distance(s,s.armies[id],s.armies[other])===1)))for(const id of ids)changeFormation(out,id,1,out.lastCombat?.formationChanges);if(owns(s,s.armies[sourceId],'G22'))for(const id of ids)checkMorale(out,id,'기좌곽가',5,out.lastCombat?.moraleChanges);return out;}
   if(operation==='engineEvent'&&['ARRIVE','FORCED_MOVE'].includes(type)){const a=s.armies[payload.armyId];if(a&&live(s).some(g=>g.factionId===a.factionId&&read(g).gate?.gates.includes(a.tileId)&&read(g).gate.expires>=s.turn)){const out=cloneCampaign(s);book(out.armies[a.armyId]).gateStrike=true;return out;}}

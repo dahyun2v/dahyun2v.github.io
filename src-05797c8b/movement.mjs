@@ -1,4 +1,4 @@
-import {campaignMechQuery,campaignMechAllowed,hasCampaignMechQuery} from './campaign-mech-contracts.mjs';
+import {campaignMechQuery,campaignMechQueriesForRead,hasCampaignMechQuery} from './campaign-mech-contracts.mjs';
 import {cloneCampaign} from './campaign-clone.mjs';
 import {weatherKind,weatherEdgeReason,RUN_MODIFIERS} from './campaign-run-modifiers.mjs';
 import {boardNeighbors,tileId,movementTicks} from './map-primitives.mjs';
@@ -25,21 +25,28 @@ export function buildMapRules(map,data){
   return cloneCampaign({version:1,tuning:data.tuning,vision:data.vision,roads,riverEdges:data.riverEdges,crossings,blockedEdges:[]});
 }
 export function edgeTicks(s,a,fromId,toId){
+  return edgeTicksQuery(s,a,fromId,toId,(...args)=>campaignMechQuery(s,...args));
+}
+function edgeTicksQuery(s,a,fromId,toId,query){
   const from=s.tiles[fromId],to=s.tiles[toId];if(!from || !to)return null;
   const key=edgeKey(fromId,toId),r=s.mapRules;
   if(weatherEdgeReason(s,fromId,toId))return null;
   let tuning=r.tuning;
   if(weatherKind(s)==='RAIN'&&to.terrainType==='plain'){const type=parentTroop(a.troopType),base=tuning.byTroop?.[type]??tuning[type==='cavalry'?'cavalry':type==='engineer'?'engineer':'normal'],plus=RUN_MODIFIERS.weather.kinds.find(k=>k.id==='RAIN').effect.plainMoveCostPlus;tuning={...tuning,byTroop:{...tuning.byTroop,[type]:{...base,plain:base.plain+plus,rough:base.rough+plus,road:base.road+plus}}};}
   const baseline=movementTicks({from,to,troopType:parentTroop(a.troopType),maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:edgeContains(r.roads,key),river:edgeContains(r.riverEdges,key),crossing:r.crossings[key]??'none',blocked:edgeContains(r.blockedEdges,key)},tuning,tickDays:s.time.tickDays});
-  if(!campaignMechAllowed(s,'H05','moveAllowed',{sourceId:a.armyId,from:fromId,to:toId,kind:'EDGE'}))return null;
-  const cost=campaignMechQuery(s,'H07','edgeCost',{sourceId:a.armyId,from:fromId,to:toId},baseline);
+  if(query('H05','moveAllowed',{sourceId:a.armyId,from:fromId,to:toId,kind:'EDGE'},true)!==true)return null;
+  const cost=query('H07','edgeCost',{sourceId:a.armyId,from:fromId,to:toId},baseline);
   if(cost!==null&&(!Number.isSafeInteger(cost)||cost<1))throw new Error('INVALID_MECH_EDGE_COST');
   return cost;
 }
 // A search is read-only: capture geometry/rules once and discard on return.
 // No cached value survives movement, weather, tuning or map edits.
 export function edgeTicksForSearch(s,a){
-  if(hasCampaignMechQuery('H07')||hasCampaignMechQuery('H05'))return (from,to)=>edgeTicks(s,a,from,to);
+  if(hasCampaignMechQuery('H07')||hasCampaignMechQuery('H05')){
+    const query=campaignMechQueriesForRead(s);
+    const world=snapshotMovementEdges(s);
+    return (from,to)=>edgeTicksQuery(world,a,from,to,query);
+  }
   const r=s.mapRules,roads=new Set(r.roads),rivers=new Set(r.riverEdges),blocked=new Set(r.blockedEdges);
   const weather=weatherKind(s),troopType=parentTroop(a.troopType),maneuver=s.officers[a.commanderId].subStats.기동지휘;
   let rainTuning=r.tuning;

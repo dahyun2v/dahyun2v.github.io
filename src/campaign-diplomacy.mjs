@@ -181,7 +181,12 @@ export function startDiplomacyAi(s,f,{autoPlayer=false}={}){
  if(autoPlayer&&f===s.playerFactionId)finishDiplomacyPlayerTurn(s,{autoPlayer:true});
  const rule10=campaignAiRule(s,f,10),strongest=rule10?diplomacyThreatTarget(s):diplomacyStrongest(s),others=Object.keys(s.factions).filter(id=>id!==f&&s.factions[id].alive).sort();
  for(const to of others){const p=s.c43.pairs[diplomacyPair(f,to)];if(p.state==='ALLIANCE'&&(reputation(s,'threat',to)>=axes.threat.coalitionAt||diplomacyOpinion(s,f,to)<-20)&&!p.endingAt)endDiplomacyAlliance(s,f,to);}
- for(const kind of ['TRUCE','ALLIANCE'])for(const to of others.slice().sort((a,b)=>diplomacyAcceptance(s,f,b,kind).score-diplomacyAcceptance(s,f,a,kind).score||a.localeCompare(b))){
+ const ordered=kind=>{
+  // Sorting is read-only. Discard scores before any proposal/history write.
+  const scores=new Map(),score=id=>{if(!scores.has(id))scores.set(id,diplomacyAcceptance(s,f,id,kind).score);return scores.get(id);};
+  return others.slice().sort((a,b)=>score(b)-score(a)||a.localeCompare(b));
+ };
+ for(const kind of ['TRUCE','ALLIANCE'])for(const to of ordered(kind)){
   const balance=rule10?diplomacyFrontStrength(s,f,to):{mine:diplomacyStrength(s,f),other:diplomacyStrength(s,to)};
   const war=diplomacyState(s,f,to)==='WAR',coalition=!!strongest&&f!==strongest&&to!==strongest,eligible=kind==='TRUCE'?war&&(balance.mine<balance.other*.8||captures(s,to,f)||rule10&&coalition):coalition&&diplomacyHostile(s,f,strongest)&&diplomacyHostile(s,to,strongest);
   if(eligible&&canProposeDiplomacy(s,f,to,kind).ok){
@@ -201,9 +206,13 @@ export function withdrawalDistances(s,id,f){
  const a=s.armies[id],signature=`${f}:${a.troopType}:${Object.values(s.cities).map(c=>`${c.tileId}:${c.ownerFactionId}`).join(';')}:${s.mapRules.blockedEdges.join(';')}:${s.turn}`;
  let cache=exitCache.get(s);if(!cache){cache=new Map();exitCache.set(s,cache);}const key=id+'|'+signature;if(cache.has(key))return cache.get(key);
  const bare={...s,c43Disabled:true,armies:{[id]:a}},world=campaignMovementWorld(bare,id),dist=new Map(),queue=[];
- for(const t of Object.values(s.tiles))if(!diplomacyTerritory(s,f,t.tileId)){dist.set(t.tileId,0);queue.push(t.tileId);}
- while(queue.length){queue.sort((a,b)=>dist.get(a)-dist.get(b)||a.localeCompare(b));const at=queue.shift(),d=dist.get(at);
-  for(const n of boardNeighbors(s.tiles[at],s.tiles)){const next=tileId(n),cost=edgeTicks(world,world.armies[id],next,at);if(cost===null)continue;const value=d+cost;if(value<(dist.get(next)??Infinity)){dist.set(next,value);if(!queue.includes(next))queue.push(next);}}
+ // Same distance/locale tie order as the old repeated whole-frontier sort.
+ const less=(a,b)=>a.d<b.d||a.d===b.d&&a.id.localeCompare(b.id)<0;
+ const push=(id,d)=>{const x={id,d};let i=queue.length;queue.push(x);while(i){const p=(i-1)>>1;if(!less(x,queue[p]))break;queue[i]=queue[p];i=p;}queue[i]=x;};
+ const pop=()=>{const x=queue[0],last=queue.pop();if(queue.length){let i=0;while(i*2+1<queue.length){let c=i*2+1;if(c+1<queue.length&&less(queue[c+1],queue[c]))c++;if(!less(queue[c],last))break;queue[i]=queue[c];i=c;}queue[i]=last;}return x;};
+ for(const t of Object.values(s.tiles))if(!diplomacyTerritory(s,f,t.tileId)){dist.set(t.tileId,0);push(t.tileId,0);}
+ while(queue.length){const {id:at,d}=pop();if(d!==dist.get(at))continue;
+  for(const n of boardNeighbors(s.tiles[at],s.tiles)){const next=tileId(n),cost=edgeTicks(world,world.armies[id],next,at);if(cost===null)continue;const value=d+cost;if(value<(dist.get(next)??Infinity)){dist.set(next,value);push(next,value);}}
  }
  cache.set(key,dist);return dist;
 }
