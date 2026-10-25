@@ -1,3 +1,5 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {mechanicsV2Enabled} from './campaign-c34.mjs';
 // C229 browser snapshot of tactic-gauge-v0.2.json; parity tested.
 const gauge={"schema":"tactic-gauge-v0.2","status":"TRIAL — C229 게이지 비용과 충전 수치는 시험값. 기존 카드 효과와 문구 유지.","base":5,"dealt":10,"taken":10,"result":15,"periodCap":30,"storeMax":100,"cost":{"E":[40,60],"R":[80,100]}};
 import {castleArmyActive} from './campaign-city-footprint.mjs';
@@ -12,7 +14,7 @@ import {createRng} from './rng.mjs';
 import {xpToNextLevel} from './growth-progress.mjs';
 
 export const C29_DATA=mods, C29_AWAKENING=awakening;
-export const c29Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c29Enabled=s=>isSliceMap(s.mapId);
 export const c29Record=(s,id)=>s.campaignGrowth?.officers[s.armies[id]?.commanderId??id];
 const ranks=r=>r.track.growthStates[r.pack.id].ownedTraitRanks;
 const error=m=>{throw new Error(m);};
@@ -65,7 +67,11 @@ export function composeC29Draft(s,id,d){
  if(!c29Enabled(s))return d;const r=c29Record(s,id),level=d.contextSnapshot.levelAfter,rng=createRng(d.drawState.after);
  if(awakening.rule.levels.includes(level)&&r.c29.awakenings.length<awakening.rule.max){
   const narrative=awakening.narrative.byTitle.find(c=>c.titleId===r.titles?.at(-1)?.id);
-  const keys=[awakeningCard(r,awakening.steady,'steady',level),narrative?awakeningCard(r,{...narrative,rule:`AW_${narrative.titleId}`},'narrative',level):wild(r,rng,level)];
+  // '더 단단해진다' scales the core trait's numeric effects. A v2 core trait is rule-only
+  // with no numeric params (nothing to scale), so it gets a second wild card instead.
+  const core=r.cards[r.coreId]?.effects??[],ruleOnly=core.length>0&&core.every(e=>e.op==='RULE'&&!Object.values(e.params??{}).some(v=>typeof v==='number'));
+  const steady=ruleOnly?wild(r,rng,level):awakeningCard(r,awakening.steady,'steady',level);
+  const keys=[steady,narrative?awakeningCard(r,{...narrative,rule:`AW_${narrative.titleId}`},'narrative',level):wild(r,rng,level,[r.cards[steady]?.id])];
   keys.push(wild(r,rng,level,keys.map(k=>r.cards[k]?.id)));
   if(r.c29.awakenings.some(a=>a.rule==='EXTRA_CHOICE')&&!r.c29.extraChoiceSpent)keys.push(wild(r,rng,level,keys.map(k=>r.cards[k]?.id)));
   d.c29={awakening:true,rerolled:false,extraChoice:keys.length>3};delete d.c28;
@@ -114,7 +120,7 @@ export function c29Combat(s,c){
  if(c.kind==='CITY_STRIKE'){for(const u of c.units??[])if(u.casualties>0&&s.cities[c.cityId]?.ownerFactionId!==s.armies[u.unitId]?.factionId)c29Gain(s,u.unitId,gauge.taken,'taken');return;}
  const source=c.attackerId,reaction=['OVERWATCH','PURSUIT','APPROACH_FIRE'].includes(c.kind)&&!c.enginePaid,hostile=id=>s.armies[source]&&s.armies[id]&&diplomacyArmyHostile(s,source,id);
  // A receiver gets credit for hostile reactions too; the counter victim is the original attacker.
- for(const u of c.units??[])if(u.casualties>0&&!c.fire&&c.kind!=='FIRE'){
+ for(const u of c.units??[])if(u.casualties>0&&u.lossKind!=='DOT'&&c.lossKinds?.[u.unitId]!=='DOT'&&c.lossKind!=='DOT'&&c.kind!=='DOT'&&!c.fire&&c.kind!=='FIRE'){
   if(hostile(u.unitId))c29Gain(s,u.unitId,gauge.taken,'taken');
   else if(u.unitId===source&&c.counter&&(s.armies[c.targetId]&&diplomacyArmyHostile(s,c.targetId,source)||s.cities[c.cityId]?.ownerFactionId&&s.cities[c.cityId].ownerFactionId!==s.armies[source]?.factionId))c29Gain(s,source,gauge.taken,'taken');
  }
@@ -132,10 +138,11 @@ export function c29Text(text=''){
  return String(text??'').replace(/재사용 대기(?:시간)? 초기화|대기 초기화/g,'게이지 +20').replace(/전법 하나의 재사용 대기 \+1/g,'전법 게이지 −10').replace(/재사용 대기(?:시간)?\s*([+−-])\s*(\d+)/g,(_,sign,n)=>`게이지 비용 ${sign}${Number(n)*10}`).replace(/\+1 대기/g,'비용 +10').replace(/재사용 대기(?:시간)?/g,'게이지 비용');
 }
 export function c29TacticCard(s,id,card){
- const r=c29Record(s,id);if(!r?.c29)return card;const c=structuredClone(card),m=r.cards[r.c29.bindings[c.traitId]],branch=r.c29.forks[c.traitId];c.text=c29Text(c.text);c.modifier=m?{...m,text:c29Text(m.text)}:null;c.modifierSlot=m?{id:m.id,name:m.name,text:m.text}:null;c.fork=branch??null;const fork=mods.forks.list.find(f=>f.tactic===c.id);if(branch&&fork)c.forkInfo={branch,...fork[branch]};
+ if(mechanicsV2Enabled(s)&&card.pilot)return {...structuredClone(card),cooldown:0};
+ const r=c29Record(s,id);if(!r?.c29)return card;const c=structuredClone(card),m=(!r.equippedTraitIds||r.equippedTraitIds.includes(r.c29.bindings[c.traitId]))?r.cards[r.c29.bindings[c.traitId]]:null,branch=r.c29.forks[c.traitId];c.text=c29Text(c.text);c.modifier=m?{...m,text:c29Text(m.text)}:null;c.modifierSlot=m?{id:m.id,name:m.name,text:m.text}:null;c.fork=branch??null;const fork=mods.forks.list.find(f=>f.tactic===c.id);if(branch&&fork)c.forkInfo={branch,...fork[branch]};
  c.gaugeCost=Math.max(0,c29Cost(s,id,c)+(r.c29.costAdjustments?.[c.traitId]??0)+(m?10*(1+(m.params.extraCooldown??0)):0));c.cooldown=0;if(c.effects?.some(e=>e.rule==='MIRROR'))c.mirrorCostResolved=true;
  if(m?.rule==='RANGE_PLUS')c.range=(c.range??0)+m.params.extra;
- if(c29Tag(s,id,c,'FIRE')&&Object.entries(ranks(r)).some(([k,n])=>n&&r.cards[k]?.id==='TR-WIND'))c.gaugeCost=Math.max(0,c.gaugeCost-10);
+ if(c29Tag(s,id,c,'FIRE')&&Object.entries(ranks(r)).some(([k,n])=>n&&(!r.equippedTraitIds||r.equippedTraitIds.includes(k))&&r.cards[k]?.id==='TR-WIND'))c.gaugeCost=Math.max(0,c.gaugeCost-10);
  if(c.id==='CTA-12')for(const e of c.effects)if(e.rule==='FIRE_ATTACK'){e.params.spread+=(m?.rule==='FIRE_SPREAD'?m.params.extra:0)+(branch==='a'?1:0);e.params.turns=branch==='b'?2:1;}
  if(c.id==='CTA-01'&&branch==='a')for(const e of c.effects)if(e.rule==='SHOVE')e.params.push=2;
  if(c.id==='CTA-09'&&branch==='b')for(const e of c.effects)if(e.rule==='MORALE_CONTEST')e.params.loseWeight=0;
@@ -147,7 +154,7 @@ export const c29Hidden=(s,id)=>c29Record(s,id)?.c29?.awakenings.some(a=>a.rule==
 export const c29Aw=(s,id,rule)=>c29Record(s,id)?.c29?.awakenings.find(a=>a.rule===rule)??null;
 export function c29RecruitAgent(s,c){return c?.governorId&&c29Aw(s,c.governorId,'AW_TT-V06')?{agentOfficerId:c.governorId,agentCharisma:0,agentRecruitment:10}:{};}
 export function c29SupplyExempt(s,id){const a=s.armies[id];return !!a&&Object.values(s.cities).some(c=>c.ownerFactionId===a.factionId&&c29Aw(s,c.governorId,'AW_TT-V07')&&hexDistance(s.tiles[c.tileId],s.tiles[a.tileId])<=3);}
-export function c29Wind(s,id){const r=c29Record(s,id),a=s.armies[id];return !!r?.c29&&['plain','river'].includes(s.tiles[a?.tileId]?.terrainType)&&Object.entries(ranks(r)).some(([k,n])=>n&&r.cards[k]?.id==='TR-WIND');}
+export function c29Wind(s,id){const r=c29Record(s,id),a=s.armies[id];return !!r?.c29&&['plain','river'].includes(s.tiles[a?.tileId]?.terrainType)&&Object.entries(ranks(r)).some(([k,n])=>n&&(!r.equippedTraitIds||r.equippedTraitIds.includes(k))&&r.cards[k]?.id==='TR-WIND');}
 export function c29XpFactor(s,id){const a=Object.values(s.armies).find(a=>a.commanderId===id),mentor=a&&Object.values(s.armies).some(b=>b.factionId===a.factionId&&b.armyId!==a.armyId&&b.troopCount>0&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1&&c29Aw(s,b.armyId,'MENTOR_AURA'));return (mentor?1.2:1)*(c29Aw(s,id,'AW_TT-V03')?1.1:1);}
 export function c29CityOutput(s,c,raw){const id=c.governorId;if(!id)return;const x=c29Aw(s,id,'CROSSOVER'),r=c29Record(s,id);if(x&&!r.cards[r.coreId]?.domestic)for(const k of Object.keys(raw))if(typeof raw[k]==='number')raw[k]*=1+x.params.city/100;if(c29Aw(s,id,'AW_TT-V01'))raw.food*=1.1;if(c29Aw(s,id,'AW_TT-V03'))raw.science*=1.1;}
 export function c29Recovery(s,id){const x=c29Aw(s,id,'BLOOD_PRICE'),a=s.armies[id];if(!x||!a)return 1;const strength=a.deploymentStrength??s.personnel.formations.find(f=>f.formationId===id)?.targetStrength??a.troopCount;return a.troopCount*100/strength<x.params.at?0:1;}
@@ -201,7 +208,7 @@ export function c29CoreCard(s,id,card,ctx={}){
 // C30: turn-start bond snapshots and cumulative officer sets (trial data).
 
 export const C30_DATA=data;
-export const c30Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c30Enabled=s=>isSliceMap(s.mapId);
 let c30ArmyActive,c30Troop;
 export function configureC30(isActive,troop){c30ArmyActive=isActive;c30Troop=troop;}
 const active=(s,a)=>a&&a.troopCount>0&&c30ArmyActive(s,a)&&s.officers[a.commanderId]?.allegianceFactionId===a.factionId;

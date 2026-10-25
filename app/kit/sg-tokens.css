@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Song+Myung&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+/* C268: STYLE-GUIDE-v1 §2, §4.1. Canonical values; generated fallback is in kit.css. */
+:root{
+  --sg-ink-on-paper:#221c16;
+  --sg-shadow-black:#000000;
+  --sg-gold-text:#eac777;
+  --sg-text-subtle-dark:#9d9787;
+  --sg-seal-shadow:#281c12;
+  --sg-ink-muted:#3e3527;
+  --sg-seal-wash:#40180fd9;
+  --sg-surface-91:#0a0e0de8;
+  --sg-surface-96:#0a0e0df5;
+  --sg-surface-97:#0a0e0df7;
+  --sg-ink:#0a0e0d;
+  --sg-ink-raised:#14201e;
+  --sg-ink-deep:var(--sg-ink);
+  --sg-ink-pressed:var(--sg-ink);
+  --sg-paper:#eee0bd;
+  --sg-bone:#f4e1c2;
+  --sg-gold-line:#a3845a;
+  --sg-gold-name:#c9b27c;
+  --sg-text-muted-dark:#b5a793;
+  --sg-text-muted-light:#595044;
+  --sg-seal:#5a1512;
+  --sg-seal-hover:#92362a;
+  --sg-seal-pressed:#481a11;
+  --sg-text-on-seal:#fff4df;
+  --sg-danger-mark:#c4453a;
+  --sg-danger-text:#cf6256;
+  --sg-ally:#70b7b0;
+  --sg-neutral:#c9b27c;
+  --sg-preview:#b7a1d0;
+  --sg-positive-dark:#7fae86;
+  --sg-positive-light:#3f6b4a;
+  --sg-name-on-paper:#7a5a1e;
+  --sg-disabled-fill:#29231e;
+  --sg-disabled-border:#635a4a;
+  --sg-disabled-label:var(--sg-text-muted-dark);
+  --sg-scrim-color:var(--sg-ink);
+  --sg-surface-hud:var(--sg-ink);
+  --sg-surface-document:var(--sg-paper);
+  --sg-text-on-dark:var(--sg-bone);
+  --sg-text-on-light:var(--sg-ink-on-paper);
+  --sg-action-primary:var(--sg-seal);
+  --sg-error-text-on-light:var(--sg-seal);
+  --sg-gap-icon-text:8px;
+  --sg-gap-actions:12px;
+  --sg-screen-gutter:16px;
+  --sg-radius-seal:4px;
+  --sg-radius-round:50%;
+  --sg-border-normal:1px;
+  --sg-alpha-hud:0.96;
+  --sg-alpha-tooltip:0.98;
+  --sg-alpha-scrim:0.70;
+  --sg-alpha-content:1;
+  --sg-shadow-popup:0 4px 12px 0 rgb(0 0 0 / 30%);
+  --sg-edge-irregularity-max:2px;
+  --sg-action-height:48px;
+  --sg-time-now:0ms;
+  --sg-time-tick:80ms;
+  --sg-time-fast:120ms;
+  --sg-time-scene:300ms;
+  --sg-time-special:600ms;
+  --sg-time-rare:1000ms;
+  --sg-time-tooltip-delay:300ms;
+  --sg-ease-ui:cubic-bezier(.2,.8,.2,1);
+  --sg-ease-out:cubic-bezier(.4,0,1,1);
+  --sg-ease-scene:cubic-bezier(.22,1,.36,1);
+  --sg-selection:var(--sg-bone);
+  --sg-focus:#f2d28a;
+  /* C401: combination X, semantic font roles. Song Myung has only weight 400. */
+  --sg-font-name:'Song Myung','Batang','Noto Serif KR',serif;
+  --sg-font-heading:var(--sg-font-name);
+  --sg-font-button:var(--sg-font-name);
+  --sg-font-body:'Pretendard','Noto Sans KR',system-ui,sans-serif;
+  --sg-font-num:var(--sg-font-body);
+  --sg-font-title:var(--sg-font-heading);
+  --sg-font-ui:var(--sg-font-body);
+  --sg-space-1:4px;
+  --sg-space-2:8px;
+  --sg-space-3:12px;
+  --sg-space-4:16px;
+  --sg-space-6:24px;
+  --sg-space-8:32px;
+  --sg-space-12:48px;
+  --sg-screen-gutter-full:32px;
+  --sg-screen-gutter-compact:24px;
+  --sg-radius-panel:0px;
+  --sg-radius-control:0px;
+  --sg-border-selected:2px;
+  --sg-border-danger:2px;
+  --sg-focus-width:2px;
+  --sg-focus-offset:3px;
+  --sg-selection-corner:8px;
+  --sg-selection-bar:4px;
+  --sg-alpha-critical:1;
+  --sg-alpha-paper:1;
+  --sg-alpha-range:0.12;
+  --sg-alpha-range-outline:1;
+  --sg-texture-ink-max:3;
+  --sg-texture-paper-max:5;
+  --sg-texture-safe-inset:4px;
+  --sg-texture-safe-max:2;
+  --sg-texture-wash-min:24px;
+  --sg-texture-wash-max:96px;
+  --sg-hit-target-min:44px;
+  --sg-hit-target-preferred:44px;
+  --sg-type-name-compact:18px;
+  --sg-line-name-compact:24px;
+  --sg-weight-name-compact:600;
+  --sg-tracking-name-compact:0em;
+  --sg-type-hit-normal:28px;
+  --sg-type-hit-large:34px;
+  --sg-type-hit-counter:22px;
+  --sg-line-hit-normal:34px;
+  --sg-line-hit-large:42px;
+  --sg-line-hit-counter:28px;
+  --sg-type-result:40px;
+  --sg-line-result:50px;
+  --sg-type-draft-name:24px;
+  --sg-line-draft-name:32px;
+  --sg-time-panel-in:200ms;
+  --sg-time-panel-out:140ms;
+  --sg-icon-xs:16px;
+  --sg-icon-sm:20px;
+  --sg-icon-md:24px;
+  --sg-icon-lg:32px;
+  --sg-icon-xl:48px;
+  --sg-type-display:48px;
+  --sg-line-display:60px;
+  --sg-weight-display:700;
+  --sg-tracking-display:-0.02em;
+  --sg-type-h1:34px;
+  --sg-line-h1:44px;
+  --sg-weight-h1:700;
+  --sg-tracking-h1:-0.025em;
+  --sg-type-h2:26px;
+  --sg-line-h2:34px;
+  --sg-weight-h2:700;
+  --sg-tracking-h2:-0.02em;
+  --sg-type-name:22px;
+  --sg-line-name:30px;
+  --sg-weight-name:700;
+  --sg-tracking-name:-0.015em;
+  --sg-type-number-hero:32px;
+  --sg-line-number-hero:38px;
+  --sg-weight-number-hero:700;
+  --sg-tracking-number-hero:0em;
+  --sg-type-number-main:22px;
+  --sg-line-number-main:28px;
+  --sg-weight-number-main:700;
+  --sg-tracking-number-main:0em;
+  --sg-type-body:18px;
+  --sg-line-body:28px;
+  --sg-weight-body:400;
+  --sg-tracking-body:-0.005em;
+  --sg-type-action:18px;
+  --sg-line-action:24px;
+  --sg-weight-action:700;
+  --sg-tracking-action:0em;
+  --sg-type-field:16px;
+  --sg-line-field:24px;
+  --sg-weight-field:500;
+  --sg-tracking-field:0em;
+  --sg-type-ui:16px;
+  --sg-line-ui:22px;
+  --sg-weight-ui:600;
+  --sg-tracking-ui:0em;
+  --sg-type-meta:14px;
+  --sg-line-meta:20px;
+  --sg-weight-meta:500;
+  --sg-tracking-meta:0em;
+}
+
+/* C388: C375 screen names are compatibility aliases for the shared palette. */
+:root{
+  --sg-screen-v4-shadow-black:var(--sg-shadow-black);
+  --sg-screen-v4-surround:var(--sg-ink-deep);
+  --sg-screen-v4-surface:var(--sg-ink);
+  --sg-screen-v4-surface-91:var(--sg-surface-91);
+  --sg-screen-v4-surface-96:var(--sg-surface-96);
+  --sg-screen-v4-surface-97:var(--sg-surface-97);
+  --sg-screen-v4-seal-shadow:var(--sg-seal-shadow);
+  --sg-screen-v4-muted-ink:var(--sg-ink-muted);
+  --sg-screen-v4-seal-wash:var(--sg-seal-wash);
+  --sg-screen-v4-seal-deep:var(--sg-seal-pressed);
+  --sg-screen-v4-gold-muted:var(--sg-gold-line);
+  --sg-screen-v4-gold-border:var(--sg-gold-line);
+  --sg-screen-v4-gold-line:var(--sg-gold-line);
+  --sg-screen-v4-text-muted:var(--sg-text-muted-dark);
+  --sg-screen-v4-text-secondary:var(--sg-text-muted-dark);
+  --sg-screen-v4-caption:var(--sg-text-muted-dark);
+  --sg-screen-v4-summary:var(--sg-text-muted-dark);
+  --sg-screen-v4-note:var(--sg-text-muted-dark);
+  --sg-screen-v4-detail:var(--sg-text-muted-dark);
+  --sg-screen-v4-hint:var(--sg-text-muted-dark);
+  --sg-screen-v4-gold-text:var(--sg-gold-text);
+  --sg-screen-v4-text:var(--sg-bone);
+  --sg-screen-v4-focus:var(--sg-focus);
+  --sg-screen-v4-selected:var(--sg-focus);
+  --sg-screen-v4-highlight:var(--sg-focus);
+  --sg-screen-v4-bright:var(--sg-focus);
+  /* C375 r2: proportional screen sizes keep their exact cqw values. */
+  --sg-screen-v4-unit-1:1cqw;
+  --sg-screen-v4-unit-1p1:1.1cqw;
+  --sg-screen-v4-unit-1p2:1.2cqw;
+  --sg-screen-v4-unit-1p25:1.25cqw;
+  --sg-screen-v4-unit-1p3:1.3cqw;
+  --sg-screen-v4-unit-1p5:1.5cqw;
+  --sg-screen-v4-unit-1p6:1.6cqw;
+  --sg-screen-v4-unit-1p7:1.7cqw;
+  --sg-screen-v4-unit-7p3:7.3cqw;
+  --sg-screen-v4-unit-p2:.2cqw;
+  --sg-screen-v4-unit-p3:.3cqw;
+  --sg-screen-v4-unit-p35:.35cqw;
+  --sg-screen-v4-unit-p4:.4cqw;
+  --sg-screen-v4-unit-p45:.45cqw;
+  --sg-screen-v4-unit-p5:.5cqw;
+  --sg-screen-v4-unit-p6:.6cqw;
+  --sg-screen-v4-unit-p65:.65cqw;
+  --sg-screen-v4-unit-p7:.7cqw;
+  --sg-screen-v4-unit-p78:.78cqw;
+  --sg-screen-v4-unit-p8:.8cqw;
+  --sg-screen-v4-unit-p833333:.833333cqw;
+  --sg-screen-v4-unit-p85:.85cqw;
+  --sg-screen-v4-unit-p9:.9cqw;
+}
+
+/* C489: measured map HUD typography, spacing and colors. */
+:root{
+  --sg-map-hud-diplomacy-text:#f1ead8;
+  --sg-map-hud-control-inset:8px 16px;
+  --sg-map-hud-diplomacy-muted:#d3c9b3;
+  --sg-map-hud-diplomacy-warning:#ffb7a2;
+  --sg-map-hud-scroll-panel-inset:88px 12px 96px;
+  --sg-map-hud-row-inset:8px 12px;
+  --sg-map-hud-body-dense-size:17px;
+  --sg-map-hud-wide-horizontal-inset:0 20px;
+  --sg-map-hud-news-inset:4px 12px;
+  --sg-map-hud-card-inset:6px 10px;
+  --sg-map-hud-trailing-inset:0 8px 0 0;
+  --sg-map-hud-secondary-text:#c2bba8;
+  --sg-map-hud-tight-gap:6px;
+  --sg-map-hud-primary-text:#f2ead5;
+  --sg-map-hud-row-gap:10px;
+  --sg-map-hud-muted-text:#c3bba7;
+  --sg-map-hud-highlight-text:#fff0d6;
+  --sg-map-hud-forecast-text:#f2d4b8;
+  --sg-map-hud-horizontal-inset:0 12px;
+  --sg-map-hud-ink-surface:#101714;
+  --sg-map-hud-pill-inset:2px 4px;
+  --sg-map-hud-vertical-inset:8px 0;
+  --sg-map-hud-heading-font:'Hahmlet',serif;
+  --sg-map-hud-tight-horizontal-inset:0 6px;
+  --sg-map-hud-label-inset:0 12px 0 6px;
+  --sg-map-hud-compact-horizontal-inset:0 3px;
+  --sg-map-hud-gold-text:#ebd1a0;
+  --sg-map-hud-panel-horizontal-inset:0 16px;
+  --sg-map-hud-small-horizontal-inset:0 8px;
+  --sg-map-hud-heading-size:36px;
+  --sg-map-hud-badge-inset:3px 8px;
+  --sg-map-hud-compact-gap:5px;
+  --sg-map-hud-gold-muted:#c8b990;
+  --sg-map-hud-gold-highlight:#d3b574;
+  --sg-map-hud-trait-inset:4px 6px;
+  --sg-map-hud-trait-size:clamp(12px,.833334vw,16px);
+  --sg-map-hud-caption-size:13px;
+}
+
+:where(body){font-family:var(--sg-font-body)}
+:where(h1,h2,h3,h4){font-family:var(--sg-font-heading);font-weight:400}
+:where(button,kbd){font-family:var(--sg-font-button);font-weight:400}
+:root[data-font="F1"]{--sg-font-name:'Song Myung',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Pretendard',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F2"]{--sg-font-name:'Hahmlet',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Pretendard',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F3"]{--sg-font-name:'Song Myung',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Gowun Batang',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F4"]{--sg-font-name:'Yeon Sung',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Gowun Batang',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F5"]{--sg-font-name:'Black Han Sans',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Gowun Dodum',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F6"]{--sg-font-name:'East Sea Dokdo',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Gowun Batang',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F7"]{--sg-font-name:'Nanum Brush Script',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Pretendard',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F8"]{--sg-font-name:'Yeon Sung',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Pretendard',sans-serif;--sg-font-num:var(--sg-font-body)}
+:root[data-font="F9"]{--sg-font-name:'Song Myung',serif;--sg-font-heading:var(--sg-font-name);--sg-font-button:var(--sg-font-name);--sg-font-body:'Pretendard',sans-serif;--sg-font-num:var(--sg-font-body)}
+
+/* C401: controls and semantic headings use the single Song Myung weight. */
+html:not([data-font^="F"]) :is(h1,h2,h3,h4){font-family:var(--sg-font-heading)!important;font-weight:400!important}
+html:not([data-font^="F"]) :is(button,kbd){font-family:var(--sg-font-button)!important;font-weight:400!important}
+
+html:not([data-font^="F"]) body :where(p,li,dd) :where(b,strong){font-weight:600!important}

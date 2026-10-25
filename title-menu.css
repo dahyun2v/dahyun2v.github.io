@@ -1,172 +1,286 @@
-:root{color-scheme:light;font-family:"SG Sans","Noto Sans KR",system-ui,sans-serif;color:#36382e;background:#efe8d6}*{box-sizing:border-box}body{margin:0;min-height:100dvh}.landscape,.paper{position:fixed;inset:0;pointer-events:none}.landscape{background:#dedfce var(--title-background,none) center/contain no-repeat;filter:saturate(.42);opacity:.72}.paper{background:radial-gradient(ellipse at 50% 48%,#f7f0dfed 0%,#f2ecd7c9 24%,#e6dfc557 56%,#c5c9b433 100%),repeating-linear-gradient(11deg,#f4ebd214 0 1px,transparent 1px 4px);box-shadow:inset 0 0 90px #565e4930}.title-scene{position:relative;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto auto;padding:clamp(22px,4vw,64px)}.game-title{display:flex;gap:18px;align-items:center;justify-self:start}.game-title h1{font-family:"SG Serif","Noto Serif KR",serif;font-size:clamp(46px,6vw,86px);font-weight:500;letter-spacing:.25em;line-height:1.15;margin:7px 0}.overline{font-size:11px;letter-spacing:.4em;margin:0;color:#666a59}.subtitle{font-family:"SG Serif","Noto Serif KR",serif;font-size:13px;letter-spacing:.08em;margin:8px 0}.seal{align-self:start;margin-top:22px;width:34px;border:2px solid #a14d40;color:#a14d40;font-family:serif;font-size:16px;writing-mode:vertical-rl;padding:5px;transform:rotate(-4deg)}.title-menu{align-self:center;justify-self:center;display:flex;flex-direction:column;gap:16px;width:min(320px,86vw);margin:28px 0 52px}.title-menu button{position:relative;background:linear-gradient(90deg,transparent,#eae0bdaf 12%,#f7f1ddb8 58%,#e4debe8c 90%,transparent);color:#343c2e;border:0;border-bottom:1px solid #7b806044;font-family:"SG Serif","Noto Serif KR",serif;font-size:23px;letter-spacing:.22em;padding:13px 26px 12px;min-height:72px;cursor:pointer;clip-path:polygon(1% 3%,97% 0,100% 90%,3% 100%,0 55%);transition:background .15s,transform .15s}.title-menu button span{display:block;margin-top:5px;font:11px "SG Sans","Noto Sans KR",system-ui,sans-serif;letter-spacing:.06em;color:#6d715e}.title-menu button:hover:not(:disabled){background:linear-gradient(90deg,transparent,#d4ddbdcf 15%,#e4e6cacf 85%,transparent);transform:translateX(3px)}.title-menu button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible{outline:3px solid #945b35;outline-offset:3px}.title-menu button:focus-visible{clip-path:none;border-radius:3px}#title-status{text-align:center;min-height:24px;font-size:13px;color:#805345;margin:0}footer{display:flex;justify-content:space-between;gap:20px;font-size:11px;color:#737665;letter-spacing:.04em}dialog{max-width:min(480px,90vw);padding:28px 32px;border:1px solid #9da080;background:#f3efdf;color:#353a2e;box-shadow:0 12px 64px #28352f44}dialog::backdrop{background:#30382b77;backdrop-filter:blur(3px)}dialog h2{font-family:"SG Serif","Noto Serif KR",serif;font-weight:500;letter-spacing:.12em}dialog p,dialog li{font-size:13px;line-height:1.8}.setting{display:flex;align-items:center;gap:12px;padding:12px 0}.setting input[type=range]{width:160px}dialog button{background:#e3e6cb;border:1px solid #9b9f83;color:#363c2f;padding:10px 18px;cursor:pointer;margin:7px 8px 0 0}#settings-status{min-height:23px;color:#855647}@media(max-width:600px){.title-scene{padding:22px}.game-title h1{font-size:46px}.title-menu{gap:10px;margin:26px 0}.title-menu button{min-height:66px;font-size:21px}footer{flex-direction:column;gap:5px}dialog{padding:20px}.setting{flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){.title-menu button{transition:none;transform:none!important}}
+/* C268: STYLE-GUIDE-v1 §2, §4.1. Canonical values; generated fallback is in kit.css. */
+:root{
+  --sg-ink-on-paper:#221c16;
+  --sg-shadow-black:#000000;
+  --sg-gold-text:#eac777;
+  --sg-text-subtle-dark:#9d9787;
+  --sg-seal-shadow:#281c12;
+  --sg-ink-muted:#3e3527;
+  --sg-seal-wash:#40180fd9;
+  --sg-surface-91:#0a0e0de8;
+  --sg-surface-96:#0a0e0df5;
+  --sg-surface-97:#0a0e0df7;
+  --sg-ink:#0a0e0d;
+  --sg-ink-raised:#14201e;
+  --sg-ink-deep:var(--sg-ink);
+  --sg-ink-pressed:var(--sg-ink);
+  --sg-paper:#eee0bd;
+  --sg-bone:#f4e1c2;
+  --sg-gold-line:#a3845a;
+  --sg-gold-name:#c9b27c;
+  --sg-text-muted-dark:#b5a793;
+  --sg-text-muted-light:#595044;
+  --sg-seal:#5a1512;
+  --sg-seal-hover:#92362a;
+  --sg-seal-pressed:#481a11;
+  --sg-text-on-seal:#fff4df;
+  --sg-danger-mark:#c4453a;
+  --sg-danger-text:#cf6256;
+  --sg-ally:#70b7b0;
+  --sg-neutral:#c9b27c;
+  --sg-preview:#b7a1d0;
+  --sg-positive-dark:#7fae86;
+  --sg-positive-light:#3f6b4a;
+  --sg-name-on-paper:#7a5a1e;
+  --sg-disabled-fill:#29231e;
+  --sg-disabled-border:#635a4a;
+  --sg-disabled-label:var(--sg-text-muted-dark);
+  --sg-scrim-color:var(--sg-ink);
+  --sg-surface-hud:var(--sg-ink);
+  --sg-surface-document:var(--sg-paper);
+  --sg-text-on-dark:var(--sg-bone);
+  --sg-text-on-light:var(--sg-ink-on-paper);
+  --sg-action-primary:var(--sg-seal);
+  --sg-error-text-on-light:var(--sg-seal);
+  --sg-gap-icon-text:8px;
+  --sg-gap-actions:12px;
+  --sg-screen-gutter:16px;
+  --sg-radius-seal:4px;
+  --sg-radius-round:50%;
+  --sg-border-normal:1px;
+  --sg-alpha-hud:0.96;
+  --sg-alpha-tooltip:0.98;
+  --sg-alpha-scrim:0.70;
+  --sg-alpha-content:1;
+  --sg-shadow-popup:0 4px 12px 0 rgb(0 0 0 / 30%);
+  --sg-edge-irregularity-max:2px;
+  --sg-action-height:48px;
+  --sg-time-now:0ms;
+  --sg-time-tick:80ms;
+  --sg-time-fast:120ms;
+  --sg-time-scene:300ms;
+  --sg-time-special:600ms;
+  --sg-time-rare:1000ms;
+  --sg-time-tooltip-delay:300ms;
+  --sg-ease-ui:cubic-bezier(.2,.8,.2,1);
+  --sg-ease-out:cubic-bezier(.4,0,1,1);
+  --sg-ease-scene:cubic-bezier(.22,1,.36,1);
+  --sg-selection:var(--sg-bone);
+  --sg-focus:#f2d28a;
+  /* C401: combination X, semantic font roles. Song Myung has only weight 400. */
+  --sg-font-name:'Song Myung','Batang','Noto Serif KR',serif;
+  --sg-font-heading:var(--sg-font-name);
+  --sg-font-button:var(--sg-font-name);
+  --sg-font-body:'Pretendard','Noto Sans KR',system-ui,sans-serif;
+  --sg-font-num:var(--sg-font-body);
+  --sg-font-title:var(--sg-font-heading);
+  --sg-font-ui:var(--sg-font-body);
+  --sg-space-1:4px;
+  --sg-space-2:8px;
+  --sg-space-3:12px;
+  --sg-space-4:16px;
+  --sg-space-6:24px;
+  --sg-space-8:32px;
+  --sg-space-12:48px;
+  --sg-screen-gutter-full:32px;
+  --sg-screen-gutter-compact:24px;
+  --sg-radius-panel:0px;
+  --sg-radius-control:0px;
+  --sg-border-selected:2px;
+  --sg-border-danger:2px;
+  --sg-focus-width:2px;
+  --sg-focus-offset:3px;
+  --sg-selection-corner:8px;
+  --sg-selection-bar:4px;
+  --sg-alpha-critical:1;
+  --sg-alpha-paper:1;
+  --sg-alpha-range:0.12;
+  --sg-alpha-range-outline:1;
+  --sg-texture-ink-max:3;
+  --sg-texture-paper-max:5;
+  --sg-texture-safe-inset:4px;
+  --sg-texture-safe-max:2;
+  --sg-texture-wash-min:24px;
+  --sg-texture-wash-max:96px;
+  --sg-hit-target-min:44px;
+  --sg-hit-target-preferred:44px;
+  --sg-type-name-compact:18px;
+  --sg-line-name-compact:24px;
+  --sg-weight-name-compact:600;
+  --sg-tracking-name-compact:0em;
+  --sg-type-hit-normal:28px;
+  --sg-type-hit-large:34px;
+  --sg-type-hit-counter:22px;
+  --sg-line-hit-normal:34px;
+  --sg-line-hit-large:42px;
+  --sg-line-hit-counter:28px;
+  --sg-type-result:40px;
+  --sg-line-result:50px;
+  --sg-type-draft-name:24px;
+  --sg-line-draft-name:32px;
+  --sg-time-panel-in:200ms;
+  --sg-time-panel-out:140ms;
+  --sg-icon-xs:16px;
+  --sg-icon-sm:20px;
+  --sg-icon-md:24px;
+  --sg-icon-lg:32px;
+  --sg-icon-xl:48px;
+  --sg-type-display:48px;
+  --sg-line-display:60px;
+  --sg-weight-display:700;
+  --sg-tracking-display:-0.02em;
+  --sg-type-h1:34px;
+  --sg-line-h1:44px;
+  --sg-weight-h1:700;
+  --sg-tracking-h1:-0.025em;
+  --sg-type-h2:26px;
+  --sg-line-h2:34px;
+  --sg-weight-h2:700;
+  --sg-tracking-h2:-0.02em;
+  --sg-type-name:22px;
+  --sg-line-name:30px;
+  --sg-weight-name:700;
+  --sg-tracking-name:-0.015em;
+  --sg-type-number-hero:32px;
+  --sg-line-number-hero:38px;
+  --sg-weight-number-hero:700;
+  --sg-tracking-number-hero:0em;
+  --sg-type-number-main:22px;
+  --sg-line-number-main:28px;
+  --sg-weight-number-main:700;
+  --sg-tracking-number-main:0em;
+  --sg-type-body:18px;
+  --sg-line-body:28px;
+  --sg-weight-body:400;
+  --sg-tracking-body:-0.005em;
+  --sg-type-action:18px;
+  --sg-line-action:24px;
+  --sg-weight-action:700;
+  --sg-tracking-action:0em;
+  --sg-type-field:16px;
+  --sg-line-field:24px;
+  --sg-weight-field:500;
+  --sg-tracking-field:0em;
+  --sg-type-ui:16px;
+  --sg-line-ui:22px;
+  --sg-weight-ui:600;
+  --sg-tracking-ui:0em;
+  --sg-type-meta:14px;
+  --sg-line-meta:20px;
+  --sg-weight-meta:500;
+  --sg-tracking-meta:0em;
+}
+/* C246b: ink lettering on the supplied, character-free paper landscape. */
+:root{color-scheme:light;font-family:var(--sg-font-body);color:var(--sg-ink-raised);background:var(--sg-paper)}*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:var(--sg-paper)}button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:default}[hidden]{display:none!important}
+html body .landscape{position:fixed;inset:0;pointer-events:none;background:var(--sg-paper) var(--title-background,url(/assets/title-screen/title-bg-v1.webp)) left center/cover no-repeat;filter:none;opacity:1}html body .paper{display:none}
+.title-scene{position:relative;min-height:100dvh;padding:clamp(40px,21.296296vh,230px) 0 90px 6vw;width:100%}.game-title{position:relative;width:max-content;max-width:88vw;height:200px;margin:0 0 40px}.logo-slot{display:flex;align-items:center;gap:18px}#title-logo{display:block;width:auto;max-width:82vw;height:200px;object-fit:contain}html body .game-title h1{font-family:var(--sg-font-heading);font-weight:400;font-size:clamp(var(--sg-type-h2),3.4vw,66px)!important;line-height:1.2;letter-spacing:.04em;margin:0;color:var(--sg-ink-raised)}.seal{display:grid;place-items:center;width:30px;height:34px;flex:none;background:var(--sg-seal);color:var(--sg-paper);font:400 var(--sg-type-name) var(--sg-font-heading);transform:rotate(-4deg)}html body .subtitle{margin:18px 0 0;font-size:clamp(var(--sg-type-ui),1.4vw,var(--sg-type-ui));color:color-mix(in srgb,var(--sg-ink-raised) 70.196%,transparent);line-height:1.5}
+.title-menu{width:28vw;min-width:300px;display:flex;flex-direction:column;align-items:flex-start;gap:20px}html body.shared-ui #title-menu .menu-card{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;width:max-content;max-width:100%;height:44px;min-height:0;flex:none;padding:0;border:0;border-radius:0;background:transparent;color:color-mix(in srgb,var(--sg-ink) 60.000%,transparent);font-family:var(--sg-font-button);font-weight:400!important;font-size:var(--sg-type-h2);text-align:left;white-space:nowrap;letter-spacing:.04em;line-height:1.2;clip-path:none;text-shadow:none;-webkit-text-stroke:0;box-shadow:none}
+.title-menu .menu-card::before,.title-menu .menu-card::after{display:none}#title-menu .menu-label{display:block;margin-left:-14px;padding:0 14px;line-height:44px;transition:background-color var(--sg-time-fast),color var(--sg-time-fast)}html body.shared-ui #title-menu .menu-card.is-selected>.menu-label{background:var(--sg-seal);color:var(--sg-paper)}html body.shared-ui #title-menu .menu-card:focus-visible,button:focus-visible,input:focus-visible{outline:1px dotted var(--sg-ink-raised);outline-offset:4px;border-radius:0}#continue-summary{position:absolute;top:44px;left:0;display:flex;align-items:center;gap:6px;margin:0;font-family:var(--sg-font-body);font-size:var(--sg-type-ui);font-weight:400;line-height:20px;letter-spacing:0;color:color-mix(in srgb,var(--sg-ink) 70.196%,transparent)}#continue-summary::before{content:"";display:block;flex:none;width:8px;height:8px;border-radius:50%;background:var(--faction-color,currentColor)}
+.secondary-menu{display:flex;flex-direction:column;gap:var(--sg-space-1);width:300px;max-width:100%;margin-top:-8px;padding-top:var(--sg-space-3);border-top:var(--sg-border-normal) solid color-mix(in srgb,var(--sg-gold-name) 40.000%,transparent)}html body.shared-ui #title-menu .secondary-menu .menu-card{width:max-content;height:44px;font-size:var(--sg-type-name);font-weight:400!important}#menu-description{min-height:3em;margin:var(--sg-space-1) 0 0;color:color-mix(in srgb,var(--sg-ink) 70.196%,transparent);font-family:var(--sg-font-body);font-size:var(--sg-type-ui);font-weight:400;line-height:1.5;max-width:420px}
+#bgm-status{margin:0;font:inherit;color:inherit}#bgm-status:empty{display:none}
+#title-status{max-width:32em;color:color-mix(in srgb,var(--sg-ink-raised) 70.196%,transparent);font-size:var(--sg-type-ui);line-height:1.5}#title-status:empty{display:none}footer{position:fixed;left:24px;bottom:28px;display:flex;align-items:baseline;gap:var(--sg-space-6);color:color-mix(in srgb,var(--sg-ink) 50.196%,transparent);font-family:var(--sg-font-body);font-size:var(--sg-type-ui);line-height:20px}.ui-icon-defs{position:absolute;overflow:hidden;pointer-events:none}.v3-try,.dev-links{display:block;margin:var(--sg-space-4) 0;color:color-mix(in srgb,var(--sg-ink-raised) 70.196%,transparent);font-size:var(--sg-type-ui)}.dev-links a,.dev-links button{color:inherit;background:var(--sg-paper)}.dev-links[open]{max-width:28vw}
+html body.shared-ui dialog{font-family:var(--sg-font-body);color-scheme:light;width:min(560px,90vw);max-height:88dvh;overflow:auto;padding:28px var(--sg-space-8);border:var(--sg-border-normal) solid #bca77c66;border-radius:4px;background:var(--sg-paper);color:var(--sg-ink);box-shadow:0 12px 40px color-mix(in srgb,var(--sg-ink-raised) 20.000%,transparent)}dialog::backdrop{background:color-mix(in srgb,var(--sg-ink-deep) 53.33333%,transparent)}html body.shared-ui dialog h2{font-family:var(--sg-font-heading);font-size:var(--sg-type-ui);line-height:1.5;margin:0 0 var(--sg-space-4);font-weight:400}html body.shared-ui dialog p,html body.shared-ui dialog li{font-size:var(--sg-type-ui);line-height:1.8}html body.shared-ui dialog button{padding:var(--sg-space-3) 18px;margin:var(--sg-space-2) 10px 0 0;border:var(--sg-border-normal) solid #bca77c66;border-radius:4px;color:var(--sg-ink);background:var(--sg-paper)}html body.shared-ui dialog #prologue-accept{background:var(--sg-seal);border-color:var(--sg-seal);color:var(--sg-paper)}dialog button:focus-visible,dialog input:focus-visible{outline-color:var(--sg-seal)}.setting{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sg-space-3);padding:var(--sg-space-3) 0}.setting input[type=range]{width:160px}#settings-status{min-height:24px}
+@media(max-height:800px){.title-scene{padding-top:40px}.game-title,#title-logo{height:140px}.game-title{margin-bottom:40px}}
+@media(max-width:700px){.title-menu{width:86vw;min-width:0}.logo-slot{gap:var(--sg-space-2)}.game-title,#title-logo{height:auto;max-height:140px}#title-logo{width:76vw}.game-title{height:140px}footer{position:static;margin:20px var(--sg-space-6) 28px;flex-wrap:wrap;gap:var(--sg-space-2) var(--sg-space-6)}.title-scene{padding-bottom:var(--sg-space-6)}#continue-summary{font-size:var(--sg-type-ui)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-.ui-icon-defs{position:absolute;overflow:hidden;pointer-events:none}.ui-icon{width:18px;height:18px;display:inline-block;vertical-align:-3px;margin-inline-end:6px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;flex:none}.multi-map-icon{fill:none;stroke:currentColor;stroke-width:2;color:#f4d29a;pointer-events:none}.multi-unit .multi-map-icon{color:#efc64e}.multi-unit .engaged-icon{color:#f4d29a}button:disabled .ui-icon{opacity:.5}
+/* Presentation colors match map-v3 FACTION; no campaign rules are duplicated. */
+#continue-summary[data-faction="F01"]{--faction-color:var(--sg-danger-text)}#continue-summary[data-faction="F02"]{--faction-color:#4f8f73}#continue-summary[data-faction="F03"]{--faction-color:#33709f}
 
-/* Seven shared menu frames. plaque-ready is enabled only after local PNG verification. */
-.title-menu a.menu-card{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;background:linear-gradient(90deg,transparent,#eae0bdaf 12%,#f7f1ddb8 58%,#e4debe8c 90%,transparent);color:#343c2e;border:0;border-bottom:1px solid #7b806044;font-family:"SG Serif","Noto Serif KR",serif;font-size:16px;letter-spacing:.05em;padding:13px 26px;min-height:72px;clip-path:polygon(1% 3%,97% 0,100% 90%,3% 100%,0 55%);transition:background .15s,transform .15s}
-.title-menu a.menu-card:hover{background:linear-gradient(90deg,transparent,#d4ddbdcf 15%,#e4e6cacf 85%,transparent);transform:translateX(3px)}
-.title-menu .menu-card:focus-visible{outline:3px solid #945b35;outline-offset:3px;clip-path:none;border-radius:3px}
-.title-menu.plaque-ready .menu-card{isolation:isolate;clip-path:none;border:0;background:transparent;color:#f8eed3;text-shadow:0 1px 2px #000;font-weight:600;padding:16px 28px;min-height:80px;transition:filter .15s,transform .15s}
-.title-menu.plaque-ready .menu-card::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--title-menu-plaque) center/104% 165% no-repeat;pointer-events:none}
-.title-menu.plaque-ready .menu-card span{color:#e5d7b3;text-shadow:0 1px 2px #000}
-.title-menu.plaque-ready .menu-card:hover:not(:disabled){background:transparent;filter:brightness(1.16);transform:translateX(3px)}
-.title-menu.plaque-ready .menu-card:focus-visible{outline:3px solid #d9ad63;outline-offset:3px;filter:brightness(1.1)}
-.title-menu.plaque-ready .menu-card:disabled{opacity:.48;filter:grayscale(.65);cursor:default}
-@media(max-width:600px){.title-menu a.menu-card{min-height:66px;font-size:14px}.title-menu.plaque-ready .menu-card{min-height:76px;padding:14px 24px}}
-@media(prefers-reduced-motion:reduce){.title-menu .menu-card{transition:none;transform:none!important}}
+/* C270: saved faction identity and summary have their own line. */
+html body.shared-ui #title-menu #continue-game:not([hidden]){margin-bottom:24px}
+#continue-summary{white-space:nowrap}
+#continue-summary::before{width:20px;height:20px;border-radius:0;background:var(--continue-emblem) center/contain no-repeat}
+#continue-summary[data-faction="F01"]{--continue-emblem:url('/assets/ui-v3/emblems/F01.png')}
+#continue-summary[data-faction="F02"]{--continue-emblem:url('/assets/ui-v3/emblems/F02.png')}
+#continue-summary[data-faction="F03"]{--continue-emblem:url('/assets/ui-v3/emblems/F03.png')}
+#bgm-status{font-size:14px;margin:0}
 
-.title-menu.plaque-ready{width:min(400px,86vw);gap:8px;margin:20px 0 24px}
-.dev-links{justify-self:center;margin:-36px 0 28px;font-size:12px;color:#6b6a5c;text-align:center}
-.dev-links summary{cursor:pointer;opacity:.75}.dev-links summary:hover{opacity:1}
-.dev-links[open]{display:flex;flex-direction:column;gap:6px;align-items:center}
-.dev-links .dev-link{font:inherit;font-size:12px;color:#55544a;background:#f3ecdacc;border:1px solid #b9b096;border-radius:4px;padding:4px 10px;cursor:pointer;text-decoration:none}
-.dev-links .dev-link:hover{background:#fff8ee}
+html body.shared-ui :is(dialog p,dialog li,#menu-description){font-size:var(--sg-type-body);line-height:var(--sg-line-body)}
 
+/* C298: BOOKEND-ANALYSIS, title safe area. Landscape and logo are originals. */
+@media(min-width:701px){
+ .title-scene{padding:0;min-height:100dvh}
+ .game-title{position:absolute;left:5vw;top:17.407407vh;width:600px;max-width:40vw;height:220px;margin:0}
+ .logo-slot{height:100%}#title-logo{width:600px;max-width:100%;height:220px;max-height:100%;object-fit:contain}
+ .title-menu{position:absolute;left:5.833333vw;top:43.333333vh;width:448px;min-width:0;max-width:40vw;gap:8px}
+ html body.shared-ui #title-menu .menu-card,html body.shared-ui #title-menu .secondary-menu .menu-card{width:448px;max-width:100%;height:52px;font-size:24px;line-height:32px;color:var(--sg-ink);font-weight:400!important}
+ #title-menu .menu-label{line-height:32px;padding:4px 14px}
+ .secondary-menu{gap:8px;width:100%;margin:0;padding:0;border:0}
+ html body.shared-ui #title-menu #continue-game:not([hidden]){margin-bottom:64px}
+ #continue-summary{top:52px;height:64px;max-width:100%;white-space:normal;line-height:24px;font-size:16px}
+ #menu-description,#title-status{font-size:16px!important;line-height:24px!important;color:var(--sg-ink-raised);background:var(--sg-paper)}
+ #menu-description{max-width:448px;min-height:48px}
+ #title-status{position:absolute;left:5.833333vw;top:calc(43.333333vh + 390px);max-width:448px;margin:0}
+ footer{left:32px;bottom:36px;width:auto;font-size:14px;color:var(--sg-text-muted-light)}
+}
+@media(min-width:701px) and (max-height:850px){
+ .game-title{top:7vh;height:150px}#title-logo{height:150px;width:410px}
+ .title-menu{top:31vh}.title-menu .menu-card{height:44px!important;font-size:22px!important}
+ html body.shared-ui #title-menu #continue-game:not([hidden]){margin-bottom:48px}
+ #continue-summary{top:44px;height:48px}#title-status{top:calc(31vh + 370px)}footer{bottom:20px}
+}
 
-/* ── UI v3 첫 화면(2026-10-08): 키아트 위 어두운 칠 판 — 청록산수는 sg-theme=qinglu 일 때만 ── */
-html.theme-v3{color-scheme:dark;background:#0b0e10;color:#e8e3d7}
-html.theme-v3 body{background:#0b0e10}
-html.theme-v3 .landscape{background:#0b0e10 url(/assets/ui-v3/title/key-art.webp) 62% center/cover no-repeat;filter:none;opacity:1;animation:v3TitleDrift 40s ease-in-out infinite alternate}
-html.theme-v3 .paper{background:linear-gradient(90deg,rgba(8,10,11,.92) 0%,rgba(8,10,11,.72) 30%,rgba(8,10,11,.12) 62%,rgba(8,10,11,.28) 100%),radial-gradient(ellipse at 60% 40%,transparent 50%,rgba(4,6,7,.6) 100%);box-shadow:none}
-@keyframes v3TitleDrift{from{transform:scale(1.04) translateX(0)}to{transform:scale(1.08) translateX(-1.2%)}}
-html.theme-v3 .title-scene{grid-template-rows:auto auto 1fr auto auto;padding:clamp(28px,5vw,72px) clamp(24px,6vw,96px)}
-html.theme-v3 .game-title{gap:20px;align-items:flex-start}
-html.theme-v3 .seal{margin-top:8px;width:44px;padding:6px 4px;border:0;background:#a3453d;color:#f6ebe2;font:900 18px "Noto Serif KR",serif;letter-spacing:.1em;transform:none;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25),0 0 0 1px rgba(163,69,61,.5)}
-html.theme-v3 .overline{font:500 12px "Noto Serif KR",serif;letter-spacing:.32em;color:#b48f5f}
-html.theme-v3 .game-title h1{margin:10px 0 4px;font:900 clamp(56px,7vw,104px) "Noto Serif KR","SG Serif",serif;letter-spacing:.3em;color:#efe9dc;text-shadow:0 6px 24px rgba(0,0,0,.6)}
-html.theme-v3 .subtitle{font:500 14px "Noto Serif KR",serif;letter-spacing:.16em;color:#bdb6a6}
-html.theme-v3 .title-menu,html.theme-v3 .title-menu.plaque-ready{justify-self:start;align-self:start;width:min(380px,86vw);gap:10px;margin:44px 0 24px}
-html.theme-v3 .title-menu.plaque-ready .menu-card,html.theme-v3 .title-menu button{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:68px;padding:12px 22px;clip-path:none;border:1px solid rgba(232,227,215,.14);border-left:2px solid rgba(180,143,95,.7);border-radius:2px;background:linear-gradient(180deg,rgba(23,29,32,.92),rgba(13,17,19,.92));color:#ece6d8;font:700 20px "Noto Serif KR",serif;letter-spacing:.3em;text-align:left;text-shadow:none;box-shadow:0 10px 26px rgba(0,0,0,.35);filter:none;transition:border-color .15s,transform .15s,background .15s}
-html.theme-v3 .title-menu.plaque-ready .menu-card::before{display:none}
-html.theme-v3 .title-menu.plaque-ready .menu-card span,html.theme-v3 .title-menu button span{margin-top:4px;font:500 11.5px Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.06em;color:#a8a294;text-shadow:none}
-html.theme-v3 .title-menu .menu-card .ui-icon{display:none}
-html.theme-v3 .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3 .title-menu button:hover:not(:disabled){border-color:rgba(174,188,174,.6);border-left-color:#aebcae;background:linear-gradient(180deg,rgba(30,38,41,.95),rgba(16,21,23,.95));transform:translateX(4px);filter:none}
-html.theme-v3 .title-menu.plaque-ready #new-game{border-color:#c0564c;border-left:2px solid #f0c9c2;background:linear-gradient(180deg,#8e3a33,#65271f);color:#f6ebe2}
-html.theme-v3 .title-menu.plaque-ready #new-game span{color:#f1cfc8}
-html.theme-v3 .title-menu.plaque-ready #new-game:hover:not(:disabled){background:linear-gradient(180deg,#9c423a,#712c24);border-color:#f0c9c2}
-html.theme-v3 .title-menu.plaque-ready .menu-card:disabled{opacity:.42;filter:none}
-html.theme-v3 .title-menu .menu-card:focus-visible{outline:2px solid #aebcae;outline-offset:3px}
-html.theme-v3 .dev-links{justify-self:start;margin:0 0 20px;color:#8c8679}
-html.theme-v3 .dev-links .dev-link{background:rgba(17,22,25,.85);border-color:rgba(232,227,215,.18);color:#c9c3b5}
-html.theme-v3 .dev-links .dev-link:hover{background:#1d2528}
-html.theme-v3 #title-status,html.theme-v3 #bgm-status{text-align:left;color:#bdb6a6}
-html.theme-v3 footer{color:#7f7a6e}
-html.theme-v3 dialog{background:#12171a;color:#e8e3d7;border:1px solid rgba(232,227,215,.18);border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
-html.theme-v3 dialog::backdrop{background:rgba(4,6,7,.7)}
-html.theme-v3 dialog h2{font:700 22px "Noto Serif KR",serif;letter-spacing:.2em}
-html.theme-v3 dialog button{background:#1b2326;color:#e8e3d7;border:1px solid rgba(232,227,215,.22);border-radius:2px;padding:7px 14px;cursor:pointer}
-@media(prefers-reduced-motion:reduce){html.theme-v3 .landscape{animation:none}}
-@media(max-width:600px){html.theme-v3 .paper{background:linear-gradient(180deg,rgba(8,10,11,.88),rgba(8,10,11,.6) 60%,rgba(8,10,11,.85))}html.theme-v3 .title-menu,html.theme-v3 .title-menu.plaque-ready{justify-self:stretch;width:100%}}
+html body.shared-ui #title-menu #continue-game:disabled{opacity:1;color:var(--sg-text-muted-light)}
+#continue-summary{color:var(--sg-text-muted-light)}
 
-.v3-try{justify-self:start;margin:-8px 0 22px;font-size:13px;color:#7a6a4f;text-decoration:none;border-bottom:1px solid currentColor}
-html.theme-v3 .v3-try{display:inline-flex;align-items:baseline;gap:10px;width:min(380px,86vw);padding:10px 22px;border:1px dashed rgba(174,188,174,.45);border-radius:2px;color:#cfdccc;font:600 14px "Noto Serif KR",serif;letter-spacing:.12em}
-html.theme-v3 .v3-try small{font:500 11px Pretendard,sans-serif;letter-spacing:.04em;color:#9aa69a}
-html.theme-v3 .v3-try:hover{border-style:solid;background:rgba(174,188,174,.08)}
+/* C313: failure reasons wrap within the menu, including the narrow layout. */
+#continue-summary{max-width:min(448px,86vw);white-space:normal;overflow-wrap:anywhere}
+#continue-summary[data-faction=""]::before{display:none}
+@media(max-width:700px){html body.shared-ui #title-menu #continue-game:not([hidden]){margin-bottom:64px}#continue-summary{width:86vw;top:44px;min-height:48px}}
 
-/* 흑묵 그래픽 노블 처음 화면(2026-10-10, 기준 그림 page-title): 위 가운데 제목 · 오른쪽 붓질 메뉴 · 흑묵 키 아트. ?skin=v3 로 이전 모습 */
-html.theme-v3.ink .landscape{background-image:url(/assets/ui-v3/title-ink/key-art.webp),url(/assets/ui-v3/title/key-art.webp);background-position:38% center,62% center}
-html.theme-v3.ink .paper{background:linear-gradient(270deg,rgba(13,12,11,.9) 0%,rgba(13,12,11,.62) 30%,rgba(13,12,11,.06) 60%,rgba(13,12,11,.2) 100%),linear-gradient(180deg,rgba(13,12,11,.55),transparent 28%),radial-gradient(ellipse at 45% 45%,transparent 55%,rgba(8,7,6,.6) 100%)}
-html.theme-v3.ink .title-scene{justify-items:end}
-html.theme-v3.ink .game-title{justify-self:center;text-align:center;flex-direction:column;align-items:center;gap:8px}
-html.theme-v3.ink .seal{display:none}
-html.theme-v3.ink .overline{color:#d1c7bb}
-html.theme-v3.ink .game-title h1{color:#e6dccb;text-shadow:0 4px 0 rgba(13,12,11,.6),0 10px 30px rgba(0,0,0,.7)}
-html.theme-v3.ink .subtitle{color:#cdbfa8}
-html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{justify-self:end;margin:36px 0 18px}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button{border:0;border-radius:0;background:url(/assets/ui-v3/ink/stroke-ink.png) center/100% 100% no-repeat;box-shadow:none;color:#e6dccb;padding:14px 34px;font-family:"Noto Serif KR",serif;letter-spacing:.14em}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){border:0;background:url(/assets/ui-v3/ink/stroke-ink.png) center/100% 100% no-repeat;filter:brightness(1.35);transform:translateX(-4px)}
-html.theme-v3.ink .title-menu.plaque-ready #new-game,html.theme-v3.ink .title-menu.plaque-ready #new-game:hover:not(:disabled){border:0;background:url(/assets/ui-v3/ink/stroke-rust.png) center/100% 100% no-repeat;color:#f6ece0}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card span,html.theme-v3.ink .title-menu button span{color:#bdb19e}
-html.theme-v3.ink .title-menu.plaque-ready #new-game span{color:#f1d9cf}
-html.theme-v3.ink .v3-try,html.theme-v3.ink .dev-links{justify-self:end}
-html.theme-v3.ink .v3-try{border:1px dashed rgba(230,220,203,.3);color:#d1c7bb}
-html.theme-v3.ink .title-scene{padding-top:clamp(10px,2.2vh,24px)}
-html.theme-v3.ink .overline{display:none}
-html.theme-v3.ink .game-title h1{margin:0;font-size:clamp(40px,4.6vw,66px);letter-spacing:.36em;padding-left:.36em}
-html.theme-v3.ink .subtitle{margin:0;font-size:12px;letter-spacing:.3em}
-html.theme-v3.ink .landscape{animation:none;transform:none;background-position:center bottom,62% center}
-/* 처음 화면 판 = 그림(기준 page-title · 닷토리 title 키트, 2026-10-10): 제목 깃발 판(title-banner 1300×284) · 메뉴 띠(title-menu-red/teal 900×186: 고리 = 가로 5~18.7%) */
-html.theme-v3.ink .game-title{width:min(46vw,640px);aspect-ratio:1300/284;justify-content:center;gap:0;padding:0 12%;background:url(/assets/ui-v3/hud/title-banner.png) center/100% 100% no-repeat;filter:drop-shadow(0 14px 22px rgba(0,0,0,.6))}
-html.theme-v3.ink .game-title h1{margin:0;font-size:clamp(26px,3.6vw,54px);line-height:1;letter-spacing:.4em;padding-left:.4em;text-shadow:0 3px 0 rgba(13,12,11,.7)}
-html.theme-v3.ink .game-title .overline{margin:0 0 4px;font-size:clamp(9px,.8vw,12px);white-space:nowrap}
-html.theme-v3.ink .game-title .subtitle{margin:4px 0 0;font-size:clamp(9px,.85vw,13px);white-space:nowrap}
-html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{display:flex;flex-direction:column;gap:10px;width:min(31vw,430px)}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button,html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){position:relative;width:100%;min-height:0;aspect-ratio:900/186;padding:0 24% 0 23%;border:0;border-left:0;background:url(/assets/ui-v3/hud/title-menu-teal.png) center/100% 100% no-repeat;align-items:flex-start;justify-content:center;font-size:clamp(14px,1.3vw,19px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.55))}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd),html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd):hover:not(:disabled),html.theme-v3.ink .title-menu.plaque-ready #new-game,html.theme-v3.ink .title-menu.plaque-ready #new-game:hover:not(:disabled){background:url(/assets/ui-v3/hud/title-menu-red.png) center/100% 100% no-repeat}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){filter:brightness(1.25) drop-shadow(0 8px 12px rgba(0,0,0,.55));transform:translateX(-5px)}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card::before{content:"";display:block;position:absolute;left:6.6%;top:22%;width:10.6%;height:auto;aspect-ratio:1;z-index:0;background:center/66% no-repeat}
-html.theme-v3.ink .title-menu #new-game::before{background-image:url(/assets/ui-v3/hud/icons/cmd-attack.png)}
-html.theme-v3.ink .title-menu #continue-game::before{background-image:url(/assets/ui-v3/hud/icons/b-book.png)}
-html.theme-v3.ink .title-menu #settings::before{background-image:url(/assets/ui-v3/hud/icons/b-gear.png)}
-html.theme-v3.ink .title-menu #guide::before{background-image:url(/assets/ui-v3/hud/icons/b-treaty.png)}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card span,html.theme-v3.ink .title-menu button span{margin-top:2px;font-size:clamp(9px,.78vw,11.5px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-html.theme-v3.ink .v3-try{width:auto;align-self:start;padding:5px 14px;font-size:12px;letter-spacing:.08em;opacity:.8}
-html.theme-v3.ink .v3-try small{font-size:10.5px}
-/* 처음 화면 밝기·크기(기준 page-title): 그림을 어둡게 누르던 막을 걷는다 — 붉은 하늘과 해가 보이게. 메뉴 쪽만 살짝. 제목 깃발 판은 화면 폭의 44% */
-html.theme-v3.ink .paper{background:linear-gradient(270deg,rgba(13,12,11,.42) 0%,rgba(13,12,11,.18) 26%,rgba(13,12,11,0) 46%),linear-gradient(180deg,rgba(13,12,11,.18),transparent 16%),linear-gradient(0deg,rgba(13,12,11,.3),transparent 18%)}
-html.theme-v3.ink .game-title{width:min(44vw,760px)}
-html.theme-v3.ink :is(.v3-try,.dev-links summary,#bgm-status,#title-status,footer span){text-shadow:0 1px 2px #000,0 0 8px #000,0 0 14px rgba(0,0,0,.9)}
-html.theme-v3.ink :is(.v3-try,.dev-links summary,#bgm-status:not(:empty)){padding:3px 10px;background:linear-gradient(270deg,rgba(13,12,11,.72),rgba(13,12,11,.5) 70%,rgba(13,12,11,0))}
-/* 글꼴 벌(world 와 같은 이름): 제목·메뉴 글자 */
-html[data-font="F2"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Hahmlet','Noto Serif KR',serif!important;font-weight:800!important}
-html[data-font="F3"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Song Myung','Noto Serif KR',serif!important;font-weight:400!important}
-html[data-font="F4"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Yeon Sung','Noto Serif KR',serif!important;font-weight:400!important}
-html[data-font="F5"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'Black Han Sans','Noto Sans KR',sans-serif!important;font-weight:400!important}
-html[data-font="F6"].theme-v3.ink :is(.game-title h1,.title-menu .menu-card,.title-menu button){font-family:'East Sea Dokdo','Noto Serif KR',serif!important;font-weight:400!important}
-html:is([data-font="F7"],[data-font="F8"],[data-font="F9"]).theme-v3.ink :is(.title-menu .menu-card,.title-menu button){font-family:'Hahmlet','Noto Serif KR',serif!important;font-weight:800!important}
-html[data-font="F7"].theme-v3.ink .game-title h1{font-family:'Nanum Brush Script','Hahmlet',serif!important;font-weight:400!important;font-size:clamp(34px,5vw,76px)}
-html[data-font="F8"].theme-v3.ink .game-title h1{font-family:'Yeon Sung','Hahmlet',serif!important;font-weight:400!important}
-html[data-font="F9"].theme-v3.ink .game-title h1{font-family:'Song Myung','Hahmlet',serif!important;font-weight:400!important}
-/* 시안 비율 맞춤(page-title): 메뉴 띠 = 가로 76.5~97(폭 20.5) · 세로 26부터 한 줄 9, 간격 11 */
-html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{position:fixed;right:3vw;top:26vh;width:max(20.5vw,250px);margin:0;gap:max(6px,calc(11vh - max(20.5vw,250px)*.2067))}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button{font-size:clamp(13px,1.15vw,18px)}
-html.theme-v3.ink :is(.v3-try,.dev-links){position:fixed;right:3vw;margin:0}
-html.theme-v3.ink .v3-try{bottom:9vh}
-html.theme-v3.ink .dev-links{bottom:5.5vh}
-/* F4 제목 — world 와 같은 처리: 크게(글자 꼴만) · 굵게(같은 색 테두리) · 가운데 */
-html[data-font="F4"].theme-v3.ink .game-title h1{font-size-adjust:.553;-webkit-text-stroke:.03em currentColor;paint-order:stroke fill;letter-spacing:.16em;padding-left:.16em}
-html[data-font="F4"].theme-v3.ink :is(.title-menu .menu-card,.title-menu button){font-size-adjust:.5;-webkit-text-stroke:.016em currentColor;paint-order:stroke fill}
+/* C371: title only. 1920x1080 painted-v4 measured layout.
+   Artwork is served from the retained file assets. */
+html body.shared-ui{background:var(--sg-ink);color:var(--sg-paper);overflow-x:hidden}
+html body.shared-ui .landscape{background:var(--sg-ink) url("/assets/ui-kit/own/screens-v4/title/landscape-blank.webp") center/cover no-repeat}
+html body.shared-ui .title-scene{--tu:min(.052083333vw,.092592593dvh);position:absolute;left:0;top:50%;transform:translateY(-50%);width:100%;height:calc(1080 * var(--tu));min-height:0;padding:0}
+html body.shared-ui .game-title{position:absolute;left:calc(96 * var(--tu));top:calc(174 * var(--tu));width:calc(600 * var(--tu));height:calc(230 * var(--tu));max-width:none;margin:0}
+html body.shared-ui .logo-slot{height:100%;width:100%}
+html body.shared-ui #title-logo{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;filter:url(#title-ivory)}
+html body.shared-ui .game-title h1{color:var(--sg-paper);font-size:clamp(26px,calc(66 * var(--tu)),66px)!important}
+html body.shared-ui .subtitle{color:var(--sg-paper)}
+html body.shared-ui #title-menu{position:absolute;left:calc(112 * var(--tu));top:calc(468 * var(--tu));width:calc(448 * var(--tu));min-width:0;max-width:none;gap:max(2px,calc(16 * var(--tu)))}
+html body.shared-ui #title-menu .menu-card,html body.shared-ui #title-menu .secondary-menu .menu-card{width:100%;height:max(44px,calc(52 * var(--tu)));min-height:44px;margin:0!important;padding:0;border:0;justify-content:center;color:var(--sg-paper);font-size:clamp(20px,calc(30 * var(--tu)),30px)!important;font-weight:400!important;line-height:1.2;background:none;opacity:1}
+html body.shared-ui #title-menu #continue-game:disabled{color:#d2cbb9;opacity:.88}
+html body.shared-ui #title-menu .secondary-menu{display:flex;flex-direction:column;gap:max(2px,calc(16 * var(--tu)));width:100%;margin:0;padding:0;border:0}
+html body.shared-ui #title-menu .menu-label{margin:0;padding:0 calc(10 * var(--tu));line-height:calc(44 * var(--tu));min-height:32px;display:flex;align-items:center;position:relative;letter-spacing:.04em}
+html body.shared-ui #title-menu .menu-card.is-selected>.menu-label{background:var(--title-seal-image,none) center/100% 100% no-repeat;color:var(--sg-paper)}
+html body.shared-ui #title-menu .menu-card::after{content:"";display:block;position:absolute;left:calc(-16 * var(--tu));top:100%;width:calc(260 * var(--tu));height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--sg-gold-line) 40%,transparent),transparent)}
+html body.shared-ui #title-menu .menu-card:last-child::after{display:none}
+html body.shared-ui #title-menu .menu-card.is-selected::before{content:"";display:block;position:absolute;left:calc(-17 * var(--tu));top:calc(2 * var(--tu));bottom:calc(2 * var(--tu));width:max(3px,calc(5 * var(--tu)));border-radius:2px;background:#e3bd66;box-shadow:0 0 8px #d6b76880}
+html body.shared-ui #title-menu .menu-card:focus-visible{outline:2px solid var(--sg-paper);outline-offset:4px}
+/* Metadata stays available to screen readers and the native title tooltip,
+   without inserting a sixth row into the five-row menu. */
+html body.shared-ui #continue-summary,html body.shared-ui #menu-description,html body.shared-ui .title-scene footer{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap!important;border:0}
+html body.shared-ui #title-status{position:absolute;left:calc(112 * var(--tu));top:calc(850 * var(--tu));max-width:min(600px,80vw);background:color-mix(in srgb,var(--sg-ink) 90.98039%,transparent);color:var(--sg-paper);font-size:16px!important;line-height:24px!important}
+html body.shared-ui .v3-try,html body.shared-ui .dev-links{position:relative;top:calc(850 * var(--tu));left:calc(112 * var(--tu))}
+@media(max-width:700px){html body.shared-ui .game-title{width:82vw;height:30vw;left:6vw;top:0}html body.shared-ui #title-menu{left:8vw;top:34vw;width:80vw}html body.shared-ui .title-scene{height:calc(34vw + 280px)}html body.shared-ui #title-status{top:calc(34vw + 250px);left:8vw}}
 
-/* 첫 화면 배경 = 기준 시안(page-title) 그림 그대로에서 UI만 지운 판(2026-10-10 사용자 "뒤에 붙이는 그림은 시안 것 그대로") — 16:9 로 화면을 덮는다 */
-html.theme-v3.ink .landscape{background-image:url(/assets/ui-v3/scenes/plate-title.webp);background-position:50% 50%;background-size:cover;animation:none}
+/* C371 finish: a painted empty stamp, never baked-in menu text. */
+html body.shared-ui #title-menu{--title-seal-image:url("/assets/ui-kit/own/screens-v4/title/selection-blank.webp")}
+html body.shared-ui #title-menu .menu-card,html body.shared-ui #title-menu .secondary-menu .menu-card{font-family:var(--sg-font-button);font-weight:400!important}
+html body.shared-ui #title-menu .menu-card.is-selected>.menu-label{min-width:calc(104 * var(--tu));min-height:calc(52 * var(--tu));background-size:112% auto;justify-content:center}
+/* C371: restore the seal's original dark lettering after wordmark recoloring. */
+html body.shared-ui .logo-slot{position:relative}
+/* 10-21 사용자: 로고 옆 붉은 天 인장 뺌 — 인장 없는 logo-ink-noseal.png 를 쓰고 인장 덧그리기도 없앰 */
+html body.shared-ui .logo-slot::after{content:none}
+html body.shared-ui .logo-slot .seal{display:none}
+html body.shared-ui .logo-slot:has(#title-logo[hidden])::after{display:none}
+html body.shared-ui #title-menu .menu-card,html body.shared-ui #title-menu .secondary-menu .menu-card{font-size:clamp(20px,calc(28 * var(--tu)),28px)!important;font-weight:400!important}
+html body.shared-ui #title-menu .menu-label{letter-spacing:0}
+html body.shared-ui #title-menu .menu-card.is-selected>.menu-label{font-size:clamp(22px,calc(34 * var(--tu)),34px);letter-spacing:.06em}
 
-/* 메뉴 띠 두께(Codex 반박 리뷰 2026-10-11 "메뉴 띠가 시안보다 얇고 간격이 넓다") — 시안 띠 상자는 4.25:1(세로 8.3%), 한 줄 간격 11.3%.
-   가운데만 눌러 도톰하게 만든 그림(title-menu-*-b.png, 615×186)으로 바꾸고, 고리 안 아이콘 · 글 자리를 그 그림에 맞춘다 */
-html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{--bw:max(20.5vw,250px);--bh:calc(var(--bw)*.3024);width:var(--bw);top:25.4vh;gap:max(2px,calc(11.3vh - var(--bh)))}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card,html.theme-v3.ink .title-menu button,html.theme-v3.ink .title-menu.plaque-ready .menu-card:hover:not(:disabled),html.theme-v3.ink .title-menu button:hover:not(:disabled){aspect-ratio:615/186;padding:0 27% 7% 31%;background-image:url(/assets/ui-v3/hud/title-menu-teal-b.png);font-size:clamp(14px,1.28vw,20px)}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd),html.theme-v3.ink .title-menu.plaque-ready .menu-card:nth-child(odd):hover:not(:disabled),html.theme-v3.ink .title-menu.plaque-ready #new-game,html.theme-v3.ink .title-menu.plaque-ready #new-game:hover:not(:disabled){background-image:url(/assets/ui-v3/hud/title-menu-red-b.png)}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card::before{left:7.3%;top:10.5%;width:19.6%;background-size:58%}
-html.theme-v3.ink .title-menu.plaque-ready .menu-card span,html.theme-v3.ink .title-menu button span{font-size:clamp(9px,.74vw,11.5px)}
-/* 왼쪽 아래 작은 띠(시안의 둥근 아이콘 + 한 줄): 상태 한 줄(BGM 안내 · 저장 상태)을 여기에 둔다 — 오른쪽 메뉴 위에 떠 있던 것을 옮김 */
-html.theme-v3.ink #bgm-status:not(:empty){position:fixed;left:2.2vw;bottom:5.2vh;margin:0;min-height:max(4.4vh,30px);display:flex;align-items:center;padding:0 2.2em 0 calc(max(4.4vh,30px) + 1em);background:url(/assets/ui-v3/ink/stroke-ink.png) center/100% 100% no-repeat;color:#e6dccb;font-size:clamp(10px,.82vw,13px);letter-spacing:.06em;text-align:left;white-space:nowrap}
-html.theme-v3.ink #bgm-status:not(:empty)::before{content:"";position:absolute;left:-.2em;top:50%;width:max(5.6vh,38px);aspect-ratio:1;translate:0 -50%;border-radius:50%;background:url(/assets/ui-v3/hud/icons/mode-terrain.png) center/58% no-repeat,url(/assets/ui-v3/hud/btn-round.png) center/100% 100% no-repeat}
-html.theme-v3.ink footer{position:fixed;right:3vw;bottom:1.6vh;margin:0;display:flex;gap:1.2em;font-size:11px;opacity:.75}
-html.theme-v3.ink #title-status:not(:empty){position:fixed;left:2.2vw;bottom:11.5vh;margin:0}
+/* C378: title-local lettering; menu baselines measured against painted-v4. */
+html body.shared-ui #title-menu .menu-card,html body.shared-ui #title-menu .secondary-menu .menu-card{font-family:var(--sg-font-button);font-weight:400!important}
+html body.shared-ui #title-menu .menu-card,html body.shared-ui #title-menu .secondary-menu .menu-card{font-size:clamp(20px,calc(30 * var(--tu)),30px)!important}
+html body.shared-ui #title-menu .menu-label{transform:translateY(calc(1 * var(--tu)));padding-left:calc(12 * var(--tu))}
+html body.shared-ui #title-menu .menu-card.is-selected>.menu-label{transform:translateY(calc(5 * var(--tu)));letter-spacing:.035em;margin-left:calc(6 * var(--tu));min-width:calc(98 * var(--tu));min-height:calc(50 * var(--tu));background-size:100% 100%;line-height:calc(50 * var(--tu));padding:0 calc(6 * var(--tu));border:1px solid #341712;border-radius:calc(6 * var(--tu));box-shadow:inset 0 0 0 2px #240e0b;background-color:#341712;background-blend-mode:normal}
+html body.shared-ui #title-menu .menu-card.is-selected::before{top:calc(5 * var(--tu));bottom:calc(-3 * var(--tu))}
+html body.shared-ui #title-menu .menu-card.is-selected>.menu-label{font-size:clamp(22px,calc(36 * var(--tu)),36px)}
 
-/* 왼쪽 아래 띠에 시안의 가는 테두리(2차 반박 리뷰 2026-10-11) */
-html.theme-v3.ink #bgm-status:not(:empty){outline:1px solid rgba(230,220,203,.55);outline-offset:-3px;box-shadow:0 0 0 1px rgba(13,12,11,.9),0 6px 12px rgba(0,0,0,.5)}
-/* 메뉴 간격(4차 반박 리뷰: 아래로 갈수록 벌어짐) — 줄 높이 기준으로 고정 */
-html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{gap:0}
-/* 꺼진 메뉴(저장이 없을 때의 이어하기)도 띠는 보이게 — 시안은 네 띠가 모두 또렷하다 */
-html.theme-v3.ink .title-menu.plaque-ready .menu-card:disabled{opacity:.8;filter:grayscale(.9) brightness(.72) drop-shadow(0 8px 12px rgba(0,0,0,.55))}
-/* 메뉴 아이콘 · 순서(5차 반박 리뷰): 시안 = 칼(시작) · 투구(이어하기) · 두루마리(안내) · 톱니(설정). 안내와 설정의 보이는 순서를 바꾸고 색도 붉은 · 청록 번갈아 맞춘다 */
-html.theme-v3.ink .title-menu #continue-game::before{background-image:url(/assets/ui-v3/hud/icons/b-helmet.png)}
-html.theme-v3.ink .title-menu #guide{order:3}
-html.theme-v3.ink .title-menu #settings{order:4}
-html.theme-v3.ink .title-menu.plaque-ready #guide,html.theme-v3.ink .title-menu.plaque-ready #guide:hover:not(:disabled){background-image:url(/assets/ui-v3/hud/title-menu-red-b.png)}
-html.theme-v3.ink .title-menu.plaque-ready #settings,html.theme-v3.ink .title-menu.plaque-ready #settings:hover:not(:disabled){background-image:url(/assets/ui-v3/hud/title-menu-teal-b.png)}
-/* 메뉴 아이콘 모양(6차 반박 리뷰): 안내 = 말아 묶은 두루마리(죽간), 이어하기 = 정면 투구(GPT 새 그림 icons/b-helm-front.png — 없으면 옆모습 투구) */
-html.theme-v3.ink .title-menu #guide::before{background-image:url(/assets/ui-v3/hud/icons/res-science.png)}
-html.theme-v3.ink .title-menu #continue-game::before{background-image:url(/assets/ui-v3/hud/icons/b-helm-front.png),url(/assets/ui-v3/hud/icons/b-helmet.png);background-size:66%,0}
-/* 왼쪽 아래 띠 폭(7차 반박 리뷰: 21% → 시안 14%쯤) — 글을 두 줄로 접는다 */
-html.theme-v3.ink #bgm-status:not(:empty){max-width:15vw;white-space:normal;line-height:1.25;padding-top:.35vh;padding-bottom:.35vh;padding-right:1.6em;font-size:clamp(9px,.74vw,12px)}
-/* 메뉴 네 줄의 간격(시안을 1% 눈금으로 다시 잼 = 줄마다 11.0%, 첫 줄 24.5%) */
-html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{gap:0}
-html.theme-v3.ink .title-menu>*+*{margin-top:calc(11vh - var(--bh))}
-html.theme-v3.ink .title-menu,html.theme-v3.ink .title-menu.plaque-ready{top:24.9vh}
-/* 환경설정 톱니가 시안보다 작다(19차) */
-html.theme-v3.ink .title-menu.plaque-ready #settings::before,html.theme-v3.ink .title-menu #settings::before{background-size:88%}
-/* 20차: 톱니 높이 4.0 → 시안 5.5% */
-html.theme-v3.ink .title-menu.plaque-ready #settings::before,html.theme-v3.ink .title-menu #settings::before{scale:1.36}
-/* 21차: 톱니를 키우면서 고리 가운데보다 1.2% 아래로 내려감 → 위로 */
-html.theme-v3.ink .title-menu.plaque-ready #settings::before,html.theme-v3.ink .title-menu #settings::before{translate:0 -30%}
+/* C401: explicit semantic roles; no sizes, colors, geometry or hidden-state changes. */
+html:not([data-font^="F"]) body :is(p,li,label,dd,.od-shared-detail,.c354-description,.c300-tooltip,.c327-state,.od-budget small){font-family:var(--sg-font-body)!important;font-weight:400!important;}
+html:not([data-font^="F"]) body :is(button,kbd,.w-btn,.k-btn,.k-btn-primary,.menu-label,.ss-btn,#selection a){font-family:var(--sg-font-button)!important;font-weight:400!important;}
+html:not([data-font^="F"]) body :is(h1,h2,h3,h4,.c258-tabs button,.c258-skills button,.c327-state h3,[role="tab"],.k-tab,.c251-identity h3){font-family:var(--sg-font-heading)!important;font-weight:400!important;}
+html:not([data-font^="F"]) body :is(#selection h2,#selection b,#selection figcaption,.w-lord .plate>b,.civ-name,.civ-lord-name,.od-plate>b,.c298-draft-hero figcaption,.od-shared-detail b,.c298-card-judgment,#officer-title,.oc-slot .trait-chip,.oc-tactic>b,.c258-unique b,.c258-skills b,.c354-description h3,.c300-tooltip h3,.c327-name,.c327-core small,.c300-qwer small,.c327-trait-group small,.c251-identity h2,.c251-lords b,.c251-officers figcaption,.c251-features b,.k-name,.ss-name){font-family:var(--sg-font-name)!important;font-weight:400!important;}
+html:not([data-font^="F"]) body :is(.od-card-stats b,.od-stats b,.od-cost,.od-budget b,.od-budget i,.oc-stats b,.oc-sub b,.c354-stats b,.c354-stats dd,.c335-stat b,.c300-gauge span,.c327-troop-line b,.c300-stat b,.c327-state b,.c327-level,.c300-slot button em,.k-stat b,.ss-stat,.rs-score,.rs-stats b,.c373-report-status b){font-family:var(--sg-font-num)!important;font-weight:600!important;font-variant-numeric:tabular-nums!important;}

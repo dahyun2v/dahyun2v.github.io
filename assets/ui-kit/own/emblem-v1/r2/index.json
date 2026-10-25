@@ -1,0 +1,917 @@
+{
+  "version": "2",
+  "current": true,
+  "sharedCount": 28,
+  "uniqueCount": 12,
+  "count": 40,
+  "colorData": "prototype/data/officer-colors-v0.1.json",
+  "sharedRule": "One immutable grayscale RGBA source; officer.primary is a separate opaque backdrop. Source-over; no hue filter on glyph.",
+  "uniqueRule": "Officer-colored, original motifs; E/R/passive mapping is a visual sample, not finalized abilities.",
+  "archive": "../index.json",
+  "replacementRegions": [
+    [
+      600,
+      778,
+      686,
+      880
+    ],
+    [
+      696,
+      782,
+      778,
+      860
+    ],
+    [
+      792,
+      782,
+      874,
+      860
+    ],
+    [
+      888,
+      782,
+      970,
+      860
+    ],
+    [
+      982,
+      782,
+      1064,
+      860
+    ],
+    [
+      1135,
+      783,
+      1167,
+      839
+    ],
+    [
+      1182,
+      783,
+      1214,
+      839
+    ],
+    [
+      1229,
+      783,
+      1261,
+      839
+    ]
+  ],
+  "cooldownInsetRegions": [
+    [
+      722,
+      634,
+      802,
+      709
+    ],
+    [
+      872,
+      634,
+      952,
+      709
+    ]
+  ],
+  "assets": [
+    {
+      "id": "q-spear",
+      "label": "창",
+      "group": "Q",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        0,
+        0,
+        280,
+        280
+      ],
+      "file": "q-spear.png",
+      "sizes": {
+        "72": "72/q-spear.png",
+        "56": "56/q-spear.png",
+        "32": "32/q-spear.png"
+      },
+      "sha256": "ab0c1c7016a346147dcfee07b6a1aca1efb1d546cb664b75b60015f62ddec997",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "q-dao",
+      "label": "도",
+      "group": "Q",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        280,
+        0,
+        561,
+        280
+      ],
+      "file": "q-dao.png",
+      "sizes": {
+        "72": "72/q-dao.png",
+        "56": "56/q-dao.png",
+        "32": "32/q-dao.png"
+      },
+      "sha256": "cf5b5c8a3730983ebd355d1c0276852cc5525991566ecaff615862cd0e515356",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "q-cavalry",
+      "label": "기",
+      "group": "Q",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        561,
+        0,
+        841,
+        280
+      ],
+      "file": "q-cavalry.png",
+      "sizes": {
+        "72": "72/q-cavalry.png",
+        "56": "56/q-cavalry.png",
+        "32": "32/q-cavalry.png"
+      },
+      "sha256": "22995da8a243085da54d73e011d549f73535443b7e334debd12dc3a09cd0e665",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "q-bow",
+      "label": "궁",
+      "group": "Q",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        841,
+        0,
+        1122,
+        280
+      ],
+      "file": "q-bow.png",
+      "sizes": {
+        "72": "72/q-bow.png",
+        "56": "56/q-bow.png",
+        "32": "32/q-bow.png"
+      },
+      "sha256": "46f5c9d404d4be05c307e87e92813ab36b47536829ddeb04e1204c00a42c0879",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-fierce",
+      "label": "맹장",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        1122,
+        0,
+        1402,
+        280
+      ],
+      "file": "w-fierce.png",
+      "sizes": {
+        "72": "72/w-fierce.png",
+        "56": "56/w-fierce.png",
+        "32": "32/w-fierce.png"
+      },
+      "sha256": "1061f76f59f760eeff84db28d5037674a09bbd6435aaa2e7122041e004defa72",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-stalwart",
+      "label": "강장",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        0,
+        280,
+        280,
+        561
+      ],
+      "file": "w-stalwart.png",
+      "sizes": {
+        "72": "72/w-stalwart.png",
+        "56": "56/w-stalwart.png",
+        "32": "32/w-stalwart.png"
+      },
+      "sha256": "5f4b47cc64503ccc3fbbbfc1516d5d5a6ffffbd0ef4df33109f30c59699d1e81",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-guardian",
+      "label": "호위",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        280,
+        280,
+        561,
+        561
+      ],
+      "file": "w-guardian.png",
+      "sizes": {
+        "72": "72/w-guardian.png",
+        "56": "56/w-guardian.png",
+        "32": "32/w-guardian.png"
+      },
+      "sha256": "3453cec377d87116dd3b0b339ca4e6253980834329e241fa28792057c5be5ac0",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-duelist",
+      "label": "투장",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        561,
+        280,
+        841,
+        561
+      ],
+      "file": "w-duelist.png",
+      "sizes": {
+        "72": "72/w-duelist.png",
+        "56": "56/w-duelist.png",
+        "32": "32/w-duelist.png"
+      },
+      "sha256": "2c0a4ca0f1cb1db6d5668f7ee3ee50078aa6ad07ebd676535b9cffd5ca70b9dd",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-general",
+      "label": "장군",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        841,
+        280,
+        1122,
+        561
+      ],
+      "file": "w-general.png",
+      "sizes": {
+        "72": "72/w-general.png",
+        "56": "56/w-general.png",
+        "32": "32/w-general.png"
+      },
+      "sha256": "8c06a7f1f3ffb80cc58f342f7863a623fb67953ca275a26e4e41ffdcab38d0a7",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-strategist",
+      "label": "책사",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        1122,
+        280,
+        1402,
+        561
+      ],
+      "file": "w-strategist.png",
+      "sizes": {
+        "72": "72/w-strategist.png",
+        "56": "56/w-strategist.png",
+        "32": "32/w-strategist.png"
+      },
+      "sha256": "81dae07960d205331ad0a6a3cead17757a7884d21e8aa5bcec11411d2ebcce16",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-builder",
+      "label": "축성장",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        0,
+        561,
+        280,
+        842
+      ],
+      "file": "w-builder.png",
+      "sizes": {
+        "72": "72/w-builder.png",
+        "56": "56/w-builder.png",
+        "32": "32/w-builder.png"
+      },
+      "sha256": "93a4740f8b199e46718b58e97d395053a37ec8be95a12164802ebeded8abca06",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-scout",
+      "label": "척후",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        280,
+        561,
+        561,
+        842
+      ],
+      "file": "w-scout.png",
+      "sizes": {
+        "72": "72/w-scout.png",
+        "56": "56/w-scout.png",
+        "32": "32/w-scout.png"
+      },
+      "sha256": "7cd5922094d542bd8ed1776e18fea1327b21cfdd28dbaff82fa0c9763237ae7c",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-supply",
+      "label": "전농",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        561,
+        561,
+        841,
+        842
+      ],
+      "file": "w-supply.png",
+      "sizes": {
+        "72": "72/w-supply.png",
+        "56": "56/w-supply.png",
+        "32": "32/w-supply.png"
+      },
+      "sha256": "bf5bd88e892eba4fbc983ed6fc82e3c84106ed65ed7988d24b38104fbd3a563d",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "w-statesman",
+      "label": "국사",
+      "group": "W",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        841,
+        561,
+        1122,
+        842
+      ],
+      "file": "w-statesman.png",
+      "sizes": {
+        "72": "72/w-statesman.png",
+        "56": "56/w-statesman.png",
+        "32": "32/w-statesman.png"
+      },
+      "sha256": "c40ef097aa7875a0a5a852445f5aa27bc8447334a160fbc192a1fdb4cb96bdf9",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "t-fire",
+      "label": "불",
+      "group": "전법 속성",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        1122,
+        561,
+        1402,
+        842
+      ],
+      "file": "t-fire.png",
+      "sizes": {
+        "72": "72/t-fire.png",
+        "56": "56/t-fire.png",
+        "32": "32/t-fire.png"
+      },
+      "sha256": "5d2832ecd25bd0038a9c78511154caed413493429fa1d5d0a316413859a2b96b",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "t-water",
+      "label": "물",
+      "group": "전법 속성",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        0,
+        842,
+        280,
+        1122
+      ],
+      "file": "t-water.png",
+      "sizes": {
+        "72": "72/t-water.png",
+        "56": "56/t-water.png",
+        "32": "32/t-water.png"
+      },
+      "sha256": "06b4edd325a6d32033a27be4dfa228e1a35bad7b66bf234bd265729edaedbedd",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "t-wind",
+      "label": "바람",
+      "group": "전법 속성",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        280,
+        842,
+        561,
+        1122
+      ],
+      "file": "t-wind.png",
+      "sizes": {
+        "72": "72/t-wind.png",
+        "56": "56/t-wind.png",
+        "32": "32/t-wind.png"
+      },
+      "sha256": "9048d77b41e37856b75299c6a801a1cf2b34cebb17d3f757042c51303749d3e0",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "t-lightning",
+      "label": "번개",
+      "group": "전법 속성",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        561,
+        842,
+        841,
+        1122
+      ],
+      "file": "t-lightning.png",
+      "sizes": {
+        "72": "72/t-lightning.png",
+        "56": "56/t-lightning.png",
+        "32": "32/t-lightning.png"
+      },
+      "sha256": "5ede531318297437a9cab70c0bde252037ff2fa7b79ef6316cec5f229d1c2663",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "t-momentum",
+      "label": "기세",
+      "group": "전법 속성",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        841,
+        842,
+        1122,
+        1122
+      ],
+      "file": "t-momentum.png",
+      "sizes": {
+        "72": "72/t-momentum.png",
+        "56": "56/t-momentum.png",
+        "32": "32/t-momentum.png"
+      },
+      "sha256": "f3d2e896ff10e9848995706dfd280f03ec4ba48de92fc9eca84b7445dc58fb6f",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "t-deception",
+      "label": "교란",
+      "group": "전법 속성",
+      "shared": true,
+      "source": "skills-sheet.png",
+      "crop": [
+        1122,
+        842,
+        1402,
+        1122
+      ],
+      "file": "t-deception.png",
+      "sizes": {
+        "72": "72/t-deception.png",
+        "56": "56/t-deception.png",
+        "32": "32/t-deception.png"
+      },
+      "sha256": "5f51e2f50fc1c0812d74c7a26e28d35980c508f7fd42850f95081307230ae85a",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-attack",
+      "label": "공격",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        0,
+        0,
+        444,
+        444
+      ],
+      "file": "trait-attack.png",
+      "sizes": {
+        "72": "72/trait-attack.png",
+        "56": "56/trait-attack.png",
+        "32": "32/trait-attack.png"
+      },
+      "sha256": "e7cd07e1b1a4e864caa688536f03fb47259162713c623e363210dbd1ef2fa866",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-defense",
+      "label": "방어",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        444,
+        0,
+        887,
+        444
+      ],
+      "file": "trait-defense.png",
+      "sizes": {
+        "72": "72/trait-defense.png",
+        "56": "56/trait-defense.png",
+        "32": "32/trait-defense.png"
+      },
+      "sha256": "db5960e55ed36406b53360b799ddd752417db59ee3352ff7c7f4ebfbd10f5c51",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-movement",
+      "label": "이동",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        887,
+        0,
+        1330,
+        444
+      ],
+      "file": "trait-movement.png",
+      "sizes": {
+        "72": "72/trait-movement.png",
+        "56": "56/trait-movement.png",
+        "32": "32/trait-movement.png"
+      },
+      "sha256": "b56152698aaba3cac56f9482eeb4007315f35cc0c0577e00841c02be68f45a99",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-morale",
+      "label": "사기",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        1330,
+        0,
+        1774,
+        444
+      ],
+      "file": "trait-morale.png",
+      "sizes": {
+        "72": "72/trait-morale.png",
+        "56": "56/trait-morale.png",
+        "32": "32/trait-morale.png"
+      },
+      "sha256": "d938228f41fe2edb6442152f21c0fc162583c09e98043bc176c5462ec9aeee95",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-information",
+      "label": "정보",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        0,
+        444,
+        444,
+        887
+      ],
+      "file": "trait-information.png",
+      "sizes": {
+        "72": "72/trait-information.png",
+        "56": "56/trait-information.png",
+        "32": "32/trait-information.png"
+      },
+      "sha256": "331363fe8ddcd17843f21451faf4cee62f7bd0a7a224fc9b8eea22888efb7d9b",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-domestic",
+      "label": "내정",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        444,
+        444,
+        887,
+        887
+      ],
+      "file": "trait-domestic.png",
+      "sizes": {
+        "72": "72/trait-domestic.png",
+        "56": "56/trait-domestic.png",
+        "32": "32/trait-domestic.png"
+      },
+      "sha256": "13bfb9f1f2423fb0251678b4ea34bb2fbdcc10f312629c500f426eda3e14ec18",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-supply",
+      "label": "보급",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        887,
+        444,
+        1330,
+        887
+      ],
+      "file": "trait-supply.png",
+      "sizes": {
+        "72": "72/trait-supply.png",
+        "56": "56/trait-supply.png",
+        "32": "32/trait-supply.png"
+      },
+      "sha256": "3a9ff2f48207351388fc0ec7eefb9b3d8ffb73b2ca74b94b4b47b158c9fc08f7",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "trait-growth",
+      "label": "성장",
+      "group": "일반특기",
+      "shared": true,
+      "source": "traits-sheet.png",
+      "crop": [
+        1330,
+        444,
+        1774,
+        887
+      ],
+      "file": "trait-growth.png",
+      "sizes": {
+        "72": "72/trait-growth.png",
+        "56": "56/trait-growth.png",
+        "32": "32/trait-growth.png"
+      },
+      "sha256": "0182ca3445395f48a879e454f5f963c1ab92afc1e1ca80a6cf0598e362274ab2",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G24-passive",
+      "label": "장료 고유특기",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        0,
+        0,
+        443,
+        296
+      ],
+      "file": "G24-passive.png",
+      "sizes": {
+        "72": "72/G24-passive.png",
+        "56": "56/G24-passive.png",
+        "32": "32/G24-passive.png"
+      },
+      "sha256": "c10fad00cb66048046c94c252444b88cbcfea5446df7328bc4e27e4a86475ca7",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G24-e",
+      "label": "장료 고유 E",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        443,
+        0,
+        887,
+        296
+      ],
+      "file": "G24-e.png",
+      "sizes": {
+        "72": "72/G24-e.png",
+        "56": "56/G24-e.png",
+        "32": "32/G24-e.png"
+      },
+      "sha256": "6d14c6c402c8edc902af14e8c6003406b81b2212e2588e1df533ba538ea55263",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G24-r",
+      "label": "장료 R",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        887,
+        0,
+        1330,
+        296
+      ],
+      "file": "G24-r.png",
+      "sizes": {
+        "72": "72/G24-r.png",
+        "56": "56/G24-r.png",
+        "32": "32/G24-r.png"
+      },
+      "sha256": "73ebfde2312657c4e39b7d3d08d0b08200c1738247f6f4ae62701e242d5067b6",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G18-passive",
+      "label": "관우 고유특기",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        0,
+        296,
+        443,
+        591
+      ],
+      "file": "G18-passive.png",
+      "sizes": {
+        "72": "72/G18-passive.png",
+        "56": "56/G18-passive.png",
+        "32": "32/G18-passive.png"
+      },
+      "sha256": "0ff730ccf40f57aa7faaf5704de0ca2d1acba2d077e3ed1bc52ab54544e545db",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G18-e",
+      "label": "관우 고유 E",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        443,
+        296,
+        887,
+        591
+      ],
+      "file": "G18-e.png",
+      "sizes": {
+        "72": "72/G18-e.png",
+        "56": "56/G18-e.png",
+        "32": "32/G18-e.png"
+      },
+      "sha256": "fde2bbb59be8b3c8cb99ddc03c7ab9062bf60de57e53a1c1f3cefce5b89b3bb7",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G18-r",
+      "label": "관우 R",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        887,
+        296,
+        1330,
+        591
+      ],
+      "file": "G18-r.png",
+      "sizes": {
+        "72": "72/G18-r.png",
+        "56": "56/G18-r.png",
+        "32": "32/G18-r.png"
+      },
+      "sha256": "97fec1a2ff96dc5b15b76044c6d66749225a5a6f18bc5535d44fc307627c9458",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G04-passive",
+      "label": "순욱 고유특기",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        0,
+        591,
+        443,
+        886
+      ],
+      "file": "G04-passive.png",
+      "sizes": {
+        "72": "72/G04-passive.png",
+        "56": "56/G04-passive.png",
+        "32": "32/G04-passive.png"
+      },
+      "sha256": "b2ea40fa53370132ac34b48e2ed2e90711b656af49034ed44f60d25896bb318c",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G04-e",
+      "label": "순욱 고유 E",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        443,
+        591,
+        887,
+        886
+      ],
+      "file": "G04-e.png",
+      "sizes": {
+        "72": "72/G04-e.png",
+        "56": "56/G04-e.png",
+        "32": "32/G04-e.png"
+      },
+      "sha256": "914ab09078277f3d602a6606939788310abaa06dbb71032419283a2c1a313431",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G04-r",
+      "label": "순욱 R",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        887,
+        591,
+        1330,
+        886
+      ],
+      "file": "G04-r.png",
+      "sizes": {
+        "72": "72/G04-r.png",
+        "56": "56/G04-r.png",
+        "32": "32/G04-r.png"
+      },
+      "sha256": "91da84807e1c0eb87d675a4158b6836b07548ea031e16b6a31f0f7587a45642a",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G27-passive",
+      "label": "주유 고유특기",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        0,
+        886,
+        443,
+        1182
+      ],
+      "file": "G27-passive.png",
+      "sizes": {
+        "72": "72/G27-passive.png",
+        "56": "56/G27-passive.png",
+        "32": "32/G27-passive.png"
+      },
+      "sha256": "1ff9615eb0b0838c47b1991c587a8cc225f27fc0bf35488c8e6d51606ede6a2a",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G27-e",
+      "label": "주유 고유 E",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        443,
+        886,
+        887,
+        1182
+      ],
+      "file": "G27-e.png",
+      "sizes": {
+        "72": "72/G27-e.png",
+        "56": "56/G27-e.png",
+        "32": "32/G27-e.png"
+      },
+      "sha256": "4484e080cf568c35db5a4417c21d3c054bbb151a92c97e7f5390c8d02461f839",
+      "status": "visual-sample; no ability or approval change"
+    },
+    {
+      "id": "G27-r",
+      "label": "주유 R",
+      "group": "고유",
+      "shared": false,
+      "source": "unique-sheet.png",
+      "crop": [
+        887,
+        886,
+        1330,
+        1182
+      ],
+      "file": "G27-r.png",
+      "sizes": {
+        "72": "72/G27-r.png",
+        "56": "56/G27-r.png",
+        "32": "32/G27-r.png"
+      },
+      "sha256": "dc1fd514a19f80b61d29237ca0c763a694faaefffa2a2b3bd7176a0b2b22fad6",
+      "status": "visual-sample; no ability or approval change"
+    }
+  ]
+}

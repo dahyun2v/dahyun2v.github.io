@@ -1,10 +1,11 @@
+import {isSliceMap} from './map-primitives.mjs';
 import data from '../../docs/design-data/officer-pack/deja-vu-v0.1.json' with {type:'json'};
 import {campaignMapData} from './campaign-scenario.mjs';
 import {hexDistance} from './map-primitives.mjs';
 import {creditCampaignGrowth} from './campaign-growth.mjs';
 
 export const DEJA_VU=data;
-export const dejaVuEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c41Disabled!==true;
+export const dejaVuEnabled=s=>isSliceMap(s.mapId)&&s.c41Disabled!==true;
 const entries=new Map(data.entries.map(e=>[e.id,e]));
 const alive=o=>o?.lifeState==='ALIVE';
 const free=o=>alive(o)&&o.captivityState==='FREE';
@@ -16,9 +17,9 @@ function atCity(s,id,c,{governor=false}={}){
  const a=armyFor(s,id);
  return a?cityTiles(c).includes(a.tileId):o.locationRef?.kind==='CITY'&&o.locationRef.id===c.cityId;
 }
-export function initializeDejaVu(s){if(['v2','v3'].includes(s.mapId)&&s.dejaVu===undefined)s.dejaVu={fired:[],recent:[]};return s;}
+export function initializeDejaVu(s){if(isSliceMap(s.mapId)&&s.dejaVu===undefined)s.dejaVu={fired:[],recent:[]};return s;}
 export function validateDejaVu(s){
- if(!['v2','v3'].includes(s.mapId))return s;
+ if(!isSliceMap(s.mapId))return s;
  const d=s.dejaVu;
  if(!d||!Array.isArray(d.fired)||!Array.isArray(d.recent)||d.recent.length>20||new Set(d.fired).size!==d.fired.length||d.fired.some(id=>!entries.has(id))||new Set(d.recent.map(e=>e.id)).size!==d.recent.length)throw new Error('INVALID_CAMPAIGN_DEJA_VU');
  for(const r of d.recent)if(!entries.has(r.id)||!d.fired.includes(r.id)||r.officerId!==entries.get(r.id).officerId||!s.officers[r.officerId]||!s.factions[r.factionId]||!Number.isSafeInteger(r.turn)||r.turn<1||r.turn>s.turn)throw new Error('INVALID_CAMPAIGN_DEJA_VU');

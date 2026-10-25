@@ -148,7 +148,7 @@ function captorIndex(input,count,roll){
   return hash32({lane:'CAPTOR',savedSeed:input.entropy.savedSeed,transactionId:input.battleResult.transactionId,sourceResultId:input.battleResult.sourceResultId,defeatedArmyId:input.battleResult.defeatedArmyId})%count;
 }
 
-export function adjudicateCampaignRetreatFate(input){
+export function adjudicateCampaignRetreatFate(input,{captureWeight=0}={}){
   exactKeys(input,INPUT_KEYS,'INVALID_RETREAT_ADJUDICATION_INPUT_SHAPE');
   invariant(input.format===FORMAT&&input.version===VERSION,'INVALID_RETREAT_ADJUDICATION_FORMAT');
   validateBattleResult(input.battleResult);
@@ -157,7 +157,7 @@ export function adjudicateCampaignRetreatFate(input){
   const routeExists=legalRetreatTileIds(input.publicWorld,publicContext).length>0;
   const roll=fateRoll(input);
   let commanderFate='ESCAPED',captorFactionId=null;
-  if(!routeExists&&roll>=RULES.blockedFateBasisPoints.captured[0]){
+  if(!routeExists&&roll>=Math.max(500,Math.min(9000,RULES.blockedFateBasisPoints.captured[0]-captureWeight*100))){
     if(roll<RULES.blockedFateBasisPoints.captured[1]){
       commanderFate='CAPTURED';
       const captors=[...input.battleResult.eligibleCaptorFactionIds].sort((left,right)=>left.localeCompare(right,'en'));

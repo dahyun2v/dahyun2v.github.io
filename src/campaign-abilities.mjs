@@ -1,3 +1,5 @@
+import {campaignMechQuery} from './campaign-mech-contracts.mjs';
+import {pilotBurden} from './campaign-c34.mjs';
 import {engineEvent,engineFormationGuard} from './campaign-engines.mjs';
 import {diplomacyArmyHostile} from './campaign-diplomacy.mjs';
 import {c34Enabled,c34Near} from './campaign-c34.mjs';
@@ -51,6 +53,6 @@ export function initializeArmyFacing(s){for(const a of Object.values(s.armies)){
 }return s;}
 export function campaignRoll(s){const r=createRng();r.restore(s.rng.value);const value=r.next()*100;s.rng.value=r.state();s.rng.draws++;return value;}
 export const formationProbability=(s,id,weight)=>Math.max(C12.min,Math.min(C12.max,C12.formationBase+campaignSubAbility(s,s.armies[id].commanderId,'지휘','전열 유지')*C12.maintenance-weight+(s.armies[id].braced?C12.braceWeight:0)));
-export function changeFormation(s,id,steps,changes=[]){const a=s.armies[id];if(steps>0&&a.formation!=='BROKEN'&&engineFormationGuard(s,id))return changes;if(steps<0&&a.morale==='ROUTING')return changes;const levels=['ORDERED','DISORDERED','BROKEN'],from=a.formation??'ORDERED';a.formation=levels[Math.max(0,Math.min(2,levels.indexOf(from)+steps))];if(from!==a.formation){changes.push({armyId:id,from,to:a.formation});engineEvent(s,'FORMATION_CHANGE',{armyId:id,from,to:a.formation});}return changes;}
+export function changeFormation(s,id,steps,changes=[],context={}){steps=campaignMechQuery(s,'H15','formationSteps',{targetId:id,from:s.armies[id]?.formation,sourceId:s.c50?.context?.attackerId??s.lastCombat?.attackerId??null,origin:s.c50?.context?.origin??null,...context},steps);const a=s.armies[id];if(steps>0&&a.formation!=='BROKEN'&&engineFormationGuard(s,id))return changes;if(steps<0&&a.morale==='ROUTING')return changes;if(steps>0&&a.formation!=='BROKEN'&&a.morale!=='ROUTING'&&pilotBurden(s,id,steps,changes))return changes;const levels=['ORDERED','DISORDERED','BROKEN'],from=a.formation??'ORDERED';a.formation=levels[Math.max(0,Math.min(2,levels.indexOf(from)+steps))];if(from!==a.formation){changes.push({armyId:id,from,to:a.formation});engineEvent(s,'FORMATION_CHANGE',{armyId:id,from,to:a.formation});}return changes;}
 export function checkFormation(s,id,weight,changes=[]){if(c34Enabled(s)&&s.armies[id]?.c34?.formationGuardUntil>=s.turn)return changes;if(c30IgnoreFormation(s,id))return changes;if(s.armies[id].troopCount>0&&campaignRoll(s)>=formationProbability(s,id,weight))changeFormation(s,id,1,changes);return changes;}
 export function turnFacing(s,id,target){const a=s.armies[id],t=s.armies[target]??s.cities[target];if(a&&t)a.facing=directionToward(s.tiles[a.tileId],s.tiles[t.tileId],a.facing);}

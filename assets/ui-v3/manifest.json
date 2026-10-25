@@ -6887,6 +6887,186 @@
       "prompt": "Codex C157: 시안에서 떠 옴(밝은 글자 · 선 화소 -> 투명도, docs/work-integration/20261014/c157/extract-assets.py)"
     },
     {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-approach-fire.webp",
+      "purpose": "처음 보는 규칙 카드 — 접근사격(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "3d4a4d63e6b810555a1ec7fa485a05bf0f5f53a05c8b4f862b240a3ffb9d7332",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-fire.webp",
+      "purpose": "처음 보는 규칙 카드 — 화계(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "77df8b59bb8620e27c0945b093195f635c32a3059df21f6fec2e8c747b19d823",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-flank.webp",
+      "purpose": "처음 보는 규칙 카드 — 측면(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "48ac355da133b13453ed333c56ab4e6498ef1df719eed1cd431b59cac72bda7a",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-formation.webp",
+      "purpose": "처음 보는 규칙 카드 — 전열 3단계(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "0a7e4f5942e1f1dc53894546609ec425a2a6d6e777bf5b8acd837fdd96c9d5d4",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-matchup.webp",
+      "purpose": "처음 보는 규칙 카드 — 병종 상성(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "1275cfd8b7d467f73028c50e5525635802091abbed3b20953887c9ac6d661d85",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-rear.webp",
+      "purpose": "처음 보는 규칙 카드 — 후방(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "3ffff905c3a755d88c53a7db3c37c6ebc27344581bfb95b89487831c2c287379",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-siege.webp",
+      "purpose": "처음 보는 규칙 카드 — 성 공격 · 함락(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "b7fef4387cf6729105af997121bfddf308d87a3f76c0040865e1f70a6e0aa5f5",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/rule-cards/rule-supply.webp",
+      "purpose": "처음 보는 규칙 카드 — 군량 · 보급권(그림 3칸: 준비 · 행동 · 결과, 글자는 게임이 얹음). 닷토리 10-19",
+      "size": [
+        1500,
+        500
+      ],
+      "sha256": "c285be980062ff16cd712db060d9eec72a1ffa3c629775cc0f0114df3b934981",
+      "sourceSheet": "docs/work-integration/20261019/design-system/rule-cards/ORDER-RULE-CARDS.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/loading/loading-cao.webp",
+      "purpose": "불러오기 장면 — 조조(얼굴 없는 뒷모습, 아래 1/4 · 위 오른쪽 글자리). 닷토리 10-19",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "ec0f26ab6e86ad2e1510ba2e0064e133aa1ac546a03bee40afda59f240cd0b1e",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/loading/loading-liu.webp",
+      "purpose": "불러오기 장면 — 유비(얼굴 없는 뒷모습, 아래 1/4 · 위 오른쪽 글자리). 닷토리 10-19",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "0ac8366496bdcdf8c79c7d732ec1cdad1d6de3922dec6adbe4c35aa1b434d788",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/loading/loading-sun.webp",
+      "purpose": "불러오기 장면 — 손권(얼굴 없는 뒷모습, 아래 1/4 · 위 오른쪽 글자리). 닷토리 10-19",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "8a4af38322ba988da7999faa3e302a070f6e30b8241b0fee777f4c382a381daf",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/report-cards/report-asleep.webp",
+      "purpose": "보고 카드 — 장수가 쓰러짐 · 다시 잠듦(그림 한 장 + 게임이 두 줄을 얹음, 아래 1/5 비움). 닷토리 10-19",
+      "size": [
+        1200,
+        750
+      ],
+      "sha256": "3522aade023cfce6a957b0f118afbbe9c681d2aefba00dd82463ee8b6d2af339",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/report-cards/report-awaken.webp",
+      "purpose": "보고 카드 — 장수가 깨어남 · 합류(그림 한 장 + 게임이 두 줄을 얹음, 아래 1/5 비움). 닷토리 10-19",
+      "size": [
+        1200,
+        750
+      ],
+      "sha256": "409155cbe3627ecdf1114c24f7864002d0d7835941eaa1a472ff5a9f54739534",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/report-cards/report-built.webp",
+      "purpose": "보고 카드 — 시설 완공(그림 한 장 + 게임이 두 줄을 얹음, 아래 1/5 비움). 닷토리 10-19",
+      "size": [
+        1200,
+        750
+      ],
+      "sha256": "31d647a1bf8644ae36dd1f457fc44f3d2f16c5d2c908ae035e64c0ac5462c611",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/report-cards/report-city-lost.webp",
+      "purpose": "보고 카드 — 성을 잃음(그림 한 장 + 게임이 두 줄을 얹음, 아래 1/5 비움). 닷토리 10-19",
+      "size": [
+        1200,
+        750
+      ],
+      "sha256": "98fd9fc199fca85e929560ff64ac4f70dbf12182e23220f2121913cb9d9b5ba8",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/report-cards/report-city-taken.webp",
+      "purpose": "보고 카드 — 성을 얻음(그림 한 장 + 게임이 두 줄을 얹음, 아래 1/5 비움). 닷토리 10-19",
+      "size": [
+        1200,
+        750
+      ],
+      "sha256": "a7ff8cf6af9a2624e3b296121fc82e547475d6592396ccb3906c191af2ec1fc2",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/report-cards/report-envoy.webp",
+      "purpose": "보고 카드 — 외교 사신(그림 한 장 + 게임이 두 줄을 얹음, 아래 1/5 비움). 닷토리 10-19",
+      "size": [
+        1200,
+        750
+      ],
+      "sha256": "cff8ccef245c16119e84d0a9444b3c2706f5e9b0b7b78f9bd4d7afb0ffbded6d",
+      "sourceSheet": "docs/work-integration/20261019/design-system/report-cards/ORDER-REPORT-LOADING.md"
+    },
+    {
+      "path": "prototype/assets/ui-v3/map/v15-world.webp",
+      "purpose": "세계 지도 바탕 v15 — 덜 빽빽하게 같은 땅으로 다시 그림(닷토리 12조각 · map-grid.py 이음 · map-grade.py 누런 기운 누름, 1.6배). ?map=v15 시험",
+      "size": [
+        6120,
+        5549
+      ],
+      "sha256": "fb12344b7588abdf5ab81f728be74f24abf555ec05443038746ef9adcf63d0e3",
+      "sourceSheet": "docs/work-integration/20261019/design-system/map-calm/ORDER-MAP-CALM.md"
+    },
+    {
       "path": "prototype/assets/ui-v3/map/v14-world.webp",
       "purpose": "세계 지도 바탕 v14 — v13 을 1.6배 해상도로(확대 시 펜선 번짐 줄임)",
       "size": [

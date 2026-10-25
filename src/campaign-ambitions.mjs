@@ -1,3 +1,4 @@
+import {isSliceMap} from './map-primitives.mjs';
 import data from '../data/ambitions-v0.1.json' with {type:'json'};
 import g21 from '../../docs/design-data/officer-pack/trial/G21.json' with {type:'json'};
 import g22 from '../../docs/design-data/officer-pack/trial/G22.json' with {type:'json'};
@@ -8,7 +9,8 @@ import {campaignOfficerGrowth,pendingCampaignDraft,campaignDraftConfig,grantCamp
 import {rerollGrowthDraft} from './campaign-draft.mjs';
 import {applyDeckEffects} from './campaign-event-deck.mjs';
 import {campaignGoalBaseline,campaignGoalProgress} from './campaign-oaths.mjs';
-import {hexDistance} from './map-primitives.mjs';
+import {edgeTicks} from './movement.mjs';
+import {boardNeighbors,tileId,hexDistance} from './map-primitives.mjs';
 import {castleArmyActive} from './campaign-city-footprint.mjs';
 
 export const AMBITIONS=data;
@@ -23,11 +25,56 @@ const history=(s,a)=>(s.c43?.history??[]).slice(a.diplomacyIndex??0).map((e,i)=>
 const log=(s,text)=>(s.administrationLog??=[]).push({turn:s.turn,factionId:s.playerFactionId,source:'C204',text});
 const emptyLegacy=()=>({runsFinished:0,ambitionsAchieved:[]});
 
+const cityName=(s,id)=>s.cityDisplayNames?.[id]??s.cities[id]?.name??id;
+const goalFor=(s,id)=>s.ambitions?.relativeLand?.[id]?.goal??ambition(id).goal;
+function initializeRelativeLand(s){
+ if(s.startCityPlacement?.mode!=='random'||!ambition(`AMB-${s.playerFactionId}-LAND`)?.relativeGoal)return;
+ const start=s.startCityPlacement.capitals[s.playerFactionId],unit={...values(s.armies)[0],troopType:'spear'};
+ const dist={[s.cities[start].tileId]:0},queue=[s.cities[start].tileId];
+ // Same static, passable-edge hop distance as C312. Never consume campaign RNG.
+ for(let i=0;i<queue.length;i++)for(const p of boardNeighbors(s.tiles[queue[i]],s.tiles)){
+  const next=tileId(p);if(dist[next]!==undefined||edgeTicks(s,unit,queue[i],next)===null)continue;
+  dist[next]=dist[queue[i]]+1;queue.push(next);
+ }
+ const id=`AMB-${s.playerFactionId}-LAND`,spec=ambition(id).relativeGoal;
+ const candidates=values(s.cities).filter(c=>c.cityId!==start&&Number.isFinite(dist[c.tileId]));
+ const byDistance=(a,b)=>dist[a.tileId]-dist[b.tileId]||a.cityId.localeCompare(b.cityId,'en');
+ let cities;
+ if(spec.rule==='START_AND_NEAREST_MINORS')cities=[start,...candidates.filter(c=>c.kind==='minor').sort(byDistance).slice(0,spec.minorCount).map(c=>c.cityId)];
+ else cities=candidates.filter(c=>c.kind==='major').sort((a,b)=>spec.rule==='FARTHEST_MAJOR'?dist[b.tileId]-dist[a.tileId]||a.cityId.localeCompare(b.cityId,'en'):byDistance(a,b)).slice(0,1).map(c=>c.cityId);
+ if(cities.length!==(spec.minorCount??0)+1)throw new Error('AMBITION_RELATIVE_TARGETS_UNAVAILABLE');
+ const keep=spec.rule!=='FARTHEST_MAJOR';
+ s.ambitions.relativeLand={[id]:{startCityId:start,goal:{type:'HOLD_AT_END',cities,plusMajor:0},
+  goalText:spec.goalText.replace('{cities}',cities.map(id=>cityName(s,id)).join(' · ')),keep,
+  held:cities.filter(id=>s.cities[id].ownerFactionId===s.playerFactionId),captureIndex:0,violated:false}};
+}
+function observeRelativeLand(s){
+ for(const r of values(s.ambitions?.relativeLand)){
+  if(!r.keep)continue;
+  const captures=s.eventDeck?.captures??[];
+  for(const e of captures.slice(r.captureIndex))if(r.goal.cities.includes(e.cityId)){
+   if(e.factionId===s.playerFactionId){if(!r.held.includes(e.cityId))r.held.push(e.cityId);}
+   else if(r.held.includes(e.cityId))r.violated=true;
+  }
+  r.captureIndex=captures.length;
+  for(const id of r.goal.cities){
+   if(s.cities[id]?.ownerFactionId===s.playerFactionId){if(!r.held.includes(id))r.held.push(id);}
+   else if(r.held.includes(id))r.violated=true;
+  }
+ }
+}
+function ambitionDefinition(s,id){
+ const d=clone(ambition(id)),r=s.ambitions?.relativeLand?.[id];
+ if(r){d.goal=clone(r.goal);d.goalText=r.goalText;}
+ return d;
+}
+
 export function initializeCampaignAmbitions(s,{unlocks=[],legacy={},runsFinished=legacy.runsFinished??0}={}){
- if(!['v2','v3'].includes(s.mapId))return;
+ if(!isSliceMap(s.mapId))return;
  s.unlocks=[...new Set(unlocks)];
  s.legacy={runsFinished,ambitionsAchieved:[...(legacy.ambitionsAchieved??[])],memoryLastSeen:clone(legacy.memoryLastSeen??{})};
  s.ambitions={version:1,offeredIds:data.ambition.list.filter(a=>a.faction===s.playerFactionId&&possible(s,a.goal)).map(a=>a.id),closed:false,selected:null,offers:[],orders:[],rerolls:0,finished:false,unlocksEarned:[]};
+ initializeRelativeLand(s);
  s.openingMemory=data.unlocks.list.filter(u=>u.kind==='MEMORY'&&s.unlocks.includes(u.id)).map(u=>u.line);
  initializeUnlockedOfficers(s,s.unlocks);
  startAmbitionTurn(s);
@@ -93,8 +140,10 @@ export function finishAmbitionPlayerTurn(s,{autoPlayer=false}={}){
  const p=x.offers.find(o=>o.turn===s.turn&&!o.closed);if(p)chooseOrder(s,{orderId:autoPlayer?p.ids[0]??null:null});
 }
 export function observeAmbitions(s){
+ observeRelativeLand(s);
  const a=s.ambitions?.selected;if(!a||a.status!=='ACTIVE')return;
- const g=ambition(a.id).goal;
+ const g=goalFor(s,a.id);
+ if(s.ambitions.relativeLand?.[a.id]?.violated){a.status='FAILED';a.failedTurn=s.turn;return;}
  if(!possible(s,g)){a.status='FAILED';a.failedTurn=s.turn;return;}
  if(g.type==='RECRUIT_KEEP'&&friendly(s,g.officer))a.recruited=true;
  if(g.type==='ALLIANCE_KEEP'){
@@ -105,10 +154,10 @@ export function observeAmbitions(s){
  }
 }
 function ambitionConditions(s,a){
- const g=ambition(a.id).goal,fid=s.playerFactionId,cityName=id=>s.cityDisplayNames?.[id]??s.cities[id]?.name??id;
+ const g=goalFor(s,a.id),fid=s.playerFactionId,name=id=>cityName(s,id);
  const row=(key,text,met)=>({key,text,met});
  switch(g.type){
- case 'HOLD_AT_END':return [...g.cities.map(id=>row(id,cityName(id),s.cities[id]?.ownerFactionId===fid)),...(g.plusMajor?[row('plusMajor',`큰 성 ${g.plusMajor}개 더`,values(s.cities).filter(c=>c.kind==='major'&&c.ownerFactionId===fid&&!g.cities.includes(c.cityId)).length>=g.plusMajor)]:[])];
+ case 'HOLD_AT_END':return [...g.cities.map(id=>row(id,name(id),s.cities[id]?.ownerFactionId===fid)),...(g.plusMajor?[row('plusMajor',`큰 성 ${g.plusMajor}개 더`,values(s.cities).filter(c=>c.kind==='major'&&c.ownerFactionId===fid&&!g.cities.includes(c.cityId)).length>=g.plusMajor)]:[])];
  case 'PERSON_BOUND':return [g.officer,...(g.officers??[])].filter(Boolean).flatMap(id=>{
   const r=relation(s,g.lord,id),tiers=RELATIONS.tiers.map(t=>t.id),rank=tiers.indexOf(r.tier),target=tiers.indexOf(g.tier),steps=Math.max(0,target-rank);
   return [row(id,`${person(s,id)?.name??id} 곁에`,friendly(s,id)),row(`${id}.relation`,`관계 ${r.tierName}${steps?` (${RELATIONS.tiers[target]?.name??g.tier}까지 ${steps}단계)`:''}`,rank>=target)];
@@ -166,9 +215,9 @@ export function finishAmbitionRun(s){
 export function ambitionStep(s,{finish=true}={}){observeAmbitions(s);settleOrders(s);if(finish)finishAmbitionRun(s);startAmbitionTurn(s);}
 export function ambitionsView(s,fid){
  if(fid!==s.playerFactionId||s.mapId==='v1')return {};
- const x=s.ambitions,a=x?.selected,p=x?.offers.find(p=>p.turn===s.turn),selected=a?{...clone(ambition(a.id)),status:a.status,conditions:ambitionConditions(s,a)}:null;
+ const x=s.ambitions,a=x?.selected,p=x?.offers.find(p=>p.turn===s.turn),selected=a?{...ambitionDefinition(s,a.id),status:a.status,conditions:ambitionConditions(s,a)}:null;
  const card=o=>({...clone(order(o.id)),status:o.status,signedTurn:o.signedTurn,deadline:o.deadline,progress:clone(o.progress),...(o.resolvedTurn!==undefined?{resolvedTurn:o.resolvedTurn,rewardLine:o.rewardLine}:{}),turnsLeft:o.status==='ACTIVE'?Math.max(0,o.deadline-s.turn+1):0});
- const out={ambition:{selected,canChoose:!!x&&!x.closed&&!s.gameResult&&s.turn<=data.ambition.chooseUntilTurn,chooseUntilTurn:data.ambition.chooseUntilTurn,skipLabel:data.ambition.skipLabel,offered:!x?.closed&&!s.gameResult?(x?.offeredIds??[]).filter(id=>possible(s,ambition(id).goal)).map(id=>clone(ambition(id))):[]},orders:{offer:p&&!p.closed&&!s.gameResult?{turn:p.turn,deadline:p.turn+data.orders.durationTurns-1,choices:p.ids.map(id=>clone(order(id))),skipLabel:data.orders.skipLabel}:null,history:(x?.orders??[]).map(card),rerolls:x?.rerolls??0},unlocks:clone(s.unlocks??[]),openingMemory:clone(s.openingMemory??[])};
+ const out={ambition:{selected,canChoose:!!x&&!x.closed&&!s.gameResult&&s.turn<=data.ambition.chooseUntilTurn,chooseUntilTurn:data.ambition.chooseUntilTurn,skipLabel:data.ambition.skipLabel,offered:!x?.closed&&!s.gameResult?(x?.offeredIds??[]).filter(id=>possible(s,ambition(id).goal)).map(id=>ambitionDefinition(s,id)):[]},orders:{offer:p&&!p.closed&&!s.gameResult?{turn:p.turn,deadline:p.turn+data.orders.durationTurns-1,choices:p.ids.map(id=>clone(order(id))),skipLabel:data.orders.skipLabel}:null,history:(x?.orders??[]).map(card),rerolls:x?.rerolls??0},unlocks:clone(s.unlocks??[]),openingMemory:clone(s.openingMemory??[])};
  return out;
 }
 export function ambitionResultView(s){
@@ -194,6 +243,15 @@ export function validateAmbitions(s){
  if(s.legacy?.memoryLastSeen!==undefined){const m=s.legacy.memoryLastSeen;if(!m||typeof m!=='object'||Array.isArray(m)||Object.entries(m).some(([id,n])=>!data.unlocks.list.some(u=>u.id===id&&u.kind==='MEMORY')||!Number.isSafeInteger(n)||n<0||n>s.legacy.runsFinished))throw new Error('INVALID_CAMPAIGN_LEGACY');}
  const x=s.ambitions;if(!x)return;
  if(x.version!==1||!Number.isSafeInteger(x.rerolls)||x.rerolls<0||typeof x.closed!=='boolean'||typeof x.finished!=='boolean'||!Array.isArray(x.offeredIds)||x.offeredIds.some(id=>ambition(id)?.faction!==s.playerFactionId)||x.selected&&(!x.offeredIds.includes(x.selected.id)||!['ACTIVE','ACHIEVED','FAILED'].includes(x.selected.status))||!Array.isArray(x.offers)||!Array.isArray(x.orders)||!Array.isArray(x.unlocksEarned))throw new Error('INVALID_CAMPAIGN_AMBITIONS');
+ if(x.relativeLand!==undefined){
+  const entries=Object.entries(x.relativeLand??{});
+  if(!x.relativeLand||Array.isArray(x.relativeLand)||entries.length!==1)throw new Error('INVALID_CAMPAIGN_RELATIVE_AMBITION');
+  for(const [id,r] of entries){
+   const spec=ambition(id)?.relativeGoal,g=r?.goal;
+   if(!spec||!r||ambition(id).faction!==s.playerFactionId||!s.cities[r.startCityId]||g?.type!=='HOLD_AT_END'||g.plusMajor!==0||!Array.isArray(g.cities)||g.cities.length!==(spec.minorCount??0)+1||new Set(g.cities).size!==g.cities.length||g.cities.some(id=>!s.cities[id])||typeof r.goalText!=='string'||r.keep!==(spec.rule!=='FARTHEST_MAJOR')||!Array.isArray(r.held)||new Set(r.held).size!==r.held.length||r.held.some(id=>!g.cities.includes(id))||!Number.isSafeInteger(r.captureIndex)||r.captureIndex<0||typeof r.violated!=='boolean')throw new Error('INVALID_CAMPAIGN_RELATIVE_AMBITION');
+   if(spec.minorCount?g.cities[0]!==r.startCityId||g.cities.slice(1).some(id=>s.cities[id].kind!=='minor'):g.cities.some(id=>id===r.startCityId||s.cities[id].kind!=='major'))throw new Error('INVALID_CAMPAIGN_RELATIVE_AMBITION');
+  }
+ }
  for(const p of x.offers)if(!data.orders.offerTurns.includes(p.turn)||!Array.isArray(p.ids)||p.ids.length>data.orders.offerCount||new Set(p.ids).size!==p.ids.length||p.ids.some(id=>!order(id))||p.chosenId!==null&&!p.ids.includes(p.chosenId)||typeof p.closed!=='boolean')throw new Error('INVALID_CAMPAIGN_ORDER_OFFER');
  for(const o of x.orders)if(!order(o.id)||o.factionId!==s.playerFactionId||!['ACTIVE','ACHIEVED','FAILED'].includes(o.status)||o.deadline!==o.signedTurn+data.orders.durationTurns-1||JSON.stringify(o.goal)!==JSON.stringify(order(o.id).goal)||!o.baseline)throw new Error('INVALID_CAMPAIGN_ORDER');
 }

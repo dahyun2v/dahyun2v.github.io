@@ -1,3 +1,9 @@
+import {settleMechPersonnel} from './campaign-result-bridge.mjs';
+import {campaignMechQuery, campaignMechAllowed, campaignMechApply} from './campaign-mech-contracts.mjs';
+import {c450MoraleWeight,c450MoraleTarget,c450MoveAllowed} from './campaign-c450.mjs';
+import {pilotNoRout} from './campaign-c34.mjs';
+import {reclassHas,reclassHasOp} from './campaign-trait-reclass.mjs';
+import {effectModifiers,triggerEffects} from './campaign-effects.mjs';
 import {sample4EntryAllowed,sample4FireImmune} from './campaign-rule-registry.mjs';
 import {resolveForcedArrival} from './campaign-combat.mjs';
 import {engineEvent,engineMoraleGuard} from './campaign-engines.mjs';
@@ -18,29 +24,50 @@ import {uniqueMoraleWeight,uniqueOwned} from './campaign-rule-registry.mjs';
 import {C12,campaignSubAbility,changeFormation,directionToward} from './campaign-abilities.mjs';
 import {movementEffect,hasCampaignRule,ambushHidden} from './campaign-effects.mjs';
 import {hexDistance,boardNeighbors,tileId} from './map-primitives.mjs';
-import {edgeTicks,findPath} from './movement.mjs';
+import {edgeTicks,edgeTicksForSearch,findPath} from './movement.mjs';
 import {campaignMovementWorld,castleArmyActive,campaignDestinationAllowed} from './campaign-city-footprint.mjs';
 import {createRng} from './rng.mjs';
 export const enemies=(s,a)=>memoCampaignQuery(s,'enemies:'+a.armyId,()=>Object.values(s.armies).filter(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&castleArmyActive(s,b)));
 export const inControlZone=(s,a,id=a.tileId)=>memoCampaignQuery(s,'zoc:'+a.armyId+':'+id,()=>inControlZoneUncached(s,a,id));
 const inControlZoneUncached=(s,a,id)=>{
- if(c31IgnoreControlZone(s,a.armyId))return false;
- const c33Ignore=(c33Owned(s,a.armyId,'BLOODY_PATH')&&a.morale==='ROUTING'||c33Formation(s,a.armyId,'FORMATION_DRILL'))&&hexDistance(s.tiles[a.tileId],s.tiles[id])===1;if(c33Ignore)return false;
- const fearless=a.morale==='STEADY'&&uniqueOwned(s,a.armyId,'U_FEARLESS'),unlimited=uniqueOwned(s,a.armyId,'U_FLYING_GENERAL')||(a.effectStates??[]).some(e=>e.rule==='IGNORE_ZOC'&&e.expiresTurn>=s.turn)||Object.values(s.campaignGrowth?.officers[a.commanderId]?.cards??{}).some(c=>c.rarity==='MYTHIC'&&c.effects?.some(e=>e.rule==='IGNORE_ZOC')&&s.campaignGrowth.officers[a.commanderId].track.growthStates[a.commanderId].ownedTraitRanks[c.traitId]);
- const ignore=hasCampaignRule(s,a.armyId,'IGNORE_ZOC')&&(!fearless||unlimited||hexDistance(s.tiles[a.tileId],s.tiles[id])<=1);
- return !ignore&&enemies(s,a).some(b=>hexDistance(s.tiles[id],s.tiles[b.tileId])<=(hasCampaignRule(s,b.armyId,'EXTENDED_ZOC')?2:1)&&b.formation!=='BROKEN'&&!combatIgnoreZone(s,a.armyId,b)&&!ambushHidden(s,b.armyId,a.factionId));
+ // Every control rule has radius at most two. Reject distant tiles before
+ // evaluating officer exceptions; this index lives only in the read scope.
+ const nearby=memoCampaignQuery(s,'zoc-nearby:'+a.armyId,()=>{
+  const result=new Map();
+  for(const b of enemies(s,a)){
+   if(b.formation==='BROKEN'||!campaignMechAllowed(s,'H05','controlZone',{sourceId:b.armyId,targetId:a.armyId}))continue;
+   const center=s.tiles[b.tileId],radius=hasCampaignRule(s,b.armyId,'EXTENDED_ZOC')?2:1;
+   for(let dq=-radius;dq<=radius;dq++)for(let dr=Math.max(-radius,-dq-radius);dr<=Math.min(radius,-dq+radius);dr++){
+    const tile=`${center.q+dq},${center.r+dr}`;
+    if(!result.has(tile))result.set(tile,[]);result.get(tile).push(b);
+   }
+  }
+  return result;
+ }).get(id);
+ if(!nearby)return false;
+ const policy=memoCampaignQuery(s,'zoc-policy:'+a.armyId,()=>{
+  if(c31IgnoreControlZone(s,a.armyId))return {all:true};
+  const adjacent=(c33Owned(s,a.armyId,'BLOODY_PATH')&&a.morale==='ROUTING'||c33Formation(s,a.armyId,'FORMATION_DRILL'));
+  const fearless=a.morale==='STEADY'&&uniqueOwned(s,a.armyId,'U_FEARLESS');
+  const unlimited=uniqueOwned(s,a.armyId,'U_FLYING_GENERAL')||(a.effectStates??[]).some(e=>e.rule==='IGNORE_ZOC'&&e.expiresTurn>=s.turn)||Object.values(s.campaignGrowth?.officers[a.commanderId]?.cards??{}).some(c=>c.rarity==='MYTHIC'&&c.effects?.some(e=>e.rule==='IGNORE_ZOC')&&s.campaignGrowth.officers[a.commanderId].track.growthStates[a.commanderId].ownedTraitRanks[c.traitId]);
+  return {adjacent,fearless,unlimited,ignore:hasCampaignRule(s,a.armyId,'IGNORE_ZOC')};
+ });
+ if(policy.all||policy.adjacent&&hexDistance(s.tiles[a.tileId],s.tiles[id])===1)return false;
+ if(policy.ignore&&(!policy.fearless||policy.unlimited||hexDistance(s.tiles[a.tileId],s.tiles[id])<=1))return false;
+ return nearby.some(b=>!combatIgnoreZone(s,a.armyId,b)&&!ambushHidden(s,b.armyId,a.factionId));
 };
 export function campaignPath(s,id,destination){return withCampaignQueries(s,()=>campaignPathUncached(s,id,destination));}
 function campaignPathUncached(s,id,destination){
+ if(!campaignMechAllowed(s,'H05','moveAllowed',{sourceId:id,from:s.armies[id]?.tileId,to:destination,kind:'VOLUNTARY'}))return null;
  if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return null;
  if(!combatDestinationAllowed(s,id,destination)||diplomacyMoveReason(s,id,destination))return null;
  if(Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id))return campaignReachable(s,id,Infinity).get(destination)??null;
  if(movementEffect(s,id).rooted||hasCampaignRule(s,id,'NO_RETREAT')&&enemies(s,s.armies[id]).some(b=>hexDistance(s.tiles[b.tileId],s.tiles[s.armies[id].tileId])===1))return null;
- const a=s.armies[id],world=combatFireMovementWorld(s,id,campaignMovementWorld(s,id)),blocked=new Set(world.mapRules.blockedEdges);
+ const a=s.armies[id],world=combatFireMovementWorld(s,id,campaignMovementWorld(s,id,{destination})),blocked=new Set(world.mapRules.blockedEdges);
  // A zone can be a destination, but cannot be an intermediate path node.
  for(const t of Object.values(s.tiles))if(t.tileId!==a.tileId&&t.tileId!==destination&&inControlZone(s,a,t.tileId))
   for(const n of boardNeighbors(t,s.tiles))blocked.add([t.tileId,tileId(n)].sort().join('|'));
- const path=findPath({...world,mapRules:{...world.mapRules,blockedEdges:[...blocked]}},id,destination);return path&&path.pathTileIds.length-1<=combatMovement(s,id).max&&!path.pathTileIds.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path.pathTileIds[i]))?path:null;
+ const path=findPath({...world,mapRules:{...world.mapRules,blockedEdges:[...blocked]}},id,destination);return path&&path.pathTileIds.length-1<=movementEffect(s,id).max&&!path.pathTileIds.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path.pathTileIds[i]))?path:null;
 }
 // 한 번의 탐색으로 이번 차례에 닿는 모든 칸(campaignPath 와 같은 경로·시간). 통제 구역 칸은 들어갈 수는 있지만 거쳐 갈 수 없다.
 // campaignPath 의 Dijkstra(거리 → 칸 id 순)를 그대로 따르므로 칸마다 따로 찾은 결과와 같다.
@@ -50,7 +77,9 @@ function campaignReachableQuery(s,id,budget,pathMode=false){
  const diplomatic=Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id);
  if((!pathMode||diplomatic)&&combatCanPostMove(s,id))budget=Math.min(budget,s.armies[id].c27?.cantoTicks??budget);
  if(movementEffect(s,id).rooted||hasCampaignRule(s,id,'NO_RETREAT')&&enemies(s,s.armies[id]).some(b=>hexDistance(s.tiles[b.tileId],s.tiles[s.armies[id].tileId])===1))return new Map();
- const a=s.armies[id],world=combatFireMovementWorld(s,id,campaignMovementWorld(s,id)),start=a.tileId;
+ const a=s.armies[id],world=combatFireMovementWorld(s,id,campaignMovementWorld(s,id,{towardCity:true})),start=a.tileId,movementMax=movementEffect(s,id).max;
+ const ticks=edgeTicksForSearch(world,world.armies[id]);
+ const directional=reclassHas(s,id,'CT-M13');
  const zone=new Set(Object.values(s.tiles).filter(t=>t.tileId!==start&&inControlZone(s,a,t.tileId)).map(t=>t.tileId));
  const dist=new Map([[start,0]]),previous=new Map(),done=new Set(),heap=[[0,start]];
  const less=(x,y)=>x[0]<y[0]||x[0]===y[0]&&x[1].localeCompare(y[1],'en')<0;
@@ -60,12 +89,12 @@ function campaignReachableQuery(s,id,budget,pathMode=false){
   const [d,current]=pop();if(done.has(current)||d!==dist.get(current))continue;if(d>budget)break;done.add(current);
   if(current!==start&&zone.has(current))continue;
   for(const p of boardNeighbors(world.tiles[current],world.tiles)){
-   const next=tileId(p);if((!pathMode||diplomatic)&&diplomacyMoveReason(s,id,next,current))continue;const cost=edgeTicks(world,world.armies[id],current,next);if(cost===null)continue;
+   const next=tileId(p);if((!pathMode||diplomatic)&&diplomacyMoveReason(s,id,next,current))continue;const cost=ticks(current,next);if(cost===null)continue;
    const distance=d+cost;if(distance<(dist.get(next)??Infinity)){dist.set(next,distance);previous.set(next,current);push([distance,next]);}
   }
  }
  const out=new Map();
- for(const [t,d] of dist){if(!d||d>budget||!combatDestinationAllowed(s,id,t))continue;const path=[t];while(previous.has(path[0]))path.unshift(previous.get(path[0]));if(path.length-1>combatMovement(s,id).max||pathMode&&!diplomatic&&path.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path[i])))continue;out.set(t,{pathTileIds:path,totalTicks:d});}
+ for(const [t,d] of dist){if(!d||d>budget||!combatDestinationAllowed(s,id,t))continue;const path=[t];while(previous.has(path[0]))path.unshift(previous.get(path[0]));if(path.length-1>movementMax||pathMode&&!diplomatic&&path.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path[i])))continue;const exact=directional?campaignMovementWorld(s,id,{destination:t}):null,total=exact?path.slice(1).reduce((sum,to,i)=>sum+(edgeTicks(exact,exact.armies[id],path[i],to)??Infinity),0):d;if(total>budget)continue;out.set(t,{pathTileIds:path,totalTicks:total});}
  return out;
 }
 // All destinations for one read-only snapshot; no persistent engine cache.
@@ -75,11 +104,12 @@ export function campaignPaths(s,id){return withCampaignQueries(s,()=>{
  return paths;
 });}
 export function retreatRouting(s,id){
+ if(!campaignMechAllowed(s,'H05','moveAllowed',{sourceId:id,from:s.armies[id]?.tileId,kind:'ROUTING'}))return null;
  const a=s.armies[id],foes=enemies(s,a);if(!foes.length||hasCampaignRule(s,id,'NO_RETREAT')&&foes.some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1))return null;
  const world=combatFireMovementWorld(s,id,campaignMovementWorld(s,id)),distance=id=>Math.min(...foes.map(b=>hexDistance(s.tiles[id],s.tiles[b.tileId])));
  const cities=Object.values(s.cities).filter(c=>c.ownerFactionId===a.factionId);
  const home=id=>cities.length?Math.min(...cities.map(c=>hexDistance(s.tiles[id],s.tiles[c.tileId]))):Infinity;
- const choices=boardNeighbors(s.tiles[a.tileId],s.tiles).map(tileId).filter(to=>edgeTicks(world,world.armies[id],a.tileId,to)!==null&&!diplomacyMoveReason(s,id,to)&&!Object.values(s.armies).some(b=>b.armyId!==id&&castleArmyActive(s,b)&&b.tileId===to)&&distance(to)>distance(a.tileId))
+ const choices=boardNeighbors(s.tiles[a.tileId],s.tiles).map(tileId).filter(to=>campaignMechAllowed(s,'H05','moveAllowed',{sourceId:id,from:a.tileId,to,kind:'ROUTING'})&&edgeTicks(world,world.armies[id],a.tileId,to)!==null&&!diplomacyMoveReason(s,id,to)&&!Object.values(s.armies).some(b=>b.armyId!==id&&castleArmyActive(s,b)&&b.tileId===to)&&distance(to)>distance(a.tileId))
   .sort((x,y)=>distance(y)-distance(x)||home(x)-home(y)||x.localeCompare(y,'en'));
  if(!choices.length)return null;
  const from=a.tileId;a.tileId=choices[0];a.facing=directionToward(s.tiles[from],s.tiles[a.tileId],a.facing);a.currentOrder=null;a.movementState=null;resolveForcedArrival(s,id,from);return {armyId:id,from,to:s.armies[id].tileId};
@@ -89,7 +119,9 @@ let ruleNames=null;
 const reasonText=r=>{if(!/^[A-Z][A-Z0-9_]+$/.test(r??''))return r;ruleNames??=new Map(UNIQUE_OFFICERS.flatMap(o=>[o.uniqueTrait,o.signatureTactic]).flatMap(c=>(c?.effects??[]).filter(e=>e.op==='RULE').map(e=>[e.rule,c.name])));return ruleNames.get(r)??'특기 효과';};
 const labels={STEADY:'안정',SHAKEN:'동요',ROUTING:'패주'};
 export function changeMorale(s,id,to,reason,changes=[]){
- const a=s.armies[id],from=a.morale??'STEADY';if(['STEADY','SHAKEN','ROUTING'].indexOf(to)<['STEADY','SHAKEN','ROUTING'].indexOf(from)&&c34Near(s,id,1).some(b=>uniqueOwned(s,b.armyId,'U_STRICT_LAW')))return changes;if(reason!=='아홉 목숨'&&to==='ROUTING'&&(a.c29?.noRoutTurn===s.turn||hasCampaignRule(s,id,'NEVER_ROUT')||Object.values(s.armies).some(b=>b.factionId===a.factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[b.tileId],s.tiles[a.tileId])===1&&hasCampaignRule(s,b.armyId,'RALLY_AURA'))))to='SHAKEN';if(from===to)return changes;if(['STEADY','SHAKEN','ROUTING'].indexOf(to)>['STEADY','SHAKEN','ROUTING'].indexOf(from)&&c30IgnoreMorale(s,id)){markRelationMorale(s,id);return changes;}
+ to=campaignMechQuery(s,'H15','moraleTarget',{targetId:id,from:s.armies[id]?.morale,reason},to);
+ if(to==='ROUTING'&&pilotNoRout(s,id))to='SHAKEN';
+ const a=s.armies[id],from=a.morale??'STEADY';to=c450MoraleTarget(s,id,from,to);if(['STEADY','SHAKEN','ROUTING'].indexOf(to)<['STEADY','SHAKEN','ROUTING'].indexOf(from)&&c34Near(s,id,1).some(b=>uniqueOwned(s,b.armyId,'U_STRICT_LAW')))return changes;if(reason!=='아홉 목숨'&&to==='ROUTING'&&(a.c29?.noRoutTurn===s.turn||hasCampaignRule(s,id,'NEVER_ROUT')||Object.values(s.armies).some(b=>b.factionId===a.factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[b.tileId],s.tiles[a.tileId])===1&&hasCampaignRule(s,b.armyId,'RALLY_AURA'))))to='SHAKEN';if(from===to)return changes;if(['STEADY','SHAKEN','ROUTING'].indexOf(to)>['STEADY','SHAKEN','ROUTING'].indexOf(from)&&c30IgnoreMorale(s,id)){markRelationMorale(s,id);return changes;}
  if(reason!=='아홉 목숨'&&combatMoraleGuard(s,id,from,to)){markRelationMorale(s,id);return changes;}
  const survival=c28Record(s,id)?.c28?.survival;
  if(c28Enabled(s)&&survival?.name==='철의 의지'&&survival.until>=s.turn&&survival.uses>0&&['STEADY','SHAKEN','ROUTING'].indexOf(to)>['STEADY','SHAKEN','ROUTING'].indexOf(from)){survival.uses--;markRelationMorale(s,id);return changes;}
@@ -100,9 +132,14 @@ export function changeMorale(s,id,to,reason,changes=[]){
  engineEvent(s,'MORALE_CHANGE',event);changes.push(event);s.moraleLog??=[];s.moraleLog.push({turn:s.turn,...event});
  if(to==='ROUTING'){changeFormation(s,id,2);}
  if(to==='ROUTING')event.retreat=retreatRouting(s,id);
+ if(to==='ROUTING')settleMechPersonnel(s,'routPlan',{eventId:`ROUT.${s.turn}.${id}.${s.battleSequence}.${s.moraleLog.length}`,sourceId:s.c50?.context?.attackerId??null,targetId:id,event});
+ if(to==='ROUTING')campaignMechApply(s,'H02','routSettled',{eventId:`ROUT.${s.turn}.${id}.${s.battleSequence}.${s.moraleLog.length}`,sourceId:s.c50?.context?.attackerId??null,targetId:id,event});
  return changes;
 }
 function moralePassThreshold(s,id,reason,weight){
+ weight=c450MoraleWeight(s,id,weight);
+ if(reclassHasOp(s,id,'MORALE_WEIGHT_MOD',true))weight+=effectModifiers(s,id,[],{}).MORALE_WEIGHT_MOD;
+ const last=s.lastCombat;if(last?.targetId===id&&s.armies[last.attackerId]&&reclassHasOp(s,last.attackerId,'TARGET_MORALE_WEIGHT_MOD'))weight+=effectModifiers(s,last.attackerId,[],{targetId:id}).TARGET_MORALE_WEIGHT_MOD;
  weight=relationMoraleWeight(s,id,c30MoraleWeight(s,id,weight))-(c33Owned(s,id,'MORALE_WARD')?5:0);
  if(c29Aw(s,id,'CROSSOVER')&&c29Record(s,id).cards[c29Record(s,id).coreId]?.domestic)weight*=.9;
  weight=c34MoraleWeight(s,id,weight,reason);weight=uniqueMoraleWeight(s,id,weight)*(c28Rule(s,id,'COOL_HEAD')?C28.coolHeadRatio:1);
@@ -116,6 +153,7 @@ export function moraleDropChance(s,id,reason,weight){return Math.max(0,Math.min(
 export function checkMorale(s,id,reason,weight,changes=[]){if(/불|화계/.test(reason)&&sample4FireImmune(s,id))return changes;if(c34IgnoreMorale(s,id,reason))return changes;
  if(s.armies[id]?.c33?.moraleFixedUntil>=s.turn)return changes;
  const a=s.armies[id],probability=moralePassThreshold(s,id,reason,weight);if(!castleArmyActive(s,a)||a.morale==='ROUTING')return changes;
+ if(reclassHas(s,id,'TC-C04c')){triggerEffects(s,id,'ON_MORALE_CHECK');a.c319??={};a.c319.moraleTurn=s.turn;}
  const rng=createRng();rng.restore(s.rng.value);const roll=rng.next()*100;s.rng.value=rng.state();s.rng.draws++;
  if(roll>=probability)changeMorale(s,id,a.morale==='SHAKEN'?'ROUTING':'SHAKEN',reason,changes);
  return changes;
@@ -145,6 +183,7 @@ export function settleMorale(s){
 }
 export function regroupReason(s,id){const a=s.armies[id];return a?.morale!=='SHAKEN'&&a?.formation==='ORDERED'?'동요 상태에서만 가능':enemies(s,a).some(b=>hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1)?'적과 인접하여 재정비 불가':'';}
 function combatDestinationAllowed(s,id,to){
+ if(!c450MoveAllowed(s,id,s.armies[id]?.tileId,to))return false;
  if(!sample4EntryAllowed(s,id,to)||combatFireAt(s,to)&&!sample4FireImmune(s,id)||!campaignDestinationAllowed(s,id,to))return false;
  if(!combatMoveAllowed(s,id,to))return false;
  if(combatCanPostMove(s,id)&&s.armies[id].c32?.postMove!==s.turn){const a=s.armies[id],foes=enemies(s,a);const distance=tile=>Math.min(...foes.map(b=>hexDistance(s.tiles[tile],s.tiles[b.tileId])));if(foes.length&&distance(to)<=distance(a.tileId))return false;}

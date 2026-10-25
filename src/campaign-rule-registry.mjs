@@ -1,3 +1,8 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {campaignMechRemoveStatuses,campaignMechAllowed,campaignMechStatus} from './campaign-mech-contracts.mjs';
+import {mechanicsV2Enabled} from './campaign-c34.mjs';
+import {reclassCard,reclassCityMods,reclassScale,reclassStart,reclassAfterAttack,reclassSecurityDelta,reclassHas} from './campaign-trait-reclass.mjs';
+import {effectModifiers} from './campaign-effects.mjs';
 import {enginesEnabled} from './campaign-engines.mjs';
 import {forceArmyTo} from './campaign-combat.mjs';
 import C29_DATA from '../../docs/design-data/officer-pack/tactic-mods-v0.1.json' with {type:'json'};
@@ -14,7 +19,7 @@ import {c34Cost} from './campaign-c34.mjs';
 import {c34Cancel,c34AttackOptions,c34Range,c34Strategy} from './campaign-c34.mjs';
 import {C34_OFFICERS} from './campaign-officers-51-100.mjs';
 import {C34_RULES,C34_DAMAGE_TACTICS,c34Ops,c34Tactic,c34HasRule,c34Immune,c34Domestic,c34Siege,c34Targets,c34Start,c34AfterAttack,c34Xp,c34MoraleWeight} from './campaign-c34.mjs';
-import {attackDirection,archerAttackReason} from './campaign-abilities.mjs';
+import {attackDirection,archerAttackReason,campaignRoll} from './campaign-abilities.mjs';
 import {c29CoreFactor,c29Hidden,c29CoreCard,c29Aw,c29CityOutput,c29Gain,c29Cooldown,c30ElementDamage,c30Spread} from './campaign-c29.mjs';
 import {c28Suppressed,c28Rule,C28,c28ControlGuard} from './campaign-career.mjs';
 import redesign50 from '../../docs/design-data/officer-pack/redesign-50-v0.2.json' with {type:'json'};
@@ -23,17 +28,30 @@ const commonPool={"schema":"common-pool-v0.4","status":"TRIAL — C229 게이지
 // C25 extension registry. Existing engine rules retain their existing handlers.
 // C168: memoize only within an explicitly read-only query. Mutable engine steps
 // never retain entries; nested queries on the same snapshot share this scope.
+// A compact probe can temporarily cover a still-active outer board scope.
+// Reuse that board's entries only while its original read callback is active.
 let queryScope=null;
+function campaignQueryScope(s){
+ for(let scope=queryScope;scope;scope=scope.previous)if(scope.state===s)return scope;
+ return null;
+}
 export function withCampaignQueries(s,read){
- if(queryScope?.state===s)return read();
- const previous=queryScope;queryScope={state:s,values:new Map()};
+ if(campaignQueryScope(s))return read();
+ const previous=queryScope;queryScope={state:s,values:new Map(),previous};
  try{return read();}finally{queryScope=previous;}
 }
 export function memoCampaignQuery(s,key,read){
- if(queryScope?.state!==s)return read();
- const values=queryScope.values;if(!values.has(key))values.set(key,read());return values.get(key);
+ const scope=campaignQueryScope(s);if(!scope)return read();
+ const values=scope.values;if(!values.has(key))values.set(key,read());return values.get(key);
 }
-const handlers=new Map();
+// C324: retained exception handlers are restricted to the unique trait layer.
+export const POOL_DOMESTIC_RULES=Object.freeze(["SURPLUS_TO_TROOPS","UNBLOCKABLE_SUPPLY","ALT_PAYMENT","LAST_WALL","IMPART","RELEASE_PROPAGANDA","LOCAL_PRIVILEGE","COUNTER_SPY","MARTIAL_LAW","THREE_VISITS","REMOTE_RECRUIT","DEFECTION_WELCOME","BLOODLESS_MUSTER","PRODUCTION_OVERFLOW","INCORRUPTIBLE","REFUGEE_INFLOW","SHARED_GRANARY","INSTANT_ALLEGIANCE","TALENT_MAGNET","REGENT"]);
+const POOL_C33_RULES=Object.freeze(["FLANK_FIRST_STRIKE","POINT_BLANK","SHOOT_INTO_FOREST","ASSIST_STRIKE","CHAIN_ACTION","SIEGE_RANGE","LUCKY_ESCAPE","BLOODY_PATH","DAMAGE_CAP","SCHEME_RANGE","SCHEME_HASTE","SEE_THROUGH","INSIGHT_AURA","DIVINE_CALC","EXECUTE","FAKE_BANNERS","TAX_ADVANCE","BENEVOLENT_RULE","BANDIT_SWEEP","RITUAL","TRIBAL_FRIEND"]);
+export const UNIQUE_POOL_RULES=Object.freeze([...POOL_DOMESTIC_RULES,...POOL_C33_RULES]);
+export const campaignRuleAllowed=(rule,card)=>!['POOL_RECALL',...UNIQUE_POOL_RULES].includes(rule)||card?.kind==='trait'&&card.core===true;
+const ownedRuleAllowed=(r,card,rule)=>campaignRuleAllowed(rule,card)&&(!UNIQUE_POOL_RULES.includes(rule)||card===r.cards[r.coreId]);
+for(const key of ['traits','domestic'])commonPool[key]=commonPool[key].map(reclassCard);
+const handlers=new Map(['G01','G03','G05','G25'].flatMap(id=>['TRAIT','E','R'].map(slot=>[`P417_${id}_${slot}`,ctx=>mechanicsV2Enabled(ctx.s)?ctx.apply?.(ctx):undefined])));
 // C32 definitions are projected from the read-only redesign input below.
 export function registerCampaignRule(id,handler){
  if(typeof id!=='string'||!id||typeof handler!=='function')throw new Error('INVALID_CAMPAIGN_RULE_HANDLER');
@@ -44,20 +62,20 @@ export const campaignRuleRegistered=id=>handlers.has(id);
 export function executeCampaignRule(id,context){return handlers.get(id)?.(context);}
 
 // C33 trial hooks. Queries never mutate state; followups never dispatch actions.
-export const c33Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c33Enabled=s=>isSliceMap(s.mapId);
 export const c33Card=c=>!!c?.c33;
 export const c33FormationCard=c=>c33Card(c)&&c.effects.some(e=>e.rule?.startsWith('FORMATION_'));
 export function installC33(r){
- if(r.c33Version===4)return;
+ if(r.c33Version===5)return;
  for(const card of [...C33_POOL.traits,...C33_POOL.tactics,...C33_POOL.domestic]){
   const traitId=`${r.pack.id}.c33.${card.id}`,copy={...structuredClone(card),traitId,c33:true,sourceText:card.domestic?'공용 내정':'공용'};delete copy.formerName;
-  if(card.kind==='tactic')r.cards[traitId]=copy;else r.cards[traitId]??=copy;
+  if(card.kind==='tactic'||card.reclassVersion===319)r.cards[traitId]=copy;else r.cards[traitId]??=copy;
   if(!r.pool.traits.some(t=>t.traitId===traitId))r.pool.traits.push({traitId,ownershipType:'PUBLIC',rarity:card.rarity,rankMax:5,stageTags:['EARLY','MID','LATE'],affinityTags:[card.classTag],roleTags:[],experienceTags:[],domestic:!!card.domestic,careerCard:true});
  }
- r.c33Version=4;if(r.track)syncPoolFingerprint(r);
+ r.c33Version=5;if(r.track)syncPoolFingerprint(r);
 }
 export function c33Owned(s,id,rule){return c33Enabled(s)?combatRule(s,id,rule):null;}
-export function c33Formation(s,id,rule){const f=s.armies[id]?.c33?.formation;return c33Enabled(s)&&f&&f.until>=s.turn&&(!rule||f.rule===rule)?f:null;}
+export function c33Formation(s,id,rule){const f=s.armies[id]?.c33?.formation;if(s.armies[id]?.troopQDisruptedTurn===s.turn&&f?.rule==='FORMATION_RING')return null;return c33Enabled(s)&&f&&f.until>=s.turn&&(!rule||f.rule===rule)?f:null;}
 // Public perception only; never use this count to settle damage.
 export function campaignShownCount(s,id,factionId){const a=s.armies[id];return a.troopCount*campaignShownScale(s,id,factionId);}
 export function campaignShownScale(s,id,factionId){const a=s.armies[id];return a&&a.factionId!==factionId&&s.knowledge[factionId]?.tiles[a.tileId]==='VISIBLE'&&c33Owned(s,id,'FAKE_BANNERS')?2:1;}
@@ -69,7 +87,7 @@ export function c33Eligible(r,c){
  const troops=r.pack.allowedTroops??r.c33Troops??[];
  const required=['CT-V04'].includes(c.id)?['BT02']:['CT-V05','CT-V06','CTA-23','CTA-24','CTA-25','CTA-52'].includes(c.id)?['BT03']:c.id==='CT-V12'?['catapult']:c.id==='CT-V01'?['BT01','BT02']:null;
  if(required&&troops.length&&!troops.some(t=>required.includes(t)||required.includes(troopToCampaign(t))))return false;
- if(c.kind==='tactic'&&[c.classTag].flat().includes('무용')){const ranks=r.track.growthStates[r.pack.id].ownedTraitRanks;if(Object.keys(ranks).some(k=>r.cards[k]?.effects?.some(e=>e.rule==='DIVINE_CALC')))return false;}
+ if(c.kind==='tactic'&&[c.classTag].flat().includes('무용')){const ranks=r.track.growthStates[r.pack.id].ownedTraitRanks;if((r.equippedTraitIds??[]).some(k=>r.cards[k]?.effects?.some(e=>e.rule==='DIVINE_CALC'||e.op==='NO_MIGHT_TACTIC')))return false;}
  return true;
 }
 export function c33Mods(s,id,whens,ctx){
@@ -94,7 +112,7 @@ export function c33Mods(s,id,whens,ctx){
 }
 export function c33Movement(s,id){if(!c33Enabled(s))return {rooted:false,delta:0};const a=s.armies[id];return {rooted:!!c33Formation(s,id,'FORMATION_RING')||a.c33?.bideUntil>=s.turn,delta:(c33Formation(s,id,'FORMATION_DRILL')?2:0)-(a.c33?.chainCostTurn===s.turn?2:0)};}
 export function c33Range(s,id,card=null){const a=s.armies[id];if(!c33Enabled(s)||!a)return 0;return card?([card.classTag].flat().includes('지략')&&c33Owned(s,id,'SCHEME_RANGE')?1:0):(a.troopType==='catapult'&&c33Owned(s,id,'SIEGE_RANGE')?1:0)+(troopToCampaign(a.troopType)==='BT03'&&c33Formation(s,id,'FORMATION_GEESE')?1:0);}
-export function c33Cooldown(s,id,c){return Math.max(1,c.cooldown+(c33Owned(s,id,'SCHEME_HASTE')?([c.classTag].flat().includes('지략')?-1:[c.classTag].flat().includes('무용')?1:0):0)+(c33Enabled(s)&&s.armies[id]?.c33?.scaleCost?1:0));}
+export function c33Cooldown(s,id,c){const haste=c33Owned(s,id,'SCHEME_HASTE');return Math.max(1,c.cooldown+(haste&&!haste.params.automatic?([c.classTag].flat().includes('지략')?-1:[c.classTag].flat().includes('무용')?1:0):0)+(c33Enabled(s)&&s.armies[id]?.c33?.scaleCost?1:0));}
 export function c33Immune(s,id,status,source=null){
  if(!c33Enabled(s))return false;
  if(['CONFUSED','SLOWED','ROOTED'].includes(status)&&[s.armies[id],...c33Near(s,id)].some(a=>c33Owned(s,a.armyId,'INSIGHT_AURA')))return true;
@@ -134,9 +152,9 @@ export function c33AiUseful(s,id,c,target){const a=s.armies[id],t=s.armies[targe
 
 export function c33ApplyTactic({s,id,target,card,damage,heal,attack,cityAttack,log}){
  const a=s.armies[id],t=s.armies[target],e=card.effects.find(e=>e.op==='RULE'),rule=e?.rule,p=e?.params??{},near=(range=1,allies=false)=>c33Near(s,id,range,allies),line=text=>log.effectLines.push(`${card.name} — ${text}`);
- const status=(who,name)=>{if(c33Immune(s,who,name,id)||uniqueImmune(s,who,name))return;s.armies[who].effectStates.push({op:'STATUS_APPLY',status:name,value:0,source:id,startsTurn:s.turn,expiresTurn:s.turn+(s.campaignEffects.startedTurns[s.armies[who].factionId]===s.turn?1:0)});};
+ const status=(who,name)=>{if(effectModifiers(s,who,[],{targetId:id}).STATUS_WEIGHT_MOD&&campaignRoll(s)>=Math.max(5,Math.min(95,100+effectModifiers(s,who,[],{targetId:id}).STATUS_WEIGHT_MOD)))return;if(c33Immune(s,who,name,id)||uniqueImmune(s,who,name))return;s.armies[who].effectStates.push({op:'STATUS_APPLY',status:name,value:0,source:id,startsTurn:s.turn,expiresTurn:s.turn+(s.campaignEffects.startedTurns[s.armies[who].factionId]===s.turn?1:0)});};
  const buff=(who,op,value,turns=1)=>s.armies[who].effectStates.push({op,value,source:id,traitId:card.traitId,startsTurn:s.turn,expiresTurn:s.turn+turns-1});
- const strategy=()=>!!c33Owned(s,id,'DIVINE_CALC')||s.officers[a.commanderId].baseStats.intelligence+c34Strategy(s,id)>s.officers[t.commanderId].baseStats.intelligence;
+ const strategy=()=>!!c33Owned(s,id,'DIVINE_CALC')||s.officers[a.commanderId].baseStats.intelligence+c34Strategy(s,id)+effectModifiers(s,id).STRATEGY_MOD>s.officers[t.commanderId].baseStats.intelligence;
  const strike=(who=target,ratio=1)=>attack(who,ratio);
  if(c33FormationCard(card)){
   a.c33??={};a.c33.formation={rule,name:card.name,until:s.turn+1};
@@ -156,7 +174,7 @@ export function c33ApplyTactic({s,id,target,card,damage,heal,attack,cityAttack,l
  case 'ROOT':status(target,'ROOTED');break;
  case 'MASS_CONFUSE':if(strategy()){status(target,'CONFUSED');const b=Object.values(s.armies).filter(b=>b.armyId!==target&&b.factionId===t.factionId&&castleArmyActive(s,b)&&distance(s,t.tileId,b.tileId)===1&&s.knowledge[a.factionId].tiles[b.tileId]==='VISIBLE').sort((a,b)=>a.armyId.localeCompare(b.armyId))[0];if(b)status(b.armyId,'CONFUSED');}break;
  case 'ROCKSLIDE':strike();changeFormation(s,target,1,log.formationChanges);break;
- case 'CLEANSE':case 'DEEP_CURE':t.effectStates=t.effectStates.filter(e=>e.op!=='STATUS_APPLY');if(t.c27)delete t.c27.rootTurn;changeFormation(s,target,-1,log.formationChanges);if(rule==='DEEP_CURE'){heal(target,30);t.c33??={};t.c33.moraleFixedUntil=s.turn+1;}break;
+ case 'CLEANSE':case 'DEEP_CURE':campaignMechRemoveStatuses(s,t.armyId,e=>e.op==='STATUS_APPLY','CLEANSE',id);if(t.c27)delete t.c27.rootTurn;changeFormation(s,target,-1,log.formationChanges);if(rule==='DEEP_CURE'){heal(target,30);t.c33??={};t.c33.moraleFixedUntil=s.turn+1;}break;
  case 'DISARM_AREA':for(const b of near().slice(0,2)){b.c32??={};b.c32.disarmUntil=s.turn+1;}break;
  case 'EVADE':for(const b of [a,...near(1,true).slice(0,1)])buff(b.armyId,'DEFENSE_MOD',30);a.c32??={};a.c32.disarmUntil=s.turn;break;
  case 'BIDE':a.c33??={};a.c33.bideUntil=s.turn+1;a.c33.doubleTurn=s.turn+2;buff(id,'DEFENSE_MOD',40,2);break;
@@ -174,6 +192,7 @@ export function c33ApplyTactic({s,id,target,card,damage,heal,attack,cityAttack,l
 }
 
 export function c33DomesticOutput(s,c,raw){
+ const penalty=Math.min(0,...Object.values(s.cities).filter(home=>home.ownerFactionId===c.ownerFactionId).map(home=>reclassCityMods(s,home).FACTION_SCIENCE_MOD??0));raw.science=reclassScale(raw.science,penalty);
  if(!c33Enabled(s))return;
  if(c33Governor(s,c,'ADJACENCY_BONUS')&&c.facilities.length>=2)for(const k of Object.keys(raw))raw[k]*=c.facilities.length>=3?1.15:1.1;
  if(Object.values(s.cities).some(home=>home.ownerFactionId===c.ownerFactionId&&c33Governor(s,home,'RITUAL')))raw.science*=.85;
@@ -182,16 +201,17 @@ export function c33DomesticOutput(s,c,raw){
 }
 export function c33DomesticEvent(s,c,event){
  if(!c33Enabled(s))return event;
+ const mods=reclassCityMods(s,c,{eventKind:event.type});event={...event};for(const key of ['damage','loss','foodLoss','productionLoss','troopLoss'])if(typeof event[key]==='number')event[key]=reclassScale(event[key],mods.EVENT_DAMAGE_MOD);if(typeof event.cost==='number')event.cost=reclassScale(event.cost,mods.EVENT_COST_MOD);
  if(event.type==='DISASTER'&&c33Governor(s,c,'RITUAL'))return {...event,prevented:true};
  if(event.type==='BANDIT'&&Object.values(s.cities).some(home=>home.ownerFactionId===c.ownerFactionId&&distance(s,home.tileId,event.tileId??c.tileId)<=3&&c33Governor(s,home,'BANDIT_SWEEP')))return {...event,prevented:true};
  if(event.type==='TRIBAL'&&c33Governor(s,c,'TRIBAL_FRIEND'))return {...event,hostile:false,mercenaries:{troop:'cavalry',count:100}};
  return event;
 }
-export function c33TaxReason(s,c){if(!c33Governor(s,c,'TAX_ADVANCE'))return '태수 특기 필요';if(c.c33?.taxUntil>=s.turn)return '앞당긴 생산 상환 중';if(c.besieged||(s.occupations[c.cityId]?.stage??'NORMAL')!=='NORMAL')return '정상 도시에서만 사용 가능';return null;}
+export function c33TaxReason(s,c){if(!c33Governor(s,c,'TAX_ADVANCE'))return '태수 특기 필요';if(c33Governor(s,c,'TAX_ADVANCE').params.automatic)return '작업 결산에 자동 발동';if(c.c33?.taxUntil>=s.turn)return '앞당긴 생산 상환 중';if(c.besieged||(s.occupations[c.cityId]?.stage??'NORMAL')!=='NORMAL')return '정상 도시에서만 사용 가능';return null;}
 export function c33Tax(s,c,production){const reason=c33TaxReason(s,c);if(reason)throw new Error(`C33_TAX_LOCKED:${reason}`);c.c33??={};c.c33.taxUntil=s.turn+2;c.c33.advanceProduction=(c.c33.advanceProduction??0)+production*3;domesticSecurity(s,c,1,'COMMAND');domesticLine(s,c,{rule:'TAX_ADVANCE',card:{name:'세금 앞당겨 걷기'}},`생산 ${production*3} 선지급 · 3턴 생산 0 · 치안 악화`);}
 
 // C26 domestic handlers share the already served registry module.
-import career from '../../docs/design-data/officer-pack/career-titles-v0.3.json' with {type:'json'};
+import career from '../data/career-titles-v0.3.json' with {type:'json'};
 import {hexDistance,neighbors,boardNeighbors,tileId} from './map-primitives.mjs';
 import {directionToward,changeFormation,checkFormation,turnFacing} from './campaign-abilities.mjs';
 import {troopToCampaign} from './campaign-adapters.mjs';
@@ -201,8 +221,9 @@ import {castleArmyActive} from './campaign-city-footprint.mjs';
 import {creditCampaignGrowth,initializeCampaignGrowth,CAMPAIGN_TRAIT_SLOTS,syncPoolFingerprint} from './campaign-growth.mjs';
 import {syncCampaignAdministrativeTerminal} from './campaign-terminal-world-application.mjs';
 
-export const c26Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c26Enabled=s=>isSliceMap(s.mapId);
 export const DOMESTIC_RULES=Object.freeze([...new Set([...career.titleCards,...career.mythicDomestic,...career.commonDomesticTraits].filter(c=>c.domestic).flatMap(c=>c.effects.filter(e=>e.op==='RULE').map(e=>e.rule)))]);
+const ALL_DOMESTIC_RULES=Object.freeze([...new Set([...DOMESTIC_RULES,...POOL_DOMESTIC_RULES])]);
 export function domesticParams(params={},rank=1){return Object.fromEntries(Object.entries(params).map(([k,v])=>[k,typeof v==='number'?v*(1+.5*(rank-1)):v]));}
 const distance=(s,a,b)=>hexDistance(s.tiles[a],s.tiles[b]);
 const alive=o=>o?.lifeState==='ALIVE'&&o.captivityState==='FREE';
@@ -210,7 +231,7 @@ export function domesticOwned(s,id){
  if(!c26Enabled(s)||!alive(s.officers[id]))return [];
  const r=s.campaignGrowth?.officers[id];if(!r)return [];
  const ranks=r.track.growthStates[id].ownedTraitRanks;
- return [...new Set([r.coreId,...Object.keys(ranks)])].map(key=>r.cards[key]).filter(c=>c?.domestic&&c.kind==='trait').flatMap(card=>(card.effects??[]).filter(e=>e.op==='RULE'&&DOMESTIC_RULES.includes(e.rule)).map(e=>({id,card,e,rule:e.rule,rank:ranks[card.traitId]??1,params:domesticParams(e.params,ranks[card.traitId]??1)})));
+ return [...new Set([r.coreId,...Object.keys(ranks)])].filter(k=>combatTraitActive(r,k)).map(key=>r.cards[key]).filter(c=>c?.domestic&&c.kind==='trait').flatMap(card=>(card.effects??[]).filter(e=>e.op==='RULE'&&ALL_DOMESTIC_RULES.includes(e.rule)&&ownedRuleAllowed(r,card,e.rule)).map(e=>({id,card,e,rule:e.rule,rank:ranks[card.traitId]??1,params:domesticParams(e.params,ranks[card.traitId]??1)})));
 }
 export const domesticGovernorId=c=>c?.governorId??c?.c26?.occupationGovernorId;
 const governorValid=(s,c)=>{const o=s.officers[domesticGovernorId(c)];return !(s.mapId!=='v1'&&s.c46Disabled!==true&&o?.injury)&&alive(o)&&o.allegianceFactionId===c.ownerFactionId&&o.locationRef?.kind==='CITY'&&o.locationRef.id===c.cityId;};
@@ -246,6 +267,7 @@ export function domesticReserve(s,c,amount){
  s.personnel.initialPersonnel+=amount;c.reserveTroops=(c.reserveTroops??0)+amount;
 }
 export function domesticSecurity(s,c,delta,source){
+ if(delta>0)delta=reclassSecurityDelta(s,c,delta,source);
  if(!c26Enabled(s)){c.securityLevel=Math.max(0,Math.min(2,(c.securityLevel??0)+delta));return;}
  if(delta>0&&!['EVENT','TACTIC','CRISIS','COMMAND'].includes(source)&&c33Governor(s,c,'BENEVOLENT_RULE'))return;
  const law=domesticRule(s,c,'MARTIAL_LAW'),spy=['EVENT','TACTIC','CRISIS'].includes(source)&&delta>0&&domesticRule(s,c,'COUNTER_SPY');
@@ -259,6 +281,7 @@ export function domesticSecurityCauses(s,c,causes){
 }
 export function domesticOutput(s,c,raw,{commit=false}={}){
  c29CityOutput(s,c,raw);
+ const own=reclassCityMods(s,c);raw.production=Math.max(0,raw.production+(own.PRODUCTION_FLAT??0));
  const causes=[];const change=(rule,resource,fn)=>{const x=domesticRule(s,c,rule);if(!x)return;const before=raw[resource];raw[resource]=Math.max(0,fn(before,x.params));const n=raw[resource]-before;causes.push({rule,resource,label:`${x.card.name}: ${rule}`,amount:n});if(commit){domesticLine(s,c,x,`${resource} ${n}`);regentLine(s,c,x);}};
  change('GARRISON_FARMING','food',(n,p)=>n+Math.floor((c.reserveTroops??0)/p.per)*p.food);
  change('MARTIAL_LAW','production',(n,p)=>n*Math.max(0,1-p.production/100));
@@ -276,21 +299,61 @@ export function domesticFacilityCost(s,c,kind,cost){
 }
 export const domesticFacility=kind=>!['muster','recruit','reorganize','repair'].includes(kind);
 export function domesticJobCompleted(s,c,job,overflow){
+ if(reclassCityMods(s,c,{completingJob:true}).CITY_OUTPUT_MOD){c.c319??={};c.c319.completedTurn=s.turn;}
  runDomestic(s,c,'PRODUCTION_OVERFLOW','job',{overflow});
  if(domesticFacility(job.kind)){runDomestic(s,c,'BUILD_CHAIN','facility');runDomestic(s,c,'SHARED_BLUEPRINT','facility',{kind:job.kind});}
 }
 export function domesticBeforeSettlement(s,c){
  if(!c26Enabled(s))return;c.c26??={};c.c26.settlements=(c.c26.settlements??0)+1;
+ poolDomesticSettlement(s,c);
  if(!c.currentProduction)c.c26.chain=0;
  for(const rule of ['HARVEST_PULSE','CAPTIVE_DEBT','EMERGENCY_LEVY'])runDomestic(s,c,rule,'settle');
  if(!c.besieged)c.c26.levied=false;
 }
-export function domesticAfterSettlement(s,c){for(const rule of ['MENTOR_CITY','LECTURE','IMPART','TALENT_MAGNET'])runDomestic(s,c,rule,'settle');}
+// Conditional pool variants use an existing committed settlement, never a view/cost query.
+// Use officer records for per-run limits so moving governors cannot reset them.
+import {cityJobCost,cityEconomyRates,completeJob,cityJobReason} from './campaign-economy.mjs';
+function poolDomesticSettlement(s,c){
+ if(c.besieged||(s.occupations[c.cityId]?.stage??'NORMAL')!=='NORMAL')return;
+ const id=domesticGovernorId(c),r=s.campaignGrowth?.officers[id];
+ if(!r||!governorValid(s,c))return;
+ const card=r.cards[r.coreId];
+ if(card?.kind!=='trait'||card.core!==true)return;
+ for(const e of card.effects??[]){
+  if(!e.params?.automatic)continue;
+  const rule=e.rule;if(!['ALT_PAYMENT','REMOTE_RECRUIT','TAX_ADVANCE','TRIBAL_FRIEND'].includes(rule))continue;
+  if(c28Suppressed(s,id))continue;
+  r.c338??={};if(r.c338[rule])continue;
+  const x={id,rule,params:e.params,card},f=s.factions[c.ownerFactionId],job=c.currentProduction;
+  if(rule==='ALT_PAYMENT'){
+   if(!job||!domesticFacility(job.kind))continue;
+   const cost=Math.ceil(Math.max(0,cityJobCost(s,c,job.kind)-(c.jobProgress[job.key]??0))*e.params.science);
+   if(f.science<cost||cityJobReason(s,c,job.kind))continue;
+   const production=c.production,progress=c.jobProgress[job.key]??0;
+   c.jobProgress[job.key]=cityJobCost(s,c,job.kind);c.production=0;
+   completeJob(s,c,cityEconomyRates(s,c),true);c.production=production;
+   if(c.currentProduction){c.jobProgress[job.key]=progress;continue;}
+   f.science-=cost;r.c338[rule]=true;domesticLine(s,c,x,`과학 ${cost} 자동 지불 · 시설 완공`,'science',-cost);
+  }else if(rule==='REMOTE_RECRUIT'){
+   const o=Object.values(s.wanderers??{}).filter(o=>alive(o)&&!o.allegianceFactionId&&o.locationRef.kind==='CITY'&&o.locationRef.id!==c.cityId&&s.cities[o.locationRef.id]?.ownerFactionId===c.ownerFactionId&&!Object.values(s.captiveRecruitment?.proposals??{}).some(p=>p.targetOfficerId===o.officerId&&['NEGOTIATING','JOINING'].includes(p.status))).sort((a,b)=>a.officerId.localeCompare(b.officerId))[0];
+   if(!o)continue;o.locationRef={kind:'CITY',id:c.cityId};r.c338[rule]=true;domesticLine(s,c,x,`${o.name} 초청 · 기존 등용 절차 사용`);
+  }else if(rule==='TAX_ADVANCE'){
+   if(!job)continue;const production=cityEconomyRates(s,c).production;if(production<=0)continue;
+   r.c338[rule]=true;c.c33??={};c.c33.advanceProduction=(c.c33.advanceProduction??0)+production*3;c.c33.taxUntil=s.turn+2;
+   domesticSecurity(s,c,1,'COMMAND');domesticLine(s,c,x,`생산 ${production*3} 자동 선지급 · 3회 생산 0`);
+  }else if(rule==='TRIBAL_FRIEND'){
+   if(c.securityLevel!==0)continue;r.c338[rule]=true;domesticReserve(s,c,100);domesticLine(s,c,x,'우호 사절 · 예비병 +100','reserve',100);
+  }
+ }
+}
+export function domesticAfterSettlement(s,c){
+for(const rule of ['MENTOR_CITY','LECTURE','IMPART','TALENT_MAGNET'])runDomestic(s,c,rule,'settle');}
 function localOfficers(s,c,{armies=false}={}){return Object.values(s.officers).filter(o=>alive(o)&&o.allegianceFactionId===c.ownerFactionId&&(o.locationRef.kind==='CITY'&&o.locationRef.id===c.cityId&&!Object.values(s.armies).some(a=>a.commanderId===o.officerId&&castleArmyActive(s,a))||armies&&Object.values(s.armies).some(a=>a.commanderId===o.officerId&&castleArmyActive(s,a)&&a.tileId===c.tileId))).sort((a,b)=>a.officerId.localeCompare(b.officerId));}
 export function domesticMusterAvailable(s,c){return (c.reserveTroops??0)+(domesticRule(s,c,'BLOODLESS_MUSTER')?s.personnel.lots.filter(l=>l.nodeId===c.cityId&&l.kind==='WOUNDED').reduce((n,l)=>n+l.count,0):0);}
-export const domesticMusterReason=(s,id)=>domesticOwned(s,id).some(x=>x.rule==='REGENT')?'섭정: 출진 불가':null;
+export const domesticMusterReason=(s,id)=>Object.values(s.cities).some(c=>c.governorId===id&&reclassCityMods(s,c).NO_MUSTER)||domesticOwned(s,id).some(x=>x.rule==='REGENT')?'섭정: 출진 불가':null;
 export function domesticMusterLots(s,c){const blood=domesticRule(s,c,'BLOODLESS_MUSTER');return s.personnel.lots.filter(l=>l.nodeId===c.cityId&&l.count>0&&(blood||l.kind!=='WOUNDED')).sort((a,b)=>Number(b.kind==='WOUNDED')-Number(a.kind==='WOUNDED')||a.lotId.localeCompare(b.lotId));}
-export function domesticMuster(s,c,a){for(const rule of ['BLOODLESS_MUSTER','STRICT_DISCIPLINE'])runDomestic(s,c,rule,'muster',{a});}
+export function domesticMuster(s,c,a){
+ const n=reclassCityMods(s,c).MUSTER_MORALE_MOD;if(n){a.c26??={};a.c26.discipline??=[];a.c26.discipline.push({until:s.turn+2,threshold:Math.max(.1,1+n/100)});}for(const rule of ['BLOODLESS_MUSTER','STRICT_DISCIPLINE'])runDomestic(s,c,rule,'muster',{a});}
 export function domesticMoraleThreshold(s,a){return (a.c26?.discipline??[]).filter(x=>s.turn<x.until).reduce((n,x)=>n*x.threshold,1);}
 export function domesticStartFaction(s,fid){
  if(!c26Enabled(s))return;
@@ -309,19 +372,23 @@ function roadConnected(s,c,a){
 export function domesticOccupationActor(s,c){return domesticGovernorId(c)??Object.values(s.armies).filter(a=>a.factionId===c.ownerFactionId&&castleArmyActive(s,a)&&[c.tileId,...c.footprint.gates].includes(a.tileId)).sort((a,b)=>a.armyId.localeCompare(b.armyId))[0]?.commanderId;}
 export function domesticOccupationGovernor(s,id){return domesticOwned(s,id).some(x=>x.e.target==='CITY'&&['HOMETOWN_GOVERNOR','PROCLAMATION','LOCAL_PRIVILEGE','PLUNDER_ARCHIVES','INSTANT_ALLEGIANCE'].includes(x.rule));}
 export function domesticPlunderReason(s,c){
+ if(reclassCityMods(s,c).NO_PLUNDER||Object.values(s.cities).some(home=>home.ownerFactionId===c.ownerFactionId&&reclassCityMods(s,home).FACTION_NO_PLUNDER))return '특기 대가: 수탈 불가';
  if(domesticFactionRules(s,c.ownerFactionId,'INSTANT_ALLEGIANCE').length)return '천하귀심: 세력 전체 수탈 불가';
  if(domesticRule(s,c,'INCORRUPTIBLE'))return '청렴: 이 성 수탈 불가';return null;
 }
 export function finishDomesticGovernor(s,c){const id=c.c26?.occupationGovernorId;if(!id)return;c.governorId=id;delete c.c26.occupationGovernorId;if(s.terminal){s.terminal.citiesById[c.cityId].governorId=id;s.terminal.officersById[id].assignment={kind:'CITY',id:c.cityId};}}
 export function domesticNormal(s,c){const o=s.occupations[c.cityId];Object.assign(o,{stage:'NORMAL',state:'NORMAL',turnsLeft:0,productionEnabled:true,recruitmentEnabled:true,replenishmentEnabled:true});c.occupationState='NORMAL';finishDomesticGovernor(s,c);if(s.terminal){const tc=s.terminal.citiesById[c.cityId];Object.assign(tc,{occupationState:'NORMAL',pendingGovernor:false,occupationRecordId:null});for(const choice of Object.values(s.terminal.choicesById))if(choice.type==='OCCUPATION'&&choice.cityId===c.cityId&&choice.status==='PENDING'){const recordId=`${choice.causeRecordId}.C26.NORMAL.${s.globalTick}`;s.terminal.recordsById[recordId]={recordId,globalTick:s.globalTick,type:'OCCUPATION_CHOICE',causeRecordIds:[choice.causeRecordId],refs:{factionIds:[c.ownerFactionId],armyIds:[],officerIds:[],cityIds:[c.cityId],choiceIds:[choice.choiceId],prisonerRecordIds:[]},details:{method:o.method}};Object.assign(choice,{status:'RESOLVED',resolvedAtTick:s.globalTick,resolutionRecordId:recordId});}syncCampaignAdministrativeTerminal(s);}s.economy.occupationStatus[c.cityId]='NORMAL';}
-export function domesticOccupation(s,c,method){const actorId=domesticOccupationActor(s,c);if(c33Owned(s,actorId,'RENOWN')&&s.occupations[c.cityId]?.turnsLeft>0)s.occupations[c.cityId].turnsLeft--;for(const rule of ['PROCLAMATION','PLUNDER_ARCHIVES','LOCAL_PRIVILEGE','INSTANT_ALLEGIANCE'])runDomestic(s,c,rule,'occupation',{method,actorId});}
+export function domesticOccupation(s,c,method){
+ const n=reclassCityMods(s,c,{method}).OCCUPATION_SPEED??0;if(n&&s.occupations[c.cityId]?.turnsLeft>0){s.occupations[c.cityId].turnsLeft=Math.max(1,s.occupations[c.cityId].turnsLeft-n);if(n>=2){c.c319??={};c.c319.privileged=true;}}const actorId=domesticOccupationActor(s,c);if(c33Owned(s,actorId,'RENOWN')&&s.occupations[c.cityId]?.turnsLeft>0)s.occupations[c.cityId].turnsLeft--;for(const rule of ['PROCLAMATION','PLUNDER_ARCHIVES','LOCAL_PRIVILEGE','INSTANT_ALLEGIANCE'])runDomestic(s,c,rule,'occupation',{method,actorId});}
 export function domesticGovernance(s){for(const c of Object.values(s.cities))if(c.securityLevel>0&&domesticRule(s,c,'MARTIAL_LAW'))domesticSecurity(s,c,0,'GOVERNOR');}
 export function domesticGovernor(s,c){domesticGovernance(s);runDomestic(s,c,'HOMETOWN_GOVERNOR','governor');}
 export function domesticResearchThreshold(s,fid,base){const row=strongest(domesticFactionRules(s,fid,'TOO_SMART'));return row?Math.max(1,Math.ceil(base*Math.max(0,1-row.x.params.discount/100))):base;}
 export function domesticResearchRaised(s,fid){for(const {c,x} of domesticFactionRules(s,fid,'TOO_SMART')){domesticSecurity(s,c,1,'RESEARCH');domesticLine(s,c,x,'연구 문턱 감소 · 단계 상승 대가: 치안 악화','security',1);}}
 export function domesticRecruitCost(s,fid,cost){const row=strongest(domesticFactionRules(s,fid,'TALENT_MAGNET'));return row?Math.ceil(cost*(1+row.x.params.recruitPenalty/100)):cost;}
-export function domesticRecruit(s,c,id){if(c29Aw(s,c.governorId,'AW_TT-V06')){s.officers[id].c26??={};s.officers[id].c26.firstDraftExtra=(s.officers[id].c26.firstDraftExtra??0)+1;}runDomestic(s,c,'THREE_VISITS','recruit',{officerId:id});const magnet=strongest(domesticFactionRules(s,c.ownerFactionId,'TALENT_MAGNET'));if(magnet)domesticLine(s,magnet.c,magnet.x,'등용 인망 대가');}
-export function domesticRelease(s,p){if(Object.values(s.cities).some(c=>c.ownerFactionId===p.captorFactionId&&c33Governor(s,c,'RENOWN')))s.factions[p.captorFactionId].prestige+=5;for(const {c} of domesticFactionRules(s,p.captorFactionId,'CAPTIVE_DEBT'))runDomestic(s,c,'CAPTIVE_DEBT','release');for(const {c} of domesticFactionRules(s,p.captorFactionId,'RELEASE_PROPAGANDA'))runDomestic(s,c,'RELEASE_PROPAGANDA','release',{homeFactionId:p.homeFactionId});}
+export function domesticRecruit(s,c,id){
+ const first=reclassCityMods(s,c).FIRST_GROWTH_XP_MOD;if(first){s.officers[id].c319??={};s.officers[id].c319.firstGrowthXp=first;}if(c29Aw(s,c.governorId,'AW_TT-V06')){s.officers[id].c26??={};s.officers[id].c26.firstDraftExtra=(s.officers[id].c26.firstDraftExtra??0)+1;}runDomestic(s,c,'THREE_VISITS','recruit',{officerId:id});const magnet=strongest(domesticFactionRules(s,c.ownerFactionId,'TALENT_MAGNET'));if(magnet)domesticLine(s,magnet.c,magnet.x,'등용 인망 대가');}
+export function domesticRelease(s,p){
+ for(const c of Object.values(s.cities))if(c.ownerFactionId===p.captorFactionId)s.factions[p.captorFactionId].prestige+=reclassCityMods(s,c).RELEASE_PRESTIGE??0;if(Object.values(s.cities).some(c=>c.ownerFactionId===p.captorFactionId&&c33Governor(s,c,'RENOWN')))s.factions[p.captorFactionId].prestige+=5;for(const {c} of domesticFactionRules(s,p.captorFactionId,'CAPTIVE_DEBT'))runDomestic(s,c,'CAPTIVE_DEBT','release');for(const {c} of domesticFactionRules(s,p.captorFactionId,'RELEASE_PROPAGANDA'))runDomestic(s,c,'RELEASE_PROPAGANDA','release',{homeFactionId:p.homeFactionId});}
 export function domesticSupport(s,from,to,amount){runDomestic(s,to,'SUPPORT_REFUND','support',{from,amount});const x=domesticRule(s,from,'UNBLOCKABLE_SUPPLY');if(x)domesticLine(s,from,x,'포위·거리 제한 없이 지원','food',-amount);}
 export function domesticFoodAvailable(s,c){const shared=domesticFactionRules(s,c.ownerFactionId,'SHARED_GRANARY').length;return shared?Object.values(s.cities).filter(other=>other.ownerFactionId===c.ownerFactionId).reduce((n,other)=>n+Math.max(0,other.foodStock-other.reservedResources.food),0):Math.max(0,c.foodStock-c.reservedResources.food);}
 export function domesticSpendFood(s,c,amount){
@@ -330,8 +397,8 @@ export function domesticSpendFood(s,c,amount){
  let left=amount;for(const other of [c,...(shared?Object.values(s.cities).filter(other=>other!==c&&other.ownerFactionId===c.ownerFactionId).sort((a,b)=>a.cityId.localeCompare(b.cityId)):[])]){const n=Math.min(left,Math.max(0,other.foodStock-other.reservedResources.food));other.foodStock-=n;left-=n;}
  if(shared)domesticLine(s,c,shared.x,`공동 창고 소비 ${amount}`,'food',-amount);
 }
-export function domesticWall(s,c,damage,{commit=false}={}){const x=domesticRule(s,c,'LAST_WALL');if(x&&damage>=c.durability&&c.durability>0&&(c.c26?.wallUses??0)<Math.floor(x.params.uses)){if(commit){c.c26??={};c.c26.wallUses=(c.c26.wallUses??0)+1;domesticLine(s,c,x,'내구도 1로 버팀','durability',1);}return Math.max(0,c.durability-1);}return damage;}
-export function domesticStrike(s,c,{commit=false}={}){const x=domesticRule(s,c,'LAST_WALL');if(!x)return 1;if(commit)domesticLine(s,c,x,`성 사격 −${x.params.strikePenalty}%`,'damage');return Math.max(0,1-x.params.strikePenalty/100);}
+export function domesticWall(s,c,damage,{commit=false}={}){damage=Math.round(reclassScale(damage,-(reclassCityMods(s,c).WALL_DEFENSE_MOD??0)));const x=domesticRule(s,c,'LAST_WALL');if(x&&damage>=c.durability&&c.durability>0&&(c.c26?.wallUses??0)<Math.floor(x.params.uses)){if(commit){c.c26??={};c.c26.wallUses=(c.c26.wallUses??0)+1;domesticLine(s,c,x,'내구도 1로 버팀','durability',1);}return Math.max(0,c.durability-1);}return damage;}
+export function domesticStrike(s,c,{commit=false}={}){const factor=reclassScale(1,reclassCityMods(s,c).CITY_SHOT_MOD);const x=domesticRule(s,c,'LAST_WALL');if(!x)return factor;if(commit)domesticLine(s,c,x,`성 사격 −${x.params.strikePenalty}%`,'damage');return factor*Math.max(0,1-x.params.strikePenalty/100);}
 export function domesticCaptured(s,payload){
  const actor=Object.values(s.armies).filter(a=>a.factionId===payload.occupierFactionId&&a.tileId===s.cities[payload.capturedCityId]?.tileId).sort((a,b)=>a.armyId.localeCompare(b.armyId))[0];if(actor)c29Gain(s,actor.armyId,15,`result.${payload.capturedCityId}`);
  const c=s.cities[payload.capturedCityId];if(!c26Enabled(s))return;
@@ -380,9 +447,9 @@ export function initializeDomestic(s){
 export function domesticCommands(s,c,costForJob,recruitCost){
  if(!c26Enabled(s))return [];
  const choices=[],alt=domesticRule(s,c,'ALT_PAYMENT'),job=c.currentProduction;
- if(alt&&job&&domesticFacility(job.kind))for(const resource of ['fame','science']){const wallet=resource==='fame'?'prestige':'science',cost=c34Cost(s,c,resource==='fame'?'prestige':'science',Math.ceil(Math.max(0,costForJob(job.kind)-(c.jobProgress[job.key]??0))*alt.params[resource]));choices.push({type:'CITY_ALT_PAYMENT',cityId:c.cityId,resource,label:resource==='fame'?'인망으로 마무리':'과학으로 마무리',cost,blockedReason:cost>s.factions[c.ownerFactionId][wallet]-(wallet==='prestige'?(s.captiveRecruitment?.factions[c.ownerFactionId]?.reservedPrestige??0):0)?'세력 자원 부족':null});}
- if(c.c26?.privilege)choices.push({type:'CITY_REVOKE_PRIVILEGE',cityId:c.cityId,label:'특권 철회',cost:c.c26.privilege.revoke,blockedReason:s.factions[c.ownerFactionId].prestige-(s.captiveRecruitment?.factions[c.ownerFactionId]?.reservedPrestige??0)<c.c26.privilege.revoke?'세력 인망 부족':null});
- if(domesticRule(s,c,'REMOTE_RECRUIT'))for(const o of Object.values(s.wanderers??{}).filter(o=>o.locationRef.id!==c.cityId&&s.cities[o.locationRef.id]?.ownerFactionId===c.ownerFactionId).sort((a,b)=>a.officerId.localeCompare(b.officerId)))choices.push({type:'CITY_REMOTE_RECRUIT',cityId:c.cityId,officerId:o.officerId,label:`${o.name} 원격 등용`,cost:recruitCost(o.locationRef.id),blockedReason:Object.values(s.captiveRecruitment.proposals).some(p=>p.targetOfficerId===o.officerId&&p.status==='NEGOTIATING')?'등용 협의 중':null});
+ if(alt&&!alt.params.automatic&&job&&domesticFacility(job.kind))for(const resource of ['fame','science']){const wallet=resource==='fame'?'prestige':'science',cost=c34Cost(s,c,resource==='fame'?'prestige':'science',Math.ceil(Math.max(0,costForJob(job.kind)-(c.jobProgress[job.key]??0))*alt.params[resource]));choices.push({type:'CITY_ALT_PAYMENT',cityId:c.cityId,resource,label:resource==='fame'?'인망으로 마무리':'과학으로 마무리',cost,blockedReason:cost>s.factions[c.ownerFactionId][wallet]-(wallet==='prestige'?(s.captiveRecruitment?.factions[c.ownerFactionId]?.reservedPrestige??0):0)?'세력 자원 부족':null});}
+ if(c.c26?.privilege&&!c.c26.privilege.source?.params?.automatic)choices.push({type:'CITY_REVOKE_PRIVILEGE',cityId:c.cityId,label:'특권 철회',cost:c.c26.privilege.revoke,blockedReason:s.factions[c.ownerFactionId].prestige-(s.captiveRecruitment?.factions[c.ownerFactionId]?.reservedPrestige??0)<c.c26.privilege.revoke?'세력 인망 부족':null});
+ const remote=domesticRule(s,c,'REMOTE_RECRUIT');if(remote&&!remote.params.automatic)for(const o of Object.values(s.wanderers??{}).filter(o=>o.locationRef.id!==c.cityId&&s.cities[o.locationRef.id]?.ownerFactionId===c.ownerFactionId).sort((a,b)=>a.officerId.localeCompare(b.officerId)))choices.push({type:'CITY_REMOTE_RECRUIT',cityId:c.cityId,officerId:o.officerId,label:`${o.name} 원격 등용`,cost:recruitCost(o.locationRef.id),blockedReason:Object.values(s.captiveRecruitment.proposals).some(p=>p.targetOfficerId===o.officerId&&p.status==='NEGOTIATING')?'등용 협의 중':null});
  return choices;
 }
 export function domesticCommand(s,command,{costForJob,finishJob,recruit,recruitCost}){
@@ -469,7 +536,7 @@ function domesticTransaction(id,ctx){
  if(id==='REGENT'&&phase==='scope')return domesticCityRules(s,ctx.recipientCity);
 }
 export function domesticJoinedWanderer(s,id){if(!s.terminal)return;const source=Object.values(s.terminal.recordsById).find(r=>r.details.c26WandererState==='WANDERER'&&r.refs.officerIds.includes(id));if(!source)return;const recordId=`${source.recordId}.JOINED.${s.globalTick}`;s.terminal.recordsById[recordId]={recordId,globalTick:s.globalTick,type:'OFFICER_CAPTIVITY',causeRecordIds:[source.recordId],refs:{factionIds:[s.officers[id].allegianceFactionId],armyIds:[],officerIds:[id],cityIds:[],choiceIds:[],prisonerRecordIds:[]},details:{c26WandererState:'JOINED'}};}
-for(const id of DOMESTIC_RULES)registerCampaignRule(id,domesticHandlers[id]??(ctx=>domesticTransaction(id,ctx)));
+for(const id of ALL_DOMESTIC_RULES)registerCampaignRule(id,domesticHandlers[id]??(ctx=>domesticTransaction(id,ctx)));
 
 // C27 combat handlers use explicit query/commit phases. Secondary hits never
 // dispatch ON_ATTACK or produce another action, so chains are finite.
@@ -477,16 +544,17 @@ export const COMBAT_TITLE_RULES=Object.freeze(['AMBUSHER','BLADESTORM','BREACH_R
 export const COMMON_TACTIC_RULES=Object.freeze(['MASS_RALLY','SHOVE','SWAP','SHATTER_LINE','TAUNT','OVERWATCH','PIERCE','DUAL_STRIKE','MORALE_CONTEST','FALSE_ORDERS','STAKES','FIRE_ATTACK','AMBUSH','FEIGNED_RETREAT','INSIDE_AGENT','FLOOD','WOODPECKER','MIRROR','GALEFORCE']);
 export const combatParams=(params={},rank=1)=>Object.fromEntries(Object.entries(params).map(([k,v])=>[k,typeof v==='number'?v*(1+.5*(Math.max(1,Math.min(5,rank))-1)):v]));
 export function combatTraitActive(r,key){
+ if(r.equippedTraitIds&&r.cards[key]?.kind==='trait')return key===r.coreId||r.equippedTraitIds.includes(key);
  const reserves=r.c27RewardReserveIds??[];if(!reserves.includes(key))return true;
  const ranks=r.track.growthStates[r.pack.id].ownedTraitRanks,active=Object.keys(ranks).filter(k=>r.cards[k]?.kind==='trait'&&!reserves.includes(k)).length;
  return reserves.filter(k=>ranks[k]).indexOf(key)<Math.max(0,CAMPAIGN_TRAIT_SLOTS-active);
 }
-export function combatRule(s,id,rule){return memoCampaignQuery(s,'combat:'+id+':'+rule,()=>combatRuleUncached(s,id,rule));}
+export function combatRule(s,id,rule){if(s.armies[id]?.troopQDisruptedTurn===s.turn&&['SQUARE','SET_SPEARS'].includes(rule))return null;return memoCampaignQuery(s,'combat:'+id+':'+rule,()=>combatRuleUncached(s,id,rule));}
 function combatRuleUncached(s,id,rule){
  if(c28Suppressed(s,id))return null;
  const r=s.campaignGrowth?.officers[s.armies[id]?.commanderId??id];if(!r)return null;
  const ranks=r.track.growthStates[r.pack.id].ownedTraitRanks;
- const rows=[...new Set([r.coreId,...Object.keys(ranks)])].filter(k=>combatTraitActive(r,k)).map(k=>r.cards[k]).filter(c=>c?.kind==='trait').flatMap(card=>(card.effects??[]).filter(e=>e.op==='RULE'&&e.rule===rule).map(e=>({card,e,rank:ranks[card.traitId]??1,params:combatParams(e.params,ranks[card.traitId]??1)})));
+ const rows=[...new Set([r.coreId,...Object.keys(ranks)])].filter(k=>combatTraitActive(r,k)).map(k=>r.cards[k]).filter(c=>c?.kind==='trait').flatMap(card=>(card.effects??[]).filter(e=>e.op==='RULE'&&e.rule===rule&&ownedRuleAllowed(r,card,e.rule)).map(e=>({card,e,rank:ranks[card.traitId]??1,params:combatParams(e.params,ranks[card.traitId]??1)})));
  const x=rows.sort((a,b)=>b.rank-a.rank||a.card.traitId.localeCompare(b.card.traitId))[0];return x?executeCampaignRule(rule,{s,id,x,phase:'query'})??null:null;
 }
 export function combatRuleLine(s,id,rule,detail=''){return `${combatRule(s,id,rule)?.card.name??rule}${detail?` — ${detail}`:''}`;}
@@ -509,7 +577,7 @@ export function combatRival(s,id){
  const a=s.armies[id],r=s.campaignGrowth?.officers[a?.commanderId],ids=(r?.titles??[]).map(t=>t.opponentId).filter(Boolean);
  return Object.values(s.armies).filter(b=>diplomacyArmyHostile(s,id,b.armyId)&&ids.includes(b.commanderId)&&castleArmyActive(s,b)&&s.knowledge[a.factionId]?.tiles[b.tileId]==='VISIBLE'&&s.knowledge[a.factionId]?.observedArmies[b.armyId]).sort((b,c)=>combatDistance(s,a.tileId,b.tileId)-combatDistance(s,a.tileId,c.tileId)||b.armyId.localeCompare(c.armyId))[0];
 }
-export function combatMoveAllowed(s,id,destination){const a=s.armies[id],rival=combatRule(s,id,'GRUDGE')&&combatRival(s,id);return !rival||combatDistance(s,destination,rival.tileId)<combatDistance(s,a.c27?.startTile??a.tileId,rival.tileId);}
+export function combatMoveAllowed(s,id,destination){const a=s.armies[id],rival=(combatRule(s,id,'GRUDGE')||reclassHas(s,id,'TC-C06b'))&&combatRival(s,id);return !rival||combatDistance(s,destination,rival.tileId)<combatDistance(s,a.c27?.startTile??a.tileId,rival.tileId);}
 export function combatMovement(s,id){const a=s.armies[id],rival=combatRule(s,id,'GRUDGE')&&combatRival(s,id);return {rooted:enginesEnabled(s)&&!!a.c50?.rooted||a.c27?.rootTurn===s.turn||(a.c27?.rootTurn<=s.turn&&a.c27?.c31RootUntil>=s.turn),delta:(rival?combatRule(s,id,'GRUDGE').params.move:0)-(a.c27?.floodCostTurn===s.turn?2:0),max:a.c32?.postMove===s.turn||combatRule(s,id,'SQUARE')?1:Infinity};}
 export function combatIgnoreZone(s,id,enemy){return !!combatRule(s,id,'BREAKTHROUGH')&&['DISORDERED','BROKEN'].includes(enemy.formation);}
 export function combatCanPostMove(s,id){const a=s.armies[id];return a?.c27?.cantoTurn===s.turn&&(a.c27.cantoRemaining??0)>0;}
@@ -520,6 +588,7 @@ export function combatMoraleGuard(s,id,from,to){
 }
 export function combatSurvive(s,id,loss,commit){return runCombatRule(s,id,'NINE_LIVES','survive',{loss,commit})??loss;}
 export function combatStartFaction(s,fid){
+ reclassStart(s,fid);
  for(const a of Object.values(s.armies).filter(a=>a.factionId===fid&&castleArmyActive(s,a))){
   if(a.c27?.started===s.turn)continue;
   if(a.c27||COMBAT_TITLE_RULES.some(rule=>combatRule(s,a.armyId,rule))){a.c27??={};a.c27.started=s.turn;a.c27.startTile=a.tileId;a.c27.hiddenFrom=Object.keys(s.factions).filter(f=>f!==fid&&s.knowledge[f]?.tiles[a.tileId]!=='VISIBLE');delete a.c27.overwatch;delete a.c27.stakes;delete a.c27.cantoTurn;a.c27.movementTicks=0;}
@@ -571,7 +640,7 @@ export const COMMON_COMBAT_TACTICS=commonTactics.tactics;
 export const SAMPLE4=sample4.officers;
 export const UNIQUE_OFFICERS=[...redesign50.officers,...C34_OFFICERS].map(o=>{const x=SAMPLE4.find(x=>x.id===o.id)??o;return {id:x.id,name:x.name,uniqueTrait:x.uniqueTrait,signatureTactic:x.signatureTactic,...(x.signatureE?{signatureE:x.signatureE}:{})};});
 
-export const uniqueEnabled=s=>['v2','v3'].includes(s.mapId);
+export const uniqueEnabled=s=>isSliceMap(s.mapId);
 export const UNIQUE_RULES=Object.freeze([...new Set([...redesign50.officers,...C34_OFFICERS,...SAMPLE4].flatMap(o=>[o.uniqueTrait,o.signatureTactic,...(o.signatureE?[o.signatureE]:[])].flatMap(c=>c.effects.map(e=>e.rule))))]);
 const uniqueById=new Map(UNIQUE_OFFICERS.map(o=>[o.id,o]));
 export function overlayUniquePack(s,pack){
@@ -586,7 +655,7 @@ function uniqueOwnedUncached(s,id,rule){
  if(!uniqueEnabled(s))return null;
  const r=s.campaignGrowth?.officers[s.armies[id]?.commanderId??id];if(!r)return null;
  const ranks=r.track.growthStates[r.pack.id].ownedTraitRanks;
- return [...new Set([r.coreId,...Object.keys(ranks)])].map(k=>r.cards[k]).filter(c=>c?.kind==='trait').flatMap(c=>(c.effects??[]).filter(e=>e.rule===rule).map(e=>({card:c,e,params:Object.fromEntries(Object.entries(e.params??{}).map(([k,v])=>[k,typeof v==='number'&&!['range','turns','uses','cost','at','threshold'].includes(k)?v*c29CoreFactor(s,id):v])),id}))).at(0)??null;
+ return [...new Set([r.coreId,...Object.keys(ranks)])].filter(k=>combatTraitActive(r,k)).map(k=>r.cards[k]).filter(c=>c?.kind==='trait').flatMap(c=>(c.effects??[]).filter(e=>e.rule===rule).map(e=>({card:c,e,params:Object.fromEntries(Object.entries(e.params??{}).map(([k,v])=>[k,typeof v==='number'&&!['range','turns','uses','cost','at','threshold'].includes(k)?v*c29CoreFactor(s,id):v])),id}))).at(0)??null;
 }
 const uniqueNear=(s,id,{enemy=false,range=2,center=id}={})=>{const a=s.armies[id],c=s.armies[center];return !a||!c?[]:Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&(enemy?diplomacyArmyHostile(s,id,b.armyId):b.factionId===a.factionId)&&hexDistance(s.tiles[c.tileId],s.tiles[b.tileId])<=range).sort((a,b)=>a.armyId.localeCompare(b.armyId));};
 const uniqueStrength=(s,id)=>s.personnel.formations.find(f=>f.formationId===id)?.targetStrength??s.armies[id]?.troopCount??1;
@@ -678,15 +747,15 @@ export function uniqueImmune(s,id,status){
  return c34Immune(s,id,status)||a.morale==='STEADY'&&!!uniqueOwned(s,id,'U_FEARLESS')&&['CONFUSED','ROOTED','SLOWED','TAUNT'].includes(status)||['ROOTED','TAUNT'].includes(status)&&uniqueNear(s,id).some(b=>uniqueOwned(s,b.armyId,'U_PINCER_STANCE'));
 }
 export function uniqueStatus(s,source,id,status,duration=1,{guaranteed=false}={}){
- if(!castleArmyActive(s,s.armies[id])||uniqueImmune(s,id,status))return false;
+ if(!campaignMechAllowed(s,'H15','effectAllowed',{sourceId:source,targetId:id,effect:{op:'STATUS_APPLY',status}})||!campaignMechAllowed(s,'H04','attackAllowed',{sourceId:source,targetId:id,kind:'STATUS'})||!castleArmyActive(s,s.armies[id])||uniqueImmune(s,id,status))return false;
  const penalty=uniqueNear(s,id).some(b=>uniqueOwned(s,b.armyId,'U_PHOENIX_CHICK'))?30:0;
- const chance=Math.max(10,Math.min(95,60+(uniqueStat(s,source,'intelligence')-uniqueStat(s,id,'intelligence'))/2+(uniqueOwned(s,source,'U_FATAL_BEAUTY')?15:0)-penalty));
+ const chance=Math.max(10,Math.min(95,60+effectModifiers(s,id,[],{targetId:source}).STATUS_WEIGHT_MOD+(uniqueStat(s,source,'intelligence')-uniqueStat(s,id,'intelligence'))/2+(uniqueOwned(s,source,'U_FATAL_BEAUTY')?15:0)-penalty));
  // Same deterministic campaign stream as other committed combat checks.
  if(!guaranteed&&uniqueRoll(s)>=chance)return false;
  if(c28ControlGuard(s,id,status))return false;
  const a=s.armies[id],extra=uniqueNear(s,source).some(b=>uniqueOwned(s,b.armyId,'U_SUPERVISE'))?1:0;
  const start=s.turn+(s.campaignEffects?.startedTurns[a.factionId]===s.turn?1:0);
- a.effectStates??=[];a.effectStates.push({op:'STATUS_APPLY',status,source,startsTurn:start,expiresTurn:start+duration+extra-1,expiresFactionId:a.factionId});return true;
+ a.effectStates??=[];const nextStatus=campaignMechStatus(s,source,id,{op:'STATUS_APPLY',status,source,startsTurn:start,expiresTurn:start+duration+extra-1,expiresFactionId:a.factionId});a.effectStates.push(nextStatus);return true;
 }
 function uniqueRoll(s){ // campaign RNG is the shared deterministic stream
  return uniqueRandom(s)*100;}
@@ -877,7 +946,7 @@ export function runUniqueTactic({s,id,target,card,attack,damage,heal,retreat,cit
  const buff=(units,op,value,duration=1)=>units.forEach(b=>uniqueBuff(s,id,b.armyId,op,value,duration));
  const status=(units,name,duration=1,guaranteed=false)=>units.forEach(b=>uniqueStatus(s,id,b.armyId,name,duration,{guaranteed}));
  const morale=(units,weight=10)=>units.forEach(b=>checkMorale(s,b.armyId,card.name,weight,s.lastCombat.moraleChanges));
- const restore=(units,n=0,clean=false,rally=true)=>units.forEach(b=>{if(rally)uniqueRecoverMorale(s,b.armyId);if(clean)b.effectStates=(b.effectStates??[]).filter(e=>e.op!=='STATUS_APPLY');if(n)heal(b.armyId,n);});
+ const restore=(units,n=0,clean=false,rally=true)=>units.forEach(b=>{if(rally)uniqueRecoverMorale(s,b.armyId);if(clean)campaignMechRemoveStatuses(s,b.armyId,e=>e.op==='STATUS_APPLY','CLEANSE',id);if(n)heal(b.armyId,n);});
  const hit=(who=target,ratio=100)=>attack(id,who,ratio);
  const aoe=(ratio=100,range=1,center=id)=>near(true,range,center).forEach(b=>hit(b.armyId,ratio));
  a.c32??={};uniqueCount(s,rule);
@@ -946,6 +1015,8 @@ for(const rule of [...C29_DATA.modifiers.map(c=>c.rule),'WIND_READER',...C29_AWA
 export const C33_POOL=commonPool;
 
 archerAttackReason.pointBlank=(s,id)=>!!c33Owned(s,id,'POINT_BLANK');
+for(const rule of POOL_C33_RULES)registerCampaignRule(rule,ctx=>ctx.phase==='query'?ctx.x:ctx.phase==='event'?c33DomesticEvent(ctx.s,ctx.c,ctx.event):undefined);
+registerCampaignRule('POOL_RECALL',ctx=>ctx.phase==='query'?ctx.x:undefined);
 for(const c of [...C33_POOL.traits,...C33_POOL.tactics,...C33_POOL.domestic])for(const e of c.effects)if(e.op==='RULE'&&!campaignRuleRegistered(e.rule))registerCampaignRule(e.rule,ctx=>ctx.phase==='query'?ctx.x:ctx.phase==='tactic'?c33ApplyTactic(ctx):ctx.phase==='event'?c33DomesticEvent(ctx.s,ctx.c,ctx.event):undefined);
 export function c33MusterCost(s,c,kind,troop,cost){if(kind!=='muster'||!troop)return cost;if(troopToCampaign(troop)==='BT04'&&c33Governor(s,c,'HORSE_BREEDING'))return Math.ceil(cost*.5);if(troop==='catapult'&&c33Governor(s,c,'INVENTOR'))return Math.ceil(cost*.7);return cost;}
 

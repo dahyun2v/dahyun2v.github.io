@@ -23,7 +23,7 @@ export function showClash(host, d) {
     <div class="cl-scene"></div>${flag('foe')}${flag('ally')}
     ${side('foe')}${side('ally')}
     <svg class="cl-arrow${d.attackerIsAlly === false ? ' foe' : ''}" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="${d.attackerIsAlly === false ? 'M42.1 31.1 L42.8 30.8 L48 43.45 L49.1 43 L49.4 47.8 L46.2 44.2 L47.3 43.75 Z' : 'M60.9 71.67 L60.2 71.93 L55.2 57.25 L54.1 57.7 L53.6 52.9 L57 56.3 L55.85 56.75 Z'}"/></svg>
-    <div class="cl-order" aria-hidden="true"><img class="bar" src="${H}battle-cmd.png" alt=""><i class="ring r1"><img src="${H}icons/cmd-tactic.png" alt=""></i><i class="ring r2"><img src="${H}icons/cmd-brace.png" alt=""></i><i class="ring r3"><img src="${H}icons/u-cavalry.png" alt=""></i><b class="atk"><img src="${H}icons/cmd-attack.png" alt="">${d.attackerIsAlly === false ? '맞선다' : '공격'}</b></div>
+    <div class="cl-order c266-skip">누르면 넘김</div>
     <div class="cl-num"><img class="art" src="${H}battle-clash.png" alt="">${cell('ally')}${cell('foe')}<small>${d.attackerIsAlly === false ? `${esc(d.foe.name)}의 공격` : `${esc(d.ally.name)}의 공격`}${d.counter ? ' · 반격' : ''}</small></div>
   </div>`;
   host.hidden = false;

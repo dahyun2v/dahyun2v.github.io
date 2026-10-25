@@ -1,0 +1,349 @@
+{
+  "status": "C470 시험값 — 확정 아님",
+  "units": {
+    "food": "석",
+    "gold": "금",
+    "people": "명"
+  },
+  "start": {
+    "granary": 100000,
+    "treasury": 3000,
+    "majorPeople": 200000,
+    "minorPeople": 100000
+  },
+  "populationUnit": 100000,
+  "taxPeople": 10000,
+  "tax": {
+    "food": 500,
+    "gold": 20,
+    "production": 0.1,
+    "science": 1
+  },
+  "recruitPerTaxPeople": 2.5,
+  "foodPerTroop": 10,
+  "carryTurns": 5,
+  "growthRate": 0.015,
+  "growthFood": 1,
+  "growthSecurity": [
+    1,
+    0.5,
+    0
+  ],
+  "centerCapacity": 100000,
+  "centerProduction": {
+    "major": 2,
+    "minor": 1
+  },
+  "terrain": {
+    "riverside": {
+      "food": 300,
+      "capacity": 50000
+    },
+    "plain": {
+      "food": 200,
+      "capacity": 30000
+    },
+    "forest": {
+      "food": 100,
+      "production": 1,
+      "capacity": 20000
+    },
+    "hill": {
+      "production": 2,
+      "capacity": 20000
+    },
+    "mountain": {
+      "production": 1,
+      "capacity": 10000
+    },
+    "water": {
+      "food": 100,
+      "capacity": 10000
+    }
+  },
+  "facility": {
+    "farm": {
+      "food": 1000,
+      "capacity": 20000
+    },
+    "tuntian": {
+      "food": 1500
+    },
+    "workshop": {
+      "production": 2
+    },
+    "market": {
+      "gold": 100,
+      "capacity": 20000
+    },
+    "granary": {
+      "capacity": 20000
+    }
+  },
+  "territory": {
+    "startTiles": {"major": 4, "minor": 2},
+    "maxRadius": 4,
+    "expandAt": 0.65,
+    "productionWeight": 100,
+    "resourceWeight": 100000,
+    "resourceDistance": [2, 3]
+  },
+  "grainPurchase": {
+    "grainPerGold": 5,
+    "limit": 2000,
+    "marketLimit": 3000,
+    "repeatIncrease": 0.25
+  },
+  "tilePurchase": {
+    "price": 300,
+    "repeatFactor": 1.5
+  },
+  "hurry": {
+    "goldPerProduction": 10,
+    "repeatFactor": 1.5
+  },
+  "idleGold": 5,
+  "facilityCosts": {
+    "mine": 20,
+    "ranch": 20,
+    "trainingGround": 24,
+    "tavern": 16,
+    "academy": 18
+  },
+  "facilityNames": {
+    "mine": "광산",
+    "ranch": "목장",
+    "trainingGround": "훈련소",
+    "tavern": "주점",
+    "academy": "서원"
+  },
+  "facilityTerrain": {
+    "farm": ["plain", "riverside"],
+    "tuntian": ["plain", "riverside"],
+    "market": ["plain", "riverside"],
+    "granary": ["plain", "riverside", "hill"],
+    "trainingGround": ["plain", "riverside", "hill"],
+    "tavern": ["plain", "riverside", "hill"],
+    "academy": ["plain", "riverside", "hill"],
+    "workshop": ["plain", "riverside", "hill", "forest", "mountain"]
+  },
+  "facilityPreference": {
+    "trainingGround": [
+      "plain",
+      "hill",
+      "riverside",
+      "forest",
+      "mountain"
+    ],
+    "tavern": [
+      "plain",
+      "hill",
+      "riverside",
+      "forest",
+      "mountain"
+    ],
+    "academy": [
+      "plain",
+      "hill",
+      "riverside",
+      "forest",
+      "mountain"
+    ]
+  },
+  "seats": {
+    "mine": {"stat": "politics", "specialist": "artisan"},
+    "ranch": {"stat": "leadership", "specialist": "military"},
+    "office": {
+      "stat": "politics",
+      "resource": "production",
+      "specialist": "artisan"
+    },
+    "farm": {
+      "stat": "politics",
+      "resource": "food",
+      "specialist": "agronomist"
+    },
+    "market": {
+      "stat": "intelligence",
+      "resource": "gold",
+      "specialist": "official"
+    },
+    "workshop": {
+      "stat": "politics",
+      "resource": "production",
+      "specialist": "artisan"
+    },
+    "trainingGround": {
+      "stat": "leadership",
+      "resource": "recruit",
+      "specialist": "military"
+    },
+    "tavern": {
+      "stat": "intelligence",
+      "resource": "prestige"
+    },
+    "academy": {
+      "stat": "intelligence",
+      "resource": "science",
+      "specialist": "scholar"
+    }
+  },
+  "officerBoost": {
+    "offset": 50,
+    "divisor": 200
+  },
+  "specialists": {
+    "period": 3,
+    "fastPeriod": 2,
+    "fastStat": 80,
+    "passivePeriod": 12,
+    "rate": 0.1,
+    "peoplePerSlot": 100000
+  },
+  "standardPeriod": 3,
+  "grades": [
+    {
+      "id": "county",
+      "name": "현성",
+      "minimum": 0,
+      "wall": 1,
+      "institutionSlots": 0
+    },
+    {
+      "id": "commandery",
+      "name": "군성",
+      "minimum": 150000,
+      "wall": 1.25,
+      "institutionSlots": 0
+    },
+    {
+      "id": "greatCommandery",
+      "name": "대군",
+      "minimum": 250000,
+      "wall": 1.5,
+      "institutionSlots": 1
+    },
+    {
+      "id": "capital",
+      "name": "주도",
+      "minimum": 400000,
+      "wall": 2,
+      "institutionSlots": 2
+    }
+  ],
+  "characterRate": 0.2,
+  "fortFoodReduction": 0.1,
+  "policyGrowth": {
+    "balanced": 1,
+    "agriculture": 1.5,
+    "commerce": 1,
+    "military": 0
+  },
+  "policyOrder": {
+    "balanced": [
+      "market",
+      "farm",
+      "granary"
+    ],
+    "agriculture": [
+      "farm",
+      "granary",
+      "market"
+    ],
+    "commerce": [
+      "market",
+      "tavern",
+      "academy"
+    ],
+    "military": [
+      "trainingGround",
+      "workshop"
+    ]
+  },
+  "delegatedRadius": 4,
+  "recruitTargets": {
+    "low": 0.03,
+    "normal": 0.05,
+    "high": 0.08,
+    "total": 0.12
+  },
+  "policyRecruitTargets": {
+    "agriculture": 0.04,
+    "commerce": 0.04,
+    "balanced": 0.05,
+    "military": 0.08
+  },
+  "security": {
+    "names": [
+      "안정",
+      "불안",
+      "혼란"
+    ],
+    "workFactors": [
+      1,
+      0.5,
+      0
+    ],
+    "garrisonDisplayScale": 10,
+    "recoveryGarrisonRatio": 0.02,
+    "migrationAfter": 3,
+    "migrationRate": 0.01
+  },
+  "occupation": {
+    "pacify": {
+      "peopleLoss": 0,
+      "specialistFactor": 1,
+      "security": 0,
+      "turns": 1
+    },
+    "military": {
+      "peopleLoss": 0.05,
+      "specialistFactor": 0.5,
+      "security": 1,
+      "turns": 2
+    },
+    "plunder": {
+      "peopleLoss": 0.2,
+      "specialistFactor": 0,
+      "security": 2,
+      "turns": 2
+    },
+    "pacifyFoodPerTaxPeople": 300,
+    "plunderPrestige": 20,
+    "gradePenaltyTurns": 10,
+    "lootCooldown": 10,
+    "lootTroopRate": 0.3,
+    "plunderLootFactor": 1.5
+  },
+  "siege": {
+    "turns": 3,
+    "granaryTurns": 5,
+    "attrition": 0.1,
+    "defenseFactor": 0.5
+  },
+  "arms": {
+    "displayScale": 10,
+    "productionCost": 10,
+    "batch": 1000,
+    "startPerOfficer": 3000,
+    "goldPerArm": 0.5,
+    "ironProductionMod": 50,
+    "ironGoldFactor": 0.75
+  },
+  "horses": {
+    "goldPerHorse": 3,
+    "marketLimit": 200,
+    "repeatIncrease": 0.25,
+    "pastureYield": 100,
+    "improvedYield": 300
+  },
+  "goldUpkeep": {
+    "perThousandTroops": 10,
+    "officer": 5,
+    "deployedFactor": 2,
+    "specialist": 2,
+    "moralePenalty": 10,
+    "desertAfter": 3,
+    "desertRate": 0.01
+  }
+}

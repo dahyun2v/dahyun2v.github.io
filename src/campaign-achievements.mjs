@@ -1,3 +1,4 @@
+import {isSliceMap} from './map-primitives.mjs';
 import data from '../../docs/design-data/achievements-v0.1.json' with {type:'json'};
 import {hexDistance} from './map-primitives.mjs';
 import {createRng} from './rng.mjs';
@@ -5,7 +6,7 @@ import {C19,settleCampaignResearch} from './campaign-roster.mjs';
 import {domesticResearchThreshold} from './campaign-rule-registry.mjs';
 
 export const ACHIEVEMENTS=data;
-export const achievementsEnabled=s=>['v2','v3'].includes(s.mapId)&&s.trialRules?.achievements!==false;
+export const achievementsEnabled=s=>isSliceMap(s.mapId)&&s.trialRules?.achievements!==false;
 const values=o=>Object.values(o??{});
 const cities=(s,fid)=>values(s.cities).filter(c=>c.ownerFactionId===fid);
 const cityName=(s,c)=>s.cityDisplayNames?.[c.cityId]??c.name??c.cityId;

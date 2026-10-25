@@ -1,17 +1,22 @@
-import {citySecurityName,worldDisplayText} from './hud-ink.mjs';
+import {recruitV3} from './domestic-v3-ui.mjs';
+import {armyFoodPerTurn,fieldDrainTurns} from '../../src/campaign-supply.mjs';
+import {symImg,citySecurityName,worldDisplayText} from './hud-ink.mjs';
 import {troopText} from '../../src/troop-display.mjs';
 // 성 무대(CITY STAGE, 정본 §23) — 성 전경 → 건물 → 시설 장면(장수 큰 그림 + 그 시설의 명령).
 // Claude 2026-10-08. 화면 연출은 Fable 시안(docs/work-integration/20261008/ui-v3/compare/fable-city-stage.html)에서 가져오고 실제 게임 상태로 채운다.
 // 명령 자체는 컨트롤러의 성 창(#city-panel)을 시설 장면 오른쪽에 옮겨 붙여 그대로 쓴다(명령 처리 코드 그대로).
 
 import {cityLifeHtml} from './city-life.mjs';
-import {cityEconomyRates,facilityTiles} from '../../src/campaign-economy.mjs';
+import {manpowerV2,naturalRecruitment,emergencyConscriptionPreview,cityEconomyRates,facilityTiles,startDomesticProduction} from '../../src/campaign-economy.mjs';
 import {view,step} from '../../src/campaign-runtime.mjs';
 import {CITY_JOBS} from '../../src/campaign-economy.mjs';
-import {productionReadout,cityReinforcementText} from './hud-ink.mjs';
-import {C20_FACILITIES} from '../../src/campaign-policy.mjs';
+import {productionReadout,cityReinforcementText,cityReinforcementRows} from './hud-ink.mjs';
+import {C20_FACILITIES,C20} from '../../src/campaign-policy.mjs';
+import {C19,sortie,sortieTroopRange,sortieReason} from '../../src/campaign-roster.mjs';
+import {domesticResearchThreshold} from '../../src/campaign-rule-registry.mjs';
+import {CITY_POLICIES} from '../../src/campaign-domestic.mjs';
 import {directionToward} from '../../src/campaign-abilities.mjs';
-import {parentTroop,troopInfo} from '../../src/campaign-special-troops.mjs';
+import {parentTroop,troopInfo,SPECIAL_TROOPS} from '../../src/campaign-special-troops.mjs';
 import {v3Asset} from '../design/v3-ui.mjs';
 const esc = (s) => worldDisplayText(s).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
@@ -31,13 +36,90 @@ export function domesticIntent(cityId,action,value,extra={}){
     priority:()=>({type:'CITY_FOOD_PRIORITY',cityId,enabled:value}),reserve:()=>({type:'CITY_RESERVE_JOB',cityId,kind:value||null,...extra}),
     job:()=>({type:'CITY_JOB',cityId,kind:value,...extra}),transfer:()=>({type:'OFFICER_TRANSFER',fromCityId:cityId,toCityId:value,officerId:extra.officerId})})[action]?.();
 }
+// The isolated city skin owns only the explicit kit query.
+if(typeof document!=='undefined'&&new URLSearchParams(globalThis.location?.search??'').get('ui')==='kit')document.documentElement.dataset.ui='kit';
+const kitActive=()=>typeof document!=='undefined'&&document.documentElement?.dataset.ui==='kit';
 const njNum=n=>Number.isFinite(n)?Number(n.toFixed(2)).toLocaleString('ko-KR'):'—';
 const NJ_POLICIES={balanced:'균형',agriculture:'농업',commerce:'상업',military:'군사',delegated:'위임'};
 const NJ_SPEC={artisan:'기술자',scholar:'학자',logistician:'병참',official:'관료'};
 const NJ_RESOURCE={agriculture:'식량',commerce:'생산 · 인망',military:'군사 보너스'};
 const njSeatStatus=(k,s)=>!s.officerId?'빈 칸':k==='governor'?s.state:`+${njNum(s.bonus)} ${NJ_RESOURCE[k]}${s.state==='근무 중'?'':` · ${s.state}`}`;
-const njIcon=name=>`<img src="/assets/ui-v3/hud/icons/${name}.png" alt="">`;
+const njIcon=name=>{const resource={'res-food':'food','res-production':'production'}[name];return resource?symImg('resources',resource,{size:'sm',paper:true}):'';};
 const njJob=kind=>CITY_JOBS[kind]?.name??kind??'없음';
+export const JOB_FX={farm:'식량 +2 (도시당 2개까지)',granary:'식량 창고 +80',market:'인망 +1',barracks:'모집·재편 진행 +10%',workshop:'생산 +1 (도시당 2개까지)',recruit:`예비병 +${troopText(500)} (동원 한도 안)`,muster:'장수와 예비병으로 새 부대 편성 · 병종별 출진 조건 확인',repair:'손상된 시설 수리',reorganize:'부대 병종 바꾸기'};
+export const researchUnlockHint=(state,v)=>C19.names.map((name,i)=>`${i+1}단계 ${name}(${domesticResearchThreshold(state,v.factionId,C19.thresholds[i])})`).join(' · ');
+const recommendations=new WeakMap();
+/** Run the existing delegated selector on a disposable copy, for an owned city only. */
+export function recommendCityJob(state,cityId){
+ let cache=recommendations.get(state);if(!cache){cache=new Map();recommendations.set(state,cache);}if(cache.has(cityId))return cache.get(cityId);
+ const own=view(state).ownCities[cityId];let result=null;
+ if(own?.governorSlot?.officerId&&own.governorSlot.state==='근무 중'){
+  const copy=structuredClone(state),c=copy.cities[cityId];c.currentProduction=null;c.domesticPolicy='delegated';
+  // A recommendation is optional; a failed read-only probe must not hide the city commands.
+  try{startDomesticProduction(copy,c);}catch{cache.set(cityId,null);return null;}const job=c.currentProduction;
+  if(job&&job.kind!=='muster'&&own.jobs?.some(j=>j.kind===job.kind&&!j.blockedReason))result={kind:job.kind,officerId:own.governorSlot.officerId};
+ }
+ cache.set(cityId,result);return result;
+}
+export function domesticPolicyPreview(state,cityId,policy,maxChanges=Infinity){
+ const c=view(state).ownCities[cityId];if(!c||!CITY_POLICIES[policy])return '';
+ const copy=structuredClone(state),raw=copy.cities[cityId],before=cityEconomyRates(copy,raw).raw;
+ raw.domesticPolicy=policy;const after=cityEconomyRates(copy,raw).raw;
+ return Object.entries({food:'식량',production:'생산',science:'학문',prestige:'인망'}).flatMap(([k,n])=>Math.abs(after[k]-before[k])>1e-8?[`<span class="${after[k]>before[k]?'gain':'loss'}">${n} <b>${njNum(before[k])} → ${njNum(after[k])}</b></span>`]:[]).slice(0,maxChanges).join(' · ');
+}
+function domesticJobGroups({state,v,c,selectedJob,extra,locked,quote,refusal,face,recommendation}){
+ const jobs=(c.jobs??[]).filter(j=>j.kind!=='muster'),military=['recruit','reorganize','repair'];
+ return [['시설 짓기',jobs.filter(j=>!military.includes(j.kind))],['병력 · 손보기',jobs.filter(j=>military.includes(j.kind))]].map(([name,list])=>`<h3 class="nj-job-group">${name}<span>${list.length}</span></h3>${list.sort((a,b)=>Number(!!a.blockedReason)-Number(!!b.blockedReason)).map(j=>{
+  const why=locked||j.blockedReason||quote(domesticIntent(c.cityId,'job',j.kind,j.kind===selectedJob?extra:{})).reason,read=j.estimate?productionReadout(j.estimate):null,count=c.facilities?.filter(f=>f.kind===j.kind).length??0;
+  const limit=j.kind==='workshop'?C19.workshopLimit:j.kind==='farm'?2:C20_FACILITIES[j.kind]?C20.facilityLimit:null,fx=j.description??JOB_FX[j.kind]??'',short=({mufu:'별의 길 대기 −1',clinic:'부상병 회복 ×2'})[j.kind]??fx.replace(/\s*\([^)]*\)/g,'').replace('도시 ','').replace('진행 ','');
+  const recommendationBadge=j.kind===recommendation?.kind?`<span class="nj-recommend" title="${esc(v.officers[recommendation.officerId]?.name)}이 권함 — 위임 방침이면 이것을 짓습니다">${face(recommendation.officerId)?`<img src="${esc(face(recommendation.officerId))}" alt="">`:''}<em>권함</em></span>`:'';
+  const art=cityCandidateImage(j.kind);
+  return `<button class="nj-job-card k-card-paper ${j.kind===selectedJob?'on':''} ${why?'blocked':''}" data-nj-job="${j.kind}" aria-pressed="${j.kind===selectedJob}"><picture class="c399-candidate-art"><source srcset="${art}"><img src="${art}" alt=""></picture>${count?`<span class="nj-installed ${limit&&count>=limit?'full':''}">보유 ${count}${limit?' / 한도 '+limit:'곳'}</span>`:''}${recommendationBadge}<b>${esc(j.name)}</b><span class="nj-job-effect" title="${esc(fx)}">${esc(short)}</span><span>생산 ${njNum(j.cost)} · ${read?.turns===null?'재개 대기':`${njNum(read?.turns)}차례`}</span>${why?`<small>${esc(refusal(why))}</small>`:''}</button>`;
+ }).join('')}`).join('');
+}
+export function cityGrowthHint(c){
+ if(c.population>=c.populationCapacity)return '한도 — 늘지 않음';
+ const net=c.foodLedger?.forecastNet??c.economyForecast?.food,need=c.population*6,rate=Math.max(0,Math.round(net));
+ if(!(rate>0))return '식량 순증 없음 — 성장 대기';
+ const progress=c.growthProgress;
+ if(!Number.isFinite(progress))return `성장 진척 정보 없음 · 식량 재고 ${need} 이상 필요`;
+ const turns=Math.max(0,Math.ceil((need-progress)/rate),Math.ceil((need-c.foodStock)/net));
+ return `다음 인구까지 약 ${turns}차례(식량 순증 기준) · 재고 ${need} 이상 필요`;
+}
+const siegeDisplay=new Map();
+export function cityAuditStats(c,stats,turn){
+ const prior=siegeDisplay.get(c.cityId),last=prior?.turn>turn?null:prior;let released=last?.released;
+ if(c.besieged)released=null;else if(last?.besieged)released=turn;
+ siegeDisplay.set(c.cityId,{besieged:!!c.besieged,released,turn});
+ const rows=stats.filter(x=>x.label!=='포위').map(x=>({...x,hint:x.label==='인구'?cityGrowthHint(c):x.label==='예비병'?[cityReinforcementText(c),...Object.entries(c.specialReserves??{}).filter(([,n])=>n>0).map(([k,n])=>`${SPECIAL_TROOPS[k]?.name??k} 특수 예비 ${troopText(n)}`)].join(' · '):x.hint}));
+ if(c.besieged)rows.unshift({ic:'cmd-garrison',label:'포위',text:`${c.siegeTurns??1}차례째`,tone:'bad',hint:`포위 ${c.siegeTurns??1}차례`});
+ else if(released===turn)rows.unshift({ic:'cmd-garrison',label:'포위 풀림',text:'',tone:'quiet'});
+ return rows;
+}
+export function cityNavigation(v,c,small=false){
+ const cities=Object.values(v.ownCities??{}).sort((a,b)=>Number(!b.currentProduction)-Number(!a.currentProduction));if(cities.length<2)return '';
+ const i=cities.findIndex(x=>x.cityId===c.cityId),idle=cities.filter(x=>!x.currentProduction).length;
+ const button=(offset)=>{const next=cities[(i+offset+cities.length)%cities.length];return `<button class="cs-city-nav k-btn" data-city-nav="${esc(next.cityId)}" title="${offset>0?'다음':'이전'} 성 · ${esc(next.name)}${!next.currentProduction?'(쉬는 중)':''}" aria-label="${offset>0?'다음':'이전'} 성 · ${esc(next.name)}">${offset>0?'›':'‹'}${offset>0&&idle?`<i>${idle}</i>`:''}</button>`;};
+ return small?`${button(-1)}<b>${esc(c.name)} · 내정</b>${button(1)}`:`<nav class="cs-city-navigation">${button(-1)}<button class="cs-world k-btn" title="지도로 (Esc)">‹ 천하로</button>${button(1)}</nav>`;
+}
+/** City-local interactions; the controller supplies navigation and appointment actions. */
+export function bindCityAudit(root,{navigate,appoint,isOpen}){
+ if(!root)return;
+ const filter=()=>{const search=root.querySelector('[data-city-search]'),idle=root.querySelector('[data-city-idle]');cityListUi.query=search?.value??'';cityListUi.idle=!!idle?.checked;for(const row of root.querySelectorAll('[data-city-name]'))row.hidden=!(row.dataset.cityName.includes(search?.value??'')&&(!idle?.checked||row.dataset.cityTask==='true'));};
+ root.addEventListener('input',e=>{if(e.target.matches?.('[data-city-search],[data-city-idle]'))filter();});
+ root.addEventListener('change',e=>{if(e.target.matches?.('[data-city-idle]'))filter();});
+ root.addEventListener('scroll',e=>{if(e.target.matches?.('.c294-city-list>div'))cityListUi.scroll=e.target.scrollTop;},true);
+ root.addEventListener('toggle',e=>{if(e.target.matches?.('.c294-city-list[open]')){const list=e.target.querySelector('div');if(list)list.scrollTop=cityListUi.scroll;}},true);
+ let chooseForCity=false;
+ const navigateCity=id=>{root.querySelector?.('[data-nj-dismiss]')?.click();root.querySelector?.('[data-nj-unselect]')?.click();chooseForCity=true;navigate(id);};
+ root.addEventListener('click',e=>{if(chooseForCity&&e.target.closest?.('[data-nj-jobs]')){chooseForCity=false;setTimeout(()=>root.querySelector?.('.nj-job-card:not(.blocked)')?.click(),0);}},true);
+ root.addEventListener('click',e=>{const nav=e.target.closest?.('[data-city-nav]'),seat=e.target.closest?.('[data-city-seat]');if(nav){e.stopImmediatePropagation();navigateCity(nav.dataset.cityNav);}else if(seat){e.stopImmediatePropagation();appoint(seat.dataset.citySeat);}},true);
+ const preview=e=>{const tab=e.target.closest?.('[data-nj-policy]'),line=root.querySelector('.nj-policy-effect');if(line&&tab)line.innerHTML=tab.dataset.preview||line.dataset.default;};
+ const restore=e=>{if(e.target.closest?.('[data-nj-policy]')){const line=root.querySelector('.nj-policy-effect');if(line)line.textContent=line.dataset.default;}};
+ root.addEventListener('pointerover',preview);root.addEventListener('focusin',preview);root.addEventListener('pointerout',restore);root.addEventListener('focusout',restore);
+ root.addEventListener('pointerover',e=>{const row=e.target.closest?.('.face-btn[data-spot],.entry[data-spot]');if(!row||row.contains(e.relatedTarget))return;const dot=root.querySelector(`.cs-spot[data-spot="${row.dataset.spot}"] .cs-issue`);if(dot){dot.classList.remove('blink');void dot.offsetWidth;dot.classList.add('blink');}});
+ document.addEventListener('keydown',e=>{if(!isOpen()||!['ArrowLeft','ArrowRight'].includes(e.key)||e.target.closest?.('input,select,textarea,[contenteditable="true"]'))return;const buttons=root.querySelectorAll('[data-city-nav]');if(buttons.length){if(buttons[e.key==='ArrowRight'?1:0].disabled)return;e.preventDefault();e.stopImmediatePropagation();navigateCity(buttons[e.key==='ArrowRight'?1:0].dataset.cityNav);}},true);
+}
 const domesticRecipe=(kind,text)=>text.includes('→')?text:`${text} → ${{farm:'군량 · 주민',tuntian:'군량 · 주민',granary:'식량 비축',market:'정책 · 장수 등용',workshop:'건설 · 모집',barracks:'모집 · 재편',clinic:'부상병 회복',mufu:'군사 운영'}[kind]??'성 운영'}`;
 export function domesticJobExtra(v,ui){
  if(ui.job!=='reorganize')return {};
@@ -52,16 +134,21 @@ export function influenceHtml(c){
   return `<div class="nj-influence" aria-label="영향권 산출"><header>영향권 · 인구 ${esc(c.influence?.workers)}명 / ${esc(c.influence?.workedTiles)}칸 작업 <small>밝은 칸은 작업 중 · 숫자는 칸의 유효 산출</small></header><div class="nj-tiles">${tiles.map(t=>{const [q,r]=t.tileId.split(',').map(Number),x=50+(q-cq+(r-cr)/2)*16,y=50+(r-cr)*20;return `<div class="nj-tile ${t.worked?'worked':''} ${t.blocked?'blocked':''}" data-nj-tile="${esc(t.tileId)}" style="left:${x}%;top:${y}%" title="${esc(t.tileId)} · ${esc(t.terrain)} · 기저 식량 ${njNum(t.baseYield.food)} / 생산 ${njNum(t.baseYield.production)}"><small>${esc(t.tileId)}</small><span>${njIcon('res-food')}${njNum(t.effectiveYield.food)} ${njIcon('res-production')}${njNum(t.effectiveYield.production)}</span><small>${t.blocked?'적 점유 · 산출 중단':t.worked?'작업 중':'미작업'}</small></div>`;}).join('')}<b class="nj-center">${esc(c.name)}</b></div></div>`;
 }
 /** All numbers come from own-city view; permission probes execute only on the engine's copied state. */
-export function naejeongHtml({state,v,c,art,ui={},face=()=>null,reasonText=x=>x,date=''}){
+export function naejeongHtml({state,v,c,art,ui={},face=()=>null,reasonText=x=>x,date='',kit=kitActive()}){
+ if(manpowerV2(state))c={...c,naturalRecruitment:naturalRecruitment(state,state.cities[c.cityId]),emergencyConscription:emergencyConscriptionPreview(state,state.cities[c.cityId])};
+ const recommendation=recommendCityJob(state,c.cityId),recommended=recommendation?njJob(recommendation.kind):null;
+ const policyLine=({balanced:'밭과 공방 칸을 고르게 일굽니다',agriculture:'밭 칸을 먼저 일굽니다 · 다음 전문인력 병참',commerce:'공방 칸을 먼저 일굽니다 · 다음 전문인력 기술자',military:'군사에 알맞은 칸을 먼저 일굽니다 · 다음 전문인력 관료',delegated:`태수가 생산까지 고릅니다${recommended?' — 다음: '+recommended:''}`})[c.domesticPolicy??'balanced'];
  const rates=c.economyForecast??{},ledger=c.foodLedger??{},kind=ui.facility,job=c.jobs?.find(j=>j.kind===kind),installed=c.facilities?.filter(f=>f.kind===kind)??[],site=c.facilitySites?.[kind];
- const refusal=code=>code?`${reasonText(code)}${/[가-힣]/.test(code)?'':` (${code})`}`:'';
+ const refusal=code=>kit?domesticReason(code,reasonText):code?`${reasonText(code)}${/[가-힣]/.test(code)?'':` (${code})`}`:'';
  const quote=cmd=>domesticQuote(state,cmd),locked=ui.locked?'명령 처리 중':'';
  const roles=kind?cityFacilityRoles(state,c.cityId):{},role=roles[kind];
  const estimate=job?.estimate?productionReadout(job.estimate):null,jobCommand=domesticIntent(c.cityId,'job',kind),jobReason=kind?(locked||job?.blockedReason||quote(jobCommand).reason):null;
+ const forecast=kit&&kind?domesticFacilityForecast(state,c.cityId,kind):'';
  const seats={governor:{...c.governorSlot,name:'태수',stat:'politics',statName:'정무'},...c.departments};
- const departments=Object.entries(seats).map(([k,s])=>{const o=v.officers[s.officerId],src=face(s.officerId);return `<button type="button" class="nj-dept ${ui.department===k?'on':''} ${s.state==='출진 중'?'absent':''}" data-nj-department="${k}"><span class="nj-face">${src?`<img src="${esc(src)}" alt="">`:'＋'}</span><span><b>${esc(s.name)}</b><small>${esc(o?.name??'앉히기')}</small><small>${o?`${esc(s.statName)} ${njNum(o.baseStats?.[s.stat])}`:''}</small><small>${esc(njSeatStatus(k,s))}</small></span></button>`;}).join('');
+ // 새 내정 판(v3)은 빈 담당 자리를 null 로 준다 — 그 자리는 그리지 않는다(플레이 점검 02 P1: null.officerId 로 판이 비던 것).
+ const departments=Object.entries(seats).filter(([,s])=>s&&typeof s==='object').map(([k,s])=>{const o=v.officers[s.officerId],src=face(s.officerId);return `<button type="button" class="nj-dept ${ui.department===k?'on':''} ${s.state==='출진 중'?'absent':''}" data-nj-department="${k}"><span class="nj-face${kit?' k-medallion':''}">${src?`<img src="${esc(src)}" alt="">`:'＋'}</span><span><b>${esc(s.name)}</b><small>${esc(o?.name??'앉히기')}</small><small>${o?`${esc(s.statName)} ${njNum(o.baseStats?.[s.stat])}`:''}</small>${kit&&k!=='governor'?`<small class="nj-seat-effect">+${njNum(s.bonus)} ${NJ_RESOURCE[k]}</small><small>${esc(s.state)}</small>`:`<small>${esc(njSeatStatus(k,s))}</small>`}</span></button>`;}).join('');
  const selected=seats[ui.department],previews=selected?(ui.department==='governor'?(c.departments?.agriculture?.previews??[]):selected.previews??[]):[];
- const picker=selected?`<section class="nj-picker" aria-label="담당 장수 선택"><header><b>${esc(selected.name)} · 장수 앉히기</b><button data-nj-dismiss>닫기 ×</button></header>${previews.map(p=>{const o=v.officers[p.officerId],cmd=domesticIntent(c.cityId,'department',p.officerId,{department:ui.department}),why=locked||quote(cmd).reason;return `<div class="nj-candidate"><button data-nj-appoint="${esc(p.officerId)}" ${why?'disabled':''}><b>${esc(o?.name??p.officerId)}</b> ${esc(selected.statName)} ${njNum(o?.baseStats?.[selected.stat])} ${ui.department==='governor'?'':` · +${p.bonus} ${NJ_RESOURCE[ui.department]}`}</button><button data-nj-transfer-officer="${esc(p.officerId)}">다른 성으로</button>${why?`<small>${esc(refusal(why))}</small>`:''}</div>`;}).join('')||'<p>이 성에 근무할 수 있는 장수가 없습니다.</p>'}${selected.officerId?`<div class="nj-candidate"><button data-nj-clear ${ui.department==='governor'||locked?'disabled':''}>비우기</button><button data-nj-transfer-officer="${esc(selected.officerId)}">${esc(v.officers[selected.officerId]?.name)} · 다른 성으로</button>${ui.department==='governor'?'<small>태수 해임 명령은 엔진에 없습니다. 다른 태수로 교체할 수 있습니다.</small>':''}</div>`:''}</section>`:'';
+ const picker=selected?`<section class="nj-picker" aria-label="담당 장수 선택"><header><b>${esc(selected.name)} · 장수 앉히기</b><button data-nj-dismiss>닫기 ×</button></header>${previews.map(p=>{const o=v.officers[p.officerId],cmd=domesticIntent(c.cityId,'department',p.officerId,{department:ui.department}),why=locked||quote(cmd).reason;return `<div class="nj-candidate"><button data-nj-appoint="${esc(p.officerId)}" ${why?'disabled':''}>${kit?`<span class="nj-candidate-face k-medallion">${face(p.officerId)?`<img src="${esc(face(p.officerId))}" alt="">`:"＋"}</span>`:""}${kit?`<span class="nj-candidate-info"><b>${esc(o?.name??p.officerId)}</b><span>${esc(selected.statName)} ${njNum(o?.baseStats?.[selected.stat])}</span>${ui.department==='governor'?'':`<strong>+${p.bonus} ${NJ_RESOURCE[ui.department]}</strong>`}</span>`:`<b>${esc(o?.name??p.officerId)}</b> ${esc(selected.statName)} ${njNum(o?.baseStats?.[selected.stat])} ${ui.department==='governor'?'':` · +${p.bonus} ${NJ_RESOURCE[ui.department]}`}`}</button><button data-nj-transfer-officer="${esc(p.officerId)}">다른 성으로</button>${why?`<small>${esc(refusal(why))}</small>`:''}</div>`;}).join('')||'<p>이 성에 근무할 수 있는 장수가 없습니다.</p>'}${selected.officerId?`<div class="nj-candidate"><button data-nj-clear ${ui.department==='governor'||locked?'disabled':''}>비우기</button><button data-nj-transfer-officer="${esc(selected.officerId)}">${esc(v.officers[selected.officerId]?.name)} · 다른 성으로</button>${ui.department==='governor'?'<small>태수 해임 명령은 엔진에 없습니다. 다른 태수로 교체할 수 있습니다.</small>':''}</div>`:''}</section>`:'';
  const transfers=ui.transferOfficer?domesticTransferOptions(state,v,c,ui.transferOfficer):[];
  const transferPicker=ui.transferOfficer?`<section class="nj-picker" aria-label="장수 이동 목록"><header><b>${esc(v.officers[ui.transferOfficer]?.name)} · 다른 성으로</b><button data-nj-dismiss>닫기 ×</button></header>${transfers.map(t=>`<p><button data-nj-transfer="${esc(t.cityId)}" ${t.reason||locked?'disabled':''}>${esc(t.name)} ${t.reason?'':`· ${t.turns}차례`}</button> <small>${esc(refusal(t.reason))}</small></p>`).join('')||'<p>이동할 다른 아군 성이 없습니다.</p>'}</section>`:'';
  const active=c.jobs?.find(j=>j.kind===c.currentProduction?.kind),activeRead=active?.estimate?productionReadout(active.estimate):null,pct=active?.estimate?.cost?Math.min(100,active.estimate.progress/active.estimate.cost*100):0;
@@ -70,49 +157,157 @@ export function naejeongHtml({state,v,c,art,ui={},face=()=>null,reasonText=x=>x,
  const selectedSpot=art.spots?.[kind]??({farm:art.spots?.granary,tuntian:art.spots?.residence,clinic:art.spots?.tavern,mufu:art.spots?.office})[kind];
  const box=selectedSpot?buildingHitBox(selectedSpot,art):null;
  const highlight=box?`<img class="nj-lit" src="${esc(art.src)}" alt="" style="clip-path:inset(${box[1]/art.h*100}% ${100-(box[0]+box[2])/art.w*100}% ${100-(box[1]+box[3])/art.h*100}% ${box[0]/art.w*100}%)"><i class="nj-site-outline" style="left:${box[0]/art.w*100}%;top:${box[1]/art.h*100}%;width:${box[2]/art.w*100}%;height:${box[3]/art.h*100}%"></i>`:'';
- const jobChoices=(c.jobs??[]).filter(j=>j.kind!=='muster').map(j=>`<option value="${j.kind}" ${ui.job===j.kind?'selected':''}>${esc(j.name)}${j.blockedReason?` · ${esc(refusal(j.blockedReason))}`:''}</option>`).join('');
+ const jobChoices=[['시설 짓기',false],['병력 · 손보기',true]].map(([label,military])=>`<optgroup label="${label}">${(c.jobs??[]).filter(j=>j.kind!=='muster'&&['recruit','reorganize','repair'].includes(j.kind)===military).map(j=>`<option value="${j.kind}" title="${esc(j.description??JOB_FX[j.kind]??'')}" ${ui.job===j.kind?'selected':''}>${esc(j.name)}${j.kind===recommendation?.kind?' · 태수 권함':''}${j.blockedReason?` · ${esc(refusal(j.blockedReason))}`:''}</option>`).join('')}</optgroup>`).join('');
  const selectedJob=ui.job??(c.jobs??[]).find(j=>!['muster','reorganize'].includes(j.kind))?.kind,chosen=c.jobs?.find(j=>j.kind===selectedJob),extra=domesticJobExtra(v,ui);
  const reserveReason=ui.jobs?(locked||chosen?.blockedReason||quote(domesticIntent(c.cityId,'reserve',selectedJob,extra)).reason):null;
  const startReason=ui.jobs?(locked||chosen?.blockedReason||quote(domesticIntent(c.cityId,'job',selectedJob,extra)).reason):null;
  const ledgerRows=[...(ledger.incoming??[]),...(ledger.outgoing??[])];
  const reserveInfo=[cityReinforcementText(c),...Object.entries(c.specialReserves??{}).map(([type,n])=>`특수 예비 · ${troopInfo(state,type).troopDisplayName} ${troopText(n)}명`)].join(' / ');
- return `<div class="nj-screen"><header class="nj-ledger"><div class="nj-title"><b>${esc(c.name)} · 내정</b><span>${esc(date)}</span><nav><button data-nj-legacy="state">형편</button><button data-nj-legacy="cmds">특기</button><button class="cs-back">성으로</button><button class="cs-world">지도로</button></nav></div><div class="nj-resources"><details class="nj-food"><summary>식량 <strong data-nj-number="foodStock">${njNum(c.foodStock)}</strong><span>순증 <b data-nj-number="forecastNet">${ledger.forecastNet>0?'+':''}${njNum(ledger.forecastNet)}</b></span><span>바닥까지 <b>${ledger.turnsUntilEmpty===null?'—':njNum(ledger.turnsUntilEmpty)}</b> 차례</span></summary><div class="nj-ledger-detail"><b>직전 정산 · 실제 순증 ${njNum(ledger.net)}</b>${ledgerRows.map(e=>`<p>${esc(e.label)} <b>${e.amount>0?'+':''}${njNum(e.amount)}</b></p>`).join('')||'<p>첫 정산 전입니다.</p>'}<small>위 순증·바닥까지는 현재 산출과 유지비로 추정합니다. 자동 지원은 직전 정산 내역에 표시됩니다.</small></div></details><section class="c222-specialist-ledger" aria-label="전문인력 효과"><b>전문인력</b>${Object.entries(NJ_SPEC).map(([k,n])=>`<span>${n} ${njNum(c.specialists?.[k]??0)} · ${esc(c.specialistFormation?.effects?.[k]??'')}</span>`).join('')}</section>${[['production','생산','res-production'],['science','학문','res-science'],['prestige','인망','res-fame']].map(([k,n,ic])=>`<span>${njIcon(ic)}${n} <b data-nj-number="${k}">${njNum(rates[k])}</b></span>`).join('')}<span title="${esc(reserveInfo)}">예비병 <b>${troopText(c.reserveTroops)}</b> <button data-reserve-transfer="${esc(c.cityId)}" ${ui.locked?'disabled':''}>예비병 보내기</button></span></div></header>
- <aside class="nj-departments"><h2>담당 장수</h2>${departments}<label class="nj-auto"><input type="checkbox" data-nj-auto ${c.autoDepartments?'checked':''} ${locked?'disabled':''}> 빈 칸 자동 채움</label><section class="nj-specialists"><h2>전문인력</h2>${Object.entries(NJ_SPEC).map(([k,n])=>`<p><b>${n} ${njNum(c.specialists?.[k]??0)}</b></p>`).join('')}<small>${esc(c.specialistFormation?.state)} · 대략 ${njNum(c.specialistFormation?.approximateTurns)}차례<br>다음 ${esc(NJ_SPEC[c.specialistFormation?.nextKind]??'—')}</small></section></aside>
- <main class="nj-city ${kind?'selected':''}" aria-label="성 시설"><div class="nj-painting" style="--nj-ratio:${art.w/art.h}"><img class="nj-city-art" src="${esc(art.src)}" alt="${esc(c.name)} 성 전경">${ui.influence?'':highlight+markers}</div>${ui.influence?influenceHtml(c):''}${ui.error?`<p class="nj-error" role="alert">${esc(ui.error)}</p>`:''}</main>
- ${job?`<aside class="nj-facility"><header><h1>${esc(job.name)}</h1><span>${installed.length?`설치 ${installed.length}곳`:'미설치'}</span><button data-nj-unselect aria-label="시설 선택 닫기">×</button></header><img class="nj-facility-art" src="/assets/ui-v3/facilities-ink/${kind==='repair'?'workshop':kind}.png" alt="${esc(job.name)}"><small>만드는 것 → 쓰이는 곳</small><h3>${esc(domesticRecipe(kind,role?.text??job.description??CITY_JOBS[kind]?.description??''))}</h3><p>자리: ${esc(site?.reason??'지을 빈 영향권 칸 없음')}</p>${installed.map(f=>`<p>${esc(f.siteReason??'기존 시설 자리')} · ${f.disabled?'적 점유·손상 · 산출 정지':'가동 중'}</p>`).join('')}<p>현재 상태 · ${esc(c.currentProduction?.kind===kind?'건설 중':jobReason?refusal(jobReason):'생산 가능')}</p><section><h3>다음 시설 추가</h3><p>생산 ${njNum(job.cost)} · ${estimate?.turns===null?'산출 회복 후 재개':`${njNum(estimate?.turns)}차례`}</p><p>${esc(job.description??CITY_JOBS[kind]?.description??'')}</p><small>기존 시설의 단계 승급은 제공되지 않습니다.</small></section><button class="nj-upgrade" data-nj-build="${kind}" ${jobReason?'disabled':''}>올리기 · 새 시설 추가</button>${jobReason?`<small class="nj-refusal">${esc(refusal(jobReason))}</small>`:''}</aside>`:''}
- <footer class="nj-bottom"><section class="nj-production"><small>현재 생산</small><b>${c.currentProduction?esc(njJob(c.currentProduction.kind)):'놀고 있음'}</b><span>${activeRead?.turns===null?'생산 회복 후 재개':activeRead?`${activeRead.turns}차례 남음`:''}</span><div class="nj-progress"><i style="width:${pct}%"></i></div>${c.jobBlocked?`<small>${esc(refusal(c.jobBlocked))}</small>`:''}<button data-nj-jobs>생산 고르기</button></section><section class="nj-reservation"><small>다음 예약 · 1칸</small><b>${esc(njJob(c.nextProduction?.kind))}</b><button data-nj-jobs>예약 고르기</button>${c.nextProduction?`<button data-nj-cancel-reserve ${locked?'disabled':''}>취소</button>`:''}</section><section class="nj-policy"><small title="${esc(c.policyEffects?.join(' · '))}">성 방침</small><div>${Object.entries(NJ_POLICIES).map(([k,n])=>`<button data-nj-policy="${k}" class="${c.domesticPolicy===k?'on':''}" aria-pressed="${c.domesticPolicy===k}" ${locked?'disabled':''}>${n}</button>`).join('')}</div></section><section class="nj-priority"><button data-nj-priority aria-pressed="${c.foodPriority}" ${locked?'disabled':''}>식량 먼저 채울 성 ${c.foodPriority?'☑':'□'}</button><button data-nj-influence aria-pressed="${!!ui.influence}">영향권 보기</button><small>${esc(citySecurityName(c)??'—')} · ${esc(cityReinforcementLabel(c))}</small></section></footer>
- ${ui.jobs?`<section class="nj-picker" aria-label="생산과 예약"><header><b>생산 · 다음 예약</b><button data-nj-dismiss>닫기 ×</button></header><label>할 일 <select data-nj-job-select>${jobChoices}</select></label>${ui.job==='reorganize'?`<p><label>재편 부대 <select data-nj-army>${Object.values(v.ownArmies).map(a=>`<option value="${esc(a.armyId)}" ${extra.armyId===a.armyId?'selected':''}>${esc(v.officers[a.commanderId]?.name??a.armyId)}</option>`).join('')}</select></label><label> 병종 <select data-nj-troop>${(v.officers[v.ownArmies[extra.armyId]?.commanderId]?.multiTroopTrait?.troopTypes??[v.officers[v.ownArmies[extra.armyId]?.commanderId]?.troopType]).filter(Boolean).map(t=>`<option value="${esc(t)}" ${t===extra.troopType?'selected':''}>${esc({militia:'근접보병',spear:'장병',bow:'원거리보병',cavalry:'기병'}[t]??t)}</option>`).join('')}</select></label></p>`:''}<p><button data-nj-start ${startReason?'disabled':''}>지금 생산</button><small>${esc(refusal(startReason))}</small></p><p><button data-nj-reserve ${reserveReason?'disabled':''}>다음 예약</button><small>${esc(refusal(reserveReason))}</small></p></section>`:transferPicker||picker}
+ const output = `<div class="nj-screen"><header class="nj-ledger"><div class="nj-title">${cityNavigation(v,c,true)||`<b>${esc(c.name)} · 내정</b>`}<span>${esc(date)}</span><nav><button data-nj-legacy="state">형편</button><button data-nj-legacy="cmds">특기</button><button class="cs-back">성으로</button><button class="cs-world">지도로</button></nav></div><div class="nj-resources"><details class="nj-food"><summary>식량 <strong data-nj-number="foodStock">${njNum(c.foodStock)}</strong><span>순증 <b data-nj-number="forecastNet">${ledger.forecastNet>0?'+':''}${njNum(ledger.forecastNet)}</b></span><span>바닥까지 <b>${ledger.turnsUntilEmpty===null?'—':njNum(ledger.turnsUntilEmpty)}</b> 차례</span></summary><div class="nj-ledger-detail"><b>직전 정산 · 실제 순증 ${njNum(ledger.net)}</b>${ledgerRows.map(e=>`<p>${esc(e.label)} <b>${e.amount>0?'+':''}${njNum(e.amount)}</b></p>`).join('')||'<p>첫 정산 전입니다.</p>'}<small>위 순증·바닥까지는 현재 산출과 유지비로 추정합니다. 자동 지원은 직전 정산 내역에 표시됩니다.</small></div></details><section class="c222-specialist-ledger" aria-label="전문인력 효과"><b>전문인력</b>${Object.entries(NJ_SPEC).map(([k,n])=>`<span>${n} ${njNum(c.specialists?.[k]??0)} · ${esc(c.specialistFormation?.effects?.[k]??'')}</span>`).join('')}</section>${[['production','생산','res-production'],['science','학문','res-science'],['prestige','인망','res-fame']].map(([k,n,ic])=>`<span>${njIcon(ic)}${n} <b data-nj-number="${k}">${njNum(rates[k])}</b></span>`).join('')}<span title="${esc(reserveInfo)}">예비병 <b>${troopText(c.reserveTroops)}</b> ${cityReinforcementRows(c,v)}<button data-reserve-transfer="${esc(c.cityId)}" title="이 성 예비병을 내 다른 성으로 옮긴다" ${ui.locked?'disabled':''}>병력 이송</button></span></div></header>
+ <aside class="nj-departments"><h2>담당 장수</h2>${departments}<label class="nj-auto"><input type="checkbox" data-nj-auto ${c.autoDepartments?'checked':''} ${locked?'disabled':''}> 빈 칸 자동 채움</label><section class="nj-specialists" title="${esc(Object.values(c.specialistFormation?.effects??{}).join(' · '))}"><p>${Object.entries(NJ_SPEC).some(([k])=>c.specialists?.[k]>0)?'전문인력 · '+Object.entries(NJ_SPEC).filter(([k])=>c.specialists?.[k]>0).map(([k,n])=>`${n} ${njNum(c.specialists[k])}`).join(' · '):'전문인력 없음'}</p><small>다음 ${esc(NJ_SPEC[c.specialistFormation?.nextKind]??'—')} · 약 ${njNum(c.specialistFormation?.approximateTurns)}차례(방침 ${esc(NJ_POLICIES[c.domesticPolicy??'balanced'])})</small></section></aside>
+ <main class="nj-city ${kind?'selected':''}" aria-label="성 시설"><div class="nj-painting" style="--nj-ratio:${art.w/art.h}"><img class="nj-city-art" src="${esc(art.src)}" alt="${esc(c.name)} 성 전경">${ui.influence?'':highlight+markers}</div>${ui.influence?influenceHtml(c):''}${ui.error?`<p class="nj-error" role="alert">${esc(kit?domesticReason(ui.error,reasonText):ui.error)}</p>`:''}</main>
+ ${job?`<aside class="nj-facility"><header><h1>${esc(job.name)}</h1><span>${installed.length?`설치 ${installed.length}곳`:'미설치'}</span><button data-nj-unselect aria-label="시설 선택 닫기">×</button></header><img class="nj-facility-art" src="${facilityImage(kind)}" alt="${esc(job.name)}"><small>만드는 것 → 쓰이는 곳</small><h3>${esc(domesticRecipe(kind,role?.text??job.description??CITY_JOBS[kind]?.description??''))}</h3><p>자리: ${esc(site?.reason??'지을 빈 영향권 칸 없음')}</p>${installed.map(f=>`<p>${esc(f.siteReason??'기존 시설 자리')} · ${f.disabled?'적 점유·손상 · 산출 정지':'가동 중'}</p>`).join('')}<p>현재 상태 · ${esc(c.currentProduction?.kind===kind?'건설 중':jobReason?refusal(jobReason):'생산 가능')}</p><section><h3>다음 시설 추가</h3><p>생산 ${njNum(job.cost)} · ${estimate?.turns===null?'산출 회복 후 재개':`${njNum(estimate?.turns)}차례`}</p><p>${esc(job.description??CITY_JOBS[kind]?.description??'')}</p><small>기존 시설의 단계 승급은 제공되지 않습니다.</small></section>${forecast?`<p class="nj-forecast">${esc(forecast)}</p>`:''}<button class="nj-upgrade" data-nj-build="${kind}" ${jobReason?'disabled':''}>올리기 · 새 시설 추가</button>${jobReason?`<small class="nj-refusal">${esc(refusal(jobReason))}</small>`:''}</aside>`:''}
+ <footer class="nj-bottom"><section class="nj-production"><small>현재 생산</small><b>${c.currentProduction?esc(njJob(c.currentProduction.kind)):'놀고 있음'}</b><span>${activeRead?.turns===null?'생산 회복 후 재개':activeRead?`${activeRead.turns}차례 남음`:''}</span><div class="nj-progress"><i style="width:${pct}%"></i></div>${c.jobBlocked?`<small>${esc(refusal(c.jobBlocked))}</small>`:''}<button data-nj-jobs>생산 고르기</button></section><section class="nj-reservation"><small>다음 예약 · 1칸</small><b>${esc(c.nextProduction?njJob(c.nextProduction.kind):c.domesticPolicy==='delegated'&&recommended?`${recommended}(태수가 고름)`:'없음')}</b><button data-nj-jobs>예약 고르기</button>${c.nextProduction?`<button data-nj-cancel-reserve ${locked?'disabled':''}>취소</button>`:''}</section><section class="nj-policy"><small title="${esc(c.policyEffects?.join(' · '))}">성 방침</small><div>${Object.entries(NJ_POLICIES).map(([k,n])=>`<button data-nj-policy="${k}" class="${c.domesticPolicy===k?'on':''}" data-preview="${esc(`${n}으로 바꾸면 · `)+esc(domesticPolicyPreview(state,c.cityId,k,kit?2:Infinity)||'산출 변화 없음')}" aria-pressed="${c.domesticPolicy===k}" ${locked?'disabled':''}>${n}</button>`).join('')}</div><p class="nj-policy-effect" data-default="${esc(policyLine)}">${esc(policyLine)}</p></section><section class="nj-priority"><button data-nj-priority aria-pressed="${c.foodPriority}" ${locked?'disabled':''}>식량 먼저 채울 성 ${c.foodPriority?'☑':'□'}</button><button data-nj-influence aria-pressed="${!!ui.influence}">영향권 보기</button><small>${esc(citySecurityName(c)??'—')} · ${esc(cityReinforcementLabel(c))}</small></section></footer>
+ ${ui.jobs?`<section class="nj-picker" aria-label="생산과 예약"><header><b>생산 · 다음 예약</b><button data-nj-dismiss>닫기 ×</button></header>${kit?`<div class="nj-job-grid">${domesticJobGroups({state,v,c,selectedJob,extra,locked,quote,refusal,face,recommendation})}</div>`:`<label>할 일 <select data-nj-job-select>${jobChoices}</select></label>`}${kit&&selectedJob==='reorganize'?`<div class="nj-reorganize">${Object.values(v.ownArmies).map(a=>`<button class="k-btn" data-nj-army-choice="${esc(a.armyId)}" aria-pressed="${extra.armyId===a.armyId}">${esc(v.officers[a.commanderId]?.name??a.armyId)}</button>`).join('')}${(v.officers[v.ownArmies[extra.armyId]?.commanderId]?.multiTroopTrait?.troopTypes??[v.officers[v.ownArmies[extra.armyId]?.commanderId]?.troopType]).filter(Boolean).map(t=>`<button class="k-btn" data-nj-troop-choice="${esc(t)}" aria-pressed="${t===extra.troopType}">${esc(troopInfo(state,t).troopDisplayName)}</button>`).join('')}</div>`:ui.job==='reorganize'?`<p><label>재편 부대 <select data-nj-army>${Object.values(v.ownArmies).map(a=>`<option value="${esc(a.armyId)}" ${extra.armyId===a.armyId?'selected':''}>${esc(v.officers[a.commanderId]?.name??a.armyId)}</option>`).join('')}</select></label><label> 병종 <select data-nj-troop>${(v.officers[v.ownArmies[extra.armyId]?.commanderId]?.multiTroopTrait?.troopTypes??[v.officers[v.ownArmies[extra.armyId]?.commanderId]?.troopType]).filter(Boolean).map(t=>`<option value="${esc(t)}" ${t===extra.troopType?'selected':''}>${esc({militia:'근접보병',spear:'장병',bow:'원거리보병',cavalry:'기병'}[t]??t)}</option>`).join('')}</select></label></p>`:''}<p><button data-nj-start ${startReason?'disabled':''}>지금 생산</button><small>${esc(refusal(startReason))}</small></p><p><button data-nj-reserve ${reserveReason?'disabled':''}>다음 예약</button><small>${esc(refusal(reserveReason))}</small></p></section>`:transferPicker||picker}
  ${(v.officerTransfers??[]).filter(t=>t.fromCityId===c.cityId||t.toCityId===c.cityId).length?`<div class="nj-transit">${(v.officerTransfers??[]).filter(t=>t.fromCityId===c.cityId||t.toCityId===c.cityId).map(t=>`${esc(v.officers[t.officerId]?.name??t.officerId)} → ${esc(v.ownCities[t.toCityId]?.name??t.toCityId)} · ${t.state==='BLOCKED'?'보급선 단절 · 대기':`${Math.max(0,t.arrivalTurn-v.turn)}차례`}`).join('<br>')}</div>`:''}</div>`;
+ return kit?cityFocusHtml(kitDomesticHtml(output),{state,v,c,art,date,ui,face,activeRead,chosen,startReason,reserveReason,refusal}):output;
+}
+// Presentation only: no duplicate permission or economic rules.
+export function domesticReason(code,translate=x=>x){
+ if(!code)return '';
+ const text=translate(code);
+ if(text&&/[가-힣]/.test(text))return text.replace(/\s*\([^)]*[A-Z_]{3,}[^)]*\)/g,'').replace(/\b[A-Z][A-Z_]{3,}\b/g,'').trim();
+ return ({INVALID_DEPARTMENT_OFFICER:'이 장수는 이 자리를 맡을 수 없습니다.',INSUFFICIENT_PRODUCTION:'자원이 부족합니다.',INSUFFICIENT_FOOD:'자원이 부족합니다.',NO_FACILITY_SITE:'시설을 지을 빈 자리가 없습니다.'})[code]??'현재 조건에서는 실행할 수 없습니다.';
+}
+// Reuse the engine rate query already used by cityFacilityRoles; own city only.
+export function domesticFacilityForecast(state,cityId,kind){
+ const own=view(state).ownCities[cityId],c=state.cities[cityId],site=own?.facilitySites?.[kind];
+ if(!own||!site?.tileId||!own.jobs?.some(j=>j.kind===kind&&!j.blockedReason))return '';
+ const before=cityEconomyRates(state,c),after=cityEconomyRates(state,{...c,facilities:[...(c.facilities??[]),{kind,tileId:site.tileId}]});
+ const labels={food:'식량 차례마다',production:'생산 차례마다',prestige:'인망 차례마다',capacity:'식량 창고',workBonus:'모집·재편 보너스'};
+ return Object.entries(labels).flatMap(([k,label])=>{const a=before.raw?.[k]??before[k],b=after.raw?.[k]??after[k],factor=k==='workBonus'?100:1,unit=k==='workBonus'?'%':'';return Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(b-a)>1e-8?[`지으면 ${label} ${njNum(a*factor)}${unit} → ${njNum(b*factor)}${unit}`]:[];}).join(' · ');
+}
+const cityCandidateImage=kind=>`/assets/ui-kit/own/screens-v5/city/${kind}.webp`;
+const facilityImage=kind=>['recruit','reorganize','repair'].includes(kind)?`/assets/ui-v3/hud/icons/${{recruit:'res-troops',reorganize:'cmd-attack',repair:'cmd-garrison'}[kind]}.png`:`/assets/ui-v3/facilities-ink/${kind}.png`;
+function kitDomesticHtml(html){
+ return html.replace(/<section class="c222-specialist-ledger"[\s\S]*?<\/section>/,'')
+ .replace(/class="nj-picker"/g,'class="nj-picker k-panel-ink"')
+ .replace('class="nj-ledger"','class="nj-ledger k-panel-ink"')
+ .replace('class="nj-facility"','class="nj-facility k-panel-ink"')
+ .replace(/<button data-nj-legacy/g,'<button class="k-tab" data-nj-legacy')
+ .replace('class="cs-back"','class="cs-back k-btn"').replace('class="cs-world"','class="cs-world k-btn"')
+ .replace('<summary>식량','<summary>'+njIcon('res-food')+'식량')
+ .replace('>지도로</button>','>지도로 (Esc)</button>')
+ .replace('class="nj-upgrade"','class="nj-upgrade k-btn-primary"')
+ .replace(/<button data-nj-start/g,'<button class="k-btn-primary" data-nj-start')
+ .replace(/<button data-nj-(reserve|jobs|influence|transfer-officer)/g,'<button class="k-btn" data-nj-$1')
+ .replace(/class="(on|)" aria-pressed/g,'class="k-tab $1" aria-pressed');
 }
 function cityReinforcementLabel(c){return Number.isFinite(c.guardMaximum)?`수비 최대 ${troopText(c.guardMaximum)}`:'';}
 
-/** Same six axial rays as combat facing, translated into screen compass names. */
-export function sortieGateName(center,tile){
-  if(center.q===tile.q&&center.r===tile.r)return '성 가운데';
-  return ['동문','북동문','북서문','서문','남서문','남동문'][directionToward(center,tile)];
+// C366: task flags use only the current public city projection.
+export function cityTaskStatus(c){
+ const estimate=c.jobs?.find(j=>j.kind===c.currentProduction?.kind)?.estimate;
+ const paused=!!c.currentProduction&&!!estimate&&productionReadout(estimate).turns===null;
+ const blocked=!!c.jobBlocked||!!paused,delegated=c.domesticPolicy==='delegated';
+ const labels=[c.besieged?'⚠ 포위':null,blocked?'생산 막힘':c.currentProduction?`생산 ${njJob(c.currentProduction.kind)}`:'생산 없음',delegated?'위임':null,c.nextProduction?`예약 ${njJob(c.nextProduction.kind)}`:null,c.reserveTroops===0?'예비병 부족 · 0':null];
+ return {text:labels.filter(Boolean).join(' · '),attention:!!c.besieged||blocked||(!c.currentProduction&&!delegated)||c.reserveTroops===0};
 }
+export function cityReinforcementKit(c,v){
+ const armies=Object.values(v.ownArmies??{}),total=armies.reduce((n,a)=>n+(a.nextReinforcement?.count??0),0);
+ return `<details class="c366-reinforcement"><summary>${esc(cityReinforcementText(c))}</summary>${cityReinforcementRows(c,v)||'<p>이 성에서 배분할 충원 없음</p>'}<details><summary>전 부대 다음 차례 충원 +${troopText(total)}</summary>${armies.map(a=>`<p>${esc(v.officers?.[a.commanderId]?.name??a.armyId)} 부대 +${troopText(a.nextReinforcement?.count??0)}<small>${(a.nextReinforcement?.sources??[]).map(r=>`${esc(v.ownCities?.[r.cityId]?.name??r.cityId)} +${troopText(r.count)}`).join(' · ')||'충원 배분 없음'}</small></p>`).join('')||'<p>보유 부대 없음</p>'}<small>공개된 다음 차례 배분 예상 · 충원 없음은 예비병 부족 외에도 거리·조건의 영향을 받습니다.</small></details></details>`;
+}
+const cityListUi={query:'',idle:false,scroll:0};
+// C294: a kit-only composition of existing readouts and command controls.
+// No permissions, costs, yields or arrival times are inferred here.
+export function cityHeaderKit(v,c,domestic=false){
+ const cities=Object.values(v.ownCities??{}).sort((a,b)=>a.cityId.localeCompare(b.cityId)),i=cities.findIndex(x=>x.cityId===c.cityId);
+ const arrow=offset=>`<button class="cs-city-nav k-btn" data-city-nav="${esc(cities[(i+offset+cities.length)%cities.length]?.cityId??c.cityId)}" ${cities.length<2?'disabled':''} aria-label="${offset<0?'이전':'다음'} 성" title="끝에서 처음으로 순환">${offset<0?'‹':'›'}</button>`;
+ return `<header class="c294-head"><nav aria-label="성 넘기기">${arrow(-1)}<details class="c294-city-list"><summary>${esc(c.name)} <small>${i+1}/${cities.length}</small></summary><input type="search" data-city-search aria-label="성 이름 검색" placeholder="성 이름 검색" value="${esc(cityListUi.query)}"><label><input type="checkbox" data-city-idle ${cityListUi.idle?'checked':''}> 할 일 있는 성만</label><div>${cities.map(x=>`<button data-city-nav="${esc(x.cityId)}" data-city-name="${esc(x.name)}" ${!x.name.includes(cityListUi.query)||(cityListUi.idle&&!cityTaskStatus(x).attention)?'hidden':''} data-city-task="${cityTaskStatus(x).attention}" aria-current="${x.cityId===c.cityId}">${esc(x.name)} <small>${esc(cityTaskStatus(x).text)}</small></button>`).join('')}</div></details>${arrow(1)}</nav><nav aria-label="성 화면"><button class="k-tab ${domestic?'':'on'}" data-city-mode="overview" aria-pressed="${!domestic}">성 보기</button><button class="k-tab ${domestic?'on':''}" data-city-mode="domestic" aria-pressed="${domestic}">내정</button></nav><button class="cs-world k-btn">지도로 Esc</button></header>`;
+}
+function citySummaryKit(c,v){
+ const food=c.foodLedger??{},net=food.forecastNet??c.economyForecast?.food,security=citySecurityName(c);
+ return `<dl class="c294-values"><div><dt>성벽</dt><dd>${njNum(c.durability)} / ${njNum(c.durabilityMax)}</dd></div><div><dt>식량</dt><dd>${njNum(c.foodStock)} / ${njNum(c.foodCapacity)}<small class="${net<0?'c399-food-warning':''}">차례마다 ${net>0?'+':''}${njNum(net)}${net<0&&Number.isFinite(food.turnsUntilEmpty)?` · 바닥까지 ${food.turnsUntilEmpty}차례`:''}</small></dd></div><div><dt>이 성 예비병</dt><dd>${troopText(c.reserveTroops??0)}${c.naturalRecruitment?`<small>${esc(c.naturalRecruitment.reason??`+${troopText(c.naturalRecruitment.amount)}/차례`)}</small>`:''}</dd></div><div><dt>생산 / 차례</dt><dd>${njNum(c.economyForecast?.production)}</dd></div></dl>${c.besieged?'<p class="c294-warning">⚠ 포위 중</p>':''}${security?`<small class="c294-security">치안 · ${esc(security)}</small>`:''}`;
+}
+function cityProductionKit(c,read=null,overview=false){
+ const delegated=c.domesticPolicy==='delegated';
+ return `<section class="c294-production" aria-label="현재 생산과 다음 예약"><div class="c294-current"><span>현재 생산</span><b>${esc(c.currentProduction?njJob(c.currentProduction.kind):'작업 없음')}</b>${delegated?'<small>위임 · 태수가 생산 선택</small>':''}<strong>${read?.turns===null?'재개 대기':read?`${read.turns}차례 남음`:''}</strong><button ${overview?'class="cs-kit-produce k-btn-primary" data-city-mode="production"':'class="k-btn" data-nj-jobs'}>생산 고르기</button></div><div class="c294-next"><span>다음 예약 · 1칸</span><b>${esc(c.nextProduction?njJob(c.nextProduction.kind):delegated?'위임 · 다음 생산 자동 선택':'없음')}</b>${overview?'':`<button class="k-btn" data-nj-jobs>${c.nextProduction?'예약 바꾸기':'예약 고르기'}</button>${c.nextProduction?'<button class="k-btn" data-nj-cancel-reserve>취소</button>':''}`}</div>${c.jobBlocked?`<small>생산 막힘: ${esc(domesticReason(c.jobBlocked))}</small>`:''}</section>`;
+}
+function cityOverviewKit(html,{v,c,people,portraits,facilityState}){
+ const stage=html.slice(0,html.indexOf('<header class="cs-top">')).replace('class="cs-stage"','class="cs-stage c399-overview-stage"');
+ const o=people.office,face=portraits[o?.officerId]?.path,job=c.jobs?.find(j=>j.kind===c.currentProduction?.kind),read=job?.estimate?productionReadout(job.estimate):null;
+ return `${stage}${cityHeaderKit(v,c)}<aside class="c294-overview k-panel-ink"><header class="cs-kit-heading"><b>${esc(c.name)}</b><div class="c294-governor">${face?`<img src="${esc(face)}" alt="">`:''}<span>태수 ${esc(o?.name??'빈 칸')}<small>${esc(v.faction?.name??'')}</small></span></div></header>${citySummaryKit(c,v)}</aside><div class="c294-overview-production">${cityProductionKit(c,read,true)}</div>`;
+}
+// C456 readouts use only the existing public city projection.
+const cityResourceIcon=(kind,label)=>`<img class="c456-resource" src="/assets/ui-kit/own/sym/resources/${kind}.webp" alt="" title="${esc(label)}">`;
+function cityDomesticSummary(c){
+ const food=c.foodLedger??{},net=food.forecastNet??c.economyForecast?.food;
+ const growth=Number.isFinite(c.growthProgress)&&c.population>0?Math.max(0,Math.min(100,c.growthProgress/(c.population*6)*100)):0;
+ const row=(kind,label,value,hint='')=>`<div><dt>${cityResourceIcon(kind,label)}${label}</dt><dd>${value}${hint?`<small>${hint}</small>`:''}</dd></div>`;
+ const yields=[['food','식량',net],['production','생산',c.economyForecast?.production],['learning','학문',c.economyForecast?.science],['renown','인망',c.economyForecast?.prestige]].filter(x=>Number.isFinite(x[2]));
+ return `<div class="c456-growth"><div class="c456-population" style="--growth:${growth}%" title="${esc(cityGrowthHint(c))}">${cityResourceIcon('population','인구')}<b>${njNum(c.population)}<small>/ ${njNum(c.populationCapacity)}</small></b></div><div><div class="c456-yields">${yields.map(([kind,label,n])=>`<span title="${label} / 차례">${cityResourceIcon(kind,label)}${n>0?'+':''}${njNum(n)}</span>`).join('')}</div><small class="c456-growth-hint">${esc(cityGrowthHint(c))}</small></div></div><dl class="c456-values">${row('wall','성벽',`${njNum(c.durability)} / ${njNum(c.durabilityMax)}`)}${row('food','식량',`${njNum(c.foodStock)} / ${njNum(c.foodCapacity)}`,`<span class="${net<0?'c399-food-warning':''}">차례마다 ${net>0?'+':''}${njNum(net)}${net<0&&Number.isFinite(food.turnsUntilEmpty)?` · 바닥까지 ${food.turnsUntilEmpty}차례`:''}</span>`)}${row('reserve','예비병',troopText(c.reserveTroops??0),c.naturalRecruitment?esc(c.naturalRecruitment.reason??`+${troopText(c.naturalRecruitment.amount)}/차례`):'')}${Number.isFinite(c.woundedTroops)?row('wounded','부상병',troopText(c.woundedTroops)):''}${citySecurityName(c)?row('security','치안',esc(citySecurityName(c))):''}</dl>${c.besieged?'<p class="c294-warning">포위 중</p>':''}`;
+}
+function cityDomesticProduction(c,read,choosing){
+ const job=c.currentProduction,estimate=c.jobs?.find(j=>j.kind===job?.kind)?.estimate;
+ const next=c.nextProduction,nextEstimate=c.jobs?.find(j=>j.kind===next?.kind)?.estimate,nextRead=nextEstimate?productionReadout(nextEstimate):null;
+ const progress=Number.isFinite(estimate?.progress)&&Number.isFinite(estimate?.cost)&&estimate.cost>0;
+ return `<section class="c456-production" aria-label="현재 생산과 다음 예약"><small>현재 생산</small><div class="c456-current">${job?`<img class="c456-production-art" src="${cityCandidateImage(job.kind)}" alt=""><div><h2>${esc(njJob(job.kind))}</h2>${progress?`<progress aria-label="현재 생산 진척" value="${Math.max(0,Math.min(estimate.cost,estimate.progress))}" max="${estimate.cost}"></progress><small>${njNum(estimate.progress)} / ${njNum(estimate.cost)}</small>`:''}</div><strong class="c456-turns">${read?.turns===null?'대기':read?read.turns:''}<small>${read?.turns===null?'생산 회복 후 재개':read?'차례 남음':''}</small></strong>`:`<div class="c456-empty">${cityResourceIcon('production','생산')}<h2>작업 없음</h2></div>`}</div>${choosing?'':'<button class="k-btn k-btn-primary" data-nj-jobs>생산 고르기</button>'}${c.jobBlocked?`<small>${esc(domesticReason(c.jobBlocked))}</small>`:''}<div class="c456-next"><span>다음 ▸</span>${next?`<img src="${cityCandidateImage(next.kind)}" alt=""><span>${esc(njJob(next.kind))}${nextRead?.turns!=null?` · ${nextRead.turns}차례`:''}</span>`:`<span>${c.domesticPolicy==='delegated'?'위임 · 자동 선택':'예약 없음'}</span>`}${choosing?'':`<button class="k-btn" data-nj-jobs>${next?'바꾸기':'고르기'}</button>${next?'<button class="k-btn" data-nj-cancel-reserve aria-label="예약 취소">×</button>':''}`}</div></section>`;
+}
+function cityFocusHtml(html,{state,v,c,art,date,ui,face,activeRead,chosen,startReason,reserveReason,refusal}){
+ const take=(a,b)=>html.slice(html.indexOf(a),html.indexOf(b,html.indexOf(a)));
+ const originalDepartments=take('<aside class="nj-departments">','<main class="nj-city');
+ const departmentLine=Object.entries(c.departments??{}).filter(([,s])=>s).map(([,s])=>`${s.name} ${v.officers[s.officerId]?.name??'미배정'}`).join(' · ');
+ const departments=originalDepartments.replace('</aside>',`<button class="k-btn c456-personnel-toggle" data-nj-personnel aria-expanded="${!!ui.personnel}" title="${esc(departmentLine)}">농업 · 상업 · 군사 ▸</button><button class="k-btn c456-policy-toggle" data-nj-policy-toggle aria-expanded="${!!ui.policy}">성 방침 · ${esc(NJ_POLICIES[c.domesticPolicy??'balanced'])} ▸</button></aside>`);
+ const policy=take('<section class="nj-policy">','</footer>');
+ const pickerStart=html.indexOf('<section class="nj-picker'),pickerEnd=html.indexOf('<div class="nj-transit');
+ let picker=pickerStart<0?'':html.slice(pickerStart,pickerEnd<0?html.lastIndexOf('</div>'):pickerEnd);
+ const forecast=ui.jobs&&chosen?domesticFacilityForecast(state,c.cityId,chosen.kind):'';
+ if(ui.jobs){
+  const blocked=[];
+  picker=picker.replace(/<button class="nj-job-card [^"]*blocked[^"]*"[\s\S]*?<\/button>/g,card=>{blocked.push(card);return '';});
+  if(blocked.length)picker=picker.replace('</div><p><button class="k-btn-primary" data-nj-start',`</div><details class="c294-blocked"><summary>지을 수 없는 후보 ${blocked.length}</summary><div class="nj-job-grid">${blocked.join('')}</div></details><p><button class="k-btn-primary" data-nj-start`);
+  const last=picker.indexOf('<p><button class="k-btn-primary" data-nj-start');
+  if(last>=0)picker=picker.slice(0,last)+`<section class="c294-selection">${chosen?`<img class="c399-selection-art" src="${cityCandidateImage(chosen.kind)}" alt="">`:""}<h3>${esc(chosen?.name??'생산 선택')}</h3><p>${esc(forecast||chosen?.description||JOB_FX[chosen?.kind]||'')}</p><p>필요 생산 ${njNum(chosen?.cost)} · ${chosen?.estimate?esc(productionReadout(chosen.estimate).line):''}</p>${c.currentProduction?'<small>작업을 바꾸어도 작업별 진척은 보관됩니다.</small>':''}</section><footer class="c294-actions"><button class="k-btn-primary" data-nj-start ${startReason?'disabled':''}>지금 생산</button><button class="k-btn" data-nj-reserve ${reserveReason?'disabled':''}>${c.nextProduction?'예약 바꾸기':'다음 예약'}</button><small>${esc(refusal(startReason||reserveReason))}</small></footer></section>`;
+ }
+ const facility=html.includes('<aside class="nj-facility')?take('<aside class="nj-facility','<footer class="nj-bottom">'):'';
+ const body=picker||facility||(ui.personnel?`<section class="nj-picker c456-personnel-picker" aria-label="담당 장수"><header><b>담당 장수</b><button class="k-btn" data-nj-dismiss>닫기 ×</button></header>${originalDepartments.replace('class="nj-departments"','class="c456-personnel-seats"')}</section>`:'');
+ // C399: one live text layer over the existing city art and generated blank plates.
+ const sceneTone=c.ownerFactionId??v.factionId;
+ const sceneSrc=art.src||`/assets/ui-v3/scenes/plate-city${['F01','F03'].includes(sceneTone)?'-'+sceneTone:''}.webp`;
+ const scene=`<div class="c399-backdrop" aria-hidden="true"><img src="${esc(sceneSrc)}" alt=""></div>${ui.influence?`<section class="c399-influence">${influenceHtml(c)}</section>`:''}`;
+ const head=cityHeaderKit(v,c,true).replace('<nav aria-label="성 화면">',`<span class="c399-date">${esc(v.faction?.name??'')} · ${esc(date)}</span><nav aria-label="성 화면">`);
+ const production=cityDomesticProduction(c,activeRead,ui.jobs);
+ return `<div class="nj-screen c294-focus c399-city c399-r2 c456-city">${head}${scene}<div class="c294-workspace${ui.personnel?' show-personnel':''}${ui.jobs?' c294-choosing':''}">${departments}<main class="c294-work"><div class="c294-production-host">${production}</div>${ui.error?`<p class="c399-error" role="alert">${esc(domesticReason(ui.error))}</p>`:''}${body}${ui.policy?`<section class="c294-policy c456-policy-popover" role="dialog" aria-label="성 방침"><header><h2>성 방침</h2><button class="k-btn" data-nj-dismiss>닫기 ×</button></header>${policy}</section>`:''}</main><aside class="c294-summary"><h2>성 현황</h2>${cityDomesticSummary(c)}</aside><aside class="c399-military"><h2>병력 · 장수</h2>${cityReinforcementKit(c,v)}<fieldset class="c354-city-group"><legend>병력</legend><button class="k-btn" data-city-mode="military">출진</button><button class="k-btn" data-reserve-transfer="${esc(c.cityId)}" title="이 성 예비병을 내 다른 성으로 옮긴다">병력 이송</button>${c.emergencyConscription?`<button class="k-btn" data-emergency-conscription="${esc(c.cityId)}" ${c.emergencyConscription.reason?'disabled':''} title="+${troopText(c.emergencyConscription.amount)}명 / 인구 −1 / 치안 → ${['민심 불안','혼란'][c.securityLevel??0]??'혼란'} / 3차례 징집 정지">긴급 징병 +${troopText(c.emergencyConscription.amount)}명</button><small>${esc(c.emergencyConscription.reason??'인구 −1 · 치안 악화 · 3차례 징집 정지')}</small>`:''}</fieldset><fieldset class="c354-city-group"><legend>장수</legend><button class="k-tab" data-nj-legacy="state">형편</button><button class="k-tab" data-nj-legacy="cmds">특기</button></fieldset><small>일반특기 바꾸기는 성 안에서</small></aside></div></div>`;
+}
+
+/** Same six axial rays as combat facing, translated into screen compass names. */
 export const sortieTroopIcon=type=>`/assets/ui-v3/dots-1016/icons/D3-${({militia:'melee',spear:'spear',bow:'bow',cavalry:'cavalry'})[parentTroop(type)]??'melee'}.png`;
 export function sortieSquadPath(type='militia',tone='grey',asset=v3Asset){
   return asset(`units-ink/squad-${type}-${tone}.webp`)??`/assets/ui-v3/units-ink/squad-${parentTroop(type)}-${tone}.webp`;
 }
 
 /** Presentation only: ranges, gate availability and refusals are supplied by the engine controller. */
-export function sortieHtml({city,officer,art,roster,troops,selectedType,gates,selectedGate,sequence,keep,face}){
-  const icon=sortieTroopIcon(selectedType??officer?.troopType),tone=({F01:'red',F02:'green',F03:'blue'})[city.ownerFactionId]??'grey';
-  return `<header class="u3-sortie-head"><span>${esc(city.name)} 병영 · 출진 편성</span><button type="button" data-sortie-close>병영으로 돌아가기 ×</button></header>
-    <div class="u3-sortie-art">${art?`<img src="${esc(art)}" alt="${esc(officer?.name)} 전신 원화">`:''}</div>
-    <section class="u3-sortie-panel" aria-label="부대 편성"><p class="u3-sortie-sequence">${sequence+1}번째 출진 · 한 장수 한 부대</p>
-      <div class="u3-sortie-title"><h1>${esc(officer?.name??'장수 없음')}</h1><label><img src="${icon}" alt="">편성 <select id="city-job-muster-troop" aria-label="출진 병종" ${troops.length<2?'disabled':''}>${sortieTroopOptionsHtml(troops,selectedType)}</select></label></div>
-      <div class="u3-sortie-squad" aria-label="병종 대열">${Array.from({length:4},()=>`<img src="${sortieSquadPath(selectedType??'militia',tone)}" alt="">`).join('')}</div>
-      <dl class="u3-sortie-stats"><div><dt>공격</dt><dd data-sortie-stat="attack">—</dd></div><div><dt>방어</dt><dd data-sortie-stat="defense">—</dd></div><div><dt>기동</dt><dd data-sortie-stat="mobility">—</dd></div></dl>
-      <div class="u3-sortie-strength"><label for="city-sortie-count">편성 병력</label><p><output id="sortie-strength"></output><span>명</span></p></div>
-      <div class="u3-sortie-slider"><input id="city-sortie-count" type="range" aria-label="출진 병력"><div class="u3-sortie-limits"><span id="sortie-min"></span><span id="sortie-max"></span></div><small id="muster-troop-info"></small></div>
-      <div class="u3-sortie-result"><p id="sortie-reserve"></p><p id="muster-selection" aria-live="polite"></p><small id="sortie-supply"></small></div>
-      <select id="city-job-officer" hidden aria-label="출진 장수">${roster.map(r=>`<option value="${esc(r.officerId)}" ${r.officerId===officer?.officerId?'selected':''}>${esc(r.name)}</option>`).join('')}</select>
-    </section>
-    <aside class="u3-sortie-roster" aria-label="장수 명단"><h2>장수 명단 <small>${roster.length}명</small></h2><div>${roster.map(r=>`<button type="button" class="u3-sortie-row ${r.officerId===officer?.officerId?'on':''}" data-sortie-officer="${esc(r.officerId)}" ${r.reason?'disabled':''}><span class="u3-sortie-face">${face(r.officerId)?`<img src="${esc(face(r.officerId))}" alt="">`:''}</span><span><b>${esc(r.name)}</b><small><img src="${sortieTroopIcon(r.troopType)}" alt="">${esc(r.troopName)}</small><small class="${r.reason?'refusal':''}">${esc(r.reason??r.status)}</small></span></button>`).join('')}</div></aside>
-    <div class="u3-sortie-gates" aria-label="출진 성문"><span class="u3-sortie-gate-label">나갈 문<br><b>${gates.filter(g=>!g.reason).length}</b>곳 열림</span><div>${gates.map(g=>`<button type="button" class="u3-sortie-gate ${g.tileId===selectedGate?'on':''}" data-sortie-gate="${esc(g.tileId)}" aria-pressed="${g.tileId===selectedGate}" ${g.reason?'disabled':''}><b>${esc(g.name)}${g.reason?' · 막힘':''}</b><small>${esc(g.reason??'이 문으로 출진')}</small></button>`).join('')}</div></div>
-    <footer class="u3-sortie-action"><label><input id="sortie-keep" type="checkbox" ${keep?'checked':''}> 계속 출진</label><button type="button" data-sortie>출진</button><small>누르면 바로 출진 · 이번 차례에 이동 가능</small></footer>`;
+// A disposable world allocates the actual reserve lots in selection order, including special reserves.
+export function planSorties(state,cityId,selections){
+ const copy=structuredClone(state),rows=[];let stopped=false,food=0;
+ for(const pick of selections){
+  const type=pick.troopType??copy.officers[pick.officerId]?.troopType,range=sortieTroopRange(copy,copy.cities[cityId],type,pick.officerId);
+  const count=range.max<range.min?0:(pick.count??range.max),request={type:'SORTIE',cityId,officerId:pick.officerId,troopType:type,troopCount:count,...(pick.trustArmyId?{trustArmyId:pick.trustArmyId}:{})};
+  const reason=stopped?'앞선 편성부터 확인하세요':sortieReason(copy,request)?.message;
+  if(!reason){sortie(copy,request);const id=copy.officers[pick.officerId].locationRef.id;food+=armyFoodPerTurn(copy.armies[id],copy)*fieldDrainTurns(copy,copy.armies[id]);}else stopped=true;
+  rows.push({...pick,troopType:type,count,range,reason,request});
+ }
+ return {rows,units:rows.filter(r=>!r.reason&&r.count>0).length,remaining:copy.cities[cityId].reserveTroops,total:rows.filter(r=>!r.reason).reduce((n,r)=>n+r.count,0),food};
+}
+export function sortieHtml({city,officer,art,roster,plan,sequence,deployedNames=[],face,error}){
+ const units=plan.units??plan.rows.filter(r=>!r.reason&&r.count>0).length;
+ return `<header class="u3-sortie-head"><span>${esc(city.name)} 병영 · 출진 편성</span><button type="button" data-sortie-close>병영으로 돌아가기 ×</button></header>
+ <div class="u3-sortie-art">${art?`<img src="${esc(art)}" alt="${esc(officer?.name)} 전신 원화">`:''}</div>
+ <section class="u3-sortie-panel" aria-label="부대 편성"><h1>출진 편성</h1>${recruitV3(city)}<p class="u3-sortie-sequence" role="status">${sequence?`${sequence}부대 출진 · 방금 출진: ${esc(deployedNames.join(' · '))}`:'함께 나갈 장수를 고르세요'}</p>
+ ${sequence?`<button type="button" class="k-btn k-btn-primary c457-map" data-sortie-map>지도로</button>`:''}<div class="c457-formations">${plan.rows.map(r=>{const o=roster.find(o=>o.officerId===r.officerId);return `<section class="c457-formation" data-formation="${esc(r.officerId)}"><span class="u3-sortie-face">${face(r.officerId)?`<img src="${esc(face(r.officerId))}" alt="">`:''}</span><b>${esc(o?.name)}</b><select data-no-glossary data-sortie-type="${esc(r.officerId)}" aria-label="${esc(o?.name)} 병종">${sortieTroopOptionsHtml(o?.troops??[],r.troopType)}</select><label>병력 <output>${troopText(r.count)}</output><input type="range" data-sortie-strength="${esc(r.officerId)}" aria-label="${esc(o?.name)} 병력" min="${r.count===0?0:r.range.min}" max="${r.count===0?0:r.range.max}" step="${r.range.step??50}" value="${r.count}" ${r.count===0?'disabled':''}></label><small class="refusal">${esc(r.reason??`최대 ${troopText(r.range.max)}명 · 500명 단위 조절`)}</small><span class="c457-squad" aria-hidden="true">${Array.from({length:4},()=>`<img src="${sortieSquadPath(r.troopType,({F01:'red',F02:'green',F03:'blue'})[city.ownerFactionId]??'grey')}" alt="">`).join('')}</span></section>`;}).join('')}</div>
+ <p id="muster-selection" role="alert">${esc(error??'')}</p></section>
+ <aside class="u3-sortie-roster" aria-label="장수 명단"><h2>장수 명단 <small>${roster.length}명</small></h2><div>${roster.map(r=>{const on=plan.rows.some(p=>p.officerId===r.officerId);return `<button type="button" class="u3-sortie-row ${on?'on':''}" data-sortie-officer="${esc(r.officerId)}" aria-pressed="${on}" ${r.reason&&!on?'disabled':''}><span aria-hidden="true">${on?'☑':'□'}</span><span class="u3-sortie-face">${face(r.officerId)?`<img src="${esc(face(r.officerId))}" alt="">`:''}</span><span><b>${esc(r.name)}</b><small>${esc(r.troopName)}</small><small class="${r.reason?'refusal':''}">${esc(r.reason??r.status)}</small></span></button>`;}).join('')}</div></aside>
+ <footer class="u3-sortie-action"><dl class="c457-totals" aria-label="출진 합계"><div><dt>부대</dt><dd><b data-sortie-total="units">${units}</b>부대</dd></div><div><dt>총 병력</dt><dd><b data-sortie-total="total">${troopText(plan.total)}</b>명</dd></div><div><dt>남는 예비병</dt><dd><b data-sortie-total="remaining">${troopText(plan.remaining)}</b>명</dd></div><div title="보급권 밖 차례당 식량"><dt>차례당 식량</dt><dd data-sortie-total="food">${plan.food}</dd></div></dl><button type="button" data-sortie ${!units?'disabled':''}>출진</button><small>고른 순서대로 즉시 출진 · 이번 차례에 이동 가능</small></footer>`;
 }
 
 export const sortieTroopOptionsHtml=(troops,selectedType)=>troops.map(t=>`<option value="${esc(t.troopType)}" ${t.troopType===selectedType?'selected':''} ${t.blockedReason?'disabled':''}>${esc(t.troopType===t.parentTroopType?`기본 · ${t.troopDisplayName}`:t.troopDisplayName)}${t.blockedReason?` · ${esc(t.blockedReason)}`:''}</option>`).join('');
@@ -193,20 +388,13 @@ const ACT_IC = {office: 'b-develop', barracks: 'cmd-attack', market: 'b-trade', 
 const ic = (name) => `<img class="ic" src="${name.startsWith('D2:')?d2(name.slice(3)):`${HUD}icons/${name}.png`}" alt="" onerror="this.style.visibility='hidden'">`;
 const SIL = '<svg viewBox="0 0 11 20"><path d="M5.5 0a2.1 2.1 0 1 1 0 4.2A2.1 2.1 0 0 1 5.5 0zM2.2 6.3C2.2 5.3 3.7 4.6 5.5 4.6s3.3.7 3.3 1.7V12H7.6l-.5 8H3.9l-.5-8H2.2z"/></svg>';
 
-/** 이 성의 사람들을 건물에 앉힌다: 관청 = 태수, 병영 = 지휘 높은 자유 장수, 주점 = 재야(없으면 감화 높은 장수), 저택 = 군주 또는 남은 장수. */
+/** 공개 내정 담당·부재 상태를 그대로 연결한다. 주점은 재야, 저택은 이 성의 군주만. */
 export function cityPeople(v, c) {
-  const all = [...(c.freeOfficers ?? []).map((o) => v.officers[o.officerId] ?? o)];
-  const gov = c.governorId ? v.officers[c.governorId] : null;
-  const ruler = v.faction?.rulerOfficerId ?? v.faction?.rulerId;
-  const pool = [gov, ...all].filter(Boolean).filter((o, i, a) => a.findIndex((x) => x.officerId === o.officerId) === i);
-  const by = (k) => [...pool].sort((a, b) => (b.baseStats?.[k] ?? 0) - (a.baseStats?.[k] ?? 0));
-  const taken = new Set(), take = (o) => { if (o) taken.add(o.officerId); return o ?? null; };
-  const office = take(gov ?? by('politics')[0]);
-  const barracks = take(by('leadership').find((o) => !taken.has(o.officerId)) ?? null);
-  const wanderer = (c.wanderers ?? [])[0];
-  const tavern = wanderer ? {...wanderer, wanderer: true} : take(by('charisma').find((o) => !taken.has(o.officerId)) ?? null);
-  const residence = take(pool.find((o) => o.officerId === ruler && !taken.has(o.officerId)) ?? pool.find((o) => !taken.has(o.officerId)) ?? null);
-  return {office, barracks, tavern, residence};
+  const seat=id=>id?(v.officers?.[id]??null):null;
+  const governor=c.governorSlot?.officerId??c.governorId;
+  const ruler=v.faction?.rulerOfficerId??v.faction?.rulerId,residence=seat(ruler);
+  const local=residence?.locationRef?.kind==='CITY'&&residence.locationRef.id===c.cityId,wanderer=c.wanderers?.[0];
+  return {office:seat(governor),granary:seat(c.departments?.agriculture?.officerId),market:seat(c.departments?.commerce?.officerId),barracks:seat(c.departments?.military?.officerId),tavern:wanderer?{...wanderer,wanderer:true}:null,residence:local?residence:null};
 }
 
 /** 人牒: 사람이 들고 온 현안(최대 3 + 나머지 수). 게임 상태에서만 뽑는다. */
@@ -215,7 +403,7 @@ export function cityIssues(v, c, people, {idle = false} = {}) {
   const occ = c.occupation?.stage;
   if (occ === 'CAPTURED' || occ === 'OCCUPATION') out.push({to: 'office', by: people.office, text: '관청의 형편 탭에서 점령 정책을 정하세요', level: 'urgent'});
   if (idle) out.push({to: 'office', by: people.office, text: '생산할 일을 정해 주십시오', level: 'urgent'});
-  if ((c.economyForecast?.food ?? 0) < 0) out.push({to: 'granary', by: people.office, text: '곳간이 줄고 있습니다', level: 'warn'});
+  if ((c.foodLedger?.forecastNet ?? c.economyForecast?.food ?? 0) < 0) out.push({to: 'granary', by: people.granary, text: '곳간이 줄고 있습니다', level: 'warn'});
   if ((c.securityLevel ?? 0) >= 1) out.push({to: 'office', by: people.office, text: '민심이 흔들립니다', level: 'warn'});
   if ((c.wanderers ?? []).length) out.push({to: 'tavern', by: people.tavern, text: `떠돌이 인재 ${c.wanderers.length}명이 주점에 머뭅니다`, level: 'new'});
   if ((c.musterOptions ?? []).length && (c.reserveTroops ?? 0) >= 200) out.push({to: 'barracks', by: people.barracks, text: '출진할 준비가 되었습니다', level: 'quiet'});
@@ -226,7 +414,7 @@ export function cityIssues(v, c, people, {idle = false} = {}) {
 /** 그림·건물 위치: C82 전경(json)이 있으면 그것, 없으면 지도 미니어처 + 기본 자리. */
 export async function loadStageArt(cityId, assetUrl, tone = '') {
   // 기준 시안(page-city-v2)의 그림 그대로: 시안에서 UI만 지운 판 한 장(세력 깃발 색이 다른 판이 있으면 그것)을 쓴다 — 사용자 2026-10-10 "뒤에 붙이는 그림은 시안 것 그대로". 건물 자리는 판 옆 json
-  const plate = (tone && assetUrl(`scenes/plate-city-${tone}.webp`)) || assetUrl('scenes/plate-city.webp');
+  const plate = (tone && assetUrl(`scenes/plate-city-${tone}.webp`)) || assetUrl('scenes/plate-city.webp') || `/assets/ui-v3/scenes/plate-city${['F01','F03'].includes(tone)?'-'+tone:''}.webp`;
   if (plate) {
     try {
       const j = await fetch('/assets/ui-v3/scenes/plate-city.json').then((r) => r.json());
@@ -251,7 +439,8 @@ export async function loadStageArt(cityId, assetUrl, tone = '') {
 }
 
 /** 성 전경 HTML(무대 안). art = loadStageArt 결과. */
-export function overviewHtml({v, c, art, people, issues, date, facilityState = {}, portraits = {}, emblem = '', lordArt = null}) {
+export function overviewHtml({state, v, c, art, people, issues, date, facilityState = {}, portraits = {}, emblem = '', lordArt = null, kit=kitActive()}) {
+ if(state&&manpowerV2(state)&&state.cities[c.cityId]?.ownerFactionId===state.playerFactionId)c={...c,naturalRecruitment:naturalRecruitment(state,state.cities[c.cityId])};
   const owner = c.ownerFactionId === v.factionId ? (v.faction?.name ?? '') : '';
   const fmt = (n) => Number.isFinite(n) ? Math.round(n).toLocaleString('ko-KR') : '—';
   const d = (n) => Number.isFinite(n) && n ? `<u class="${n > 0 ? '' : 'down'}">${n > 0 ? '+' : '−'}${Math.abs(Math.round(n))}</u>` : '';
@@ -259,35 +448,42 @@ export function overviewHtml({v, c, art, people, issues, date, facilityState = {
   const place = (id) => people[id] ? `<div class="cs-mark" data-spot="${id}">${SIL}<span>${esc(people[id].name)}</span>${portraits[people[id].officerId]?.path ? `<div class="face"><img src="${esc(portraits[people[id].officerId].path)}" alt=""></div>` : ''}</div>` : '';
   const spots = Object.entries(art.spots).map(([id, s]) => {
     const b = BUILDINGS[id]; if (!b) return '';
-    const [x,y,w,h]=buildingHitBox(s,art);
-    return `<div class="cs-spot" data-spot="${id}" data-hanja="${b.hanja}" style="left:${x/art.w*100}%;top:${y/art.h*100}%;width:${w/art.w*100}%;height:${h/art.h*100}%"><button class="cs-hit" aria-label="${b.name}" aria-describedby="cs-role-${id}"></button><i class="cs-building-highlight" style="background-image:url('${esc(art.src)}');background-size:${art.w/w*100}% ${art.h/h*100}%;background-position:${x/(art.w-w)*100}% ${y/(art.h-h)*100}%"></i><span class="cs-decoration" style="left:${(s.x-x)/w*100}%;top:${(s.y-y)/h*100}%"><span class="mk"><img class="mk-art" src="${HUD}city-marker.png" alt="">${ic(BUILD_ICON[id] ?? 'b-office')}</span><span class="label"><b>${b.name}</b><small>${b.fn}</small></span>${place(id)}</span><span id="cs-role-${id}" class="cs-role-host">${roleHtml(id,facilityState.roles,c)}</span></div>`;
+    const [x,y,w,h]=buildingHitBox(s,art),issue=issues.find(x=>x.to===id&&x.level!=='quiet'),hint=issue?`${issue.name||b.name} — ${issue.text}`:'';
+    return `<div class="cs-spot" data-spot="${id}" data-hanja="${b.hanja}" style="left:${x/art.w*100}%;top:${y/art.h*100}%;width:${w/art.w*100}%;height:${h/art.h*100}%">${kit?'':`<button class="cs-hit" aria-label="${b.name}" aria-describedby="cs-role-${id}" title="${esc(hint)}"></button>`}<i class="cs-building-highlight" style="background-image:url('${esc(art.src)}');background-size:${art.w/w*100}% ${art.h/h*100}%;background-position:${x/(art.w-w)*100}% ${y/(art.h-h)*100}%"></i><span class="cs-decoration" style="left:${(s.x-x)/w*100}%;top:${(s.y-y)/h*100}%">${kit?`<button class="c399-overview-sign" aria-label="${esc(b.name)}" title="${esc(hint)}">${esc(b.name)}${issue?`<i class="cs-issue ${issue.level}" title="${esc(hint)}">!</i>`:''}</button>`:`<span class="mk"><img class="mk-art" src="${HUD}city-marker.png" alt="">${ic(BUILD_ICON[id] ?? 'b-office')}${issue?`<i class="cs-issue ${issue.level}" title="${esc(hint)}">!</i>`:''}</span><span class="label"><b>${b.name}</b><small>${b.fn}</small></span>${place(id)}`}</span><span id="cs-role-${id}" class="cs-role-host">${roleHtml(id,facilityState.roles,c)}</span></div>`;
   }).join('');
   const shown = issues.slice(0, 3), more = issues.length - shown.length;
   // 흑묵판(page-city-v2): 왼쪽 = 건물에 앉은 사람의 둥근 초상 + 건물 표(누르면 그 건물), 오른쪽 = 태수 판(큰 그림·능력 막대·건물 바로가기)
-  const cast = ['office', 'barracks', 'tavern', 'residence'].filter((k) => people[k]).map((k) => {
-    const o = people[k], face = portraits[o.officerId]?.path, iss = issues.find((x) => x.by === o && x.level !== 'quiet');
-    return `<button class="face-btn ${iss?.level ?? ''}" data-spot="${iss?.to ?? k}" title="${esc(o.name)} · ${BUILDINGS[k].name}${iss ? ` — ${esc(iss.text)}` : ''}"><span class="disc">${face ? `<img src="${esc(face)}" alt="">` : ''}</span><img class="frame" src="${HUD}city-cast-frame.png" alt=""><span class="badge">${ic(BUILD_ICON[k])}</span><span class="role">${BUILDINGS[k].name}</span><span class="tag"><b>${esc(o.name)}</b>${iss ? `<em>${esc(iss.text)}</em>` : `<small>${BUILDINGS[k].name}</small>`}</span></button>`;
+  const seatMap={office:'governor',granary:'agriculture',market:'commerce',barracks:'military'};
+  const cast=['office','granary','market','barracks',...(people.tavern?['tavern']:[]),...(people.residence?['residence']:[])].map(k=>{
+    const o=people[k],seat=seatMap[k],slot=seat==='governor'?c.governorSlot:c.departments?.[seat],role=({office:'태수',granary:'농업 담당',market:'상업 담당',barracks:'군사 담당',tavern:'떠돌이 인재',residence:'군주'})[k],face=portraits[o?.officerId]?.path,iss=issues.find(x=>x.to===k&&x.level!=='quiet'),absent=slot?.state&&slot.state!=='근무 중',effect=slot?.bonus?`+${njNum(slot.bonus)} ${NJ_RESOURCE[seat]}`:'';
+    return `<button class="face-btn ${iss?.level??''} ${o?'':'vacant'} ${o&&absent?'absent':''}" data-spot="${k}" ${!o&&seat?`data-city-seat="${seat}"`:''} title="${esc(role)} · ${esc(o?.name??'비었음')}${iss?' — '+esc(iss.text):''}"><span class="disc${kit?' k-medallion':''}">${face?`<img src="${esc(face)}" alt="">`:''}</span><img class="frame" src="${HUD}city-cast-frame.png" alt=""><span class="badge">${ic(BUILD_ICON[k])}</span><span class="role">${role}</span><span class="tag"><b>${esc(o?.name??'비었음')}</b><em>${esc(!o?(c.autoDepartments?'앉히기 · 다음 차례 자동':'앉히기'):absent?slot.state:effect)}</em>${iss?`<em>${esc(iss.text.slice(0,24))}</em>`:''}</span></button>`;
   }).join('');
   const lord = people.office;
   // 2026-10-13 배치(시안 docs/work-integration/20261013/ui-layout/mock/city-gpt.jpg): 건물 단추 넷 대신 성 수치 표, 막대에는 이름. 태수 그림은 원래대로 크게(사용자 10-13 "태수 초상화는 원래대로 큰 거로" — 판 그림 city-lord-v3)
   // 태수 판의 막대 두 칸은 성의 값이다(사용자 2026-10-14: "도시 태수로서의 화면인데 개인 능력치 들어갈 이유가 없음" — 정무 · 지휘를 뺐다). 무엇을 보일지는 부르는 쪽이 정한다(facilityState.lordGauges)
-  const gauges = (facilityState.lordGauges ?? []).slice(0, 2).map((g, i) => `<i class="bar b${i + 1}${g.tone ? ` ${esc(g.tone)}` : ''}" title="${esc(g.label)} ${esc(g.text)}${g.hint ? ` · ${esc(g.hint)}` : ''}"><em>${esc(g.label)}</em><u style="--v:${Math.max(0, Math.min(100, g.max ? g.value / g.max * 100 : 0)).toFixed(0)}"></u><b>${esc(g.text)}</b></i>`).join('');
+  const gauges = (facilityState.lordGauges ?? []).slice(0, 2).map((g, i) => `<i class="bar b${i + 1}${g.tone ? ` ${esc(g.tone)}` : ''}" title="${esc(g.label)} ${esc(g.text)}${g.hint ? ` · ${esc(g.hint)}` : ''}${g.label==='식량'?' · '+esc((c.economyCauses??[]).filter(x=>x.resource==='food').slice(0,3).map(x=>`${x.label} ${x.amount>0?'+':''}${njNum(x.amount)}`).join(' · ')):''}"><em>${esc(g.label)}</em><u style="--v:${Math.max(0, Math.min(100, g.max ? g.value / g.max * 100 : 0)).toFixed(0)}"></u><b>${esc(g.text)}</b></i>`).join('');
   const lordFace = lord ? portraits[lord.officerId]?.path : null;
-  const stats = (facilityState.stats ?? []).map((x) => `<li class="${esc(x.tone ?? '')}" title="${esc(x.label)} ${esc(x.text)}${x.delta ? ` (차례마다 ${esc(x.delta)})` : ''}">${ic(x.ic)}<span class="k">${esc(x.label)}</span><b class="v">${esc(x.text)}</b>${x.delta ? `<u class="d">${esc(x.delta)}</u>` : ''}</li>`).join('');
+  const reinforcementRows=cityReinforcementRows(c,v).replaceAll('<p ', '<li ').replaceAll('</p>','</li>');
+  const stats = cityAuditStats(c,facilityState.stats??[],v.turn).map((x) => `<li class="${esc(x.tone ?? '')}" title="${esc(x.label)} ${esc(x.text)}${x.delta ? ` (차례마다 ${esc(x.delta)})` : ''}${x.hint?' · '+esc(x.hint):''}">${ic(x.ic)}<span class="k">${esc(x.label)}</span><b class="v">${esc(x.text)}</b>${x.delta ? `<u class="d">${esc(x.delta)}</u>` : ''}</li>`).join('');
   const lordTone = {F01: 'red', F02: 'green', F03: 'blue'}[v.factionId] ?? 'red';
-  const lordHtml = lord ? `<aside class="cs-lord v3"><img class="panel" src="${HUD}city-lord-v3-${lordTone}.png" alt="" onerror="this.onerror=null;this.src='${HUD}city-lord-v3-red.png'">${v.factionId ? `<img class="em" src="${HUD}faction-banner-${esc(v.factionId)}.png" alt="" onerror="this.onerror=null;this.src='/assets/ui-v3/emblems/${esc(v.factionId)}.png'">` : ''}<div class="art" data-spot="office" title="${esc(lord.name)} · 관청">${lordArt ? `<img src="${esc(lordArt)}" alt="${esc(lord.name)}">` : lordFace ? `<img class="face" src="${esc(lordFace)}" alt="${esc(lord.name)}">` : ''}</div><b class="nm">${esc(lord.name)}<small>${lord.officerId === c.governorId ? '태수' : '관청'}</small></b>${gauges}<ol class="stats">${stats}</ol></aside>` : '';
-  const job = facilityState.job;
-  return `<div class="cs-stage"><img class="cs-under" src="${esc(art.src)}" alt="" aria-hidden="true"><div class="cs-fit${art.full ? ' full' : ''}${art.plate ? ' plate' : ''}" style="--ar:${(art.w / art.h).toFixed(4)}"><div class="cs-camera"><img class="cs-img" src="${esc(art.src)}" alt="" draggable="false"><i class="cs-light"></i><i class="cs-fog a"></i><i class="cs-fog b"></i>${cityLifeHtml(art)}<div class="cs-spots">${spots}</div></div></div><i class="cs-vignette"></i></div>
+  const lordHtml = `<aside class="cs-lord v3${kit?' k-panel-ink':''}">${kit?`<header class="cs-kit-heading"><b>${esc(c.name)}</b><small>${c.kind==='minor'?'작은 성':'큰 성'} · ${esc(owner)} · 태수 ${esc(lord?.name??'비었음')}</small></header>`:''}<img class="panel" src="${HUD}city-lord-v3-${lordTone}.png" alt="" onerror="this.onerror=null;this.src='${HUD}city-lord-v3-red.png'">${v.factionId ? `<img class="em" src="${HUD}faction-banner-${esc(v.factionId)}.png" alt="" onerror="this.onerror=null;this.src='/assets/ui-v3/emblems/${esc(v.factionId)}.png'">` : ''}<div class="art" data-spot="office" title="${esc(lord?.name??'비었음')} · 관청">${lordArt ? `<img src="${esc(lordArt)}" alt="${esc(lord?.name??'비었음')}">` : lordFace ? `<img class="face" src="${esc(lordFace)}" alt="${esc(lord?.name??'비었음')}">` : ''}</div><b class="nm">${esc(lord?.name??'비었음')}<small>${lord?.officerId === c.governorId ? '태수' : '관청'}</small></b>${gauges}${kit?`<p class="cs-kit-yields">차례마다 식량 ${njNum(c.economyForecast?.food)} · 생산 ${njNum(c.economyForecast?.production)}</p>`:''}<ol class="stats">${stats}${reinforcementRows}</ol></aside>`;
+  const job = facilityState.job,recommendation=facilityState.recommendation;
+  const queued=c.nextProduction?njJob(c.nextProduction.kind):c.domesticPolicy==='delegated'&&recommendation?`${njJob(recommendation.kind)}(태수가 고름)`:null;
+  const output = `<div class="cs-stage"><img class="cs-under" src="${esc(art.src)}" alt="" aria-hidden="true"><div class="cs-fit${art.full ? ' full' : ''}${art.plate ? ' plate' : ''}" style="--ar:${(art.w / art.h).toFixed(4)}"><div class="cs-camera"><img class="cs-img" src="${esc(art.src)}" alt="" draggable="false"><i class="cs-light"></i><i class="cs-fog a"></i><i class="cs-fog b"></i>${cityLifeHtml(art)}<div class="cs-spots">${spots}</div></div></div><i class="cs-vignette"></i></div>
   <header class="cs-top"><div class="cell id">${emblem}<span class="name">${esc(c.name)}</span></div><div class="cell owner"><i style="background:var(--fc)"></i>${esc(owner || '우리 성')}<small>${c.kind === 'minor' ? '작은 성' : '큰 성'}</small></div><div class="cell date">${esc(date)}</div>
     <div class="cell vitals"><span>식량<b>${fmt(c.foodStock)}</b>${d(c.economyForecast?.food)}</span><span>인구<b>${fmt(c.population)}</b></span><span>예비병<b>${troopText(c.reserveTroops??0)}</b></span><span>치안<b>${sec}</b></span>${facilityState.working ? `<span class="role">생산 · ${esc(facilityState.working)}</span>` : ''}</div>
     <div class="cell back"><button class="cs-world" title="지도로 (Esc)">‹ 천하로</button></div></header>
   <aside class="cs-roster"><div class="panel"><h2>인첩</h2><div class="spine">${shown.map((x) => `<button class="entry ${x.level}" data-spot="${x.to}"><span class="who"><b>${esc(x.name || BUILDINGS[x.to]?.name)}</b><span class="where">${BUILDINGS[x.to]?.name ?? ''}</span></span><p><i class="issue-mark"></i>${esc(x.text)}</p></button>`).join('') || '<p class="calm">오늘은 조용합니다.</p>'}</div>${more > 0 ? `<div class="more"><b>+${more}</b> 다른 현안</div>` : ''}</div><div class="hint"><kbd>Alt</kbd>모든 건물 이름 · <kbd>Esc</kbd>천하로</div></aside>
   <nav class="cs-cast">${cast}</nav>${lordHtml}
-  <footer class="cs-pulse${job ? ' v2' : ''}"${(facilityState.news ?? []).length ? ` title="${esc(facilityState.news.slice(0, 4).map((n) => `${n.tag} ${n.text}`).join(' · '))}"` : ''}>${job ? `<div class="cs-job${job.idle ? ' idle' : ''}" data-spot="office" title="지금 하는 일 · ${esc(job.name)}${job.text ? ` · ${esc(job.text)}` : ''}">${ic(job.ic ?? 'res-production')}<b>${esc(job.name)}</b><i><u style="width:${Math.max(0, Math.min(100, job.pct ?? 0)).toFixed(0)}%"></u></i><span>${esc(job.text ?? '')}</span></div>` : ''}${!job && (facilityState.gauges ?? []).length ? `<ol class="cs-gauges">${facilityState.gauges.map((g) => `<li class="${esc(g.tone ?? '')}" title="${esc(g.label)} ${esc(g.text ?? '')}">${ic(g.ic)}<span class="gauge-label">${esc(g.label.split(' · ')[0])}</span><i><u style="width:${Math.max(0, Math.min(100, g.pct ?? 0)).toFixed(0)}%"></u></i><b>${esc(g.text ?? '')}</b></li>`).join('')}</ol>` : ''}<div class="lab"><i></i>도시 소식</div><ul>${(facilityState.news ?? []).slice(0, 4).map((n) => `<li><em>${esc(n.tag)}</em><span>${esc(n.text)}</span></li>`).join('') || '<li><span>새 소식이 없습니다.</span></li>'}</ul></footer>`;
+  <footer class="cs-pulse${job ? ' v2' : ''}"${(facilityState.news ?? []).length ? ` title="${esc(facilityState.news.slice(0, 4).map((n) => `${n.tag} ${n.text}`).join(' · '))}"` : ''}>${kit&&(!job||job.idle)?'<button class="cs-kit-produce k-btn-primary" data-spot="office">생산 고르기</button>':job ? `<div class="cs-job${job.idle ? ' idle' : ''}" data-spot="office" title="지금 하는 일 · ${esc(job.name)}${job.text ? ` · ${esc(job.text)}` : ''}">${ic(job.ic ?? 'res-production')}<b>${esc(job.name)}</b><i><u style="width:${Math.max(0, Math.min(100, job.pct ?? 0)).toFixed(0)}%"></u></i><span>${esc(job.text ?? '')}</span></div>` : ''}${!job && (facilityState.gauges ?? []).length ? `<ol class="cs-gauges">${facilityState.gauges.map((g) => `<li class="${esc(g.tone ?? '')}" title="${esc(g.label)} ${esc(g.text ?? '')}">${ic(g.ic)}<span class="gauge-label">${esc(g.label.split(' · ')[0])}</span><i><u style="width:${Math.max(0, Math.min(100, g.pct ?? 0)).toFixed(0)}%"></u></i><b>${esc(g.text ?? '')}</b></li>`).join('')}</ol>` : ''}${queued?`<div class="cs-next"><small>다음</small><b>${esc(queued)}</b></div>`:''}<div class="lab"><i></i>도시 소식</div><ul>${(facilityState.news ?? []).slice(0, 4).map((n) => `<li><em>${esc(n.tag)}</em><span>${esc(n.text)}</span></li>`).join('') || '<li><span>새 소식이 없습니다.</span></li>'}</ul></footer>`;
+  const nav=cityNavigation(v,c);
+  return kit?cityOverviewKit(output,{v,c,people,portraits,facilityState}):nav?output.replace('<div class="cell back">','<div class="cell back">'+nav).replace('<button class="cs-world" title="지도로 (Esc)">‹ 천하로</button></div></header>','</div></header>'):output;
 }
 
 /** 시설 장면 HTML(명령 칸은 비워 두고 컨트롤러가 성 창을 옮겨 붙인다). */
-export function facilityHtml({c, id, officer, line, bg, art, spot, portraits = {}, others = [], roles = {}}) {
+export function facilityHtml({c, id, officer, line, bg, art, spot, portraits = {}, others = [], roles = {}, v=null, state=null, kit=kitActive()}) {
+  if(kit&&state&&manpowerV2(state))c={...c,emergencyConscription:emergencyConscriptionPreview(state,state.cities[c.cityId])};
+  if(kit&&v&&id==='barracks')return `${cityHeaderKit(v,c,true)}<section class="c294-military k-panel-ink"><h1>병력 · 출진</h1><div class="cs-commands" data-fac="barracks"></div><button class="k-btn c294-send" data-reserve-transfer="${esc(c.cityId)}" title="이 성 예비병을 내 다른 성으로 옮긴다">병력 이송</button>${Object.keys(v.ownCities??{}).length<2?'<p>받을 내 성이 없습니다.</p>':''}<button class="k-btn c294-recruit" data-city-mode="production">${c.emergencyConscription?'재편':'모집 · 재편'}</button>${c.emergencyConscription?`<button class="k-btn" data-emergency-conscription="${esc(c.cityId)}" ${c.emergencyConscription.reason?'disabled':''} title="인구 −1 · 치안 악화 · 3차례 징집 정지">긴급 징병 +${troopText(c.emergencyConscription.amount)}명</button><small>${esc(c.emergencyConscription.reason??'인구 −1 · 치안 악화 · 3차례 징집 정지')}</small>`:''}</section>`;
   const b = BUILDINGS[id], full = officer && portraits[officer.officerId]?.full;
   const ox = spot ? (spot.x / art.w * 100).toFixed(2) : 50, oy = spot ? (spot.y / art.h * 100).toFixed(2) : 50;
   const scene = bg ? `<img class="cs-bg" src="${esc(bg)}" alt="">` : `<div class="cs-blur"><img src="${esc(art.src)}" alt="" style="transform-origin:${ox}% ${oy}%;transform:translate(${(50 - ox).toFixed(2)}%,${(50 - oy).toFixed(2)}%) scale(3.1)"></div>`;

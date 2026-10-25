@@ -1,3 +1,5 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {effectModifiers} from './campaign-effects.mjs';
 import data from '../../docs/design-data/injury-v0.1.json' with {type:'json'};
 import {hexDistance} from './map-primitives.mjs';
 import {createRng} from './rng.mjs';
@@ -11,15 +13,15 @@ import {createCampaignTerminalStateFromWorld} from './campaign-terminal-world.mj
 import {syncResearchCities} from './campaign-roster.mjs';
 
 export const INJURY=data;
-export const injuryEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c46Disabled!==true;
-export function initializeInjury(s){initializeFatigue(s);if(['v2','v3'].includes(s.mapId))for(const o of Object.values(s.officers))o.injury??=null;return s;}
+export const injuryEnabled=s=>isSliceMap(s.mapId)&&s.c46Disabled!==true;
+export function initializeInjury(s){initializeFatigue(s);if(isSliceMap(s.mapId))for(const o of Object.values(s.officers))o.injury??=null;return s;}
 function random(s,key){let seed=Number(s.campaignSeed)>>>0;for(const c of `injury:${key}`)seed=Math.imul(seed^c.charCodeAt(0),16777619)>>>0;return createRng(seed).next();}
 export const injuryView=(s,id)=>s.officers[id]?.injury?{turnsLeft:Math.max(0,s.officers[id].injury.untilTurn-s.turn),cause:s.officers[id].injury.cause,cityId:s.officers[id].injury.cityId}:null;
 export const injuryReason=(s,id)=>injuryEnabled(s)&&s.officers[id]?.injury?`중상 — ${Math.max(0,s.officers[id].injury.untilTurn-s.turn)}차례 요양`:null;
 export function tryInjury(s,id,cause,key,tileId){
  if(!injuryEnabled(s))return false;initializeInjury(s);const token=`${cause}:${id}:${key}`;
  if(s.c46.processed.includes(token))return false;s.c46.processed.push(token);
- const o=s.officers[id];if(!o||o.lifeState!=='ALIVE'||o.captivityState!=='FREE'||random(s,token)>=data.triggers[cause].chance)return false;
+ const o=s.officers[id];if(!o||o.lifeState!=='ALIVE'||o.captivityState!=='FREE'||random(s,token)>=Math.max(.01,Math.min(.99,data.triggers[cause].chance+(effectModifiers(s,Object.values(s.armies).find(a=>a.commanderId===id)?.armyId??id).INJURY_WEIGHT_MOD??0)/100)))return false;
  const turns=data.recovery.turns[0]+Math.floor(random(s,token+':duration')*(data.recovery.turns[1]-data.recovery.turns[0]+1));
  const origin=s.tiles[tileId]??s.tiles[s.cities[o.locationRef.id]?.tileId]??s.tiles[s.cities[s.factions[o.allegianceFactionId].capitalCityId].tileId];
  const city=Object.values(s.cities).filter(c=>c.ownerFactionId===o.allegianceFactionId).sort((a,b)=>hexDistance(origin,s.tiles[a.tileId])-hexDistance(origin,s.tiles[b.tileId])||a.cityId.localeCompare(b.cityId))[0]??s.cities[s.factions[o.allegianceFactionId].capitalCityId];
@@ -71,7 +73,7 @@ export function settleInjury(s){
 }
 export function injuryRecent(s,fid){return {recent:(s.c46?.recent??[]).filter(r=>r.turn>=s.turn-1&&s.officers[r.officerId]?.allegianceFactionId===fid).map(r=>({...r}))};}
 export function validateInjury(s){
- if(!['v2','v3'].includes(s.mapId))return;
+ if(!isSliceMap(s.mapId))return;
  const fail=()=>{throw new Error('INVALID_CAMPAIGN_INJURY');},x=s.c46;
  for(const key of ['c46Disabled','c46FatigueDisabled'])if(s[key]!==undefined&&typeof s[key]!=='boolean')fail();
  if(!x||!Array.isArray(x.processed)||x.processed.some(k=>typeof k!=='string')||new Set(x.processed).size!==x.processed.length||!Array.isArray(x.recent)||!x.stats||!Array.isArray(x.stats.durations))fail();

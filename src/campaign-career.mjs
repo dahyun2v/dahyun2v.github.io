@@ -1,3 +1,4 @@
+import {isSliceMap} from './map-primitives.mjs';
 import {c33Eligible} from './campaign-rule-registry.mjs';
 import {c29BindingTargets,c29Hidden} from './campaign-c29.mjs';
 import {createRng} from './rng.mjs';
@@ -5,12 +6,12 @@ import {hexDistance} from './map-primitives.mjs';
 import {troopToCampaign} from './campaign-adapters.mjs';
 import {combatTraitActive} from './campaign-rule-registry.mjs';
 import {syncPoolFingerprint} from './campaign-growth.mjs';
-import career from '../../docs/design-data/officer-pack/career-titles-v0.3.json' with {type:'json'};
+import career from '../data/career-titles-v0.3.json' with {type:'json'};
 import {CAMPAIGN_RULES} from './campaign-effects.mjs';
 import {campaignRuleRegistered} from './campaign-rule-registry.mjs';
 export {career as CAREER_DATA};
 export const C25=Object.freeze({outputCap:10,facilityXp:10,securityXp:10,recruitXp:15,eventXp:10,occupationXp:20,lossRate:.5,lossCap:30,survivalXp:20,survivalRatio:.3,titleWeight:2,tacticWeight:1.5});
-export const c25Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c25Enabled=s=>isSliceMap(s.mapId);
 export function initializeCareer(r){
  r.trace??={};for(const k of career.traceKeys.filter(k=>!k.includes('<')))r.trace[k]??=0;
  r.titles??=[];r.traceEvents??={};r.levelSources??={};r.lossXpByTurn??={};r.careerXpTotals??={};
@@ -82,7 +83,7 @@ export const C28_COUNTER_DATA=counters;
 // C28 trial values and deterministic narrative growth; v1 remains unchanged.
 export const C28=Object.freeze({lossRatio:.4,tacticHits:3,influenceReroll:85,lateLevel:15,rankMax:5,slots:5,revengeDamage:5,conquerorDamage:8,virtueTurns:3,woundThreshold:.9,exposeUses:2,exposePenalty:20,flankRatio:.5,fireReduce:.5,recoveryRatio:.5,breachRatio:.5,coolHeadRatio:.7,scoutRange:2,scoutVision:1,learningRareLevel:5,learningEpicLevel:10,recoveryTrigger:50,civilPriority:.5,baseRerolls:1});
 export const C28_RULES=Object.freeze(counters.counters.flatMap(c=>c.effects.filter(e=>e.op==='RULE').map(e=>e.rule)));
-export const c28Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c28Enabled=s=>isSliceMap(s.mapId);
 export const c28Record=(s,id)=>s.campaignGrowth?.officers[s.armies[id]?.commanderId??id];
 export function initializeC28(r){r.c28??={events:{},pending:[],tacticHits:{},learnedTactics:[],missedTitles:[],relations:{},exposeUsed:0};return r.c28;}
 export function c28Suppressed(s,id){return !c29Hidden(s,id)&&c28Enabled(s)&&(c28Record(s,id)?.c28?.suppressedUntil??0)>=s.turn;}

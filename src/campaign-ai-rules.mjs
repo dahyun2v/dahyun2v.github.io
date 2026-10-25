@@ -1,3 +1,5 @@
+import {campaignScenarioRules} from './campaign-scenario-data.mjs';
+import {isSliceMap} from './map-primitives.mjs';
 import {hexDistance,movementTicks} from './map-primitives.mjs';
 import {C193,parentTroop,platformState,platformReason} from './campaign-special-troops.mjs';
 import {diplomacyHostile,diplomacyArmyHostile} from './campaign-diplomacy.mjs';
@@ -30,7 +32,7 @@ export function configureAiRules({enabled=true}={}){testEnabled=enabled!==false;
 
 export function campaignAiRule(s,f,n){
  const profile=s.trialRules?.aiProfile?.[f]??s.trialRules?.aiSiege;
- if(!testEnabled||!['v2','v3'].includes(s.mapId)||['legacy','siege'].includes(s.trialRules?.aiSiege)||['legacy','siege'].includes(profile))return false;
+ if(!testEnabled||!isSliceMap(s.mapId)||['legacy','siege'].includes(s.trialRules?.aiSiege)||['legacy','siege'].includes(profile))return false;
  const rules=s.trialRules?.aiRules,local=rules?.[f];
  return ((local&&typeof local==='object'?local[`r${n}`]:rules?.[`r${n}`])??AI_RULE_DEFAULTS[`r${n}`])!==false;
 }
@@ -38,15 +40,29 @@ export const campaignAiRulesEnabled=(s,f)=>Array.from({length:13},(_,i)=>i+1).so
 
 // Public static edge costs use maneuver 50, the same neutral public quote as
 // getFactionView. No hidden commander abilities, positions or blockers enter it.
+function arrivalFrontier(){
+ const heap=[],less=(a,b)=>a.time-b.time||a.id.localeCompare(b.id);
+ return {get size(){return heap.length;},push(id,time){const x={id,time};let i=heap.length;heap.push(x);while(i){const p=(i-1)>>1;if(less(heap[p],x)<=0)break;heap[i]=heap[p];i=p;}heap[i]=x;},pop(){const first=heap[0],last=heap.pop();if(heap.length){let i=0;while(i*2+1<heap.length){let c=i*2+1;if(c+1<heap.length&&less(heap[c+1],heap[c])<0)c++;if(less(last,heap[c])<=0)break;heap[i]=heap[c];i=c;}heap[i]=last;}return first;}};
+}
+let arrivalScope=null;
+// One read-only AI plan owns a fresh cache. Standalone mutable callers retain
+// rebuilding behavior, and no view/edge array is retained across plans.
+export function withCampaignAiArrivalQueries(read){const previous=arrivalScope;arrivalScope=new WeakMap();try{return read();}finally{arrivalScope=previous;}}
 export function campaignAiArrivalTurns(v,army,goals,{ticksPerTurn=v.time.ticksPerTurn,maxTurns=3}={}){
- const cls=army.troopType==='cavalry'?'cavalry':army.troopType==='engineer'?'engineer':'normal',edges=new Map();
- for(const e of v.knownEdges){const cost=e.travelTicksByClass[cls];if(e.blocked||cost===null||cost>ticksPerTurn)continue;for(const [from,to] of [[e.fromTileId,e.toTileId],[e.toTileId,e.fromTileId]]){if(!edges.has(from))edges.set(from,[]);edges.get(from).push({to,cost});}}
- const centers=new Set(Object.values({...v.knowledge?.cities,...v.ownCities}).filter(c=>c.ownerFactionId!==army.factionId).map(c=>c.tileId));
- const targets=new Set(goals),distance=new Map([[army.tileId,0]]),queue=new Set([army.tileId]);
- while(queue.size){const from=[...queue].sort((a,b)=>distance.get(a)-distance.get(b)||a.localeCompare(b))[0];queue.delete(from);const time=distance.get(from);if(targets.has(from))return Math.ceil(time/ticksPerTurn);
-  for(const {to,cost} of edges.get(from)??[]){if(centers.has(to))continue;const used=time%ticksPerTurn,next=used+cost>ticksPerTurn?time+ticksPerTurn-used+cost:time+cost;if(next>maxTurns*ticksPerTurn||next>=(distance.get(to)??Infinity))continue;distance.set(to,next);queue.add(to);}
+ const cls=army.troopType==='cavalry'?'cavalry':army.troopType==='engineer'?'engineer':'normal',key=`${cls}:${ticksPerTurn}:${army.factionId}`;
+ let cache=arrivalScope?.get(v);if(arrivalScope&&!cache){cache=new Map();arrivalScope.set(v,cache);}let graph=cache?.get(key);
+ if(!graph){const edges=new Map();
+  for(const e of v.knownEdges){const cost=e.travelTicksByClass[cls];if(e.blocked||cost===null||cost>ticksPerTurn)continue;for(const [from,to] of [[e.fromTileId,e.toTileId],[e.toTileId,e.fromTileId]]){if(!edges.has(from))edges.set(from,[]);edges.get(from).push({to,cost});}}
+  const centers=new Set(Object.values({...v.knowledge?.cities,...v.ownCities}).filter(c=>c.ownerFactionId!==army.factionId).map(c=>c.tileId));graph={edges,centers,answers:new Map()};cache?.set(key,graph);
  }
- return Infinity;
+ const {edges,centers}=graph,answerKey=JSON.stringify([army.tileId,maxTurns,[...goals].sort()]);
+ if(cache&&graph.answers.has(answerKey))return graph.answers.get(answerKey);
+ const answer=value=>{if(cache)graph.answers.set(answerKey,value);return value;};
+ const targets=new Set(goals),distance=new Map([[army.tileId,0]]),queue=arrivalFrontier();queue.push(army.tileId,0);
+ while(queue.size){const {id:from,time}=queue.pop();if(time!==distance.get(from))continue;if(targets.has(from))return answer(Math.ceil(time/ticksPerTurn));
+  for(const {to,cost} of edges.get(from)??[]){if(centers.has(to))continue;const used=time%ticksPerTurn,next=used+cost>ticksPerTurn?time+ticksPerTurn-used+cost:time+cost;if(next>maxTurns*ticksPerTurn||next>=(distance.get(to)??Infinity))continue;distance.set(to,next);queue.push(to,next);}
+ }
+ return answer(Infinity);
 }
 export function campaignAiRoll(s,f,id,salt='start'){
  let h=2166136261;
@@ -80,16 +96,21 @@ export function campaignPlatformAiAction(s,v,id){
 export function campaignAiExchangeAllowed(p,{aggressive=false}={}){const ratio=campaignAiExchange(p);return ratio>=.7&&ratio>=(aggressive&&ratio>=1?1:1.2);}
 const count=a=>Math.max(0,a?.troopCount??0);
 const dist=(v,a,b)=>v.tiles[a]&&v.tiles[b]?hexDistance(v.tiles[a],v.tiles[b]):Infinity;
-export function campaignAiPosture(s,v,ranking,turnLimit=26){
+export function campaignAiPosture(s,v,ranking,turnLimit=campaignScenarioRules(s).turnLimit){
  if(!ranking.length){const rows=new Map();for(const c of Object.values({...v.knowledge.cities,...v.ownCities}))if(c.ownerFactionId){const row=rows.get(c.ownerFactionId)??{factionId:c.ownerFactionId,majorCities:0,minorCities:0};row[(c.kind??s.cities[c.cityId]?.kind)==='minor'?'minorCities':'majorCities']++;rows.set(c.ownerFactionId,row);}ranking=[...rows.values()].sort((a,b)=>b.majorCities-a.majorCities||b.minorCities-a.minorCities||a.factionId.localeCompare(b.factionId));}
  const self=ranking.find(r=>r.factionId===v.factionId),rank=Math.max(0,ranking.indexOf(self)),enemies=ranking.filter(r=>r.factionId!==v.factionId);
  const own=Object.values(v.ownArmies).reduce((n,a)=>n+count(a),0),enemy=Math.max(0,...enemies.map(r=>Object.values(v.knowledge.observedArmies).filter(a=>a.factionId===r.factionId).reduce((n,a)=>n+count(a),0)));
  const behind=rank>0,remaining=Math.max(0,turnLimit-s.turn+1),urgent=behind?rank*.05+(1-remaining/turnLimit)*.1:0;
  return {rank,own,enemy,remaining,defensive:!behind&&enemy>own,startRatio:campaignAiRule(s,v.factionId,6)?Math.max(1,AI_RULE_START_RATIO-urgent-(behind&&own>enemy?.05:0)):AI_RULE_START_RATIO,lossWeight:campaignAiRule(s,v.factionId,6)&&behind&&own>enemy?1:1.2};
 }
-export function campaignAiWaitValue(s,v,unit,target,group,{supplyTurns=Infinity,posture}={}){
- const friends=group.filter(a=>a.armyId!==unit.armyId&&dist(v,a.tileId,target.tileId)<=4&&dist(v,a.tileId,target.tileId)>2).reduce((n,a)=>n+count(a),0);
- const foes=Object.values(v.knowledge.observedArmies).filter(a=>dist(v,a.tileId,target.tileId)>2&&dist(v,a.tileId,target.tileId)<=4).reduce((n,a)=>n+count(a),0);
+function waitArrival(v,target,a){
+ const goals=target.footprint?.gates??Object.keys(v.tiles).filter(t=>dist(v,t,target.tileId)<=1&&t!==target.tileId);
+ return campaignAiArrivalTurns(v,{...a,troopType:parentTroop(a.troopType)},goals,{maxTurns:2});
+}
+export function campaignAiWaitValue(s,v,unit,target,group,{supplyTurns=Infinity,posture,arrival}={}){
+ const arrives=arrival??(a=>waitArrival(v,target,a));
+ const friends=group.filter(a=>a.armyId!==unit.armyId&&dist(v,a.tileId,target.tileId)>2&&arrives(a)<=2).reduce((n,a)=>n+count(a),0);
+ const foes=Object.values(v.knowledge.observedArmies).filter(a=>dist(v,a.tileId,target.tileId)>2&&arrives(a)<=2).reduce((n,a)=>n+count(a),0);
  const local=group.filter(a=>dist(v,a.tileId,target.tileId)<=2).reduce((n,a)=>n+count(a),0),defense=Object.values(v.knowledge.observedArmies).filter(a=>dist(v,a.tileId,target.tileId)<=2).reduce((n,a)=>n+count(a),0);
  return {friends,foes,net:friends-foes,allowed:friends>foes&&local/Math.max(1,defense)<(posture?.startRatio??AI_RULE_START_RATIO)&&(local+friends)/Math.max(1,defense+foes)>=(posture?.startRatio??AI_RULE_START_RATIO)&&supplyTurns>1};
 }
@@ -210,34 +231,53 @@ function referenceRecapture(s,v,plan,api){
 
 // Public routes/reachable positions are supplied by the bridge. Memory is
 // optional, bounded, JSON data; diagnostics never write or consume game RNG.
-export function campaignReferencePlan(s,v,plan,{remember=false,ranking=[],turnLimit=26,api}={}){
+export function campaignReferencePlan(s,v,plan,{remember=false,ranking=[],turnLimit=campaignScenarioRules(s).turnLimit,api}={}){
  if(!campaignAiRulesEnabled(s,v.factionId))return plan;
  const f=v.factionId,m=structuredClone(s.aiMilitary?.[f]??{units:{},groups:[]}),units=Object.values(v.ownArmies).filter(a=>api.active(s,a)&&a.morale!=='ROUTING'),posture=campaignAiPosture(s,v,ranking,turnLimit);
+ // A plan's public board is fixed; quote each army/goal arrival once for all waiters.
+ const arrivals=new Map(),arrival=(target,a)=>{let rows=arrivals.get(target);if(!rows){rows=new Map();arrivals.set(target,rows);}if(!rows.has(a))rows.set(a,waitArrival(v,target,a));return rows.get(a);};
  const originalTarget=plan.goal?.targetCityId;
  referenceRecapture(s,v,plan,api);
  referenceCitySafety(s,v,plan,api,turnLimit);
  m.units=Object.fromEntries(Object.entries(m.units??{}).filter(([id])=>v.ownArmies[id]));
  const primary=v.knowledge.cities[plan.goal?.targetCityId]??v.knowledge.observedArmies[plan.goal?.targetArmyId],reserved=new Set();
- let targets=primary?[primary]:[];
+ const fronts=plan.fronts,attackFronts=fronts?.fronts.filter(f=>f.role==='ATTACK'&&!f.paused),allowedCity=id=>!fronts||attackFronts.some(f=>f.cityIds.includes(id));
+ let targets=primary&&(!primary.cityId||allowedCity(primary.cityId))&&fronts?.operationLimit!==0?[primary]:[];
  const orderReasons={};const note=code=>{orderReasons[code]=(orderReasons[code]??0)+1;};
- if(campaignAiRule(s,f,9)&&primary?.cityId&&units.length>=3){
-  const second=(plan.strategy?.targets??[]).filter(t=>t.cityId!==primary.cityId&&t.score>0&&!t.deferred).map(t=>v.knowledge.cities[t.cityId]).find(c=>c&&dist(v,c.tileId,primary.tileId)<=6);
+ if(campaignAiRule(s,f,9)&&primary?.cityId&&units.length>=3&&(!fronts||fronts.operationLimit>1)&&targets.length){
+  const second=(plan.strategy?.targets??[]).filter(t=>t.cityId!==primary.cityId&&t.score>0&&!t.deferred&&allowedCity(t.cityId)).map(t=>v.knowledge.cities[t.cityId]).find(c=>c&&dist(v,c.tileId,primary.tileId)<=6);
   if(second)targets.push(second);else note('SPLIT_NO_NEIGHBOR');
  }else if(campaignAiRule(s,f,9))note('SPLIT_UNIT_SHORTAGE');
- const assigned=new Map(),groups=targets.map((target,i)=>{
-  const eligible=units.filter(a=>!plan.candidates.find(c=>c.armyId===a.armyId)?.defendCityId).map(a=>{
+ const assigned=new Map(),lateByTarget=new Map(),groups=targets.map((target,i)=>{
+  const eligible=units.filter(a=>{const c=plan.candidates.find(c=>c.armyId===a.armyId);return c&&!c.defendCityId&&!c.aiCityDefensePriority&&!c.aiSupplyOrder&&!c.crisisTargetCityId&&!c.crisisTargetArmyId&&!/WITHDRAW|CLOCK_RETREAT|C31_|EXPLORE|GARRISON|REPLENISH|MUSTER|DEFEND/.test(c.reasonCode??'');}).map(a=>{
    const positions=target.cityId?api.positions(s,v,a,target,{capability:true}):[target.tileId];
    const routes=positions.map(t=>api.route(s,v,a.armyId,t)).filter(Boolean).sort((a,b)=>a.totalTicks-b.totalTicks);
    return {a,route:routes[0],turns:routes[0]?Math.ceil(routes[0].totalTicks/s.time.ticksPerTurn):Infinity};
-  }).filter(x=>x.route&&(!campaignAiRule(s,f,1)||x.turns<=AI_RULE_GATHER_TURNS));
+  }).filter(x=>x.route&&(!campaignAiRule(s,f,1)||x.turns<=AI_RULE_GATHER_TURNS+1));
   let selected=eligible.filter(x=>!assigned.has(x.a.armyId));
-  if(targets.length>1&&i===0)selected=selected.slice(0,Math.max(1,Math.ceil(selected.length/2)));
+  if(targets.length>1&&i===0){
+   const foes=Object.values(v.knowledge.observedArmies).filter(a=>dist(v,a.tileId,target.tileId)<=2).reduce((n,a)=>n+count(a),0)*(campaignAiRule(s,f,7)?AI_RULE_ENEMY_MARGIN:1);
+   const required=Math.max(1,foes)*posture.startRatio*1.5;
+   // Keep the departure force intact; only surplus troops get a second mission.
+   const power=selected.filter(x=>x.turns<=AI_RULE_GATHER_TURNS).reduce((n,x)=>n+count(x.a),0);
+   if(power>=required){
+    // C483 conservative revision: retain at least half the ready units together.
+    // The 1.5x power gate still applies; only the most distant surplus detaches.
+    selected.sort((x,y)=>x.turns-y.turns||x.route.totalTicks-y.route.totalTicks||x.a.armyId.localeCompare(y.a.armyId));
+    const keep=new Set(selected),ready=selected.filter(x=>x.turns<=AI_RULE_GATHER_TURNS),minimum=Math.max(1,Math.ceil(ready.length/2));let kept=power,remaining=ready.length;
+    for(const x of [...ready].reverse())if(remaining>minimum&&kept-count(x.a)>=required){keep.delete(x);kept-=count(x.a);remaining--;}
+    selected=selected.filter(x=>keep.has(x));
+   }
+   else note('SPLIT_FORCE_SHORTAGE');
+  }
   if(i>0&&!selected.length)note('SPLIT_FORCE_SHORTAGE');
   selected.forEach(x=>assigned.set(x.a.armyId,target));
-  const power=selected.reduce((n,x)=>n+count(x.a),0),foes=Object.values(v.knowledge.observedArmies).filter(a=>dist(v,a.tileId,target.tileId)<=2).reduce((n,a)=>n+count(a),0);
-  const center=selected.length?{q:Math.round(selected.reduce((n,x)=>n+v.tiles[x.a.tileId].q*count(x.a),0)/Math.max(1,power)),r:Math.round(selected.reduce((n,x)=>n+v.tiles[x.a.tileId].r*count(x.a),0)/Math.max(1,power))}:v.tiles[target.tileId];
+  const power=selected.filter(x=>x.turns<=AI_RULE_GATHER_TURNS).reduce((n,x)=>n+count(x.a),0),foes=Object.values(v.knowledge.observedArmies).filter(a=>dist(v,a.tileId,target.tileId)<=2).reduce((n,a)=>n+count(a),0);
+  const allPower=selected.reduce((n,x)=>n+count(x.a),0);
+  const center=selected.length?{q:Math.round(selected.reduce((n,x)=>n+v.tiles[x.a.tileId].q*count(x.a),0)/Math.max(1,allPower)),r:Math.round(selected.reduce((n,x)=>n+v.tiles[x.a.tileId].r*count(x.a),0)/Math.max(1,allPower))}:v.tiles[target.tileId];
   const stage=Object.values(v.tiles).filter(t=>v.knowledge.tiles[t.tileId]!=='UNEXPLORED'&&t.tileId!==target.tileId).sort((a,b)=>hexDistance(a,center)-hexDistance(b,center)||a.tileId.localeCompare(b.tileId))[0]?.tileId;
   const prior=(m.groups??[]).find(g=>g.targetId===(target.cityId??target.armyId)),stageTileId=prior?.stageTileId&&dist(v,prior.stageTileId,target.tileId)<dist(v,stage,target.tileId)?prior.stageTileId:stage;
+  lateByTarget.set(target.cityId??target.armyId,new Set(selected.filter(x=>x.turns>AI_RULE_GATHER_TURNS).map(x=>x.a.armyId)));
   return {targetId:target.cityId??target.armyId,targetTileId:target.tileId,armyIds:selected.map(x=>x.a.armyId),power,ratio:power/Math.max(1,foes*(campaignAiRule(s,f,7)?AI_RULE_ENEMY_MARGIN:1)),stageTileId,startedTurn:prior?.startedTurn??s.turn,gatherCount:prior?.gatherCount??0,gatherTurn:prior?.gatherTurn??0,phase:prior?.phase==='ADVANCE'?'ADVANCE':'READY'};
  });
  plan.candidates=plan.candidates.map(c=>{
@@ -256,16 +296,20 @@ export function campaignReferencePlan(s,v,plan,{remember=false,ranking=[],turnLi
     const route=destinations.map(t=>api.route(s,v,a.armyId,t)).find(Boolean);if(route){if(!old.retreatUntil||old.retreatUntil<s.turn)record.retreatUntil=s.turn+AI_RULE_RETREAT_TURNS-1;note('LOCAL_DISADVANTAGE');return {...api.move(s,v,c,route,'RULE_RETREAT'),aiReferenceMove:true};}
    }
   }
-  if(c.defendCityId||/GARRISON|REPLENISH|MUSTER|DEFEND/.test(c.reasonCode??''))return c;
-  if(target&&group){
-   const supplyTurns=api.supplyTurns(a),wait=campaignAiWaitValue(s,v,a,target,units,{supplyTurns,posture}),waited=old.waitTurn===s.turn-1||old.waitTurn===s.turn;
+  if(c.defendCityId||c.aiSupplyOrder||c.crisisTargetCityId||c.crisisTargetArmyId||/GARRISON|REPLENISH|MUSTER|DEFEND/.test(c.reasonCode??''))return c;
+  if(target&&group&&group.armyIds.includes(a.armyId)){
+   if(lateByTarget.get(group.targetId)?.has(a.armyId)){const route=api.route(s,v,a.armyId,group.stageTileId);return route?{...api.move(s,v,c,route,'RULE_ASSEMBLE'),aiReferenceMove:true}:c;}
+   const supplyTurns=api.supplyTurns(a),wait=campaignAiWaitValue(s,v,a,target,units.filter(b=>group.armyIds.includes(b.armyId)),{supplyTurns,posture,arrival:b=>arrival(target,b)});
+   const maxWait=dist(v,a.tileId,target.tileId)<=3?1:AI_RULE_GATHER_TURNS;
+   const previousGroup=(m.groups??[]).find(g=>g.targetId===group.targetId);
+   const waited=Math.max(0,(previousGroup?.gatherCount??0)-Number(previousGroup?.gatherTurn===s.turn));
    const cohesive=group.armyIds.every(id=>dist(v,v.ownArmies[id].tileId,group.stageTileId)<=AI_RULE_GATHER_RADIUS);
    const launch=campaignAiRule(s,f,2)?campaignAiLaunch(s,f,a.armyId,group.ratio,posture.startRatio):group.ratio>=posture.startRatio;
-   const mayWait=campaignAiRule(s,f,3)||campaignAiRule(s,f,5)?wait.allowed&&!waited:s.turn-group.startedTurn<AI_RULE_GATHER_TURNS;
-   if(campaignAiRule(s,f,1)&&group.phase!=='ADVANCE'&&!launch&&mayWait&&group.gatherCount<AI_RULE_GATHER_TURNS&&s.turn-group.startedTurn<AI_RULE_GATHER_TURNS&&supplyTurns>1&&!cohesive){
+   const mayWait=campaignAiRule(s,f,3)||campaignAiRule(s,f,5)?wait.allowed&&waited<maxWait:s.turn-group.startedTurn<maxWait;
+   if(campaignAiRule(s,f,1)&&mayWait&&(wait.allowed||s.turn-group.startedTurn<maxWait)&&supplyTurns>1&&(!cohesive||wait.allowed)){
     if(group.gatherTurn!==s.turn){group.gatherCount++;group.gatherTurn=s.turn;}
     group.phase='ASSEMBLE';record.waitTurn=s.turn;note('REINFORCEMENT_NEXT_TURN');
-    if(campaignAiRule(s,f,9)&&group.stageTileId!==a.tileId){const route=api.route(s,v,a.armyId,group.stageTileId);if(route)return {...api.move(s,v,c,route,'RULE_ASSEMBLE'),aiReferenceMove:true};}
+    if(campaignAiRule(s,f,9)&&dist(v,a.tileId,target.tileId)>2&&group.stageTileId!==a.tileId){const route=api.route(s,v,a.armyId,group.stageTileId);if(route)return {...api.move(s,v,c,route,'RULE_ASSEMBLE'),aiReferenceMove:true};}
     return {...c,type:'HOLD',destinationTileId:null,pathTileIds:[],reasonCode:'RULE_WAIT_SUPPORT',aiOperationWait:true};
    }
    group.phase='ADVANCE';

@@ -1,0 +1,105 @@
+{
+  "source": "prototype\\assets\\ui-v3\\map\\v15-world.webp",
+  "source_sha256": "fb12344b7588abdf5ab81f728be74f24abf555ec05443038746ef9adcf63d0e3",
+  "size": [
+    6120,
+    5549
+  ],
+  "cols": 3,
+  "rows": 4,
+  "overlap": 0.06,
+  "boxes": {
+    "tile-r2c2": [
+      1918,
+      1304,
+      4202,
+      2858
+    ],
+    "tile-r2c3": [
+      3958,
+      1304,
+      6120,
+      2858
+    ],
+    "tile-r3c2": [
+      1918,
+      2691,
+      4202,
+      4245
+    ],
+    "tile-r3c3": [
+      3958,
+      2691,
+      6120,
+      4245
+    ]
+  },
+  "guide": "M mountain / F forest / H hill / P plain / W water; blue=engine river edges; magenta=engine city center. Painting is position authority; guides expose existing discrepancies.",
+  "projection": "map-v3.mjs: ring=624 land=2577x2220 tilt=.62; image scale=6120/3825,5549/3468",
+  "sample_extent": [
+    1918,
+    1304,
+    6120,
+    4245
+  ],
+  "tiles": {
+    "tile-r2c2": {
+      "source_size": [
+        2284,
+        1554
+      ],
+      "generated_size": [
+        1520,
+        1035
+      ],
+      "water_iou": 0.761,
+      "water_edge_distance_median_px": 2.87,
+      "water_edge_distance_p95_px": 537.07,
+      "png_sha256": "e77ca9038809268393f89012c8c18794c8f2660d99c41d0bd70b382dcf27d108"
+    },
+    "tile-r2c3": {
+      "source_size": [
+        2162,
+        1554
+      ],
+      "generated_size": [
+        1479,
+        1064
+      ],
+      "water_iou": 0.888,
+      "water_edge_distance_median_px": 2.74,
+      "water_edge_distance_p95_px": 34.36,
+      "png_sha256": "50ee638ba5e2b13bb55cb4200ddc25d358aec4f766549947b65631a95c72961b"
+    },
+    "tile-r3c2": {
+      "source_size": [
+        2284,
+        1554
+      ],
+      "generated_size": [
+        1520,
+        1035
+      ],
+      "water_iou": 0.8591,
+      "water_edge_distance_median_px": 1.91,
+      "water_edge_distance_p95_px": 83.01,
+      "png_sha256": "3c1ec86738bf2128da76252c42f3505ed8e853d33289881c0f6a34adeed40262"
+    },
+    "tile-r3c3": {
+      "source_size": [
+        2162,
+        1554
+      ],
+      "generated_size": [
+        1479,
+        1064
+      ],
+      "water_iou": 0.803,
+      "water_edge_distance_median_px": 2.87,
+      "water_edge_distance_p95_px": 175.72,
+      "png_sha256": "1681dde05734971ddad5023c1b26c7a1ccf0f5d275e086e16bd8502c32329cfa"
+    }
+  },
+  "status": "sample only; not connected to game; geometry checks are measurements, not automatic approval",
+  "stitch": "minimum RGB difference seam within original overlaps; 6px feather; no warping; source artwork preserved"
+}

@@ -1,3 +1,5 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {c450Peace} from './campaign-c450.mjs';
 import sceneData from '../data/relation-scenes-v0.2.json' with {type:'json'};
 import rivalSceneData from '../data/relation-scenes-rival-v0.1.json' with {type:'json'};
 import visitTalks from '../../docs/design-data/officer-pack/visit-talks-v0.1.json' with {type:'json'};
@@ -6,7 +8,7 @@ import {createRng} from './rng.mjs';
 import {hexDistance} from './map-primitives.mjs';
 
 export const RELATIONS=data;
-export const relationsEnabled=s=>['v2','v3'].includes(s.mapId);
+export const relationsEnabled=s=>isSliceMap(s.mapId);
 export const relationKey=(a,b)=>[a,b].sort().join('|');
 export const relationMonth=s=>Math.floor(s.currentDate/30);
 const roster=s=>({...s.wanderers,...s.officers});
@@ -19,7 +21,7 @@ const pairs=ids=>ids.flatMap((a,i)=>ids.slice(i+1).map(b=>[a,b]));
 const percent=text=>Number(text.match(/[+−－-](\d+)%/)?.[1]??0)/100;
 const min=id=>data.tiers.find(t=>t.id===id).min;
 const history=new Map(data.pairs.map(p=>[relationKey(p.a,p.b),p]));
-export function relation(s,a,b){const r=s.relations?.[relationKey(a,b)]??{value:data.defaultValue};const tier=r.value<=data.rivalAt?{id:'RIVAL',name:'숙적'}:[...data.tiers].reverse().find(t=>r.value>=t.min);return {...r,tier:tier.id,tierName:tier.name,displayName:tier.id==='BOUND'?(data.boundNames[r.kind]??tier.name):tier.id!=='RIVAL'&&r.kind==='RIVAL'?data.kindNames.RIVAL:tier.name,grudge:!!history.get(relationKey(a,b))?.grudge,rivalEvent:tier.id==='RIVAL'?(data.rivalEvents[s.c38?.rivalEvents?.[relationKey(a,b)]?.event]?.name??null):null};}
+export function relation(s,a,b){const original=s.relations?.[relationKey(a,b)]??{value:data.defaultValue},r=original.value<=data.rivalAt&&c450Peace(s,a,b)?{...original,value:data.defaultValue,kind:undefined}:original;const tier=r.value<=data.rivalAt?{id:'RIVAL',name:'숙적'}:[...data.tiers].reverse().find(t=>r.value>=t.min);return {...r,tier:tier.id,tierName:tier.name,displayName:tier.id==='BOUND'?(data.boundNames[r.kind]??tier.name):tier.id!=='RIVAL'&&r.kind==='RIVAL'?data.kindNames.RIVAL:tier.name,grudge:!!history.get(relationKey(a,b))?.grudge,rivalEvent:tier.id==='RIVAL'?(data.rivalEvents[s.c38?.rivalEvents?.[relationKey(a,b)]?.event]?.name??null):null};}
 export function initializeRelations(s,addedId=null){
  if(!relationsEnabled(s))return s;
  s.relationScenes??={queue:[],active:null,lastTurn:0};const fresh=s.relations===undefined;s.relations??={};

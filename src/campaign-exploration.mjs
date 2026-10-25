@@ -1,3 +1,4 @@
+import {flowFeature} from './campaign-flow.mjs';
 import {withdrawalProtection} from './campaign-diplomacy.mjs';
 import data from '../../docs/design-data/exploration-v0.1.json' with {type:'json'};
 import {campaignMapData} from './campaign-scenario.mjs';
@@ -9,7 +10,8 @@ import {troopToCampaign} from './campaign-adapters.mjs';
 import {parentTroop} from './campaign-special-troops.mjs';
 
 export const EXPLORATION=data;
-export const explorationEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c42Disabled!==true;
+export const explorationEnabled=s=>flowFeature(s,'exploration')&&s.c42Disabled!==true;
+const placeEventIds=(s,p)=>data.placeEvents[s.trialRules?.flow==='v1'?({'옛 싸움터':'옛 진지','변경':'군마 산지'}[p.kind]??p.kind??p.label):p.label]??[];
 const events=new Map(data.events.map(e=>[e.id,e]));
 const liveWanderer=(s,id)=>{
  const o=s.wanderers?.[id];
@@ -24,7 +26,7 @@ function nearestCity(s,p,fid){
 }
 export function initializeExploration(s){
  if(!explorationEnabled(s)||s.exploration!==undefined)return s;
- s.exploration={places:Object.fromEntries(campaignMapData(s.mapId).places.map(p=>[p.label,{label:p.label,tileId:p.at.join(','),eventId:(data.placeEvents[p.label]??[]).find(id=>{const e=events.get(id);return e&&(!e.requires?.wanderer||liveWanderer(s,e.requires.wanderer));})??null,status:'KNOWN'}])),pending:{},known:Object.fromEntries(Object.keys(s.factions).map(fid=>[fid,[]]))};
+ s.exploration={places:Object.fromEntries(campaignMapData(s.mapId).places.map(p=>[p.label,{label:p.label,tileId:p.at.join(','),eventId:placeEventIds(s,p).find(id=>{const e=events.get(id);return e&&(!e.requires?.wanderer||liveWanderer(s,e.requires.wanderer));})??null,status:'KNOWN'}])),pending:{},known:Object.fromEntries(Object.keys(s.factions).map(fid=>[fid,[]]))};
  rememberExploration(s);return s;
 }
 export function rememberExploration(s){
@@ -161,7 +163,7 @@ export function validateExploration(s){
  for(const city of Object.values(s.cities))if(city.lastSettlementScience!==undefined&&(!Number.isSafeInteger(city.lastSettlementScience)||city.lastSettlementScience<0))fail();
  for(const spec of specs){
   const p=e.places[spec.label];
-  if(!p||p.label!==spec.label||p.tileId!==spec.at.join(',')||!(p.eventId===null||(data.placeEvents[p.label]??[]).includes(p.eventId))||!['KNOWN','INVESTIGATING','PENDING','RESOLVED'].includes(p.status))fail();
+  if(!p||p.label!==spec.label||p.tileId!==spec.at.join(',')||!(p.eventId===null||placeEventIds(s,spec).includes(p.eventId))||!['KNOWN','INVESTIGATING','PENDING','RESOLVED'].includes(p.status))fail();
   if(p.stock!==undefined&&(!obj(p.stock)||!Number.isSafeInteger(p.stock.residentFood)||p.stock.residentFood<0))fail();
   if(p.progressArmyId&&!s.armies[p.progressArmyId]||p.investigator&&!s.officers[p.investigator])fail();
   if(p.status==='RESOLVED'&&(!s.factions[p.resolvedBy]||!(p.choiceId===null&&p.eventId===null||events.get(p.eventId)?.choices.some(c=>c.id===p.choiceId))))fail();

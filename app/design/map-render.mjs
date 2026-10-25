@@ -511,6 +511,9 @@ ${PLACE_STATUS[p.status] ?? PLACE_STATUS.KNOWN}</title><circle class="halo" r="$
 /** 미니맵: 지형·영역·도시·부대를 점으로. */
 export function renderMinimap(model, {size = 6, theme} = {}) {
   TILT = 1;
+  const kit291=globalThis.document?.documentElement?.dataset.ui==='kit';
+  const visibility291=new Map(model.tiles.map(t=>[`${t.q},${t.r}`,t.vis]));
+  if(kit291)model={...model,cities:(model.cities??[]).filter(c=>visibility291.has(c.center)&&visibility291.get(c.center)!=='UNEXPLORED'),units:(model.units??[]).filter(u=>!u.remembered&&visibility291.has(u.tileId)&&!['UNEXPLORED','REMEMBERED'].includes(visibility291.get(u.tileId)))};
   const tiles = model.tiles.map((t) => ({...t, id: `${t.q},${t.r}`}));
   const raw = tiles.map((t) => hexCenter(t, {size, ox: 0, oy: 0}));
   const minX = Math.min(...raw.map((c) => c.x)) - size, minY = Math.min(...raw.map((c) => c.y)) - size;
@@ -523,8 +526,8 @@ export function renderMinimap(model, {size = 6, theme} = {}) {
   for (const t of tiles) {
     const c = hexCenter(t, layout), f = territory[t.id];
     // 미탐험: 지형을 알면 옛 지도 갈색 톤, 모르면 빈 종이
-    const fill = t.vis === 'UNEXPLORED' ? oldCol[t.terrain] ?? '#cdbf9c' : f && FACTION_STYLE[f] ? FACTION_STYLE[f].color : col[t.terrain] ?? col.plain;
-    s += `<path d="${hexPath(c, size)}" fill="${fill}" fill-opacity="${t.vis === 'UNEXPLORED' ? 0.7 : f ? 0.6 : 0.95}"/>`;
+    const fill = t.vis === 'UNEXPLORED' ? kit291?'#C9C8BE':oldCol[t.terrain] ?? '#cdbf9c' : f && FACTION_STYLE[f] ? FACTION_STYLE[f].color : col[t.terrain] ?? col.plain;
+    s += `<path d="${hexPath(c, size)}" fill="${fill}" fill-opacity="${t.vis === 'UNEXPLORED' ? kit291?1:0.7 : f ? 0.6 : 0.95}"/>`;
   }
   for (const city of model.cities ?? []) { const c = hexCenter(parse(city.center), layout); s += `<rect x="${fmt(c.x - 4)}" y="${fmt(c.y - 4)}" width="8" height="8" fill="${FACTION_STYLE[city.factionId]?.color ?? '#8a8576'}" stroke="#fff" stroke-width="1.5"/>`; }
   for (const u of model.units ?? []) { const c = hexCenter(parse(u.tileId), layout); s += `<circle cx="${fmt(c.x)}" cy="${fmt(c.y)}" r="2.6" fill="${FACTION_STYLE[u.factionId]?.color}" stroke="#fff" stroke-width=".8"/>`; }

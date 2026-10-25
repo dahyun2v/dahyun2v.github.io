@@ -35,6 +35,10 @@ export function v3Size(url) {
 
 // 흑묵 지도가 기본(2026-10-10, 사용자 "기준 그림들과 같은 비주얼이 실제 게임 화면에서"). ?map=paint 로 이전 회화 지도.
 export const inkMapTrial = () => { try { return new URLSearchParams(globalThis.location?.search ?? '').get('map') !== 'paint'; } catch { return true; } };
+// C337: one default setting; ?map=v15 retains the untouched previous painting.
+export const MAP_WORLD_DEFAULT = 'v16';
+const paintedWorldVersion = () => { try { return new URLSearchParams(globalThis.location?.search ?? '').get('map') || MAP_WORLD_DEFAULT; } catch { return MAP_WORLD_DEFAULT; } };
+const paintedWorldSource = () => !manifest ? null : paintedWorldVersion() === 'v16' ? '/assets/ui-v3/map/v16/world.webp' : paintedWorldVersion() === 'v15' ? v3Asset('map/v15-world.webp') : null;
 
 // 성 미니어처: castle7_t62 와 같은 캔버스·같은 7칸 자리(C80 지시). 다르면 여기 fit 만 고친다.
 const CITY_FILE = {west: 'ye', east: 'ji', south: 'nanpi', yijing: 'yijing', zhongshan: 'zhongshan', xindu: 'xindu', julu: 'julu', pingyuan: 'pingyuan'};
@@ -55,7 +59,11 @@ export function v3MapOptions() {
     // v12(2026-10-13): 성 여덟 곳을 지도 그림 안에 그려 넣은 바탕(사용자 "성이든 뭐든 지도 위에 올라가는 건 이 방법으로" — tools/design/bake-inputs.py · paste-edit.py). baked 에 적힌 성은 따로 얹는 그림을 그리지 않는다. 없으면 v11 + 얹는 성 그림
     // v13(2026-10-14): v12 + 탐험지 네 곳(성소 · 은거지 · 옛 진지 · 군마 산지)도 그려 넣음 — baked 에 탐험지 이름도 적는다(얹는 미니어처를 그리지 않는다)
     // v14(2026-10-14 반박 리뷰 3차 M6 '확대하면 펜선이 번짐'): v13 을 1.6배 해상도로(Lanczos + 선명, 내용 그대로 — tools/design/map-upres.py). 그림 비율이 같아 land · ring · cityLabelAt 그대로
-    mapWorld: !inkMapTrial() ? null : (v3Asset('map/v14-world.webp') ?? v3Asset('map/v13-world.webp')) ? {src: v3Asset('map/v14-world.webp') ?? v3Asset('map/v13-world.webp'), ring: 624, land: [2577, 2220], baked: [...Object.keys(CITY_FILE), ...Object.keys(SITE_FILE)], cityLabelAt: BAKED_CITY_LABEL_AT}
+    // v15(2026-10-19 사용자 "지도는 너 말대로 바꿔 봐"): 같은 땅을 덜 빽빽하게 다시 그림(평지 = 비운 한지, 숲 = 먹 덩어리, 잔 무늬 레퍼런스 수준) — ?map=v15 시험.
+    // 성 여덟 곳은 같은 자리(cityLabelAt 그대로 맞음 — docs/work-integration/20261019/design-system/map-calm/), 탐험지 넷은 그림에 없어 따로 얹는다(baked 에 넣지 않음)
+    // v16: C330/C337 3x4 painted tiles assembled without changing the projection or baked city labels.
+    mapWorld: !inkMapTrial() ? null : paintedWorldSource() ? {src: paintedWorldSource(), ring: 624, land: [2577, 2220], baked: Object.keys(CITY_FILE), cityLabelAt: BAKED_CITY_LABEL_AT}
+      : (v3Asset('map/v14-world.webp') ?? v3Asset('map/v13-world.webp')) ? {src: v3Asset('map/v14-world.webp') ?? v3Asset('map/v13-world.webp'), ring: 624, land: [2577, 2220], baked: [...Object.keys(CITY_FILE), ...Object.keys(SITE_FILE)], cityLabelAt: BAKED_CITY_LABEL_AT}
       : v3Asset('map/v12-world.webp') ? {src: v3Asset('map/v12-world.webp'), ring: 624, land: [2577, 2220], baked: Object.keys(CITY_FILE), cityLabelAt: BAKED_CITY_LABEL_AT}
       : v3Asset('map/v11-world.webp') ? {src: v3Asset('map/v11-world.webp'), ring: 624, land: [2577, 2220]} : null,
     cityArt, mode,
@@ -76,8 +84,12 @@ export function setV3Mode(m) { mode = V3_MODES.some((x) => x.id === m) ? m : 'wo
 /** 지도 모델에 모드별 층을 더한다(보급선·관계). */
 export function v3ModeHighlights(v, model, state) {
   if (mode === 'supply') {
-    model.highlights.supply = Object.values(v.ownArmies ?? {}).filter((a) => a.supply?.sourceCityId && state.cities[a.supply.sourceCityId])
-      .map((a) => ({from: a.tileId, to: state.cities[a.supply.sourceCityId].tileId, state: a.supply.state}));
+    const cities={...v.knowledge.cities,...v.ownCities},hubs=v.hubs??[];
+    model.highlights.supply = Object.values(v.ownArmies??{}).flatMap(a=>{
+      const source=cities[a.supply?.sourceCityId]??hubs.find(h=>h.hubId===a.supply?.sourceHubId);
+      return source?[{from:a.tileId,to:source.tileId,state:a.supply.state}]:[];
+    });
+    model.highlights.supplyWarnings=Object.values(v.ownArmies??{}).filter(a=>['CUT','STARVING'].includes(a.supply?.state)).map(a=>({tileId:a.tileId,state:a.supply.state}));
   }
   return model;
 }

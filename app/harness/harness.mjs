@@ -1,7 +1,7 @@
 // @ts-check
 // Browser and Node share this adapter. Campaign rules and save schema live in src.
 import {createCampaign, view, step, serialize, deserialize, campaignMoveOptions} from '../../src/campaign-runtime.mjs';
-import {attackTargets, cityAttackTargets, previewAttack, previewCityAttack, previewTactic, armyActionEnded} from '../../src/campaign-combat.mjs';
+import {attackTargets, cityAttackTargets, previewAttack, previewTroopQ, previewCityAttack, previewTactic, armyActionEnded} from '../../src/campaign-combat.mjs';
 import {campaignTactics, canMainAction, recallReason} from '../../src/campaign-effects.mjs';
 import {pendingCampaignDraft, needsTraitResolution} from '../../src/campaign-growth.mjs';
 import {createOfficerDraft, officerDraftView, officerDraftCompanions} from '../../src/campaign-officer-draft.mjs';
@@ -69,6 +69,7 @@ export function listActions(s, {compact=false}={}) {
         if(!compact)add({type:'QUEUE_MOVE',armyIds:[id],destinationTileId:m.tileId},`예약 이동 ${id} → ${m.tileId}`,undefined,true);
       }
       for(const targetId of attackTargets(s,id))add({type:'ATTACK_UNIT',armyId:id,targetId},`공격 ${id} → ${targetId}`,previewAttack(s,id,targetId));
+      for(const targetId of a.troopQ?.targets??[])add({type:'USE_TROOP_Q',armyId:id,targetTileId:targetId},`병종 Q ${id} ${a.troopQ.name} → ${targetId}`,previewTroopQ(s,id,targetId));
       for(const cityId of cityAttackTargets(s,id))add({type:'ATTACK_CITY',armyId:id,cityId},`성 공격 ${id} → ${cityId}`,previewCityAttack(s,id,cityId));
       for(const t of campaignTactics(s,id))if(t.canUse)for(const targetId of t.targets){
         const command={type:'USE_TACTIC',armyId:id,traitId:t.traitId,targetId};
@@ -150,6 +151,7 @@ export function forecastFor(s,c){
   }
   if(c.type==='ATTACK_UNIT')return previewAttack(s,c.armyId,c.targetId);
   if(c.type==='ATTACK_CITY')return previewCityAttack(s,c.armyId,c.cityId);
+  if(c.type==='USE_TROOP_Q')return previewTroopQ(s,c.armyId,c.targetTileId);
   if(c.type==='USE_TACTIC')return previewTactic(s,c.armyId,c.traitId,c.targetId);
   return null;
 }
@@ -220,12 +222,13 @@ export class Harness {
       command=typeof input==='string'?parseCommand(input,this.actions(options)):copy(input);
       const prediction=forecastFor(before,command), next=step(before,command);
       const logs=(next.combatLog??[]).filter(e=>e.sequence>(before.battleSequence??0)&&(before.armies[e.attackerId]?.factionId===before.playerFactionId||(e.units??[]).some(u=>before.armies[u.unitId]?.factionId===before.playerFactionId)));
-      const matches=e=>e?.sequence>(before.battleSequence??0)&&e.attackerId===command.armyId&&(command.type==='ATTACK_CITY'?e.cityId===command.cityId:e.targetId===command.targetId);
+      const matches=e=>e?.sequence>(before.battleSequence??0)&&e.attackerId===command.armyId&&(command.type==='USE_TROOP_Q'?e.kind==='Q':command.type==='ATTACK_CITY'?e.cityId===command.cityId:e.targetId===command.targetId);
       const actual=command.type==='SORTIE'?{troopCount:Object.values(next.armies).find(a=>a.commanderId===command.officerId&&!before.armies[a.armyId])?.troopCount}:matches(next.lastCombat)?next.lastCombat:logs.find(matches)??null;
       const comparison=compareForecast(prediction,actual);
       const row={kind:'COMMAND',turn:before.turn,command,ok:true,comparison,combats:logs};
       this.state=next;this.history.push(row);
       const f=feature(command);if(f)this.stats[f]++;
+      if(command.type==='USE_TROOP_Q'){this.stats['공격']++;this.details['병종 Q']=(this.details['병종 Q']??0)+1;}
       if(['SORTIE','USE_TACTIC','CITY_JOB','DIPLO_PROPOSE','DIPLO_GIFT','DIPLO_RESPOND'].includes(command.type)){
         const replyKind=command.type==='DIPLO_RESPOND'?view(before).diplomacy?.incoming.find(p=>p.proposalId===command.proposalId)?.kind:null;
         const key=command.type==='SORTIE'?`출진:${command.troopType??next.officers[command.officerId].troopType}:${actual.troopCount}`:command.type==='USE_TACTIC'?`전법:${campaignTactics(before,command.armyId).find(t=>t.traitId===command.traitId)?.name??command.traitId}`:command.type==='CITY_JOB'?`생산:${command.kind}`:command.type==='DIPLO_RESPOND'?`외교:응답:${replyKind??'UNKNOWN'}:${command.accept?'수락':'거절'}`:`외교:${command.kind??command.type}`;

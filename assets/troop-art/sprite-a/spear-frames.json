@@ -1,0 +1,88 @@
+{
+  "width": 800,
+  "height": 360,
+  "referenceHeight": 256,
+  "idle": {
+    "file": "spear-idle.webp",
+    "foot": [
+      280,
+      330
+    ]
+  },
+  "frames": [
+    {
+      "file": "spear-walk-0.webp",
+      "action": "walk",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-walk-1.webp",
+      "action": "walk",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-walk-2.webp",
+      "action": "walk",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-walk-3.webp",
+      "action": "walk",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-attack-0.webp",
+      "action": "attack",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-attack-1.webp",
+      "action": "attack",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-attack-2.webp",
+      "action": "attack",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-fall-0.webp",
+      "action": "fall",
+      "foot": [
+        280,
+        330
+      ]
+    },
+    {
+      "file": "spear-fall-1.webp",
+      "action": "fall",
+      "foot": [
+        280,
+        330
+      ]
+    }
+  ],
+  "qualityMetrics": "../docs/work-integration/20261019/c435/metrics.json",
+  "composition": "spear-hands.json"
+}

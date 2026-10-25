@@ -1,3 +1,6 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {captureV3Loot} from './campaign-occupation.mjs';
+import {DOMESTIC_V3,domesticV3Enabled,settleDomesticV3Supply,takeGrain,learningModifier,v3CarryTurns} from './domestic-v3.mjs';
 import {engineFoodFactor,engineMovementWorld} from './campaign-engines.mjs';
 import {blessingEffect,weatherKind,weatherEdgeReason,RUN_MODIFIERS} from './campaign-run-modifiers.mjs';
 import data from '../../docs/design-data/supply-v0.1.json' with {type:'json'};
@@ -12,16 +15,16 @@ import {classifyBattleCasualties} from './military-personnel-ledger.mjs';
 // Runtime services avoid the economy/roster/morale import cycle.
 let services;
 export function configureSupply(options){services=options;}
-export const supplyEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c45Disabled!==true;
+export const supplyEnabled=s=>isSliceMap(s.mapId)&&s.c45Disabled!==true;
 // Existing city field upkeep: two food per thousand soldiers per settlement.
-export const foodModel=s=>['v2','v3'].includes(s?.mapId)?s.trialRules?.foodModel??'upkeep':'upkeep';
+export const foodModel=s=>isSliceMap(s?.mapId)?s.trialRules?.foodModel??'upkeep':'upkeep';
 export const clockFood=s=>foodModel(s)==='clock';
 export const baseCityFood=s=>foodModel(s)==='cheap'?models.cheap.cityBaseFood:4;
 export const troopFoodRate=s=>foodModel(s)==='cheap'?models.cheap.troopFoodPerThousand:2;
-export const supplyStockTurns=(s,a=null)=>((a?.factionId??s.playerFactionId)===s.playerFactionId?blessingEffect(s,'CARRIED_FOOD_MAX')?.value:null)??(clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns);
-export const armyFoodPerTurn=(a,s=null)=>Math.round(a.troopCount*troopFoodRate(s))/1000;
-export function fieldDrainTurns(s,a){if(!domesticEngineEnabled(s))return 1;const shown=a.troopCount*TROOP_DISPLAY_SCALE;return C184.fieldDrainTurns[shown<=C184.fieldShownThresholds[0]?0:shown<=C184.fieldShownThresholds[1]?1:2];}
-export function armyFieldConsumption(s,a,link=supplyLink(s,a)){return armyFoodPerTurn(a,s)*engineFoodFactor(s,a)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(weatherKind(s)==='COLD'?RUN_MODIFIERS.weather.kinds.find(k=>k.id==='COLD').effect.outOfSupplyFoodMultiplier:1));}
+export const supplyStockTurns=(s,a=null)=>domesticV3Enabled(s)?v3CarryTurns(s,a?.factionId??s.playerFactionId):((a?.factionId??s.playerFactionId)===s.playerFactionId?blessingEffect(s,'CARRIED_FOOD_MAX')?.value:null)??(clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns);
+export const armyFoodPerTurn=(a,s=null)=>s&&domesticV3Enabled(s)?a.troopCount*DOMESTIC_V3.foodPerTroop:Math.round(a.troopCount*troopFoodRate(s))/1000;
+export function fieldDrainTurns(s,a){if(domesticV3Enabled(s))return 1;if(!domesticEngineEnabled(s))return 1;const shown=a.troopCount*TROOP_DISPLAY_SCALE;return C184.fieldDrainTurns[shown<=C184.fieldShownThresholds[0]?0:shown<=C184.fieldShownThresholds[1]?1:2];}
+export function armyFieldConsumption(s,a,link=supplyLink(s,a)){if(domesticV3Enabled(s))return armyFoodPerTurn(a,s);return armyFoodPerTurn(a,s)*engineFoodFactor(s,a)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(weatherKind(s)==='COLD'?RUN_MODIFIERS.weather.kinds.find(k=>k.id==='COLD').effect.outOfSupplyFoodMultiplier:1));}
 // City stocks use the same passable land edges, without a last-mile range cap.
 export function citySupplyRoute(s,from,to){
  s=engineMovementWorld(s,null,s);
@@ -63,6 +66,7 @@ export function initializeSupply(s){
 export function loadMusterSupply(s,a,c){
  if(!supplyEnabled(s))return;
  initializeSupply(s);a.supplyFood=0;
+ if(domesticV3Enabled(s)){a.supplyFood=takeGrain(s,a.factionId,supplyMax(s,a));a.supplyInitialized=true;return;}
  if(clockFood(s)){a.supplyFood=supplyMax(s,a);a.supplyInitialized=true;return;}
  const amount=Math.min(supplyMax(s,a),Math.max(0,c.foodStock-(c.reservedResources?.food??0)-c.population*2));
  c.foodStock=round(c.foodStock-amount);a.supplyFood=amount;a.supplyInitialized=true;
@@ -93,9 +97,10 @@ export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2
   if(best||d===limit||blocked.has(current))continue;
   for(const p of boardNeighbors(s.tiles[current],s.tiles)){const to=tileId(p);if(seen.has(to)||blocked.has(to)||edgeTicks(world,world.armies[a.armyId],current,to)===null)continue;seen.add(to);queue.push([to,d+1]);}
  }
- return best?{state:best.distance<=data.link.range?'SAFE':'DISRUPTED',sourceCityId:best.source.city?.cityId??null,sourceHubId:best.source.hub?.hubId??null,...best}:{state:'CUT',sourceCityId:null,sourceHubId:null,distance:null,source:null};
+ return best?{state:best.distance<=data.link.range+learningModifier(s,a.factionId,'SUPPLY_SAFE_RANGE_ADD')?'SAFE':'DISRUPTED',sourceCityId:best.source.city?.cityId??null,sourceHubId:best.source.hub?.hubId??null,...best}:{state:'CUT',sourceCityId:null,sourceHubId:null,distance:null,source:null};
 }
 export function supplyView(s,a,at=a.tileId){
+ if(domesticV3Enabled(s)){const link=supplyLink(s,a,at),perTurn=armyFoodPerTurn(a,s),stored=Math.min(s.factions[a.factionId]?.granary??0,link.state==='SAFE'?perTurn:link.state==='DISRUPTED'?perTurn/2:0),drain=perTurn-stored;return {state:at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max:supplyMax(s,a),perTurn,drainPerTurn:drain,drainTurns:1,turnsLeft:drain?a.supplyFood/drain:null,sourceCityId:link.sourceCityId,sourceHubId:link.sourceHubId,distance:link.distance,model:'domesticV3',draining:drain>0};}
  const link=supplyLink(s,a,at),perTurn=armyFieldConsumption(s,a,link),max=supplyMax(s,a),free=clockFood(s)&&link.state==='SAFE'&&!link.source?.city?.besieged;
  const drain=free?0:clockFood(s)&&!link.source?.city?.besieged?perTurn*(link.state==='DISRUPTED'?.5:1):perTurn;
  return {state:!free&&at===a.tileId&&a.supplyStarving?'STARVING':link.state,stock:a.supplyFood,max,perTurn,...(domesticEngineEnabled(s)?{drainPerTurn:drain,drainTurns:link.state==='SAFE'?0:fieldDrainTurns(s,a)}:{}),turnsLeft:free?supplyStockTurns(s,a):drain?round(a.supplyFood/drain):0,sourceCityId:link.sourceCityId,sourceHubId:link.sourceHubId,distance:link.distance,model:foodModel(s),draining:clockFood(s)?!free:link.state!=='SAFE'||(link.source?.city?link.source.city.foodStock-(link.source.city.reservedResources?.food??0)-link.source.city.population*2<perTurn:(link.source?.hub?.stock??0)<perTurn)};
@@ -122,7 +127,12 @@ export function hubBuildReason(s,a){
  return '';
 }
 export function beginHub(s,id){initializeSupply(s);const a=s.armies[id],reason=hubBuildReason(s,a);if(reason)throw new Error(reason);s.supply.pending[id]={armyId:id,tileId:a.tileId,factionId:a.factionId,turn:s.turn,cost:clockFood(s)?0:hubOpeningCost(a,s)};}
-export function supplyCombat(s,ids){if(supplyEnabled(s)&&s.supply)for(const id of ids)delete s.supply.pending[id];}
+export function supplyCombat(s,ids){if(domesticV3Enabled(s)){
+ // The capture policy can relocate reserves before terminal ownership changes.
+ // Preserve their real source counts at the existing pre-combat boundary.
+ s.economy.v3BattleLotIds=s.personnel.lots.map(l=>l.lotId);
+ for(const c of Object.values(s.cities)){const lots=s.personnel.lots.filter(l=>l.nodeId===c.cityId);c.v3BattleLots={globalTick:s.globalTick,owner:c.ownerFactionId,lotIds:lots.map(l=>l.lotId),count:lots.reduce((n,l)=>n+l.count,0)};}
+}if(supplyEnabled(s)&&s.supply)for(const id of ids)delete s.supply.pending[id];}
 export function captureHubs(s,id){
  if(!supplyEnabled(s))return;const a=s.armies[id];
  for(const h of s.supply.hubs)if(h.tileId===a.tileId&&diplomacyHostile(s,a.factionId,h.factionId)&&!Object.values(s.armies).some(b=>b.armyId!==id&&active(s,b)&&b.factionId===h.factionId&&b.tileId===h.tileId)){h.factionId=a.factionId;h.availableTurn=s.turn+1;h.linked=false;s.supply.captured++;supplyLoot(s,id,'HUB',{hubId:h.hubId});}
@@ -150,6 +160,7 @@ export function supplyCombatLoot(s,log,sourceId=log.attackerId){
  }
 }
 export function supplyCityLoot(s,id,cityId,log){
+ if(domesticV3Enabled(s)){if(s.armies[id]&&s.cities[cityId])captureV3Loot(s,s.cities[cityId],log?.dispersedReserves??0);return;}
  const a=s.armies[id],c=s.cities[cityId];if(!a||!c||!clockFood(s)||!supplyEnabled(s))return;
  initializeSupply(s);const key=`CITY:${cityId}`;if(s.supply.lootClaims[key])return;s.supply.lootClaims[key]=true;
  for(const b of Object.values(s.armies))if(active(s,b)&&b.factionId===a.factionId&&(b.armyId===id||cityTiles(c).includes(b.tileId)))grantSupplyLoot(s,b.armyId,'CITY',{cityId},log);
@@ -170,11 +181,12 @@ export function settleSupply(s){
   const a=s.armies[id];delete s.supply.pending[id];
   if(!a||!active(s,a)||a.tileId!==p.tileId||a.factionId!==p.factionId||s.turn<=p.turn)continue;
   if(hubBuildReason(s,a))continue;
-  if(clockFood(s)){s.supply.hubs.push({hubId:`HUB.${++s.supply.sequence}`,tileId:p.tileId,factionId:p.factionId,stock:0,max:0,handled:0,availableTurn:s.turn,linked:true});s.supply.built++;continue;}
+  if(clockFood(s)||domesticV3Enabled(s)){s.supply.hubs.push({hubId:`HUB.${++s.supply.sequence}`,tileId:p.tileId,factionId:p.factionId,stock:0,max:0,handled:0,availableTurn:s.turn,linked:true});s.supply.built++;continue;}
   const link=supplyLink(s,a),amount=take(s,link.source,p.cost);if(amount!==p.cost)throw new Error('거점 군량 이전량이 올바르지 않습니다.');
   if(link.source.city)(link.source.city.economyCauses??=[]).push({resource:'food',label:'보급 거점 첫 재고',amount:0-amount});
   s.supply.hubs.push({hubId:`HUB.${++s.supply.sequence}`,tileId:p.tileId,factionId:p.factionId,stock:amount,max:maxHub(s),handled:amount,availableTurn:s.turn,linked:true});s.supply.built++;
  }
+ if(domesticV3Enabled(s))return settleDomesticV3Supply(s,{armies:Object.values(s.armies).filter(a=>active(s,a)).sort((a,b)=>a.armyId.localeCompare(b.armyId)),link:a=>supplyLink(s,a),starvation:a=>starvation(s,a)});
  // Snapshot donor stock: a hub cannot forward a fresh receipt in this settlement.
  const opening=Object.fromEntries(s.supply.hubs.map(h=>[h.hubId,h.stock]));
  for(const h of s.supply.hubs){
@@ -234,6 +246,7 @@ export function supplyAiAction(s,id,reachable,{targetCityId=null,allowBuild=true
 
 // C143b planning-only reads. Loading/refill still uses the unchanged rules above.
 export function supplyAiLaunchFood(s,c,count){
+ if(domesticV3Enabled(s)){const full=count*DOMESTIC_V3.foodPerTroop*v3CarryTurns(s,c.ownerFactionId),available=s.factions[c.ownerFactionId]?.granary??0;return {full,available,canFill:available>=full};}
  const full=supplyEnabled(s)?supplyMax(s,{troopCount:count}):0;
  const available=Math.max(0,c.foodStock-(c.reservedResources?.food??0)-c.population*2);
  return {full,available,canFill:clockFood(s)||!supplyEnabled(s)||available+1e-6>=full};

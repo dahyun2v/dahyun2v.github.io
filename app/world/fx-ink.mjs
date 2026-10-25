@@ -42,6 +42,14 @@ export function createFireMemory({scorchTurns=3}={}){
   clear(){turn=-1;burning.clear();scorched.clear();},
  };
 }
+// C292: one duration badge per connected public region with the same expiry.
+export function fireBadges292(rows,turn){
+ const pending=new Map(rows.map(r=>[r.id,r.turnsLeft??Math.max(0,r.until-turn+1)])),badges=new Map();
+ const deltas=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
+ for(const id of [...pending.keys()]){if(!pending.has(id))continue;const remaining=pending.get(id),queue=[id];pending.delete(id);badges.set(id,remaining);
+  while(queue.length){const [q,r]=queue.shift().split(',').map(Number);for(const [dq,dr] of deltas){const next=`${q+dq},${r+dr}`;if(pending.get(next)===remaining){pending.delete(next);queue.push(next);}}}
+ }return badges;
+}
 function fireRecords(s,knowledge){
  if(s.fire)return fireReadout(s).fires.filter(f=>knowledge[f.id]==='VISIBLE');
  const rows=[];for(const f of s?.c27?.fires??[])for(const id of f.tiles??[])if(knowledge[id]==='VISIBLE')rows.push({id,until:f.until});
@@ -126,7 +134,7 @@ export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>fx
  }
  return {
   sync(state,knowledge){svg=root.querySelector('svg');if(!svg)return;layout={size:Number(svg.dataset.size),ox:Number(svg.dataset.ox),oy:Number(svg.dataset.oy)};
-   const rows=fireRecords(state,knowledge),out=memory.update(rows.map(r=>r.id),state.turn,knowledge);memory.remember(rows);fires=out.fires;fireTurns=new Map(rows.filter(r=>r.turnsLeft!==undefined).map(r=>[r.id,r.turnsLeft]));scorches=[...new Set([...out.scorches,...fireReadout(state).scorches])].filter(id=>knowledge[id]&&knowledge[id]!=='UNEXPLORED');
+   const rows=fireRecords(state,knowledge),out=memory.update(rows.map(r=>r.id),state.turn,knowledge);memory.remember(rows);fires=out.fires;fireTurns=globalThis.document?.documentElement?.dataset.ui==='kit'?fireBadges292(rows,state.turn):new Map(rows.filter(r=>r.turnsLeft!==undefined).map(r=>[r.id,r.turnsLeft]));scorches=[...new Set([...out.scorches,...fireReadout(state).scorches])].filter(id=>knowledge[id]&&knowledge[id]!=='UNEXPLORED');
    const live=new Set(fires);for(const id of ignitions.keys())if(!live.has(id))ignitions.delete(id);
    last=-Infinity;if(!frame)paint();
   },
@@ -156,6 +164,12 @@ export function createInkFx({root=null,viewport=null,sfx=()=>null,reduced=()=>fx
  };
 }
 // Draw under the horses with the troop renderer's existing motion and matrix.
+// Small, local SVG marks; the hit timestamp also controls the popup and count.
+export function feelInkMarkup({kind='clash',side='FRONT',age=0,rout=false,counter=false}={}){
+ const angle=side==='REAR'?-35:side==='FLANK'?35:0;
+ const shape=kind==='bow'?'<path d="M-12 -6l7 8m5 -10l2 14m6 -11l-3 11"/><circle r="3"/>':kind==='spear'?'<path d="M-30 -6L30 -4M-28 0L32 2M-26 7L28 5"/>':kind==='charge'?'<path d="M-25 -16L17 0L-23 16L-7 0Z"/>':'<path d="M-21 -9L18 8M-14 14L14 -15M-25 1L23 -2"/>';
+ return `<g class="feel-ink feel-${kind}${counter?' feel-counter':''}" style="animation-delay:-${Math.max(0,age)}ms" transform="translate(0 8) rotate(${angle})">${shape}<circle cx="-19" cy="12" r="2"/><circle cx="20" cy="-13" r="1.6"/></g>${rout?'<path class="feel-rout-mark" d="M-7 -28L0 -10L12 -16M0 -10L-13 10"/>':''}`;
+}
 let dustImage=null;
 export function drawChargeDust(ctx,s,{reduced=false,width=70,active=false}={}){
  if(s.kind!=='cavalry'||(!(reduced&&active)&&!s.moving&&!(s.progress>0&&s.progress<.95)))return false;

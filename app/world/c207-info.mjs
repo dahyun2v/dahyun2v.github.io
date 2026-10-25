@@ -7,6 +7,9 @@ import {visibleControlZones} from '../../src/campaign-orders.mjs';
 import {boardNeighbors,tileId} from '../../src/map-primitives.mjs';
 import {edgeTicks} from '../../src/movement.mjs';
 import {C12} from '../../src/campaign-abilities.mjs';
+import {TICKS_PER_TURN} from '../../src/first3.mjs';
+import {parentTroop} from '../../src/campaign-special-troops.mjs';
+import {troopToCampaign} from '../../src/campaign-adapters.mjs';
 import {C182} from '../../src/campaign-rule-registry.mjs';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const stratagemEntries=[{term:'계략',lines:['성에 있는 장수의 주 행동','보이는 범위 안의 적에게 실행','재사용 대기가 끝나면 다시 사용']},{term:'유언비어',lines:['적 성에 헛소문을 퍼뜨린다','식량·생산 산출 감소, 예비병 자동 충원 멈춤','표시된 차례가 지나면 끝남']},{term:'이간',lines:['적 부대 장수와 주군을 이간한다','사기 동요가 표시된 차례 동안 지속','이미 동요·패주인 부대는 그대로']},{term:'보급 교란',lines:['적 부대의 보급을 끊는다','휴대 군량 감소','안전한 보급권에서 보충']}];
@@ -18,12 +21,28 @@ export const TILE_HOVER_MS=400;
 const terrainNames={plain:'평지',forest:'숲',hill:'언덕',mountain:'산',water:'물'};
 // Query the combat formula itself: terrain defense has no exported rule table.
 // A private, own-officer probe avoids reading any foreign army or changing RNG.
-export function terrainDefense(s,terrain){
+function terrainMultipliers(s,terrain,river=false){
  const o=Object.values(s.officers).find(o=>o.allegianceFactionId===s.playerFactionId);if(!o)return null;
  const other=Object.keys(s.factions).find(f=>f!==s.playerFactionId),make=(id,factionId,at)=>({armyId:id,commanderId:o.officerId,factionId,tileId:at,troopType:'militia',troopCount:100,maxTroopCount:100,morale:'STEADY',formation:'ORDERED',facing:0,movedTiles:0,effectStates:[]});
  const a=make('C207-A',s.playerFactionId,'0,0'),b=make('C207-B',other,'1,0');
- const probe={...s,armies:{[a.armyId]:a,[b.armyId]:b},cities:{},relations:{},c43Disabled:true,c31Disabled:true,c31:null,campaignTerminalWorld:null,tiles:{'0,0':{tileId:'0,0',q:0,r:0,terrainType:'plain'},'1,0':{tileId:'1,0',q:1,r:0,terrainType:terrain}},mapRules:{...s.mapRules,roads:[],riverEdges:[],blockedEdges:[],crossings:{}}};
- return previewAttackThreat(probe,a.armyId,b.armyId).multipliers.terrain;
+ const probe={...s,armies:{[a.armyId]:a,[b.armyId]:b},cities:{},relations:{},c43Disabled:true,c31Disabled:true,c31:null,campaignTerminalWorld:null,tiles:{'0,0':{tileId:'0,0',q:0,r:0,terrainType:'plain'},'1,0':{tileId:'1,0',q:1,r:0,terrainType:terrain}},mapRules:{...s.mapRules,roads:[],riverEdges:river?['0,0|1,0']:[],blockedEdges:[],crossings:{}}};
+ return previewAttackThreat(probe,a.armyId,b.armyId).multipliers;
+}
+export const terrainDefense=(s,terrain)=>terrainMultipliers(s,terrain)?.terrain??null;
+// UI-only comparison: ask the combat query on a private own-officer probe.
+// No foreign officer, live army, RNG, or campaign object is changed.
+export function troopMatchupBrief(s,officerId){
+ const officer=s.officers[officerId];if(!officer)return '';
+ const type=parentTroop(officer.troopType),names={militia:'도',spear:'창',bow:'궁',cavalry:'기'};
+ if(!names[type])return '';
+ const other=Object.keys(s.factions).find(f=>f!==s.playerFactionId);
+ const army=(id,factionId,at,troopType)=>({armyId:id,commanderId:officerId,factionId,tileId:at,troopType,troopCount:100,maxTroopCount:100,morale:'STEADY',formation:'ORDERED',facing:id==='C270-A'?0:3,movedTiles:0,effectStates:[]});
+ const values=Object.keys(names).filter(t=>t!==type).map(t=>{
+  const a=army('C270-A',s.playerFactionId,'0,0',type),b=army('C270-B',other,'1,0',t);
+  const probe={...s,armies:{[a.armyId]:a,[b.armyId]:b},cities:{},relations:{},c43Disabled:true,c31Disabled:true,c31:null,campaignTerminalWorld:null,tiles:{'0,0':{tileId:'0,0',q:0,r:0,terrainType:'plain'},'1,0':{tileId:'1,0',q:1,r:0,terrainType:'plain'}},mapRules:{...s.mapRules,roads:[],riverEdges:[],blockedEdges:[],crossings:{}}};
+  return {name:names[t],value:previewAttackThreat(probe,a.armyId,b.armyId).multipliers.matchup};
+ }).filter(x=>Number.isFinite(x.value)&&x.value!==1).sort((a,b)=>b.value-a.value);
+ return `${names[type]} · 정면 상성 ${values.map(x=>`${x.name}에 ×${x.value}`).join(' / ')||'보정 없음'}`;
 }
 // Only visible foreign entities enter supply routing and control-zone queries.
 export function publicTileState(s,v){
@@ -42,10 +61,15 @@ export function tileReadout(s,v,id,selected=null){
  const p=publicTileState(s,v);let a=p.armies[selected]??Object.values(p.armies).find(a=>a.factionId===v.factionId);const terrain=t.terrainType;
  const standard=!a;
  if(!a){const o=Object.values(v.officers).find(o=>o.allegianceFactionId===v.factionId);if(o){a={armyId:'C207-MOVE',commanderId:o.officerId,factionId:v.factionId,tileId:id,troopType:'militia',troopCount:100,morale:'STEADY',formation:'ORDERED',effectStates:[]};p.armies={...p.armies,[a.armyId]:a};}}
- const lines=[`방어 ×${terrainDefense(s,terrain)}`,`시야 · ${known==='VISIBLE'?'보임':'가림 · 기억한 지형'}`];
+ const lines=[`방어 ×${terrainDefense(s,terrain)}`];
+ const picked=v.ownArmies?.[selected],kind=picked&&troopToCampaign(parentTroop(picked.troopType)),factor=C182.terrainAttack[kind]?.[terrain];
+ const edge=picked&&[picked.tileId,id].sort().join('|');
+ if(edge&&s.mapRules.riverEdges.includes(edge)&&s.mapRules.crossings?.[edge]!=='bridge')lines[0]+=` · 강 건너 공격 ×${terrainMultipliers(s,terrain,true)?.river}`;
+ if(factor)lines[0]+=` · ${kind==='BT04'?'기병':'궁병'} 공격 ×${factor}`;
+
  if(a){
   const world=campaignMovementWorld(p,a.armyId),costs=boardNeighbors(t,v.tiles).filter(n=>v.knowledge.tiles[tileId(n)]&&v.knowledge.tiles[tileId(n)]!=='UNEXPLORED').map(n=>edgeTicks(world,world.armies[a.armyId],tileId(n),id)).filter(n=>n!==null);
-  lines.push(costs.length?`이동 비용 ${Math.min(...costs)}${Math.max(...costs)!==Math.min(...costs)?`~${Math.max(...costs)}`:''}틱 · ${standard?'보병':selected?'선택 부대':'아군 첫 부대'} 기준`:'이동 · 통과 불가');
+  lines.unshift(costs.length?`이동 비용 ${Math.ceil(Math.min(...costs)/TICKS_PER_TURN)}차례 · 1칸${v.weather?.active?.kind==='RAIN'&&terrain==='plain'?' (장마 +1)':''}`:'이동 · 통과 불가');
   if(supplyEnabled(p)){const link=supplyLink(p,a,id);lines.push(`보급권 ${link.state==='SAFE'?'안':'밖'} · 관측한 길 기준`);}
   if(visibleControlZones(p,a.armyId).includes(id))lines.push('통제 구역 · 관측한 적');
  }else lines.push('이동 비용 · 부대를 고르면 표시','보급권 · 부대를 고르면 표시');
@@ -53,11 +77,16 @@ export function tileReadout(s,v,id,selected=null){
  const fire=known==='VISIBLE'&&v.fire?.tiles?.find(f=>f.tileId===id);if(fire)lines.push(`불 · ${fire.turnsLeft}차례 남음`);
  if(v.fire?.burnedForest?.includes(id))lines.push('불탄 숲');
  for(const x of Object.values({...v.ownCities,...v.knowledge.cities,...v.ownArmies,...v.knowledge.observedArmies}))if(x.tileId===id&&x.stratagemText)lines.push(x.stratagemText);
- return {title:terrainNames[terrain]??'지형 미확인',lines,tileId:id};
+ lines.push(`시야 · ${known==='VISIBLE'?'보임':'가림 · 기억한 지형'}`);
+ const influence=Object.values(v.ownCities).flatMap(c=>c.influence?.tiles??[]).find(t=>t.tileId===id);
+ if(influence)lines.push([influence.yield.food?`식량 +${influence.yield.food}`:'',influence.yield.production?`생산 +${influence.yield.production}`:''].filter(Boolean).join(' · '));
+ const road=(v.knownEdges?.roads??s.mapRules.roads??[]).some(e=>e.split('|').includes(id));
+ const river=(v.knownEdges?.riverEdges??s.mapRules.riverEdges??[]).some(e=>e.split('|').includes(id));
+ return {title:[terrainNames[terrain]??'지형 미확인',road?'길':'',river?'강가':''].filter(Boolean).join(' · '),lines:lines.filter(Boolean).length>5?[...lines.filter(Boolean).slice(0,4),lines.filter(Boolean).slice(4).join(' · ')]:lines.filter(Boolean),tileId:id};
 }
 export function tileHtml(info){return `<b>${esc(info.title)}</b>${info.lines.map(l=>`<p>${esc(l)}</p>`).join('')}`;}
 const tokens={side:()=>Math.round(C12.side*100),rear:()=>Math.round(C12.rear*100),disordered:()=>Math.round(C12.disordered*100),broken:()=>Math.round(C12.broken*100),fireTurns:()=>C182.fire.turns,fireDamage:()=>C182.fire.damageRatio*100};
-export const glossaryText=s=>String(s).replace(/\{(\w+)\}/g,(_,key)=>String(tokens[key]?.()??''));
+export const glossaryText=s=>String(s).replace(/\{(\w+)\}/g,(_,key)=>String(tokens[key]?.()??'')).replace('전열 손상 완화','전열이 무너지는 것을 완화');
 export function glossaryHtml(entry){return `<b>${esc(entry.term)}</b>${entry.lines.map((line,i)=>`<p><small>${['무엇','효과','푸는 법'][i]}</small> ${esc(glossaryText(line))}</p>`).join('')}`;}
 export function rulesGlossaryHtml(){return entries.map(e=>`<dt>${esc(e.term)}</dt><dd>${e.lines.map(glossaryText).map(esc).join(' · ')}</dd>`).join('');}
 // Text-node replacement never touches attributes, forms, SVG or existing links.

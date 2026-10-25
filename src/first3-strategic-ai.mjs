@@ -129,9 +129,23 @@ function maps(snapshot){
   return {tiles:new Map(snapshot.tiles.map(tile=>[tile.tileId,tile])),edges:snapshot.edges};
 }
 
-function knownPathFor(snapshot,{startTileId,destinationTileId,movementClass}){
+let pathScope=null;
+function knownPathFor(snapshot,input){
+  if(pathScope?.snapshot!==snapshot)return knownPathSingle(snapshot,input);
+  const {startTileId,destinationTileId,movementClass}=input;
+  const key=JSON.stringify([startTileId,movementClass]);
+  if(!pathScope.trees.has(key))pathScope.trees.set(key,knownPathTree(snapshot,input));
+  const tree=pathScope.trees.get(key);
+  if(!tree||!tree.distance.has(destinationTileId))return null;
+  const pathTileIds=[destinationTileId];
+  while(tree.previous.has(pathTileIds[0]))pathTileIds.unshift(tree.previous.get(pathTileIds[0]));
+  return {pathTileIds,totalTicks:tree.distance.get(destinationTileId)};
+}
+const knownPathSingle=(snapshot,input)=>knownPathSearch(snapshot,input);
+const knownPathTree=(snapshot,input)=>knownPathSearch(snapshot,input,true);
+function knownPathSearch(snapshot,{startTileId,destinationTileId,movementClass},all=false){
   const {tiles,edges}=maps(snapshot),start=tiles.get(startTileId),destination=tiles.get(destinationTileId);
-  if(!knownTile(start)||!knownTile(destination))return null;
+  if(!knownTile(start)||!all&&!knownTile(destination))return null;
   const adjacency=new Map();
   for(const edge of [...edges].sort(byId('edgeId'))){
     const cost=edge.blocked?null:edge.travelTicksByClass[movementClass];if(cost===null)continue;
@@ -143,7 +157,7 @@ function knownPathFor(snapshot,{startTileId,destinationTileId,movementClass}){
   const distance=new Map([[startTileId,0]]),previous=new Map(),open=new Set([startTileId]);
   while(open.size){
     const current=[...open].sort((left,right)=>distance.get(left)-distance.get(right)||left.localeCompare(right,'en'))[0];open.delete(current);
-    if(current===destinationTileId){
+    if(!all&&current===destinationTileId){
       const pathTileIds=[current];while(previous.has(pathTileIds[0]))pathTileIds.unshift(previous.get(pathTileIds[0]));
       return {pathTileIds,totalTicks:distance.get(current)};
     }
@@ -153,8 +167,9 @@ function knownPathFor(snapshot,{startTileId,destinationTileId,movementClass}){
       if(candidate<known||(candidate===known&&current.localeCompare(previous.get(to)??'\uffff','en')<0)){distance.set(to,candidate);previous.set(to,current);open.add(to);}
     }
   }
-  return null;
+  return all?{distance,previous}:null;
 }
+
 
 export function findFirst3KnownPath(snapshot,{armyId,destinationTileId}={}){
   validateFirst3StrategicAiSnapshot(snapshot);
@@ -263,6 +278,10 @@ function orderForScoutGoal(snapshot,army,goal,scoutArmyId){
 }
 
 export function planFirst3StrategicAi(snapshot){
+  const previous=pathScope;pathScope={snapshot,trees:new Map()};
+  try{return planFirst3StrategicAiUncached(snapshot);}finally{pathScope=previous;}
+}
+function planFirst3StrategicAiUncached(snapshot){
   validateFirst3StrategicAiSnapshot(snapshot);
   const goal=selectGoal(snapshot),active=snapshot.ownArmies.filter(army=>army.status==='ACTIVE').sort(byId('armyId')),reservedDestinations=new Set(),candidates=[];
   let scoutArmyId=null;

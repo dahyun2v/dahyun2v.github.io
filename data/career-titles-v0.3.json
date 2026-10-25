@@ -1,0 +1,2336 @@
+{
+  "schema": "career-titles-v0.3",
+  "status": "TRIAL — Claude 2026-10-04. v0.2 + 사용자 \"내정 특기는 시뮬레이션 게임, 특기랑 전법은 시뮬레이션게임이랑 알피지게임 레퍼런스 잘 찾아봐\" → 레퍼런스(docs/work-integration/20261004/growth-narrative/REF-DOMESTIC.md · REF-COMBAT.md) 반영. 등급 = 규칙 깊이(일반 숫자 · 고급/희귀 조건 · 영웅 다른 시스템 연결 · 전설 대가형 · 신화 규칙 파괴 + 대가). 카드마다 ref. 수치 시험값.",
+  "newEffectOps": {
+    "RULE": "규칙형 효과 — rule id 별 처리기(아래 rules). 태수일 때(target CITY) 또는 그 장수가 관여할 때(target SELF) 작동"
+  },
+  "traceKeys": [
+    "charge",
+    "flank",
+    "rear",
+    "frontHold",
+    "siegeDamage",
+    "cityDefense",
+    "pursuit",
+    "tactic",
+    "survived",
+    "routed",
+    "foughtBy:<officerId>",
+    "govTurns",
+    "foodAdded",
+    "productionAdded",
+    "scienceAdded",
+    "facilitiesBuilt",
+    "specialist:<kind>",
+    "occupation:<method>",
+    "securityRecovered",
+    "recruited",
+    "eventsDecided"
+  ],
+  "titles": [
+    {
+      "id": "TT-C01",
+      "name": "돌격대장",
+      "kind": "COMBAT",
+      "rule": "charge>=5",
+      "text": "기병 돌격 5회",
+      "weightTags": [
+        "무용",
+        "CHARGE"
+      ],
+      "cards": [
+        "TC-C01a",
+        "TC-C01b",
+        "TC-C01c",
+        "TC-C01d",
+        "TC-C01e"
+      ]
+    },
+    {
+      "id": "TT-C02",
+      "name": "측면의 달인",
+      "kind": "COMBAT",
+      "rule": "flank+rear>=6",
+      "text": "측면·후방 공격 6회",
+      "weightTags": [
+        "지휘",
+        "FLANK"
+      ],
+      "cards": [
+        "TC-C02a",
+        "TC-C02b",
+        "TC-C02c",
+        "TC-C02d",
+        "TC-C02e"
+      ]
+    },
+    {
+      "id": "TT-C03",
+      "name": "철벽",
+      "kind": "COMBAT",
+      "rule": "cityDefense>=3 && frontHold>=5",
+      "text": "수성 3회·정면 수비 5회",
+      "weightTags": [
+        "지휘",
+        "DEFENSE"
+      ],
+      "cards": [
+        "TC-C03a",
+        "TC-C03b",
+        "TC-C03c",
+        "TC-C03d",
+        "TC-C03e"
+      ]
+    },
+    {
+      "id": "TT-C04",
+      "name": "생환자",
+      "kind": "COMBAT",
+      "rule": "survived>=2",
+      "text": "병력 30% 아래에서 살아남기 2회",
+      "weightTags": [
+        "감화",
+        "COMEBACK"
+      ],
+      "cards": [
+        "TC-C04a",
+        "TC-C04b",
+        "TC-C04c",
+        "TC-C04d",
+        "TC-C04e"
+      ]
+    },
+    {
+      "id": "TT-C05",
+      "name": "공성장",
+      "kind": "COMBAT",
+      "rule": "siegeDamage>=100",
+      "text": "성 내구도 피해 누적 100",
+      "weightTags": [
+        "무용",
+        "SIEGE"
+      ],
+      "cards": [
+        "TC-C05a",
+        "TC-C05b",
+        "TC-C05c",
+        "TC-C05d"
+      ]
+    },
+    {
+      "id": "TT-C06",
+      "name": "{상대}의 숙적",
+      "kind": "COMBAT",
+      "rule": "foughtBy:<id> >= 3",
+      "text": "같은 상대와 3번 교전",
+      "weightTags": [
+        "RIVAL"
+      ],
+      "cards": [
+        "TC-C06a",
+        "TC-C06b"
+      ],
+      "perOpponent": true
+    },
+    {
+      "id": "TT-V01",
+      "name": "둔전관",
+      "kind": "CIVIL",
+      "rule": "foodAdded>=60",
+      "text": "태수로 늘린 식량 누적 60",
+      "weightTags": [
+        "정무",
+        "FOOD"
+      ],
+      "cards": [
+        "TC-V01a",
+        "TC-V01b",
+        "TC-V01c",
+        "TC-V01d"
+      ]
+    },
+    {
+      "id": "TT-V02",
+      "name": "감독관",
+      "kind": "CIVIL",
+      "rule": "facilitiesBuilt>=3",
+      "text": "시설 3개 완공",
+      "weightTags": [
+        "정무",
+        "BUILD"
+      ],
+      "cards": [
+        "TC-V02a",
+        "TC-V02b",
+        "TC-V02c",
+        "TC-V02d"
+      ]
+    },
+    {
+      "id": "TT-V03",
+      "name": "학관",
+      "kind": "CIVIL",
+      "rule": "scienceAdded>=40",
+      "text": "태수로 늘린 과학 누적 40",
+      "weightTags": [
+        "지략",
+        "SCIENCE"
+      ],
+      "cards": [
+        "TC-V03a",
+        "TC-V03b",
+        "TC-V03c",
+        "TC-V03d"
+      ]
+    },
+    {
+      "id": "TT-V04",
+      "name": "회유가",
+      "kind": "CIVIL",
+      "rule": "occupation:conciliation>=2",
+      "text": "회유로 점령 처리 2회",
+      "weightTags": [
+        "감화",
+        "OCCUPATION"
+      ],
+      "cards": [
+        "TC-V04a",
+        "TC-V04b",
+        "TC-V04c",
+        "TC-V04d"
+      ]
+    },
+    {
+      "id": "TT-V05",
+      "name": "치안관",
+      "kind": "CIVIL",
+      "rule": "securityRecovered>=3",
+      "text": "치안 회복 3회",
+      "weightTags": [
+        "정무",
+        "SECURITY"
+      ],
+      "cards": [
+        "TC-V05a",
+        "TC-V05b",
+        "TC-V05c",
+        "TC-V05d"
+      ]
+    },
+    {
+      "id": "TT-V06",
+      "name": "인재가",
+      "kind": "CIVIL",
+      "rule": "recruited>=2",
+      "text": "등용 성공 2회",
+      "weightTags": [
+        "감화",
+        "RECRUIT"
+      ],
+      "cards": [
+        "TC-V06a",
+        "TC-V06b",
+        "TC-V06c",
+        "TC-V06d"
+      ]
+    },
+    {
+      "id": "TT-V07",
+      "name": "군량관",
+      "kind": "CIVIL",
+      "rule": "specialist:logistician>=3",
+      "text": "병참 전문인력 3명 육성",
+      "weightTags": [
+        "정무",
+        "LOGISTICS"
+      ],
+      "cards": [
+        "TC-V07a",
+        "TC-V07b",
+        "TC-V07c",
+        "TC-V07d"
+      ]
+    }
+  ],
+  "titleCards": [
+    {
+      "id": "TC-C01a",
+      "title": "TT-C01",
+      "kind": "trait",
+      "name": "기세",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "text": "기병 돌격 피해 +5%(2칸 넘게 달린 칸마다 +5%, 최대 +15%).",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "CHARGE_MOMENTUM",
+          "params": {
+            "perHex": 5,
+            "max": 15
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "토탈워 돌격 보너스(달린 거리)",
+      "nameShort": "예기",
+      "nameHanja": "銳氣",
+      "nameGloss": "적진을 찌를 듯 날카로운 첫 기세 — 기세"
+    },
+    {
+      "id": "TC-C01b",
+      "title": "TT-C01",
+      "kind": "trait",
+      "name": "선봉의 기세",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "기병 돌격으로 공격하면 상대에게 사기 판정 1회(가중 10).",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": -10,
+          "duration": 0,
+          "condition": "CHARGE"
+        }
+      ],
+      "ref": "삼국지11 위풍",
+      "nameShort": "선봉세",
+      "nameHanja": "先鋒勢",
+      "nameGloss": "맨 앞에서 아군을 이끄는 기세 — 선봉의 기세"
+    },
+    {
+      "id": "TC-C01c",
+      "title": "TT-C01",
+      "kind": "trait",
+      "name": "치고 빠지기",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "돌격 명중 · 반격 피해 −20% · 다음 이동 −1",
+      "effects": [
+        {
+          "op": "COUNTER_TAKEN_MOD",
+          "value": -20,
+          "condition": "CHARGE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "CHARGE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "파이어 엠블렘 캔토",
+      "reclassVersion": 319,
+      "nameShort": "략습",
+      "nameHanja": "掠襲",
+      "nameGloss": "스치듯 빠르게 치고 곧바로 빠짐 — 치고 빠지기"
+    },
+    {
+      "id": "TC-C01d",
+      "title": "TT-C01",
+      "kind": "trait",
+      "name": "적진을 가르고 달린다",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "돌격 패주 유발 · 다음 차례 이동 +1 · 다음 첫 공격 −10%",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "value": 1,
+          "condition": "CHARGE",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "CHARGE",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "durationNext": true,
+          "firstOnly": true
+        }
+      ],
+      "ref": "XCOM2 처치 시 이동",
+      "formerName": "천군을 가르다",
+      "reclassVersion": 319,
+      "nameShort": "종횡",
+      "nameHanja": "縱橫",
+      "nameGloss": "적진을 거침없이 가르고 내달림 — 적진을 가르고 달린다"
+    },
+    {
+      "id": "TC-C01e",
+      "title": "TT-C01",
+      "kind": "trait",
+      "name": "돌파",
+      "rarity": "LEGENDARY",
+      "classTag": "무용",
+      "text": "흐트러진 적 공격 · 피해 +15% · 자기 전열 저하",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "TARGET_DISORDERED",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "value": -1,
+          "condition": "CHARGE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "인투 더 브리치 기동·삼국지11 돌파",
+      "cost": "자기 전열 저하",
+      "reclassVersion": 319,
+      "nameShort": "관통",
+      "nameHanja": "貫通",
+      "nameGloss": "적의 방어선을 꿰뚫고 지나감 — 돌파"
+    },
+    {
+      "id": "TC-C02a",
+      "title": "TT-C02",
+      "kind": "trait",
+      "name": "측면을 안다",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "text": "측면·후방 공격 피해 +5%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 5,
+          "duration": 0,
+          "condition": "FLANK"
+        }
+      ],
+      "ref": "배틀 브라더스 포위 보너스",
+      "nameShort": "측안",
+      "nameHanja": "側眼",
+      "nameGloss": "적의 허술한 옆구리를 꿰뚫어 봄 — 측면을 안다"
+    },
+    {
+      "id": "TC-C02b",
+      "title": "TT-C02",
+      "kind": "trait",
+      "name": "협공",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "대상 반대편 아군 · 원대상 피해 +15% · 단독 공격 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "ALLY_BEHIND_TARGET",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "NO_ALLY_BEHIND",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "트라이앵글 스트래티지 협공",
+      "reclassVersion": 319,
+      "nameShort": "합공",
+      "nameHanja": "合攻",
+      "nameGloss": "양쪽에서 호흡을 맞춰 함께 침 — 협공"
+    },
+    {
+      "id": "TC-C02c",
+      "title": "TT-C02",
+      "kind": "trait",
+      "name": "빈틈을 찌르다",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "측후면 공격 · 반격 피해 −30% · 정면 피해 −10%",
+      "effects": [
+        {
+          "op": "COUNTER_TAKEN_MOD",
+          "value": -30,
+          "condition": "FLANK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "FRONT",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "파이어 엠블렘 엔게이지 브레이크",
+      "reclassVersion": 319,
+      "nameShort": "승허",
+      "nameHanja": "乘虛",
+      "nameGloss": "적의 방비가 빈 틈을 놓치지 않음 — 빈틈을 찌르다"
+    },
+    {
+      "id": "TC-C02d",
+      "title": "TT-C02",
+      "kind": "trait",
+      "name": "매복자",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "text": "시야 밖 시작 첫 공격 · 피해 +15% · 이후 공격 −5%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "HIDDEN_START&FIRST_ROUND",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -5,
+          "condition": "NOT_FIRST",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "섀도우 오브 모르도르 매복",
+      "reclassVersion": 319,
+      "nameShort": "복병",
+      "nameHanja": "伏兵",
+      "nameGloss": "길목에 숨어 적을 기다리는 군사 — 매복자"
+    },
+    {
+      "id": "TC-C02e",
+      "title": "TT-C02",
+      "kind": "trait",
+      "name": "늘 옆을 친다",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "text": "실제 측면 공격 · 피해 +20% · 후방 보너스 −10%p",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 20,
+          "condition": "ACTUAL_FLANK",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DIRECTION_BONUS_FLAT",
+          "value": -10,
+          "condition": "REAR",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "패스 오브 엑자일 키스톤",
+      "cost": "후방 보너스 −10%p",
+      "formerName": "정면 없음",
+      "reclassVersion": 319,
+      "nameShort": "익격",
+      "nameHanja": "翼擊",
+      "nameGloss": "적의 날개 쪽 옆구리를 거듭 침 — 늘 옆을 친다"
+    },
+    {
+      "id": "TC-C03a",
+      "title": "TT-C03",
+      "kind": "trait",
+      "name": "방패벽",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "text": "전열이 정돈된 채 공격받으면 받는 피해 −6%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 6,
+          "duration": 0,
+          "condition": "SELF_ORDERED"
+        }
+      ],
+      "ref": "배틀 브라더스 방패벽",
+      "nameShort": "성방",
+      "nameHanja": "城盾",
+      "nameGloss": "성벽처럼 단단하게 세운 방패벽 — 방패벽"
+    },
+    {
+      "id": "TC-C03b",
+      "title": "TT-C03",
+      "kind": "trait",
+      "name": "고슴도치",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "정돈 측면 피격 · 측면 추가 피해 절반 · 이동 −1",
+      "effects": [
+        {
+          "op": "DIRECTION_DAMAGE_MOD",
+          "value": -50,
+          "condition": "SELF_ORDERED&ACTUAL_FLANK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "배틀 브라더스 언더독",
+      "reclassVersion": 319,
+      "nameShort": "극침",
+      "nameHanja": "棘針",
+      "nameGloss": "고슴도치 가시처럼 촘촘한 방어 — 고슴도치"
+    },
+    {
+      "id": "TC-C03c",
+      "title": "TT-C03",
+      "kind": "trait",
+      "name": "창 세우기",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "미이동 정면 방어 · 기존 반격 +25% · 다음 이동 −1",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "value": 25,
+          "condition": "UNMOVED&FRONT",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "UNMOVED&FRONT",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "토탈워 창병 대돌격",
+      "reclassVersion": 319,
+      "nameShort": "입창",
+      "nameHanja": "立槍",
+      "nameGloss": "창을 빽빽이 세워 돌격을 막음 — 창 세우기"
+    },
+    {
+      "id": "TC-C03d",
+      "title": "TT-C03",
+      "kind": "trait",
+      "name": "들어오면 먼저 친다",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "미이동 방어 · 기존 반격 +20% · 이동 차례 보상 없음",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "value": 20,
+          "condition": "UNMOVED",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "XCOM2 칼날 폭풍",
+      "formerName": "칼날 폭풍",
+      "reclassVersion": 319,
+      "nameShort": "반제",
+      "nameHanja": "反制",
+      "nameGloss": "다가오는 적을 먼저 쳐서 누름 — 들어오면 먼저 친다"
+    },
+    {
+      "id": "TC-C03e",
+      "title": "TT-C03",
+      "kind": "trait",
+      "name": "방진",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "text": "측후면 피격 · 해당 추가 피해 절반 · 이동 최대 1",
+      "effects": [
+        {
+          "op": "DIRECTION_DAMAGE_MOD",
+          "value": -50,
+          "condition": "FLANK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MAX",
+          "value": 1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "방진 대형",
+      "cost": "이동 최대 1",
+      "reclassVersion": 319,
+      "nameShort": "원진",
+      "nameHanja": "圓陣",
+      "nameGloss": "사방을 빈틈없이 지키는 둥근 진 — 방진"
+    },
+    {
+      "id": "TC-C04a",
+      "title": "TT-C04",
+      "kind": "trait",
+      "name": "살아 돌아온 자",
+      "rarity": "COMMON",
+      "classTag": "감화",
+      "text": "잃는 병력의 전사 비율 −10%p.",
+      "effects": [
+        {
+          "op": "CASUALTY_SHIFT",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "CK3 조직가(퇴각 손실)",
+      "nameShort": "생환자",
+      "nameHanja": "生還者",
+      "nameGloss": "사지에서 살아 돌아온 질긴 생명 — 살아 돌아온 자"
+    },
+    {
+      "id": "TC-C04b",
+      "title": "TT-C04",
+      "kind": "trait",
+      "name": "패배를 딛고",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "병력이 절반 아래면 주는 피해 +12%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": "HP_BELOW:50"
+        }
+      ],
+      "ref": "파이어 엠블렘 분노·다키스트 던전",
+      "nameShort": "권토",
+      "nameHanja": "捲土",
+      "nameGloss": "패배를 딛고 땅을 말아 다시 일어섬 — 패배를 딛고"
+    },
+    {
+      "id": "TC-C04c",
+      "title": "TT-C04",
+      "kind": "trait",
+      "name": "철의 의지",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "text": "첫 사기 판정 · 가중 −5 · 다음 공격 −5%",
+      "effects": [
+        {
+          "op": "MORALE_WEIGHT_MOD",
+          "value": -5,
+          "condition": "FIRST_MORALE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -5,
+          "condition": "FIRST_MORALE",
+          "when": "ON_MORALE_CHECK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "배틀 브라더스 강인한 정신",
+      "reclassVersion": 319,
+      "nameShort": "철심",
+      "nameHanja": "鐵心",
+      "nameGloss": "무쇠처럼 단단하여 흔들림 없는 뜻 — 철의 의지"
+    },
+    {
+      "id": "TC-C04d",
+      "title": "TT-C04",
+      "kind": "trait",
+      "name": "아홉 목숨",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "text": "병력 25% 미만 · 방어 +20% · 이동 −1",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "value": 20,
+          "condition": "HP_BELOW:25",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "HP_BELOW:25",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "배틀 브라더스 아홉 목숨",
+      "reclassVersion": 319,
+      "nameShort": "구명",
+      "nameHanja": "九命",
+      "nameGloss": "아홉 개의 목숨을 가진 듯 버텨냄 — 아홉 목숨"
+    },
+    {
+      "id": "TC-C04e",
+      "title": "TT-C04",
+      "kind": "trait",
+      "name": "복수의 맹세",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "text": "패주 후 숙적 격파 · 경험치 +30% · 복수 전 3전투 피해 −10%",
+      "effects": [
+        {
+          "op": "XP_MOD",
+          "value": 30,
+          "condition": "REVENGE_TARGET",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "eventOnly": true
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "REVENGE_PENDING",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "하데스 카오스 축복",
+      "cost": "복수 전 3전투 피해 −10%",
+      "reclassVersion": 319,
+      "nameShort": "설한",
+      "nameHanja": "雪恨",
+      "nameGloss": "품은 한을 기어코 갚겠다는 다짐 — 복수의 맹세"
+    },
+    {
+      "id": "TC-C05a",
+      "title": "TT-C05",
+      "kind": "trait",
+      "name": "공병의 손",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "text": "성 공격 피해 +10%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": "TARGET_CITY"
+        }
+      ],
+      "ref": "CK3 군사 기술자",
+      "nameShort": "기공",
+      "nameHanja": "技工",
+      "nameGloss": "공성 무기를 다루는 숙련된 손길 — 공병의 손"
+    },
+    {
+      "id": "TC-C05b",
+      "title": "TT-C05",
+      "kind": "trait",
+      "name": "화살비를 견딘다",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "성 사격으로 받는 피해 −25%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "FROM_CITY"
+        }
+      ],
+      "ref": "방패 지붕",
+      "nameShort": "내시",
+      "nameHanja": "耐矢",
+      "nameGloss": "쏟아지는 화살비를 몸으로 견뎌냄 — 화살비를 견딘다"
+    },
+    {
+      "id": "TC-C05c",
+      "title": "TT-C05",
+      "kind": "trait",
+      "name": "성문을 부순다",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "성을 공격하면 피해 +20%, 내구도 0을 만든 공격이면 자기 사기 회복.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "TARGET_CITY"
+        },
+        {
+          "op": "RULE",
+          "rule": "BREACH_RALLY",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "공성 함락 사기",
+      "nameShort": "파문",
+      "nameHanja": "破門",
+      "nameGloss": "굳게 닫힌 적의 성문을 부수어 엶 — 성문을 부순다"
+    },
+    {
+      "id": "TC-C05d",
+      "title": "TT-C05",
+      "kind": "trait",
+      "name": "포위망",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "text": "세 면 포위 · 주 행동 성 공격 피해 +20% · 이동 −1",
+      "effects": [
+        {
+          "op": "SIEGE_DAMAGE_MOD",
+          "value": 20,
+          "condition": "THREE_SIEGERS",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "삼국지14 보급선 차단",
+      "reclassVersion": 319,
+      "nameShort": "외포",
+      "nameHanja": "外包",
+      "nameGloss": "성 밖을 겹겹이 에워싸는 포위망 — 포위망"
+    },
+    {
+      "id": "TC-C06a",
+      "title": "TT-C06",
+      "kind": "trait",
+      "name": "숙적을 안다",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "숙적에게 주는 피해 +10%, 숙적에게 받는 피해 −10%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": "TARGET_RIVAL"
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": "TARGET_RIVAL"
+        }
+      ],
+      "ref": "CK3 라이벌",
+      "nameShort": "숙적",
+      "nameHanja": "宿敵",
+      "nameGloss": "오래도록 맞서 싸워 잘 아는 적수 — 숙적을 안다"
+    },
+    {
+      "id": "TC-C06b",
+      "title": "TT-C06",
+      "kind": "trait",
+      "name": "원한",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "숙적 보임 · 이동 +1·사기 가중 −5 · 숙적 쪽 이동 제약 유지",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "value": 1,
+          "condition": "RIVAL_VISIBLE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MORALE_WEIGHT_MOD",
+          "value": -5,
+          "condition": "RIVAL_VISIBLE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_TOWARD_RIVAL",
+          "value": 1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "섀도우 오브 모르도르 분노",
+      "cost": "숙적 쪽 이동 제약 유지",
+      "reclassVersion": 319,
+      "nameShort": "원념",
+      "nameHanja": "怨念",
+      "nameGloss": "가슴 깊이 맺혀 풀리지 않는 원한 — 원한"
+    },
+    {
+      "id": "TC-V01a",
+      "title": "TT-V01",
+      "kind": "trait",
+      "name": "흉년 대비",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "창고 가득 · 기존 모집량 +20% · 식량 산출 −10%",
+      "effects": [
+        {
+          "op": "RECRUIT_AMOUNT_MOD",
+          "value": 20,
+          "condition": "FULL_STORAGE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "FOOD"
+        }
+      ],
+      "ref": "올드 월드 넘침 전환",
+      "domestic": true,
+      "reclassVersion": 319,
+      "nameShort": "비황",
+      "nameHanja": "備荒",
+      "nameGloss": "흉년에 대비해 미리 곡식을 모음 — 흉년 대비"
+    },
+    {
+      "id": "TC-V01b",
+      "title": "TT-V01",
+      "kind": "trait",
+      "name": "병사가 밭을 간다",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "성의 예비병 100명마다 식량 +1 — 주둔병이 밭을 일군다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "GARRISON_FARMING",
+          "params": {
+            "per": 100,
+            "food": 1
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "삼국지14 둔전(반대로)",
+      "domestic": true,
+      "formerName": "군둔(軍屯)",
+      "nameShort": "둔농",
+      "nameHanja": "屯農",
+      "nameGloss": "병사가 무기를 내려놓고 밭을 감 — 병사가 밭을 간다"
+    },
+    {
+      "id": "TC-V01c",
+      "title": "TT-V01",
+      "kind": "trait",
+      "name": "주고 돌려받는 식량",
+      "rarity": "EPIC",
+      "classTag": "정무",
+      "text": "이 성으로 보낸 식량 지원의 절반을 보낸 성이 돌려받는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SUPPORT_REFUND",
+          "params": {
+            "ratio": 50
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "문명6 마그누스 잉여 물류",
+      "domestic": true,
+      "formerName": "돌려받는 지원",
+      "nameShort": "환곡",
+      "nameHanja": "還穀",
+      "nameGloss": "식량을 빌려주고 가을에 돌려받음 — 주고 돌려받는 식량"
+    },
+    {
+      "id": "TC-V01d",
+      "title": "TT-V01",
+      "kind": "trait",
+      "name": "천하의 곡창",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "text": "평시 합법 지원 · 지원량 +20% · 생산 −2",
+      "effects": [
+        {
+          "op": "SUPPORT_AMOUNT_MOD",
+          "value": 20,
+          "condition": "PEACEFUL",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "PRODUCTION_FLAT",
+          "value": -2,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "문명6 빅토르 방어 물류",
+      "domestic": true,
+      "cost": "생산 −2",
+      "reclassVersion": 319,
+      "nameShort": "곡창",
+      "nameHanja": "穀倉",
+      "nameGloss": "천하를 먹여 살릴 만큼 넓은 곳간 — 천하의 곡창"
+    },
+    {
+      "id": "TC-V02a",
+      "title": "TT-V02",
+      "kind": "trait",
+      "name": "설계도 돌려쓰기",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "이 성에서 완성한 시설 종류는 다른 아군 성에서 지을 때 비용 −30%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SHARED_BLUEPRINT",
+          "params": {
+            "discount": 30
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "아노 노조 전문가·설계 공유",
+      "domestic": true,
+      "formerName": "같은 설계도",
+      "nameShort": "도면",
+      "nameHanja": "圖面",
+      "nameGloss": "한 번 쓴 설계도를 돌려가며 씀 — 설계도 돌려쓰기"
+    },
+    {
+      "id": "TC-V02b",
+      "title": "TT-V02",
+      "kind": "trait",
+      "name": "연쇄 공사",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "시설이 완공될 때마다 다음 시설 비용 −20%(누적 최대 −60%), 작업이 비면 초기화.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "BUILD_CHAIN",
+          "params": {
+            "step": 20,
+            "max": 60
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "올드 월드 건축가 총독",
+      "domestic": true,
+      "nameShort": "연축",
+      "nameHanja": "連築",
+      "nameGloss": "여러 공사를 멈추지 않고 이어 감 — 연쇄 공사"
+    },
+    {
+      "id": "TC-V02c",
+      "title": "TT-V02",
+      "kind": "trait",
+      "name": "인망·과학으로 짓기",
+      "rarity": "EPIC",
+      "classTag": "정무",
+      "text": "시설 건설 중 · 생산 +20% · 과학 −10%",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": 20,
+          "condition": "BUILDING",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "SCIENCE"
+        }
+      ],
+      "ref": "문명6 레이나 계약자",
+      "domestic": true,
+      "formerName": "다른 값으로 짓는다",
+      "reclassVersion": 319,
+      "nameShort": "축조",
+      "nameHanja": "築造",
+      "nameGloss": "백성의 신망과 기술로 성을 쌓음 — 인망·과학으로 짓기"
+    },
+    {
+      "id": "TC-V02d",
+      "title": "TT-V02",
+      "kind": "trait",
+      "name": "마지막 한 번 버티는 성벽",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "text": "내구 25 이하 · 내구 피해 −20% · 성 사격 −50%",
+      "effects": [
+        {
+          "op": "WALL_DEFENSE_MOD",
+          "value": 20,
+          "condition": "WALL_BELOW_25",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_SHOT_MOD",
+          "value": -50,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "마지막 성벽",
+      "domestic": true,
+      "cost": "성 사격 −50%",
+      "formerName": "철옹성",
+      "reclassVersion": 319,
+      "nameShort": "보루",
+      "nameHanja": "堡壘",
+      "nameGloss": "무너지기 직전 마지막 한 번을 버팀 — 마지막 한 번 버티는 성벽"
+    },
+    {
+      "id": "TC-V03a",
+      "title": "TT-V03",
+      "kind": "trait",
+      "name": "성 안 강의",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "text": "이 성에 있는 아군 장수 경험치 +3/턴.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "LECTURE",
+          "params": {
+            "xp": 3
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "올드 월드 교육",
+      "domestic": true,
+      "formerName": "강학(講學)",
+      "nameShort": "강학",
+      "nameHanja": "講學",
+      "nameGloss": "성 안에서 학문과 병법을 강의함 — 성 안 강의"
+    },
+    {
+      "id": "TC-V03b",
+      "title": "TT-V03",
+      "kind": "trait",
+      "name": "스승의 길",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "자유 장수 성 체류 · 경험치 +20% · 태수 경험치 −10%",
+      "effects": [
+        {
+          "op": "RESIDENT_XP_MOD",
+          "value": 20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "XP_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ],
+      "ref": "올드 월드 관리술 전수",
+      "domestic": true,
+      "reclassVersion": 319,
+      "nameShort": "사도",
+      "nameHanja": "師道",
+      "nameGloss": "제자를 바르게 이끄는 스승의 길 — 스승의 길"
+    },
+    {
+      "id": "TC-V03c",
+      "title": "TT-V03",
+      "kind": "trait",
+      "name": "약탈한 서고",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "text": "이 장수가 관여한 점령 처리에서 수탈을 고르면 과학 +15.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "PLUNDER_ARCHIVES",
+          "params": {
+            "science": 15
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "문명6 약탈 정책",
+      "domestic": true,
+      "nameShort": "노서",
+      "nameHanja": "擄書",
+      "nameGloss": "적에게서 빼앗아 채운 책과 서고 — 약탈한 서고"
+    },
+    {
+      "id": "TC-V03d",
+      "title": "TT-V03",
+      "kind": "trait",
+      "name": "급한 연구",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "text": "연구 문턱 −30%. 대가: 연구 단계가 오를 때마다 이 성 치안 한 단계 악화.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "TOO_SMART",
+          "params": {
+            "discount": 30
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "림월드 너무 똑똑함",
+      "domestic": true,
+      "cost": "단계마다 치안 악화",
+      "formerName": "너무 영리하다",
+      "nameShort": "속연",
+      "nameHanja": "速硏",
+      "nameGloss": "당장 필요한 기술을 급히 연구함 — 급한 연구"
+    },
+    {
+      "id": "TC-V04a",
+      "title": "TT-V04",
+      "kind": "trait",
+      "name": "안심 방 붙이기",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "이 장수가 점령 처리한 성은 치안이 한 단계 좋은 상태로 시작.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "PROCLAMATION",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "문명6 수비대 사령관",
+      "domestic": true,
+      "formerName": "방을 붙인다",
+      "nameShort": "방문",
+      "nameHanja": "榜文",
+      "nameGloss": "백성을 안심시키는 글을 써 붙임 — 안심 방 붙이기"
+    },
+    {
+      "id": "TC-V04b",
+      "title": "TT-V04",
+      "kind": "trait",
+      "name": "포로를 돌려보낸다",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "text": "포로 석방 · 자기 인망 +15 · 생산 −10%",
+      "effects": [
+        {
+          "op": "RELEASE_PRESTIGE",
+          "value": 15,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ],
+      "ref": "삼국지14 명성(포로)",
+      "domestic": true,
+      "reclassVersion": 319,
+      "nameShort": "석방",
+      "nameHanja": "釋放",
+      "nameGloss": "사로잡은 포로를 풀어 돌려보냄 — 포로를 돌려보낸다"
+    },
+    {
+      "id": "TC-V04c",
+      "title": "TT-V04",
+      "kind": "trait",
+      "name": "고향의 태수",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "text": "등용한 장수를 원래 소속했던 성의 태수로 앉히면 그 성 점령 단계 −2. 대가: 그 성 인망 산출 절반.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "HOMETOWN_GOVERNOR",
+          "params": {
+            "stages": 2
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "올드 월드 가문 도시",
+      "domestic": true,
+      "cost": "인망 절반",
+      "nameShort": "향관",
+      "nameHanja": "鄕官",
+      "nameGloss": "고향 땅을 다스려 민심을 얻는 관리 — 고향의 태수"
+    },
+    {
+      "id": "TC-V04d",
+      "title": "TT-V04",
+      "kind": "trait",
+      "name": "토호에게 특권 주기",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "text": "회유 처리 · 잔여 점령 기간 −2 · 생산 −1",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "value": 2,
+          "condition": "CONCILIATE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "PRODUCTION_FLAT",
+          "value": -1,
+          "condition": "PRIVILEGED",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "유로파5 신분 특권",
+      "domestic": true,
+      "cost": "생산 −1",
+      "formerName": "지방 특권",
+      "reclassVersion": 319,
+      "nameShort": "특권",
+      "nameHanja": "特權",
+      "nameGloss": "지역 토호에게 특별한 권한을 줌 — 토호에게 특권 주기"
+    },
+    {
+      "id": "TC-V05a",
+      "title": "TT-V05",
+      "kind": "trait",
+      "name": "엄한 군율",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "이 성에서 출진한 부대는 3턴 동안 동요 문턱 ×1.25.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "STRICT_DISCIPLINE",
+          "params": {
+            "turns": 3,
+            "threshold": 1.25
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "토탈워 군율",
+      "domestic": true,
+      "nameShort": "엄법",
+      "nameHanja": "嚴法",
+      "nameGloss": "조금의 어김도 용서치 않는 군율 — 엄한 군율"
+    },
+    {
+      "id": "TC-V05b",
+      "title": "TT-V05",
+      "kind": "trait",
+      "name": "첩자를 잡는다",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "사건 발생 · 치안 손실 −30%·시야 +2 · 인망 −10%",
+      "effects": [
+        {
+          "op": "SECURITY_LOSS_MOD",
+          "value": -30,
+          "condition": "EVENT",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_VISION_MOD",
+          "value": 2,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRESTIGE"
+        }
+      ],
+      "ref": "방첩",
+      "domestic": true,
+      "reclassVersion": 319,
+      "nameShort": "색간",
+      "nameHanja": "索奸",
+      "nameGloss": "성 안에 숨어든 첩자를 색출해 냄 — 첩자를 잡는다"
+    },
+    {
+      "id": "TC-V05c",
+      "title": "TT-V05",
+      "kind": "trait",
+      "name": "군의 위세로 누른다",
+      "rarity": "EPIC",
+      "classTag": "정무",
+      "text": "치안이 불안 이상이면 정산 때 예비병 100을 써서 한 단계 회복.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "HARSH_TREATMENT",
+          "params": {
+            "reserve": 100
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "유로파4 가혹한 처우",
+      "domestic": true,
+      "nameShort": "군위",
+      "nameHanja": "軍威",
+      "nameGloss": "군대의 서슬 퍼런 위세로 찍어 누름 — 군의 위세로 누른다"
+    },
+    {
+      "id": "TC-V05d",
+      "title": "TT-V05",
+      "kind": "trait",
+      "name": "계엄",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "text": "불안 이상 · 치안 손실 −30% · 생산 −50%",
+      "effects": [
+        {
+          "op": "SECURITY_LOSS_MOD",
+          "value": -30,
+          "condition": "UNREST",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -50,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ],
+      "ref": "트로피코 계엄령",
+      "domestic": true,
+      "cost": "생산 −50%",
+      "reclassVersion": 319,
+      "nameShort": "계엄",
+      "nameHanja": "戒嚴",
+      "nameGloss": "병력을 풀어 성 안팎을 삼엄히 지킴 — 계엄"
+    },
+    {
+      "id": "TC-V06a",
+      "title": "TT-V06",
+      "kind": "trait",
+      "name": "정성 들인 등용",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "등용 후 첫 성장 · 경험치 +20% · 등용 인망 비용 +10%",
+      "effects": [
+        {
+          "op": "FIRST_GROWTH_XP_MOD",
+          "value": 20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "RECRUIT_COST_MOD",
+          "value": 10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "삼고초려",
+      "domestic": true,
+      "formerName": "삼고초려",
+      "reclassVersion": 319,
+      "nameShort": "예빙",
+      "nameHanja": "禮聘",
+      "nameGloss": "온 정성과 예를 갖추어 인재를 모심 — 정성 들인 등용"
+    },
+    {
+      "id": "TC-V06b",
+      "title": "TT-V06",
+      "kind": "trait",
+      "name": "인재의 그물",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "text": "자기 성 등용 · 인망 비용 −20% · 생산 −10%",
+      "effects": [
+        {
+          "op": "RECRUIT_COST_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ],
+      "ref": "삼국지14 인맥",
+      "domestic": true,
+      "reclassVersion": 319,
+      "nameShort": "인망",
+      "nameHanja": "人網",
+      "nameGloss": "인재를 빠짐없이 거두는 넓은 그물 — 인재의 그물"
+    },
+    {
+      "id": "TC-V06c",
+      "title": "TT-V06",
+      "kind": "trait",
+      "name": "귀순을 이끈다",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "text": "합법 포로 등용 · 인망 비용 −20% · 도시 인망 −10%",
+      "effects": [
+        {
+          "op": "CAPTIVE_RECRUIT_COST_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRESTIGE"
+        }
+      ],
+      "ref": "토탈워 삼국 만족도·귀순",
+      "domestic": true,
+      "reclassVersion": 319,
+      "nameShort": "유항",
+      "nameHanja": "誘降",
+      "nameGloss": "적의 마음을 움직여 귀순을 이끌어냄 — 귀순을 이끈다"
+    },
+    {
+      "id": "TC-V06d",
+      "title": "TT-V06",
+      "kind": "trait",
+      "name": "포로로 인망 얻기",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "text": "억류한 포로 1명마다 매 턴 인망 +3, 석방하면 인망 +20. 대가: 이 성에서는 포로를 등용할 수 없다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "CAPTIVE_DEBT",
+          "params": {
+            "perTurn": 3,
+            "release": 20
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "CK3 황금 의무",
+      "domestic": true,
+      "cost": "포로 등용 불가",
+      "formerName": "포로는 빚이다",
+      "nameShort": "은방",
+      "nameHanja": "恩放",
+      "nameGloss": "포로를 은혜로 풀어주어 인망을 얻음 — 포로로 인망 얻기"
+    },
+    {
+      "id": "TC-V07a",
+      "title": "TT-V07",
+      "kind": "trait",
+      "name": "보급 기지",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "이 성 3칸 안에서 차례를 시작한 아군 부대 부상병 30 복귀.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "FIELD_DEPOT",
+          "params": {
+            "range": 3,
+            "heal": 30
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "문명7 요새 마을",
+      "domestic": true,
+      "nameShort": "병참",
+      "nameHanja": "兵站",
+      "nameGloss": "군량과 무기를 대어 주는 보급 기지 — 보급 기지"
+    },
+    {
+      "id": "TC-V07b",
+      "title": "TT-V07",
+      "kind": "trait",
+      "name": "역참 길",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "아군 성끼리 잇는 길 위에서 아군 부대 이동 +1칸.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "RELAY_STATIONS",
+          "params": {
+            "move": 1
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "역참제",
+      "domestic": true,
+      "formerName": "역참",
+      "nameShort": "역참",
+      "nameHanja": "驛站",
+      "nameGloss": "전령과 물자가 쉬어 가는 길목의 역 — 역참 길"
+    },
+    {
+      "id": "TC-V07c",
+      "title": "TT-V07",
+      "kind": "trait",
+      "name": "징발령",
+      "rarity": "EPIC",
+      "classTag": "정무",
+      "text": "이 성이 포위되면 그 정산에 식량 −20으로 예비병 +150(포위마다 1회).",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "EMERGENCY_LEVY",
+          "params": {
+            "food": 20,
+            "reserve": 150
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "프로스트펑크 비상 교대",
+      "domestic": true,
+      "nameShort": "징발",
+      "nameHanja": "徵發",
+      "nameGloss": "전시에 필요한 물자와 사람을 거둠 — 징발령"
+    },
+    {
+      "id": "TC-V07d",
+      "title": "TT-V07",
+      "kind": "trait",
+      "name": "부상병 먼저 출진",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "text": "부상병 있는 성 · 기존 회복량 +30% · 새 부대 2턴 사기 문턱 ×0.8",
+      "effects": [
+        {
+          "op": "WOUNDED_RECOVERY_MOD",
+          "value": 30,
+          "condition": "CITY_WOUNDED",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "MUSTER_MORALE_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "문명6 마그누스 공급",
+      "domestic": true,
+      "cost": "새 부대 2턴 사기 문턱 ×0.8",
+      "formerName": "피 흘리지 않는 출진",
+      "reclassVersion": 319,
+      "nameShort": "상병진",
+      "nameHanja": "傷兵陣",
+      "nameGloss": "부상병이 먼저 나서서 사기를 올림 — 부상병 먼저 출진"
+    }
+  ],
+  "commonDomesticTraits": [
+    {
+      "id": "CD-01",
+      "kind": "trait",
+      "domestic": true,
+      "name": "농번기",
+      "rarity": "COMMON",
+      "classTag": "정무",
+      "text": "3턴마다 이 성 식량 +4.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "HARVEST_PULSE",
+          "params": {
+            "period": 3,
+            "food": 4
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "파딩 프런티어 윤작",
+      "nameShort": "농시",
+      "nameHanja": "農時",
+      "nameGloss": "씨 뿌리고 거두는 바쁜 농사철 — 농번기"
+    },
+    {
+      "id": "CD-02",
+      "kind": "trait",
+      "domestic": true,
+      "name": "장부 정리",
+      "rarity": "COMMON",
+      "classTag": "정무",
+      "text": "작업 완공 차례 · 생산 +10% · 작업 없는 차례 보상 없음",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": 10,
+          "condition": "COMPLETING_JOB",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ],
+      "ref": "넘침 전환",
+      "reclassVersion": 319,
+      "nameShort": "회계",
+      "nameHanja": "會計",
+      "nameGloss": "물자와 돈의 흐름을 장부로 정리함 — 장부 정리"
+    },
+    {
+      "id": "CD-03",
+      "kind": "trait",
+      "domestic": true,
+      "name": "쉬며 배운다",
+      "rarity": "COMMON",
+      "classTag": "감화",
+      "text": "이 성 자유 장수(부대 없음) 경험치 +2/턴.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "MENTOR_CITY",
+          "params": {
+            "xp": 2
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "올드 월드 교육",
+      "formerName": "말동무",
+      "nameShort": "여학",
+      "nameHanja": "餘學",
+      "nameGloss": "틈틈이 쉬는 시간에도 학문을 배움 — 쉬며 배운다"
+    },
+    {
+      "id": "CD-04",
+      "kind": "trait",
+      "domestic": true,
+      "name": "청렴",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "정산 치안 판정 · 손실 −20% · 수탈 불가",
+      "effects": [
+        {
+          "op": "SECURITY_LOSS_MOD",
+          "value": -20,
+          "condition": "SETTLE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "NO_PLUNDER",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "매너 로드 이익·대가",
+      "cost": "수탈 불가",
+      "reclassVersion": 319,
+      "nameShort": "청백",
+      "nameHanja": "淸白",
+      "nameGloss": "탐욕 없이 마음이 맑고 깨끗함 — 청렴"
+    },
+    {
+      "id": "CD-05",
+      "kind": "trait",
+      "domestic": true,
+      "name": "민심 수습",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "이 장수가 점령 처리에 관여하면 기간 −1턴.",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "CK3 통제 강화",
+      "nameShort": "수습",
+      "nameHanja": "收拾",
+      "nameGloss": "어지러워진 백성의 마음을 추스름 — 민심 수습"
+    },
+    {
+      "id": "CD-06",
+      "kind": "trait",
+      "domestic": true,
+      "name": "피란민을 받는다",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "인근 성 함락 후 · 기존 인구 성장 +20% · 식량 소비 +10%",
+      "effects": [
+        {
+          "op": "POPULATION_GROWTH_MOD",
+          "value": 20,
+          "condition": "NEAR_CAPTURE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "FOOD_CONSUMPTION_MOD",
+          "value": 10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "노부나가 다이시 피난민",
+      "reclassVersion": 319,
+      "nameShort": "안집",
+      "nameHanja": "安集",
+      "nameGloss": "떠도는 피란민을 받아 편히 살게 함 — 피란민을 받는다"
+    }
+  ],
+  "tacticWeighting": "전법은 전투 전용(사용자). 칭호의 weightTags 가 전투 전법 후보 가중에만 쓰인다 — 예: 철벽 → DEFENSE 태그 전법, 회유가·인재가 → 감화(사기·결집) 전법.",
+  "draftRule": {
+    "text": "레벨업 특기 후보 3장의 갈래는 직전 레벨 이후 경험치 출처 비율로 정한다 — 내정 출처(GOVERNOR 계열) 비율 r 이면 후보마다 r 확률로 내정 특기, 1−r 로 전투 특기(시드 결정적). 전법 Draft(Lv 5 배수)는 항상 전투 전법.",
+    "civilSources": [
+      "GOVERNOR_TURN",
+      "GOVERNOR_OUTPUT",
+      "FACILITY_BUILT",
+      "SECURITY_RECOVERED",
+      "RECRUITED",
+      "EVENT_DECIDED",
+      "OCCUPATION_COMPLETED",
+      "SPECIALIST_GROWN"
+    ]
+  },
+  "rules": {
+    "CHARGE_MOMENTUM": "기병 돌격 피해 +5%(2칸 넘게 달린 칸마다 +5%, 최대 +15%).",
+    "CANTO": "돌격 뒤 남은 이동으로 물러날 수 있다(교전 이탈 추격은 그대로).",
+    "ROUT_ADVANCE": "돌격으로 상대를 패주시키면 1칸 더 이동.",
+    "BREAKTHROUGH": "흐트러진 적의 통제 구역을 무시하고 지난다. 대가: 돌격한 뒤 자기 전열이 흐트러짐.",
+    "PINCER_FOLLOWUP": "대상 반대편에 아군이 있으면 그 아군이 40% 추격타.",
+    "NO_COUNTER_ON_FLANK": "측면·후방으로 공격하면 상대가 반격하지 못한다.",
+    "AMBUSHER": "상대 시야 밖에서 시작한 첫 공격은 후방 공격으로 친다.",
+    "NO_FRONT": "모든 공격이 최소 측면 공격. 대가: 후방 보너스 없음.",
+    "HEDGEHOG": "정돈 상태면 측면 공격 보너스를 받지 않는다(후방은 받음).",
+    "SET_SPEARS": "이번 차례 움직이지 않았으면 정면 돌격 피해의 25%를 되돌려준다.",
+    "BLADESTORM": "내 통제 구역에 들어온 첫 적을 상대가 치기 전에 먼저 친다(턴당 1회).",
+    "SQUARE": "측면·후방으로 맞아도 불리함이 없다. 대가: 이동 최대 1칸.",
+    "IRON_NERVE": "차례마다 첫 사기 저하를 무시.",
+    "NINE_LIVES": "부대가 소멸할 피해를 한 판에 한 번 버티고 병력 5%로 패주.",
+    "OATH_OF_REVENGE": "패주한 뒤 3전투 동안 주는 피해 −10%, 그 사이 패주시킨 상대를 이기면 희귀 특기 1장을 바로 얻는다.",
+    "BREACH_RALLY": "성을 공격하면 피해 +20%, 내구도 0을 만든 공격이면 자기 사기 회복.",
+    "ENCIRCLE": "아군이 성의 세 면 이상을 둘러싸면 그 성 내구도·수비 부대 사기가 차례마다 떨어진다.",
+    "GRUDGE": "숙적이 보이면 이동 +1·사기 고정. 대가: 그 차례 숙적 쪽으로 가까워져야 한다.",
+    "SURPLUS_TO_TROOPS": "식량이 창고 상한을 넘치면 넘친 식량 1당 예비병 +5.",
+    "GARRISON_FARMING": "성의 예비병 100명마다 식량 +1 — 주둔병이 밭을 일군다.",
+    "SUPPORT_REFUND": "이 성으로 보낸 식량 지원의 절반을 보낸 성이 돌려받는다.",
+    "UNBLOCKABLE_SUPPLY": "이 성의 식량 지원은 포위·거리 제한 없이 닿는다. 대가: 이 성 생산 −2.",
+    "SHARED_BLUEPRINT": "이 성에서 완성한 시설 종류는 다른 아군 성에서 지을 때 비용 −30%.",
+    "BUILD_CHAIN": "시설이 완공될 때마다 다음 시설 비용 −20%(누적 최대 −60%), 작업이 비면 초기화.",
+    "ALT_PAYMENT": "시설 작업의 남은 생산을 인망 2 또는 과학 1당 1씩 대신 치러 즉시 끝낼 수 있다.",
+    "LAST_WALL": "성 내구도가 0이 되는 공격을 한 판에 한 번 버틴다(내구 1). 대가: 성 사격 피해 −50%.",
+    "LECTURE": "이 성에 있는 아군 장수 경험치 +3/턴.",
+    "IMPART": "3턴마다 이 성 자유 장수 1명에게 이 태수의 내정 특기 1장을 1단계로 전수.",
+    "PLUNDER_ARCHIVES": "이 장수가 관여한 점령 처리에서 수탈을 고르면 과학 +15.",
+    "TOO_SMART": "연구 문턱 −30%. 대가: 연구 단계가 오를 때마다 이 성 치안 한 단계 악화.",
+    "PROCLAMATION": "이 장수가 점령 처리한 성은 치안이 한 단계 좋은 상태로 시작.",
+    "RELEASE_PROPAGANDA": "포로를 석방하면 인망 +15, 그 포로 세력의 성 하나 치안 한 단계 악화.",
+    "HOMETOWN_GOVERNOR": "등용한 장수를 원래 소속했던 성의 태수로 앉히면 그 성 점령 단계 −2. 대가: 그 성 인망 산출 절반.",
+    "LOCAL_PRIVILEGE": "회유 처리 때 점령 단계 둘을 한 번에 끝낸다. 대가: 그 성 생산 영구 −1(인망 50으로 철회).",
+    "STRICT_DISCIPLINE": "이 성에서 출진한 부대는 3턴 동안 동요 문턱 ×1.25.",
+    "COUNTER_SPY": "성 시야 +2, 사건·전법으로 이 성 치안이 떨어지지 않는다.",
+    "HARSH_TREATMENT": "치안이 불안 이상이면 정산 때 예비병 100을 써서 한 단계 회복.",
+    "MARTIAL_LAW": "이 성 치안은 무엇이 있어도 '안정'. 대가: 생산 −50%.",
+    "THREE_VISITS": "이 성에서 등용한 장수는 첫 레벨업 때 후보 카드 +1장.",
+    "REMOTE_RECRUIT": "이 성에서 다른 아군 성의 재야 장수도 등용할 수 있다.",
+    "DEFECTION_WELCOME": "아군이 적 성을 함락하면 그 성 자유 장수는 포로 대신 재야로 남는다.",
+    "CAPTIVE_DEBT": "억류한 포로 1명마다 매 턴 인망 +3, 석방하면 인망 +20. 대가: 이 성에서는 포로를 등용할 수 없다.",
+    "FIELD_DEPOT": "이 성 3칸 안에서 차례를 시작한 아군 부대 부상병 30 복귀.",
+    "RELAY_STATIONS": "아군 성끼리 잇는 길 위에서 아군 부대 이동 +1칸.",
+    "EMERGENCY_LEVY": "이 성이 포위되면 그 정산에 식량 −20으로 예비병 +150(포위마다 1회).",
+    "BLOODLESS_MUSTER": "이 성 출진은 예비병보다 부상병을 먼저 쓴다. 대가: 그 부대 첫 2턴 동요 문턱 ×0.8.",
+    "SHARED_GRANARY": "세력 모든 성이 식량 창고 하나를 함께 쓴다(포위된 성 포함). 대가: 합친 창고 상한 −20%.",
+    "INSTANT_ALLEGIANCE": "이 장수가 점령 처리에 관여한 성은 점령 단계 없이 바로 정상. 대가: 세력 전체 수탈 불가.",
+    "TALENT_MAGNET": "5턴마다 이 장수의 성에 아직 나오지 않은 장수 1명이 재야로 나타난다. 대가: 세력 등용 인망 +20%.",
+    "REGENT": "이 장수는 2칸 안 모든 아군 성의 태수로도 친다(내정 특기가 그 성들에도). 대가: 이 장수는 출진할 수 없다.",
+    "HARVEST_PULSE": "3턴마다 이 성 식량 +4.",
+    "PRODUCTION_OVERFLOW": "작업이 끝나는 턴에 남은 생산이 다음 작업으로 넘어간다.",
+    "MENTOR_CITY": "이 성 자유 장수(부대 없음) 경험치 +2/턴.",
+    "INCORRUPTIBLE": "이 성에서 수탈을 고를 수 없다. 대신 치안이 나빠질 원인 1개를 매 정산 무시.",
+    "REFUGEE_INFLOW": "5칸 안 아군·중립 성이 함락되면 이 성 인구 +1."
+  },
+  "mythicDomestic": [
+    {
+      "id": "TM-01",
+      "requiresAnyTitle": [
+        "TT-V01",
+        "TT-V07"
+      ],
+      "name": "나라 하나의 창고",
+      "classTag": "정무",
+      "text": "평시 합법 지원 · 지원량 +20% · 창고 상한 −20%",
+      "effects": [
+        {
+          "op": "SUPPORT_AMOUNT_MOD",
+          "value": 20,
+          "condition": "PEACEFUL",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "STORAGE_CAP_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "문명7 마을·천하 한 창고",
+      "cost": "창고 상한 −20%",
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "gate": "요구 칭호 중 하나 + 문관 칭호 2개 이상 + Lv 10 이상",
+      "formerName": "목우유마(木牛流馬)",
+      "reclassVersion": 319,
+      "nameShort": "국고",
+      "nameHanja": "國庫",
+      "nameGloss": "나라 하나를 먹여 살릴 큰 창고 — 나라 하나의 창고"
+    },
+    {
+      "id": "TM-02",
+      "requiresAnyTitle": [
+        "TT-V04",
+        "TT-V05"
+      ],
+      "name": "바로 따르는 민심",
+      "classTag": "감화",
+      "text": "점령 처리 · 잔여 기간 −1 · 세력 수탈 불가",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "FACTION_NO_PLUNDER",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "삼국지14 명성·영명",
+      "cost": "세력 수탈 불가",
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "gate": "요구 칭호 중 하나 + 문관 칭호 2개 이상 + Lv 10 이상",
+      "formerName": "천하귀심(天下歸心)",
+      "reclassVersion": 319,
+      "nameShort": "귀심",
+      "nameHanja": "歸心",
+      "nameGloss": "백성의 마음이 저절로 믿고 따름 — 바로 따르는 민심"
+    },
+    {
+      "id": "TM-03",
+      "requiresAnyTitle": [
+        "TT-V06",
+        "TT-V03"
+      ],
+      "name": "천하의 인재가 모인다",
+      "classTag": "감화",
+      "text": "자기 성 등용 · 인망 비용 −20% · 생산 −10%",
+      "effects": [
+        {
+          "op": "RECRUIT_COST_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ],
+      "ref": "반시드 유목민·인재 유입",
+      "cost": "생산 −10%",
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "gate": "요구 칭호 중 하나 + 문관 칭호 2개 이상 + Lv 10 이상",
+      "reclassVersion": 319,
+      "nameShort": "현집",
+      "nameHanja": "賢集",
+      "nameGloss": "천하의 어진 인재가 구름처럼 모임 — 천하의 인재가 모인다"
+    },
+    {
+      "id": "TM-04",
+      "requiresAnyTitle": [
+        "TT-V02",
+        "TT-V05"
+      ],
+      "name": "여러 성을 맡는다",
+      "classTag": "정무",
+      "text": "현재 맡은 성 · 산출 +15% · 출진 불가",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": 15,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "NO_MUSTER",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ],
+      "ref": "문명6 빅토르 범위 오라",
+      "cost": "출진 불가",
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "gate": "요구 칭호 중 하나 + 문관 칭호 2개 이상 + Lv 10 이상",
+      "formerName": "섭정",
+      "reclassVersion": 319,
+      "nameShort": "도독",
+      "nameHanja": "都督",
+      "nameGloss": "여러 성의 군사와 살림을 아울러 맡음 — 여러 성을 맡는다"
+    }
+  ],
+  "newConditions": {
+    "TARGET_CITY": "이번 공격 대상이 성(내구도)",
+    "FROM_CITY": "성 사격으로 맞음",
+    "TARGET_RIVAL": "대상이 이 장수의 숙적(같은 상대 3번 교전)"
+  },
+  "rarityPrinciple": {
+    "COMMON": "숫자",
+    "UNCOMMON": "조건",
+    "RARE": "조건·새 행동",
+    "EPIC": "다른 시스템과 연결·변환",
+    "LEGENDARY": "대가형(cost 필수)",
+    "MYTHIC": "규칙 파괴 + 대가(cost 필수)"
+  }
+}

@@ -1,3 +1,5 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {reclassCityMods,reclassScale} from './campaign-trait-reclass.mjs';
 import peopleTrial from '../data/c192-people-trial.json' with {type:'json'};
 import {relation,relationsEnabled,RELATIONS} from './campaign-relations.mjs';
 import {troopText,troopDelta} from './troop-display.mjs';
@@ -18,7 +20,7 @@ import {syncCampaignAdministrativeTerminal} from './campaign-terminal-world-appl
 export const C20=Object.freeze({facilityCost:14,facilityLimit:1,tuntianFood:3,clinicMultiplier:2,recoveryPerTurn:100,mufuRange:3,mufuCooldownReduction:1,armyCooldown:2,cityCooldown:3,duration:2,vision:3,vanguard:1.25,supply:40,muster:100,cityDamage:10,production:3,recruitCost:50,recruitDiscount:.5});
 export const C20_FACILITIES=Object.freeze({tuntian:{factionId:'F01',name:'둔전',description:'도시 식량 +3'},clinic:{factionId:'F02',name:'의원',description:'도시 부상병 회복 속도 ×2'},mufu:{factionId:'F03',name:'장막부',description:'그 성 태수의 별의 길 대기 −1턴, 3칸 안에서 차례를 시작한 부대장의 별의 길 대기 −1턴'}});
 export const C20_POLICIES=Object.freeze({F01:{name:'편입제국',description:'적 성의 가장 발전한 시설을 함락 직전 소유하던 성에서 건설 해금'},F02:{name:'탈출·재정착',description:'함락 시 주민 절반·예비병·자유 장수 탈출, 피란 대열 재정착. 성 없이도 부대가 있으면 생존'},F03:{name:'별의 길',description:'부대장·태수의 가장 높은 큰 능력에 맞는 행동 1개'}});
-export const c20Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c20Enabled=s=>isSliceMap(s.mapId);
 const alive=(s,a)=>castleArmyActive(s,a);
 const name=(s,c)=>s.cityDisplayNames?.[c.cityId]??c.name;
 const line=(s,factionId,text)=>{s.administrationLog??=[];s.administrationLog.push({turn:s.turn,factionId,text});s.administrationLog=s.administrationLog.slice(-120);};
@@ -132,7 +134,7 @@ export function useStarAction(s,command,factionId=s.playerFactionId){
  line(s,factionId,`\uBCC4\uC758 \uAE38 \u2014 ${s.officers[action.officerId].name} ${action.name}`);return s;
 }
 export const starAttackMultiplier=(s,a)=>c20Enabled(s)&&a.starVanguardTurn<=s.turn&&s.turn<=a.starVanguardTurn+1?C20.vanguard:1;
-const baseCityRecruitCost=(s,cityId,fid)=>c34Cost(s,s.cities[cityId],'recruit',c31RecruitCost(s,fid,domesticRecruitCost(s,fid,c20Enabled(s)&&fid==='F03'&&s.cities[cityId]?.ownerFactionId===fid&&s.cities[cityId].starRecruitTurn===s.turn?C20.recruitCost*C20.recruitDiscount:C20.recruitCost)));
+const baseCityRecruitCost=(s,cityId,fid)=>Math.ceil(reclassScale(c34Cost(s,s.cities[cityId],'recruit',c31RecruitCost(s,fid,domesticRecruitCost(s,fid,c20Enabled(s)&&fid==='F03'&&s.cities[cityId]?.ownerFactionId===fid&&s.cities[cityId].starRecruitTurn===s.turn?C20.recruitCost*C20.recruitDiscount:C20.recruitCost))),reclassCityMods(s,s.cities[cityId]).RECRUIT_COST_MOD));
 export function aiStarAction(s,command,fid){
  const act=starAction(s,command,fid);if(!act?.canUse)return false;
  const a=s.armies[command.armyId],c=s.cities[command.cityId];let useful=false;
@@ -156,7 +158,7 @@ export function validateCampaignPolicy(s){
 
 // One pure quote for the UI, reservation, and AI affordability guard.
 export function cityRecruitQuote(s,cityId,fid,targetId=null){
- const base=baseCityRecruitCost(s,cityId,fid);
+ const base=Math.ceil(reclassScale(baseCityRecruitCost(s,cityId,fid),s.officers[targetId]?.captivityState==='PRISONER'?reclassCityMods(s,s.cities[cityId]).CAPTIVE_RECRUIT_COST_MOD:0));
  const candidates=targetId&&relationsEnabled(s)?Object.values(s.officers).filter(o=>o.officerId!==targetId&&o.allegianceFactionId===fid&&o.lifeState==='ALIVE'&&o.captivityState==='FREE').map(o=>({o,r:relation(s,o.officerId,targetId)})):[];
  // A present rival takes priority over a friendly sponsor; never stack sponsors.
  const match=candidates.filter(x=>x.r.tier==='RIVAL').sort((a,b)=>a.o.officerId.localeCompare(b.o.officerId))[0]??candidates.filter(x=>x.r.value>=RELATION_CLOSE()).sort((a,b)=>b.r.value-a.r.value||a.o.officerId.localeCompare(b.o.officerId))[0];

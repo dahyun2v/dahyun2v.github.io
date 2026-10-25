@@ -1,3 +1,5 @@
+import {flowCoalitionPeace} from './campaign-flow.mjs';
+import {isSliceMap} from './map-primitives.mjs';
 import data from '../../docs/design-data/diplomacy-v0.1.json' with {type:'json'};
 import {recordSituationEvent} from './campaign-situations.mjs';
 import axes from '../../docs/design-data/diplomacy-axes-v0.1.json' with {type:'json'};
@@ -18,7 +20,7 @@ const combatMovement=(s,id)=>services.movement(s,id);
 const cityEconomyRates=(s,c)=>services.cityRates(s,c);
 const campaignShownCount=(s,id,factionId)=>services.shownCount(s,id,factionId);
 
-export const diplomacyEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c43Disabled!==true;
+export const diplomacyEnabled=s=>isSliceMap(s.mapId)&&s.c43Disabled!==true;
 export const diplomacyPair=(a,b)=>[a,b].sort().join('|');
 const kindName=k=>k==='TRUCE'?'휴전':'동맹';
 const name=(s,f)=>s.factions[f]?.name??f;
@@ -33,7 +35,7 @@ export function initializeDiplomacy(s){
  for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)s.c43.pairs[diplomacyPair(ids[i],ids[j])]??={state:'WAR',since:s.turn,everAgreed:false};
  return s;
 }
-export const diplomacyState=(s,a,b)=>diplomacyEnabled(s)?s.c43?.pairs[diplomacyPair(a,b)]?.state??'WAR':'WAR';
+export const diplomacyState=(s,a,b)=>flowCoalitionPeace(s,a,b)?'TRUCE':diplomacyEnabled(s)?s.c43?.pairs[diplomacyPair(a,b)]?.state??'WAR':'WAR';
 export const diplomacyHostile=(s,a,b)=>a!==b&&(!a||!b||diplomacyState(s,a,b)==='WAR');
 export const withdrawalProtection=(s,id)=>diplomacyEnabled(s)&&s.c43?.protectedArmies[id]?.until>=s.turn?s.c43.protectedArmies[id]:null;
 export const diplomacyArmyHostile=(s,a,b)=>!!s.armies[a]&&!!s.armies[b]&&diplomacyHostile(s,s.armies[a].factionId,s.armies[b].factionId)&&!withdrawalProtection(s,a)&&!withdrawalProtection(s,b);
@@ -315,7 +317,26 @@ export function diplomacyTiming(s,f,other,kind='TRUCE'){
  const p=s.c43?.pairs?.[diplomacyPair(f,other)],pending=p?.pending;
  return {kind:pending?.state??kind,startsAt:pending?.at??s.turn+1,turns:((pending?.state??kind)==='TRUCE'?data.truce.turns:null),pending:!!pending};
 }
+// C296: public presentation facts for an already contacted bilateral partner.
+// This query adds no knowledge, rules or persisted fields.
+export function diplomacyScreenFacts(s,from,to){
+ if(!diplomacyEnabled(s)||!diplomacyContact(s,from,to))return {attitude:{label:'미접촉',tone:'neutral',value:null},forecasts:{},result:null};
+ const value=diplomacyOpinion(s,to,from);
+ const pair=s.c43?.pairs?.[diplomacyPair(from,to)];
+ const endAlliance={ok:pair?.state==='ALLIANCE'&&!pair.endingAt,reason:pair?.endingAt?'이미 종료 통보 중':'',effectLines:['동맹 종료를 통보합니다. 실행 전에 확인합니다.']};
+ const forecasts=Object.fromEntries(['TRUCE','ALLIANCE'].map(kind=>{const a=diplomacyAcceptance(s,from,to,kind);return [kind,{label:Number.isFinite(a.score)?(a.score>=0?'높음':'낮음'):'확인 불가',reasons:a.effectLines??[]}];}));
+ const last=[...(s.c43?.history??[])].reverse().find(e=>['ACCEPT','REJECT','GIFT','END_NOTICE'].includes(e.type)&&((e.from===from&&e.to===to)||(e.from===to&&e.to===from)));
+ const text=last?({ACCEPT:`${kindName(last.kind)} 제안을 받아들였습니다. 다음 차례부터 적용됩니다.`,REJECT:`${kindName(last.kind)} 제안을 거절했습니다.`,GIFT:`선물을 전했습니다. 인망 −${gift.cost}`,END_NOTICE:'동맹 종료를 통보했습니다. 다음 차례부터 적용됩니다.'})[last.type]:null;
+ return {attitude:{label:value>=20?'우호':value<=-20?'적대':'보통',tone:value>=20?'positive':value<=-20?'negative':'neutral',value},forecasts,endAlliance,allianceEffect:'서로 공격하지 않습니다. 자동으로 함께 싸우지는 않습니다.',result:last?{type:last.type,kind:last.kind,text}:null};
+}
+// Public third-party relations: both parties must have been observed by this player.
+// Symmetric engine contact also includes the other side's knowledge, so do not use it here.
+export function diplomacyPublicRelations(s,f){
+ const k=s.knowledge?.[f],met=new Set([f,...Object.values(k?.cities??{}).map(c=>c.ownerFactionId),...Object.values(k?.observedArmies??{}).map(a=>a.factionId)]);
+ return Object.entries(s.c43?.pairs??{}).flatMap(([key,p])=>{const [from,to]=key.split('|');return met.has(from)&&met.has(to)&&s.factions[from]?.alive&&s.factions[to]?.alive?[{from,to,state:p.state}]:[];});
+}
 export function diplomacyView(s,f){return {
+ publicRelations:diplomacyPublicRelations(s,f),
  me:{trust:reputation(s,'trust',f),threat:reputation(s,'threat',f)},
  factions:Object.keys(s.factions).filter(id=>id!==f&&s.factions[id].alive).sort().map(id=>{const p=s.c43.pairs[diplomacyPair(f,id)],truce=canProposeDiplomacy(s,f,id,'TRUCE'),alliance=canProposeDiplomacy(s,f,id,'ALLIANCE');return {factionId:id,name:name(s,id),opinionOfMe:diplomacyOpinion(s,id,f),myOpinion:diplomacyOpinion(s,f,id),opinionReasons:diplomacyOpinionReasons(s,id,f).map(r=>({text:opinionModifiers[r.key].text.replace(/C\d+\s*/g,''),value:r.value,turnsLeft:r.persistent?null:r.remaining})),trust:reputation(s,'trust',id),threat:reputation(s,'threat',id),state:p.state,...(p.state==='TRUCE'?{turnsLeft:p.until-s.turn+1}:{}),...(p.endingAt?{endingAt:p.endingAt}:{}),contact:diplomacyContact(s,f,id),canGift:canGift(s,f,id),canPropose:{TRUCE:truce,ALLIANCE:alliance},aiStance:{TRUCE:diplomacyAcceptance(s,f,id,'TRUCE'),ALLIANCE:diplomacyAcceptance(s,f,id,'ALLIANCE')}};}),
  incoming:s.c43.proposals.filter(p=>p.to===f&&p.status==='PENDING').map(p=>({proposalId:p.id,from:p.from,fromName:name(s,p.from),kind:p.kind,expiresTurn:p.expiresTurn??p.turn+data.proposal.responseTurns-1})),

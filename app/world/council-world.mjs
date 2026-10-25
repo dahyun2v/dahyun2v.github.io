@@ -3,7 +3,7 @@
 // Claude 2026-10-10. 석실 화면(seoksil/screens/council.mjs)의 흐름(군사 고르기 → 안건 고르기 → 결의/보류 → 평정 마침)을 그대로 따른다.
 import {COUNCIL,COUNCIL_ADOPTION_AFFINITY,councilCandidates,councilOpinions} from '/src/campaign-council.mjs';
 import {campaignDate} from '/src/campaign-map-model.mjs';
-import {readableError,campaignHorizonText,noFieldArmyText} from '/app/world/hud-ink.mjs';
+import {readableError,campaignHorizonText,noFieldArmyText,particle,josa} from '/app/world/hud-ink.mjs';
 import {CAMPAIGN_TURN_LIMIT} from '/src/campaign-runtime.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
@@ -58,19 +58,19 @@ export function renderCouncilWorld(root, state, ctx) {
       return `<button class="wc-row${id === (u.pick ?? c.strategistId) ? ' is-picked' : ''}" data-pick-officer="${esc(id)}"><span class="wc-ic">군사</span><span class="wc-face">${f ? `<img src="${esc(f)}" alt="">` : ''}</span><span class="wc-tx"><b>${esc(name(id))}</b><small>${id === c.strategistId ? '지금 군사' : '군사 후보'} · 지략 ${st.intelligence ?? '—'} · 지휘 ${st.leadership ?? '—'} · 정무 ${st.politics ?? '—'}</small></span></button>`; }).join('');
   } else {
     rows = c.proposals.map((p) => { const k = KIND[p.kind], st = p.decision, f = ctx.face?.(p.proposerId);
-      return `<button class="wc-row${p.id === u.selectedId ? ' is-picked' : ''}${st ? ' is-done' : ''}" data-proposal="${esc(p.id)}"><span class="wc-ic" data-kind="${esc(p.kind)}">${GLYPH[p.kind] ?? '안건'}</span><span class="wc-face">${f ? `<img src="${esc(f)}" alt="">` : ''}</span><span class="wc-tx"><b>${esc(k?.label ?? p.kind)} <em>${esc(name(p.proposerId))}</em></b><small>${esc(p.what)}</small></span><span class="wc-st ${st === 'APPROVE' ? 'ok' : st === 'HOLD' ? 'hold' : ''}">${st === 'APPROVE' ? '결의' : st === 'HOLD' ? '보류' : ''}</span></button>`; }).join('') || '<p class="wc-none">올라온 안건이 없습니다.</p>';
+      return `<button class="wc-row${p.id === u.selectedId ? ' is-picked' : ''}${st ? ' is-done' : ''}" data-proposal="${esc(p.id)}"><span class="wc-ic" data-kind="${esc(p.kind)}">${GLYPH[p.kind] ?? '안건'}</span><span class="wc-face">${f ? `<img src="${esc(f)}" alt="">` : ''}</span><span class="wc-tx"><b>${esc(k?.label ?? p.kind)} <em>${esc(name(p.proposerId))}</em></b><small>${esc(josa(p.what))}</small></span><span class="wc-st ${st === 'APPROVE' ? 'ok' : st === 'HOLD' ? 'hold' : ''}">${st === 'APPROVE' ? '결의' : st === 'HOLD' ? '보류' : ''}</span></button>`; }).join('') || '<p class="wc-none">올라온 안건이 없습니다.</p>';
   }
 
   // ── 가운데: 군사 보고 / 고른 안건 ──
   const fx = COUNCIL.decision.fulfilled.effects, bx = COUNCIL.decision.broken.effects;
   let detail;
   if (u.appoint) {
-    detail = `<h3>군사</h3><p class="wc-say">${firstChoice ? `첫 평정이다. 곁에서 보고하고 계책을 낼 군사를 고른다. 고르지 않으면 ${esc(name(c.strategistId))}이(가) 맡는다.` : '군사는 평정마다 한 번 바꿀 수 있다.'}</p><p class="wc-note">지략 ${COUNCIL.strategist.foresight.intelligenceAtLeast} 이상이면 보고에 적의 다음 수를 짐작하는 한 줄이 붙는다.</p>`;
+    detail = `<h3>군사</h3><p class="wc-say">${firstChoice ? `첫 평정이다. 곁에서 보고하고 계책을 낼 군사를 고른다. 고르지 않으면 ${esc(particle(name(c.strategistId)))} 맡는다.` : '군사는 평정마다 한 번 바꿀 수 있다.'}</p><p class="wc-note">지략 ${COUNCIL.strategist.foresight.intelligenceAtLeast} 이상이면 보고에 적의 다음 수를 짐작하는 한 줄이 붙는다.</p>`;
   } else if (selected) {
     const opinions=councilOpinions(state,selected);
     const faces=opinions.map(p=>`<div class="wc-opinion ${p.stance==='FOR'?'is-for':'is-against'}"><span class="wc-face">${ctx.face?.(p.officerId)?`<img src="${esc(ctx.face(p.officerId))}" alt="${esc(name(p.officerId))}">`:''}</span><p><b>${esc(name(p.officerId))} · ${p.officerId===selected.proposerId?'제안자':p.stance==='FOR'?'찬성':'반대'}</b><small>${esc(p.reason)}</small></p></div>`).join('');
-    detail = `<h3>${esc(KIND[selected.kind]?.label ?? selected.kind)} <small>${esc(name(selected.proposerId))} · ${esc(shortDate(c.turn + 2))}까지</small></h3><p class="wc-say">“${esc(selected.what)}”</p>
-      <dl class="wc-facts"><div><dt>기대</dt><dd>${esc(selected.expected)}</dd></div><div><dt>위험</dt><dd>${esc(selected.risk)}</dd></div>
+    detail = `<h3>${esc(KIND[selected.kind]?.label ?? selected.kind)} <small>${esc(name(selected.proposerId))} · ${esc(shortDate(c.turn + 2))}까지</small></h3><p class="wc-say">“${esc(josa(selected.what))}”</p>
+      <dl class="wc-facts"><div><dt>기대</dt><dd>${esc(josa(selected.expected))}</dd></div><div><dt>위험</dt><dd>${esc(selected.risk)}</dd></div>
       <div><dt>채택하면</dt><dd>${esc(name(selected.proposerId))} · 군주와 친밀 +${COUNCIL_ADOPTION_AFFINITY}</dd></div><div><dt>지키면</dt><dd>${esc(name(selected.proposerId))} 경험 +${fx.proposerExperience} · 친밀 +${fx.rulerAffinity}</dd></div><div><dt>어기면</dt><dd>군주와 친밀 ${bx.rulerAffinity}</dd></div></dl><div class="wc-opinions" aria-label="참석자 찬반">${faces}</div>`;
   } else {
     const lines = (open ? c.report : [c.advisorLine ?? '변경은 조용합니다.']).map(l=>campaignHorizonText(l,state.turn,CAMPAIGN_TURN_LIMIT));
@@ -78,6 +78,9 @@ export function renderCouncilWorld(root, state, ctx) {
     if(noArmy)lines.push(noArmy);
     detail = `<h3>${open ? `군사 ${esc(strategist?.name ?? '')}의 보고` : '군사 한마디'}</h3>${lines.map((l) => `<p class="wc-line">${esc(l)}</p>`).join('') || '<p class="wc-line">보고할 것이 없습니다.</p>'}`;
   }
+
+  const followups=(c.resolutions??[]).filter(r=>r.status==='ACTIVE'&&['CITY_DEVELOP','RECRUIT'].includes(r.kind));
+  if(followups.length)detail+=`<aside class="wc-followups" aria-label="결의 실행 안내">${followups.map(r=>`<p>${r.kind==='CITY_DEVELOP'?'결의를 지키려면 그 성에서 생산을 바꾸세요.':'재야 장수는 그 성 주점에서 부를 수 있습니다.'}<button class="wc-btn" data-c489-follow="${esc(r.proposalId)}">${r.kind==='CITY_DEVELOP'?'생산 바꾸기':'주점으로'}</button></p>`).join('')}</aside>`;
 
   // ── 오른쪽: 큰 인장 + 작은 단추 ──
   let sealOn = false, sealLabel, sealAct = 'approve', small = '';
@@ -125,6 +128,7 @@ export function renderCouncilWorld(root, state, ctx) {
     setTimeout(() => { if (send({type: 'COUNCIL_DECIDE', proposalId: id, decision: 'APPROVE'})) u.selectedId = null; rerender(); }, 450); });
   on('close-council', () => { send({type: 'COUNCIL_CLOSE'}); ctx.close?.(); });
   on('exit', () => ctx.close?.());
+  for(const button of root.querySelectorAll('[data-c489-follow]'))button.onclick=()=>{const r=followups.find(r=>r.proposalId===button.dataset.c489Follow);if(!r)return;ctx.close?.();ctx.followResolution?.(r);};
   on('who', () => { ctx.close?.(); document.querySelector('#roster-open')?.click(); });   // 참석자 = 명부(평정은 열어 둔 채 닫힌다 — 다시 열면 그대로)
 }
 

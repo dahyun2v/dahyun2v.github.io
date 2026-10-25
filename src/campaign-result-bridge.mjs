@@ -1,3 +1,10 @@
+import {campaignScenarioRules} from './campaign-scenario-data.mjs';
+import {campaignMechShareSettlement, campaignMechQuery, campaignMechCommit, campaignMechPlan, hasCampaignMechQuery} from './campaign-mech-contracts.mjs';
+import {cloneCampaign} from './campaign-clone.mjs';
+import {validatePersonnelLedger} from './military-personnel-ledger.mjs';
+import {domesticSecurity} from './campaign-rule-registry.mjs';
+import {hexDistance} from './map-primitives.mjs';
+import {reclassCityMods} from './campaign-trait-reclass.mjs';
 import {engineEvent} from './campaign-engines.mjs';
 import {injuryDefeats} from './campaign-injury.mjs';
 import {recordSituationEvent} from './campaign-situations.mjs';
@@ -14,6 +21,7 @@ import {syncResearchCities} from './campaign-roster.mjs';
 import {syncCampaignAdministrativeTerminal} from './campaign-terminal-world-application.mjs';
 import {hasCampaignRule,effectModifiers,triggerEffects} from './campaign-effects.mjs';
 import {getFactionView} from './knowledge.mjs';
+import {updateCampaignKnowledge} from './campaign-vision.mjs';
 import {troopToCampaign} from './campaign-adapters.mjs';
 import {createPersonnelLedger,classifyBattleCasualties} from './military-personnel-ledger.mjs';
 import {adjudicateCampaignRetreatFate} from './campaign-retreat-fate-adjudicator.mjs';
@@ -34,8 +42,36 @@ export function campaignPersonnel(world) {
     targetStrength:a.troopCount,specialSupportAvailable:false})),lots:[]});
 }
 
+// Transfer actual wounds on a detached ledger; no replacement troops are minted.
+export function settleMechPersonnel(s,operation,context){
+ if(!hasCampaignMechQuery('H02')||s.mechContracts?.personnelEvents?.[context.eventId])return s;
+ const plan=campaignMechPlan(s,'H02',operation,context,{transfers:[]});
+ if(!Array.isArray(plan.transfers))throw new Error('INVALID_MECH_PERSONNEL_PLAN');
+ if(!plan.transfers.length)return s;
+ const next=cloneCampaign(s);
+ for(const [index,row] of plan.transfers.entries()){
+  const from=next.armies[row.fromId],to=next.armies[row.toId],f=next.personnel.formations.find(f=>f.formationId===row.toId);
+  if(!from||!to||from===to||!f||!Number.isSafeInteger(row.count)||row.count<1||row.mode!==undefined&&!['WOUNDED','FIELD'].includes(row.mode)||row.securityDelta!==undefined&&(!Number.isSafeInteger(row.securityDelta)||row.securityDelta<0||row.securityDelta>2))throw new Error('INVALID_MECH_PERSONNEL_TRANSFER');
+  if(row.cityId&&(!next.cities[row.cityId]||next.cities[row.cityId].ownerFactionId!==to.factionId))throw new Error('INVALID_MECH_SECURITY_CITY');
+  const lots=next.personnel.lots.filter(l=>l.kind==='WOUNDED'&&l.originFormationId===row.fromId&&(!row.lotIds||row.lotIds.includes(l.lotId)));
+  if(lots.reduce((n,l)=>n+l.count,0)<row.count||from.woundedCount<row.count||row.mode==='FIELD'&&(to.hp<=0||to.morale==='ROUTING'||f.field+row.count>f.targetStrength))throw new Error('INSUFFICIENT_MECH_WOUNDED');
+  let remaining=row.count;
+  for(const lot of lots){const n=Math.min(remaining,lot.count);if(!n)continue;lot.count-=n;remaining-=n;
+   if(row.mode==='FIELD'){f.field+=n;to.troopCount+=n;}
+   else next.personnel.lots.push({...lot,lotId:`MH02.${context.eventId}.${index}.${lot.lotId}`,originFormationId:row.toId,nodeId:f.nodeId,count:n});
+  }
+  from.woundedCount-=row.count;if(row.mode!=='FIELD')to.woundedCount+=row.count;
+  if(row.securityDelta){if(!row.cityId)throw new Error('MECH_SECURITY_CITY_REQUIRED');domesticSecurity(next,next.cities[row.cityId],row.securityDelta,'TACTIC');}
+ }
+ validatePersonnelLedger(next.personnel);
+ next.mechContracts??={spent:{}};next.mechContracts.personnelEvents??={};next.mechContracts.personnelEvents[context.eventId]=true;
+ for(const [id,a] of Object.entries(s.armies)){Object.assign(a,next.armies[id]);next.armies[id]=a;}
+ Object.assign(s,next);return s;
+}
+
 export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads) {
   if(!defeatPayloads.length&&!cityCapturePayloads.length)return world;
+  if(world.campaignTerminalWorld?.publicProbe)return world; // Public combat already settled losses; synthetic officers have no canonical fate/occupation ledger.
   defeatPayloads=injuryDefeats(world,defeatPayloads);
   const welcome=domesticWelcomeCapture(world,cityCapturePayloads);
   preparePolicyCapture(world,cityCapturePayloads);
@@ -48,7 +84,7 @@ export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads)
   }
   world.terminalBatchSequence=(world.terminalBatchSequence??0)+1;
   const terminal=settleConfirmedCampaignTerminalBatch(base,{batchId:`C3a.${world.globalTick}.${world.terminalBatchSequence}`,
-    globalTick:world.globalTick,defeatPayloads,cityCapturePayloads},{deferResult:true,deferExtinction:true,allowRecapture:true,allowUngovernedNormal:true});
+    globalTick:world.globalTick,defeatPayloads,cityCapturePayloads},{unificationMajorCities:campaignScenarioRules(world).unificationMajorCities,deferResult:true,deferExtinction:true,allowRecapture:true,allowUngovernedNormal:true});
   let next=applyCampaignTerminalStateToWorld(world,terminal,{allowCitylessAlive:true,allowSupersededOccupation:true,allowUngovernedNormal:true});
   next.terminal=terminal;
   for(const p of defeatPayloads)if(terminal.armiesById[p.defeatedArmyId]?.disposition==='DEFEATED')recordSituationEvent(next,'ARMY_DESTROYED',world.armies[p.defeatedArmyId].factionId);
@@ -63,6 +99,7 @@ export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads)
     productionEnabled:false,recruitmentEnabled:false,replenishmentEnabled:false};
   for(const payload of cityCapturePayloads){
     const city=next.cities[payload.capturedCityId];city.durability=0;
+    for(const home of Object.values(next.cities))if(home.cityId!==city.cityId&&(payload.formerOwnerFactionId===null||payload.formerOwnerFactionId===home.ownerFactionId)&&(reclassCityMods(next,home,{nearCapture:true}).POPULATION_GROWTH_MOD??0)>0&&hexDistance(next.tiles[home.tileId],next.tiles[city.tileId])<=5){home.c319??={};home.c319.nearCaptureUntil=next.turn+1;}
     const army=Object.values(next.armies).filter(a=>a.factionId===payload.occupierFactionId&&a.tileId===city.tileId&&a.troopCount>0)
       .sort((a,b)=>a.armyId.localeCompare(b.armyId))[0];
     if(army)triggerEffects(next,army.armyId,'ON_CAPTURE_CITY',{cityId:city.cityId});
@@ -75,8 +112,12 @@ export function settleCampaignPayloads(world,defeatPayloads,cityCapturePayloads)
   return finishC22Crisis(refreshCampaignSieges(next));
 }
 
-export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLossRatio=0,captorByArmyId={},attackingCityId=null,escapeCommanderIds=[]}={}) {
+export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLossRatio=0,captorByArmyId={},attackingCityId=null,escapeCommanderIds=[],mechContext={}}={}) {
+  campaignMechShareSettlement(world,snapshot.units,{...mechContext,sourceId:mechContext.sourceId??attackingCityId,eventId:snapshot.battleId});
   supplyCombat(world,snapshot.units.map(u=>u.unitId));
+  // Movement can precede the defeated faction's next observation refresh.
+  // Adjudication must consume current public facts, before losses remove vision.
+  if(snapshot.units.some(u=>u.unitState==='ELIMINATED'))updateCampaignKnowledge(world);
   world.economy??={lastSettledTurn:null,readyAt:{},occupationStatus:{}};
   world.economy.combatCities??={};
   for(const city of Object.values(world.cities))if(snapshot.units.some(u=>{
@@ -85,8 +126,17 @@ export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLos
   }))world.economy.combatCities[city.cityId]=world.turn;
   // Defeating the garrison is necessary; ownership changes only on a later center entry.
   const capturePayloads=[];
-  const defeatPayloads=snapshot.units.filter(u=>u.unitState==='ELIMINATED').map(u=>{
+  let defeatPayloads=snapshot.units.filter(u=>u.unitState==='ELIMINATED').map(u=>{
     const a=world.armies[u.unitId],v=getFactionView(world,a.factionId);
+    // A confirmed hit identifies its participating opponent even when another
+    // observer supplied the shot's sight. Only this battle's units enter the
+    // retreat facts; the map knowledge and unseen bystanders remain unchanged.
+    for(const participant of snapshot.units){
+      const enemy=world.armies[participant.unitId];
+      if(enemy.factionId===a.factionId)continue;
+      v.knowledge.tiles[enemy.tileId]='VISIBLE';
+      v.knowledge.observedArmies[enemy.armyId]={armyId:enemy.armyId,factionId:enemy.factionId,tileId:enemy.tileId};
+    }
     if(c33Owned(world,a.armyId,'LUCKY_ESCAPE')||c33Owned(world,a.armyId,'BLOODY_PATH')||escapeCommanderIds.includes(a.armyId)||uniqueGuardedCommander(world,a.armyId)||uniqueOwned(world,a.armyId,'U_NO_SURRENDER')||uniqueOwned(world,a.armyId,'U_RISE_AGAIN')&&(a.c32?.revivals??0)<2)return {transactionId:`RD.${world.battleSequence}.${a.armyId}`,sourceResultId:snapshot.battleId.replaceAll(':','.'),globalTick:world.globalTick,defeatedArmyId:a.armyId,commanderFate:'ESCAPED',captorFactionId:null};
     const occupancy=a=>({armyId:a.armyId,factionId:a.factionId,tileId:a.tileId});
     // Retreat facts describe occupied tiles. Keep the defeated identity when
@@ -107,14 +157,16 @@ export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLos
         tiles:Object.values(v.tiles).map(t=>({tileId:t.tileId,q:t.q,r:t.r,knowledge:v.knowledge.tiles[t.tileId]})),edges:v.knownEdges.map((e,i)=>({...e,edgeId:`E.${i}`})),
         ownArmies:occupiedTiles(Object.values(v.ownArmies)),observedHostileArmies:occupiedTiles(Object.values(v.knowledge.observedArmies)),
         ...(attackingCityId?{observedHostileCities:Object.values(v.knowledge.cities).filter(c=>c.cityId===attackingCityId&&v.knowledge.tiles[c.tileId]==='VISIBLE').map(c=>({cityId:c.cityId,factionId:c.ownerFactionId,tileId:c.tileId}))}:{})},
-      entropy:{mode:'SAVED_SEED',savedSeed:world.campaignSeed,rollBasisPoints:null}});
+      entropy:{mode:'SAVED_SEED',savedSeed:world.campaignSeed,rollBasisPoints:null}},{captureWeight:effectModifiers(world,a.armyId).CAPTURE_WEIGHT_MOD+(killer?effectModifiers(world,killer.unitId,['ON_KILL'],{targetId:a.armyId}).CAPTURE_WEIGHT_MOD:0)});
   });
-  const lossRatio=id=>Math.max(permanentLossRatio===0?0:.05,permanentLossRatio-effectModifiers(world,id,['ON_DEFEND']).CASUALTY_SHIFT/100);
+  defeatPayloads=campaignMechQuery(world,'H02','defeatPayloads',{...mechContext,eventId:snapshot.battleId,snapshot},defeatPayloads);
+  const lossRatio=id=>campaignMechQuery(world,'H02','permanentLossRatio',{...mechContext,eventId:snapshot.battleId,targetId:id,snapshot},Math.max(permanentLossRatio===0?0:.05,permanentLossRatio-effectModifiers(world,id,['ON_DEFEND']).CASUALTY_SHIFT/100));
   const allocations=snapshot.units.map(u=>{const f=world.personnel.formations.find(f=>f.formationId===u.unitId);
     // Legacy callers retain all wounds; direct-map combat supplies the 30% split.
     const dead=Math.round(u.casualties*lossRatio(u.unitId));
     return {unitId:u.unitId,formationId:u.unitId,wounded:u.casualties-dead,permanentLoss:dead,
       recoveryNodeId:f.nodeId,woundedLotId:`W.${world.battleSequence}.${u.unitId}`,lossId:`L.${world.battleSequence}.${u.unitId}`};});
+  world=campaignMechCommit(world,'H01','beforeLossSettlement',{...mechContext,eventId:snapshot.battleId,snapshot,allocations});
   engineEvent(world,'BEFORE_DAMAGE',{units:snapshot.units});
   world.personnel=classifyBattleCasualties(world.personnel,{operationId:`B.${world.battleSequence}`,
     expectedRevision:world.personnel.revision,snapshot,allocations}).ledger;
@@ -124,6 +176,9 @@ export function settleCampaignRound(world,snapshot,winnerFactionId,{permanentLos
     else if(['CONTACT','EDGE_CONTACT'].includes(a.currentOrder?.status))a.currentOrder.status='ACTIVE';}
   engineEvent(world,'AFTER_DAMAGE',{units:snapshot.units});
   for(const u of snapshot.units)if(!u.postBattleCount&&u.preBattleCount>0)engineEvent(world,'KILL',{armyId:u.unitId,winnerFactionId});
+  world=campaignMechCommit(world,'H01','lossSettled',{...mechContext,eventId:snapshot.battleId,snapshot,allocations});
+  world=campaignMechCommit(world,'H02','personnelSettled',{...mechContext,eventId:snapshot.battleId,snapshot,allocations});
+  world=settleMechPersonnel(world,'personnelPlan',{...mechContext,eventId:snapshot.battleId,snapshot,allocations});
   return settleCampaignPayloads(world,defeatPayloads,capturePayloads);
 }
 
@@ -146,9 +201,10 @@ export function settleCampaignSuccession(world) {
 }
 
 export function settleCampaignTurnEnd(world) {
+  world=campaignMechCommit(world,'H02','turnEnd',{eventId:`TURN_END.${world.turn}.${world.globalTick}`});
   refreshCampaignSieges(world);
   if(world.terminal){
-    const terminal=settleConfirmedCampaignTerminalBatch(world.terminal,{batchId:`C3a.END.${world.globalTick}`,globalTick:world.globalTick,defeatPayloads:[],cityCapturePayloads:[]},{settleTurnEnd:true,deferResult:true,policySurvival:c20Enabled(world),allowRecapture:true,allowUngovernedNormal:true});
+    const terminal=settleConfirmedCampaignTerminalBatch(world.terminal,{batchId:`C3a.END.${world.globalTick}`,globalTick:world.globalTick,defeatPayloads:[],cityCapturePayloads:[]},{unificationMajorCities:campaignScenarioRules(world).unificationMajorCities,settleTurnEnd:true,deferResult:true,policySurvival:c20Enabled(world),allowRecapture:true,allowUngovernedNormal:true});
     world={...applyCampaignTerminalStateToWorld(world,terminal,{allowCitylessAlive:true,allowSupersededOccupation:true,allowUngovernedNormal:true}),terminal};
   }
   world=settleCampaignSuccession(world);
@@ -157,7 +213,7 @@ export function settleCampaignTurnEnd(world) {
   const living=terminal.factionOrder.filter(id=>terminal.factionsById[id].alive);
   const defeated=!terminal.factionsById[world.playerFactionId].alive;
   const winner=living.find(fid=>terminal.cityOrder.filter(id=>terminal.citiesById[id].kind!=='minor').every(id=>terminal.citiesById[id].ownerFactionId===fid));
-  const unified=!!winner&&(c20Enabled(world)||living.length===1);
+  const unified=!!winner&&terminal.cityOrder.filter(id=>terminal.citiesById[id].kind!=='minor').length===campaignScenarioRules(world).unificationMajorCities&&(c20Enabled(world)||living.length===1);
   if(!defeated&&!unified)return world;
   const finalized=finalizeCampaignTerminalState(terminal,{recordId:`REC.ZC3a.END.${world.globalTick}`,reportId:`REPORT.C2.${world.globalTick}`,
     globalTick:world.globalTick,type:unified?'UNIFICATION':'PLAYER_DEFEAT',winnerFactionId:unified?winner:living.length===1?living[0]:null,

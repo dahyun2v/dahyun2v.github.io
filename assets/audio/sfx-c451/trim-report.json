@@ -1,0 +1,98 @@
+{
+ "sword-core-a": {
+  "ms": 160,
+  "sr": 44100,
+  "onset_ms_in_raw": 32,
+  "rms_dbfs": -26.0
+ },
+ "blade-edge-a": {
+  "ms": 70,
+  "sr": 44100,
+  "onset_ms_in_raw": 49,
+  "rms_dbfs": -29.3
+ },
+ "hoof-run-a": {
+  "ms": 180,
+  "sr": 44100,
+  "onset_ms_in_raw": 13,
+  "rms_dbfs": -28.3
+ },
+ "charge-wall-a": {
+  "ms": 210,
+  "sr": 44100,
+  "onset_ms_in_raw": 28,
+  "rms_dbfs": -22.7
+ },
+ "bow-release-a": {
+  "ms": 90,
+  "sr": 44100,
+  "onset_ms_in_raw": 37,
+  "rms_dbfs": -19.4
+ },
+ "volley-air-a": {
+  "ms": 160,
+  "sr": 44100,
+  "onset_ms_in_raw": 35,
+  "rms_dbfs": -29.7
+ },
+ "arrow-hit-group-a": {
+  "ms": 150,
+  "sr": 44100,
+  "onset_ms_in_raw": 47,
+  "rms_dbfs": -26.8
+ },
+ "siege-impact-a": {
+  "ms": 220,
+  "sr": 44100,
+  "onset_ms_in_raw": 61,
+  "rms_dbfs": -22.9
+ },
+ "hit-cloth-a": {
+  "ms": 140,
+  "sr": 44100,
+  "onset_ms_in_raw": 19,
+  "rms_dbfs": -22.6
+ },
+ "ui-order-soft-a": {
+  "ms": 60,
+  "sr": 44100,
+  "onset_ms_in_raw": 69,
+  "rms_dbfs": -18.6
+ },
+ "ui-paper-open-a": {
+  "ms": 180,
+  "sr": 44100,
+  "onset_ms_in_raw": 94,
+  "rms_dbfs": -26.8
+ },
+ "ui-paper-close-a": {
+  "ms": 80,
+  "sr": 44100,
+  "onset_ms_in_raw": 114,
+  "rms_dbfs": -25.5
+ },
+ "tactic-core-a": {
+  "ms": 220,
+  "sr": 44100,
+  "onset_ms_in_raw": 15,
+  "rms_dbfs": -15.1
+ },
+ "fire-ignite-a": {
+  "ms": 300,
+  "sr": 44100,
+  "onset_ms_in_raw": 68,
+  "rms_dbfs": -31.9
+ },
+ "rout-break-a": {
+  "ms": 160,
+  "sr": 44100,
+  "onset_ms_in_raw": 128,
+  "rms_dbfs": -27.2
+ },
+ "capture-flag-a": {
+  "ms": 200,
+  "sr": 44100,
+  "onset_ms_in_raw": 26,
+  "rms_dbfs": -23.3
+ }
+}

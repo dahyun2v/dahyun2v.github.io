@@ -1,0 +1,847 @@
+{
+  "status": "초안 — 확정 아님(내정 콘텐츠 방 2026-10-24). 수치는 시험값, 효과 키 중 existing=false 는 C473~C475 에서 새로 만들 키",
+  "design": "docs/work-integration/20261024/naejeong-content/LEARNING-CARDS.md",
+  "thresholds": [
+    200,
+    500,
+    900,
+    1400,
+    2000
+  ],
+  "degree": {
+    "조금": 0.1,
+    "꽤": 0.2,
+    "크게": 0.3
+  },
+  "draw": {
+    "cards": 3,
+    "slots": [
+      {
+        "slot": 1,
+        "colors": [
+          "군"
+        ]
+      },
+      {
+        "slot": 2,
+        "colors": [
+          "내정"
+        ]
+      },
+      {
+        "slot": 3,
+        "colors": [
+          "군",
+          "내정",
+          "천하",
+          "시기"
+        ]
+      }
+    ],
+    "tierOrder": "같은 family 는 앞 단계를 고른 뒤에만 다음 단계가 후보",
+    "unchosen": "후보 더미로 돌아감(시기 카드만 사라짐)",
+    "troopWeight": "세력이 가장 많이 거느린 병종 둘의 family 는 뽑힐 무게 2배(실제로 쓰는 병종)",
+    "eurekaWindow": "문턱을 넘은 그 차례에 고름 — 멈추지 않고 고르지 않으면 차례가 끝날 때 첫 장 자동",
+    "siegeTag": "tags 에 공성이 있는 카드 4장(운제 · 투석 개발 · 벽력 · 공병 육성). 태수 특기 발명가(C33 INVENTOR) v3 = 고른 공성 카드 수 × 공성 피해 +5%(최대 15%) + 공성 카드 뜰 무게 2배(능력 체계 방 e1f4d759 DOMESTIC-V3-TRAITS.md)"
+  },
+  "cards": [
+    {"id": "LC-SPEAR-1",
+      "color": "군",
+      "family": "spear",
+      "tier": 1,
+      "name": "창병 단련",
+      "text": "창병의 방어가 조금 오른다.",
+      "effect": {
+        "kind": "DEFENSE_MOD",
+        "value": 10,
+        "condition": "TROOP:BT02",
+        "existing": true
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 창병단련"
+    },
+    {"id": "LC-SPEAR-2",
+      "color": "군",
+      "family": "spear",
+      "tier": 2,
+      "name": "방진 편성",
+      "text": "방진대를 출진시킬 수 있다.",
+      "effect": {
+        "kind": "UNLOCK_SPECIAL_TROOP",
+        "value": "방진대",
+        "existing": true,
+        "note": "지금 연구 1단계 효과를 옮김(campaign-special-troops.mjs:4)"
+      },
+      "requires": [
+        "LC-SPEAR-1"
+      ],
+      "ref": "삼국지11 기교 2단계 = 특수 동작 → 우리는 특수병종 허가"
+    },
+    {"id": "LC-SPEAR-3",
+      "color": "군",
+      "family": "spear",
+      "tier": 3,
+      "name": "정예 창병",
+      "text": "숙련 창병이 더 세진다.",
+      "effect": {
+        "kind": "VETERAN_BONUS",
+        "value": 10,
+        "condition": "TROOP:BT02",
+        "existing": false,
+        "note": "전원 숙련 +20% 에 +10%p(C473)"
+      },
+      "requires": [
+        "LC-SPEAR-2"
+      ],
+      "ref": "삼국지11 기교 정예창병"
+    },
+    {"id": "LC-BLADE-1",
+      "color": "군",
+      "family": "blade",
+      "tier": 1,
+      "name": "도병 단련",
+      "text": "도병의 공격이 조금 오른다.",
+      "effect": {
+        "kind": "DAMAGE_MOD",
+        "value": 10,
+        "condition": "TROOP:BT01",
+        "existing": true
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 극병단련"
+    },
+    {"id": "LC-BLADE-2",
+      "color": "군",
+      "family": "blade",
+      "tier": 2,
+      "name": "큰 방패",
+      "text": "도병이 화살에 덜 다친다.",
+      "effect": {
+        "kind": "DEFENSE_MOD",
+        "value": 20,
+        "condition": "TROOP:BT01&RANGED_HIT",
+        "existing": true,
+        "note": "RANGED_HIT 조건은 새로 필요할 수 있음"
+      },
+      "requires": [
+        "LC-BLADE-1"
+      ],
+      "ref": "삼국지11 기교 대순"
+    },
+    {"id": "LC-BLADE-3",
+      "color": "군",
+      "family": "blade",
+      "tier": 3,
+      "name": "정예 도병",
+      "text": "숙련 도병이 더 세진다.",
+      "effect": {
+        "kind": "VETERAN_BONUS",
+        "value": 10,
+        "condition": "TROOP:BT01",
+        "existing": false
+      },
+      "requires": [
+        "LC-BLADE-2"
+      ],
+      "ref": "삼국지11 기교 정예극병"
+    },
+    {"id": "LC-HORSE-1",
+      "color": "군",
+      "family": "cavalry",
+      "tier": 1,
+      "name": "기병 단련",
+      "text": "기병의 공격이 조금 오른다.",
+      "effect": {
+        "kind": "DAMAGE_MOD",
+        "value": 10,
+        "condition": "TROOP:BT04",
+        "existing": true,
+        "note": "옛 초안의 '이동 +1' 은 기병 Q 돌파 · 계통 이동과 겹쳐 뺌"
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 기병단련"
+    },
+    {"id": "LC-HORSE-2",
+      "color": "군",
+      "family": "cavalry",
+      "tier": 2,
+      "name": "기사 훈련",
+      "text": "기마궁을 출진시킬 수 있다.",
+      "effect": {
+        "kind": "UNLOCK_SPECIAL_TROOP",
+        "value": "기마궁",
+        "existing": true,
+        "note": "지금 연구 2단계 효과를 옮김 · 명마 자원으로도 열림(CITY-IDENTITY)"
+      },
+      "requires": [
+        "LC-HORSE-1"
+      ],
+      "ref": "삼국지11 기교 기사"
+    },
+    {"id": "LC-HORSE-3",
+      "color": "군",
+      "family": "cavalry",
+      "tier": 3,
+      "name": "정예 기병",
+      "text": "숙련 기병이 더 세진다.",
+      "effect": {
+        "kind": "VETERAN_BONUS",
+        "value": 10,
+        "condition": "TROOP:BT04",
+        "existing": false
+      },
+      "requires": [
+        "LC-HORSE-2"
+      ],
+      "ref": "삼국지11 기교 정예기병"
+    },
+    {"id": "LC-BOW-1",
+      "color": "군",
+      "family": "bow",
+      "tier": 1,
+      "name": "궁병 단련",
+      "text": "궁병의 공격이 조금 오른다.",
+      "effect": {
+        "kind": "DAMAGE_MOD",
+        "value": 10,
+        "condition": "TROOP:BT03",
+        "existing": true
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 노병단련"
+    },
+    {"id": "LC-BOW-2",
+      "color": "군",
+      "family": "bow",
+      "tier": 2,
+      "name": "강노",
+      "text": "성벽 위 궁병이 한 칸 더 멀리 쏜다.",
+      "effect": {
+        "kind": "RANGE_MOD",
+        "value": 1,
+        "condition": "TROOP:BT03&ON_WALL",
+        "existing": false,
+        "note": "사거리 op 없음 — c33Range 처럼 attackRange 에 더하는 새 키"
+      },
+      "requires": [
+        "LC-BOW-1"
+      ],
+      "ref": "삼국지11 기교 강노"
+    },
+    {"id": "LC-BOW-3",
+      "color": "군",
+      "family": "bow",
+      "tier": 3,
+      "name": "정예 궁병",
+      "text": "숙련 궁병이 더 세진다.",
+      "effect": {
+        "kind": "VETERAN_BONUS",
+        "value": 10,
+        "condition": "TROOP:BT03",
+        "existing": false
+      },
+      "requires": [
+        "LC-BOW-2"
+      ],
+      "ref": "삼국지11 기교 정예노병"
+    },
+    {"id": "LC-DRILL-1",
+      "color": "군",
+      "family": "drill",
+      "tier": 1,
+      "name": "훈련 법식",
+      "text": "훈련소 하나가 두 배 많은 병사를 훈련한다.",
+      "effect": {
+        "kind": "DRILL_CAP_MULT",
+        "value": 2,
+        "existing": false,
+        "note": "훈련소 1순 2,000명 → 4,000명(C473)"
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 숙련병 계통"
+    },
+    {"id": "LC-DRILL-2",
+      "color": "군",
+      "family": "drill",
+      "tier": 2,
+      "name": "숙련병",
+      "text": "싸움에서 살아남은 병사가 더 많이 숙련병이 된다.",
+      "effect": {
+        "kind": "VETERAN_RATE_ADD",
+        "value": 0.1,
+        "existing": false,
+        "note": "상대값 — 전투 뒤 숙련병이 되는 몫 기본(25%)에 +0.10"
+      },
+      "requires": [
+        "LC-DRILL-1"
+      ],
+      "ref": "삼국지11 기교 숙련병"
+    },
+    {"id": "LC-DRILL-3",
+      "color": "군",
+      "family": "drill",
+      "tier": 3,
+      "name": "군제 개혁",
+      "text": "부대가 군량을 더 오래 지니고 다닌다.",
+      "effect": {
+        "kind": "CARRIED_FOOD_TURNS_ADD",
+        "value": 2,
+        "existing": true,
+        "note": "상대값 — 휴대 군량 기본(지금 5순분, carryTurns)에 +2순분"
+      },
+      "requires": [
+        "LC-DRILL-2"
+      ],
+      "ref": "삼국지11 기교 군제개혁(이름) · 노스가드 전승 '겨울 벌칙 해소'형"
+    },
+    {"id": "LC-ARMS-1",
+      "color": "군",
+      "family": "armory",
+      "tier": 1,
+      "name": "병기 공방",
+      "text": "공방이 무구를 꽤 빨리 만든다.",
+      "effect": {
+        "kind": "ARMS_PROD_MOD",
+        "value": 20,
+        "existing": false,
+        "note": "DESIGN §16-1 무구 제작(생산 1당 50자루)"
+      },
+      "requires": [],
+      "ref": "3KR 무기 구입 · 삼국지11 기교(병기)"
+    },
+    {"id": "LC-ARMS-2",
+      "color": "군",
+      "family": "armory",
+      "tier": 2,
+      "name": "양마 개량",
+      "text": "기병이 출진하고 보충할 때 말이 꽤 덜 든다.",
+      "effect": {
+        "kind": "HORSES_PER_CAVALRY",
+        "value": 0.8,
+        "existing": false,
+        "note": "기병 1명 = 말 1필 → 0.8필(DESIGN §16-1)"
+      },
+      "requires": [
+        "LC-ARMS-1"
+      ],
+      "ref": "삼국지11 기교 양마산출(이름)"
+    },
+    {"id": "LC-ARMS-3",
+      "color": "군",
+      "family": "armory",
+      "tier": 3,
+      "name": "노획 정리",
+      "text": "적을 깨고 성을 빼앗을 때 거두는 무구가 크게 는다.",
+      "effect": {
+        "kind": "ARMS_LOOT_MOD",
+        "value": 30,
+        "existing": false,
+        "note": "§16-1 노획(적 무기고에서 일부)"
+      },
+      "requires": [
+        "LC-ARMS-2"
+      ],
+      "ref": "문명6 전략 자원 소모 · 노획"
+    },
+    {"id": "LC-SIEGE-1",
+      "color": "군",
+      "family": "siege",
+      "tier": 1,
+      "name": "운제",
+      "text": "성벽을 꽤 더 잘 허문다.",
+      "effect": {
+        "kind": "SIEGE_DAMAGE_MOD",
+        "value": 20,
+        "existing": true
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 운제",
+      "tags": [
+        "공성"
+      ]
+    },
+    {"id": "LC-SIEGE-2",
+      "color": "군",
+      "family": "siege",
+      "tier": 2,
+      "name": "투석 개발",
+      "text": "투석기가 한 칸 더 멀리 던진다.",
+      "effect": {
+        "kind": "RANGE_MOD",
+        "value": 1,
+        "condition": "TROOP:CATAPULT",
+        "existing": false,
+        "note": "투석기는 지금도 공방만 있으면 출진(campaign-special-troops.mjs:50-52) — 그래서 허가 대신 사거리 3 → 4(c193-siege range)"
+      },
+      "requires": [
+        "LC-SIEGE-1"
+      ],
+      "ref": "삼국지11 기교 투석개발",
+      "tags": [
+        "공성"
+      ]
+    },
+    {"id": "LC-SIEGE-3",
+      "color": "군",
+      "family": "siege",
+      "tier": 3,
+      "name": "벽력",
+      "text": "투석기가 성벽을 크게 허문다.",
+      "effect": {
+        "kind": "SIEGE_DAMAGE_MOD",
+        "value": 30,
+        "condition": "TROOP:CATAPULT",
+        "existing": true
+      },
+      "requires": [
+        "LC-SIEGE-2"
+      ],
+      "ref": "삼국지11 기교 벽력",
+      "tags": [
+        "공성"
+      ]
+    },
+    {"id": "LC-WALL-1",
+      "color": "군",
+      "family": "wall",
+      "tier": 1,
+      "name": "성벽 강화",
+      "text": "모든 성의 성벽이 더 튼튼해진다.",
+      "effect": {
+        "kind": "WALL_MAX_ADD",
+        "value": 25,
+        "existing": true,
+        "note": "지금 연구 2단계 wallBonus +25 를 옮김(campaign-roster.mjs:192)"
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 성벽강화"
+    },
+    {"id": "LC-WALL-2",
+      "color": "군",
+      "family": "wall",
+      "tier": 2,
+      "name": "방위 강화",
+      "text": "포위된 성이 더 오래 버틴다.",
+      "effect": {
+        "kind": "SIEGE_RESERVE_TURNS_ADD",
+        "value": 2,
+        "existing": false,
+        "note": "성 비축 3순 → 5순(DESIGN §11, C474)"
+      },
+      "requires": [
+        "LC-WALL-1"
+      ],
+      "ref": "삼국지11 기교 방위강화"
+    },
+    {"id": "LC-WALL-3",
+      "color": "군",
+      "family": "wall",
+      "tier": 3,
+      "name": "석조 성곽",
+      "text": "성 사격이 꽤 아프다.",
+      "effect": {
+        "kind": "CITY_SHOT_MOD",
+        "value": 20,
+        "existing": true,
+        "note": "성벽 수리 가속은 태수 특기(REPAIR_BONUS)와 겹쳐 쓰지 않음"
+      },
+      "requires": [
+        "LC-WALL-2"
+      ],
+      "ref": "삼국지11 기교 석조건축(이름)"
+    },
+    {"id": "LC-FARM-1",
+      "color": "내정",
+      "family": "farm",
+      "tier": 1,
+      "name": "수리 사업",
+      "text": "강가와 평지 칸의 곡식이 조금 는다.",
+      "effect": {
+        "kind": "TILE_OUTPUT_MOD",
+        "value": 10,
+        "resource": "grain",
+        "condition": "TERRAIN:RIVERSIDE|PLAIN",
+        "existing": false,
+        "note": "CITY_OUTPUT_MOD(FOOD) 와 비슷하나 땅 몫에만"
+      },
+      "requires": [],
+      "ref": "토탈워 삼국 개혁 농업 분류"
+    },
+    {"id": "LC-FARM-2",
+      "color": "내정",
+      "family": "farm",
+      "tier": 2,
+      "name": "병사 자급",
+      "text": "성 안에 머무는 병사가 군량을 꽤 덜 먹는다.",
+      "effect": {
+        "kind": "GARRISON_UPKEEP_MOD",
+        "value": -20,
+        "existing": false,
+        "note": "야전 군량은 그대로(전농 둔전장 '군량 감소' 와 범위가 다름). 옛 초안 이름 '둔전법' 은 F01 시설 둔전과 겹쳐 바꿈"
+      },
+      "requires": [
+        "LC-FARM-1"
+      ],
+      "ref": "조조 둔전 · 토탈워 개혁 농업"
+    },
+    {"id": "LC-FARM-3",
+      "color": "내정",
+      "family": "farm",
+      "tier": 3,
+      "name": "유민 정착",
+      "text": "인구가 꽤 빨리 는다.",
+      "effect": {
+        "kind": "POPULATION_GROWTH_MOD",
+        "value": 20,
+        "existing": true
+      },
+      "requires": [
+        "LC-FARM-2"
+      ],
+      "ref": "조조 募民屯田 · 폴리토피아 레벨 보상 '인구 +3'"
+    },
+    {"id": "LC-COIN-1",
+      "color": "내정",
+      "family": "coin",
+      "tier": 1,
+      "name": "화폐 정비",
+      "text": "백성이 내는 금이 조금 는다.",
+      "effect": {
+        "kind": "PEOPLE_YIELD_MOD",
+        "value": 10,
+        "resource": "gold",
+        "existing": false
+      },
+      "requires": [],
+      "ref": "토탈워 개혁 기반 · 재정"
+    },
+    {"id": "LC-COIN-2",
+      "color": "내정",
+      "family": "coin",
+      "tier": 2,
+      "name": "상단 왕래",
+      "text": "한 차례에 살 수 있는 군량이 크게 는다.",
+      "effect": {
+        "kind": "GRAIN_BUY_CAP_MOD",
+        "value": 50,
+        "existing": false,
+        "note": "buyGrain 한 차례 한도(C470)"
+      },
+      "requires": [
+        "LC-COIN-1"
+      ],
+      "ref": "토탈워 개혁 상업"
+    },
+    {"id": "LC-COIN-3",
+      "color": "내정",
+      "family": "coin",
+      "tier": 3,
+      "name": "균수법",
+      "text": "서두르기 값이 꽤 싸진다.",
+      "effect": {
+        "kind": "HURRY_COST_MOD",
+        "value": -20,
+        "existing": false,
+        "note": "hurryProduction(C470)"
+      },
+      "requires": [
+        "LC-COIN-2"
+      ],
+      "ref": "한 무제 균수 · 평준(이름)"
+    },
+    {"id": "LC-RULE-1",
+      "color": "내정",
+      "family": "govern",
+      "tier": 1,
+      "name": "정령 정비",
+      "text": "국가 표준이 된 시설이 다른 성에 더 빨리 갖춰진다.",
+      "effect": {
+        "kind": "GRADUATE_BUILD_MOD",
+        "value": 30,
+        "existing": false,
+        "note": "졸업 시설 자동 갖추기 생산(C472)"
+      },
+      "requires": [],
+      "ref": "토탈워 개혁 정부"
+    },
+    {"id": "LC-RULE-2",
+      "color": "내정",
+      "family": "govern",
+      "tier": 2,
+      "name": "인심 장악",
+      "text": "치안이 한 차례 빨리 돌아온다.",
+      "effect": {
+        "kind": "SECURITY_RECOVERY_STEP",
+        "value": 1,
+        "existing": false,
+        "note": "회복 속도. 태수 특기 '어진 정치' · '계엄'(손실 줄임)과 다른 동사"
+      },
+      "requires": [
+        "LC-RULE-1"
+      ],
+      "ref": "삼국지14 시정 · 토탈워 개혁 정부"
+    },
+    {"id": "LC-RULE-3",
+      "color": "내정",
+      "family": "govern",
+      "tier": 3,
+      "name": "향거리선",
+      "text": "전문인력이 더 빨리 길러진다.",
+      "effect": {
+        "kind": "SPECIALIST_PERIOD_ADD",
+        "value": -1,
+        "existing": false,
+        "note": "3순마다 1명 → 2순마다(능력 80+ 는 2 → 1.5 올림 2). 점령 정상화 단축은 태수 특기(OCCUPATION_SPEED)와 겹쳐 쓰지 않음"
+      },
+      "requires": [
+        "LC-RULE-2"
+      ],
+      "ref": "후한 향거리선 · 올드 월드 전문가"
+    },
+    {"id": "LC-LAND-1",
+      "color": "내정",
+      "family": "land",
+      "tier": 1,
+      "name": "개간",
+      "text": "성의 땅이 더 일찍 넓어진다.",
+      "effect": {
+        "kind": "TERRITORY_GROW_AT_ADD",
+        "value": -0.1,
+        "existing": false,
+        "note": "상대값 — 영역이 넓어지는 기준(지금 기본 0.65, C470 r2 territory expandAt)에서 0.10 낮춤 → 0.55"
+      },
+      "requires": [],
+      "ref": "폴리토피아 레벨 보상 '영토 확장' · 문명6 문화 경계"
+    },
+    {"id": "LC-LAND-2",
+      "color": "내정",
+      "family": "land",
+      "tier": 2,
+      "name": "호적 정리",
+      "text": "땅이 사람을 조금 더 먹여 살린다.",
+      "effect": {
+        "kind": "TILE_POP_CAP_MOD",
+        "value": 10,
+        "existing": false,
+        "note": "칸마다 인구 한도(C470 규칙 9)"
+      },
+      "requires": [
+        "LC-LAND-1"
+      ],
+      "ref": "후한 호적 · 올드 월드 법률(정착)"
+    },
+    {"id": "LC-LAND-3",
+      "color": "내정",
+      "family": "land",
+      "tier": 3,
+      "name": "군현 정비",
+      "text": "성 등급이 조금 일찍 오른다.",
+      "effect": {
+        "kind": "GRADE_THRESHOLD_MOD",
+        "value": -10,
+        "existing": false,
+        "note": "현성 → 군성 → 대군 → 주도 문턱 20만 · 40만 · 70만에서(C472)"
+      },
+      "requires": [
+        "LC-LAND-2"
+      ],
+      "ref": "토탈워 개혁 정부 · 휴먼카인드 시대의 별(다음 단계를 앞당김)"
+    },
+    {"id": "LC-REALM-POST",
+      "color": "천하",
+      "family": "realm",
+      "tier": 1,
+      "name": "역참 정비",
+      "text": "보급선이 두 칸 더 멀리 닿는다.",
+      "effect": {
+        "kind": "SUPPLY_SAFE_RANGE_ADD",
+        "value": 2,
+        "existing": false,
+        "note": "supply-v0.1 link.range 8 → 10. 옛 초안 이름 '목우유마' 는 제갈량 고유 느낌이라 바꿈"
+      },
+      "requires": [],
+      "ref": "노스가드 전승 '규칙을 바꾸는 카드'"
+    },
+    {"id": "LC-REALM-NAME",
+      "color": "천하",
+      "family": "realm",
+      "tier": 1,
+      "name": "대의명분",
+      "text": "싸움과 업적에서 얻는 인망이 꽤 는다.",
+      "effect": {
+        "kind": "PRESTIGE_GAIN_MOD",
+        "value": 20,
+        "existing": false
+      },
+      "requires": [],
+      "ref": "삼국지13 PK 군령(이익과 대가)"
+    },
+    {"id": "LC-REALM-LAND",
+      "color": "천하",
+      "family": "realm",
+      "tier": 1,
+      "name": "영지 매입",
+      "text": "칸 사기 값이 크게 싸진다.",
+      "effect": {
+        "kind": "TILE_BUY_COST_MOD",
+        "value": -30,
+        "existing": false,
+        "note": "buyTile(C470)"
+      },
+      "requires": [],
+      "ref": "폴리토피아 '영토 확장' 보상"
+    },
+    {"id": "LC-REALM-STUDY",
+      "color": "천하",
+      "family": "realm",
+      "tier": 1,
+      "name": "태학 부흥",
+      "text": "학문이 꽤 빨리 쌓인다.",
+      "effect": {
+        "kind": "FACTION_SCIENCE_MOD",
+        "value": 20,
+        "existing": true
+      },
+      "requires": [],
+      "ref": "문명6 과학 · 다음 카드가 빨라짐"
+    },
+    {"id": "LC-REALM-ENGINEER",
+      "color": "천하",
+      "family": "realm",
+      "tier": 1,
+      "tags": [
+        "공성"
+      ],
+      "name": "공병 육성",
+      "text": "공병대가 성벽을 꽤 더 잘 허문다.",
+      "effect": {
+        "kind": "SIEGE_DAMAGE_MOD",
+        "value": 20,
+        "condition": "TROOP:ENGINEER",
+        "existing": true,
+        "note": "공병대(C217 engineer) 성 피해 ×1.5 위에 곱함"
+      },
+      "requires": [],
+      "ref": "삼국지11 기교 공병육성"
+    },
+    {"id": "LC-ONCE-GRAIN",
+      "color": "시기",
+      "family": "once",
+      "tier": 1,
+      "name": "풍년 곡식",
+      "text": "지금 곡식을 받는다. 이번에 안 고르면 사라진다.",
+      "effect": {
+        "kind": "GRANT_GRAIN",
+        "value": 30000,
+        "existing": false
+      },
+      "requires": [],
+      "vanishIfUnchosen": true,
+      "ref": "올드 월드 보너스 카드(놓치면 영구 소멸)"
+    },
+    {"id": "LC-ONCE-GOLD",
+      "color": "시기",
+      "family": "once",
+      "tier": 1,
+      "name": "호족 기부",
+      "text": "지금 금을 받는다. 이번에 안 고르면 사라진다.",
+      "effect": {
+        "kind": "GRANT_GOLD",
+        "value": 1500,
+        "existing": false
+      },
+      "requires": [],
+      "vanishIfUnchosen": true,
+      "ref": "올드 월드 보너스 카드"
+    },
+    {"id": "LC-ONCE-PEOPLE",
+      "color": "시기",
+      "family": "once",
+      "tier": 1,
+      "name": "유민 귀순",
+      "text": "가장 작은 내 성에 백성이 몰려온다. 이번에 안 고르면 사라진다.",
+      "effect": {
+        "kind": "GRANT_PEOPLE",
+        "value": 20000,
+        "target": "SMALLEST_OWN_CITY",
+        "existing": false,
+        "note": "땅 한도를 넘지 않음"
+      },
+      "requires": [],
+      "vanishIfUnchosen": true,
+      "ref": "올드 월드 보너스 카드 · 폴리토피아 인구 +3"
+    },
+    {"id": "LC-ONCE-DRILL",
+      "color": "시기",
+      "family": "once",
+      "tier": 1,
+      "name": "노장 교관",
+      "text": "병사가 가장 많은 내 성의 병사 훈련이 크게 오른다. 이번에 안 고르면 사라진다.",
+      "effect": {
+        "kind": "GRANT_DRILL",
+        "value": 30,
+        "target": "MOST_SOLDIERS_OWN_CITY",
+        "existing": false
+      },
+      "requires": [],
+      "vanishIfUnchosen": true,
+      "ref": "올드 월드 보너스 카드"
+    }
+  ],
+  "eureka": [
+    {
+      "id": "EU-FIRST-WIN",
+      "when": "첫 전투 승리",
+      "science": 30
+    },
+    {
+      "id": "EU-FIRST-CAPTURE",
+      "when": "첫 함락",
+      "science": 50
+    },
+    {
+      "id": "EU-FIRST-CAPTIVE",
+      "when": "적 장수 첫 포로",
+      "science": 20
+    },
+    {
+      "id": "EU-VETERAN-1000",
+      "when": "처음 숙련병 표시 1,000명",
+      "science": 20
+    },
+    {
+      "id": "EU-FIRST-GRADUATE",
+      "when": "첫 국가 표준(졸업)",
+      "science": 30
+    },
+    {
+      "id": "EU-FIRST-GRADE",
+      "when": "처음 성 등급이 오름",
+      "science": 40
+    },
+    {
+      "id": "EU-CRISIS-READY",
+      "when": "예고된 위기에 대응을 골라 넘김(처음)",
+      "science": 30
+    },
+    {
+      "id": "EU-FIRST-RESOURCE",
+      "when": "처음 특수자원을 손에 넣음",
+      "science": 20
+    }
+  ],
+  "retired": [
+    {
+      "was": "연구 3단계 군량 기지",
+      "why": "출진이 생산을 쓰지 않아 효과 0 — 삭제(사용자 10-23)"
+    },
+    {
+      "was": "연구 1단계 공방 짓기 허용",
+      "why": "v3 에서 공방은 기초 시설(첫 투자)이라 카드가 아님"
+    },
+    {
+      "was": "C33 태수 특기 발명가 '공성 피해 +5%/연구 단계'",
+      "why": "연구 단계가 없어짐 — '고른 카드 수' 또는 '공성 family 단계'로 다시 묶어야 함(능력 체계 방)"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import {chinaDraftPacks} from './campaign-china12.mjs';
 import {initializeEngines} from './campaign-engines.mjs';
 import {seededPool,requiredPoolIds} from './campaign-engine-gaps.mjs';
 // @ts-check
@@ -13,24 +14,26 @@ import {domesticStartFaction,combatStartFaction,c33Start} from './campaign-rule-
 
 export const OFFICER_DRAFT=Object.freeze({slots:5,minCompanions:2,offerSize:5,rerolls:2,budget:15,trial:true,baseWeight:100,needWeight:40,homeWeight:60,bondMax:120,axisFloor:80,valueCost:2,costBands:5,initialHomeFloor:2,costOverride:{},faction:{F01:{extraRerolls:1,needWeight:120},F02:{bondWeight:2,chainWeight:150},F03:{delegateWeight:150}}});
 const pools=new Map();
+let chinaSource;
 function fail(code){throw Object.assign(new Error(code),{code});}
-function source(factionId,mapId,unlocks=[]){
- const key=`${mapId}:${factionId}:${[...unlocks].sort().join()}`;
+function source(factionId,mapId,unlocks=[],china12=false){
+ const expanded=mapId==='china'&&china12;
+ const key=`${mapId}${expanded?'-12':''}:${factionId}:${[...unlocks].sort().join()}`;
  if(!pools.has(key)){
-  const s=createCampaign({factionId,map:mapId,unlocks,trialRules:{engineGaps:false}}),f=s.factions[factionId];
+  const s=expanded?(chinaSource??=createCampaign({map:'china',trialRules:{engineGaps:false,china12:true,chinaDraftSource:true}})):createCampaign({factionId,map:mapId,unlocks,trialRules:{engineGaps:false}}),f=s.factions[factionId];
   const rulers=new Set(Object.values(s.factions).map(f=>f.rulerId));
-  const home=new Set(f.officerIds);
-  const officers=[...f.officerIds.filter(id=>!rulers.has(id)).map(id=>s.officers[id]),...Object.values(s.wanderers??{}).filter(o=>!rulers.has(o.officerId))];
+  const home=new Set(expanded?Object.values(chinaDraftPacks()).filter(p=>p.factionCandidate===factionId).map(p=>p.id):f.officerIds);
+  const officers=expanded?Object.values({...s.officers,...s.wanderers}).filter(o=>!rulers.has(o.officerId)):[...f.officerIds.filter(id=>!rulers.has(id)).map(id=>s.officers[id]),...Object.values(s.wanderers??{}).filter(o=>!rulers.has(o.officerId))];
   const ranked=[...officers].sort((a,b)=>Object.values(a.baseStats).reduce((n,v)=>n+v,0)-Object.values(b.baseStats).reduce((n,v)=>n+v,0)||a.officerId.localeCompare(b.officerId));
   const costs=new Map(ranked.map((o,i)=>[o.officerId,Math.min(OFFICER_DRAFT.costBands,1+Math.floor(i*OFFICER_DRAFT.costBands/ranked.length))]));
   pools.set(key,{state:s,rulerId:f.rulerId,officers:structuredClone(officers),cards:officers.map(o=>({officerId:o.officerId,name:o.name,home:home.has(o.officerId),cost:costs.get(o.officerId),stats:statsToOfficerPack(o.baseStats),role:o.rolePrimary,style:o.roleSecondary}))});
  }
  return pools.get(key);
 }
-export function officerDraftPool({factionId,mapId='v3',seed=190919,unlocks=[]}){const cards=structuredClone(source(factionId,mapId,unlocks).cards),keep=seededPool(cards.map(c=>c.officerId),seed,[...requiredPoolIds(),...cards.filter(c=>c.home).map(c=>c.officerId),...unlocks]);return cards.filter(c=>mapId==='v1'||keep.has(c.officerId)).map(c=>({...c,cost:OFFICER_DRAFT.costOverride[c.officerId]??c.cost}));}
+export function officerDraftPool({factionId,mapId='v3',seed=190919,unlocks=[],china12=false}){const cards=structuredClone(source(factionId,mapId,unlocks,china12).cards),keep=seededPool(cards.map(c=>c.officerId),seed,[...requiredPoolIds(),...cards.filter(c=>c.home).map(c=>c.officerId),...unlocks]);return cards.filter(c=>china12||mapId==='v1'||keep.has(c.officerId)).map(c=>({...c,cost:OFFICER_DRAFT.costOverride[c.officerId]??c.cost}));}
 const axes=[['politics','NEED_GOVERN'],['leadership','NEED_COMMAND'],['intelligence','NEED_INTELLECT'],['might','NEED_MIGHT'],['charisma','NEED_CHARISMA']];
 function context(d){
- const data=source(d.factionId,d.mapId,d.unlocks),cards=officerDraftPool(d),byId=new Map(cards.map(c=>[c.officerId,c]));
+ const data=source(d.factionId,d.mapId,d.unlocks,d.china12),cards=officerDraftPool(d).filter(c=>!d.excluded?.includes(c.officerId)),byId=new Map(cards.map(c=>[c.officerId,c]));
  const locked=d.locked.map(id=>byId.get(id));
  const originals=new Map([...data.officers,data.state.officers[data.rulerId]].map(o=>[o.officerId,o]));
  const owners=[data.rulerId,...d.locked];
@@ -49,8 +52,8 @@ function context(d){
 }
 function randomFor(seed,step){let n=Number(seed)>>>0;for(const ch of `officer-draft:${step}`)n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;return createRng(n);}
 function pick(cards,rng,weight){let roll=rng.next()*cards.reduce((n,c)=>n+weight(c),0);return cards.find(c=>(roll-=weight(c))<0)??cards.at(-1);}
-export function createOfficerDraft({factionId,seed=190919,mapId='v3',unlocks=[]}){
- const d={factionId,mapId,seed,unlocks:[...unlocks],slots:OFFICER_DRAFT.slots,budget:OFFICER_DRAFT.budget,rerollsLeft:OFFICER_DRAFT.rerolls,offers:[],locked:[],seen:[],step:0};
+export function createOfficerDraft({factionId,seed=190919,mapId='v3',unlocks=[],excluded=[],china12=false}){
+ const d={factionId,mapId,seed,unlocks:[...unlocks],slots:OFFICER_DRAFT.slots,budget:OFFICER_DRAFT.budget,rerollsLeft:OFFICER_DRAFT.rerolls,offers:[],locked:[],seen:[],step:0,...(mapId==='china'&&china12?{china12:true,excluded:[...excluded]}:{})};
  d.rerollsLeft+=OFFICER_DRAFT.faction[factionId]?.extraRerolls??0;
  return propose(d,true);
 }
@@ -131,6 +134,7 @@ function propose(d,initial){
   }
   for(let i=start;i<=candidates.length-(count-selected.length);i++)complete(i+1,[...selected,candidates[i]],cost+candidates[i].cost);
  }
+ if(d.china12)return proposeChinaGroups(d,initial,x,rng,candidates,positions,count,fixedCards,masks,coverage,needAffordable,affordable);
  complete(0,[],0);
  if(!combinations.length)fail('DRAFT_BUDGET');
  // Condition weighted draws on completable sets with maximum lane coverage.
@@ -143,10 +147,88 @@ function propose(d,initial){
  }
  if(!initial){d.rerollsLeft--;d.step++;}return d;
 }
+// 사용자 10-25(고도): 다시 뽑기 전에는 고른 장수를 취소할 수 있고, 다시 뽑는 순간 그때까지 고른 장수는 고정 — 새 함수만(웹 · 옛 판 · 골든은 그대로).
+// draft.fixed = 마지막 다시 뽑기 때 고정된 장수(옛 draft 에는 없음 = 고정 없음). 다시 뽑기는 rerollOfficerDraftFixing 을 써야 고정이 기록된다.
+export function unlockDraftOfficer(draft,officerId){
+ if(!draft.locked.includes(officerId))fail('DRAFT_NOT_LOCKED');
+ if((draft.fixed??[]).includes(officerId))fail('DRAFT_FIXED');
+ return {...structuredClone(draft),locked:draft.locked.filter(id=>id!==officerId)};
+}
+export function rerollOfficerDraftFixing(draft,options){const d=rerollOfficerDraft(draft,options);d.fixed=[...draft.locked];return d;}
+export function officerDraftFixed(draft){return [...(draft.fixed??[])];}
 export function officerDraftCompanions(draft){const v=officerDraftView(draft);if(!v.canConfirm)fail(v.confirmBlocked==='TOO_FEW'?'DRAFT_TOO_FEW':'DRAFT_BUDGET');return [...draft.locked];}
+
+// Enumerate equivalent card classes, not 388 choose 5 individual sets. A class
+// has identical lane/home/affordability predicates. Weighted individual draws
+// are still conditioned on exactly the maximum-coverage completable sets.
+function proposeChinaGroups(d,initial,x,rng,candidates,positions,count,fixed,masks,coverage,needAffordable,affordable){
+ const groups=[];
+ for(const c of candidates){const key=`${masks.get(c.officerId)}:${c.home}:${affordable(c)}`;let g=groups.find(g=>g.key===key);if(!g){g={key,cards:[]};groups.push(g);}g.cards.push(c);}
+ let best=-1,sets=[];
+ function visit(i,left,counts,cards){
+  if(!left){const all=[...fixed,...cards];if(initial&&all.filter(c=>c.home).length<Math.min(OFFICER_DRAFT.initialHomeFloor,x.cards.filter(c=>c.home).length))return;
+   if(needAffordable&&!all.some(c=>!d.locked.includes(c.officerId)&&affordable(c)))return;
+   const score=coverage(all);if(score>best){best=score;sets=[];}if(score===best)sets.push([...counts,...Array(groups.length-counts.length).fill(0)]);return;
+  }
+  if(i===groups.length)return;
+  for(let n=0;n<=Math.min(left,groups[i].cards.length);n++)visit(i+1,left-n,[...counts,n],[...cards,...groups[i].cards.slice(0,n)]);
+ }
+ visit(0,count,[],[]);if(!sets.length)fail('DRAFT_BUDGET');
+ for(let j=0;j<count;j++){
+  const available=groups.flatMap((g,i)=>sets.some(set=>set[i]>0)?g.cards:[]),c=pick(available,rng,x.weight),index=groups.findIndex(g=>g.cards.includes(c));
+  d.offers[positions[j]]=c.officerId;d.seen.push(c.officerId);groups[index].cards=groups[index].cards.filter(o=>o!==c);
+  sets=sets.filter(set=>set[index]>0).map(set=>set.map((n,i)=>i===index?n-1:n));
+ }
+ if(!initial){d.rerollsLeft--;d.step++;}return d;
+}
+
+export function autoOfficerDraft(options){
+ let draft=createOfficerDraft(options);const decisions=[];
+ for(;;){
+  const view=officerDraftView(draft),x=context(draft),cards=view.cards.filter(c=>!c.lockBlocked).sort((a,b)=>x.weight(b)-x.weight(a)||a.officerId.localeCompare(b.officerId));
+  if(cards.length){const c=cards[0];decisions.push({officerId:c.officerId,weight:x.weight(c),cost:c.cost,offers:view.cards.filter(c=>!c.lockBlocked).map(c=>({officerId:c.officerId,weight:x.weight(c),cost:c.cost}))});draft=lockDraftOfficer(draft,c.officerId);continue;}
+  if(view.canReroll){draft=rerollOfficerDraft(draft);continue;}
+  return {companions:officerDraftCompanions(draft),cost:view.lockedCost,decisions};
+ }
+}
+
+function applyChinaDraft(s,companions,unlocks){
+ const order=[s.playerFactionId,...Object.keys(s.factions).filter(id=>id!==s.playerFactionId).sort()],used=[],results={};
+ for(const fid of order){
+  if(fid===s.playerFactionId&&companions!==undefined){
+   const cards=officerDraftPool({factionId:fid,mapId:'china',china12:true,seed:s.campaignSeed,unlocks}),byId=new Map(cards.map(c=>[c.officerId,c]));
+   if(!Array.isArray(companions)||companions.length<2||companions.length>5||new Set(companions).size!==companions.length||companions.some(id=>!byId.has(id)))fail('INVALID_COMPANIONS');
+   const cost=companions.reduce((n,id)=>n+byId.get(id).cost,0);if(cost>OFFICER_DRAFT.budget)fail('DRAFT_BUDGET');results[fid]={companions:[...companions],cost,decisions:[]};
+  }else results[fid]=autoOfficerDraft({factionId:fid,mapId:'china',china12:true,seed:s.campaignSeed,unlocks,excluded:used});
+  used.push(...results[fid].companions);
+ }
+ const all={...s.officers,...s.wanderers},selected=new Set([...used,...Object.values(s.factions).map(f=>f.rulerId)]),neutrals=Object.values(s.cities).filter(c=>c.ownerFactionId===null).sort((a,b)=>a.cityId.localeCompare(b.cityId));
+ s.officers={};s.wanderers={};let index=0;
+ for(const [id,o] of Object.entries(all)){
+  if(selected.has(id)){s.officers[id]=o;continue;}
+  o.allegianceFactionId=null;o.locationRef={kind:'CITY',id:neutrals[index++%neutrals.length].cityId};o.c26OriginFaction=null;o.c26OriginCity=o.locationRef.id;s.wanderers[id]=o;delete s.campaignGrowth.officers[id];
+ }
+ for(const fid of order){
+  const f=s.factions[fid],cap=s.cities[f.capitalCityId],ids=results[fid].companions;
+  f.officerIds=[f.rulerId,...ids];
+  for(const id of f.officerIds){const o=s.officers[id];o.allegianceFactionId=fid;o.locationRef={kind:'CITY',id:cap.cityId};o.c26OriginFaction=fid;o.c26OriginCity=cap.cityId;delete s.campaignGrowth.officers[id];}
+  const rank=key=>[...ids].sort((a,b)=>key(s.officers[b].baseStats)-key(s.officers[a].baseStats)||a.localeCompare(b));
+  cap.governorId=rank(v=>v.politics)[0];const commander=rank(v=>v.leadership+v.might).find(id=>id!==cap.governorId);
+  for(const [i,armyId] of f.armyIds.entries()){
+   const a=s.armies[armyId];a.commanderId=i?commander:f.rulerId;const o=s.officers[a.commanderId];a.troopType=o.allowedTroops[0];o.locationRef={kind:'ARMY',id:armyId};
+   s.personnel.formations.find(row=>row.formationId===armyId).identity={baseTroopId:troopToCampaign(a.troopType),specialTroopId:null};
+   a.effectStates=[];a.tacticReadyTurns={};for(const key of ['c50','c50CommanderId','c26','c27','c33'])delete a[key];
+  }
+ }
+ initializeCampaignAbilities(s);initializeCampaignGrowth(s,chinaDraftPacks());initializeEngines(s);
+ for(const a of Object.values(s.armies))triggerEffects(s,a.armyId,'PASSIVE');
+ for(const fid of order){domesticStartFaction(s,fid);combatStartFaction(s,fid);c33Start(s,fid);}
+ s.officerDraft={version:2,companions:[...results[s.playerFactionId].companions],order,factions:results};
+}
 
 // Called only for the opt-in start, after the stock roster has been installed.
 export function applyOfficerDraft(s,companions,unlocks=[]){
+ if(s.china12){if(!s.trialRules?.chinaDraftSource)applyChinaDraft(s,companions,unlocks);return;}
  if(companions===undefined)return;
  const pool=source(s.playerFactionId,s.mapId,unlocks),allowed=new Set(pool.cards.map(c=>c.officerId));
  if(!Array.isArray(companions)||companions.length<OFFICER_DRAFT.minCompanions||companions.length>5||new Set(companions).size!==companions.length||companions.some(id=>!allowed.has(id)))fail('INVALID_COMPANIONS');

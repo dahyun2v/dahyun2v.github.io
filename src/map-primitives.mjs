@@ -35,3 +35,6 @@ export function movementTicks({from,to,troopType,maneuver=50,edge,tuning,tickDay
   const rawTicks=(base*multiplier+delay)/tickDays;
   return Math.max(1,Math.ceil(rawTicks-1e-9));
 }
+
+// Shared campaign slice contract; v1 retains its historical rules.
+export const isSliceMap=mapId=>mapId==='v2'||mapId==='v3'||mapId==='china';

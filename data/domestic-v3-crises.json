@@ -1,0 +1,119 @@
+{
+  "status": "초안 — 확정 아님(내정 콘텐츠 방 2026-10-24, DESIGN §13 주제 13 사용자 확인 전). 수치는 시험값",
+  "design": "docs/work-integration/20261024/naejeong-content/CRISES.md",
+  "framework": {
+    "basedOn": "날씨 예고(prototype/data/run-modifiers-v0.1.json weather — eventsPerRun · warnTurnsAhead · windows · 판 시드)를 지역 위기로 넓힘",
+    "perRun": {"min": 2, "max": 3},
+    "windows": [[4, 8], [11, 15], [18, 23]],
+    "warnTurns": 2,
+    "rules": [
+      "판 시드로 창마다 차례 하나 · 종류 하나(셋째 창은 50% 로 비움)",
+      "판에 위기가 둘 이상이면 하나는 반드시 좋은 위기(풍년)",
+      "같은 종류는 한 판에 한 번 · 바로 앞 판과 같은 차례 · 같은 지역이 되지 않게 시드를 섞음",
+      "날씨가 시작하는 차례와 겹치면 위기를 한 차례 뒤로",
+      "모든 세력이 같은 예고를 봄(플레이어 · AI 똑같이 — 적의 위기는 공격 기회)"
+    ],
+    "area": "주 하나(지도에 주가 없으면 성 하나를 중심으로 반경 6칸). 고르는 무게는 각 위기의 weightBy",
+    "strength": {"낮음": 0.5, "보통": 1.0, "높음": 1.5, "pick": "낮음 2 · 보통 2 · 높음 1"},
+    "counters": [
+      "태수 특기 CD-16 하늘에 비는 제사(EVENT_DAMAGE_MOD DISASTER −30%) — 재해 위기(흉년 · 메뚜기 · 역병 · 홍수) 피해에 그대로 곱함",
+      "성 개성: 약초(역병 −50%) · 태창(흉년 · 메뚜기 −50%) · 약포(역병 번짐 없음) · 봉수대(예고 +1차례)",
+      "학문 유레카 EU-CRISIS-READY — 대응을 골라 넘기면 학문 +30(처음 한 번)"
+    ],
+    "notice": "예고 · 시작 · 끝만 알림(DESIGN §13-4 위험만 알림). 예고 때 대응 카드 한 장(그림 + 두 줄 + 선택지 2~3, 토탈워처럼 같은 줄 순서로 대가 비교). 고르지 않으면 '그대로 둔다'"
+  },
+  "crises": [
+    {
+      "id": "CR-DROUGHT", "kind": "drought", "good": false, "name": "가뭄 흉년",
+      "text": "{area}에 비가 오지 않는다. 두 차례 뒤부터 세 차례 동안 곡식이 절반만 걷힌다.",
+      "weightBy": {"season": ["여름", "가을"], "terrain": {"plain": 2, "riverside": 1}},
+      "durationTurns": 3,
+      "effects": [
+        {"kind": "AREA_GRAIN_YIELD_MULT", "value": 0.5, "scaleByStrength": true, "note": "사람 몫 곡식 + 땅 몫 곡식"},
+        {"kind": "GRAIN_BUY_PRICE_MULT", "value": 1.5, "scope": "all", "note": "흉년 동안 모든 세력 군량 값 상승(DESIGN §3)"},
+        {"kind": "AREA_SECURITY_CAUSE", "value": "흉년", "note": "치안 원인(DESIGN §10) — 구휼이면 없음"}
+      ],
+      "responses": [
+        {"id": "stockpile", "label": "미리 군량을 사 둔다", "cost": "금", "effects": [{"kind": "GRAIN_BUY_CAP_ONCE_MULT", "value": 2, "turns": 2}], "preview": "예고 동안 지금 값으로 두 배까지 산다", "why": "읽은 쪽이 이득(TI4 의제 미리 보기)"},
+        {"id": "relief", "label": "창고를 열어 구휼한다", "cost": "곡식", "costValue": {"perPeople10k": 300}, "effects": [{"kind": "REMOVE_SECURITY_CAUSE", "value": "흉년"}], "preview": "그 지역 내 성 치안이 흉년으로 나빠지지 않는다", "why": "곡식으로 치안을 산다(군량 ↔ 민심)"},
+        {"id": "none", "label": "그대로 둔다", "cost": "없음", "effects": [], "preview": "곡식이 줄고 치안이 흔들린다"}
+      ],
+      "aiDefault": "창고가 5순분보다 많으면 relief, 금이 많으면 stockpile, 아니면 none"
+    },
+    {
+      "id": "CR-LOCUST", "kind": "locust", "good": false, "name": "메뚜기 떼",
+      "text": "{area}에 메뚜기 떼가 인다. 지나간 칸은 곡식이 나지 않고 이웃 주로 번질 수 있다.",
+      "weightBy": {"season": ["여름", "가을"], "terrain": {"plain": 3}},
+      "durationTurns": 2,
+      "effects": [
+        {"kind": "AREA_TILE_GRAIN_ZERO", "value": true, "share": 0.5, "scaleByStrength": true, "note": "그 지역 땅 칸의 절반(강도에 따라 낮음 1/4 · 높음 3/4)"},
+        {"kind": "AREA_SECURITY_CAUSE", "value": "흉년"}
+      ],
+      "spread": {"maxSteps": 1, "chance": 0.5, "via": "맞닿은 주", "ref": "삼국지14 메뚜기 · 번짐 최대 2단계(reference-db/immersion/RTK14I/GPT-3.md:574) — 우리는 1단계"},
+      "responses": [
+        {"id": "burn", "label": "들불로 막는다", "cost": "생산", "costValue": {"perCity": 10}, "effects": [{"kind": "SPREAD_BLOCK", "value": true}, {"kind": "AREA_TILE_GRAIN_SHARE_MULT", "value": 0.5}], "preview": "번지지 않고 피해 칸이 절반 — 그 차례 생산을 쓴다"},
+        {"id": "none", "label": "그대로 둔다", "cost": "없음", "effects": [], "preview": "칸 곡식이 끊기고 이웃 주로 번질 수 있다"}
+      ],
+      "aiDefault": "그 지역 내 성이 둘 이상이면 burn"
+    },
+    {
+      "id": "CR-PLAGUE", "kind": "plague", "good": false, "name": "역병",
+      "text": "{area}에 역병이 돈다. 세 차례 동안 백성이 줄고 부상병이 낫지 않는다.",
+      "weightBy": {"recentBattles": 3, "besiegedRecently": 3, "people": 1, "note": "큰 싸움 · 포위가 있었던 곳에 잘 생김(무작위 반란 금지 — 세계 상태에서 생김, 정본 31 §7)"},
+      "durationTurns": 3,
+      "effects": [
+        {"kind": "AREA_PEOPLE_LOSS_PER_TURN", "value": 0.02, "scaleByStrength": true},
+        {"kind": "AREA_WOUNDED_RECOVERY_STOP", "value": true},
+        {"kind": "AREA_SECURITY_CAUSE", "value": "역병"}
+      ],
+      "spread": {"maxSteps": 1, "chance": 0.5, "via": "보급선으로 이어진 이웃 성"},
+      "responses": [
+        {"id": "quarantine", "label": "성문을 닫는다", "cost": "생산", "effects": [{"kind": "AREA_PRODUCTION_MULT", "value": 0.5}, {"kind": "AREA_MUSTER_BLOCK", "value": true}, {"kind": "SPREAD_BLOCK", "value": true}], "preview": "번지지 않는다 — 대신 그 성은 생산 절반 · 출진 못 함"},
+        {"id": "physicians", "label": "의원을 불러 모은다", "cost": "금", "costValue": {"perCity": 300}, "effects": [{"kind": "CRISIS_DAMAGE_MOD", "value": -50}], "preview": "백성이 덜 줄어든다"},
+        {"id": "none", "label": "그대로 둔다", "cost": "없음", "effects": [], "preview": "백성이 줄고 이웃으로 번질 수 있다"}
+      ],
+      "aiDefault": "전선 성이면 physicians, 후방이면 quarantine"
+    },
+    {
+      "id": "CR-FLOOD", "kind": "flood", "good": false, "name": "큰물",
+      "text": "{area}의 강이 넘친다. 강가 칸 시설이 한 차례 멈추고 뒤에는 땅이 기름져진다.",
+      "weightBy": {"season": ["여름"], "terrain": {"riverside": 4}},
+      "durationTurns": 1,
+      "effects": [
+        {"kind": "AREA_RIVER_FACILITY_STOP", "value": true, "turns": 1},
+        {"kind": "AREA_RIVER_TILE_GRAIN_MULT", "value": 1.5, "turns": 3, "after": true, "note": "물이 빠진 뒤 세 차례 강가 칸 곡식 1.5배(문명6 홍수 · 화산 비옥화 — 위험이자 기회, reference-db/ui-scenes/CIV6/GPT-4.md:267-285)"},
+        {"kind": "FORDS_BLOCKED", "value": true, "turns": 1, "note": "장마 날씨 효과(fordsBlocked)와 같은 키"}
+      ],
+      "responses": [
+        {"id": "dike", "label": "둑을 쌓는다", "cost": "생산", "costValue": {"perCity": 15}, "effects": [{"kind": "CANCEL", "value": "AREA_RIVER_FACILITY_STOP"}, {"kind": "CANCEL", "value": "AREA_RIVER_TILE_GRAIN_MULT"}], "preview": "시설이 멈추지 않는다 — 대신 기름진 땅도 없다"},
+        {"id": "none", "label": "그대로 둔다", "cost": "없음", "effects": [], "preview": "한 차례 시설이 멈추고 그 뒤 곡식이 는다"}
+      ],
+      "aiDefault": "그 지역이 전선이면 dike"
+    },
+    {
+      "id": "CR-HARVEST", "kind": "harvest", "good": true, "name": "풍년",
+      "text": "{area}에 풍년이 든다. 두 차례 뒤부터 두 차례 동안 곡식이 넉넉히 걷힌다.",
+      "weightBy": {"season": ["가을"], "terrain": {"plain": 2, "riverside": 2}},
+      "durationTurns": 2,
+      "effects": [
+        {"kind": "AREA_GRAIN_YIELD_MULT", "value": 1.5, "scaleByStrength": true},
+        {"kind": "GRAIN_BUY_PRICE_MULT", "value": 0.8, "scope": "all"}
+      ],
+      "responses": [
+        {"id": "grow", "label": "백성을 늘린다", "cost": "곡식", "effects": [{"kind": "AREA_GROWTH_MULT", "value": 2, "turns": 2}], "preview": "그 지역 성장이 두 배 — 늘어난 곡식이 백성에게 간다"},
+        {"id": "store", "label": "창고에 쌓는다", "cost": "없음", "effects": [], "preview": "늘어난 곡식이 그대로 군량이 된다"},
+        {"id": "sell", "label": "내다 판다", "cost": "곡식", "effects": [{"kind": "SELL_SURPLUS_FOR_GOLD", "share": 0.5, "rate": 0.15}], "preview": "늘어난 곡식의 절반을 금으로 바꾼다"}
+      ],
+      "aiDefault": "출진 중이면 store, 아니면 grow",
+      "why": "곡식이 군량이냐 성장이냐(DESIGN §0 맞교환)를 좋은 소식으로 한 번 더 묻는다"
+    }
+  ],
+  "emergency": {
+    "note": "DESIGN §13-3 비상 명령 한 칸 — 성 화면 '비상'. 위기와 같이 쓰이지만 위기가 없어도 쓸 수 있음",
+    "orders": [
+      {"id": "EM-RESERVE", "name": "생존비축 헐기", "text": "곡식을 바로 얻는다. 치안이 나빠지고 그 성은 자라지 않는다.", "effects": [{"kind": "GRANT_GRAIN_FROM_CITY", "perPeople10k": 2000}, {"kind": "SECURITY_STEP", "value": 1}, {"kind": "CITY_GROWTH_STOP", "turns": 3}], "cooldownTurns": 5},
+      {"id": "EM-DRAFT", "name": "긴급 징병", "text": "병사를 바로 얻는다. 치안이 나빠지고 한동안 징집이 멈춘다.", "effects": [{"kind": "EXISTING", "value": "C457 긴급 징병 그대로"}]},
+      {"id": "EM-TAXFREE", "name": "세금 면제", "text": "이 성 세금을 한 차례 걷지 않는다. 다음 차례 치안이 한 단계 돌아온다.", "effects": [{"kind": "EXISTING", "value": "DESIGN §10 세금 면제"}]}
+    ]
+  }
+}

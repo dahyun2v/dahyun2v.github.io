@@ -1,0 +1,108 @@
+{
+  "source": "source.png",
+  "tool": "built-in image_gen; asset-normalize.py per-cell 1x1, 128px pad .10 alpha keep-color; separate stroke auto prevents unlike edge/icon shapes changing each other",
+  "assets": [
+    {
+      "name": "edge-top",
+      "file": "edge-top.webp",
+      "sourceCell": 1,
+      "size": [
+        102,
+        22
+      ]
+    },
+    {
+      "name": "edge-bottom",
+      "file": "edge-bottom.webp",
+      "sourceCell": 2,
+      "size": [
+        102,
+        25
+      ]
+    },
+    {
+      "name": "edge-left",
+      "file": "edge-left.webp",
+      "sourceCell": 3,
+      "size": [
+        20,
+        102
+      ]
+    },
+    {
+      "name": "edge-right",
+      "file": "edge-right.webp",
+      "sourceCell": 4,
+      "size": [
+        18,
+        102
+      ]
+    },
+    {
+      "name": "neutral",
+      "file": "neutral.webp",
+      "sourceCell": 5,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "name": "unknown",
+      "file": "unknown.webp",
+      "sourceCell": 6,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "name": "capital",
+      "file": "capital.webp",
+      "sourceCell": 7,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "name": "siege",
+      "file": "siege.webp",
+      "sourceCell": 8,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "name": "fire",
+      "file": "fire.webp",
+      "sourceCell": 9,
+      "size": [
+        128,
+        128
+      ]
+    }
+  ],
+  "reused": {
+    "05": "../ink-panel.webp",
+    "22": "../sym/lenses/danger.webp",
+    "23": "../sym/global/records.webp",
+    "27": "../sym/diplomacy/alliance.webp",
+    "30": "../sym/actions/wait.webp"
+  },
+  "reviewSizes": [
+    12,
+    16,
+    20
+  ],
+  "note": "Generated source 1254x1254 instead of requested 2048x2048. Measured row crops: first eight cells x=floor(i*1254/8)..floor((i+1)*1254/8), y=0..220; flame x=0..156 y=220..420. Normalized individually with asset-normalize.py. Edge alpha bounding boxes cropped after normalization. Unlike shapes never forced to the same stroke width.",
+  "prompt": "Use case: stylized-concept. Production raster UI atlas for original Korean ink graphic strategy game. Transparent 2048x2048, strict 8 by 8 grid of 256px cells, NO grid lines, text, labels, letters, digits, crowns, shields or game emblems. Only first row occupied: cells 1-4 four matte charcoal dry ink edge strips (top, bottom, left, right) thin ragged silhouette, smooth inner edge; cell5 empty neutral square seal frame; cell6 unknown ownership square broken seal frame; cell7 simple Chinese city gate tower silhouette, flat roof with two upturned eaves over single gate, NO crown shape; cell8 siege icon two crossed simple spears surrounding small square. Second row first cell only: small flame silhouette. Remaining 55 cells transparent empty. Icons centered inside 96px area, thick minimal bone #E9E5DC silhouettes with max one internal cutout, readable at 12px. Edges charcoal #171713. Restrained matte dry brush, flat shapes, no bevel, metallic borders, elaborate corners, shadows or background. Reference images already reviewed show quiet small city labels; match existing muted ink sym icons. One sheet only.\n",
+  "references": [
+    "docs/reference-db/ui-scenes/CIV6/shots/CIV6-S12-1.jpg",
+    "docs/reference-db/ui-scenes/TW3K/shots/TW3K-S14-1.jpg",
+    "docs/work-integration/20261019/c284/after-1920.jpg",
+    "prototype/assets/ui-kit/own/panel-v2/contact.jpg",
+    "prototype/assets/ui-kit/own/sym/diplomacy/alliance.webp"
+  ]
+}

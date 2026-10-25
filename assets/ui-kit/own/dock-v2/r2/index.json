@@ -1,0 +1,127 @@
+{
+  "id": "c329-r2",
+  "status": "WORK_TRIAL",
+  "reference": "docs/cloud/mockup/dock-v5/dock-v5-painted.png",
+  "selected": "candidate-b.png",
+  "canvas": [
+    2400,
+    352
+  ],
+  "display": [
+    1200,
+    176
+  ],
+  "sourceSize": [
+    2172,
+    724
+  ],
+  "sourceCrop": [
+    14,
+    177,
+    2146,
+    375
+  ],
+  "generator": "built-in image_gen",
+  "coordinatesPercent": {
+    "classBadge": [
+      25.65,
+      16,
+      2.6,
+      15.7
+    ],
+    "morale": [
+      1.8,
+      20,
+      13.4,
+      31
+    ],
+    "supply": [
+      1.8,
+      60,
+      13.4,
+      31
+    ],
+    "portrait": [
+      17.3,
+      20,
+      10.7,
+      73
+    ],
+    "core": [
+      30.4,
+      30,
+      6.15,
+      33
+    ],
+    "Q": [
+      38.2,
+      25,
+      7.3,
+      40.5
+    ],
+    "W": [
+      46.7,
+      25,
+      7.3,
+      40.5
+    ],
+    "E": [
+      55.2,
+      25,
+      7.3,
+      40.5
+    ],
+    "R": [
+      63.8,
+      25,
+      7.3,
+      40.5
+    ],
+    "traits": [
+      73.5,
+      31,
+      14.2,
+      24
+    ],
+    "inventory": [
+      90,
+      29,
+      7.7,
+      25
+    ],
+    "orders": [
+      73.5,
+      69,
+      25,
+      24
+    ],
+    "troops": [
+      30.5,
+      74,
+      37,
+      5
+    ],
+    "gauge": [
+      30.2,
+      83,
+      37.5,
+      10
+    ]
+  },
+  "assets": [
+    {
+      "file": "plate.png",
+      "sha256": "800171e3fe8b3f3b4a20d862e56e4f63c2c0bf28bd29ac4b4aa9268191f711a2"
+    },
+    {
+      "file": "plate.webp",
+      "sha256": "d0ccee70e933c60ccfecf016e95e53d8d792089a167974f8a5b9f6183b160c6f"
+    }
+  ],
+  "notes": [
+    "No wooden traits or ropes. Class badge at portrait upper right. Two left image regions for flag and five rice sacks.",
+    "Original C326 R1 painted PNG selected through picture source. R2 img remains format fallback.",
+    "Own slots reuse painted prototypes tinted with officer hue; no new bespoke artwork is claimed.",
+    "The code darkens the unfilled brush band so a low gauge cannot look full."
+  ]
+}

@@ -63,7 +63,7 @@ export function swapReason(s,{armyId,otherArmyId},fid=s.playerFactionId){
  if(edgeTicks(s,a,a.tileId,b.tileId)===null||edgeTicks(s,b,b.tileId,a.tileId)===null||[a,b].some(a=>a.troopType==='catapult'&&a.platformState==='DEPLOYED'))return '이동할 수 없는 자리입니다.';
  return null;
 }
-export function swapArmies(s,cmd){const reason=swapReason(s,cmd);if(reason)throw new Error(reason);const a=s.armies[cmd.armyId],b=s.armies[cmd.otherArmyId];[a.tileId,b.tileId]=[b.tileId,a.tileId];for(const x of [a,b]){s.movedArmyIds.push(x.armyId);x.movedTiles++;x.braced=false;delete s.moveOrders?.[x.armyId];}return s;}
+export function swapArmies(s,cmd){const reason=swapReason(s,cmd);if(reason)throw new Error(reason);const a=s.armies[cmd.armyId],b=s.armies[cmd.otherArmyId];[a.tileId,b.tileId]=[b.tileId,a.tileId];for(const x of [a,b]){s.movedArmyIds.push(x.armyId);x.movedTiles++;x.braced=false;x.currentOrder=null;delete s.moveOrders?.[x.armyId];}return s;}
 export function recordEventHistory(s,p,choice,result,key){
  if(!gapsEnabled(s))return;s.characterHistory??={};
  for(const id of new Set(Object.values(p.roles??{}).map(id=>s.armies[id]?.commanderId??id))){if(!s.officers[id]&&!s.wanderers?.[id])continue;const rows=s.characterHistory[id]??=[];if(rows.some(r=>r.key===key))continue;rows.push({key,turn:s.turn,eventId:p.eventId,title:p.title,choice,result,text:`${p.title} — ${choice}: ${result}`,factionId:p.factionId});}

@@ -1,3 +1,4 @@
+import {DEFAULT_CAMPAIGN_RULES} from './campaign-scenario-data.mjs';
 import {finalizeCampaignTerminalState,validateCampaignTerminalState} from './campaign-terminal-state.mjs';
 
 const FORMAT='sangoku-campaign-terminal-batch-settlement';
@@ -133,7 +134,7 @@ function validateReplay(state,input,anchors,options={}){
  * Atomically projects one externally confirmed result batch. This reducer does
  * not decide combat, retreat, fate, city capture, occupation policy or duels.
  */
-export function settleConfirmedCampaignTerminalBatch(state,input,{deferResult=false,deferExtinction=false,settleTurnEnd=false,allowRecapture=false,allowUngovernedNormal=false,policySurvival=false}={}){
+export function settleConfirmedCampaignTerminalBatch(state,input,{deferResult=false,deferExtinction=false,settleTurnEnd=false,allowRecapture=false,allowUngovernedNormal=false,policySurvival=false,unificationMajorCities=DEFAULT_CAMPAIGN_RULES.unificationMajorCities}={}){
   invariant([deferResult,deferExtinction,settleTurnEnd,allowRecapture].every(v=>typeof v==='boolean'),'INVALID_TERMINAL_BATCH_DEFER_RESULT');
   const validation={allowCitylessAlive:deferExtinction||settleTurnEnd,allowSupersededOccupation:allowRecapture,allowUngovernedNormal};
   validateCampaignTerminalState(state,validation);
@@ -309,7 +310,7 @@ export function settleConfirmedCampaignTerminalBatch(state,input,{deferResult=fa
   }
 
   const aliveFactionIds=next.factionOrder.filter(factionId=>next.factionsById[factionId].alive),playerDefeated=!next.factionsById[next.playerFactionId].alive;
-  const unificationWinner=aliveFactionIds.length===1&&next.cityOrder.filter(id=>next.citiesById[id].kind!=='minor').length===3&&next.cityOrder.filter(id=>next.citiesById[id].kind!=='minor').every(cityId=>next.citiesById[cityId].ownerFactionId===aliveFactionIds[0])?aliveFactionIds[0]:null;
+  const unificationWinner=aliveFactionIds.length===1&&next.cityOrder.filter(id=>next.citiesById[id].kind!=='minor').length===unificationMajorCities&&next.cityOrder.filter(id=>next.citiesById[id].kind!=='minor').every(cityId=>next.citiesById[cityId].ownerFactionId===aliveFactionIds[0])?aliveFactionIds[0]:null;
   const resultType=deferResult?null:playerDefeated?'PLAYER_DEFEAT':unificationWinner?'UNIFICATION':null;
   const winnerFactionId=resultType==='UNIFICATION'?unificationWinner:resultType==='PLAYER_DEFEAT'&&aliveFactionIds.length===1?aliveFactionIds[0]:null;
   const terminalRecordId=resultType?ids.terminalRecordId:null,reportId=resultType?ids.reportId:null;

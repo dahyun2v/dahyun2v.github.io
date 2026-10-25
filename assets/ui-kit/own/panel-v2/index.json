@@ -1,0 +1,111 @@
+{
+  "source": "source.png",
+  "tool": "built-in image_gen; tools/design/asset-normalize.py --grid 1x1 --size 512 --pad 0 --bg alpha --keep-color --levels 256",
+  "assets": [
+    {
+      "name": "panel",
+      "file": "panel.webp",
+      "size": [
+        512,
+        440
+      ],
+      "slice": [
+        64,
+        64,
+        64,
+        64
+      ]
+    },
+    {
+      "name": "header",
+      "file": "header.webp",
+      "size": [
+        512,
+        123
+      ],
+      "slice": [
+        32,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "name": "city",
+      "file": "city.webp",
+      "size": [
+        512,
+        123
+      ],
+      "slice": [
+        32,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "name": "divider",
+      "file": "divider.webp",
+      "size": [
+        512,
+        9
+      ],
+      "slice": [
+        0,
+        16,
+        1,
+        16
+      ]
+    },
+    {
+      "name": "seal",
+      "file": "seal.webp",
+      "size": [
+        505,
+        512
+      ],
+      "slice": [
+        32,
+        32,
+        32,
+        32
+      ]
+    }
+  ],
+  "grid": "3x2",
+  "cropBoxes": {
+    "panel": [
+      45,
+      90,
+      478,
+      466
+    ],
+    "header": [
+      535,
+      235,
+      993,
+      351
+    ],
+    "city": [
+      1045,
+      235,
+      1506,
+      351
+    ],
+    "divider": [
+      30,
+      720,
+      490,
+      810
+    ],
+    "seal": [
+      685,
+      683,
+      848,
+      848
+    ]
+  },
+  "notes": "Each crop normalized separately to preserve proportions and avoid cross-shape stroke dilation. Auto stroke is a silhouette metric, not the gold hairline width; border-image controls displayed hairlines. Alpha preserved. Divider uses a 90px tall crop because the normalizer rejects cells shorter than 25px.",
+  "prompt": "Use case: stylized-concept. One production UI asset atlas, transparent 1536x1024 canvas, strict 3 columns x 2 rows grid. Row 1: square ink panel nine-slice frame; wide short panel header; wide short city nameplate band. Row 2: very thin horizontal row divider; small square seal backing; empty last cell. No text, letters, symbols, labels or watermark. Original restrained ink-and-paper strategy UI. References: ink-panel.webp rough ink edges, fibrous paper.webp, rubbed seal-bar.webp, muted ochre map. Palette #16120e, #221c16, #b9a46e. Matte ink wash, angular gold corner brackets in 64px corners, fine gold lines, 4px dry-brush bleed. Plain dark center, no pattern. Header and city band: painted ends, straight gold top/bottom lines, repeatable undecorated center. Divider: rubbed gold. Seal: dark crimson inset in ink. No bevel, shine, dragons, stone, perspective, shadows or excessive decoration."
+}

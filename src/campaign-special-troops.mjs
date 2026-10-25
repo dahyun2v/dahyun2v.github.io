@@ -1,3 +1,5 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {domesticV3Enabled,learningModifier} from './domestic-v3.mjs';
 import {troopText,troopDelta} from './troop-display.mjs';
 // C217 runtime projection: protected server uses an explicit module/data allowlist.
 // Parity with the JSON source is verified by test-campaign-c217.
@@ -18,7 +20,7 @@ export const SPECIAL_TROOPS=Object.freeze({
  danyang:def('단양병','militia','F03','방어 태세 무시 · 숲·언덕에서 공격·반격 피해 +10%','이동 −1칸'),
  catapult:def('투석기','bow',null,`전개 후 사거리 ${C193.catapult.range} · 성 내구 피해 ×${C193.catapult.siegeMultiplier}`,'부대 피해 −50% · 전개 중 이동 불가 · 이동 −2칸 · 시야 −1',{siegeMultiplier:C193.catapult.siegeMultiplier,requiresDeployed:true}),
 });
-export const c24Enabled=s=>['v2','v3'].includes(s.mapId);
+export const c24Enabled=s=>isSliceMap(s.mapId);
 export const parentTroop=type=>SPECIAL_TROOPS[type]?.parent??type;
 export const specialTroop=(s,type)=>c24Enabled(s)?SPECIAL_TROOPS[type]:undefined;
 // Reserves remain in the conserved personnel ledger, with their trained identity.
@@ -48,7 +50,8 @@ export function specialMusterReason(s,c,type){
  if(d.factionId&&d.factionId!==c.ownerFactionId)return '다른 세력의 특수 병종은 출진 불가';
  if(c.kind!=='major')return '큰 성에서만 특수 병종 출진 가능';
  const facility=d.base?.facility??(type==='catapult'?'workshop':'barracks');
- if((s.factions[c.ownerFactionId]?.research?.stage??0)<(d.base?.researchStage??0))return `연구 ${d.base.researchStage}단계 필요`;
+ if(domesticV3Enabled(s)&&d.base?.researchStage&&!learningModifier(s,c.ownerFactionId,'UNLOCK_SPECIAL_TROOP',{specialTroop:d.name}))return '학문 카드 필요';
+ if(!domesticV3Enabled(s)&&(s.factions[c.ownerFactionId]?.research?.stage??0)<(d.base?.researchStage??0))return `연구 ${d.base.researchStage}단계 필요`;
  return c.facilities.some(f=>f.kind===facility&&!f.damaged&&!f.disabled)?null:`${facility==='workshop'?'공방':'병영'} 필요`;
 }
 export const lossMoraleThreshold=(s,a)=>.3*(specialTroop(s,a.troopType)&&a.troopType==='qingzhou'&&a.morale!=='SHAKEN'?C24.shakenThreshold:1);

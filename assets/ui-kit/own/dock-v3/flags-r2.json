@@ -1,0 +1,21 @@
+{
+  "source": "flags-r2-source-v2.png",
+  "canvas": [
+    288,
+    512
+  ],
+  "assets": {
+    "steady": {
+      "base": "flag-r2-steady.webp",
+      "mask": "flag-r2-steady-cloth.webp"
+    },
+    "wavering": {
+      "base": "flag-r2-wavering.webp",
+      "mask": "flag-r2-wavering-cloth.webp"
+    },
+    "routing": {
+      "base": "flag-r2-routing.webp",
+      "mask": "flag-r2-routing-cloth.webp"
+    }
+  }
+}

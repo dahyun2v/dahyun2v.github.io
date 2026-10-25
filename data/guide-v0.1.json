@@ -1,0 +1,522 @@
+{
+  "guides": {
+    "G17": {
+      "name": "정위",
+      "title": "바다를 메우는 새 · 천연 공주",
+      "persona": "바다를 메우는 새 · 천연 공주",
+      "portrait": "/assets/guide/G17/full.webp",
+      "expressions": {
+        "neutral": "/assets/guide/G17/expr-neutral.webp",
+        "smile": "/assets/guide/G17/expr-smile.webp",
+        "surprise": "/assets/guide/G17/expr-surprise.webp",
+        "worry": "/assets/guide/G17/expr-worry.webp",
+        "serious": "/assets/guide/G17/expr-serious.webp",
+        "triumph": "/assets/guide/G17/expr-triumph.webp"
+      }
+    },
+    "G08": {
+      "name": "옥토",
+      "title": "옥토",
+      "persona": "달에서 약을 찧던 옥토끼 갸루",
+      "portrait": "/assets/guide/G08/full.webp",
+      "expressions": {
+        "neutral": "/assets/guide/G08/expr-neutral.webp",
+        "smile": "/assets/guide/G08/expr-smile.webp",
+        "surprise": "/assets/guide/G08/expr-surprise.webp",
+        "worry": "/assets/guide/G08/expr-worry.webp",
+        "serious": "/assets/guide/G08/expr-serious.webp",
+        "triumph": "/assets/guide/G08/expr-triumph.webp"
+      }
+    },
+    "G51": {
+      "name": "창랑",
+      "title": "신참을 챙기는 늑대",
+      "persona": "신참을 챙기는 늑대",
+      "portrait": "/assets/guide/G51/full.webp",
+      "expressions": {
+        "neutral": "/assets/guide/G51/expr-neutral.webp",
+        "smile": "/assets/guide/G51/expr-smile.webp",
+        "surprise": "/assets/guide/G51/expr-surprise.webp",
+        "worry": "/assets/guide/G51/expr-worry.webp",
+        "serious": "/assets/guide/G51/expr-serious.webp",
+        "triumph": "/assets/guide/G51/expr-triumph.webp"
+      }
+    }
+  },
+  "lines": {
+    "G17": {
+      "select.intro": {
+        "text": "염제의 딸 정위라 하오. 바다는 아직 넓소. 그대와 함께 끝없이 돌을 나르겠소.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "select.pick": {
+        "text": "나를 골랐군. 그럼 먼저 내 망토의 깃털부터 골라 주시오… 원래 군주가 시중드는 것 아니오?",
+        "expr": "surprise",
+        "draft": false
+      },
+      "greet.first": {
+        "text": "새 판의 첫 차례가 밝았소. 물기가 없으니 날기 좋은 날이오.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.SORTIE": {
+        "text": "허창 성 병영에서 출진을 누르시오. 하후돈에 병력 5000명을 붙이면 시중들기 딱 좋소.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.MOVE": {
+        "text": "하후돈을 고르면 이동 칸과 붉은 통제 구역이 보이오. 하늘에서 찍어 둔 표시된 칸으로 가시오.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.END_FIRST": {
+        "text": "조조도 출진시켜 표시된 칸에 두고 차례를 끝내시오. 양쪽에서 적과 마주하게 되오.",
+        "expr": "serious",
+        "draft": false,
+        "cityText": "조조도 출진시켜 표시된 칸에 두고 차례를 끝내시오. 양쪽에서 적과 마주하게 되오."
+      },
+      "tutorial.COMBAT": {
+        "text": "조조로 적 수비대를 가리키시오. 피해와 반격에 측면 15% 예고를 보고 쪼아 버리시오.",
+        "expr": "serious",
+        "draft": false
+      },
+      "tutorial.END_SECOND": {
+        "text": "측면 공격이 들어갔으니 작은 돌 하나를 얹었소. 차례를 끝내고 다음엔 작은 성을 치시오.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.CITY": {
+        "text": "하후돈으로 작은 성의 수비와 내구를 보시오. 내구를 0으로 만들고 성을 치면 둥지가 함락되오.",
+        "expr": "serious",
+        "draft": false
+      },
+      "tutorial.DONE": {
+        "text": "출진과 이동에 통제 구역 그리고 예고와 측면으로 함락까지 해냈소. …나는 지금 기뻐하고 있소.",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.zoc": {
+        "text": "저 붉은 칸은 적의 통제 구역이오. 깊은 바닷물 같은 곳이니 들어가면 그 자리에서 멈추오.",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.flank": {
+        "text": "적의 측면이나 후방을 치면 피해가 커지오. 고개를 갸웃하고 봐도 정면은 어리석소.",
+        "expr": "serious",
+        "draft": false
+      },
+      "first.line": {
+        "text": "전열은 3단계로 나뉘오. 깃털처럼 전열이 흐트러지면 부대가 약해지니 잘 고르시오.",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.morale": {
+        "text": "사기가 떨어지면 부대가 패주할 수 있소. 다들 왜 겁을 먹는지 나는 잘 모르겠소.",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.gauge": {
+        "text": "전법 게이지가 가득 찼소. 이제 전법 R을 쓸 수 있소.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "first.tacticE": {
+        "text": "전법 E는 게이지 일부만 쓰는 작은 전법이오. 조약돌처럼 가볍게 던지시오.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "first.tacticR": {
+        "text": "전법 R은 장수 고유의 큰 전법이오. 바위를 던지듯 전세를 뒤집으시오.",
+        "expr": "serious",
+        "draft": false
+      },
+      "first.capture": {
+        "text": "성 공격 예고가 떴소. 내구를 0으로 만든 뒤 성을 공격하면 저 둥지는 함락되오.",
+        "expr": "serious",
+        "draft": false
+      },
+      "first.draft": {
+        "text": "석각이 빛나오. 우리 시중을 들 장수 하나를 깨우시오.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "first.promotion": {
+        "text": "실적 3회를 채워 2차 전직이 열렸소. 더 높이 날아오를 갈래를 고르시오.",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.food": {
+        "text": "식량이 모자라면 부대가 약해지오. 식량은 원래 저절로 생기는 것이 아니었소? 먼저 채울 성을 정하시오.",
+        "expr": "surprise",
+        "draft": false
+      },
+      "first.tianshi": {
+        "text": "이번 판의 천시가 내렸소. 하늘의 때가 주는 유리한 조건을 바람결로 읽으시오.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "first.dejavu": {
+        "text": "기시감이 찾아왔소. 지난 판의 기억으로 한 번 되감을 수 있소. 바다는 아직 넓소.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "event.firstWin": {
+        "text": "첫 교전에서 이겨 작은 돌 하나를 얹었소. 깃털에 먼지도 묻지 않았소.",
+        "expr": "smile",
+        "draft": false
+      },
+      "event.firstCapture": {
+        "text": "첫 성을 함락해 큰 돌을 얹었소. 새 둥지가 생겼소. …나는 지금 매우 만족하고 있소.",
+        "expr": "smile",
+        "draft": false
+      },
+      "event.cityLost": {
+        "text": "우리 성을 잃었소. 둥지가 부서졌으니 내 날개 밑으로 들어오시오.",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.officerCaptured": {
+        "text": "적 장수를 사로잡았소. 돌 대신 바다에 던지진 않을 테니 안심하시오.",
+        "expr": "smile",
+        "draft": false
+      },
+      "event.officerLost": {
+        "text": "우리 장수를 잃었소. 나뭇가지가 부러진 듯 가슴이 답답하오.",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.capitalThreat": {
+        "text": "수도가 위험하오! 내 날개로 그대를 덮어 지킬 테니 지금 당장 수도를 막으시오.",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.runWin": {
+        "text": "천하를 통일해 큰 돌을 올렸으나 바다는 아직 넓소. 다음 판이 열려도 이 돌을 기억하겠소.",
+        "expr": "triumph",
+        "draft": false
+      },
+      "event.runLoss": {
+        "text": "이번 판에 얹은 돌은 여기까지이나 바다는 아직 넓소. 다음 판에서 다시 돌을 나르겠소.",
+        "expr": "neutral",
+        "draft": false
+      }
+    },
+    "G08": {
+      "select.intro": {
+        "text": "반가워 나는 옥토야! 달에서 약만 찧기 심심했는데 나랑 천하를 뒤집어 보자~",
+        "expr": "smile",
+        "draft": false
+      },
+      "select.pick": {
+        "text": "역시 날 고를 줄 알았거든! 좋아서 귀가 막 쫑긋거리는데 끝까지 책임져 줄게~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "greet.first": {
+        "text": "자 새 판 첫 차례야! 달빛도 완전 좋은데 시작부터 신나게 뛰어 볼까~",
+        "expr": "smile",
+        "draft": false
+      },
+      "tutorial.SORTIE": {
+        "text": "허창 성 병영 눌러서 출진 가자! 내 긴 귀에 딱 들리는데 하후돈이랑 병력 5000명이 최고야~",
+        "expr": "smile",
+        "draft": false
+      },
+      "tutorial.MOVE": {
+        "text": "하후돈 고르면 이동 칸이랑 붉은 통제 구역 뜨지? 저기 표시된 칸으로 가볍게 뛰어 가 봐~",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.END_FIRST": {
+        "text": "조조도 출진시켜서 표시된 칸에 두고 차례 끝내! 두 부대가 양쪽에서 적을 싹 가두는 거지~",
+        "expr": "smile",
+        "draft": false,
+        "cityText": "조조도 출진시켜서 표시된 칸에 두고 차례 끝내! 두 부대가 양쪽에서 적을 싹 가두는 거지~"
+      },
+      "tutorial.COMBAT": {
+        "text": "조조로 적 수비대 가리켜 봐! 피해랑 반격에 옆구리 아니 측면 15% 예고 보고 절구질하듯 패 버려~",
+        "expr": "smile",
+        "draft": false
+      },
+      "tutorial.END_SECOND": {
+        "text": "방금 측면 공격 들어간 거 완전 내 덕분이지? 이 기세로 차례 끝내고 작은 성도 털러 가자~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "tutorial.CITY": {
+        "text": "하후돈으로 작은 성 수비랑 내구부터 봐! 내구 0으로 깎고 성 치면 바로 함락이거든~",
+        "expr": "smile",
+        "draft": false
+      },
+      "tutorial.DONE": {
+        "text": "출진이랑 이동에 통제 구역 보고 예고랑 측면으로 함락까지 다 배웠네! 너 혹시 천재 아냐?",
+        "expr": "triumph",
+        "draft": false
+      },
+      "first.zoc": {
+        "text": "잠깐 저 붉은 칸은 적의 출입 금지 아니 통제 구역이야! 밟으면 딱 멈추니까 괜히 힘 빼지 마~",
+        "expr": "surprise",
+        "draft": false
+      },
+      "first.flank": {
+        "text": "정면은 재미없으니까 측면이나 후방을 노려! 피해가 확 커지는 게 내 눈에도 딱 보이잖아~",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.line": {
+        "text": "전열은 3단계가 끝이거든! 전열 무너지면 애들 약해져서 탈탈 털리니까 정신 똑바로 차려~",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.morale": {
+        "text": "사기 바닥나서 패주하면 진짜 볼품없잖아! 애들 기 안 죽게 네가 사기 좀 잘 챙겨 봐~",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.gauge": {
+        "text": "와 전법 막대기 아니 전법 게이지 꽉 찼잖아! 아끼지 말고 지금 바로 전법 R 질러 버리자~",
+        "expr": "surprise",
+        "draft": false
+      },
+      "first.tacticE": {
+        "text": "전법 E는 게이지 조금만 쓰는 작은 전법이야! 내가 보기엔 이럴 때 얄밉게 툭 쓰는 게 최고거든~",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.tacticR": {
+        "text": "전법 R은 장수 고유의 큰 전법이잖아! 판 뒤집을 땐 이거 말고 답 없으니까 화려하게 터뜨려~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "first.capture": {
+        "text": "성 공격 예고 뜬 거 봤지? 내구 0 만들고 성 치면 바로 함락이니 창고 털 준비나 하자~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "first.draft": {
+        "text": "석각에서 새 장수 깨어날 시간인데! 내 귀엔 저기 반짝이는 애 소리가 들리는데 네 촉은 어때?",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.promotion": {
+        "text": "벌써 실적 3회 채워서 2차 전직 열렸네! 어떤 갈래가 제일 화려할지 네 안목 좀 볼까~",
+        "expr": "surprise",
+        "draft": false
+      },
+      "first.food": {
+        "text": "식량 떨어지면 부대가 배고파서 약해지잖아! 아무리 불사약이 있어도 밥은 먹어야 하니 먼저 채울 성을 찍어~",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.tianshi": {
+        "text": "이번 판 하늘 운세 아니 천시 완전 우리 편인데? 달이 뜬 것처럼 유리한 조건이니까 무조건 챙기자~",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.dejavu": {
+        "text": "방금 기시감 온 거 맞지? 지난 판 기억으로 한 번 되감기 되니까 방금 내 실수는 모른 척하고 무르자~",
+        "expr": "smile",
+        "draft": false
+      },
+      "event.firstWin": {
+        "text": "첫 교전 승리 완전 대박이잖아! 다친 데는 없지? 내가 이따 특제 약 찧어 줄게~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "event.firstCapture": {
+        "text": "첫 성 함락이라니 진짜 잘하는데? 기분 최고니까 오늘 밤엔 달 보면서 창고에 금붙이나 세자~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "event.cityLost": {
+        "text": "우리 성 하나 뺏긴 거 가지고 귀 축 늘어뜨리지 마. 내가 옆에 있잖아 금방 다시 찾아오면 돼.",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.officerCaptured": {
+        "text": "대박 적 장수 사로잡았네! 도망치려는 거 내 귀가 먼저 듣고 잡았으니 상으로 맛있는 거 줘~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "event.officerLost": {
+        "text": "우리 장수가 당했네… 아무리 약을 찧어도 이건 못 고치잖아. 이 빚은 무조건 두 배로 갚아 주자.",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.capitalThreat": {
+        "text": "야 지금 한눈팔 때가 아니야 수도에서 위험한 소리가 들려! 다 제쳐 두고 당장 수도부터 막으러 가자.",
+        "expr": "surprise",
+        "draft": false
+      },
+      "event.runWin": {
+        "text": "진짜 천하 통일 해낼 줄은 몰랐는데 너 완전 최고야! 다음 판 달이 떠도 오늘 일은 절대 안 잊을게~",
+        "expr": "triumph",
+        "draft": false
+      },
+      "event.runLoss": {
+        "text": "이번 판은 좀 아쉽게 끝났네… 기죽지 마 내가 달에서 새 약 찧어 놓고 기다릴 테니까 다음 판에 꼭 다시 와.",
+        "expr": "serious",
+        "draft": false
+      }
+    },
+    "G51": {
+      "select.intro": {
+        "text": "내 이름은 창랑이다. {호칭} 같은 풋내기는 내 등 뒤에 바짝 붙어야 살아남을 거다!",
+        "expr": "serious",
+        "draft": false
+      },
+      "select.pick": {
+        "text": "나를 고르다니… 서열은 확실히 지켜라! …크흠 꼬리 흔들었다는 소리는 못 들은 걸로 해.",
+        "expr": "smile",
+        "draft": false
+      },
+      "greet.first": {
+        "text": "새 판 첫 차례부터 한눈팔지 마라! {호칭} 곁에서 또 달릴 수 있어 다행이란 뜻은 아니다.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.SORTIE": {
+        "text": "허창 성 병영을 눌러 출진해라! 하후돈에 병력 5000명은 붙여야 {호칭} 몸이 성할 거다.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.MOVE": {
+        "text": "하후돈을 고르면 이동 칸과 붉은 통제 구역이 보인다. 길 잃지 말고 표시된 칸으로 달려라!",
+        "expr": "neutral",
+        "draft": false
+      },
+      "tutorial.END_FIRST": {
+        "text": "조조도 출진시켜 표시된 칸에 두고 차례를 끝내! 양쪽에서 적을 마주하는 게 무리 사냥의 기본이다.",
+        "expr": "serious",
+        "draft": false,
+        "cityText": "조조도 출진시켜 표시된 칸에 두고 차례를 끝내! 양쪽에서 적을 마주하는 게 무리 사냥의 기본이다."
+      },
+      "tutorial.COMBAT": {
+        "text": "조조로 적 수비대를 가리켜 피해와 반격에 측면 15% 예고부터 봐라! 다치기 싫으면 확인하고 쳐.",
+        "expr": "serious",
+        "draft": false
+      },
+      "tutorial.END_SECOND": {
+        "text": "측면 공격이 먹혔군… 제법이잖아. 무슨 눈으로 보는 거냐 빨리 차례 끝내고 작은 성이나 쳐!",
+        "expr": "smile",
+        "draft": false
+      },
+      "tutorial.CITY": {
+        "text": "하후돈으로 작은 성을 쳐라! 수비와 내구를 보고 내구 0일 때 치면 {호칭} 공으로 함락시켜 주지.",
+        "expr": "serious",
+        "draft": false
+      },
+      "tutorial.DONE": {
+        "text": "출진과 이동에 통제 구역 파악하고 예고와 측면으로 함락까지 끝냈군. …칭찬 바라는 눈빛 거둬라!",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.zoc": {
+        "text": "멈춰라! 붉은 칸은 적의 통제 구역이라 들어가면 멈춘단 말이다… {호칭} 발 묶일까 봐 소리쳤다 왜!",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.flank": {
+        "text": "사냥할 땐 측면이나 후방을 노려라! 피해가 훨씬 커지니 어설프게 정면으로 들이받지 마.",
+        "expr": "serious",
+        "draft": false
+      },
+      "first.line": {
+        "text": "전열은 3단계다! 전열이 흐트러지면 부대가 약해지니… {호칭} 위험해지는 꼴 보게 하지 마라.",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.morale": {
+        "text": "사기가 떨어지면 패주할 수 있다! 겁먹은 냄새를 풍기는 건 내가 용납 못 하니 똑바로 챙겨.",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.gauge": {
+        "text": "전법 게이지가 가득 찼다! 아끼다 위기에 몰리지 말고 지금 당장 전법 R을 써 버려.",
+        "expr": "serious",
+        "draft": false
+      },
+      "first.tacticE": {
+        "text": "전법 E는 게이지 일부로 쓰는 작은 전법이다. …{호칭}한테 이런 기초까지 챙겨 줘야 마음이 놓이니 원.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "first.tacticR": {
+        "text": "전법 R은 장수 고유의 큰 전법이다! 앞길을 막는 놈들은 바람처럼 단숨에 물어뜯어라.",
+        "expr": "triumph",
+        "draft": false
+      },
+      "first.capture": {
+        "text": "성 공격 예고가 떴다! 내구를 0으로 만들고 성을 치면 함락이니… 다 차려 준 사냥감 놓치지 마.",
+        "expr": "triumph",
+        "draft": false
+      },
+      "first.draft": {
+        "text": "석각에서 깨어날 장수 하나를 골라라. …누굴 골라도 {호칭}의 제일 든든한 기병은 나라는 걸 잊지 마!",
+        "expr": "neutral",
+        "draft": false
+      },
+      "first.promotion": {
+        "text": "실적 3회를 채워 2차 전직이 열렸군. {호칭} 뜻대로 고른 갈래라면… 어디든 따라가 주지.",
+        "expr": "smile",
+        "draft": false
+      },
+      "first.food": {
+        "text": "식량이 모자라면 부대가 약해진다! 내 몫까지 줄 테니 {호칭}부터 먹고 먼저 채울 성을 정해 둬라.",
+        "expr": "worry",
+        "draft": false
+      },
+      "first.tianshi": {
+        "text": "판마다 바뀌는 하늘의 때인 천시가 내렸다. 유리한 바람이 불어오니 이번엔 꼭 이겨야 한다… 알겠냐?",
+        "expr": "neutral",
+        "draft": false
+      },
+      "first.dejavu": {
+        "text": "기시감이 도는군. 딱히 {호칭} 실수를 덮어 주려는 건 아니지만… 지난 판 기억으로 한 번 되감아라.",
+        "expr": "neutral",
+        "draft": false
+      },
+      "event.firstWin": {
+        "text": "첫 교전을 이겼군! 아우우 울부짖고 싶을 만큼… 아 아니 그냥 적들이 약해서 이긴 거다!",
+        "expr": "smile",
+        "draft": false
+      },
+      "event.firstCapture": {
+        "text": "첫 성을 함락했군. 착각하지 마라 {호칭} 몸에 상처가 없어서 안도의 한숨을 쉰 게 아니니까!",
+        "expr": "smile",
+        "draft": false
+      },
+      "event.cityLost": {
+        "text": "우리 성을 잃었다고 고개 숙이지 마라! …네 잘못이 아니니 당장 내 말 탄 등 뒤로 숨어.",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.officerCaptured": {
+        "text": "적 장수를 사로잡았군! {호칭} 오늘 꽤 멋… 크흠 그냥 사냥 솜씨가 나쁘지 않다고 한 거다.",
+        "expr": "triumph",
+        "draft": false
+      },
+      "event.officerLost": {
+        "text": "우리 무리의 장수를 잃었다… 더는 동료 잃는 피 냄새를 맡기 싫으니 내 곁에서 떨어지지 마라.",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.capitalThreat": {
+        "text": "수도가 위험하다! 불길한 기척이 코앞까지 왔으니 무슨 일이 있어도 당장 말머리를 돌려 수도로 가자!",
+        "expr": "worry",
+        "draft": false
+      },
+      "event.runWin": {
+        "text": "마침내 천하를 통일했군! 딱히 널 기다리는 건 아니지만… 다음 판에서도 제일 먼저 날 찾아와야 한다.",
+        "expr": "triumph",
+        "draft": false
+      },
+      "event.runLoss": {
+        "text": "이번 판은 졌지만 절대 자책하지 마라… {호칭} 돌아올 때까지 다음 판에서 너만 기다리고 있을 테니까.",
+        "expr": "serious",
+        "draft": false
+      }
+    }
+  }
+}

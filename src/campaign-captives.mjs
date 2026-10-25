@@ -1,3 +1,4 @@
+import {isSliceMap} from './map-primitives.mjs';
 import {relationsEnabled,relationCaptiveReleased} from './campaign-relations.mjs';
 import {c29RecruitAgent} from './campaign-c29.mjs';
 import {domesticRule,domesticRelease,domesticRecruit} from './campaign-rule-registry.mjs';
@@ -24,7 +25,7 @@ export function campaignCaptives(s,factionId=s.playerFactionId) {
 }
 export function captiveRecruitmentReason(s,p) {
   if(domesticRule(s,s.cities[p.cityId],'CAPTIVE_DEBT'))return '포로로 인망 얻기: 이 성 포로 등용 불가';
-  if(!['v2','v3'].includes(s.mapId)&&s.factions[p.homeFactionId]?.alive)return '원소속 세력이 존속하여 고정 소속 등용 불가';
+  if(!isSliceMap(s.mapId)&&s.factions[p.homeFactionId]?.alive)return '원소속 세력이 존속하여 고정 소속 등용 불가';
   if(p.negotiating)return '등용 협의 중 · 1턴';
   const reserved=s.captiveRecruitment?.factions[s.playerFactionId]?.reservedPrestige??0;
   if(s.factions[s.playerFactionId].prestige-reserved<(p.cost??C20.recruitCost))return `인망 ${p.cost??C20.recruitCost} 필요`;
@@ -79,7 +80,7 @@ export function settleCampaignCaptives(s) {
     const o=s.officers[proposal.targetOfficerId];
     if(proposal.sourceFactionId===null){const w=s.wanderers?.[proposal.targetOfficerId],cityId=proposal.candidateSourceRef;eligibilityByProposalId[proposal.proposalId]={eligible:!!w&&w.locationRef.id===cityId&&s.cities[cityId]?.ownerFactionId===proposal.factionId&&s.factions[proposal.factionId].prestige>=proposal.cost,reason:'TARGET_WORLD_STATE_CHANGED'};arrivalPlansByProposalId[proposal.proposalId]={destinationRef:cityId,routeId:'C16.LOCAL',expectedArrivalTurn:s.turn};continue;}
     eligibilityByProposalId[proposal.proposalId]={eligible:o.lifeState==='ALIVE'&&o.captivityState==='PRISONER'&&o.captorFactionId===proposal.factionId&&
-      !domesticRule(s,s.cities[proposal.candidateSourceRef],'CAPTIVE_DEBT')&&(['v2','v3'].includes(s.mapId)||!s.factions[proposal.sourceFactionId].alive)&&s.factions[proposal.factionId].prestige>=proposal.cost,reason:'TARGET_WORLD_STATE_CHANGED'};
+      !domesticRule(s,s.cities[proposal.candidateSourceRef],'CAPTIVE_DEBT')&&(isSliceMap(s.mapId)||!s.factions[proposal.sourceFactionId].alive)&&s.factions[proposal.factionId].prestige>=proposal.cost,reason:'TARGET_WORLD_STATE_CHANGED'};
     arrivalPlansByProposalId[proposal.proposalId]={destinationRef:s.factions[proposal.factionId].capitalCityId,routeId:'C6.LOCAL',expectedArrivalTurn:s.turn};
   }
   s.captiveRecruitment=resolveRecruitmentAgreements(r,{eventId:`C6.AGREEMENT.${s.turn}`,currentTurn:s.turn,eligibilityByProposalId,arrivalPlansByProposalId});

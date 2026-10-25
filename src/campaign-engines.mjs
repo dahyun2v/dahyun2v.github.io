@@ -1,3 +1,9 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {campaignMechQuery,campaignMechAllowed,campaignMechApply,campaignMechPlan,hasCampaignMechQuery,campaignMechBudget} from './campaign-mech-contracts.mjs';
+import {c467Enabled,c467Deploy,c467Owns,c467CartCapacity,c467CartEntry,c467CartSpend,c467AuraOrigins,c467OrderRange,c467FormationGuard,c467AfterCombat,c467ResultEvent} from './campaign-c467.mjs';
+import {withCampaignQueries} from './campaign-rule-registry.mjs';
+import {cloneCampaign,writableCampaign} from './campaign-clone.mjs';
+import {pilotWarning} from './campaign-c34.mjs';
 import {sample4Separated,sample4Execute,sample4CleanSeparation} from './campaign-rule-registry.mjs';
 import data from '../../docs/design-data/officer-pack/engines-v1.0.json' with {type:'json'};
 import assignments from '../../docs/design-data/officer-pack/engine-assignment-v1.0.json' with {type:'json'};
@@ -9,8 +15,8 @@ export const ENGINES=Object.freeze(data.engines);
 const definitions=new Map(ENGINES.map(e=>[e.id,e]));
 const assigned=new Map(assignments.assignments.map(o=>[o.id,o.engine]));
 // Historical c37 switch now disables the engine foundation, including migration.
-export const enginesEnabled=s=>['v2','v3'].includes(s.mapId)&&s.c37Disabled!==true;
-export const officerEngine=(s,id)=>enginesEnabled(s)?assigned.get(id)??null:null;
+export const enginesEnabled=s=>isSliceMap(s.mapId)&&s.c37Disabled!==true;
+export const officerEngine=(s,id)=>enginesEnabled(s)?assigned.get(id)??(s.china12?s.officers[id]?.catalogEngineId:null)??null:null;
 const maxResource=(s,id)=>s.campaignGrowth?.officers[id]?.c50?.path==='BASE'?data.common.baseKeepMax:data.common.resourceMax;
 export function armyEngine(s,id){
  const a=s.armies[id];if(!a||!enginesEnabled(s))return null;
@@ -36,6 +42,7 @@ export function initializeEngines(s){
    // Existing engine state is left alone: events and load must not refill it.
    const resource=active(s,a)&&definitions.has(engineId)&&!['TU','CHEOK'].includes(engineId)?2:0;
    a.c50={engineId,resource,reservations:{},relation:null};a.c50CommanderId=a.commanderId;
+   c467Deploy(s,a);
   }
  }
  return s;
@@ -49,13 +56,13 @@ export function engineView(s,id,armyId=null,viewer=null){
 }
 export function publicArmyEngine(s,id,viewer=null){
  const a=s.armies[id],e=armyEngine(s,id);if(!e)return null;
- const x=a.c50??{resource:0,reservations:{},relation:null},details={};for(const [key,r] of Object.entries(x.reservations??{}))if(['COUNTER','BLOCK','PIN'].includes(key)&&r&&typeof r==='object')details[key]={...(Number.isInteger(r.n)?{n:r.n}:{}),...(Number.isInteger(r.facing)?{facing:r.facing}:{}),...(r.targetId&&(!viewer||s.knowledge[viewer]?.tiles[s.armies[r.targetId]?.tileId]==='VISIBLE')?{targetId:r.targetId}:{})};
+ const x=a.c50??{resource:0,reservations:{},relation:null},details={};for(const [key,r] of Object.entries(x.reservations??{}))if(['COUNTER','BLOCK','PIN','RETURN_FIRE'].includes(key)&&r&&typeof r==='object')details[key]={...(Number.isInteger(r.n)?{n:r.n}:{}),...(Number.isInteger(r.facing)?{facing:r.facing}:{}),...(r.targetId&&(!viewer||s.knowledge[viewer]?.tiles[s.armies[r.targetId]?.tileId]==='VISIBLE')?{targetId:r.targetId}:{})};
  const target=validRelation(s,a),relation=target&&(!viewer||target.factionId===viewer||s.knowledge[viewer]?.tiles[target.tileId]==='VISIBLE'&&!engineApi.hidden?.(s,target.armyId,viewer))?{type:x.relation.type,targetId:target.armyId,pursued:!!x.relation.pursued}:null;
  const branchState={};for(const key of ['frenzy','flag','passage','depot'])if(x[key]){branchState[key]=structuredClone(x[key]);if(key==='depot')delete branchState[key].recipients;}
  for(const key of ['grudge','trust']){const target=typeof x[key]==='string'?x[key]:x[key]?.targetId;if(target&&(!viewer||s.armies[target]?.factionId===viewer||s.knowledge[viewer]?.tiles[s.armies[target]?.tileId]==='VISIBLE'&&!engineApi.hidden?.(s,target,viewer)))branchState[key]=structuredClone(x[key]);}
  for(const key of ['direct','persuaded'])if(x[key])branchState[key]=Object.fromEntries(Object.entries(x[key]).filter(([k])=>k!=='sourceId'));
  if(!viewer||viewer===a.factionId){if(x.evacuation)branchState.evacuation=structuredClone(x.evacuation);if(x.sharedHide)branchState.sharedHide=x.sharedHide;}
- return {engineId:e.engineId,path:e.path,...branchState,resource:e.resource,max:e.max,reservations:Object.keys(x.reservations??{}).filter(k=>!viewer||viewer===a.factionId||k!=='RETURN_FIRE'),...(Object.keys(details).length?{reservationDetails:details}:{}),...(relation?{relation}:{}),...(e.engineId==='JANGGUN'?{order:orderOf(a)}:{})};
+ return {engineId:e.engineId,path:e.path,...branchState,resource:e.resource,max:e.max,reservations:Object.keys(x.reservations??{}),...(Object.keys(details).length?{reservationDetails:details}:{}),...(relation?{relation}:{}),...(e.engineId==='JANGGUN'?{order:orderOf(a)}:{})};
 }
 // Observer is an ephemeral test seam, never saved.
 let observer=null;
@@ -84,8 +91,9 @@ export function validateEngines(s){
  if(!object(s.c50)||!object(s.c50.finishedTurns))fail();
  if(s.c50.structures!==undefined){
   if(!Array.isArray(s.c50.structures)||new Set(s.c50.structures.map(o=>o.id)).size!==s.c50.structures.length)fail();
-  const unique=new Set();for(const o of s.c50.structures){const key=`${o.sourceId}:${o.type}`;
-   if(!object(o)||!s.armies[o.sourceId]||!s.factions[o.factionId]||!s.tiles[o.tileId]||!['PALISADE','CAMP','BRIDGE','CART'].includes(o.type)||!Number.isSafeInteger(o.hp)||o.hp<1||o.hp>o.maxHp||!Number.isSafeInteger(o.maxHp)||!Number.isSafeInteger(o.n)||o.n<1||o.n>4||typeof o.spend!=='string'||unique.has(key)||o.type==='CART'&&(!Number.isSafeInteger(o.expires)||typeof o.onSupply!=='boolean'))fail();unique.add(key);
+  const unique=new Map();for(const o of s.c50.structures){const key=`${o.sourceId}:${o.type}:${o.group??"ENGINE"}`;
+   const limit=structureLimit(s,o.sourceId,o.type,o.group??"ENGINE");const count=(unique.get(key)??0)+1;
+   if(!object(o)||!s.armies[o.sourceId]||!s.factions[o.factionId]||!s.tiles[o.tileId]||!['PALISADE','CAMP','BRIDGE','CART'].includes(o.type)||!Number.isSafeInteger(o.hp)||o.hp<1||o.hp>o.maxHp||!Number.isSafeInteger(o.maxHp)||!Number.isSafeInteger(o.n)||o.n<1||o.n>4||typeof o.spend!=='string'||count>limit||o.expires!==undefined&&!Number.isSafeInteger(o.expires)||o.type==='CART'&&(!Number.isSafeInteger(o.expires)||typeof o.onSupply!=='boolean'))fail();unique.set(key,count);
   }
  }
  for(const [f,t] of Object.entries(s.c50.finishedTurns))if(!s.factions[f]||!Number.isSafeInteger(t)||t<1||t>s.turn)fail();
@@ -120,7 +128,7 @@ const live=s=>Object.values(s.armies).filter(a=>active(s,a));
 const usable=(s,a)=>active(s,a)&&a.morale!=='ROUTING'&&a.formation!=='BROKEN'&&!(a.c32?.stunUntil>=s.turn)&&!(a.c27?.stunUntil>=s.turn);
 const kind=(s,a,id)=>!!a?.c50&&a.c50CommanderId===a.commanderId&&armyEngine(s,a.armyId)?.engineId===id;
 const melee=(s,a)=>!armyEngine(s,a.armyId)?.archer;
-const gain=(s,a,n=1)=>{a.c50.resource=Math.max(0,Math.min(armyEngine(s,a.armyId).max,a.c50.resource+n));};
+const gain=(s,a,n=1)=>{n=campaignMechQuery(s,'H09','resourceGain',{sourceId:a.armyId},n);if(!Number.isSafeInteger(n))throw new Error('INVALID_MECH_RESOURCE');a.c50.resource=Math.max(0,Math.min(armyEngine(s,a.armyId).max,a.c50.resource+n));};
 function once(s,a,key){a.c50.periodKeys??={};if(a.c50.periodKeys[key])return false;a.c50.periodKeys[key]=true;return true;}
 const hasMoved=(s,a)=>a.ruleMovedTurn===s.turn||(a.movedTiles??0)>0;
 const firstAttack=(s,a)=>a.c50?.attackTurn!==s.turn;
@@ -130,14 +138,21 @@ export function engineOrderRecipients(s,id){
  const g=s.armies[id];if(!g||!active(s,g)||!kind(s,g,'JANGGUN'))return [];
  const recipients=new Set((branched(s,g,'DOKJEON')?(g.c50.resource>0?directTargets(s,g):[]):g.morale==='STEADY'?orderTargets(s,g):[]).map(a=>a.armyId));
  for(const a of live(s))if(a.armyId!==id&&friendly(a,g)&&!sample4Separated(s,id,a.armyId)&&(a.c50?.direct?.sourceId===id&&a.c50.direct.expires>=s.turn||a.c50?.lastOrders?.some(o=>o.sourceId===id&&o.expires>=s.turn)))recipients.add(a.armyId);
- return [...recipients].sort();
+ return mechRecipients(s,id,[...recipients].sort());
 }
-function orderTargets(s,g){if(branched(s,g,'DOKJEON')||branched(s,g,'GUNGI')&&!g.c50.flag)return [];const origin=g.c50.flag?{...g,tileId:g.c50.flag}:g;return live(s).filter(a=>a.armyId!==g.armyId&&!sample4Separated(s,g.armyId,a.armyId)&&friendly(a,g)&&distance(s,a,origin)<=(g.c50.resource>=3?params('JANGGUN').rangeAt3:params('JANGGUN').range)).sort((a,b)=>distance(s,a,origin)-distance(s,b,origin)||a.troopCount-b.troopCount||a.armyId.localeCompare(b.armyId)).slice(0,g.c50.resource);}
+function mechRecipients(s,id,ids){
+ if(!hasCampaignMechQuery('H08'))return ids;
+ const result=campaignMechQuery(s,'H08','orderRecipients',{sourceId:id},ids);
+ if(!Array.isArray(result)||new Set(result).size!==result.length||result.some(t=>!active(s,s.armies[t])||s.armies[t].factionId!==s.armies[id].factionId||t===id))throw new Error('INVALID_MECH_RECIPIENTS');
+ return result;
+}
+function orderTargets(s,g){return mechRecipients(s,g.armyId,orderTargetsBase(s,g).map(a=>a.armyId)).map(id=>s.armies[id]);}
+function orderTargetsBase(s,g){if(branched(s,g,'DOKJEON')||branched(s,g,'GUNGI')&&!c467Owns(s,g,'G99')&&!g.c50.flag)return [];const origin=g.c50.flag?{...g,tileId:g.c50.flag}:g;return live(s).filter(a=>a.armyId!==g.armyId&&!sample4Separated(s,g.armyId,a.armyId)&&friendly(a,g)&&distance(s,a,origin)<=c467OrderRange(s,g,g.c50.resource>=3?params('JANGGUN').rangeAt3:params('JANGGUN').range)).sort((a,b)=>distance(s,a,origin)-distance(s,b,origin)||a.troopCount-b.troopCount||a.armyId.localeCompare(b.armyId)).slice(0,g.c50.resource+(c467Owns(s,g,'G99')&&g.c50.flag?1:0));}
 function auraRange(a){return a.c50.resource>=2?params('GUKSA').auraRangeAt2:params('GUKSA').auraRange;}
 function validRelation(s,a){
  const r=a.c50?.relation,t=s.armies[r?.targetId];if(!r)return null;
  const invalid=!active(s,t)||a.morale==='ROUTING'||t.morale==='ROUTING'||r.type==='LINK'&&(a.formation==='BROKEN'||distance(s,a,t)>params('HOWI').linkRange);
- return invalid?null:t;
+ return campaignMechQuery(s,'H08','relation',{sourceId:a.armyId,targetId:t?.armyId??null},!invalid)===true?t:null;
 }
 function cleanRelations(s){for(const a of Object.values(s.armies)){if(a.c50?.relation&&!validRelation(s,a)){a.c50.relation=null;if(kind(s,a,'TU'))a.c50.resource=0;delete a.c50.reservations.BLOCK;}if(a.c50?.reservations.COUNTER&&!usable(s,a))delete a.c50.reservations.COUNTER;if(a.c50?.reservations.RETURN_FIRE&&!usable(s,a))delete a.c50.reservations.RETURN_FIRE;if(a.c50?.warning&&!usable(s,a))delete a.c50.warning;if(a.c50?.reservations.PIN&&(!usable(s,a)||validRelation(s,a)?.armyId!==a.c50.reservations.PIN.targetId))delete a.c50.reservations.PIN;}}
 function merit(s,a,branch,targetId,spend){
@@ -147,11 +162,12 @@ function merit(s,a,branch,targetId,spend){
  if(r.meritKeys[id][targetId]||r.meritKeys[id][`spend:${spend}`])return;
  r.meritKeys[id][targetId]=true;r.meritKeys[id][`spend:${spend}`]=true;r.merits[id]=(r.merits[id]??0)+1;
 }
-export function engineActions(s,id){
+export function engineActions(s,id){return withCampaignQueries(s,()=>engineActionsRead(s,id));}
+function engineActionsRead(s,id){
  const a=s.armies[id],e=armyEngine(s,id);if(!e)return [];
  const names={CHAEK:[['WARN_FIRE','예고 · 화공'],['WARN_ROOT','예고 · 이동 봉쇄'],['WARN_MORALE','예고 · 사기 교란']],CHUKSEONG:[['PALISADE','목책 공사'],['CAMP','진지 공사'],['BRIDGE','다리 공사'],['CHIP','깎기']],CHEOK:[['STEALTH','잠행'],['SCOUT','정탐']],JEONNONG:[['CART','수레']],MAENG:[['FLURRY','연타']],GANG:[['COUNTER','반격 자세']],HOWI:[['LINK','연결 바꾸기'],['BLOCK','막기']],TU:[['RIVAL','맞수 지정'],['STRIKE','투지 치기']],JANGGUN:[['ORDER','영 바꾸기']],GUKSA:[['RELEASE','해방']]};
  if(e.archer&&e.engineId==='GANG')names.GANG=[['RETURN_FIRE','응사']];
- return [...(names[e.engineId]??[]).filter(([action])=>branchAllows(s,a,action)),...(branchActions[pathOf(s,a)?.split('.')[1]]??[])].map(([action,name])=>({action,name,...engineActionAvailability(s,id,action)}));
+ return [...(names[e.engineId]??[]).filter(([action])=>branchAllows(s,a,action)),...(branchActions[pathOf(s,a)?.split('.')[1]]??[]),...(c467Owns(s,a,'G99')&&!branched(s,a,'GUNGI')?[['FLAG','군기 꽂기'],['UNFLAG','군기 뽑기']]:[])].map(([action,name])=>({action,name,...engineActionAvailability(s,id,action)}));
 }
 export function engineActionAvailability(s,id,action){
  const a=s.armies[id],e=armyEngine(s,id);if(promotionActions.has(action))return promotionAvailability(s,id,action);if(!branchAllows(s,a,action))return {canUse:false,reasonCode:'SEALED_ENGINE_ACTION',reasonText:'전직으로 봉인된 행동입니다',targets:[]};if(mapActions.has(action))return mapActionAvailability(s,id,action);let reasonCode='',reasonText='',targets=[];
@@ -173,7 +189,7 @@ export function engineActionAvailability(s,id,action){
   else if(action==='RIVAL')targets=foes.filter(b=>(e.archer?engineShotLegal(s,id,b.armyId):distance(s,a,b)===1)&&b.morale!=='ROUTING').map(b=>b.armyId);
   else if(action==='STRIKE'){const t=validRelation(s,a);targets=t&&engineApi.targets(s,id).includes(t.armyId)?[t.armyId]:[];}
   else if(action==='ORDER')targets=[id];
-  else if(action==='RELEASE')targets=allies.filter(b=>distance(s,a,b)<=auraRange(a)&&b.morale!=='STEADY').map(b=>b.armyId);
+  else if(action==='RELEASE')targets=allies.filter(b=>c467AuraOrigins(s,a).some(at=>tileDistance(s,at,b.tileId)<=auraRange(a))&&b.morale!=='STEADY').map(b=>b.armyId);
   if(!reasonCode&&!targets.length)fail('NO_ENGINE_TARGET','지금 사용할 수 있는 대상이 없습니다');
  }
  return {reasonCode,reasonText,canUse:!reasonCode,targets};
@@ -184,7 +200,7 @@ export function resolveEngineAction(state,id,action,targetId,options={}){
  if(mapActions.has(action))return resolveMapAction(state,id,action,targetId,options);
  const av=engineActionAvailability(state,id,action);if(!av.canUse)throw new Error(av.reasonCode);
  targetId??=av.targets.length===1?av.targets[0]:null;if(!av.targets.includes(targetId))throw new Error('INVALID_ENGINE_TARGET');
- let s=structuredClone(state),a=s.armies[id],x=a.c50,n=x.resource;
+ let s=writableCampaign(state),a=s.armies[id],x=a.c50,n=x.resource;
  const spend=`${s.turn}:${id}:${s.battleSequence}:${a.mainActionCount??0}:${action}`;
  cleanRelations(s);s.c50.context={attackerId:id,origin:spend};
  if(action==='LINK'){x.relation={type:'LINK',targetId};delete x.reservations.BLOCK;}
@@ -235,7 +251,7 @@ export function engineAttackOptions(s,id,targetId,options={}){
  if(a.c50?.direct?.type==='FLANK'&&!sample4Separated(s,a.c50.direct.sourceId,id)&&!options.counter&&!options.reaction)out.forceSide='FLANK';
  if(!options.counter&&!options.reaction){
   const sources=live(s).filter(g=>kind(s,g,'JANGGUN')&&g.morale==='STEADY'&&orderOf(g)==='ADVANCE'&&orderTargets(s,g).some(b=>b.armyId===id));
-  if(a.c50?.lastOrders?.some(o=>o.order==='ADVANCE'&&!sample4Separated(s,o.sourceId,id))||sources.length&&hasMoved(s,a)&&firstAttack(s,a))out.forceSide='FLANK';
+  if(a.mechV2?.globalAdvance?.turn===s.turn&&hasMoved(s,a)&&firstAttack(s,a)||a.c50?.lastOrders?.some(o=>o.order==='ADVANCE'&&!sample4Separated(s,o.sourceId,id))||sources.length&&hasMoved(s,a)&&firstAttack(s,a))out.forceSide='FLANK';
  }
  return out;
 }
@@ -245,19 +261,20 @@ export function engineDamageFactor(s,id,targetId,side,options={}){
  if(kind(s,t,'GANG')&&melee(s,t)&&t.c50.resource>=2){if(side==='FRONT'&&!branched(s,t,'BAESU'))reduce=params('GANG').frontReduce/(t.c50.reservations.COUNTER?2:1);if(side==='FLANK'&&!branched(s,t,'BAESU'))factor*=1+params('GANG').flankIncrease/100;}
  if(side==='FRONT'&&(t.c50?.lastOrders?.some(o=>o.order==='GUARD'&&!sample4Separated(s,o.sourceId,targetId))||live(s).some(g=>kind(s,g,'JANGGUN')&&g.morale==='STEADY'&&orderOf(g)==='GUARD'&&orderTargets(s,g).some(b=>b.armyId===targetId))))reduce=Math.max(reduce,params('JANGGUN').guardReduce);
  if((s.c50?.structures??[]).some(o=>o.type==='CAMP'&&o.factionId===t.factionId&&o.tileId===t.tileId))reduce=Math.max(reduce,20);
- return factor*(1-reduce/100)*(options.damageRatio??1);
+ return campaignMechQuery(s,'H08','damageFactor',{sourceId:id,targetId,side,options},factor*(1-reduce/100)*(options.damageRatio??1));
 }
 function engineCounterFront(s,id,attackerId){const a=s.armies[id],r=a?.c50?.reservations.COUNTER;return !!r&&usable(s,a)&&engineApi.side({...s,armies:{...s.armies,[id]:{...a,facing:r.facing??a.facing}}},attackerId,id)=== 'FRONT'!==branched(s,a,'BAESU');}
 export function engineSuppressReaction(s,id,attackerId){return enginesEnabled(s)&&(!!s.armies[id]?.c50?.reservations.PIN&&(!attackerId||s.armies[id].c50.reservations.PIN.targetId===attackerId)||!!s.armies[id]?.c50?.reservations.COUNTER&&(!attackerId||engineCounterFront(s,id,attackerId)));}
 export function engineFormationGuard(s,id){
  if(!enginesEnabled(s)||!s.c50)return false;initializeEngines(s);cleanRelations(s);
+ if(c467FormationGuard(s,id))return true;
  const target=s.armies[id];for(const a of live(s).sort((a,b)=>a.armyId.localeCompare(b.armyId))){const r=a.c50?.reservations.BLOCK;
   if(r&&!sample4Separated(s,a.armyId,id)&&r.targetId===id&&validRelation(s,a)?.armyId===id){if(--r.n<=0)delete a.c50.reservations.BLOCK;if(distance(s,a,target)===2)merit(s,a,'GUWON',id,r.spend);a.c50.blockedAttacker={targetId:s.c50?.context?.attackerId,turn:s.turn,spend:r.spend};return true;}
  }return false;
 }
 export function engineMoraleGuard(s,id,from,to){
  if(!enginesEnabled(s)||!s.c50||from!=='SHAKEN'||to!=='ROUTING')return false;initializeEngines(s);
- const target=s.armies[id];for(const a of live(s).sort((a,b)=>a.armyId.localeCompare(b.armyId)))if(kind(s,a,'GUKSA')&&!a.c50.auraOff&&a.morale!=='ROUTING'&&friendly(a,target)&&!sample4Separated(s,a.armyId,id)&&(!branched(s,a,'GEUNSIN')&&distance(s,a,target)<=auraRange(a)||branched(s,a,'GEUNSIN')&&a.c50.trust===id&&s.knowledge[a.factionId]?.tiles[target.tileId]==='VISIBLE')&&(a.c50.routGuards??={})[id]!==s.turn){a.c50.routGuards[id]=s.turn;return true;}
+ const target=s.armies[id];for(const a of live(s).sort((a,b)=>a.armyId.localeCompare(b.armyId)))if(kind(s,a,'GUKSA')&&!a.c50.auraOff&&a.morale!=='ROUTING'&&friendly(a,target)&&!sample4Separated(s,a.armyId,id)&&(!branched(s,a,'GEUNSIN')&&c467AuraOrigins(s,a).some(at=>tileDistance(s,at,target.tileId)<=auraRange(a))||branched(s,a,'GEUNSIN')&&a.c50.trust===id&&s.knowledge[a.factionId]?.tiles[target.tileId]==='VISIBLE')&&(a.c50.routGuards??={})[id]!==s.turn){a.c50.routGuards[id]=s.turn;return true;}
  return false;
 }
 export function engineShareRows(s,rows){
@@ -269,7 +286,8 @@ export function engineShareRows(s,rows){
   if(once(s,a,'share'))gain(s,a);
  }
 }
-export function enginePursuit(s,id,targetId){
+export function enginePursuit(s,id,targetId){return campaignMechQuery(s,'H03','pursuitReservation',{sourceId:id,targetId},enginePursuitBase(s,id,targetId));}
+function enginePursuitBase(s,id,targetId){
  const a=s.armies[id],r=a?.c50?.relation;return enginesEnabled(s)&&kind(s,a,'TU')&&!branched(s,a,'GYEONJE')&&melee(s,a)&&r?.targetId===targetId&&!r.pursued?{multiplier:params('TU').pursuitMultiplier,n:a.c50.resource}:null;
 }
 export function engineAfterAttack(s,before,id,targetId,log,options={}){
@@ -294,21 +312,23 @@ export function engineAfterAttack(s,before,id,targetId,log,options={}){
   if(t.c50)t.c50.lastOrders=(t.c50.lastOrders??[]).filter(o=>o.order!=='GUARD');
  }
  cleanRelations(s);
- const r=t.c50?.reservations.COUNTER;
- if(!options.reaction&&r&&usable(s,t)&&active(s,a)&&engineCounterFront(s,targetId,id)&&a.factionId!==t.factionId){
+ const r=engineCounterReservation(s,targetId,id);
+ if(!options.reaction&&!options.noCounter&&r&&usable(s,t)&&active(s,a)&&campaignMechAllowed(s,'H04','attackAllowed',{sourceId:targetId,targetId:id,kind:'COUNTER_RESERVATION'})&&a.factionId!==t.factionId){
   delete t.c50.reservations.COUNTER;t.c50.resource=Math.max(0,t.c50.resource-r.n);
   const many=live(s).filter(b=>hostile(s,t,b)&&distance(s,t,b)===1).length>=2,pre=t.c50.resource;
-  const out=engineApi.attack(s,targetId,id,null,{reaction:true,enginePaid:true,damageRatio:r.n*params('GANG').counterRatio});
-  const outer=log;Object.assign(s,out);const defender=s.armies[targetId],result=s.lastCombat,spend=`counter:${s.turn}:${targetId}:${result.sequence}`;
-  if(many)merit(s,defender,'BAESU',id,spend);if(result.formationChanges.some(f=>f.armyId===id&&formationDrop(f.from,f.to)))merit(s,defender,'YEOKSEUP',id,spend);
+  const out=engineApi.attack(s,targetId,id,null,{reaction:true,enginePaid:true,c467Counter:true,damageRatio:r.n*params('GANG').counterRatio});
+  const outer=log;Object.assign(s,out);campaignMechBudget(s,r.budget);const defender=s.armies[targetId],result=s.lastCombat,spend=`counter:${s.turn}:${targetId}:${result.sequence}`;
+  if(kind(s,defender,'GANG')&&many)merit(s,defender,'BAESU',id,spend);if(kind(s,defender,'GANG')&&result.formationChanges.some(f=>f.armyId===id&&formationDrop(f.from,f.to)))merit(s,defender,'YEOKSEUP',id,spend);
   // The reaction may not replenish its own spent resource.
   defender.c50.resource=pre;outer.allyLoss+=result.enemyLoss;outer.formationChanges.push(...result.formationChanges);outer.moraleChanges.push(...result.moraleChanges);outer.effectLines.push('반격 자세');outer.engineCounter=result;s.lastCombat=outer;
  }
  if(options.reaction&&options.engineFormation&&active(s,t))engineFormationDamage(s,targetId,options.engineFormation,log);
  mapAfterAttack(s,before,id,targetId,log,options);
+ c467AfterCombat(s,before,id,targetId,log,options);
  if(handled)s.c50.handledAttack=handled;
 }
 function handleEngineEvent(s,type,p){
+ c467ResultEvent(s,type,p);
  if(!s.c50)return;
  promotionEvent(s,type,p);
  mapEngineEvent(s,type,p);
@@ -345,7 +365,8 @@ function handleEngineEvent(s,type,p){
  }
 }
 export function enginePursuitMerit(s,id,targetId){const a=s.armies[id];merit(s,a,'GYEONJE',targetId,`pursuit:${s.turn}:${s.battleSequence}`);}
-export function engineAiActions(s,id){
+export function engineAiActions(s,id){return withCampaignQueries(s,()=>engineAiActionsRead(s,id));}
+function engineAiActionsRead(s,id){
  const a=s.armies[id],e=armyEngine(s,id);if(!e)return [];
  if(pathOf(s,a)&&pathOf(s,a)!=='BASE'){
   const choices=engineActions(s,id).filter(o=>o.canUse&&promotionActions.has(o.action)),rows=[];
@@ -388,7 +409,7 @@ export function engineAiActions(s,id){
 
 export function engineStatuses(s,id,viewer=null){
  const a=s.armies[id];if(!armyEngine(s,id))return [];const x=a.c50,labels={COUNTER:'반격 자세',BLOCK:'막기',RETURN_FIRE:'응사',PIN:'이탈 막기'};
- return [...(x?.frenzy?[`광분 ${x.frenzy.remaining}차례`]:[]),...(x?.flag?['군기']:[]),...(x?.trap?['함정']:[]),...(x?.passage?['통로']:[]),...(x?.depot?['보급소']:[]),...(x?.trust?['신임']:[]),...(x?.grudge?['원한']:[]),...(x?.persuaded?['설득 · 공격 불가']:[]),...(x?.direct?[`군령 · ${x.direct.type==='MOVE'?'이탈 추격 면제':'다음 공격 측면'}`]:[]),...((!viewer||viewer===a.factionId)&&x?.evacuation?['후송 회복 예약']:[]),...(x?.hidden?['숨음']:[]),...(x?.warning?['예고']:[]),...(x?.mark?['정탐 표식']:[]),...Object.keys(x?.reservations??{}).filter(k=>!viewer||viewer===a.factionId||k!=='RETURN_FIRE').map(k=>labels[k]??k),...(validRelation(s,a)?[x.relation.type==='LINK'?'연결':'맞수']:[]),...(kind(s,a,'JANGGUN')?[orderOf(a)==='ADVANCE'?'진격령':'수비령']:[])];
+ return [...(x?.frenzy?[`광분 ${x.frenzy.remaining}차례`]:[]),...(x?.flag?['군기']:[]),...(x?.trap?['함정']:[]),...(x?.passage?['통로']:[]),...(x?.depot?['보급소']:[]),...(x?.trust?['신임']:[]),...(x?.grudge?['원한']:[]),...(x?.persuaded?['설득 · 공격 불가']:[]),...(x?.direct?[`군령 · ${x.direct.type==='MOVE'?'이탈 추격 면제':'다음 공격 측면'}`]:[]),...((!viewer||viewer===a.factionId)&&x?.evacuation?['후송 회복 예약']:[]),...(x?.hidden?['숨음']:[]),...(x?.warning?['예고']:[]),...(x?.mark?['정탐 표식']:[]),...Object.keys(x?.reservations??{}).map(k=>labels[k]??k),...(validRelation(s,a)?[x.relation.type==='LINK'?'연결':'맞수']:[]),...(kind(s,a,'JANGGUN')?[orderOf(a)==='ADVANCE'?'진격령':'수비령']:[])];
 }
 export function engineCombatHit(s,log){
  if(!enginesEnabled(s)||s.disengageResolving)return;
@@ -408,7 +429,7 @@ export function engineCombatHit(s,log){
  if(log.counter&&log.allyLoss>0&&!branched(s,a,'BAESU')&&kind(s,a,'GANG')&&melee(s,a)&&once(s,a,`gang-counter:${origin}:${log.sequence??s.battleSequence}`))gain(s,a);
 }
 
-export function engineCounterReservation(s,id,attackerId){return enginesEnabled(s)&&engineCounterFront(s,id,attackerId)?s.armies[id].c50.reservations.COUNTER:null;}
+export function engineCounterReservation(s,id,attackerId){const r=campaignMechQuery(s,'H03','counterReservation',{sourceId:id,targetId:attackerId},enginesEnabled(s)&&engineCounterFront(s,id,attackerId)?s.armies[id].c50.reservations.COUNTER:null);if(r!==null){if(!r||!Number.isSafeInteger(r.n)||r.n<1||r.n>4)throw new Error('INVALID_MECH_COUNTER_RESERVATION');campaignMechBudget(s,r.budget,false);}return r;}
 export const engineCounterRatio=()=>params('GANG').counterRatio;
 
 const formationDrop=(from,to)=>["ORDERED","DISORDERED","BROKEN"].indexOf(to)>["ORDERED","DISORDERED","BROKEN"].indexOf(from);
@@ -443,7 +464,7 @@ export function engineShotLegal(s,id,targetId,{fromTileId=null,facing=null}={}){
 }
 export function engineStructureTargets(s,id){
  const a=s.armies[id];if(!enginesEnabled(s)||!usable(s,a)||!engineApi.canAct(s,id))return [];
- return (s.c50?.structures??[]).filter(o=>o.hp>0&&o.factionId!==a.factionId&&engineApi.hostileFaction(s,a.factionId,o.factionId)&&s.knowledge[a.factionId]?.tiles[o.tileId]==='VISIBLE'&&tileDistance(s,a.tileId,o.tileId)===(troopToCampaign(a.troopType)==='BT03'?2:1)&&engineApi.structureLine(s,id,o.tileId)).map(o=>o.id);
+ return (s.c50?.structures??[]).filter(o=>o.hp>0&&campaignMechAllowed(s,'H04','attackAllowed',{sourceId:id,targetId:o.id,kind:'STRUCTURE'})&&o.factionId!==a.factionId&&engineApi.hostileFaction(s,a.factionId,o.factionId)&&s.knowledge[a.factionId]?.tiles[o.tileId]==='VISIBLE'&&tileDistance(s,a.tileId,o.tileId)===(troopToCampaign(a.troopType)==='BT03'?2:1)&&engineApi.structureLine(s,id,o.tileId)).map(o=>o.id);
 }
 function mapActionAvailability(s,id,action){
  const a=s.armies[id],e=armyEngine(s,id),bad=(reasonCode,reasonText)=>({canUse:false,reasonCode,reasonText,targets:[]});
@@ -453,8 +474,8 @@ function mapActionAvailability(s,id,action){
  if(!engineApi.canAct(s,id))return bad('MAIN_ACTION_USED','이번 차례 주 행동을 마쳤습니다');
  const expected={WARN_FIRE:'CHAEK',WARN_ROOT:'CHAEK',WARN_MORALE:'CHAEK',PALISADE:'CHUKSEONG',CAMP:'CHUKSEONG',BRIDGE:'CHUKSEONG',CHIP:'CHUKSEONG',STEALTH:'CHEOK',SCOUT:'CHEOK',CART:'JEONNONG',RETURN_FIRE:'GANG'};
  if(e.engineId!==expected[action]||action==='RETURN_FIRE'&&!e.archer)return bad('INVALID_ENGINE_ACTION','계통에 맞는 행동을 고르세요');
- const cost={PALISADE:params('CHUKSEONG').costPalisade,CAMP:params('CHUKSEONG').costCamp,BRIDGE:params('CHUKSEONG').costBridge,STEALTH:0,SCOUT:0}[action]??1;
- if(e.resource<cost)return bad('ENGINE_RESOURCE','계통 자원이 부족합니다');
+ const cost=constructionCost(s,id,action,{PALISADE:params('CHUKSEONG').costPalisade,CAMP:params('CHUKSEONG').costCamp,BRIDGE:params('CHUKSEONG').costBridge,STEALTH:0,SCOUT:0}[action]??1);
+ if(e.resource<cost+(action==='CART'&&c467Owns(s,a,'G65')&&a.mechV2?.cartDebt?1:0))return bad('ENGINE_RESOURCE','계통 자원이 부족합니다');
  if(['STEALTH','SCOUT'].includes(action)&&!a.c50.hidden)return bad('ENGINE_NOT_HIDDEN','숨은 상태에서만 사용할 수 있습니다');
  if(action.startsWith('WARN')&&(a.c50.warning||a.c50.cooldownThrough>=s.turn))return bad('ENGINE_COOLDOWN','예고 재사용 대기 중입니다');
  let targets=[];
@@ -466,23 +487,32 @@ function mapActionAvailability(s,id,action){
  if(action==='RETURN_FIRE')targets=[id];
  return targets.length?{canUse:true,reasonCode:'',reasonText:'',targets:targets.sort()}:bad('NO_ENGINE_TARGET','지금 사용할 수 있는 대상이 없습니다');
 }
+function structureLimit(s,id,type,group="ENGINE"){const n=campaignMechQuery(s,'H11','structureLimit',{sourceId:id,type,group},1);if(!Number.isSafeInteger(n)||n<1||n>32)throw new Error('INVALID_MECH_STRUCTURE_LIMIT');return n;}
+function constructionCost(s,id,action,baseline){const n=campaignMechQuery(s,'H09','resourceCost',{sourceId:id,action},baseline);if(!Number.isSafeInteger(n)||n<0)throw new Error('INVALID_MECH_RESOURCE_COST');return n;}
 function resolveMapAction(state,id,action,targetId,options){
  const av=mapActionAvailability(state,id,action);if(!av.canUse)throw new Error(av.reasonCode);
  targetId??=av.targets.length===1?av.targets[0]:null;if(!av.targets.includes(targetId))throw new Error('INVALID_ENGINE_TARGET');
- let s=structuredClone(state),a=s.armies[id],x=a.c50,n=x.resource;const spend=`${s.turn}:${id}:${s.battleSequence}:${a.mainActionCount??0}:${action}`;
+ let s=writableCampaign(state),a=s.armies[id],x=a.c50,n=x.resource;const spend=`${s.turn}:${id}:${s.battleSequence}:${a.mainActionCount??0}:${action}`;
  if(action.startsWith('WARN')){
   const neighbors=adjacent(s,targetId),chosen=options.tileIds??neighbors.slice(0,2);
   if(n===2&&(!Array.isArray(chosen)||chosen.length!==Math.min(2,neighbors.length)||new Set(chosen).size!==chosen.length||chosen.some(at=>!neighbors.includes(at))))throw new Error('INVALID_ENGINE_AREA');
-  x.warning={tileId:targetId,tiles:[targetId,...(n>=3?neighbors:n===2?chosen:[])],n,action,turn:s.turn,spend};x.resource=0;x.cooldownThrough=s.turn+params('CHAEK').cooldown;
+  x.warning=campaignMechPlan(s,'H12','scheduledPlan',{sourceId:id,action,targetId},{tileId:targetId,tiles:[targetId,...(n>=3?neighbors:n===2?chosen:[])],n,action,turn:s.turn,spend});if(x.warning.independent){s.mechContracts??={spent:{}};(s.mechContracts.forecasts??=[]).push({id:spend,sourceId:id,factionId:a.factionId,dueTurn:s.turn+1,sourceSnapshot:cloneCampaign(a),officerSnapshot:cloneCampaign(s.officers[a.commanderId]),growthSnapshot:cloneCampaign(s.campaignGrowth?.officers[a.commanderId]),plan:cloneCampaign(x.warning)});delete x.warning;}x.resource=0;x.cooldownThrough=s.turn+params('CHAEK').cooldown;pilotWarning(s,id);campaignMechApply(s,'H12','scheduledCommitted',{eventId:`SCHEDULE.${spend}`,sourceId:id,targetId,action,plan:x.warning??s.mechContracts?.forecasts?.at(-1)?.plan});
  }
  if(['PALISADE','CAMP','BRIDGE','CART'].includes(action)){
-  const cost={PALISADE:params('CHUKSEONG').costPalisade,CAMP:params('CHUKSEONG').costCamp,BRIDGE:params('CHUKSEONG').costBridge}[action]??n;
+  const cartN=action==='CART'?c467CartSpend(s,a,n):n;
+  const cost=constructionCost(s,id,action,{PALISADE:params('CHUKSEONG').costPalisade,CAMP:params('CHUKSEONG').costCamp,BRIDGE:params('CHUKSEONG').costBridge}[action]??n);
   x.resource-=cost;s.c50.structures??=[];s.c50.structureSequence=(s.c50.structureSequence??0)+1;
-  s.c50.structures=s.c50.structures.filter(o=>o.sourceId!==id||o.type!==action);
-  s.c50.structures.push({id:`C50.${s.c50.structureSequence}`,sourceId:id,factionId:a.factionId,type:action,tileId:targetId,hp:30,maxHp:30,n:cost,spend,createdTurn:s.turn,...(action==='CART'?{expires:s.turn+1,onSupply:engineApi.supply(s,{...a,tileId:targetId}).state==='SAFE'}:{})});
+  const same=s.c50.structures.filter(o=>o.sourceId===id&&o.type===action&&(o.group??"ENGINE")==="ENGINE"),limit=structureLimit(s,id,action);
+  const remove=new Set(same.slice(0,Math.max(0,same.length-limit+1)).map(o=>o.id));
+  s.c50.structures=s.c50.structures.filter(o=>!remove.has(o.id));
+  const structure=campaignMechPlan(s,'H11','structurePlan',{sourceId:id,action,targetId},{hp:30,maxHp:30,n:action==='CART'?Math.max(1,cartN):Math.max(1,cost),...(action==='CART'?{expires:s.turn+1}:{})});
+  if(Object.keys(structure).some(k=>!['hp','maxHp','n','expires'].includes(k))||!Number.isSafeInteger(structure.hp)||structure.hp<1||!Number.isSafeInteger(structure.maxHp)||structure.hp>structure.maxHp||!Number.isSafeInteger(structure.n)||structure.n<1||structure.n>4||structure.expires!==undefined&&(!Number.isSafeInteger(structure.expires)||structure.expires<s.turn))throw new Error('INVALID_MECH_STRUCTURE_PLAN');
+  s.c50.structures.push({id:`C50.${s.c50.structureSequence}`,sourceId:id,factionId:a.factionId,type:action,tileId:targetId,hp:30,maxHp:30,n:action==='CART'?Math.max(1,cartN):cost,spend,createdTurn:s.turn,...(action==='CART'?{expires:s.turn+1,onSupply:engineApi.supply(s,{...a,tileId:targetId}).state==='SAFE'}:{}),...structure});
+  campaignMechApply(s,'H09','resourceCommitted',{eventId:spend,sourceId:id,action,cost});
+  campaignMechApply(s,'H11','structureCommitted',{eventId:spend,sourceId:id,action,targetId,structure:s.c50.structures.at(-1)});
  }
  if(action==='CHIP'){x.resource=0;const o=s.c50.structures?.find(o=>o.id===targetId),c=s.cities[targetId];if(o)damageStructure(s,a,o,n*params('CHUKSEONG').chipPerPoint,true);else {const loss=Math.min(c.durability,n*params('CHUKSEONG').chipPerPoint);c.durability-=loss;if(loss)merit(s,a,'GONGSEONG',targetId,spend);}}
- if(action==='SCOUT'){if(!branched(s,a,'TAMMA'))revealScout(s,a);x.mark={targetId,spend,expires:s.turn+1};}
+ if(action==='SCOUT'){if(!branched(s,a,'TAMMA'))revealScout(s,a);x.mark=campaignMechPlan(s,'H10','markPlan',{sourceId:id,targetId},{targetId,spend,expires:s.turn+1});if(!av.targets.includes(x.mark.targetId)||!Number.isSafeInteger(x.mark.expires)||x.mark.expires<s.turn||typeof x.mark.spend!=='string')throw new Error('INVALID_MECH_MARK_PLAN');campaignMechApply(s,'H10','markCommitted',{eventId:spend,sourceId:id,targetId:x.mark.targetId,mark:x.mark});}
  if(action==='STEALTH'){s=engineApi.move(s,id,targetId);if(!s.movedArmyIds.includes(id))s.movedArmyIds.push(id);}
  if(action==='RETURN_FIRE')x.reservations.RETURN_FIRE={n,facing:a.facing,turn:s.turn,spend};
  engineApi.consume(s,id);s.c50.actionCounts??={};s.c50.actionCounts[a.factionId]=(s.c50.actionCounts[a.factionId]??0)+1;
@@ -490,16 +520,19 @@ function resolveMapAction(state,id,action,targetId,options){
  s.c50.armyActionCounts??={};s.c50.armyActionCounts[id]=(s.c50.armyActionCounts[id]??0)+1;
  s.c50.lastAction={armyId:id,action,targetId,turn:s.turn};return s;
 }
-function damageStructure(s,a,o,damage,paid=false){o.hp=Math.max(0,o.hp-damage);if(o.hp===0){s.c50.structures=s.c50.structures.filter(t=>t.id!==o.id);if(!paid&&kind(s,a,'CHUKSEONG'))gain(s,a,params('CHUKSEONG').demolishGain);}}
-export function resolveStructureAttack(state,id,targetId){
+function damageStructure(s,a,o,damage,paid=false){damage=campaignMechQuery(s,'H16','cityDamage',{sourceId:a.armyId,structureId:o.id,kind:'STRUCTURE'},damage);damage=campaignMechQuery(s,'H11','structureDamage',{sourceId:a.armyId,structure:o,paid},damage);if(!Number.isFinite(damage)||damage<0)throw new Error('INVALID_MECH_STRUCTURE_DAMAGE');o.hp=Math.max(0,o.hp-damage);if(o.hp===0){s.c50.structures=s.c50.structures.filter(t=>t.id!==o.id);if(!paid&&kind(s,a,'CHUKSEONG'))gain(s,a,params('CHUKSEONG').demolishGain);campaignMechApply(s,'H11','structureRemoved',{eventId:`DESTROY.${s.turn}.${o.id}`,sourceId:a.armyId,structure:o,reason:'DESTROYED'});}}
+export function resolveStructureAttack(state,id,targetId,options={}){
  if(!engineStructureTargets(state,id).includes(targetId))throw new Error('INVALID_STRUCTURE_TARGET');
- const s=structuredClone(state),a=s.armies[id],o=s.c50.structures.find(o=>o.id===targetId);damageStructure(s,a,o,engineApi.structureDamage(s,id));engineApi.consume(s,id,{attack:true});
+ const s=writableCampaign(state),a=s.armies[id],o=s.c50.structures.find(o=>o.id===targetId);damageStructure(s,a,o,engineApi.structureDamage(s,id));if(!options.enginePaid)engineApi.consume(s,id,{attack:true});
  // Structures never grant tactic gauge or combat-hit resources.
  engineEvent(s,'ATTACK_DECLARE',{attackerId:id,targetId,reaction:false});a.c50&&(a.c50.attackTurn=s.turn);delete a.c50?.hiddenAttack;return s;
 }
 function revealScout(s,a,attack=false){if(a?.c50?.hidden){a.c50.hidden=false;a.c50.resource=0;if(attack&&pathOf(s,a)!=='BASE')a.c50.hideBlockedThrough=s.turn+1;}}
-function scoutHiddenAllowed(s,a){return ['forest','hill'].includes(s.tiles[a.tileId].terrainType)&&!engineApi.fireAt(s,a.tileId)&&!live(s).some(b=>hostile(s,a,b)&&distance(s,a,b)<=1)&&Object.keys(s.factions).filter(f=>engineApi.hostileFaction(s,a.factionId,f)).every(f=>s.knowledge[f]?.tiles[a.tileId]!=='VISIBLE');}
+function scoutHiddenAllowed(s,a){if(!campaignMechAllowed(s,'H13','scoutHiddenAllowed',{sourceId:a.armyId}))return false;return ['forest','hill'].includes(s.tiles[a.tileId].terrainType)&&!engineApi.fireAt(s,a.tileId)&&!live(s).some(b=>hostile(s,a,b)&&distance(s,a,b)<=1)&&Object.keys(s.factions).filter(f=>engineApi.hostileFaction(s,a.factionId,f)).every(f=>s.knowledge[f]?.tiles[a.tileId]!=='VISIBLE');}
 function mapEngineEvent(s,type,p){
+ const eventId=`ENGINE.${type}.${s.turn}.${s.battleSequence}.${p.armyId??p.factionId??''}`;
+ for(const contract of ['H02','H10','H11','H12'])campaignMechApply(s,contract,'engineEvent',{eventId,type,payload:p});
+ if(type==='FACTION_END'){const expired=(s.c50.structures??[]).filter(o=>o.type!=='CART'&&o.factionId===p.factionId&&o.expires!==undefined&&o.expires<=s.turn);if(expired.length){s.c50.structures=s.c50.structures.filter(o=>!expired.includes(o));for(const o of expired)campaignMechApply(s,'H11','structureRemoved',{eventId:`EXPIRE.${s.turn}.${o.id}`,structure:o,reason:'EXPIRED'});}}
  const a=s.armies[p.armyId??p.attackerId];
  if(type==='MOVE_LEAVE'&&a?.c234?.concealUntil){revealScout(s,a);delete a.c234.concealUntil;}
  if(type==='ATTACK_DECLARE'&&a?.c50?.hidden){a.c50.hiddenAttack=true;revealScout(s,a,true);}
@@ -512,21 +545,25 @@ function mapEngineEvent(s,type,p){
     if(o.factionId!==a.factionId){s.c50.structures=s.c50.structures.filter(t=>t.id!==o.id);continue;}
     if(o.sourceId===a.armyId)continue;
     const wounded=s.personnel.lots.filter(l=>l.kind==='WOUNDED'&&l.originFormationId===a.armyId).reduce((n,l)=>n+l.count,0),before=a.troopCount;
-    const amount=Math.floor(wounded*o.n*params('JEONNONG').cartHealPerPoint/100);if(branched(s,s.armies[o.sourceId],'HUSONG'))a.c50.evacuation={amount:Math.floor(amount*1.5)};else engineApi.heal(s,a.armyId,amount);
-    const source=s.armies[o.sourceId];if(source&&a.troopCount>before){if(!live(s).some(b=>hostile(s,a,b)&&distance(s,a,b)===1))merit(s,source,'HUSONG',a.armyId,o.spend);if(o.onSupply)merit(s,source,'DUNJEON',a.armyId,o.spend);}
+    const amount=c467CartCapacity(s,s.armies[o.sourceId],a,Math.floor(wounded*o.n*params('JEONNONG').cartHealPerPoint/100));if(branched(s,s.armies[o.sourceId],'HUSONG'))a.c50.evacuation={amount:Math.floor(amount*1.5)};else engineApi.heal(s,a.armyId,amount);
+    const source=s.armies[o.sourceId];c467CartEntry(s,source,a,o);if(source&&a.troopCount>before){if(!live(s).some(b=>hostile(s,a,b)&&distance(s,a,b)===1))merit(s,source,'HUSONG',a.armyId,o.spend);if(o.onSupply)merit(s,source,'DUNJEON',a.armyId,o.spend);}
     s.c50.structures=s.c50.structures.filter(t=>t.id!==o.id);
    }else if(o.type==='BRIDGE'&&o.factionId===a.factionId&&s.armies[o.sourceId])merit(s,s.armies[o.sourceId],'GONGBYEONG',a.armyId,o.spend);
   }
  }
  if(type==='MOVE_LEAVE'&&a&&kind(s,a,'GANG')&&!melee(s,a))a.c50.resource=0;
+ if(type==='FACTION_START')resolveIndependentForecasts(s,p.factionId);
  if(type==='FACTION_START')for(const u of live(s).filter(u=>u.factionId===p.factionId)){
   const w=u.c50?.warning;if(!w)continue;delete u.c50.warning;if(!usable(s,u))continue;
+  const previousContext=s.c50.context;if(c467Owns(s,Object.values(s.armies).find(g=>g.commanderId==='G51'),'G51'))s.c50.context={attackerId:u.armyId,origin:`warning:${w.spend}`};
   const targets=live(s).filter(t=>w.tiles.includes(t.tileId)),enemies=targets.filter(t=>hostile(s,u,t));
   const reserved=new Set(enemies.filter(t=>Object.keys(t.c50?.reservations??{}).length||t.c50?.warning).map(t=>t.armyId));
   const rows=targets.map(t=>({targetId:t.armyId,loss:Math.round(engineApi.baseDamage(s,u.armyId,t.armyId)*w.n*params('CHAEK').powerPerPoint/targets.length*(w.action==='WARN_FIRE'?1:.5))}));
   if(rows.length){engineApi.damage(s,u.armyId,rows,'ENGINE_WARNING',true);for(const t of enemies)if(s.lastCombat?.units.some(row=>row.unitId===t.armyId&&row.casualties>0)){if(enemies.length===1)merit(s,u,'GWEGYE',t.armyId,w.spend);if(reserved.has(t.armyId))merit(s,u,'GUNSA',t.armyId,w.spend);}}
+  campaignMechApply(s,'H12','forecastResolved',{eventId:`FORECAST.${w.spend}`,sourceId:u.armyId,targetIds:enemies.map(t=>t.armyId),combat:s.lastCombat});
   if(w.action==='WARN_FIRE')engineApi.fire(s,u.armyId,w.tiles);
   else for(const t of targets.filter(t=>active(s,t))){if(w.action==='WARN_ROOT'){t.c50??={};t.c50.rootNext=true;}else engineApi.morale(s,t.armyId,t.morale==='STEADY'?'SHAKEN':'ROUTING','교란 예고');}
+  if(previousContext)s.c50.context=previousContext;else delete s.c50.context;
  }
  if(type==='FACTION_START')for(const u of live(s).filter(u=>u.factionId===p.factionId)){if(u.c50.rooted||u.c50.rootNext){u.c50.rooted=!!u.c50.rootNext;delete u.c50.rootNext;}}
  if(type==='FACTION_END'){
@@ -545,6 +582,7 @@ function mapEngineEvent(s,type,p){
 }
 function updateSupplyResource(s,a){const linked=engineApi.supply(s,a).state==='SAFE';if(linked&&!a.c50.supplyLinked)gain(s,a,params('JEONNONG').linkGain);a.c50.supplyLinked=linked;}
 function mapAfterAttack(s,before,id,targetId,log,options){
+ campaignMechApply(s,'H10','attackCommitted',{eventId:`HIT.${s.turn}.${log.sequence}`,sourceId:id,targetId,combat:log,options});
  const a=s.armies[id],t=s.armies[targetId];if(!options.reaction&&!options.counter){
   if(!options.enginePaid&&kind(s,a,'TU')&&armyEngine(s,id)?.archer&&validRelation(s,a)?.armyId===targetId&&log.enemyLoss>0)gain(s,a);
   for(const u of live(s).filter(u=>u.factionId===a.factionId)){
@@ -558,12 +596,15 @@ function mapAfterAttack(s,before,id,targetId,log,options){
  if(log.firstStrike&&log.side==='FRONT')for(const o of s.c50.structures??[])if(['CAMP','PALISADE'].includes(o.type)&&o.factionId===t.factionId&&tileDistance(s,o.tileId,t.tileId)<=1&&s.armies[o.sourceId])merit(s,s.armies[o.sourceId],'GONGBYEONG',targetId,o.spend);
 }
 export function engineFirstStrike(s,id){const a=s.armies[id];return enginesEnabled(s)&&(s.c50?.structures??[]).some(o=>['CAMP','PALISADE'].includes(o.type)&&!branched(s,s.armies[o.sourceId],'GONGSEONG')&&!branched(s,s.armies[o.sourceId],'GONGBYEONG')&&o.factionId===a.factionId&&tileDistance(s,o.tileId,a.tileId)<=1);}
-export function engineFoodFactor(s,a){return enginesEnabled(s)&&live(s).some(u=>kind(s,u,'JEONNONG')&&!branched(s,u,'DUNJEON')&&friendly(a,u)&&distance(s,a,u)<=2)?1-params('JEONNONG').foodReduce/100:1;}
+export function engineFoodFactor(s,a){return campaignMechQuery(s,'H17','foodFactor',{sourceId:a.armyId},enginesEnabled(s)&&live(s).some(u=>kind(s,u,'JEONNONG')&&!branched(s,u,'DUNJEON')&&friendly(a,u)&&distance(s,a,u)<=2)?1-params('JEONNONG').foodReduce/100:1);}
 export function engineMovementWorld(s,id,world){
  if(!enginesEnabled(s)||!s.c50)return world;
  const blocked=new Set(world.mapRules.blockedEdges),crossings={...world.mapRules.crossings};
- for(const o of s.c50.structures??[]){if(o.type==='PALISADE')for(const to of adjacent(s,o.tileId))blocked.add([o.tileId,to].sort().join('|'));if(o.type==='BRIDGE')for(const edge of world.mapRules.riverEdges)if(edge.split('|').includes(o.tileId))crossings[edge]='bridge';}
- const tiles={...world.tiles};for(const a of live(s)){const at=a.c50?.passage?.tileId;if(!at)continue;tiles[at]={...tiles[at],terrainType:'plain'};for(const edge of world.mapRules.riverEdges)if(edge.split('|').includes(at))crossings[edge]='bridge';}
+ // A reduced board (unit ratings' two-tile sandbox) may omit a structure's tile; it has no edge there.
+ for(const o of s.c50.structures??[]){if(o.type==='PALISADE'&&s.tiles[o.tileId])for(const to of adjacent(s,o.tileId))blocked.add([o.tileId,to].sort().join('|'));if(o.type==='BRIDGE')for(const edge of world.mapRules.riverEdges)if(edge.split('|').includes(o.tileId))crossings[edge]='bridge';}
+ // Most armies have no passage. Keep the read-only map until a tile actually
+ // needs an overlay; never write through to the campaign's terrain records.
+ let tiles=world.tiles;for(const a of live(s)){const at=a.c50?.passage?.tileId;if(!at)continue;if(tiles===world.tiles)tiles={...tiles};tiles[at]={...tiles[at],terrainType:'plain'};for(const edge of world.mapRules.riverEdges)if(edge.split('|').includes(at))crossings[edge]='bridge';}
  return {...world,tiles,mapRules:{...world.mapRules,crossings,blockedEdges:[...blocked]}};
 }
 export function engineMapView(s,factionId){
@@ -574,14 +615,49 @@ export function engineMapView(s,factionId){
  const traps=live(s).filter(a=>a.c50?.trap&&(a.factionId===factionId||s.knowledge[factionId]?.tiles[a.c50.trap.tileId]==='VISIBLE')).map(a=>({...(a.factionId===factionId||visible(s,{factionId},a)?{sourceId:a.armyId}:{}),factionId:a.factionId,tileId:a.c50.trap.tileId,n:a.c50.trap.n,action:a.c50.trap.action,expires:a.c50.trap.expires}));
  for(const t of traps)warnings.push({sourceId:'trap:'+t.tileId,factionId:t.factionId,tiles:[t.tileId],name:t.action==='TRAP_FIRE'?'화공 함정':'교란 함정'});
  for(const a of live(s))for(const [key,name] of [['flag','군기'],['passage','통로'],['depot','보급소']]){const at=typeof a.c50?.[key]==='string'?a.c50[key]:a.c50?.[key]?.tileId;if(at&&(a.factionId===factionId||s.knowledge[factionId]?.tiles[at]==='VISIBLE'))warnings.push({sourceId:`${key}:${at}`,factionId:a.factionId,tiles:[at],name});}
- return {structures,warnings,marks,traps};
+ for(const q of s.mechContracts?.forecasts??[]){const tiles=q.plan.tiles.filter(at=>q.factionId===factionId||s.knowledge[factionId]?.tiles[at]==='VISIBLE');if(tiles.length)warnings.push({id:q.id,...(q.factionId===factionId||s.armies[q.sourceId]&&visible(s,{factionId},s.armies[q.sourceId])?{sourceId:q.sourceId}:{}),factionId:q.factionId,tiles,dueTurn:q.dueTurn,independent:true,name:'유계 예고'});}
+ return campaignMechQuery(s,'H12','publicMap',{factionId},{structures,warnings,marks,traps});
 }
 function mapAiActions(s,id){
  const a=s.armies[id],e=armyEngine(s,id),actions=engineActions(s,id).filter(o=>o.canUse),foes=live(s).filter(b=>hostile(s,a,b)&&visible(s,a,b)),rows=[];
- const choose=(action,targetId)=>{const av=actions.find(o=>o.action===action);if(av?.targets.includes(targetId))rows.push({action,targetId});};
+ const choose=(action,targetId,aiValue)=>{const av=actions.find(o=>o.action===action);if(av?.targets.includes(targetId))rows.push({action,targetId,...(aiValue===undefined?{}:{aiValue})});};
  if(e.engineId==='CHAEK'&&e.resource>=2){const av=actions.find(o=>o.action==='WARN_FIRE'),at=av?.targets.find(at=>foes.filter(b=>tileDistance(s,at,b.tileId)<=1).length>=1);if(at)choose('WARN_FIRE',at);}
- if(e.engineId==='CHUKSEONG'){const chip=actions.find(o=>o.action==='CHIP');if(chip)choose('CHIP',chip.targets[0]);else if(foes.length){const av=actions.find(o=>o.action==='PALISADE'),at=av?.targets.sort((x,y)=>Math.min(...foes.map(b=>tileDistance(s,x,b.tileId)))-Math.min(...foes.map(b=>tileDistance(s,y,b.tileId))))[0];if(at)choose('PALISADE',at);}}
-  if(e.engineId==='CHEOK'&&a.c50.hidden&&!engineApi.targets(s,id).length){const av=actions.find(o=>o.action==='SCOUT'),target=av?.targets.find(t=>live(s).some(b=>b.armyId!==id&&friendly(a,b)&&!s.endedArmyIds.includes(b.armyId)&&engineApi.targets(s,b.armyId).includes(t)));if(target)choose('SCOUT',target);}
+ if(e.engineId==='CHUKSEONG'){
+  const chip=actions.find(o=>o.action==='CHIP');
+  if(e.resource>=2&&chip)choose('CHIP',chip.targets[0],e.resource*10+20);
+  const built=type=>(s.c50.structures??[]).some(o=>o.sourceId===id&&o.type===type);
+  const known=Object.values(s.knowledge[a.factionId]?.cities??{}),home=known.filter(c=>c.ownerFactionId===a.factionId&&tileDistance(s,a.tileId,c.tileId)<=3);
+  const approaching=foes.filter(b=>distance(s,a,b)<=6&&(home.some(c=>tileDistance(s,b.tileId,c.tileId)<=6)||live(s).some(c=>c.armyId!==id&&friendly(a,c)&&distance(s,a,c)<=2&&distance(s,b,c)<=2)));
+  if(approaching.length){
+   const av=actions.find(o=>o.action==='PALISADE');
+   const at=!built('PALISADE')&&av?.targets.filter(at=>approaching.some(b=>tileDistance(s,at,b.tileId)<distance(s,a,b))&&!home.some(c=>c.footprint?.gates?.includes(at)))
+    .sort((x,y)=>Math.min(...approaching.map(b=>tileDistance(s,x,b.tileId)))-Math.min(...approaching.map(b=>tileDistance(s,y,b.tileId)))||x.localeCompare(y))[0];
+   if(at)choose('PALISADE',at,35);
+   // Base CAMP is adjacent-only. Prefer a friendly occupied tile; never
+   // invent a self-tile exception to the construction rule.
+   const camp=!built('CAMP')&&actions.find(o=>o.action==='CAMP')?.targets.find(at=>live(s).some(b=>friendly(a,b)&&b.tileId===at));
+   if(camp)choose('CAMP',camp,40);
+  }
+  const goals=[...foes.map(b=>b.tileId),...known.filter(c=>c.ownerFactionId&&engineApi.hostileFaction(s,a.factionId,c.ownerFactionId)).map(c=>c.tileId)];
+  const bridge=!built('BRIDGE')&&actions.find(o=>o.action==='BRIDGE')?.targets.find(at=>s.mapRules.riverEdges.some(edge=>edge.split('|').includes(a.tileId)&&edge.split('|').includes(at)&&!s.mapRules.crossings[edge])&&!(s.c50.structures??[]).some(o=>o.type==='BRIDGE'&&o.tileId===at)&&goals.some(goal=>tileDistance(s,at,goal)<tileDistance(s,a.tileId,goal)));
+  if(bridge)choose('BRIDGE',bridge,45);
+ }
+ if(e.engineId==='CHEOK'&&a.c50.hidden){
+  const weakness=b=>(b.formation!=='ORDERED'?20:0)+Math.max(0,30-b.troopCount*.05);
+  const scout=actions.find(o=>o.action==='SCOUT');
+  for(const target of scout?.targets??[]){const ally=live(s).find(b=>b.armyId!==id&&friendly(a,b)&&!s.endedArmyIds.includes(b.armyId)&&engineApi.canAct(s,b.armyId)&&engineApi.targets(s,b.armyId).includes(target));
+   if(ally)choose('SCOUT',target,35+weakness(s.armies[target]));}
+  // Contact reveals under the existing rule. Stop two hexes away on cover
+  // rather than spending concealment on an adjacent/visible plain arrival.
+  const stealth=actions.find(o=>o.action==='STEALTH');
+  const moves=(stealth?.targets??[]).flatMap(at=>{
+   if(!['forest','hill'].includes(s.tiles[at]?.terrainType)||engineApi.fireAt(s,at)||foes.some(b=>tileDistance(s,at,b.tileId)<=1))return [];
+   const targets=foes.filter(b=>tileDistance(s,at,b.tileId)<distance(s,a,b));
+   const board={...s,armies:{...s.armies,[id]:{...a,tileId:at}}};
+   return targets.map(b=>({at,value:20+weakness(b)+(engineApi.side(board,id,b.armyId)!=='FRONT'?10:0)-tileDistance(s,at,b.tileId)*3}));
+  }).sort((x,y)=>y.value-x.value||x.at.localeCompare(y.at));
+  if(moves[0])choose('STEALTH',moves[0].at,moves[0].value);
+ }
   if(e.engineId==='JEONNONG'&&e.resource>=1){const av=actions.find(o=>o.action==='CART'),allies=live(s).filter(b=>b.armyId!==id&&friendly(a,b)&&b.woundedCount>0).sort((b,c)=>c.woundedCount-b.woundedCount);for(const ally of allies){const reach=engineApi.remainingReachable(s,ally.armyId,s.time.ticksPerTurn);const at=av?.targets.find(at=>reach.includes(at)&&tileDistance(s,at,ally.tileId)===1);if(at){choose('CART',at);break;}}}
  if(e.archer&&e.engineId==='MAENG'&&e.resource>=2)choose('FLURRY',actions.find(o=>o.action==='FLURRY')?.targets[0]);
  if(e.archer&&e.engineId==='GANG'&&foes.some(b=>distance(s,a,b)<=3&&(engineApi.side(s,b.armyId,id)==='FRONT')!==branched(s,a,'BAESU')))choose('RETURN_FIRE',id);
@@ -589,6 +665,7 @@ function mapAiActions(s,id){
  return rows;
 }
 function engineRangedReaction(s,id,targetId,fromTileId=null,outer=null){
+ if(!campaignMechAllowed(s,'H04','attackAllowed',{sourceId:id,targetId,kind:'RETURN_FIRE'}))return false;
  const a=s.armies[id],r=a.c50.reservations.RETURN_FIRE;if(!r||!usable(s,a)||!engineShotLegal(s,id,targetId,{fromTileId})||(engineShotLegal(s,id,targetId,{fromTileId,facing:r.facing})===branched(s,a,'BAESU'))||s.knowledge[a.factionId]?.tiles[s.armies[targetId].tileId]!=='VISIBLE')return false;
  delete a.c50.reservations.RETURN_FIRE;a.c50.resource=Math.max(0,a.c50.resource-r.n);a.c50.reactionKeys??={};a.c50.reactionKeys[`${s.turn}:${targetId}`]=true;
  const target=s.armies[targetId],at=target.tileId;if(fromTileId)target.tileId=fromTileId;
@@ -599,8 +676,9 @@ function engineRangedReaction(s,id,targetId,fromTileId=null,outer=null){
 }
 // Invoked before each voluntary edge. Forced arrivals never call this hook.
 export function engineBeforeMove(s,id,from,to){
+ campaignMechApply(s,'H12','beforeMove',{eventId:`MOVE.${s.turn}.${id}.${from}.${to}.${s.armies[id]?.movedTiles??0}`,sourceId:id,from,to});
  if(!enginesEnabled(s)||from===to)return s;
- for(const u of live(s)){const r=u.c50?.reservations.PIN;if(!r||!usable(s,u)||r.targetId!==id||!hostile(s,u,s.armies[id]))continue;const arch=armyEngine(s,u.armyId)?.archer;if((arch?engineShotLegal(s,u.armyId,id,{fromTileId:from})&&tileDistance(s,u.tileId,to)>2:tileDistance(s,u.tileId,from)===1&&tileDistance(s,u.tileId,to)>1)){delete u.c50.reservations.PIN;s.armies[id].c50.moveStopped=true;return s;}}
+ for(const u of live(s)){const r=u.c50?.reservations.PIN;if(!r||!campaignMechAllowed(s,'H05','blocking',{sourceId:u.armyId,targetId:id})||!usable(s,u)||r.targetId!==id||!hostile(s,u,s.armies[id]))continue;const arch=armyEngine(s,u.armyId)?.archer;if((arch?engineShotLegal(s,u.armyId,id,{fromTileId:from})&&tileDistance(s,u.tileId,to)>2:tileDistance(s,u.tileId,from)===1&&tileDistance(s,u.tileId,to)>1)){delete u.c50.reservations.PIN;s.armies[id].c50.moveStopped=true;return s;}}
  for(const original of live(s).filter(a=>a.armyId!==id).sort((a,b)=>a.armyId.localeCompare(b.armyId))){const a=s.armies[original.armyId],m=s.armies[id];if(!hostile(s,a,m)||!visible(s,a,m))continue;
   const r=a.c50?.reservations.RETURN_FIRE;
   if(r&&tileDistance(s,a.tileId,from)<=2&&tileDistance(s,a.tileId,to)===1)engineRangedReaction(s,a.armyId,id,from);
@@ -622,10 +700,9 @@ export function engineArriveReaction(s,id,from){
 function adoptEngineState(s,next){for(const [id,a] of Object.entries(s.armies)){Object.assign(a,next.armies[id]);next.armies[id]=a;}Object.assign(s,next);return s;}
 
 export function engineAiHold(s,id){
- const a=s.armies[id];if(!kind(s,a,'CHEOK')||a.c50.hidden||a.c50.hideBlockedThrough>=s.turn||!['forest','hill'].includes(s.tiles[a.tileId].terrainType))return false;
+ const a=s.armies[id];if(!kind(s,a,'CHEOK')||a.c50.hidden||!engineAiCoverValue(s,id,a.tileId))return false;
  const enemies=live(s).filter(b=>hostile(s,a,b)&&visible(s,a,b));
- const cities=Object.values(s.knowledge[a.factionId]?.cities??{}).filter(c=>c.ownerFactionId&&engineApi.hostileFaction(s,a.factionId,c.ownerFactionId));
- return !engineApi.targets(s,id).length&&!enemies.some(b=>distance(s,a,b)<=3)&&!engineApi.fireAt(s,a.tileId)&&(enemies.some(b=>distance(s,a,b)<=6)||!cities.some(c=>tileDistance(s,a.tileId,c.tileId)<=10));
+ return !engineApi.targets(s,id).length&&enemies.some(b=>distance(s,a,b)<=6);
 }
 
 // Public-board estimate only: actual concealment remains the rule event's job.
@@ -642,9 +719,12 @@ export function engineAiCoverValue(s,id,to){
 
 export function engineAiCoverDestination(s,id,path,reachable){
  const a=s.armies[id];if(!kind(s,a,'CHEOK')||engineApi.targets(s,id).length||!path?.length)return null;
- const goal=path.at(-1);
- return [...reachable].filter(([at])=>at!==a.tileId&&engineAiCoverValue(s,id,at)>0&&Math.min(...path.map(p=>tileDistance(s,at,p)))<=2&&tileDistance(s,at,goal)<=tileDistance(s,a.tileId,goal))
+ const goal=path.at(-1),foes=live(s).filter(b=>hostile(s,a,b)&&visible(s,a,b)&&distance(s,a,b)<=6);
+ if(!foes.length)return [...reachable].filter(([at])=>at!==a.tileId&&engineAiCoverValue(s,id,at)>0&&Math.min(...path.map(p=>tileDistance(s,at,p)))<=2&&tileDistance(s,at,goal)<=tileDistance(s,a.tileId,goal))
   .sort(([at],[bt])=>tileDistance(s,a.tileId,at)-tileDistance(s,a.tileId,bt)||tileDistance(s,at,goal)-tileDistance(s,bt,goal)||at.localeCompare(bt))[0]?.[0]??null;
+ const near=at=>Math.min(...foes.map(b=>tileDistance(s,at,b.tileId)));
+ return [...reachable].filter(([at])=>at!==a.tileId&&engineAiCoverValue(s,id,at)>0&&near(at)<=near(a.tileId)+1)
+  .sort(([at],[bt])=>near(at)-near(bt)||tileDistance(s,at,goal)-tileDistance(s,bt,goal)||at.localeCompare(bt))[0]?.[0]??null;
 }
 
 // C233: rule descriptions transcribed from standard 50 v1.0 section 6-2.
@@ -765,7 +845,7 @@ export function aiPromotionChoice(s,id){
 }
 const pathOf=(s,a)=>s.campaignGrowth?.officers[a?.commanderId]?.c50?.path??a?.c50?.path??null;
 const branched=(s,a,key)=>pathOf(s,a)?.split('.')[1]===key;
-const sealedActions={GWANGJANG:['FLURRY'],YEOKSEUP:['COUNTER','RETURN_FIRE'],GUWON:['BLOCK'],EUNGJING:['BLOCK'],GYEONJE:['STRIKE'],SEONBONG:['STRIKE'],GUNGI:[],DOKJEON:['ORDER'],GWEGYE:['WARN_FIRE','WARN_ROOT','WARN_MORALE'],GUNSA:['WARN_FIRE'],GONGSEONG:['PALISADE','CAMP','BRIDGE'],GONGBYEONG:['BRIDGE'],BOKBYEONG:['STEALTH'],DUNJEON:['CART'],GEUNSIN:[],SEGAEK:['RELEASE']};
+const sealedActions={GWANGJANG:['FLURRY'],YEOKSEUP:['COUNTER','RETURN_FIRE'],GUWON:[],EUNGJING:['BLOCK'],GYEONJE:['STRIKE'],SEONBONG:['STRIKE'],GUNGI:[],DOKJEON:['ORDER'],GWEGYE:['WARN_FIRE','WARN_ROOT','WARN_MORALE'],GUNSA:['WARN_FIRE'],GONGSEONG:['PALISADE','CAMP','BRIDGE'],GONGBYEONG:['BRIDGE'],BOKBYEONG:['STEALTH'],DUNJEON:['CART'],GEUNSIN:[],SEGAEK:['RELEASE']};
 const branchActions={GWANGJANG:[['FRENZY','광분 돌입']],YONGJANG:[['INTIMIDATE','위압']],YEOKSEUP:[['REVENGE','역습']],GUWON:[['RESCUE','자리 바꾸기']],EUNGJING:[['VENGEANCE','원한 치기']],GYEONJE:[['PIN','이탈 막기']],SEONBONG:[['LEND','투지 쓰기']],GUNGI:[['FLAG','군기 꽂기'],['UNFLAG','군기 뽑기']],DOKJEON:[['DIRECT_FLANK','군령 · 측면'],['DIRECT_MOVE','군령 · 이동']],GWEGYE:[['TRAP_FIRE','함정 · 화공'],['TRAP_MORALE','함정 · 교란']],GUNSA:[['DISPEL','간파']],GONGSEONG:[['BREACH','수비 끊기']],GONGBYEONG:[['PASSAGE','통로']],BOKBYEONG:[['SHARE_HIDE','숨음 공유']],DUNJEON:[['DEPOT','보급소']],GEUNSIN:[['TRUST','신임 바꾸기']],SEGAEK:[['PERSUADE','설득']]};
 const promotionActions=new Set(Object.values(branchActions).flat().map(([id])=>id));
 function branchAllows(s,a,action){return !(sealedActions[pathOf(s,a)?.split('.')[1]]??[]).includes(action);}
@@ -774,7 +854,7 @@ function siegeAdjacent(s,a){return Object.values(s.cities).some(c=>c.ownerFactio
 const engaged=(s,a)=>live(s).some(b=>hostile(s,a,b)&&distance(s,a,b)===1);
 function promotionAvailability(s,id,action){
  const a=s.armies[id],e=armyEngine(s,id),bad=reasonCode=>({canUse:false,reasonCode,reasonText:{ENGINE_RESOURCE:'계통 자원이 부족합니다',MAIN_ACTION_USED:'이번 차례 주 행동을 마쳤습니다',NO_ENGINE_TARGET:'지금 사용할 수 있는 대상이 없습니다'}[reasonCode]??'지금 사용할 수 없는 행동입니다',targets:[]});
- if(!e||!branchActions[pathOf(s,a)?.split('.')[1]]?.some(([key])=>key===action))return bad('INVALID_ENGINE_ACTION');
+ if(!e||!(c467Owns(s,a,'G99')&&['FLAG','UNFLAG'].includes(action))&&!branchActions[pathOf(s,a)?.split('.')[1]]?.some(([key])=>key===action))return bad('INVALID_ENGINE_ACTION');
  if(engineAttackBlocked(s,id)&&['FRENZY','REVENGE','INTIMIDATE','VENGEANCE','LEND','PERSUADE','TRAP_FIRE','TRAP_MORALE'].includes(action))return bad('ENGINE_PERSUADED');
  if(!usable(s,a))return bad('ENGINE_DISABLED');if(!engineApi.canAct(s,id))return bad('MAIN_ACTION_USED');
  const cost={RESCUE:2,FLAG:0,UNFLAG:0,BREACH:2,PASSAGE:2,SHARE_HIDE:0,PERSUADE:2}[action]??1;
@@ -793,7 +873,7 @@ function promotionAvailability(s,id,action){
  if(action==='UNFLAG'&&a.c50.flag)targets=[id];
  if(['TRAP_FIRE','TRAP_MORALE','PASSAGE','DEPOT'].includes(action))targets=Object.keys(s.tiles).filter(at=>s.knowledge[a.factionId]?.tiles[at]==='VISIBLE'&&tileDistance(s,a.tileId,at)<=(action.startsWith('TRAP')?3:1)&&empty(s,at)&&!engineApi.fireAt(s,at)&&(action!=='PASSAGE'||['forest','hill'].includes(s.tiles[at].terrainType)||s.mapRules.riverEdges.some(edge=>edge.split('|').includes(at))));
  if(action==='DEPOT')targets=targets.filter(at=>tileDistance(s,a.tileId,at)===1&&!['mountain','water'].includes(s.tiles[at].terrainType));
- if(action==='DISPEL')targets=[...foes.filter(b=>tileDistance(s,a.tileId,b.tileId)<=3&&Object.keys(b.c50?.reservations??{}).some(k=>k!=='RETURN_FIRE')).map(b=>b.armyId),...live(s).filter(b=>hostile(s,a,b)).flatMap(b=>[b.c50?.warning?.tileId,b.c50?.trap?.tileId].filter(at=>at&&tileDistance(s,a.tileId,at)<=3&&s.knowledge[a.factionId]?.tiles[at]==='VISIBLE'))];
+ if(action==='DISPEL')targets=[...foes.filter(b=>tileDistance(s,a.tileId,b.tileId)<=3&&Object.keys(b.c50?.reservations??{}).length>0).map(b=>b.armyId),...live(s).filter(b=>hostile(s,a,b)).flatMap(b=>[b.c50?.warning?.tileId,b.c50?.trap?.tileId].filter(at=>at&&tileDistance(s,a.tileId,at)<=3&&s.knowledge[a.factionId]?.tiles[at]==='VISIBLE'))];
  if(action==='DISPEL')targets=[...new Set([...targets,...(s.c50.publicTraps??[]).filter(t=>t.factionId!==a.factionId&&tileDistance(s,a.tileId,t.tileId)<=3).map(t=>t.tileId),...(s.c50.publicWarnings??[]).filter(t=>t.factionId!==a.factionId&&t.tileId&&tileDistance(s,a.tileId,t.tileId)<=3&&s.knowledge[a.factionId]?.tiles[t.tileId]==='VISIBLE').map(t=>t.tileId)])];
  if(action==='BREACH')targets=Object.values(s.cities).filter(c=>c.ownerFactionId&&engineApi.hostileFaction(s,a.factionId,c.ownerFactionId)&&tileDistance(s,a.tileId,c.tileId)===1&&s.knowledge[a.factionId]?.tiles[c.tileId]==='VISIBLE').map(c=>c.cityId);
  if(action==='SHARE_HIDE'&&a.c50.hidden&&!a.c50.sharedHide)targets=allies.filter(b=>distance(s,a,b)===1&&!b.c50.sharedHide).map(b=>b.armyId);
@@ -803,19 +883,19 @@ function promotionAvailability(s,id,action){
 function vengeanceDestinations(s,a,t){return [a.tileId,...(!s.movedArmyIds.includes(a.armyId)?engineApi.remainingReachable(s,a.armyId,s.time.ticksPerTurn):[])].filter(at=>tileDistance(s,at,t.tileId)===1&&(at===a.tileId||empty(s,at)));}
 function resolvePromotionAction(state,id,action,targetId,options){
  const av=promotionAvailability(state,id,action);if(!av.canUse)throw new Error(av.reasonCode);targetId??=av.targets.length===1?av.targets[0]:null;if(!av.targets.includes(targetId))throw new Error('INVALID_ENGINE_TARGET');
- let s=structuredClone(state),a=s.armies[id],x=a.c50,n=x.resource;const spend=`${s.turn}:${id}:${s.battleSequence}:${a.mainActionCount??0}:${action}`;
+ let s=writableCampaign(state),a=s.armies[id],x=a.c50,n=x.resource;const spend=`${s.turn}:${id}:${s.battleSequence}:${a.mainActionCount??0}:${action}`;
  s.c50.context={attackerId:id,origin:spend};
  if(action==='FRENZY'){x.frenzy={remaining:n,turn:s.turn};x.resource=0;for(let i=0;i<2;i++){if(!active(s,s.armies[id])||!active(s,s.armies[targetId]))break;s=engineApi.attack(s,id,targetId,null,{enginePaid:true,engineOrigin:spend,damageRatio:.6});}}
  if(action==='INTIMIDATE'){const ids=options.targetIds??[targetId];if(!Array.isArray(ids)||ids.length>n||new Set(ids).size!==ids.length||ids[0]!==targetId||ids.some(t=>!av.targets.includes(t)))throw new Error('INVALID_ENGINE_TARGET');x.resource=0;for(const t of ids)engineApi.checkMorale(s,t,'위압',engineApi.intimidateWeight??engineApi.collapseWeight,[]);}
  if(action==='REVENGE'){x.resource=0;s=engineApi.attack(s,id,targetId,null,{enginePaid:true,engineOrigin:spend,engineFormation:n,noCounter:true});}
- if(action==='RESCUE'){const t=s.armies[targetId];[a.tileId,t.tileId]=[t.tileId,a.tileId];x.resource-=2;engineEvent(s,'ARRIVE',{armyId:id,fromTileId:t.tileId});engineEvent(s,'ARRIVE',{armyId:targetId,fromTileId:a.tileId});}
+ if(action==='RESCUE'){const t=s.armies[targetId];[a.tileId,t.tileId]=[t.tileId,a.tileId];a.currentOrder=null;t.currentOrder=null;x.resource-=2;engineEvent(s,'ARRIVE',{armyId:id,fromTileId:t.tileId});engineEvent(s,'ARRIVE',{armyId:targetId,fromTileId:a.tileId});}
  if(action==='VENGEANCE'){const t=s.armies[targetId],dest=options.destinationTileId??vengeanceDestinations(s,a,t)[0];if(!vengeanceDestinations(s,a,t).includes(dest))throw new Error('INVALID_ENGINE_TARGET');x.resource=0;delete x.grudge;x.noPursuit=true;if(dest!==a.tileId)s=engineApi.move(s,id,dest);delete s.armies[id].c50.noPursuit;if(active(s,s.armies[id])&&engineApi.targets(s,id).includes(targetId))s=engineApi.attack(s,id,targetId,null,{enginePaid:true,engineOrigin:spend,damageRatio:1+n*.3});}
  if(action==='PIN'){x.resource=0;x.reservations.PIN={targetId,n,turn:s.turn,spend};}
  if(action==='LEND'){const rival=validRelation(s,a).armyId;x.resource=0;s=engineApi.attack(s,targetId,rival,null,{engineFormation:n});engineApi.consume(s,targetId,{attack:true});}
  if(action==='FLAG')x.flag=targetId;if(action==='UNFLAG')delete x.flag;
  if(action.startsWith('DIRECT_')){x.resource--;const t=s.armies[targetId];t.c50.direct={sourceId:id,type:action==='DIRECT_FLANK'?'FLANK':'MOVE',expires:s.turn+1};}
- if(action.startsWith('TRAP')){x.resource=0;x.trap={tileId:targetId,n,action,expires:s.turn+1,spend};}
- if(action==='DISPEL'){x.resource--;const t=s.armies[targetId];if(t){const key=Object.keys(t.c50.reservations).filter(k=>k!=='RETURN_FIRE').sort()[0];delete t.c50.reservations[key];}else {const source=live(s).filter(b=>hostile(s,a,b)).sort((a,b)=>a.armyId.localeCompare(b.armyId)).find(b=>b.c50?.warning?.tileId===targetId||b.c50?.trap?.tileId===targetId);if(source.c50.warning?.tileId===targetId)delete source.c50.warning;else delete source.c50.trap;}}
+ if(action.startsWith('TRAP')){x.resource=0;x.trap=campaignMechPlan(s,'H12','scheduledPlan',{sourceId:id,action,targetId},{tileId:targetId,n,action,expires:s.turn+1,spend});campaignMechApply(s,'H12','scheduledCommitted',{eventId:`SCHEDULE.${spend}`,sourceId:id,targetId,action,plan:x.trap});}
+ if(action==='DISPEL'){x.resource--;const t=s.armies[targetId];if(t){const key=Object.keys(t.c50.reservations).sort()[0];delete t.c50.reservations[key];}else {const source=live(s).filter(b=>hostile(s,a,b)).sort((a,b)=>a.armyId.localeCompare(b.armyId)).find(b=>b.c50?.warning?.tileId===targetId||b.c50?.trap?.tileId===targetId);if(source.c50.warning?.tileId===targetId)delete source.c50.warning;else delete source.c50.trap;}}
  if(action==='BREACH'){x.resource-=2;x.breach={cityId:targetId,starts:s.turn+1,expires:s.turn+1};}
  if(action==='PASSAGE'){x.resource-=2;x.passage={tileId:targetId,expires:s.turn+1};}
  if(action==='SHARE_HIDE'){x.sharedHide=targetId;const t=s.armies[targetId];t.c50.sharedHide=id;t.c50.hidden=true;}
@@ -876,7 +956,7 @@ function promotionEvent(s,type,p){
 function validatePromotionArmy(s,a){
  const x=a.c50,at=v=>typeof v==='string'&&!!s.tiles[v],unit=v=>typeof v==='string'&&!!s.armies[v],integer=(n,min=0,max=Number.MAX_SAFE_INTEGER)=>Number.isSafeInteger(n)&&n>=min&&n<=max;
  if(x.frenzy&&(!branched(s,a,'GWANGJANG')||!object(x.frenzy)||!integer(x.frenzy.remaining,1,3)||!integer(x.frenzy.turn,1,s.turn)))fail();
- if(x.flag!==undefined&&(!branched(s,a,'GUNGI')||!at(x.flag)))fail();
+ if(x.flag!==undefined&&(!branched(s,a,'GUNGI')&&!(c467Enabled(s)&&a.commanderId==='G99')||!at(x.flag)))fail();
  if(x.grudge&&(!branched(s,a,'EUNGJING')||!object(x.grudge)||!unit(x.grudge.targetId)||!integer(x.grudge.expires,s.turn)))fail();
  if(x.trap&&(!branched(s,a,'GWEGYE')||!object(x.trap)||!at(x.trap.tileId)||!integer(x.trap.n,1,3)||!['TRAP_FIRE','TRAP_MORALE'].includes(x.trap.action)||!integer(x.trap.expires,s.turn)||typeof x.trap.spend!=='string'))fail();
  if(x.breach&&(!branched(s,a,'GONGSEONG')||!s.cities[x.breach.cityId]||!integer(x.breach.starts,1)||!integer(x.breach.expires,s.turn)||x.breach.starts!==x.breach.expires))fail();
@@ -895,3 +975,19 @@ function cleanSharedHide(s){for(const a of Object.values(s.armies)){const b=s.ar
 
 export function initialTrustTargets(s,id){const a=s.armies[id];return live(s).filter(b=>b.armyId!==id&&friendly(a,b)).map(b=>b.armyId).sort();}
 export function initializeEngineTrust(s,id,targetId=null){const a=s.armies[id];if(!enginesEnabled(s)||!branched(s,a,'GEUNSIN'))return;const targets=initialTrustTargets(s,id);if(targetId!==null&&!targets.includes(targetId))throw new Error('INVALID_TRUST_TARGET');a.c50.trust=targetId??targets[0]??null;}
+
+// Independent warnings consume their serializable queue entry before resolving.
+function resolveIndependentForecasts(s,factionId){
+ const due=(s.mechContracts?.forecasts??[]).filter(q=>q.factionId===factionId&&q.dueTurn<=s.turn);
+ for(const q of due){
+  s.mechContracts.forecasts=s.mechContracts.forecasts.filter(r=>r.id!==q.id);
+  const original=s.armies[q.sourceId],officerId=q.sourceSnapshot.commanderId,officer=s.officers[officerId],growth=s.campaignGrowth?.officers[officerId];s.armies[q.sourceId]=cloneCampaign(q.sourceSnapshot);if(q.officerSnapshot)s.officers[officerId]=cloneCampaign(q.officerSnapshot);if(q.growthSnapshot)s.campaignGrowth.officers[officerId]=cloneCampaign(q.growthSnapshot);
+  try{const w=q.plan,targets=live(s).filter(t=>t.armyId!==q.sourceId&&w.tiles.includes(t.tileId));
+   const rows=targets.map(t=>({targetId:t.armyId,loss:Math.round(engineApi.baseDamage(s,q.sourceId,t.armyId)*w.n*params('CHAEK').powerPerPoint/targets.length*(w.action==='WARN_FIRE'?1:.5))}));
+   if(rows.length)engineApi.damage(s,q.sourceId,rows,'ENGINE_WARNING',true);
+   if(w.action==='WARN_FIRE')engineApi.fire(s,q.sourceId,w.tiles);
+   else for(const t of targets.filter(t=>active(s,t))){if(w.action==='WARN_ROOT'){t.c50??={};t.c50.rootNext=true;}else engineApi.morale(s,t.armyId,t.morale==='STEADY'?'SHAKEN':'ROUTING','교란 예고');}
+   campaignMechApply(s,'H12','forecastResolved',{eventId:'FORECAST.'+q.id,sourceId:q.sourceId,targetIds:targets.filter(t=>t.factionId!==q.factionId).map(t=>t.armyId),combat:s.lastCombat});
+  }finally{if(original)s.armies[q.sourceId]=original;else delete s.armies[q.sourceId];if(officer)s.officers[officerId]=officer;else delete s.officers[officerId];if(growth)s.campaignGrowth.officers[officerId]=growth;else delete s.campaignGrowth?.officers[officerId];}
+ }
+}

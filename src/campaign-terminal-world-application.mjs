@@ -1,3 +1,4 @@
+import {cloneCampaign} from './campaign-clone.mjs';
 import {transferSpecialists} from './campaign-economy.mjs';
 import {legacyGovernorValidationView} from './campaign-economy.mjs';
 import {
@@ -14,7 +15,7 @@ import {
   validateCampaignTerminalState,
 } from './campaign-terminal-state.mjs';
 
-const clone=value=>structuredClone(value);
+const clone=value=>cloneCampaign(value);
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const own=(value,key)=>Object.hasOwn(value,key);
 function invariant(condition,message){if(!condition)throw new Error(message);}

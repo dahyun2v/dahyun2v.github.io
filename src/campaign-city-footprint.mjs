@@ -1,11 +1,13 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {campaignMechQuery,campaignMechAllowed} from './campaign-mech-contracts.mjs';
 import {engineMovementWorld} from './campaign-engines.mjs';
 import {diplomacyEnabled,diplomacyState,diplomacyTerritory,withdrawalProtection,diplomacyHostile} from './campaign-diplomacy.mjs';
-import {c33Owned,c33Formation} from './campaign-rule-registry.mjs';
+import {c33Owned,c33Formation,memoCampaignQuery,withCampaignQueries} from './campaign-rule-registry.mjs';
 import {c31Sync} from './campaign-events.mjs';
 import {C24,specialTroop,parentTroop} from './campaign-special-troops.mjs';
 import {movementEffect,hasCampaignRule} from './campaign-effects.mjs';
 import {neighbors, tileId, hexDistance} from './map-primitives.mjs';
-import {moveOneTick} from './movement.mjs';
+import {moveOneTick,snapshotMovementEdges} from './movement.mjs';
 
 /** Same ring order and road priority as the display renderer, without a UI import. */
 export function castleFootprint(centerId, {roads = [], exists = () => true} = {}) {
@@ -26,7 +28,7 @@ export function castleFootprint(centerId, {roads = [], exists = () => true} = {}
 }
 
 export const castleArmyActive = (s,a) => a.troopCount > 0 && a.hp > 0 &&
-  (!s.campaignTerminalWorld || s.campaignTerminalWorld.armiesById[a.armyId]?.disposition === 'ACTIVE');
+  (!s.campaignTerminalWorld || s.campaignTerminalWorld.armiesById[a.armyId]?.disposition === 'ACTIVE')&&campaignMechAllowed(s,'H02','armyActive',{sourceId:a.armyId});
 
 export const CITY_DURABILITY_MAX=100;
 export function initializeCampaignCastles(s) {
@@ -41,6 +43,7 @@ export function initializeCampaignCastles(s) {
   }
   const walls = new Set(Object.values(s.cities).flatMap(c => c.footprint.walls));
   const blocked = new Set(s.mapRules.blockedEdges);
+  if(s.trialRules?.flow==='v1')for(const a of Object.values(s.flow?.units??{}))if(a.troopCount>0&&a.hiredBy!==s.armies[armyId]?.factionId)for(const n of neighbors(s.tiles[a.tileId]))if(s.tiles[tileId(n)])blocked.add([a.tileId,tileId(n)].sort().join('|'));
   for (const id of walls) for (const n of neighbors(s.tiles[id])) {
     if (s.tiles[tileId(n)]) blocked.add([id,tileId(n)].sort().join('|'));
   }
@@ -54,10 +57,10 @@ export function refreshCampaignSieges(s) {
   s.castleKnowledge ??= {};
   for (const c of Object.values(s.cities)) {
     for (const gate of c.footprint.gates) {
-      const occupant = armies.find(a => a.tileId === gate);
+      const occupant = armies.find(a => a.tileId === gate&&campaignMechAllowed(s,'H16','occupationEligible',{sourceId:a.armyId,cityId:c.cityId}));
       if (occupant) c.gateControl[gate] = occupant.factionId;
     }
-    c.lostGates = c.footprint.gates.filter(g => armies.some(a => a.tileId === g && diplomacyHostile(s,a.factionId,c.ownerFactionId)&&!withdrawalProtection(s,a.armyId)));
+    c.lostGates = c.footprint.gates.filter(g => armies.some(a => a.tileId === g && campaignMechAllowed(s,'H16','occupationEligible',{sourceId:a.armyId,cityId:c.cityId}) && diplomacyHostile(s,a.factionId,c.ownerFactionId)&&!withdrawalProtection(s,a.armyId)));
     c.besieged = c.lostGates.length > 0;
     if(c.besieged&&s.occupations?.[c.cityId]?.stage==='STABILIZING')s.occupations[c.cityId].besiegedTurn=s.turn;
     for (const factionId of Object.keys(s.factions)) {
@@ -83,11 +86,14 @@ export function campaignGatesHeld(c,factionId) {
 
 export function campaignCenterEntryAllowed(s,armyId,city) {
   const a = s.armies[armyId];
-  return city.ownerFactionId === a.factionId;
+  return campaignMechQuery(s,'H16','centerEntry',{sourceId:armyId,cityId:city.cityId},city.ownerFactionId === a.factionId)===true;
 }
 
 /** Enemy centers are excluded from movement; defenders remain attack targets. */
-export function campaignMovementWorld(s,armyId) {
+export function campaignMovementWorld(s,armyId,ctx={}) {
+  return withCampaignQueries(s,()=>Object.keys(ctx).length?snapshotMovementEdges(campaignMovementWorldRead(s,armyId,ctx)):memoCampaignQuery(s,'movement:world:'+armyId,()=>snapshotMovementEdges(campaignMovementWorldRead(s,armyId,ctx))));
+}
+function campaignMovementWorldRead(s,armyId,ctx) {
   const blocked = new Set(s.mapRules.blockedEdges);
   const unit=s.armies[armyId];
   if(diplomacyEnabled(s))for(const f of Object.keys(s.factions))if(f!==unit.factionId&&diplomacyState(s,unit.factionId,f)==='TRUCE'&&!diplomacyTerritory(s,f,unit.tileId))for(const t of Object.values(s.tiles))if(diplomacyTerritory(s,f,t.tileId))for(const n of neighbors(t))if(s.tiles[tileId(n)])blocked.add([t.tileId,tileId(n)].sort().join('|'));
@@ -97,7 +103,7 @@ export function campaignMovementWorld(s,armyId) {
     // Enemy centers are reached only by a city attack capture.
     for (const n of neighbors(s.tiles[c.tileId])) if (s.tiles[tileId(n)]) blocked.add([c.tileId,tileId(n)].sort().join('|'));
   }
-  const original=s.armies[armyId],parent=parentTroop(original.troopType),a={...original,troopType:parent},special=specialTroop(s,original.troopType),effect=movementEffect(s,armyId);
+  const original=s.armies[armyId],parent=parentTroop(original.troopType),a={...original,troopType:parent},special=specialTroop(s,original.troopType),effect=movementEffect(s,armyId,ctx);
     const base=s.mapRules.tuning?.byTroop?.[a.troopType]??s.mapRules.tuning?.[a.troopType==='cavalry'?'cavalry':'normal'];
     const plain=base?.plain??(a.troopType==='cavalry'?1.25:a.troopType==='bow'?2.5:2);
     const ratio=(10/plain)/Math.max(.01,10/plain+effect.delta+(special?(special.rules?.moveDelta??(original.troopType==='danyang'?C24.danyangMove:original.troopType==='catapult'?C24.catapultMove:0)):0))/(hasCampaignRule(s,armyId,'FORCED_MARCH')?2:1);
@@ -107,13 +113,14 @@ export function campaignMovementWorld(s,armyId) {
     return engineMovementWorld(s,armyId,{...s,...(special?{armies:{...s.armies,[armyId]:a}}:{}),mapRules:{...s.mapRules,tuning,...((hasCampaignRule(s,armyId,'TERRAIN_WALKER')||original.c32?.freeRiverUntil>=s.turn)?{riverEdges:[]}:{}),blockedEdges:[...blocked]}});
 }
 
-export function campaignCastleDefense(s,army) {
-  return Object.values(s.cities).some(c => c.ownerFactionId === army.factionId &&
-    [c.footprint.center,...c.footprint.gates].includes(army.tileId)) ? 1.25 : 1;
+export function campaignCastleDefense(s,army,attackerId=null) {
+  if(!campaignMechAllowed(s,'H16','defenseEligible',{sourceId:army.armyId}))return 1;
+  return campaignMechQuery(s,'H16','castleDefense',{sourceId:army.armyId,targetId:army.armyId,attackerId},Object.values(s.cities).some(c => c.ownerFactionId === army.factionId &&
+    [c.footprint.center,...c.footprint.gates].includes(army.tileId)) ? 1.25 : 1);
 }
 
 export function campaignStackAllowed(s,id,to){
- const a=s.armies[id];return !!a&&['v2','v3'].includes(s.mapId)&&Object.values(s.cities).some(c=>[c.tileId,...c.footprint.gates].includes(to));
+ const a=s.armies[id];return !!a&&isSliceMap(s.mapId)&&Object.values(s.cities).some(c=>[c.tileId,...c.footprint.gates].includes(to));
 }
 export function campaignDestinationAllowed(s,id,to){
  const a=s.armies[id];if(!a||!s.tiles[to])return false;

@@ -34,15 +34,15 @@
   "GUKSA": "국사"
  },
  "counts": {
-  "책사": 15,
-  "장군": 15,
-  "강장": 15,
+  "책사": 14,
+  "장군": 16,
+  "강장": 16,
   "맹장": 11,
-  "국사": 10,
-  "전농": 9,
+  "국사": 9,
+  "전농": 8,
   "투장": 7,
   "척후": 7,
-  "호위": 6,
+  "호위": 7,
   "축성장": 5
  },
  "assignments": [
@@ -56,7 +56,7 @@
   {
    "id": "G02",
    "name": "조운",
-   "engine": "JEONNONG",
+   "engine": "HOWI",
    "from": "TMP-CLASS-B01-014",
    "override": false
   },
@@ -406,14 +406,14 @@
   {
    "id": "G52",
    "name": "서황",
-   "engine": "CHAEK",
+   "engine": "GANG",
    "from": "TMP-CLASS-B01-002",
    "override": false
   },
   {
    "id": "G53",
    "name": "우금",
-   "engine": "GUKSA",
+   "engine": "JANGGUN",
    "from": "TMP-CLASS-B01-012",
    "override": false
   },

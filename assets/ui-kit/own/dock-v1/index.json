@@ -1,0 +1,474 @@
+{
+  "source": "source.png",
+  "tool": "built-in image_gen; tools/design/asset-normalize.py per-cell alpha keep-color stroke auto per cell; build.py",
+  "assets": [
+    {
+      "name": "button",
+      "file": "button.webp",
+      "size": [
+        72,
+        72
+      ],
+      "slice": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "usage": "nine-slice"
+    },
+    {
+      "name": "selected",
+      "file": "selected.webp",
+      "size": [
+        72,
+        72
+      ],
+      "slice": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "usage": "nine-slice"
+    },
+    {
+      "name": "focus",
+      "file": "focus.webp",
+      "size": [
+        72,
+        72
+      ],
+      "slice": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "usage": "nine-slice"
+    },
+    {
+      "name": "resource-low",
+      "file": "resource-low.webp",
+      "size": [
+        128,
+        128
+      ],
+      "slice": null,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "usage": "contain"
+    },
+    {
+      "name": "passive-engine",
+      "file": "passive-engine.webp",
+      "size": [
+        128,
+        128
+      ],
+      "slice": null,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        0,
+        0,
+        887,
+        887
+      ],
+      "usage": "contain",
+      "revision": "r2",
+      "source": "C:\\Users\\user\\.codex\\generated_images\\01a158c0-ef58-7870-99d0-403a65bdebf7\\exec-819e4bc7-54e8-45d9-9808-b299d62740e0.png",
+      "motif": "ancient war drum"
+    },
+    {
+      "name": "move-chip",
+      "file": "move-chip.webp",
+      "size": [
+        128,
+        128
+      ],
+      "slice": null,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "usage": "contain"
+    },
+    {
+      "name": "action-chip",
+      "file": "action-chip.webp",
+      "size": [
+        128,
+        128
+      ],
+      "slice": null,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "usage": "contain"
+    },
+    {
+      "name": "defend",
+      "file": "defend.webp",
+      "size": [
+        128,
+        128
+      ],
+      "slice": null,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "usage": "contain"
+    },
+    {
+      "name": "regroup",
+      "file": "regroup.webp",
+      "size": [
+        128,
+        128
+      ],
+      "slice": null,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        887,
+        0,
+        1774,
+        887
+      ],
+      "usage": "contain",
+      "revision": "r2",
+      "source": "C:\\Users\\user\\.codex\\generated_images\\01a158c0-ef58-7870-99d0-403a65bdebf7\\exec-819e4bc7-54e8-45d9-9808-b299d62740e0.png",
+      "motif": "three scattered banners gathering on a straight muster line; no arrows"
+    },
+    {
+      "name": "gauge-base",
+      "file": "gauge-base.webp",
+      "size": [
+        256,
+        16
+      ],
+      "slice": [
+        2,
+        4,
+        2,
+        4
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "usage": "nine-slice"
+    },
+    {
+      "name": "gauge-fill",
+      "file": "gauge-fill.webp",
+      "size": [
+        256,
+        16
+      ],
+      "slice": [
+        2,
+        4,
+        2,
+        4
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "usage": "nine-slice"
+    },
+    {
+      "name": "gauge-cost",
+      "file": "gauge-cost.webp",
+      "size": [
+        256,
+        16
+      ],
+      "slice": [
+        2,
+        4,
+        2,
+        4
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "usage": "nine-slice"
+    },
+    {
+      "name": "dock",
+      "file": "dock.webp",
+      "size": [
+        480,
+        72
+      ],
+      "slice": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        0,
+        940,
+        956,
+        1254
+      ],
+      "usage": "nine-slice"
+    },
+    {
+      "name": "overflow",
+      "file": "overflow.webp",
+      "size": [
+        128,
+        128
+      ],
+      "slice": null,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sourceRect": [
+        956,
+        940,
+        1254,
+        1254
+      ],
+      "usage": "contain"
+    }
+  ],
+  "reused": {
+    "ready": {
+      "file": "../sym/status/ready.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "action-used": {
+      "file": "../sym/status/done.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "waiting": {
+      "file": "../sym/actions/wait.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "target-restricted": {
+      "file": "../sym/status/locked.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "formation-ordered": {
+      "file": "../sym/status/formation-ordered.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "formation-disordered": {
+      "file": "../sym/status/formation-disordered.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "formation-broken": {
+      "file": "../sym/status/formation-broken.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "move": {
+      "file": "../sym/actions/move.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "attack": {
+      "file": "../sym/actions/attack.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "retreat": {
+      "file": "../sym/actions/undo.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "food": {
+      "file": "../sym/resources/food.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "morale": {
+      "file": "../sym/status/morale-steady.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "troops": {
+      "file": "../sym/resources/troops.webp",
+      "size": [
+        128,
+        128
+      ]
+    },
+    "tooltip": {
+      "file": "../panel-v2/panel.webp",
+      "size": [
+        512,
+        440
+      ]
+    }
+  },
+  "sliceOrder": [
+    "top",
+    "right",
+    "bottom",
+    "left"
+  ],
+  "pivotUnits": "normalized",
+  "targetSizes": {
+    "button": [
+      64,
+      72
+    ],
+    "dock": [
+      1200,
+      176
+    ],
+    "status": [
+      16,
+      20
+    ],
+    "commands": [
+      32,
+      40
+    ]
+  },
+  "notes": [
+    "No text in source sprites. Counts and labels must be code-rendered.",
+    "Nine-slice preserves corners; gauge repeat/clip center horizontally. Never scale whole dock in one direction.",
+    "Formation ordered/disordered/broken reuse the same shield skeleton.",
+    "Retreat reuses undo as a return arrow; does not change gameplay.",
+    "Source tool returned 1254x1254. Alpha below 128 removed before per-cell normalization.",
+    "12px status review is advisory; required status delivery is 16/20px."
+  ],
+  "reviewSizes": [
+    12,
+    16,
+    20
+  ],
+  "r2": {
+    "prompt": "Use case: stylized-concept. A single small production atlas with ONLY TWO isolated bone-colored ancient Chinese military UI icons on actual transparent background, horizontally arranged equal square cells, no text or labels. Left icon: passive engine represented by ONE ancient war drum, simple side view slightly above, a squat wood barrel with a broad elliptical drum skin on top, two short simple supporting feet, NO drumsticks or action rays. Right icon: regroup represented by EXACTLY THREE small ancient cloth military banners on poles, the left and right flags lean gently inward from scattered positions, and all three bottom pole tips meet one straight horizontal muster line; the middle flag upright. NO arrows of any kind, no people, no gears, no circular refresh shape. The three banners are distinct, readable silhouettes, broad cloth, minimal negative-space gaps. Style MUST be austere rubbed woodblock print, same brush weight as tiny ancient shield formation icons: flat warm bone #e9e1cf chunky silhouettes, sparse dark cut lines, broken dry-brush edges, slightly worn ink rubbing, no smooth app pictogram, no gold outline, no gradients, no bevel or lighting, no outline frame, no decoration or modern mechanical parts. Bold simple silhouettes legible at 16/20 px for drum and 32/40 px for banners. Center each icon in its half, with generous clear transparent padding, equal visual area about 75 percent of each cell. All pixels outside the two icons transparent. No incidental marks.",
+    "tool": "built-in image_gen; isolated alpha connected components, 104px contain on 128px canvas",
+    "sourceSize": [
+      1774,
+      887
+    ],
+    "note": "Only passive-engine and regroup replaced. Original source.png, prompt.txt and build.py retained; build.py recreates r1 sprites. R2 source remains at image_gen output path recorded per asset."
+  }
+}

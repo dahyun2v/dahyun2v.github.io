@@ -1,3 +1,5 @@
+import {isSliceMap} from './map-primitives.mjs';
+import {cloneCampaign} from './campaign-clone.mjs';
 import data from '../data/run-modifiers-v0.1.json' with {type:'json'};
 
 export const RUN_MODIFIERS=data;
@@ -13,20 +15,20 @@ const capital=s=>s.cities[s.factions[s.playerFactionId]?.capitalCityId];
 const facility=s=>({F01:'tuntian',F02:'clinic',F03:'mufu'})[s.playerFactionId];
 const wanderers=s=>values(s.wanderers).filter(o=>o.lifeState==='ALIVE'&&o.captivityState==='FREE'&&!o.allegianceFactionId&&!values(s.captiveRecruitment?.proposals).some(p=>p.targetOfficerId===o.officerId&&p.status==='NEGOTIATING')).sort((a,b)=>a.officerId.localeCompare(b.officerId));
 export function initializeRunModifiers(s,{legacy=false}={}){
- if(!['v2','v3'].includes(s.mapId)||s.trialRules?.runModifiers===false||s.runModifiers)return s;
+ if(!isSliceMap(s.mapId)||s.trialRules?.runModifiers===false||s.runModifiers)return s;
  s.runModifiers={version:1,rewind:{charges:data.rewind.chargesPerRun,last:null},blessing:{offeredIds:[],chosen:null,closed:legacy&&s.turn>=4},heaven:[],weather:legacy?[]:data.weather.windows.map(([a,b],i)=>({kind:data.weather.kinds[draw(s,`weather-kind:${i}`,data.weather.kinds.length)].id,startTurn:a+draw(s,`weather-turn:${i}`,b-a+1)})),lastTurn:legacy?s.turn:0,legacy};
  return s;
 }
-export function rememberRewindStart(s){if(s.phase==='PLAYER'&&!s.gameResult&&s.runModifiers)starts.set(s,structuredClone(s));return s;}
+export function rememberRewindStart(s){if(s.phase==='PLAYER'&&!s.gameResult&&s.runModifiers)starts.set(s,cloneCampaign(s));return s;}
 export function carryRewindStart(from,to){if(!starts.has(to)&&starts.has(from)&&from.turn===to.turn)starts.set(to,starts.get(from));return to;}
 export function rewindView(s,f=s.playerFactionId){
  const charges=s.runModifiers?.rewind.charges??data.rewind.chargesPerRun;
  const reason=f!==s.playerFactionId?'플레이어만 되감을 수 있습니다.':s.gameResult?'판이 끝났습니다.':s.phase!=='PLAYER'?'상대 차례입니다.':charges<=0?'기시감을 모두 썼습니다.':!starts.has(s)?'불러온 차례에는 시작 기억이 없습니다. 다음 차례부터 쓸 수 있습니다.':null;
- return {charges,available:!reason,reason,...(s.runModifiers?.rewind.last?{last:structuredClone(s.runModifiers.rewind.last)}:{})};
+ return {charges,available:!reason,reason,...(s.runModifiers?.rewind.last?{last:cloneCampaign(s.runModifiers.rewind.last)}:{})};
 }
 export function rewindTurn(s,{factionId=s.playerFactionId}={}){
  const v=rewindView(s,factionId);if(!v.available)throw new Error(v.reason);
- const start=starts.get(s),next=structuredClone(start),charges=v.charges-1;
+ const start=starts.get(s),next=cloneCampaign(start),charges=v.charges-1;
  next.runModifiers.rewind.charges=charges;
  const pool=values(next.officers).filter(o=>o.allegianceFactionId===s.playerFactionId&&o.lifeState==='ALIVE').sort((a,b)=>a.officerId.localeCompare(b.officerId));
  const o=pool[draw(next,`rewind-officer:${next.turn}`,Math.max(1,pool.length))];
@@ -72,7 +74,7 @@ export function weatherView(s){
  const e=events.find(e=>e.startTurn<=s.turn&&s.turn<e.startTurn+duration);
  return {upcoming:events.filter(e=>e.startTurn>s.turn&&e.startTurn-s.turn<=data.weather.warnTurnsAhead).map(e=>({...e})),active:e?{kind:e.kind,until:e.startTurn+duration-1}:null};
 }
-export const weatherKind=s=>weatherView(s).active?.kind;
+export const weatherKind=s=>(s.runModifiers?.weather??[]).find(e=>e.startTurn<=s.turn&&s.turn<e.startTurn+data.weather.durationTurns)?.kind;
 export function weatherEdgeReason(s,from,to){return weatherKind(s)==='RAIN'&&s.mapRules.crossings[[from,to].sort().join('|')]==='ford'?'장마':null;}
 export function heavenBonus(s,f){const awards=(s.runModifiers?.heaven??[]).filter(a=>a.factionId===f&&a.startTurn<=s.turn&&a.until>=s.turn);return {attackPct:awards.some(a=>a.kind==='favored')?data.heaven.favored.effect.attackPct:0,defensePct:awards.some(a=>a.kind==='underdog')?data.heaven.underdog.effect.defensePct:0};}
 export function heavenCombat(s,attackerFaction,targetFaction){const a=heavenBonus(s,attackerFaction),t=heavenBonus(s,targetFaction);return {factor:(1+a.attackPct/100)/(1+t.defensePct/100),lines:[...(a.attackPct?[`천시 +${a.attackPct}%`]:[]),...(t.defensePct?[`역전의 기세 방어 +${t.defensePct}%`]:[])]};}
@@ -93,9 +95,9 @@ export function startRunModifierTurn(s){
  }
 }
 export function runModifiersView(s,f){
- if(!['v2','v3'].includes(s.mapId))return {};
+ if(!isSliceMap(s.mapId))return {};
  const x=s.runModifiers,b=x?.blessing;
- return {rewind:rewindView(s,f),weather:weatherView(s),heaven:structuredClone((x?.heaven??[]).filter(a=>a.startTurn<=s.turn&&a.until>=s.turn)),...(f===s.playerFactionId?{blessing:{title:data.blessing.title,offered:b&&!b.closed?b.offeredIds.map(id=>{const d=data.blessing.list.find(b=>b.id===id);return {...structuredClone(d),...(d.effect.type==='RECRUIT_WANDERER'?{officerId:b.wandererId,officerName:s.wanderers[b.wandererId]?.name}:{} )};}):[],chosen:b?.chosen??null}}:{})};
+ return {rewind:rewindView(s,f),weather:weatherView(s),heaven:cloneCampaign((x?.heaven??[]).filter(a=>a.startTurn<=s.turn&&a.until>=s.turn)),...(f===s.playerFactionId?{blessing:{title:data.blessing.title,offered:b&&!b.closed?b.offeredIds.map(id=>{const d=data.blessing.list.find(b=>b.id===id);return {...cloneCampaign(d),...(d.effect.type==='RECRUIT_WANDERER'?{officerId:b.wandererId,officerName:s.wanderers[b.wandererId]?.name}:{} )};}):[],chosen:b?.chosen??null}}:{})};
 }
 export function validateRunModifiers(s){
  const x=s.runModifiers;if(!x)return;

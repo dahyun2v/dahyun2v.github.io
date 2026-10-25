@@ -5,7 +5,7 @@
 /* 지도 바깥 = 돌에 새긴 기억(C100 margin-memory) — 지금이 아닌 땅 */
 #ss-map{position:relative;width:max-content;min-width:100%;min-height:100%;background:linear-gradient(rgba(14,12,8,.32),rgba(14,12,8,.32)),#0E0C08 url(/assets/seoksil/a3/margin-memory.jpg) 0 0/1024px 1024px repeat}
 .sm-viewport{background:linear-gradient(rgba(14,12,8,.32),rgba(14,12,8,.32)),#0E0C08 url(/assets/seoksil/a3/margin-memory.jpg) 0 0/1024px 1024px repeat}
-#ss-map svg{display:block;max-width:none;overflow:visible;font-family:var(--ss-sans);font-variant-numeric:tabular-nums}
+#ss-map svg{display:block;max-width:none;overflow:visible;font-family:var(--sg-font-num);font-variant-numeric:tabular-nums;font-weight:600}
 #ss-map::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.04;background:repeating-linear-gradient(45deg,var(--ss-plaster) 0 1px,transparent 1px 8px);mix-blend-mode:soft-light}
 /* 다시 칠한 지도는 밝고 채도가 높아 저채도 원칙에 맞춰 한 단계 누른다(시안 지도 부분과 비슷한 명도) */
 #ss-map image[class$="-art"]{filter:saturate(.74) brightness(.86) sepia(.1) contrast(1.04)}
@@ -46,14 +46,14 @@
 #ss-map [data-unit] .count .bar{fill:var(--fc,var(--ss-jade))}
 #ss-map [data-unit] .troop rect,#ss-map [data-unit] .badge rect{fill:var(--ss-lacquer);stroke:var(--ss-stone);stroke-width:.5}
 #ss-map text{fill:var(--ss-plaster);font-size:12px;text-anchor:middle;paint-order:stroke;stroke:var(--ss-lacquer);stroke-width:2;stroke-linejoin:round;pointer-events:none}
-#ss-map [data-unit] .uname{font:700 12px var(--ss-serif);stroke-width:3}
-#ss-map [data-unit] .initial{font-size:20px;font-family:var(--ss-serif)}
+#ss-map [data-unit] .uname{font:400 12px var(--sg-font-name);stroke-width:3}
+#ss-map [data-unit] .initial{font-size:20px;font-family:var(--sg-font-heading);font-weight:400}
 #ss-map [data-unit] .count text,#ss-map [data-unit] .troop text,#ss-map [data-unit] .badge text{font-size:8px;stroke:none}
 #ss-map [data-unit] .dmg{fill:var(--ss-plaster);font-size:16px;font-weight:700}
 #ss-map [data-city] .bg{fill:var(--ss-lacquer);stroke:var(--ss-tin);stroke-width:.5}
 #ss-map [data-city] .crest rect{fill:var(--ss-lacquer);stroke:var(--fc);stroke-width:1}
 #ss-map [data-city] .crest text{fill:var(--fc);stroke:none;font-size:10px}
-#ss-map [data-city] .name{fill:var(--ss-plaster);stroke:none;font:700 12px var(--ss-serif)}
+#ss-map [data-city] .name{fill:var(--ss-plaster);stroke:none;font:400 12px var(--sg-font-name)}
 #ss-map [data-city] .def-bg{fill:var(--ss-stone-deep)}
 #ss-map [data-city] .def{fill:var(--ss-jade)}
 #ss-map [data-city] .st rect,#ss-map [data-prod-city] rect{fill:var(--ss-lacquer);stroke:var(--ss-stone);stroke-width:.5}
@@ -99,17 +99,17 @@
 .sm-resources .ss-wadang{--d:46px;margin-right:4px}
 .sm-resources>span:not(.ss-wadang){display:flex;align-items:center;gap:8px;white-space:nowrap}
 .sm-resources .ss-pic{width:30px;height:30px;filter:drop-shadow(0 1px 1px #000)}
-.sm-resources>span>i{font:400 19px/1 var(--ss-title);font-style:normal;color:var(--ss-carve);text-shadow:0 1px 2px #000}
-.sm-resources b{font:600 18px/1 var(--ss-sans);color:var(--ss-ink-1);text-shadow:0 1px 2px #000}
+.sm-resources>span>i{font:400 19px/1 var(--sg-font-body);font-style:normal;color:var(--ss-carve);text-shadow:0 1px 2px #000}
+.sm-resources b{font:600 18px/1 var(--sg-font-body);color:var(--ss-ink-1);text-shadow:0 1px 2px #000}
 .sm-top__dial{position:absolute;left:50%;top:3px;translate:-50% 0;width:88px;height:88px;filter:brightness(1.55) contrast(1.1) drop-shadow(0 6px 10px rgba(0,0,0,.75));pointer-events:none}
-.sm-date{margin-left:auto;font:500 13px var(--ss-serif);letter-spacing:.06em;color:var(--ss-ink-2);white-space:nowrap;text-shadow:0 1px 2px #000}
+.sm-date{margin-left:auto;font:400 13px var(--sg-font-heading);letter-spacing:.06em;color:var(--ss-ink-2);white-space:nowrap;text-shadow:0 1px 2px #000}
 .sm-top__btns{display:flex;gap:8px}
 
 /* 메달(A23) — 둥근 단추 공통: 청동 메달 그림 + 가운데 그림 아이콘(없으면 새김 글자) */
 .sm-medal{position:relative;display:grid;place-items:center;width:var(--md,52px);aspect-ratio:1;flex:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6));transition:filter var(--ss-t-pick)}
 .sm-medal__art{position:absolute;inset:0;width:100%;height:100%;filter:brightness(.85);transition:filter var(--ss-t-pick)}
 .sm-medal .ss-pic{position:relative;width:64%;height:64%}
-.sm-medal>i{position:relative;font:400 calc(var(--md,52px)*.42)/1 var(--ss-title);font-style:normal;color:var(--ss-carve);text-shadow:0 2px 0 #000,0 0 8px rgba(0,0,0,.9)}
+.sm-medal>i{position:relative;font:400 calc(var(--md,52px)*.42)/1 var(--sg-font-body);font-style:normal;color:var(--ss-carve);text-shadow:0 2px 0 #000,0 0 8px rgba(0,0,0,.9)}
 .sm-round{all:unset;box-sizing:border-box;cursor:pointer;display:grid;place-items:center;--md:46px}
 .sm-round:hover:not(:disabled) .sm-medal{filter:drop-shadow(0 0 9px rgba(211,154,82,.55))}
 .sm-round:hover:not(:disabled) .sm-medal__art{filter:brightness(1.05)}
@@ -124,7 +124,7 @@
 .sm-tasks{position:absolute;left:20px;top:84px;z-index:12;display:grid;gap:10px;justify-items:start}
 .sm-tasks .sm-panel__title{display:none}
 .sm-task{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;--md:60px}
-.sm-task>span:last-child{position:relative;z-index:-1;margin-left:-16px;padding:8px 22px 8px 26px;min-width:150px;font:600 14px var(--ss-serif);letter-spacing:.06em;color:var(--ss-ink-1);text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.8);
+.sm-task>span:last-child{position:relative;z-index:-1;margin-left:-16px;padding:8px 22px 8px 26px;min-width:150px;font:400 14px var(--sg-font-heading);letter-spacing:.06em;color:var(--ss-ink-1);text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.8);
   background:url(/assets/seoksil/a4/slip.webp) center/100% 100% no-repeat}
 .sm-task:hover .sm-medal{filter:drop-shadow(0 0 10px rgba(211,154,82,.55))}
 .sm-task:hover .sm-medal__art{filter:brightness(1.05)}
@@ -132,15 +132,15 @@
 /* 오른쪽 위: 진행 중 — 대나무 쪽 줄 */
 .sm-progress{position:absolute;right:20px;top:84px;z-index:12;width:340px;max-height:calc(100vh - 440px);overflow:auto;scrollbar-width:none}
 .sm-progress .sm-panel__title{display:flex;align-items:center;padding:0 0 6px 10px}
-.sm-progress .sm-panel__title b{font:600 13px var(--ss-serif);letter-spacing:.24em;color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
+.sm-progress .sm-panel__title b{font:400 13px var(--sg-font-heading);letter-spacing:.24em;color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
 .sm-progress .sm-dot{display:none}
 .sm-progress ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .sm-prog{display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;width:100%;min-height:50px;padding:6px 28px 6px 24px;border:0;cursor:pointer;color:var(--ss-ink-1);text-align:left;
   background:url(/assets/seoksil/a4/slip.webp) center/100% 100% no-repeat;filter:brightness(.92);transition:filter var(--ss-t-pick)}
 .sm-prog:hover{filter:brightness(1.08)}
 .sm-prog .ss-pic,.sm-prog>i{grid-row:1/3;width:30px;height:30px}
-.sm-prog>i{display:grid;place-items:center;font:400 17px var(--ss-title);font-style:normal;color:var(--ss-carve);text-shadow:0 1px 2px #000}
-.sm-prog b{font:600 13px/1.3 var(--ss-sans);text-shadow:0 1px 2px #000}
+.sm-prog>i{display:grid;place-items:center;font:400 17px var(--sg-font-body);font-style:normal;color:var(--ss-carve);text-shadow:0 1px 2px #000}
+.sm-prog b{font:600 13px/1.3 var(--sg-font-body);text-shadow:0 1px 2px #000}
 .sm-prog small{font-size:12px;color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
 
 /* 왼쪽 아래: 선택 묶음 = 군적 목독(A05, 그림 797×1024 · 초상 홈 x15.7% y18.8% 폭39%) + 명령 메달 격자 */
@@ -152,17 +152,17 @@
 .sm-card__face img.is-bust{transform:none;object-position:50% 50%}
 .sm-card__thumb img{width:100%;height:100%;object-fit:cover;object-position:60% 55%;transform:scale(1.5)}
 .sm-card .sm-card__title{position:absolute;left:58%;right:11%;top:19%;display:grid;gap:6px;align-content:start}
-.sm-card__title b{font:400 clamp(20px,2.4vh,26px)/1.1 var(--ss-title);letter-spacing:.06em;color:var(--ss-gold);text-shadow:0 1px 2px #000;overflow-wrap:anywhere}
-.sm-card__title span{font:600 12px var(--ss-serif);letter-spacing:.14em;color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
+.sm-card__title b{font:400 clamp(20px,2.4vh,26px)/1.1 var(--sg-font-heading);letter-spacing:.06em;color:var(--ss-gold);text-shadow:0 1px 2px #000;overflow-wrap:anywhere}
+.sm-card__title span{font:400 12px var(--sg-font-heading);letter-spacing:.14em;color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
 .sm-card .sm-dot{margin:2px 0 0}
 .sm-card .sm-stats{position:absolute;left:14%;right:12%;top:55%;list-style:none;margin:0;padding:0;display:grid;gap:9px}
 .sm-stats li{display:grid;grid-template-columns:28px 46px 1fr;align-items:center;gap:6px}
 .sm-stats .ss-pic{width:28px;height:28px}
-.sm-stats li>i{font:400 18px/1 var(--ss-title);font-style:normal;color:var(--ss-carve);text-align:center;text-shadow:0 1px 2px #000}
-.sm-stats span{font:600 12px var(--ss-serif);letter-spacing:.1em;color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
-.sm-stats b{font:600 15px/1.2 var(--ss-sans);color:var(--ss-ink-1);text-shadow:0 1px 2px #000}
-.sm-stats b small{font:500 12px var(--ss-sans);color:var(--ss-ink-2);margin-left:4px}
-.sm-card__hint{position:absolute;left:14%;right:12%;bottom:8%;margin:0;font:500 12px var(--ss-sans);color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
+.sm-stats li>i{font:600 18px/1 var(--sg-font-num);font-style:normal;color:var(--ss-carve);text-align:center;text-shadow:0 1px 2px #000;font-weight:600;font-variant-numeric:tabular-nums}
+.sm-stats span{font:600 12px var(--sg-font-num);letter-spacing:.1em;color:var(--ss-ink-2);text-shadow:0 1px 2px #000;font-weight:600;font-variant-numeric:tabular-nums}
+.sm-stats b{font:600 15px/1.2 var(--sg-font-num);color:var(--ss-ink-1);text-shadow:0 1px 2px #000;font-weight:600;font-variant-numeric:tabular-nums}
+.sm-stats b small{font:600 12px var(--sg-font-num);color:var(--ss-ink-2);margin-left:4px;font-weight:600;font-variant-numeric:tabular-nums}
+.sm-card__hint{position:absolute;left:14%;right:12%;bottom:8%;margin:0;font:500 12px var(--sg-font-body);color:var(--ss-ink-2);text-shadow:0 1px 2px #000}
 .sm-card .sm-tiles--one{position:absolute;right:10%;bottom:4%;display:block;--md:46px}
 .sm-card .sm-tiles--one .sm-tile{width:auto}
 .sm-card .sm-tiles--one .sm-tile>span:not(.sm-medal){display:none}
@@ -171,8 +171,8 @@
 .sm-commands{max-height:none;overflow:visible}
 .sm-tiles{display:grid;grid-template-columns:repeat(5,80px);gap:10px 4px}
 .sm-tile{all:unset;box-sizing:border-box;position:relative;display:grid;justify-items:center;align-content:start;gap:3px;width:80px;cursor:pointer;--md:64px}
-.sm-tile>span:not(.sm-medal){font:600 12px/1.15 var(--ss-serif);color:var(--ss-ink-1);text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.9);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sm-tile small{font:500 10px var(--ss-sans);color:var(--ss-ink-2);text-shadow:0 1px 2px #000;white-space:nowrap}
+.sm-tile>span:not(.sm-medal){font:400 12px/1.15 var(--sg-font-heading);color:var(--ss-ink-1);text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.9);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sm-tile small{font:500 10px var(--sg-font-body);color:var(--ss-ink-2);text-shadow:0 1px 2px #000;white-space:nowrap}
 .sm-tile .ss-key{position:absolute;top:0;right:4px;min-width:14px;height:14px;font-size:9px;padding:0 2px;border-color:rgba(201,206,200,.3);background:#120F0B}
 .sm-tile:hover:not(:disabled) .sm-medal{filter:drop-shadow(0 0 10px rgba(211,154,82,.55))}
 .sm-tile:hover:not(:disabled) .sm-medal__art{filter:brightness(1.05)}
@@ -187,12 +187,12 @@
 /* 도시 작업 — 흑칠 판(A19) 위: 고르는 칸(select)이 있어 판이 필요하다 */
 .sm-city-jobs{width:440px;max-height:360px;overflow:auto;scrollbar-width:thin;padding:34px 34px 30px;background:url(/assets/seoksil/a4/lacquer-panel.webp) center/100% 100% no-repeat;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
 .sm-selects{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-.sm-selects label{display:grid;gap:4px;font:500 12px var(--ss-serif);letter-spacing:.1em;color:var(--ss-ink-2)}
-.sm-selects select{font:13px var(--ss-sans);background:#17130F;color:var(--ss-plaster);border:1px solid rgba(201,206,200,.3);height:34px;padding:4px 8px;max-width:180px}
+.sm-selects label{display:grid;gap:4px;font:400 12px var(--sg-font-heading);letter-spacing:.1em;color:var(--ss-ink-2)}
+.sm-selects select{font:13px var(--sg-font-body);background:#17130F;color:var(--ss-plaster);border:1px solid rgba(201,206,200,.3);height:34px;padding:4px 8px;max-width:180px}
 .sm-city-jobs .ss-reason{margin:0 0 8px}
 
 /* 오른쪽 아래: 다음 할 일 → 턴 종료 = 전고(A07) + 표시층 메달 */
-.sm-next{position:absolute;bottom:10px;right:22px;z-index:12;display:grid;justify-items:center;gap:0;font:600 14px var(--ss-serif);letter-spacing:.12em;color:var(--ss-ink-1);text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.9)}
+.sm-next{position:absolute;bottom:10px;right:22px;z-index:12;display:grid;justify-items:center;gap:0;font:400 14px var(--sg-font-heading);letter-spacing:.12em;color:var(--ss-ink-1);text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.9)}
 .sm-drum{all:unset;box-sizing:border-box;cursor:pointer;width:150px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.7));transition:filter var(--ss-t-pick),translate var(--ss-t-pick)}
 .sm-drum img{display:block;width:100%;height:auto}
 .sm-drum:hover:not(:disabled){filter:brightness(1.1) drop-shadow(0 0 18px rgba(211,154,82,.5));translate:0 -2px}
@@ -201,8 +201,8 @@
 .sm-next .ss-key{margin-top:2px}
 .sm-modes{position:absolute;bottom:30px;right:196px;z-index:12;display:flex;gap:6px}
 .sm-modes .sm-round{--md:52px}
-.sm-advisor{position:absolute;bottom:30px;left:50%;translate:-50% 0;max-width:30%;margin:0;z-index:11;font:500 13px var(--ss-serif);color:var(--ss-ink-2);text-align:center;text-shadow:0 1px 3px #000}
-.sm-news{top:84px;clip-path:none;padding:10px 32px;min-height:0;font:500 14px var(--ss-serif);letter-spacing:.06em;color:var(--ss-plaster);text-shadow:0 1px 2px #000;background:url(/assets/seoksil/a4/slip.webp) center/100% 100% no-repeat;box-shadow:none}
+.sm-advisor{position:absolute;bottom:30px;left:50%;translate:-50% 0;max-width:30%;margin:0;z-index:11;font:400 13px var(--sg-font-heading);color:var(--ss-ink-2);text-align:center;text-shadow:0 1px 3px #000}
+.sm-news{top:84px;clip-path:none;padding:10px 32px;min-height:0;font:400 14px var(--sg-font-heading);letter-spacing:.06em;color:var(--ss-plaster);text-shadow:0 1px 2px #000;background:url(/assets/seoksil/a4/slip.webp) center/100% 100% no-repeat;box-shadow:none}
 .sm-news::before{display:none}
 @media(max-width:1440px){.sm-top{gap:16px;padding:0 14px}.sm-resources{gap:16px}.sm-resources b{font-size:15px}.sm-resources .ss-pic{width:26px;height:26px}.sm-date{font-size:12px}.sm-top__dial{width:72px;height:72px}
   .sm-card{width:240px}.sm-tiles{grid-template-columns:repeat(5,68px)}.sm-tile{width:68px;--md:54px}.sm-card .sm-stats{gap:6px}.sm-stats li{grid-template-columns:24px 40px 1fr}.sm-stats .ss-pic{width:24px;height:24px}

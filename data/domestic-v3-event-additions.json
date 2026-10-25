@@ -1,0 +1,46 @@
+{
+  "status": "초안 — C476 입력(내정 콘텐츠 방 2026-10-24). 기존 카드에 붙일 새 선택지 후보 + 새 카드 후보. 수치는 시험값",
+  "newEffectKeys": {
+    "grain": "{delta} — 세력 창고(석)",
+    "gold": "{delta} — 세력 지갑",
+    "soldiers": "{city, kind: normal|veteran|wounded, delta} — 명",
+    "people": "{city, delta, capLimited} — 명",
+    "arms": "{kind: spear|blade|bow, delta} — 자루(세력 무기고)",
+    "horses": "{delta} — 필",
+    "luxuryPause": "{resource, turns} — 그 명품의 인망 효과를 n순 멈춤(내다 팔거나 선물한 몫)",
+    "carriedFood": "{army, turns} — 그 부대 휴대 군량 +n순분"
+  },
+  "newGuards": {
+    "grain_turns_below / grain_turns_at_least": "세력 창고가 지금 수입 · 지출로 몇 순 버티나",
+    "soldiers_at_least": "{city, value} 명",
+    "gold_at_least": "{value}",
+    "arms_at_least": "{kind, value}",
+    "horses_at_least": "{value}",
+    "resource_in_territory": "{resource} 칸이 영역 안",
+    "luxury_count_at_least": "{value} 명품 종류 수",
+    "all_choice_immediate_costs_affordable": "금 · 곡식 · 무구 · 말 비용까지 셈(지금은 식량 · 인망 · 예비병만)"
+  },
+  "addChoices": [
+    {"card": ["EV-F01-02", "EV-ANY-01", "EV-ECHO-F02-LAND"], "id": "buy", "label": "금으로 곡식을 사들인다", "effects": [{"gold": {"delta": -3000}}, {"grain": {"delta": 20000}}], "preview": "금 −3,000 · 곡식 +2만 석", "why": "시장 값(금 1 = 5석)보다 조금 싸고 차례당 한도를 안 씀 — 금이 쌓이는 문제(모형 REPORT §2-6)의 쓰임"},
+    {"card": ["E03"], "id": "sellLuxury", "label": "명품을 내다 팔아 곡식을 산다", "guards": [{"test": "luxury_count_at_least", "value": 1}], "effects": [{"luxuryPause": {"resource": "any", "turns": 5}}, {"grain": {"delta": 30000}}], "preview": "명품 하나 5순 동안 인망 없음 · 곡식 +3만 석"},
+    {"card": ["E02"], "id": "carts", "label": "말 수레로 실어 나른다", "guards": [{"test": "horses_at_least", "value": 300}], "effects": [{"horses": {"delta": -300}}, {"carriedFood": {"army": "army", "turns": 2}}], "preview": "말 −300필 · 그 부대 군량 두 순 더"},
+    {"card": ["EV-F02-05", "EV-ECHO-F01-LAND"], "id": "armSurrendered", "label": "항복병에게 무구를 돌려준다", "guards": [{"test": "arms_at_least", "kind": "spear", "value": 1000}], "effects": [{"arms": {"kind": "spear", "delta": -1000}}, {"soldiers": {"city": "city", "kind": "normal", "delta": 2000}}, {"security": {"city": "city", "step": -1}}], "preview": "창 −1,000자루 · 일반병 +2,000명 · 치안 한 단계 나빠짐"},
+    {"card": ["EV-F03-02", "EV-ANY-02"], "id": "loot", "label": "노획한 무구를 거둔다", "effects": [{"arms": {"kind": "enemyTroop", "delta": 1500}}], "preview": "적 병종 무구 +1,500자루", "why": "일반병 대신 무구 — 무기고가 모자랄 때 고를 이유"},
+    {"card": ["E04"], "id": "arrowsToTownsfolk", "label": "성민에게 활을 나눠 준다", "guards": [{"test": "arms_at_least", "kind": "bow", "value": 1000}], "effects": [{"arms": {"kind": "bow", "delta": -1000}}, {"soldiers": {"city": "city", "kind": "normal", "delta": 2000}}, {"people": {"city": "city", "delta": -2000}}], "preview": "활 −1,000자루 · 일반병 +2,000명 · 인구 −2,000명"},
+    {"card": ["E06"], "id": "bribeGentry", "label": "금으로 토호를 달랜다", "guards": [{"test": "gold_at_least", "value": 1500}], "effects": [{"gold": {"delta": -1500}}, {"occupation": {"city": "city", "delta": -1}}, {"security": {"city": "city", "step": 1}}], "preview": "금 −1,500 · 점령 처리 한 순 줄어듦 · 치안 한 단계 회복"},
+    {"card": ["EV-WANDERER-01", "EV-WANDERER-02"], "id": "courtesy", "label": "금으로 예를 갖춘다", "guards": [{"test": "gold_at_least", "value": 1000}], "effects": [{"gold": {"delta": -1000}}, {"relation": {"a": "lord", "b": "officer", "delta": 10}}], "preview": "금 −1,000 · 새 장수와 관계 +10"},
+    {"card": ["EV-F02-06", "EV-ANY-03", "EV-ECHO-F03-RECONCILE"], "id": "gift", "label": "비단이나 옥을 선물한다", "guards": [{"test": "luxury_count_at_least", "value": 1}], "effects": [{"luxuryPause": {"resource": "silk|jade", "turns": 5}}, {"prestige": 10}], "preview": "명품 하나 5순 동안 인망 없음 · 인망 +10", "pending": "외교 개편 뒤 휴전 연장 · 관계로"},
+    {"card": ["EV-F01-05", "EV-F03-03"], "id": "stones", "label": "채석장 돌로 성벽을 메운다", "guards": [{"test": "resource_in_territory", "resource": "quarry"}], "effects": [{"progress": {"city": "city", "delta": -10}}, {"durability": {"city": "city", "delta": 20}}], "preview": "그 성 생산 −10 · 성벽 +20"}
+  ],
+  "newCards": [
+    {"id": "EV-RES-01", "title": "새 광맥", "when": "TURN_START", "guards": [{"test": "resource_in_territory", "resource": "iron_mine|gold_mine"}], "text": "{city} 산기슭에서 새 광맥이 드러났다. 광부들이 모여든다.", "choices": [
+      {"id": "dig", "label": "바로 광산을 연다", "effects": [{"progress": {"city": "city", "delta": -15}}, {"buildImprovement": {"city": "city", "facility": "mine"}}], "preview": "생산 −15 · 광산이 바로 선다"},
+      {"id": "later", "label": "때를 기다린다", "effects": [], "preview": "변화 없음"}]},
+    {"id": "EV-RES-02", "title": "말 장수", "when": "TURN_START", "guards": [{"test": "market_count_at_least", "value": 1}, {"test": "horses_below_need"}], "text": "북쪽 말 장수가 {city} 시장에 말을 끌고 왔다.", "choices": [
+      {"id": "buy", "label": "말을 산다", "effects": [{"gold": {"delta": -600}}, {"horses": {"delta": 300}}], "preview": "금 −600 · 말 +300필(시장 값보다 쌈)"},
+      {"id": "no", "label": "돌려보낸다", "effects": [], "preview": "변화 없음"}]},
+    {"id": "EV-RES-03", "title": "명품을 탐내는 사신", "when": "TURN_START", "guards": [{"test": "luxury_count_at_least", "value": 2}], "text": "이웃의 사신이 {luxury} 이야기를 꺼낸다.", "choices": [
+      {"id": "give", "label": "선물로 내준다", "effects": [{"luxuryPause": {"resource": "luxury", "turns": 8}}, {"prestige": 15}], "preview": "그 명품 8순 동안 인망 없음 · 인망 +15"},
+      {"id": "keep", "label": "내주지 않는다", "effects": [{"prestige": -3}], "preview": "인망 −3"}]}
+  ]
+}

@@ -1,3 +1,5 @@
+import {campaignMapDimensions} from './campaign-scenario-data.mjs';
+import {isSliceMap} from './map-primitives.mjs';
 import { createRng } from './rng.mjs';
 import {buildMapRules,findPath as findMovementPath,issueOrder as issueMovementOrder,moveOneTick} from './movement.mjs';
 import {hexDistance} from './map-primitives.mjs';
@@ -42,9 +44,9 @@ function validateCampaignTerminalWorldExtension(s){
     else need(state.rulerVacancy==='NONE'&&own(s.officers,state.rulerId)&&s.officers[state.rulerId].allegianceFactionId===id);
   }
   for(const[id,state]of Object.entries(extension.citiesById)){
-    need(exactKeys(state,['cityId','ownerFactionId','governorId','occupationState','pendingGovernor','occupationRecordId',...((s.mapId==='v2'||s.mapId==='v3')?['kind']:[])])&&state.cityId===id);
-    need(((s.mapId!=='v2'&&s.mapId!=='v3')||state.kind===s.cities[id].kind)&&state.ownerFactionId===s.cities[id].ownerFactionId&&state.governorId===s.cities[id].governorId&&state.occupationState===s.cities[id].occupationState&&(own(s.factions,state.ownerFactionId)||((s.mapId==='v2'||s.mapId==='v3')&&state.kind==='minor'&&state.ownerFactionId===null)));
-    if(state.occupationState==='NORMAL')need((state.governorId!==null||((s.mapId==='v2'||s.mapId==='v3')&&state.kind==='minor'&&state.ownerFactionId===null))&&state.pendingGovernor===false&&state.occupationRecordId===null);
+    need(exactKeys(state,['cityId','ownerFactionId','governorId','occupationState','pendingGovernor','occupationRecordId',...((isSliceMap(s.mapId))?['kind']:[])])&&state.cityId===id);
+    need(((!isSliceMap(s.mapId))||state.kind===s.cities[id].kind)&&state.ownerFactionId===s.cities[id].ownerFactionId&&state.governorId===s.cities[id].governorId&&state.occupationState===s.cities[id].occupationState&&(own(s.factions,state.ownerFactionId)||((isSliceMap(s.mapId))&&state.kind==='minor'&&state.ownerFactionId===null)));
+    if(state.occupationState==='NORMAL')need((state.governorId!==null||((isSliceMap(s.mapId))&&state.kind==='minor'&&state.ownerFactionId===null))&&state.pendingGovernor===false&&state.occupationRecordId===null);
     else need(state.occupationState==='TEMPORARY_OCCUPATION'&&state.governorId===null&&state.pendingGovernor===true&&recordIds.has(state.occupationRecordId)&&extension.sourceChoiceIds.length>0);
   }
   for(const[id,state]of Object.entries(extension.armiesById)){
@@ -97,8 +99,9 @@ export function validateState(s,{allowCitylessAlive=false}={}){
   for(const key of ['normal','cavalry','engineer'])for(const field of ['plain','rough','road','crossingExtra'])need(finite(s.mapRules.tuning[key]?.[field],0.01));
   need(finite(s.mapRules.tuning.maneuverRange?.timeMultiplierAtMinimum,0.01) && finite(s.mapRules.tuning.maneuverRange?.timeMultiplierAtMaximum,0.01));
   for(const k of ['factions','cities','officers','armies','tiles'])need(object(s[k]));
-  need(sameIds(Object.keys(s.factions),['F01','F02','F03']) && Object.keys(s.cities).length===((s.mapId==='v2'||s.mapId==='v3')?8:3) && Object.keys(s.officers).length>=9 && Object.keys(s.armies).length>=6 && Object.keys(s.tiles).length===((s.mapId==='v2'||s.mapId==='v3')?(s.mapId==='v3'?640:520):252));
-  for(const [id,t]of Object.entries(s.tiles))need(t.tileId===id && ((s.mapId==='v2'||s.mapId==='v3')?integer(t.r,0,s.mapId==='v3'?31:19)&&integer(t.q+Math.floor(t.r/2),0,s.mapId==='v3'?19:25):integer(t.q,0,17)&&integer(t.r,0,13)) && id===`${t.q},${t.r}` && ['plain','forest','hill','mountain','water'].includes(t.terrainType));
+  const dimensions=campaignMapDimensions(s.mapId);need(!!dimensions);
+  need(sameIds(Object.keys(s.factions),s.mapId==='china'&&s.china12?.version===1?Array.from({length:12},(_,i)=>`F${String(i+1).padStart(2,'0')}`):['F01','F02','F03']) && Object.keys(s.cities).length===dimensions.cities && Object.keys(s.officers).length>=9 && Object.keys(s.armies).length>=6 && Object.keys(s.tiles).length===dimensions.tiles);
+  for(const [id,t]of Object.entries(s.tiles))need(t.tileId===id && (integer(t.r,dimensions.minR,dimensions.maxR)&&integer(t.q+(isSliceMap(s.mapId)?Math.floor(t.r/2):0),dimensions.minX,dimensions.maxX)) && id===`${t.q},${t.r}` && ['plain','forest','hill','mountain','water'].includes(t.terrainType));
   const terminalWorld=hasTerminalWorld?validateCampaignTerminalWorldExtension(s):null;
   const assigned=new Set();
   for(const [id,f]of Object.entries(s.factions)){
@@ -115,12 +118,12 @@ export function validateState(s,{allowCitylessAlive=false}={}){
     need(sameIds(f.armyIds,Object.values(s.armies).filter(a=>a.factionId===id).map(a=>a.armyId)));
   }
   for(const[id,c]of Object.entries(s.cities)){
-    need(c.cityId===id && typeof c.name==='string' && (own(s.factions,c.ownerFactionId)||((s.mapId==='v2'||s.mapId==='v3')&&c.kind==='minor'&&c.ownerFactionId===null)) && own(s.tiles,c.tileId));
+    need(c.cityId===id && typeof c.name==='string' && (own(s.factions,c.ownerFactionId)||((isSliceMap(s.mapId))&&c.kind==='minor'&&c.ownerFactionId===null)) && own(s.tiles,c.tileId));
     need(integer(c.population,1) && integer(c.populationCapacity,c.population) && finite(c.foodStock) && finite(c.foodCapacity,c.foodStock) && finite(c.productionProgress) && integer(c.reserveTroops) && integer(c.woundedTroops));
     need(object(c.specialResources) && Object.values(c.specialResources).every(v=>finite(v)) && object(c.reservedResources) && Object.values(c.reservedResources).every(v=>finite(v)));
     need(c.reservedResources.food<=c.foodStock && c.reservedResources.iron<=c.specialResources.iron && c.reservedResources.horses<=c.specialResources.horses);
     const cityState=terminalWorld?.citiesById[id];
-    if(c.governorId===null)need(((s.mapId==='v2'||s.mapId==='v3')&&c.kind==='minor'&&c.ownerFactionId===null)||cityState?.occupationState==='TEMPORARY_OCCUPATION'&&cityState.pendingGovernor===true);
+    if(c.governorId===null)need(((isSliceMap(s.mapId))&&c.kind==='minor'&&c.ownerFactionId===null)||cityState?.occupationState==='TEMPORARY_OCCUPATION'&&cityState.pendingGovernor===true);
     else{
       need(own(s.officers,c.governorId) && s.officers[c.governorId].allegianceFactionId===c.ownerFactionId && s.officers[c.governorId].lifeState==='ALIVE'&&s.officers[c.governorId].captivityState==='FREE'&&!assigned.has(c.governorId));assigned.add(c.governorId);
       need(s.officers[c.governorId].locationRef.kind==='CITY' && s.officers[c.governorId].locationRef.id===id);
@@ -133,7 +136,7 @@ export function validateState(s,{allowCitylessAlive=false}={}){
     need(a.armyId===id && own(s.factions,a.factionId) && own(s.officers,a.commanderId) && own(s.tiles,a.tileId));
     const o=s.officers[a.commanderId];need(o.allegianceFactionId===a.factionId && o.allowedTroops.includes(a.troopType));
     // C173b: only v2/v3 campaign city centers/gates permit same-faction stacks.
-    const cityStack=['v2','v3'].includes(s.mapId)&&s.mapRules.vision.profile==='CAMPAIGN_V1'&&Object.values(s.cities).some(c=>c.tileId===a.tileId||c.footprint?.gates?.includes(a.tileId))&&Object.values(s.armies).filter(b=>b.tileId===a.tileId&&(!terminalWorld||terminalWorld.armiesById[b.armyId]?.disposition==='ACTIVE')).every(b=>b.factionId===a.factionId);
+    const cityStack=isSliceMap(s.mapId)&&s.mapRules.vision.profile==='CAMPAIGN_V1'&&Object.values(s.cities).some(c=>c.tileId===a.tileId||c.footprint?.gates?.includes(a.tileId))&&Object.values(s.armies).filter(b=>b.tileId===a.tileId&&(!terminalWorld||terminalWorld.armiesById[b.armyId]?.disposition==='ACTIVE')).every(b=>b.factionId===a.factionId);
     if(active){need((!occupied.has(a.tileId)||cityStack)&&!assigned.has(a.commanderId)&&o.lifeState==='ALIVE'&&o.captivityState==='FREE'&&o.locationRef.kind==='ARMY'&&o.locationRef.id===id);occupied.add(a.tileId);assigned.add(a.commanderId);}
     need(integer(a.troopCount) && integer(a.woundedCount) && integer(a.deadCount) && finite(a.hp) && finite(a.maxHp,a.hp) && finite(a.morale,0,100) && finite(a.stamina) && finite(a.maxStamina,a.stamina) && finite(a.supplyFood));
     need(Array.isArray(a.statusEffects) && Array.isArray(a.cooldowns) && Array.isArray(a.engagedArmyIds));
@@ -153,7 +156,7 @@ export function validateState(s,{allowCitylessAlive=false}={}){
   }
   for(const[id,o]of Object.entries(s.officers)){
     need(o.officerId===id && typeof o.name==='string' && own(s.factions,o.allegianceFactionId) && integer(o.level,1,30) && finite(o.experience) && integer(o.aptitudePoints));
-    need(object(o.baseStats) && sameIds(Object.keys(o.baseStats),['leadership','might','intelligence','politics','charisma']) && Object.values(o.baseStats).every(n=>finite(n,0,['v2','v3'].includes(s.mapId)?10000:100)));
+    need(object(o.baseStats) && sameIds(Object.keys(o.baseStats),['leadership','might','intelligence','politics','charisma']) && Object.values(o.baseStats).every(n=>finite(n,0,isSliceMap(s.mapId)?10000:100)));
     need(object(o.subStats) && Object.keys(o.subStats).length===20 && Object.values(o.subStats).every(n=>finite(n,0,100)));
     need(Array.isArray(o.allowedTroops) && object(o.aptitude) && sameIds(Object.keys(o.aptitude),o.allowedTroops) && Object.values(o.aptitude).every(a=>['C','B','A','S','S+'].includes(a)));
     need(['ALIVE','DEAD'].includes(o.lifeState) && ['NORMAL','WOUNDED','RECOVERING'].includes(o.conditionState) && ['FREE','PRISONER'].includes(o.captivityState) && ['STATIONARY','TRAVELLING'].includes(o.travelState));
@@ -181,7 +184,7 @@ export function validateState(s,{allowCitylessAlive=false}={}){
       need(sameIds(Object.keys(r),keys));
     }
     for(const r of Object.values(k.observedArmies))need(!own(r,'lastSeen') && k.tiles[r.tileId]==='VISIBLE');
-    for(const [cityId,r]of Object.entries(k.cities))need(sameIds(Object.keys(r),['cityId','name','tileId','ownerFactionId']) && r.cityId===cityId && own(s.cities,cityId) && own(s.tiles,r.tileId) && (own(s.factions,r.ownerFactionId)||((s.mapId==='v2'||s.mapId==='v3')&&s.cities[cityId].kind==='minor'&&r.ownerFactionId===null)) && typeof r.name==='string');
+    for(const [cityId,r]of Object.entries(k.cities))need(sameIds(Object.keys(r),['cityId','name','tileId','ownerFactionId']) && r.cityId===cityId && own(s.cities,cityId) && own(s.tiles,r.tileId) && (own(s.factions,r.ownerFactionId)||((isSliceMap(s.mapId))&&s.cities[cityId].kind==='minor'&&r.ownerFactionId===null)) && typeof r.name==='string');
   }
   need(object(s.implementation) && s.implementation.stage==='I1' && s.implementation.turnExecution==='MOVEMENT_ONLY' && Array.isArray(s.implementation.pendingData));
   return s;

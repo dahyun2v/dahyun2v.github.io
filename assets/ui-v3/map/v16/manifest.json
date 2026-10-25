@@ -1,0 +1,465 @@
+{
+  "source": "prototype\\assets\\ui-v3\\map\\v15-world.webp",
+  "source_sha256": "fb12344b7588abdf5ab81f728be74f24abf555ec05443038746ef9adcf63d0e3",
+  "size": [
+    6120,
+    5549
+  ],
+  "cols": 3,
+  "rows": 4,
+  "overlap": 0.06,
+  "boxes": {
+    "tile-r1c1": [
+      0,
+      0,
+      2162,
+      1470
+    ],
+    "tile-r1c2": [
+      1918,
+      0,
+      4202,
+      1470
+    ],
+    "tile-r1c3": [
+      3958,
+      0,
+      6120,
+      1470
+    ],
+    "tile-r2c1": [
+      0,
+      1304,
+      2162,
+      2858
+    ],
+    "tile-r2c2": [
+      1918,
+      1304,
+      4202,
+      2858
+    ],
+    "tile-r2c3": [
+      3958,
+      1304,
+      6120,
+      2858
+    ],
+    "tile-r3c1": [
+      0,
+      2691,
+      2162,
+      4245
+    ],
+    "tile-r3c2": [
+      1918,
+      2691,
+      4202,
+      4245
+    ],
+    "tile-r3c3": [
+      3958,
+      2691,
+      6120,
+      4245
+    ],
+    "tile-r4c1": [
+      0,
+      4079,
+      2162,
+      5549
+    ],
+    "tile-r4c2": [
+      1918,
+      4079,
+      4202,
+      5549
+    ],
+    "tile-r4c3": [
+      3958,
+      4079,
+      6120,
+      5549
+    ]
+  },
+  "guide": "M mountain / F forest / H hill / P plain / W water; blue=engine river edges; magenta=engine city center. Painting is position authority; guides expose existing discrepancies.",
+  "projection": "map-v3.mjs: ring=624 land=2577x2220 tilt=.62; image scale=6120/3825,5549/3468",
+  "tiles": {
+    "tile-r1c1": {
+      "box": [
+        0,
+        0,
+        2162,
+        1470
+      ],
+      "generated_size": [
+        1521,
+        1034
+      ],
+      "png_sha256": "7940468f6367d6f3626931d3316662192e785dcf727b8cced67a0714e6f65841",
+      "feature_alignment": {
+        "matches": 910,
+        "inliers": 828,
+        "median_displacement_source_px": 1.63,
+        "p95_displacement_source_px": 4.18,
+        "affine_half_resolution": [
+          [
+            1.0000771212996449,
+            -8.224356809303662e-05,
+            0.3302810104518042
+          ],
+          [
+            8.224356809303662e-05,
+            1.0000771212996449,
+            -0.3333488354378581
+          ]
+        ]
+      }
+    },
+    "tile-r1c2": {
+      "box": [
+        1918,
+        0,
+        4202,
+        1470
+      ],
+      "generated_size": [
+        1563,
+        1006
+      ],
+      "png_sha256": "6ff888262847ae573e86c46b707936067cb575b623c2b7c9a0665325406dd890",
+      "feature_alignment": {
+        "matches": 1121,
+        "inliers": 1068,
+        "median_displacement_source_px": 1.9,
+        "p95_displacement_source_px": 4.14,
+        "affine_half_resolution": [
+          [
+            0.9991700069198173,
+            0.00016849809510182686,
+            1.1277130537052142
+          ],
+          [
+            -0.00016849809510182686,
+            0.9991700069198173,
+            0.21079385119776725
+          ]
+        ]
+      }
+    },
+    "tile-r1c3": {
+      "box": [
+        3958,
+        0,
+        6120,
+        1470
+      ],
+      "generated_size": [
+        1521,
+        1034
+      ],
+      "png_sha256": "15213e231edd144ae7aa6a776b0380f41f38ea39bfbd031d6a8519fda1cd3f75",
+      "feature_alignment": {
+        "matches": 968,
+        "inliers": 894,
+        "median_displacement_source_px": 1.81,
+        "p95_displacement_source_px": 4.36,
+        "affine_half_resolution": [
+          [
+            1.0005005959605344,
+            -0.00026256357931887895,
+            0.34537420275337105
+          ],
+          [
+            0.00026256357931887895,
+            1.0005005959605344,
+            -0.5625163627715408
+          ]
+        ]
+      }
+    },
+    "tile-r2c1": {
+      "box": [
+        0,
+        1304,
+        2162,
+        2858
+      ],
+      "generated_size": [
+        1479,
+        1064
+      ],
+      "png_sha256": "6ea121e7aade2b56190ba52ea54fa69a83f2ebd361b83b02e666e7f43b649599",
+      "feature_alignment": {
+        "matches": 744,
+        "inliers": 694,
+        "median_displacement_source_px": 2.0,
+        "p95_displacement_source_px": 5.16,
+        "affine_half_resolution": [
+          [
+            1.0003305147188037,
+            7.406149921971003e-05,
+            0.31560433607521127
+          ],
+          [
+            -7.406149921971003e-05,
+            1.0003305147188037,
+            0.2280301496926014
+          ]
+        ]
+      }
+    },
+    "tile-r2c2": {
+      "box": [
+        1918,
+        1304,
+        4202,
+        2858
+      ],
+      "generated_size": [
+        1520,
+        1035
+      ],
+      "png_sha256": "e77ca9038809268393f89012c8c18794c8f2660d99c41d0bd70b382dcf27d108",
+      "feature_alignment": {
+        "matches": 833,
+        "inliers": 764,
+        "median_displacement_source_px": 1.61,
+        "p95_displacement_source_px": 4.45,
+        "affine_half_resolution": [
+          [
+            0.9999043723085411,
+            3.196006434616312e-05,
+            0.27690998824825713
+          ],
+          [
+            -3.196006434616312e-05,
+            0.9999043723085411,
+            0.24560286937131923
+          ]
+        ]
+      }
+    },
+    "tile-r2c3": {
+      "box": [
+        3958,
+        1304,
+        6120,
+        2858
+      ],
+      "generated_size": [
+        1479,
+        1064
+      ],
+      "png_sha256": "50ee638ba5e2b13bb55cb4200ddc25d358aec4f766549947b65631a95c72961b",
+      "feature_alignment": {
+        "matches": 753,
+        "inliers": 693,
+        "median_displacement_source_px": 1.61,
+        "p95_displacement_source_px": 4.22,
+        "affine_half_resolution": [
+          [
+            0.999362167289824,
+            -5.35236321081359e-05,
+            -0.006889708321267496
+          ],
+          [
+            5.35236321081359e-05,
+            0.999362167289824,
+            0.10043885901269584
+          ]
+        ]
+      }
+    },
+    "tile-r3c1": {
+      "box": [
+        0,
+        2691,
+        2162,
+        4245
+      ],
+      "generated_size": [
+        1479,
+        1064
+      ],
+      "png_sha256": "4a261c7c20a285467923c64e2a93056f0d505a8c6bd0a834de4ca81c662358d5",
+      "feature_alignment": {
+        "matches": 795,
+        "inliers": 730,
+        "median_displacement_source_px": 1.79,
+        "p95_displacement_source_px": 4.71,
+        "affine_half_resolution": [
+          [
+            0.9999565078594438,
+            -0.0003938321498229397,
+            0.5168964636075734
+          ],
+          [
+            0.0003938321498229397,
+            0.9999565078594438,
+            0.033593454846037235
+          ]
+        ]
+      }
+    },
+    "tile-r3c2": {
+      "box": [
+        1918,
+        2691,
+        4202,
+        4245
+      ],
+      "generated_size": [
+        1520,
+        1035
+      ],
+      "png_sha256": "3c1ec86738bf2128da76252c42f3505ed8e853d33289881c0f6a34adeed40262",
+      "feature_alignment": {
+        "matches": 858,
+        "inliers": 769,
+        "median_displacement_source_px": 1.43,
+        "p95_displacement_source_px": 3.99,
+        "affine_half_resolution": [
+          [
+            1.0002475884896218,
+            4.3079025120183966e-07,
+            0.12686373274357685
+          ],
+          [
+            -4.3079025120183966e-07,
+            1.0002475884896218,
+            -0.2639364838180897
+          ]
+        ]
+      }
+    },
+    "tile-r3c3": {
+      "box": [
+        3958,
+        2691,
+        6120,
+        4245
+      ],
+      "generated_size": [
+        1479,
+        1064
+      ],
+      "png_sha256": "1681dde05734971ddad5023c1b26c7a1ccf0f5d275e086e16bd8502c32329cfa",
+      "feature_alignment": {
+        "matches": 790,
+        "inliers": 707,
+        "median_displacement_source_px": 1.27,
+        "p95_displacement_source_px": 4.02,
+        "affine_half_resolution": [
+          [
+            1.0002826944569145,
+            -0.00016474363035570794,
+            -0.013787189329868865
+          ],
+          [
+            0.00016474363035570794,
+            1.0002826944569145,
+            -0.18493955410761537
+          ]
+        ]
+      }
+    },
+    "tile-r4c1": {
+      "box": [
+        0,
+        4079,
+        2162,
+        5549
+      ],
+      "generated_size": [
+        1521,
+        1034
+      ],
+      "png_sha256": "8824aa150fff00f82975ef4e36cd8dab195840f040ea70436726e2049a3a99f5",
+      "feature_alignment": {
+        "matches": 767,
+        "inliers": 653,
+        "median_displacement_source_px": 1.69,
+        "p95_displacement_source_px": 4.45,
+        "affine_half_resolution": [
+          [
+            0.9996593452319923,
+            -0.00015183453727758378,
+            0.28988396651853604
+          ],
+          [
+            0.00015183453727758378,
+            0.9996593452319923,
+            -0.4721147488428654
+          ]
+        ]
+      }
+    },
+    "tile-r4c2": {
+      "box": [
+        1918,
+        4079,
+        4202,
+        5549
+      ],
+      "generated_size": [
+        1563,
+        1006
+      ],
+      "png_sha256": "f4b6a14fb8c598cb4813f4891f9b7eee74cdb82962f4a4e71f05a7621a1f8877",
+      "feature_alignment": {
+        "matches": 631,
+        "inliers": 557,
+        "median_displacement_source_px": 2.35,
+        "p95_displacement_source_px": 4.75,
+        "affine_half_resolution": [
+          [
+            1.0002467520726903,
+            -0.00010147342777639801,
+            -0.34789965251705446
+          ],
+          [
+            0.00010147342777639801,
+            1.0002467520726903,
+            -0.7981411063106718
+          ]
+        ]
+      }
+    },
+    "tile-r4c3": {
+      "box": [
+        3958,
+        4079,
+        6120,
+        5549
+      ],
+      "generated_size": [
+        1521,
+        1034
+      ],
+      "png_sha256": "d9638afcc99e812075f215684f3f28900bdd443cf3069553ac8e13f0ea128253",
+      "feature_alignment": {
+        "matches": 576,
+        "inliers": 517,
+        "median_displacement_source_px": 2.82,
+        "p95_displacement_source_px": 6.22,
+        "affine_half_resolution": [
+          [
+            1.0007990771478317,
+            -0.00010000812143720894,
+            0.66891887280478
+          ],
+          [
+            0.00010000812143720894,
+            1.0007990771478317,
+            -0.9863699465846428
+          ]
+        ]
+      }
+    }
+  },
+  "output": "world.webp",
+  "stitch": "minimum RGB difference seam inside exact source overlap; 6px feather; no coordinate warp",
+  "output_sha256": "a2f23e8dd6d293c7ba2a3df15ed87b818719829a5c29b27ec9f6ef052913607e",
+  "geometry_note": "Feature matches measure surviving landmarks only; they do not certify every bank or terrain boundary."
+}

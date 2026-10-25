@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "status": "mockup",
+  "source": "sheet.png",
+  "generator": "built-in image_gen",
+  "grid": [
+    4,
+    4
+  ],
+  "assets": [
+    {
+      "id": "maeng",
+      "name": "맹장",
+      "engineId": "MAENG",
+      "file": "maeng.png",
+      "sourceBox": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "gang",
+      "name": "강장",
+      "engineId": "GANG",
+      "file": "gang.png",
+      "sourceBox": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "howi",
+      "name": "호위",
+      "engineId": "HOWI",
+      "file": "howi.png",
+      "sourceBox": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tu",
+      "name": "투장",
+      "engineId": "TU",
+      "file": "tu.png",
+      "sourceBox": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "janggun",
+      "name": "장군",
+      "engineId": "JANGGUN",
+      "file": "janggun.png",
+      "sourceBox": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "chaek",
+      "name": "책사",
+      "engineId": "CHAEK",
+      "file": "chaek.png",
+      "sourceBox": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "chukseong",
+      "name": "축성장",
+      "engineId": "CHUKSEONG",
+      "file": "chukseong.png",
+      "sourceBox": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "cheok",
+      "name": "척후",
+      "engineId": "CHEOK",
+      "file": "cheok.png",
+      "sourceBox": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "jeonnong",
+      "name": "전농",
+      "engineId": "JEONNONG",
+      "file": "jeonnong.png",
+      "sourceBox": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "guksa",
+      "name": "국사",
+      "engineId": "GUKSA",
+      "file": "guksa.png",
+      "sourceBox": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "flag-steady",
+      "name": "안정 군기",
+      "engineId": null,
+      "file": "flag-steady.png",
+      "sourceBox": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "flag-wavering",
+      "name": "동요 군기",
+      "engineId": null,
+      "file": "flag-wavering.png",
+      "sourceBox": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "flag-routing",
+      "name": "패주 군기",
+      "engineId": null,
+      "file": "flag-routing.png",
+      "sourceBox": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "fracture",
+      "name": "전열 금",
+      "engineId": null,
+      "file": "fracture.png",
+      "sourceBox": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "rice-sack",
+      "name": "쌀가마",
+      "engineId": null,
+      "file": "rice-sack.png",
+      "sourceBox": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "supply-cut",
+      "name": "끊긴 보급줄",
+      "engineId": null,
+      "file": "supply-cut.png",
+      "sourceBox": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "size": [
+        256,
+        256
+      ]
+    }
+  ]
+}

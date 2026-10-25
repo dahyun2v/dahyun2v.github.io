@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "source": "source.png",
+  "size": [
+    1536,
+    1024
+  ],
+  "coordinates": "source pixels; rect x,y,width,height; slice top,right,bottom,left; pivot normalized",
+  "parts": {
+    "button-normal": {
+      "file": "button-normal.webp",
+      "rect": [
+        18,
+        22,
+        364,
+        117
+      ],
+      "slice": [
+        22,
+        22,
+        22,
+        22
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "button-hover": {
+      "file": "button-hover.webp",
+      "rect": [
+        397,
+        22,
+        364,
+        117
+      ],
+      "slice": [
+        22,
+        22,
+        22,
+        22
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "button-pressed": {
+      "file": "button-pressed.webp",
+      "rect": [
+        777,
+        22,
+        364,
+        117
+      ],
+      "slice": [
+        22,
+        22,
+        22,
+        22
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "button-disabled": {
+      "file": "button-disabled.webp",
+      "rect": [
+        1156,
+        22,
+        364,
+        117
+      ],
+      "slice": [
+        22,
+        22,
+        22,
+        22
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "card": {
+      "file": "card.webp",
+      "rect": [
+        20,
+        158,
+        734,
+        331
+      ],
+      "slice": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "card-selected": {
+      "file": "card-selected.webp",
+      "rect": [
+        782,
+        158,
+        735,
+        331
+      ],
+      "slice": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "tab-selected": {
+      "file": "tab-selected.webp",
+      "rect": [
+        20,
+        507,
+        412,
+        99
+      ],
+      "slice": [
+        22,
+        22,
+        22,
+        22
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "tab": {
+      "file": "tab.webp",
+      "rect": [
+        451,
+        507,
+        412,
+        99
+      ],
+      "slice": [
+        22,
+        22,
+        22,
+        22
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "chip": {
+      "file": "chip.webp",
+      "rect": [
+        891,
+        521,
+        247,
+        70
+      ],
+      "slice": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "separator": {
+      "file": "separator.webp",
+      "rect": [
+        20,
+        640,
+        1148,
+        24
+      ],
+      "slice": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "scrollbar": {
+      "file": "scrollbar.webp",
+      "rect": [
+        1194,
+        509,
+        52,
+        201
+      ],
+      "slice": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "panel": {
+      "file": "panel.webp",
+      "rect": [
+        20,
+        691,
+        1149,
+        303
+      ],
+      "slice": [
+        22,
+        22,
+        22,
+        22
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    "corner": {
+      "file": "corner.webp",
+      "rect": [
+        20,
+        691,
+        48,
+        48
+      ],
+      "slice": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "use": "top-left; rotate for other corners; included in panel slice"
+    }
+  }
+}

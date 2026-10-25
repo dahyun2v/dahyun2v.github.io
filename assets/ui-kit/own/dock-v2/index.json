@@ -1,0 +1,119 @@
+{
+  "id": "c329-dock-art-plate",
+  "status": "WORK_TRIAL",
+  "canvas": [
+    2400,
+    352
+  ],
+  "display": [
+    1200,
+    176
+  ],
+  "selected": "candidate-c.png",
+  "sourceCrop": [
+    0,
+    176,
+    2172,
+    356
+  ],
+  "exportNote": "Tool returned 2172x724. Trimmed transparent margin and normalized once to requested export size. Runtime preserves export aspect ratio without nine-slice.",
+  "generator": "built-in image_gen",
+  "reference": "docs/cloud/mockup/dock-v5/r2/dock-v5-painted.png",
+  "guide": "layout-guide.png",
+  "coordinatesPercent": {
+    "state": [
+      1.8,
+      18,
+      13.4,
+      74
+    ],
+    "portrait": [
+      17.5,
+      20,
+      10.3,
+      72
+    ],
+    "core": [
+      30.2,
+      40,
+      3.3,
+      21
+    ],
+    "Q": [
+      34.9,
+      27,
+      7.05,
+      36
+    ],
+    "W": [
+      43.5,
+      27,
+      7.05,
+      36
+    ],
+    "E": [
+      52.3,
+      27,
+      7.05,
+      36
+    ],
+    "R": [
+      61.4,
+      27,
+      7.05,
+      36
+    ],
+    "traits": [
+      74,
+      19,
+      12.2,
+      30
+    ],
+    "inventory": [
+      90,
+      25,
+      6.1,
+      25
+    ],
+    "orders": [
+      71.5,
+      66.5,
+      27,
+      25.5
+    ],
+    "name": [
+      42.8,
+      2,
+      14,
+      16
+    ],
+    "troops": [
+      30.5,
+      72,
+      33.2,
+      5
+    ],
+    "gauge": [
+      30.5,
+      85.5,
+      33.2,
+      5
+    ]
+  },
+  "assets": [
+    {
+      "file": "plate.png",
+      "sha256": "cff5ee16553d1c2dbaa130b6cbbb95dd91d26585bbceed996288f415b5123da6"
+    },
+    {
+      "file": "plate.webp",
+      "sha256": "b33348368003f1924592db2cfab08cac73116c086605e0b7670db41d1b2f6296"
+    }
+  ],
+  "selectionNotes": {
+    "a": "Six command frames; rejected.",
+    "b": "W socket too small and state has five rows; rejected.",
+    "c": "Four state rows, smaller passive socket, equal QWER and five commands; selected. Still brighter gold and more regular sockets than reference."
+  },
+  "activeRevision": "r2/index.json"
+}

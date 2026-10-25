@@ -16,7 +16,7 @@ function quiet(s){
  return s;
 }
 export function createPrologue(){
- const s=createCampaign({factionId:'F01',seed:225,fieldArmies:false,manualEndTurn:true,c31:false,council:false,c42:false,c43:false,c45:false,c46:false,trialRules:{runModifiers:false}});
+ const s=createCampaign({startCities:'fixed',factionId:'F01',seed:225,fieldArmies:false,manualEndTurn:true,c31:false,council:false,c42:false,c43:false,c45:false,c46:false,trialRules:{runModifiers:false}});
  for(const a of Object.values(s.armies)){a.troopCount=0;a.hp=0;s.personnel.formations.find(f=>f.formationId===a.armyId).field=0;}
  s.cities.west.governorId='G07';
  for(const id of ['G07','G33'])s.officers[id].locationRef={kind:'CITY',id:'west'};

@@ -1,4 +1,5 @@
 // @ts-check
+import {audioBuses} from './sfx.mjs';
 // 화면별 배경 음악 — 처음·드래프트·지도(평시/전시, 곡 둘씩)·교전·성·주점·군의·위기·승리·패배. 곡 바꿈은 교차 페이드.
 // 표시용(게임 규칙 아님). 음량·음소거는 기존 소리 설정을 그대로 따른다.
 // 곡 파일: prototype/assets/audio/bgm/{자리}.ogg (tools/art/bgm-prepare.py 가 만든다). 파일이 없거나 서버가 못 주면 조용히 침묵한다.
@@ -25,10 +26,10 @@ export const BGM_TRACKS = Object.freeze({
 const STEP_MS = 50;
 
 /**
- * @param {{factory?: (src:string)=>any, settings?: {muted?:boolean, volume?:number}, fadeMs?: number,
+ * @param {{factory?: (src:string)=>any, settings?: {muted?:boolean, volume?:number}, fadeMs?: number, buses?:any,
  *   timer?: {set:(fn:()=>void, ms:number)=>any, clear:(id:any)=>void}, onStatus?: (scene:string|null, state:string)=>void}} [options]
  */
-export function createWorldBgm({factory = (src) => new Audio(src), settings = {muted: false, volume: 0.15}, fadeMs = 1800,
+export function createWorldBgm({factory = (src) => new Audio(src), settings = {muted: false, volume: 0.15}, fadeMs = 1800, buses = audioBuses,
   timer = {set: (fn, ms) => setInterval(fn, ms), clear: (id) => clearInterval(id)}, onStatus = () => {}} = {}) {
   /** @param {{muted?:boolean, volume?:number}} s */
   const norm = (s) => ({muted: !!s.muted, volume: Number.isFinite(s.volume) ? Math.max(0, Math.min(1, /** @type {number} */ (s.volume))) : 0.15});
@@ -38,9 +39,11 @@ export function createWorldBgm({factory = (src) => new Audio(src), settings = {m
   /** @type {Set<{el:any, f:number, gain:number}>} */ const fading = new Set();
   /** @type {Set<string>} */ const failed = new Set();
   /** @type {any} */ let tick = null;
-  const level = () => (prefs.muted ? 0 : prefs.volume);
+  buses.configure(prefs);
+  const level = () => buses.level('bgm');
   const status = (/** @type {string} */ s) => { try { onStatus(cur?.name ?? wanted, s); } catch {} };
   const setVol = (/** @type {{el:any, f:number, gain:number}} */ v) => { try { v.el.volume = Math.max(0, Math.min(1, level() * v.gain * v.f)); } catch {} };
+  buses.subscribe(()=>{if(cur)setVol(cur);for(const v of fading)setVol(v);});
   const halt = (/** @type {any} */ el) => { try { el.pause(); el.removeAttribute?.('src'); el.load?.(); } catch {} };
 
   function step() {
@@ -95,7 +98,7 @@ export function createWorldBgm({factory = (src) => new Audio(src), settings = {m
     /** 사용자의 첫 클릭·키 입력에서 부른다(브라우저 자동 재생 정책). */
     gesture() { if (!active) return; requested = true; sync(); },
     /** @param {{muted?:boolean, volume?:number}} next */
-    configure(next) { prefs = norm({muted: typeof next.muted === 'boolean' ? next.muted : prefs.muted, volume: Number.isFinite(next.volume) ? next.volume : prefs.volume}); sync(); },
+    configure(next) { prefs = norm({muted: typeof next.muted === 'boolean' ? next.muted : prefs.muted, volume: Number.isFinite(next.volume) ? next.volume : prefs.volume}); buses.configure(prefs); sync(); },
     deactivate() { active = false; stopAll(); status('STOPPED'); },
     activate() { active = true; sync(); },
     get snapshot() { return {active, requested, wanted, playing: cur?.name ?? null, fading: fading.size, failed: [...failed], settings: {...prefs}}; },

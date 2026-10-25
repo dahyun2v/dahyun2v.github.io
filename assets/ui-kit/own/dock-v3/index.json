@@ -1,0 +1,31 @@
+{
+  "canvas": [
+    2400,
+    352
+  ],
+  "provider": "built-in image_gen",
+  "reference": "docs/cloud/mockup/dock-v6/r2/dock-v6-painted.png",
+  "source": "source-v6.png",
+  "sourceCanvas": [
+    1920,
+    819
+  ],
+  "integrationCrop": [
+    12,
+    239,
+    1910,
+    584
+  ],
+  "resample": "Lanczos",
+  "assets": [
+    {
+      "file": "plate-v6.png",
+      "sha256": "75ada14be84281dc2716ef92930987a90039a9a3fb8bf030d3d3c67880766f00"
+    },
+    {
+      "file": "plate-v6.webp",
+      "sha256": "5941c7b02b0da18ad581b10490b85bf39cfb500aed102a932416bf4a4baa3fac"
+    }
+  ],
+  "prompt": "Edit reference into a production UI background asset only. Reproduce bottom dock as a transparent 2400x352 strip. Black ink lacquer and antique gold painted frames. Preserve four stat rows, portrait frame, flag socket, class emblem socket, ration area, level medallion, XP groove, five equal ability slots, three small trait slots, three-segment troop groove, gauge groove, and five command frames in two rows. Remove all content, text, numbers, keys, portraits, icons, flags, rice sacks and bar fills. Match reference painted gold style. No scene/map/background. Empty frames only."
+}

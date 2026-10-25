@@ -1,0 +1,242 @@
+/* C257: start surfaces only. Shared kit v2 and the campaign HUD stay untouched. */
+@import url('https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;700&display=swap');
+/* C307: exact repeated spacing values; presentation unchanged. */
+:root{--sg-faction-space-64:64px;--sg-faction-space-100:100px;}
+html[data-start="civ"] body.ink #selection{display:block;padding:0;color:var(--sg-ink);background:var(--sg-paper) url('/assets/ui-kit/own/paper.webp') repeat;font-family:var(--sg-font-body)}
+html[data-start="civ"] #selection>:not(.c251-start):not(.w-select-foot){display:none!important}
+html[data-start="civ"] #selection::before,html[data-start="civ"] #selection::after{display:none}
+.c251-start{position:relative;isolation:isolate;display:grid;grid-template-columns:36% 36% 28%;width:100%;height:100%;text-align:left;box-sizing:border-box}
+.c251-start *{box-sizing:border-box}
+.c251-hero{position:relative;min-height:0;pointer-events:none}
+.c251-art{position:absolute;inset:0;background:var(--art) center top/contain no-repeat;mask-image:linear-gradient(to right,var(--sg-shadow-black) calc(100% - 64px),transparent)}
+.c251-choice{position:relative;min-width:0;padding:var(--sg-faction-space-64) var(--sg-space-6) var(--sg-faction-space-100);text-align:center}
+.c251-choice header small{font-size:var(--sg-type-ui);color:var(--sg-text-muted-light)}.c251-choice h1{font:400 var(--sg-type-h1)/1.4 var(--sg-font-heading);margin:var(--sg-type-meta) 0;letter-spacing:-.04em}.c251-choice header p{font:400 var(--sg-type-ui)/1.6 var(--sg-font-body);margin:0}
+.c251-lords{position:absolute;top:33%;left:24px;right:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sg-icon-sm);margin:0}
+.c251-lords:has(>div:nth-child(4)){grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sg-space-3)}
+.c251-lords>div{display:flex;flex-direction:column;align-items:center;gap:var(--sg-type-meta);min-width:0}.c251-lords b{font:400 var(--sg-type-ui)/1.4 var(--sg-font-name)}
+.c251-lords .k-medallion img{border-radius:50%;object-fit:cover;object-position:50% 15%;width:calc(var(--d)*.76px);height:calc(var(--d)*.76px)}
+.c251-lords .is-on{outline:var(--sg-border-selected) solid var(--sg-gold-line);outline-offset:3px;box-shadow:none}
+.c251-identity{position:absolute;top:51%;left:24px;right:24px;margin:0 auto;max-width:520px;text-align:left}
+.c251-name-row{display:flex;align-items:baseline;gap:var(--sg-space-4)}.c251-lord-text h2{font:400 var(--sg-type-number-hero)/1.2 var(--sg-font-name);margin:0;color:var(--sg-ink)}
+.c251-title{font:400 var(--sg-type-body)/1.4 var(--sg-font-heading)}.c251-motto{font:400 var(--sg-type-body)/1.4 var(--sg-font-heading);margin:var(--sg-type-meta) 0 var(--sg-space-2)}
+.c251-bio{font:400 var(--sg-type-ui)/1.6 var(--sg-font-body);margin:0 0 var(--sg-space-4)}.c251-lord-trait{border-top:var(--sg-border-normal) solid var(--sg-gold-line);padding-top:var(--sg-space-3)}
+.c251-lord-trait h3{font:400 var(--sg-type-ui)/1.4 var(--sg-font-name);margin:0 0 var(--sg-map-space-6)}.c251-lord-trait b{font:400 var(--sg-type-ui)/1.5 var(--sg-font-name)}.c251-lord-trait p{font:400 var(--sg-type-ui)/1.6 var(--sg-font-name);margin:var(--sg-map-space-6) 0 0}
+.c251-go{position:absolute;bottom:9.2%;left:0;right:0}
+.c251-go .k-btn-primary{white-space:nowrap;width:300px;height:52px;margin:0;font:400 var(--sg-type-body)/1 var(--sg-font-button);color:var(--sg-bone);background:transparent}
+.c251-features{padding:var(--sg-faction-space-64) var(--sg-space-8) var(--sg-faction-space-100) var(--sg-space-6);min-height:0;overflow:auto;border-left:var(--sg-border-normal) solid #29292926;font:400 var(--sg-type-ui)/1.65 var(--sg-font-body)}
+.c251-features h3{font:400 var(--sg-type-ui)/1.5 var(--sg-font-heading);margin:0 0 var(--sg-icon-sm)}.c251-features ul{padding:0;margin:0 0 var(--sg-space-8);list-style:none}.c251-features li{display:flex;gap:var(--sg-type-meta);margin:0 0 var(--sg-space-6)}.c251-features p{font-size:var(--sg-type-ui);margin:5px 0 0}.c251-feature-icon{display:grid;place-items:center;flex:none;width:36px;height:36px;background:var(--sg-ink) url('/assets/ui-kit/own/ink-fill.webp');color:var(--sg-gold-name);font:700 var(--sg-type-body) var(--sg-font-body)}
+.c251-officers{display:flex;flex-wrap:wrap;gap:var(--sg-type-meta)}.c251-officers figure{margin:0;text-align:center}.c251-officers img{display:block;width:64px;height:64px;object-fit:cover;object-position:50% 8%;border:var(--sg-border-normal) solid #777}.c251-officers figcaption{font-size:var(--sg-type-ui);margin-top:var(--sg-map-space-6)}
+html[data-start="civ"] #selection>.w-select-foot{position:absolute;left:32px;bottom:20px;right:32px;display:flex;align-items:center;gap:var(--sg-icon-sm);margin:0;color:var(--sg-ink);font:400 var(--sg-type-ui) var(--sg-font-body)}
+html[data-start="civ"] .w-select-foot .k-btn{font:400 var(--sg-type-ui) var(--sg-font-button);color:var(--sg-bone);background:var(--sg-ink)}
+html[data-start="civ"] .w-select-foot a[href="/"]{order:-1;text-decoration:none;white-space:nowrap;min-width:180px}
+html[data-start="civ"] .w-select-foot #c215-continue-summary{font-size:var(--sg-type-ui);color:var(--sg-text-muted-light)}
+html[data-start="civ"] .w-select-foot #continue{min-width:150px;white-space:nowrap}
+html[data-start="civ"] .w-select-foot #continue:disabled{opacity:1;color:var(--sg-bone);background:var(--sg-text-muted-light)}
+.c251-start :is(button,a):focus-visible{outline:3px solid var(--sg-name-on-paper);outline-offset:5px}
+/* The five-card awakening stages and image treatment are retained. Explicit opaque
+   text surfaces prevent contrast depending on the rock/photo/texture underneath. */
+body.ink #officer-draft .c251-draft{position:absolute;inset:0;margin:0;width:100%;height:100%;background:var(--sg-ink-deep);color:var(--sg-bone);font-family:var(--sg-font-body);--serif:var(--sg-font-body);--disp:var(--sg-font-name);--sans:var(--sg-font-body)}
+body.ink #officer-draft .c251-draft .od:not(.od-awake){background:var(--sg-ink-deep);color:var(--sg-bone);font-family:var(--sg-font-body);padding-bottom:29px;grid-template-rows:44px 72px minmax(180px,1fr) 112px 92px}
+body.ink #officer-draft .c251-draft .od-head h1{font:400 var(--sg-type-h1)/1.2 var(--sg-font-heading);color:var(--sg-bone)}
+body.ink #officer-draft .c251-draft .od-head p{font:400 var(--sg-type-ui)/1.5 var(--sg-font-body);color:var(--sg-gold-name);text-shadow:none}
+body.ink #officer-draft .c251-draft .od-budget{font:600 var(--sg-type-ui)/1.4 var(--sg-font-num);color:var(--sg-bone);text-shadow:none;font-weight:600;font-variant-numeric:tabular-nums}
+body.ink #officer-draft .c251-draft .od-budget span{font:600 var(--sg-type-ui)/1.4 var(--sg-font-num);color:var(--sg-bone);letter-spacing:0;font-weight:600;font-variant-numeric:tabular-nums}
+body.ink #officer-draft .c251-draft .od-budget :is(b,i){font:600 var(--sg-type-name)/1.2 var(--sg-font-num);color:var(--sg-bone);font-variant-numeric:tabular-nums;text-shadow:none;font-weight:600}
+body.ink #officer-draft .c251-draft .od-budget small{font:600 var(--sg-type-ui)/1.4 var(--sg-font-num)!important;color:var(--sg-gold-name);font-weight:600;font-variant-numeric:tabular-nums}
+body.ink #officer-draft .c251-draft .od-note{font:400 var(--sg-type-ui)/1.4 var(--sg-font-body);color:var(--sg-gold-name);text-shadow:none}
+body.ink #officer-draft .c251-draft .od-card{outline:0;border:var(--sg-border-normal) solid #979797;background:#292d2d}
+body.ink #officer-draft .c251-draft .od-card:is(.focus,:hover,:focus-visible,.locked){outline:0;border:var(--sg-border-selected) solid var(--sg-gold-line);box-shadow:none}
+body.ink #officer-draft .c251-draft .od-plate{background:var(--sg-ink);color:var(--sg-bone);align-content:start;padding:var(--sg-space-2) var(--sg-space-3) var(--sg-line-name)}
+body.ink #officer-draft .c251-draft .od-plate b{font:400 var(--sg-type-name)/1.2 var(--sg-font-name);color:var(--sg-bone)}
+body.ink #officer-draft .c251-draft .od-plate small{font:400 var(--sg-type-ui)/1.4 var(--sg-font-name)!important;color:var(--sg-bone)}
+body.ink #officer-draft .c251-draft .od-cost{font:600 var(--sg-type-ui)/1.4 var(--sg-font-num);color:var(--sg-gold-name);font-weight:600;font-variant-numeric:tabular-nums}
+body.ink #officer-draft .c251-draft .od-card-stats{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;justify-content:space-between;gap:var(--sg-space-1);list-style:none;margin:0;padding:var(--sg-space-1) var(--sg-map-space-10);background:var(--sg-ink);color:var(--sg-bone);font:600 var(--sg-type-ui)/1.4 var(--sg-font-num);font-variant-numeric:tabular-nums;font-weight:600}
+body.ink #officer-draft .c251-draft .od-card-stats li{display:flex;gap:var(--sg-space-1)}.c251-draft .od-card-stats b{font:600 var(--sg-type-ui)/1.4 var(--sg-font-num);font-weight:600;font-variant-numeric:tabular-nums}
+body.ink #officer-draft .c251-draft .od-shared-detail{width:720px!important;max-width:100%;background:var(--sg-paper) url('/assets/ui-kit/own/paper.webp') repeat;color:var(--sg-ink);border:var(--sg-border-normal) solid var(--sg-ink);font:400 var(--sg-type-ui)/1.45 var(--sg-font-body)}
+body.ink #officer-draft .c251-draft .od-shared-detail b{font:400 var(--sg-type-ui)/1.5 var(--sg-font-heading);color:var(--sg-ink)}
+body.ink #officer-draft .c251-draft :is(.od-back.k-btn,.od-reroll.k-btn,.od-wake.k-btn){border:var(--sg-border-normal) solid var(--sg-gold-line);background:var(--sg-ink);color:var(--sg-bone);padding:0 var(--sg-icon-sm);height:44px;min-height:0;font:400 var(--sg-type-ui)/1 var(--sg-font-button);letter-spacing:0;filter:none}
+body.ink #officer-draft .c251-draft .od-wake.k-btn{height:40px;text-indent:0}
+body.ink #officer-draft .c251-draft .od-reroll.k-btn{display:flex;flex-direction:column;gap:var(--sg-space-1);min-width:195px}
+body.ink #officer-draft .c251-draft .od-reroll b{font:700 var(--sg-type-ui)/1 var(--sg-font-body)!important}
+body.ink #officer-draft .c251-draft .od-reroll small{font:400 var(--sg-type-ui)/1 var(--sg-font-body);color:var(--sg-bone)}
+body.ink #officer-draft .c251-draft .od-confirm.k-btn-primary{position:relative;inset:auto;height:52px;width:300px!important;min-width:300px;max-width:none;margin:0!important;padding:0 var(--sg-space-3);background:transparent!important;border:solid transparent;border-width:8px 24px;border-image:url('/assets/ui-kit/own/seal-bar.webp') 32 96 fill / 8px 24px / 0 stretch;color:var(--sg-bone);font:400 var(--sg-type-body)/1 var(--sg-font-button);overflow:visible}
+body.ink #officer-draft .c251-draft .od-confirm.k-btn-primary::before,body.ink #officer-draft .c251-draft .od-confirm.k-btn-primary::after{display:none}
+body.ink #officer-draft .c251-draft :is(.od-confirm,.od-reroll,.od-wake):disabled{opacity:1;filter:none;color:var(--sg-bone)}
+body.ink #officer-draft .c251-draft .od-seal{background:var(--sg-seal-pressed);color:var(--sg-bone);font-family:var(--sg-font-body)}
+body.ink #officer-draft .c251-draft .od-slots{gap:var(--sg-space-3)}
+body.ink #officer-draft .c251-draft .od-slots li.k-medallion{width:72px!important;height:72px!important;border:0;background:url('/assets/ui-kit/own/medallion.webp') center/contain!important}
+body.ink #officer-draft .c251-draft .od-slots li.ruler{margin-right:0!important}
+body.ink #officer-draft .c251-draft .od-slots li.k-medallion i{inset:12%;background-size:220% auto}
+body.ink #officer-draft .c251-draft .od-slots li.ruler::after{font:400 var(--sg-type-ui)/1.4 var(--sg-font-body);color:var(--sg-gold-name);top:-20px}
+body.ink #officer-draft .c251-draft .od-slots li.owner{outline:var(--sg-border-selected) solid var(--sg-gold-line)}
+@media(max-height:820px){.c251-choice{padding-top:var(--sg-type-hit-normal)}.c251-features{padding-top:var(--sg-type-hit-normal)}.c251-features li{margin-bottom:var(--sg-space-4)}.c251-features ul{margin-bottom:var(--sg-space-6)}.c251-lords{top:29%}.c251-identity{top:51%}.c251-motto{margin-top:var(--sg-space-2)}.c251-bio{margin-bottom:var(--sg-space-2)}.c251-lord-trait{padding-top:var(--sg-space-2)}.c251-go{bottom:8%}}
+@media(max-width:1450px){.c251-choice{padding-left:var(--sg-space-4);padding-right:var(--sg-space-4)}.c251-lords{left:16px;right:16px;gap:var(--sg-space-3)}.c251-features{padding-left:var(--sg-icon-sm);padding-right:var(--sg-space-4)}.c251-officers{gap:var(--sg-map-space-10)}body.ink #officer-draft .c251-draft .od-foot{gap:var(--sg-space-3)}body.ink #officer-draft .c251-draft .od-card-stats li{flex-direction:column;gap:0}body.ink #officer-draft .c251-draft .od-plate{padding-bottom:var(--sg-space-12)}}
+@media(max-width:1200px){.c251-choice h1{font-size:var(--sg-type-number-hero)}.c251-lords .k-medallion{--d:96!important}.c251-name-row{gap:var(--sg-space-2)}.c251-title{font-size:var(--sg-type-ui)}.c251-lord-trait p,.c251-bio{font-size:var(--sg-type-ui)}.c251-go{bottom:6%}body.ink #officer-draft .c251-draft .od:not(.od-awake){padding-left:var(--sg-space-6);padding-right:var(--sg-space-6);grid-template-rows:44px 72px minmax(180px,1fr) 100px 164px}body.ink #officer-draft .c251-draft .od-foot{flex-wrap:wrap;align-content:start;gap:var(--sg-space-4) var(--sg-space-3)}body.ink #officer-draft .c251-draft .od-slots{order:-1;flex-basis:100%;height:72px;justify-content:center}body.ink #officer-draft .c251-draft .od-note{align-self:end;justify-self:center;max-width:40%;text-align:center}body.ink #officer-draft .c251-draft .od-head h1{font-size:var(--sg-type-number-hero)}body.ink #officer-draft .c251-draft .od-head p{max-width:720px}}
+
+body.ink #officer-draft .c251-draft :is(.od-head,.od-budget,.od-shared-detail){position:relative;z-index:6}
+
+body.ink #officer-draft .c251-draft :is(.od-head,.od-budget,.od-note){background:var(--sg-ink-deep)}
+body.ink #officer-draft .c251-draft .od-foot{padding-top:var(--sg-space-2)}
+body.ink #officer-draft .c251-draft .od-foot .od-slots{height:72px}
+
+@media(max-width:1450px){body.ink #officer-draft .c251-draft .od-plate{height:110px}body.ink #officer-draft .c251-draft .od-card.locked .od-plate{height:110px}body.ink #officer-draft .c251-draft .od-art{bottom:110px}body.ink #officer-draft .c251-draft .od-wake.k-btn{bottom:118px}}
+@media(max-width:1200px){body.ink #officer-draft .c251-draft .od-foot{padding-top:var(--sg-space-4)}body.ink #officer-draft .c251-draft .od-slots li.ruler::after{top:-18px}}
+
+.c251-go .k-btn-primary>span:not(.k-grain),body.ink #officer-draft .c251-draft .od-confirm b{background:var(--sg-seal-pressed);color:var(--sg-bone);padding:var(--sg-space-1) var(--sg-map-space-6)}
+.c251-go .k-btn-primary:hover,body.ink #officer-draft .c251-draft .od-confirm:hover:not(:disabled){filter:none}
+
+body.ink #officer-draft:has(.c251-draft){--serif:var(--sg-font-body);--disp:var(--sg-font-name);--sans:var(--sg-font-body)}
+html[data-start="civ"] .w-select-foot #c215-continue-summary{background:var(--sg-paper);padding:var(--sg-space-1)}
+
+/* C270: controls stay outside portraits at every viewport size. */
+html[data-start="civ"] #selection>.w-select-foot{left:37%;right:29%;bottom:12px;gap:var(--sg-space-3);flex-wrap:wrap}
+html[data-start="civ"] .w-select-foot #continue:disabled,
+html[data-start="civ"] .w-select-foot:has(#continue:disabled) #c215-continue-summary{display:none}
+.c251-name-row{flex-wrap:wrap;align-items:center}
+.c270-emblem{width:40px;height:40px;object-fit:contain}
+.c251-officers img{border-color:var(--sg-gold-line)}
+.c270-unique{font-size:var(--sg-type-ui);margin:var(--sg-space-2) 0}
+.c270-unique p{margin:var(--sg-space-2) 0}
+.c251-features li{position:relative}
+.c270-troop-preview{display:none;position:absolute;right:0;bottom:100%;width:300px;padding:var(--sg-space-4);background:var(--sg-ink);color:var(--sg-bone);border:1px solid var(--sg-gold-line);z-index:10;pointer-events:none}
+.c251-features li:is(:hover,:focus-within) .c270-troop-preview{display:block;animation:c270-tooltip .3s step-end}
+.c270-troop-preview img{width:240px;height:120px;object-fit:contain}
+@keyframes c270-tooltip{from{opacity:0}to{opacity:1}}
+.c270-victory{font:var(--sg-type-ui)/1.4 var(--sg-font-body);margin:0 auto var(--sg-space-3);max-width:440px}
+.c251-identity{max-height:35%;overflow:auto}
+body.ink #officer-draft .c251-draft .od-wake.k-btn{position:relative;inset:auto;float:right;width:120px;height:40px;min-height:44px;margin:0 0 var(--sg-space-1) var(--sg-space-2)}
+body.ink #officer-draft .c251-draft .od-plate{height:148px;padding-bottom:var(--sg-space-12)}
+body.ink #officer-draft .c251-draft .od-art{bottom:148px}
+body.ink #officer-draft .c251-draft .od:not(.od-awake){grid-template-rows:44px 72px minmax(180px,1fr) 144px 92px}
+body.ink #officer-draft .c251-draft .od-shared-detail{overflow:auto;padding:var(--sg-space-3);box-sizing:border-box}
+body.ink #officer-draft .c251-draft .od-shared-detail p{margin:var(--sg-space-1) 0;font-size:var(--sg-type-ui)}
+.od-head h1>small{display:block;font:var(--sg-type-ui)/1.5 var(--sg-font-heading)}
+@media(max-height:820px){body.ink #officer-draft .c251-draft .od:not(.od-awake){grid-template-rows:36px 60px minmax(160px,1fr) 120px 88px;gap:var(--sg-space-2)}.c251-identity{top:51%;max-height:30%}.c251-go{bottom:9%}.c270-victory{font-size:var(--sg-type-caption)}}
+@media(max-width:1200px){body.ink #officer-draft .c251-draft .od:not(.od-awake){grid-template-rows:36px 60px minmax(160px,1fr) 120px 140px}.c251-go .k-btn-primary{max-width:90%}}
+
+@media(max-height:820px){body.ink #officer-draft .c251-draft .od:not(.od-awake){padding-bottom:var(--sg-space-6)}}
+
+body.ink #officer-draft .c251-draft .od-plate b{font-size:var(--sg-type-draft-name);line-height:var(--sg-line-draft-name)}
+
+/* C273: this node exists only while the ritual experiment is enabled. */
+.c251-identity .c273-difficulty{font:400 15px/1.6 var(--sg-font-body);color:var(--sg-text-muted-light);margin:var(--sg-gap-icon-text) 0}
+
+/* C298: original art stays left of x680; controls start at x712 (1920). */
+html[data-ui="kit"] .c251-start{display:block;overflow:hidden}
+html[data-ui="kit"] .c251-hero{position:absolute;left:1.666667%;top:3.703704%;width:33.75%;height:89.62963%}
+html[data-ui="kit"] .c251-art{inset:24px;background-position:center;mask-image:none}
+html[data-ui="kit"] .c251-choice{position:absolute;inset:0;padding:0;text-align:left;pointer-events:none}
+html[data-ui="kit"] .c251-choice>*{pointer-events:auto}
+html[data-ui="kit"] .c251-choice header{position:absolute;left:37.083333%;right:1.666667%;top:4.444444%;height:88px}
+html[data-ui="kit"] .c251-choice h1{font-size:var(--sg-space-8);line-height:40px;margin:var(--sg-radius-seal) 0}
+html[data-ui="kit"] .c251-lords{top:15.555556%;left:37.083333%;right:1.666667%;height:112px;display:grid;grid-template-columns:repeat(6,104px);grid-auto-rows:112px;gap:var(--sg-gap-actions);overflow:auto;justify-content:start}
+html[data-ui="kit"] .c251-lords>div{gap:var(--sg-radius-seal)}
+html[data-ui="kit"] .c251-lords .k-medallion{--d:80!important}
+html[data-ui="kit"] .c251-lords b{font-size:var(--sg-type-name-compact);line-height:24px}
+html[data-ui="kit"] .c251-lords .is-on::after{content:'선택됨';position:absolute;bottom:0;left:0;right:0;background:var(--sg-ink);color:var(--sg-bone);font:12px/18px var(--sg-font-name)}
+html[data-ui="kit"] .c251-identity{top:29.62963%;left:37.083333%;right:auto;width:29.583333%;max-width:none;height:46.666667%;margin:0;padding:0 var(--sg-gap-icon-text) var(--sg-gap-icon-text) 0;overflow:auto}
+html[data-ui="kit"] .c251-features{position:absolute;top:29.62963%;left:67.916667%;right:1.666667%;height:46.666667%;padding:0 var(--sg-gap-actions);border:0;font-size:var(--sg-type-name-compact);line-height:27px;background:var(--sg-map-core);color:var(--sg-map-text);border:1px solid var(--sg-map-line)}
+html[data-ui="kit"] .c251-features p{font-size:var(--sg-type-name-compact);line-height:27px}
+html[data-ui="kit"] .c251-officers img{width:56px;height:56px}
+html[data-ui="kit"] .c251-officers figcaption{font-size:var(--sg-screen-gutter)}
+html[data-ui="kit"] .c251-lord-text h2{font-size:var(--sg-line-name);line-height:40px}
+html[data-ui="kit"] .c251-motto{font-size:var(--sg-icon-sm);line-height:28px}
+html[data-ui="kit"] .c251-title{font-size:var(--sg-type-name-compact)}
+html[data-ui="kit"] .c298-start-summary{position:absolute;left:37.083333%;right:1.666667%;top:78.518519%;height:6.666667%;overflow:auto;padding:var(--sg-gap-icon-text) var(--sg-gap-actions);border-block:1px solid var(--sg-gold-line);background:var(--sg-map-core);color:var(--sg-map-text);border:1px solid var(--sg-map-line);font:18px/27px var(--sg-font-body)}
+html[data-ui="kit"] .c273-difficulty{position:static;margin:var(--sg-gap-icon-text) 0;font-size:var(--sg-type-name-compact)}
+html[data-ui="kit"] .c251-go{left:auto;right:1.666667%;top:88.148148%;bottom:auto}
+html[data-ui="kit"] .c251-go .k-btn-primary{width:288px;height:56px;font-size:var(--sg-type-name-compact)}
+html[data-ui="kit"][data-start="civ"] #selection>.w-select-foot{left:37.083333%;right:auto;bottom:auto;top:88.148148%;max-width:40%;height:56px;flex-wrap:wrap;overflow:auto}
+html[data-ui="kit"][data-start="civ"] .w-select-foot a[href="/"]{min-width:160px;height:56px}
+html[data-ui="kit"] .c251-start:has(.c251-lords>div:nth-child(7)) .c251-lords{height:224px}
+html[data-ui="kit"] .c251-start:has(.c251-lords>div:nth-child(7)) :is(.c251-identity,.c251-features){top:40%;height:37.037037%}
+@media(max-width:1450px){
+ html[data-ui="kit"] .c251-lords{grid-template-columns:repeat(6,minmax(64px,1fr));gap:var(--sg-gap-icon-text)}
+ html[data-ui="kit"] .c251-features{left:68.5%;padding:0 var(--sg-gap-icon-text)}
+ html[data-ui="kit"] .c251-choice h1{font-size:var(--sg-type-h2);line-height:34px}
+ html[data-ui="kit"] .c251-choice header p{display:none}
+ html[data-ui="kit"] .c251-lords .k-medallion{--d:64!important}
+ html[data-ui="kit"] .c251-go .k-btn-primary{width:268px}
+ html[data-ui="kit"][data-start="civ"] .w-select-foot #c215-continue-summary{display:none}
+}
+/* Draft: candidate count and lock/budget behavior still come from officerDraftView. */
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od:not(.od-awake){display:block;padding:0;overflow:hidden;background:var(--sg-ink-deep)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .c298-draft-hero{position:absolute;left:1.666667%;top:3.703704%;width:33.75%;height:89.62963%;margin:0;pointer-events:none}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .c298-draft-hero img{width:100%;height:calc(100% - 48px);object-fit:contain;padding:var(--sg-space-6)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .c298-draft-hero figcaption{text-align:center;font:24px/32px var(--sg-font-name);color:var(--sg-bone)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-head{position:absolute;top:4.444444%;left:37.083333%;right:1.666667%;height:88px;margin:0;display:block}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-head h1{font-size:var(--sg-space-8);line-height:40px}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-head small{font-size:var(--sg-screen-gutter)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-cards{position:absolute;top:15.555556%;left:37.083333%;right:1.666667%;height:49.259259%;display:grid;grid-template-columns:repeat(4,minmax(0,272px));grid-auto-rows:304px;gap:var(--sg-space-6) var(--sg-screen-gutter);overflow:auto;align-content:start;margin:0;padding:0;perspective:none}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-card{position:relative;inset:auto;width:100%;height:304px;margin:0;transform:none;translate:none;overflow:hidden}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-art{position:absolute;inset:0 0 auto;height:184px;width:100%;mask-image:none}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-art img{object-fit:contain;object-position:top}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-plate{position:absolute;inset:184px 0 0;height:120px;display:block;padding:var(--sg-gap-icon-text) var(--sg-gap-actions);background:var(--sg-ink)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-plate b{font-size:var(--sg-type-hit-counter);line-height:28px}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-plate small{display:block;font-size:var(--sg-type-name-compact)!important;line-height:24px!important}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-card-stats{display:none}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-wake.k-btn{position:absolute;right:8px;top:-176px;width:72px;height:44px;padding:0;z-index:8}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-cost{position:static;display:block;font-size:var(--sg-screen-gutter)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-seal{top:8px;right:8px;left:auto;width:52px;height:44px;font:14px/44px var(--sg-font-body)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-shared-detail{position:absolute;left:37.083333%;right:1.666667%;top:66.296296%;height:11.481481%;width:auto!important;max-width:none;overflow:auto;padding:var(--sg-gap-actions);background:var(--sg-map-core);color:var(--sg-map-text);border:1px solid var(--sg-map-line);font-size:var(--sg-type-name-compact);line-height:27px}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-budget{position:absolute;left:37.083333%;top:78.518519%;height:6.666667%;margin:0;display:flex;align-items:center;gap:var(--sg-gap-icon-text)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-note{position:absolute;left:68%;right:1.666667%;top:78.518519%;height:6.666667%;max-width:none;margin:0;overflow:auto;text-align:left;font-size:var(--sg-screen-gutter);line-height:24px}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-foot{position:absolute;left:37.083333%;right:1.666667%;top:88.148148%;height:56px;padding:0;display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:center;gap:var(--sg-screen-gutter)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-slots{position:absolute;bottom:80px;left:0;right:0;height:44px!important;gap:var(--sg-gap-icon-text);justify-content:center;pointer-events:auto}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-slots li.k-medallion{width:44px!important;height:44px!important}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-confirm.k-btn-primary{height:56px;width:288px!important;min-width:0;margin-left:auto!important}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-back{position:absolute;top:88.148148%;left:37.083333%;width:160px;height:56px;z-index:8}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-reroll{position:absolute;left:176px;width:192px;min-width:0!important}
+@media(max-width:1450px){
+ html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sg-screen-gutter)}
+ html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-head h1{font-size:var(--sg-type-h2)}
+ html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-head p{font-size:var(--sg-type-meta)}
+ html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-back{width:128px}
+ html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-reroll{left:140px;width:160px;padding:0 var(--sg-gap-icon-text)}
+ html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-confirm.k-btn-primary{width:260px!important;font-size:var(--sg-screen-gutter)}
+}
+
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-slots{left:28%;right:32%}
+
+html[data-ui="kit"] .c298-start-summary{font-size:var(--sg-screen-gutter);line-height:24px;display:flex;flex-wrap:wrap;gap:0 var(--sg-screen-gutter);align-content:start}
+html[data-ui="kit"] .c298-start-summary .c270-victory{position:static;flex-basis:100%;margin:0;font-size:var(--sg-type-name-compact);line-height:27px;max-width:none}
+html[data-ui="kit"] .c298-start-summary .c273-difficulty{margin:0;font-size:var(--sg-screen-gutter);line-height:24px}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-card{scale:1!important}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-cost{translate:none;aspect-ratio:auto;left:auto;top:auto;width:auto;height:auto;text-align:left}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-wake.k-btn{left:auto;bottom:auto;opacity:1}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-reroll{top:0;translate:none}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .c298-draft-hero{overflow:hidden}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .c298-draft-hero img{display:block;max-width:100%;max-height:calc(100% - 48px);position:static;transform:none;scale:1}
+
+.c298-card-judgment{display:none}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .c298-card-judgment{position:absolute;display:block;left:12px;right:12px;bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--sg-gold-name);font:18px/24px var(--sg-font-body)}
+
+/* C309: kit selection and draft share the world-map ink palette. */
+html[data-ui="kit"] body.ink #selection{background:var(--sg-map-core);color:var(--sg-map-text);border:1px solid var(--sg-map-line)}
+html[data-ui="kit"] .c251-lord-text h2{color:var(--sg-map-text)}
+html[data-ui="kit"] .c251-choice header small,html[data-ui="kit"] .c251-identity .c273-difficulty{color:var(--sg-map-plate-muted)}
+html[data-ui="kit"] #selection>.w-select-foot{color:var(--sg-map-text)}
+html[data-ui="kit"] .w-select-foot #c215-continue-summary{background:var(--sg-map-core);color:var(--sg-map-plate-muted);border:1px solid var(--sg-map-line)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-shared-detail{background:var(--sg-map-core);color:var(--sg-map-text);border:1px solid var(--sg-map-line)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-shared-detail b{color:var(--sg-map-text)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-shared-detail p{color:var(--sg-map-text)}
+html[data-ui="kit"] body.ink #officer-draft .c251-draft .od-shared-detail small{color:var(--sg-map-plate-muted)}
+html[data-ui="kit"] .c251-start :is(button,a):focus-visible{outline-color:var(--sg-map-selected)}
+
+/* C355 parts-v1: appearance only; keep existing control geometry. */
+ :root[data-ui="kit"] :is(.c251-go,.w-select-foot) :is(.k-btn,.k-btn-primary){border-color:transparent!important;border-image:var(--c355-button-normal) 22 fill / 8px / 0 stretch!important;background-color:#131913!important;color:var(--sg-bone)!important;box-shadow:none!important}
+:root[data-ui="kit"] :is(.c251-go,.w-select-foot) :is(.k-btn,.k-btn-primary):not(:disabled):hover{border-image-source:var(--c355-button-hover)!important;filter:brightness(1.12)}
+:root[data-ui="kit"] :is(.c251-go,.w-select-foot) :is(.k-btn,.k-btn-primary):not(:disabled):active{border-image-source:var(--c355-button-pressed)!important;translate:0 1px}
+:root[data-ui="kit"] :is(.c251-go,.w-select-foot) :is(.k-btn,.k-btn-primary):disabled{border-image-source:var(--c355-button-disabled)!important}
+
+/* C358: raised cards; paint only, preserve C355 border diet and geometry. */
+:root[data-ui="kit"] .c251-lords .k-medallion,
+:root[data-ui="kit"] body.ink #officer-draft .c251-draft .od-card .od-plate{
+ background-color:var(--sg-card-raised)!important;
+ background-image:var(--c355-card)!important;
+ background-size:100% 100%!important;
+ background-blend-mode:screen!important;
+ box-shadow:inset 0 1px 0 rgb(242 234 211 / 18%),0 2px 6px rgb(0 0 0 / 35%)!important;
+}
+:root[data-ui="kit"] .c251-lords .k-medallion.is-on,
+:root[data-ui="kit"] body.ink #officer-draft .c251-draft .od-card:is(.focus,.locked) .od-plate{background-image:var(--c355-card-selected)!important}

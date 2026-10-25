@@ -31,5 +31,37 @@
     "tuntian": ["riverside", "plain", "forest", "hill", "mountain"],
     "workshop": ["hill", "forest", "plain", "riverside", "mountain"],
     "default": ["plain", "riverside", "hill", "forest", "mountain"]
+  },
+  "startCities": {
+    "status": "WORK_TRIAL",
+    "attempts": 64,
+    "maps": {
+      "v1": {
+        "minimumDistanceRatio": 0.8,
+        "nearbyDistance": 8,
+        "maxMinorSpread": 0,
+        "maxResourceSpreadRatio": 0.25
+      },
+      "v2": {
+        "minimumDistanceRatio": 0.8,
+        "nearbyDistance": 14,
+        "maxMinorSpread": 3,
+        "maxResourceSpreadRatio": 0.25
+      },
+      "v3": {
+        "minimumDistanceRatio": 0.8,
+        "nearbyDistance": 16,
+        "maxMinorSpread": 3,
+        "maxResourceSpreadRatio": 0.5
+      },
+      "china": {
+        "attempts": 128,
+        "minimumDistanceRatio": 0.8,
+        "nearbyDistance": 8,
+        "maxMinorSpread": 3,
+        "maxResourceSpreadRatio": 0.5,
+        "startScore": {"enabled": true, "maxStd": 1.54, "scores": {"xiangping": 3.84, "wuwei": 3.71, "panyu": 3.05, "jianning": 2.27, "changan": 1.72, "jianye": 0.65, "nanzheng": 0.23, "jinyang": 0.09, "chengdu": 0.05, "south": -0.09, "linzi": -0.61, "luoyang": -0.75, "jiangling": -0.77, "ji": -0.8, "wan": -0.94, "shouchun": -1.02, "east": -1.21, "west": -1.24, "xiangyang": -1.25, "nanpi": -1.52, "ye": -1.61, "jiangzhou": -1.77, "changsha": -2.04}}
+      }
+    }
   }
 }

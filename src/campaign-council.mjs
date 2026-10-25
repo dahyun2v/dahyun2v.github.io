@@ -1,3 +1,4 @@
+import {isSliceMap} from './map-primitives.mjs';
 import {fatigueReason} from './campaign-fatigue.mjs';
 import C195 from '../data/c195-trial-v0.1.json' with {type:'json'};
 import {troopText} from './troop-display.mjs';
@@ -22,7 +23,7 @@ import {hexDistance} from './map-primitives.mjs';
 
 export const COUNCIL=data;
 export const COUNCIL_ADOPTION_AFFINITY=C195.council.adoptionAffinity;
-export const councilEnabled=s=>['v2','v3'].includes(s.mapId)&&!s.councilDisabled;
+export const councilEnabled=s=>isSliceMap(s.mapId)&&!s.councilDisabled;
 const own=s=>s.playerFactionId;
 const ruler=s=>s.factions[own(s)].rulerId;
 const cityName=(s,id)=>s.cityDisplayNames?.[id]??s.cities[id]?.name??'—';
@@ -230,7 +231,9 @@ export function validateCouncil(s){
   if(kind==='BUILD_HUB'&&!s.tiles[t.tileId]||kind==='MUSTER'&&(!s.officers[t.officerId]||!s.cities[t.cityId]||typeof t.troopType!=='string')||kind==='CITY_DEVELOP'&&!CITY_JOBS[t.facility]||kind==='DIPLOMACY'&&(!s.factions[t.factionId]||!['TRUCE','ALLIANCE'].includes(t.kind))||kind==='EXPLORE'&&!s.exploration?.places[t.placeId]||kind==='RECRUIT'&&!s.officers[t.officerId]&&!s.wanderers?.[t.officerId])return false;
   return true;
  };
+ // Proposers are historical identities: succession may promote one to ruler.
+ // New proposals still exclude the current ruler in councilProposals.
  const ids=new Set(),proposers=new Set(),seen=new Set();
- for(const p of c.proposals){if(!obj(p)||typeof p.id!=='string'||ids.has(p.id)||!kinds.includes(p.kind)||seen.has(p.kind)||!s.officers[p.proposerId]||proposers.has(p.proposerId)||p.proposerId===ruler(s)||!validTarget(p.kind,p.target)||!['what','expected','risk'].every(k=>typeof p[k]==='string')||![null,'APPROVE','HOLD'].includes(p.decision)||c.status==='CLOSED'&&p.decision===null)fail();ids.add(p.id);seen.add(p.kind);proposers.add(p.proposerId);}
- const resolutionIds=new Set();for(const r of c.resolutions){if(!obj(r)||typeof r.proposalId!=='string'||resolutionIds.has(r.proposalId)||!kinds.includes(r.kind)||!validTarget(r.kind,r.target)||!s.officers[r.proposerId]||r.proposerId===ruler(s)||!Number.isSafeInteger(r.deadlineTurn)||r.deadlineTurn<1||!['ACTIVE','FULFILLED','BROKEN'].includes(r.status))fail();resolutionIds.add(r.proposalId);}
+ for(const p of c.proposals){if(!obj(p)||typeof p.id!=='string'||ids.has(p.id)||!kinds.includes(p.kind)||seen.has(p.kind)||!s.officers[p.proposerId]||proposers.has(p.proposerId)||!validTarget(p.kind,p.target)||!['what','expected','risk'].every(k=>typeof p[k]==='string')||![null,'APPROVE','HOLD'].includes(p.decision)||c.status==='CLOSED'&&p.decision===null)fail();ids.add(p.id);seen.add(p.kind);proposers.add(p.proposerId);}
+ const resolutionIds=new Set();for(const r of c.resolutions){if(!obj(r)||typeof r.proposalId!=='string'||resolutionIds.has(r.proposalId)||!kinds.includes(r.kind)||!validTarget(r.kind,r.target)||!s.officers[r.proposerId]||!Number.isSafeInteger(r.deadlineTurn)||r.deadlineTurn<1||!['ACTIVE','FULFILLED','BROKEN'].includes(r.status))fail();resolutionIds.add(r.proposalId);}
 }

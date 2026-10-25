@@ -1,3 +1,5 @@
+import {campaignMechQuery,campaignMechAllowed,hasCampaignMechQuery} from './campaign-mech-contracts.mjs';
+import {cloneCampaign} from './campaign-clone.mjs';
 import {boardNeighbors,hexDistance,movementTicks,tileId} from './map-primitives.mjs';
 import {situationEventsView} from './campaign-situations.mjs';
 // Optional terrain is campaign-only. FIRST3 callers retain distance visibility.
@@ -32,14 +34,23 @@ function knownStaticEdge(s,fromId,toId,knowledge){
   return {edgeId:`EDGE:${key}`,fromTileId:fromId,toTileId:toId,knowledge,blocked,travelTicksByClass};
 }
 
+// Content keys include every static cost input, so in-place fixture/map edits
+// invalidate just as cloned snapshots do. Knowledge labels stay live.
+let staticEdgesCache=null;
 function knownEdges(s,knowledge){
-  const edges=[];
-  for(const fromId of Object.keys(s.tiles).sort((a,b)=>a.localeCompare(b,'en'))){
+  const signature=JSON.stringify([Object.entries(s.tiles).map(([id,t])=>[id,t.q,t.r,t.terrainType]),s.mapRules,s.time.tickDays]);
+  if(staticEdgesCache?.signature!==signature)staticEdgesCache={signature,edges:new Map()};
+  const cache=staticEdgesCache.edges,edges=[];
+  // Knowledge is sparse on large maps. Enumerate discovered entries rather
+  // than walking the entire board and testing every unexplored tile.
+  for(const fromId of Object.keys(knowledge).filter(id=>KNOWN.has(knowledge[id])&&Object.hasOwn(s.tiles,id)).sort((a,b)=>a.localeCompare(b,'en'))){
     if(!KNOWN.has(knowledge[fromId]))continue;
     for(const point of boardNeighbors(s.tiles[fromId],s.tiles)){
       const toId=tileId(point);
       if(fromId.localeCompare(toId,'en')>=0||!KNOWN.has(knowledge[toId]))continue;
-      edges.push(knownStaticEdge(s,fromId,toId,knowledge[fromId]==='VISIBLE'&&knowledge[toId]==='VISIBLE'?'VISIBLE':'REMEMBERED'));
+      const key=edgeKey(fromId,toId);
+      if(!cache.has(key))cache.set(key,knownStaticEdge(s,fromId,toId,null));
+      edges.push({...cache.get(key),knowledge:knowledge[fromId]==='VISIBLE'&&knowledge[toId]==='VISIBLE'?'VISIBLE':'REMEMBERED'});
     }
   }
   return edges.sort((left,right)=>left.edgeId.localeCompare(right.edgeId,'en'));
@@ -71,9 +82,10 @@ export function updateKnowledge(s){
     const observers=[...Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).map(c=>({tileId:c.tileId,range:s.mapRules.vision.city})),...Object.values(s.armies).filter(a=>a.factionId===factionId&&activeArmy(s,a)).map(a=>({tileId:a.tileId,range:s.mapRules.vision.byTroop?.[a.troopType]??s.mapRules.vision.field}))];
     const visible=new Set();
     for(const o of observers){const origin=s.tiles[o.tileId],range=o.range+(origin.terrainType==='hill'?s.mapRules.vision.hillBonus:0);for(const id of visibleFootprint(geometry,origin,range,s.mapRules.vision.profile==='CAMPAIGN_V1'))visible.add(id);}
+    if(hasCampaignMechQuery('H13')){const ids=campaignMechQuery(s,'H13','visibleTiles',{viewerFactionId:factionId},[...visible]);if(!Array.isArray(ids)||ids.some(id=>typeof id!=='string'||!s.tiles[id]))throw new Error('INVALID_MECH_VISIBILITY');visible.clear();for(const id of ids)visible.add(id);}
     for(const [id]of geometry.entries)k.tiles[id]=visible.has(id)?'VISIBLE':k.tiles[id] && k.tiles[id]!=='UNEXPLORED'?'REMEMBERED':'UNEXPLORED';
     k.observedArmies={};
-    for(const a of Object.values(s.armies))if(activeArmy(s,a)&&a.factionId!==factionId && k.tiles[a.tileId]==='VISIBLE'){
+    for(const a of Object.values(s.armies))if(activeArmy(s,a)&&a.factionId!==factionId && k.tiles[a.tileId]==='VISIBLE'&&campaignMechAllowed(s,'H13','observationAllowed',{targetId:a.armyId,viewerFactionId:factionId})){
       const record=minimumArmy(a);k.observedArmies[a.armyId]=record;
       k.lastSeenArmies[a.armyId]={...record,lastSeen:{tileId:a.tileId,turn:s.turnNumber,tick:s.time.tick}};
     }
@@ -84,5 +96,5 @@ export function updateKnowledge(s){
 export function getFactionView(s,factionId=s.playerFactionId){
   if(!s.factions[factionId] || !s.knowledge[factionId])throw new Error('관측할 세력이 없습니다.');
   const k=s.knowledge[factionId],ownArmies=Object.fromEntries(Object.entries(s.armies).filter(([,a])=>a.factionId===factionId&&activeArmy(s,a)));
-  return structuredClone({...(s.situationBarks?{situationEvents:situationEventsView(s,factionId),...(factionId===s.playerFactionId?{situationBarks:s.situationBarks}:{})}:{}),factionId,turnNumber:s.turnNumber,currentDate:s.currentDate,time:s.time,turnPhase:s.turnPhase,ui:s.ui,faction:s.factions[factionId],officers:Object.fromEntries(Object.entries(s.officers).filter(([,o])=>o.allegianceFactionId===factionId)),ownArmies,ownCities:Object.fromEntries(Object.entries(s.cities).filter(([,c])=>c.ownerFactionId===factionId)),knowledge:k,tiles:Object.fromEntries(Object.entries(s.tiles).map(([id,t])=>[id,k.tiles[id]==='UNEXPLORED'?{tileId:id,q:t.q,r:t.r}:t])),knownEdges:knownEdges(s,k.tiles),contacts:s.history.filter(e=>e.factionIds?.includes(factionId)).slice(-12)});
+  return cloneCampaign({...(s.situationBarks?{situationEvents:situationEventsView(s,factionId),...(factionId===s.playerFactionId?{situationBarks:s.situationBarks}:{})}:{}),factionId,turnNumber:s.turnNumber,currentDate:s.currentDate,time:s.time,turnPhase:s.turnPhase,ui:s.ui,faction:s.factions[factionId],officers:Object.fromEntries(Object.entries(s.officers).filter(([,o])=>o.allegianceFactionId===factionId)),ownArmies,ownCities:Object.fromEntries(Object.entries(s.cities).filter(([,c])=>c.ownerFactionId===factionId)),knowledge:k,tiles:Object.fromEntries(Object.entries(s.tiles).map(([id,t])=>[id,k.tiles[id]==='UNEXPLORED'?{tileId:id,q:t.q,r:t.r}:t])),knownEdges:knownEdges(s,k.tiles),contacts:s.history.filter(e=>e.factionIds?.includes(factionId)).slice(-12)});
 }
