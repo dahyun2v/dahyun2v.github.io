@@ -1,0 +1,35 @@
+/* C490: scoped to the opt-in domestic screen and resource chips. */
+.c490-screen{height:100%;overflow:auto;color:var(--sg-bone);background:var(--sg-surface-96);padding:var(--sg-space-6);font:var(--sg-type-body) var(--sg-font-body)}
+.c490-screen>header{display:flex;gap:var(--sg-space-3);margin-bottom:var(--sg-space-4)}
+.c490-domestic{max-width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sg-space-4)}
+.c490-domestic>section,.c490-domestic>details{border:var(--sg-border-normal) solid var(--sg-gold-line);padding:var(--sg-space-4);background:var(--sg-ink-raised);min-width:0}
+.c490-domestic h2{font:var(--sg-type-name) var(--sg-font-heading);margin:0 0 var(--sg-space-3);color:var(--sg-gold-text)}
+.c490-domestic p{margin:var(--sg-space-2) 0}.c490-domestic small{display:block;font-size:var(--sg-type-field);color:var(--sg-text-muted-dark)}
+.c490-domestic .k-btn{margin:var(--sg-space-1);white-space:normal}.c490-domestic select{color:var(--sg-bone);background:var(--sg-ink);font:inherit;max-width:100%}
+.c490-domestic progress{width:100%;accent-color:var(--sg-gold-text)}
+.c490-current{display:flex;align-items:center;gap:var(--sg-space-4);min-height:var(--sg-space-12)}
+.c490-current>img{width:30%;max-height:20vh;object-fit:contain}.c490-current h3{font-size:var(--sg-type-h2)}
+.c490-seat{padding:var(--sg-space-2) 0;border-bottom:var(--sg-border-normal) solid var(--sg-gold-line)}
+.c490-seat>img{width:var(--sg-icon-xl);height:var(--sg-icon-xl);object-fit:cover;vertical-align:middle}
+.c490-output{display:flex;flex-wrap:wrap;gap:var(--sg-space-4)}
+.c490-icon{width:var(--sg-icon-sm);height:var(--sg-icon-sm);object-fit:contain;vertical-align:middle;margin-right:var(--sg-space-1)}
+.c490-danger,.c490-chip.c490-danger b{color:var(--sg-danger-text)!important}
+.c490-chip{color:var(--sg-bone);font:inherit}.c490-chip small{font-size:var(--sg-type-meta)}
+:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res:has(.c490-chip){display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--sg-space-3);width:60vw;max-width:calc(100vw - 520px);padding:var(--sg-space-2)}
+:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip{display:grid!important;grid-template-columns:auto 1fr;gap:var(--sg-space-1);height:auto!important;min-width:0;white-space:normal;text-align:left}
+:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip b{font-size:var(--sg-type-number-main);white-space:nowrap}
+:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip small.d{display:block!important;grid-column:1 / -1;white-space:nowrap;font-size:var(--sg-type-meta)}
+:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip .nb-resource-label{display:none}
+.c490-ledger{max-height:65vh;overflow:auto;font-size:var(--sg-type-field)}
+.c490-recruit{font-size:var(--sg-type-field);color:var(--sg-gold-text)}
+@media(max-width:1280px){.c490-screen{padding:var(--sg-space-3)}.c490-domestic{gap:var(--sg-space-3)}.c490-domestic>section,.c490-domestic>details{padding:var(--sg-space-3)}:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res:has(.c490-chip){left:28vw;max-width:60vw;width:60vw;gap:var(--sg-space-2)}:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip b{font-size:var(--sg-type-field)}:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip .c490-icon{display:none}}
+@media(max-width:760px){.c490-domestic{grid-template-columns:minmax(0,1fr)}}
+
+.c490-domestic{align-items:start;grid-auto-rows:auto}
+.c490-city-resources{display:flex;flex-wrap:wrap;gap:var(--sg-space-4);padding:var(--sg-space-3);margin-bottom:var(--sg-space-3);border:var(--sg-border-normal) solid var(--sg-gold-line)}
+.c490-city-resources .chip{display:flex;gap:var(--sg-space-2);align-items:center;color:var(--sg-bone);background:var(--sg-ink-raised)}
+.c490-local-ledger{margin-bottom:var(--sg-space-4)}
+:root[data-ui="kit"] #city-stage .c490-screen .c490-domestic h2{font:var(--sg-type-name) var(--sg-font-heading)}
+:root[data-ui="kit"] #city-stage .c490-screen .c490-domestic p{font-size:var(--sg-type-body)}
+body:has(#city-stage:not([hidden]) .c490-screen) #city-sortie-guide{top:auto!important;left:auto!important;bottom:var(--sg-space-3)!important;right:var(--sg-space-3)!important;max-width:40vw}
+@media(max-width:1280px){:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip{grid-template-columns:1fr;gap:0}:root[data-ui="kit"] body.hud-band #ink-hud#ink-hud .ih-res .c490-chip .nb-resource-label{display:block!important;font-size:var(--sg-type-meta);color:var(--sg-text-muted-dark)}}

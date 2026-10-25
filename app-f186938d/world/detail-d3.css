@@ -1,0 +1,111 @@
+/* D3 R2: visible painted detail, native fragment ratios, no whole-panel stretch.
+   Painted fragments share roles across screens. Hero images stay above art. */
+:root[data-ui="kit"] .d3-relative{position:relative}
+:root[data-ui="kit"] .d3-panel{isolation:isolate}
+:root[data-ui="kit"] .d3-panel>.d3-backdrop{z-index:-2!important}
+.d3-ornament{display:none}
+:root[data-ui="kit"] .d3-panel>.d3-ornament{
+ display:block;position:absolute;inset:1px;overflow:hidden;pointer-events:none;
+ z-index:-1;border-radius:inherit;contain:paint;opacity:1;
+}
+.d3-piece{display:block;position:absolute;pointer-events:none;background:center/contain no-repeat}
+.d3-paper{display:none;inset:0;background:url('/assets/ui-kit/own/paper.webp') repeat;
+ opacity:.18;mask-image:linear-gradient(90deg,#000,transparent 35%,transparent 65%,#000)}
+.d3-landscape{right:-1%;bottom:-2%;width:min(68%,620px,calc(var(--d3-plate-height)*3.392857));aspect-ratio:950/280;background-position:right bottom;
+ background-image:url('/assets/ui-kit/own/detail-d3/r2-landscape.webp');opacity:.18;
+ mask-image:linear-gradient(90deg,transparent,#000 38%)}
+.d3-mountains{left:-2%;bottom:0;width:min(40%,600px,calc(var(--d3-plate-height)*3.471698));aspect-ratio:920/265;
+ background-image:url('/assets/ui-kit/own/detail-d3/r2-mountains.webp');opacity:.12;
+ mask-image:linear-gradient(90deg,#000,transparent 95%)}
+.d3-branch{right:-1%;top:-1%;width:min(40%,480px,calc(var(--d3-plate-height)*1.874359));aspect-ratio:731/390;background-position:right top;
+ background-image:url('/assets/ui-kit/own/detail-d3/r2-branch.webp');opacity:.17;
+ mask-image:linear-gradient(90deg,transparent,#000 42%)}
+.d3-birds{right:22%;top:8%;width:min(25%,260px,calc(var(--d3-plate-height)*1.081881));aspect-ratio:621/287;
+ background-image:url('/assets/ui-kit/own/detail-d3/r2-birds.webp');opacity:.18}
+.d3-pine,.d3-pine-right{display:none;width:240px;aspect-ratio:370/380;
+ background-image:url('/assets/ui-kit/own/detail-d3/pine.webp')}
+.d3-scenery{display:none;width:min(80%,600px);aspect-ratio:920/265;
+ background-image:url('/assets/ui-kit/own/detail-d3/r2-mountains.webp')}
+/* Lift dark trees into warm ink while retaining the painted interior detail.
+   Parchment uses the original color and tonal range. */
+:is([data-d3-variant="panel"],[data-d3-variant="stage"],[data-d3-variant="compact"])>.d3-ornament>:is(.d3-mountains,.d3-landscape,.d3-scenery,.d3-pine,.d3-pine-right){filter:brightness(1.25) contrast(.35) sepia(.35)}
+.d3-edge{inset:0;background:none}
+.d3-edge::before,.d3-edge::after{content:'';position:absolute;left:0;right:0;height:12px;
+ background:url('/assets/ui-kit/own/detail-d3/r2-paper-edge.webp') center -10px/560px auto repeat-x;opacity:.22}
+.d3-edge::before{top:0}
+.d3-edge::after{bottom:0;background-image:url('/assets/ui-kit/own/detail-d3/r2-ink-edge.webp');background-position:center -8px;opacity:.3}
+.d3-seal{display:none;left:12px;bottom:12px;width:19px;aspect-ratio:200/260;
+ background-image:url('/assets/ui-kit/own/detail-d3/seal-tall.webp');opacity:.85}
+[data-d3-seal]>.d3-ornament>.d3-seal{display:block}
+
+/* Ordinary reading plates retain a smooth left area. */
+[data-d3-variant="panel"]>.d3-ornament>.d3-mountains{left:auto;right:0;top:0;bottom:auto;
+ width:min(64%,600px,calc(var(--d3-plate-height)*3.471698));background-position:right top;opacity:.18;
+ mask-image:linear-gradient(90deg,transparent,#000 38%)}
+:is([data-d3-variant="panel"],[data-d3-variant="compact"],[data-d3-variant="stage"])>.d3-ornament{mask-image:var(--d3-reading-mask,none);mask-size:100% 100%;mask-mode:luminance}
+[data-d3-variant="panel"]>.d3-ornament>.d3-birds{opacity:.1}
+[data-d3-wide]>.d3-ornament>.d3-mountains,[data-d3-wide]>.d3-ornament>.d3-landscape{right:25%}
+[data-d3-wide]>.d3-ornament>.d3-landscape{right:35%}
+[data-d3-wide]>.d3-ornament>.d3-branch{right:18%}
+[data-d3-variant="branch"]>.d3-ornament>.d3-piece{display:none}
+[data-d3-variant="branch"]>.d3-ornament>.d3-branch{display:block;width:min(54%,390px);opacity:.24}
+
+/* Small map HUD corners; no scene decoration attaches to the map itself. */
+[data-d3-variant="compact"]>.d3-ornament>.d3-piece{display:none}
+[data-d3-variant="compact"]>.d3-ornament>.d3-landscape{display:block;
+ width:min(68%,250px);right:0;bottom:0;opacity:.18;mask-image:linear-gradient(90deg,transparent,#000 45%)}
+[data-d3-variant="compact"]>.d3-ornament>.d3-branch{display:block;left:0;right:auto;top:0;
+ width:min(35%,140px);opacity:.18;transform:scaleX(-1);mask-image:none}
+[data-d3-variant="compact"]>.d3-ornament>.d3-mountains{display:block;left:auto;right:0;top:0;bottom:auto;
+ width:min(48%,190px);opacity:.18;mask-image:linear-gradient(90deg,transparent,#000 40%)}
+[data-d3-variant="compact"]>.d3-ornament>.d3-edge{display:block;opacity:.4}
+[data-d3-variant="compact"]>.d3-ornament>.d3-edge::before,
+[data-d3-variant="compact"]>.d3-ornament>.d3-edge::after{height:4px}
+[data-d3-variant="compact"][data-d3-roomy]>.d3-ornament>.d3-mountains{width:min(64%,420px)}
+[data-d3-variant="compact"][data-d3-roomy]>.d3-ornament>.d3-landscape{width:min(70%,420px)}
+[data-d3-variant="compact"][data-d3-roomy]>.d3-ornament>.d3-scenery{display:block;
+ left:0;right:auto;top:-8px;width:400px;opacity:.18;mask-image:linear-gradient(90deg,#000,transparent 95%)}
+[data-d3-variant="compact"][data-d3-roomy]>.d3-ornament>.d3-edge{opacity:.85}
+[data-d3-variant="compact"][data-d3-roomy]>.d3-ornament>.d3-edge::before{height:40px}
+
+/* One brush frame for buttons and tabs, with a truly empty center. */
+[data-d3-variant="button"]>.d3-ornament{
+ box-sizing:border-box;border:4px solid transparent;
+ border-image:url('/assets/ui-kit/own/detail-d3/r2-button-brush.webp') 42 40 / 4px / 0 stretch;
+ opacity:.72!important;
+}
+[data-d3-variant="button"]>.d3-ornament>.d3-piece{display:none}
+[data-d3-variant="toolbar"]>.d3-ornament>.d3-piece{display:none}
+[data-d3-variant="toolbar"]>.d3-ornament>.d3-landscape{display:block;right:36%;width:min(75%,620px,calc(var(--d3-plate-height)*3.392857));opacity:.18}
+
+/* Large paintings sit behind the unmodified original hero image. */
+:root[data-ui="kit"] [data-d3-variant="art"]>.d3-ornament{z-index:0;inset:0;
+ mask:url('/assets/ui-kit/own/ink-panel.webp') center/112% 116% no-repeat}
+:root[data-ui="kit"] [data-d3-variant="art"]>:is(img,figcaption){z-index:1}
+[data-d3-variant="art"]>.d3-ornament>.d3-paper{display:block}
+[data-d3-variant="art"]>.d3-ornament>.d3-mountains{left:-10%;top:13%;bottom:auto;
+ width:min(88%,600px);opacity:.24;mask-image:none}
+[data-d3-variant="art"]>.d3-ornament>.d3-landscape{left:-3%;right:auto;bottom:2%;
+ width:min(100%,620px);opacity:.3;mask-image:none}
+[data-d3-variant="art"]>.d3-ornament>.d3-scenery{display:block;right:-3%;top:30%;opacity:.24;
+ mask-image:linear-gradient(90deg,transparent,#000 70%)}
+[data-d3-variant="art"]>.d3-ornament>.d3-branch{left:-2%;right:auto;top:0;
+ width:min(58%,480px);opacity:.64;transform:scaleX(-1);mask-image:none}
+[data-d3-variant="art"]>.d3-ornament>.d3-birds{right:7%;top:16%;width:min(34%,260px);opacity:.5}
+[data-d3-variant="art"]>.d3-ornament>.d3-pine{display:block;left:-6%;top:43%;opacity:.28}
+[data-d3-variant="art"]>.d3-ornament>.d3-pine-right{display:block;right:-6%;top:45%;opacity:.28;transform:scaleX(-1)}
+[data-d3-variant="art"]>.d3-ornament>.d3-edge::before,
+[data-d3-variant="art"]>.d3-ornament>.d3-edge::after{height:24px;opacity:.35}
+[data-d3-variant="art"]>.d3-ornament>.d3-seal{left:7%;bottom:15%;width:25px;opacity:.85}
+
+/* Margin scenery: existing child scene/hero hosts remain above this layer. */
+[data-d3-variant="stage"]>.d3-ornament>.d3-landscape{width:min(48%,620px);opacity:.25}
+[data-d3-variant="stage"]>.d3-ornament>.d3-scenery{display:block;right:0;top:18%;opacity:.28;
+ mask-image:linear-gradient(90deg,transparent,#000 50%)}
+[data-d3-variant="stage"]>.d3-ornament>.d3-mountains{width:min(44%,600px);opacity:.15}
+[data-d3-variant="stage"]>.d3-ornament>.d3-branch{top:8%;right:-2%;width:min(38%,480px);opacity:.38}
+[data-d3-variant="stage"]>.d3-ornament>.d3-birds{top:12%;right:16%;width:260px;opacity:.28}
+[data-d3-variant="stage"]>.d3-ornament>.d3-pine{display:block;right:-3%;top:28%;opacity:.4}
+[data-d3-variant="stage"]>.d3-ornament>.d3-pine-right{display:block;right:-4%;top:58%;opacity:.4;transform:scaleX(-1)}
+[data-d3-variant="stage"]>.d3-ornament>.d3-edge{display:none}
+@media (prefers-contrast:more){:root[data-ui="kit"] .d3-panel>.d3-ornament{display:none}}

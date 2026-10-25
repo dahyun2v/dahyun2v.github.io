@@ -1,0 +1,28 @@
+/* A1 부품 그림(C95, Codex 이미지 생성 → Claude 검수 2026-10-09) — 채택분만 /assets/seoksil/a1/ 에 둔다.
+   빠진 것: panel-sm·panel-decide(유리처럼 번들거려 칠기 같지 않음), row-slip(가운데 결이 선반처럼 읽힘) → CSS 대체 모양 유지.
+   이 파일을 빼면 parts.css 의 SVG·CSS 대체 모양으로 돌아간다. */
+:root{
+  --ss-img-panel-slice:url(/assets/seoksil/a1/panel-md.png) 40 fill / 14px stretch;
+  --ss-img-frame-slice:url(/assets/seoksil/a1/frame-bronze.png) 48 / 16px stretch;
+  --ss-img-band-sky:url(/assets/seoksil/a1/band-sky.png);
+  --ss-img-band-stone:url(/assets/seoksil/a1/band-stone.png);
+  --ss-img-cloth:url(/assets/seoksil/a1/black-cloth.png);
+}
+/* 목간 행(row-slip.png)은 가운데 밝은 결이 글자 뒤에서 선반처럼 읽혀 빼고 CSS 대체 모양을 쓴다(텍스처는 글자 뒤에서 낮춘다). */
+/* 버튼: 짧은 목간 9-slice */
+.ss-btn:not(.ss-btn--quiet){clip-path:none;background:none;border:solid transparent;border-width:8px 12px;
+  border-image:url(/assets/seoksil/a1/button.png) 20 32 fill / 10px 14px stretch;padding:0 10px}
+/* 인장: 납작한 인면 정면 그림 */
+.ss-seal{clip-path:none;background:url(/assets/seoksil/a1/seal-confirm.png) center/100% 100% no-repeat;box-shadow:0 4px 10px color-mix(in srgb,var(--sg-shadow-black) 55%,transparent)}
+.ss-seal::before{display:none}
+/* 찍힌 자국은 인면과 같은 문양이어야 한다(seal-mark.png 는 문양이 달라 쓰지 않음) — 인면 그림을 살짝 번지게 */
+.ss-seal-mark{background:url(/assets/seoksil/a1/seal-confirm.png) center/contain no-repeat;-webkit-mask:none;mask:none;mix-blend-mode:screen;filter:blur(.4px) saturate(.9) contrast(1.05)}
+/* 감실: 돌 감실 틀 그림(niche.png 400×560)을 위에 겹치고, 초상 창은 그림의 투명 창 자리(81,47)–(317,516)에 맞춘다 */
+.ss-niche{background:none;box-shadow:none;padding:0;border-radius:0;filter:drop-shadow(0 10px 18px color-mix(in srgb,var(--sg-shadow-black) 50%,transparent))}
+.ss-niche::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:url(/assets/seoksil/a1/niche.png) center/100% 100% no-repeat;filter:brightness(.66) saturate(.8);transition:filter var(--ss-t-pick)}
+/* 돌 틀은 장면에서 가장 밝은 점이 되면 안 된다 — 고른 감실만 등불을 받아 조금 밝아진다 */
+.ss-niche.is-picked::after{filter:brightness(.86) sepia(.12)}
+.ss-niche__hatch{position:absolute;left:20.25%;top:8.4%;right:20.75%;bottom:7.9%;padding:0;background:var(--sg-ink-pressed);border-radius:calc(var(--w)*.3) calc(var(--w)*.3) 0 0}
+.ss-niche__window{position:absolute;inset:0;border-radius:inherit}
+.ss-niche__plinth{display:none}
+.ss-niche.is-off{filter:grayscale(.6) brightness(.6)}

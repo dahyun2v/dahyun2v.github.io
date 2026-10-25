@@ -1,0 +1,99 @@
+@import url('/app/kit/sg-tokens.css');
+/* 석실(石室) 토큰 — 컨셉 A "등불이 들어온 석실" (사용자 2026-10-09 "A로가자")
+   기준: docs/work-integration/20261009/visual-research/bible.html §02~§06. 수치는 시험값이며 화면에서 조정한다.
+   벽 = 지금(따뜻함) · 천장 = 하늘(차가움) · 돌 = 기억(온도 없음). UI 부품은 모두 부장품이다.
+   이 파일은 값만 둔다. 부품 모양은 parts.css, 화면 배치는 화면별 css. */
+
+:root{
+  color-scheme:dark;
+
+  /* ── 벽 · 지금 (따뜻함) ── */
+  --ss-dark:var(--sg-ink);          /* 석실 어둠 — 화면 바탕 */
+  --ss-lacquer:var(--sg-ink-on-paper);       /* 흑칠 판 */
+  --ss-lacquer-hi:var(--sg-disabled-fill);    /* 칠 반사 */
+  --ss-lamp:#D39A52;          /* 등불 — 빛, 고른 것 */
+  --ss-plaster:var(--sg-text-muted-dark);       /* 회벽 — 일하는 글자의 기본 밝기 */
+  --ss-ochre:#C8A878;         /* 바랜 토황 */
+  --ss-rust:#A5553A;          /* 바랜 토홍 — 세력·경고 문맥(주사 아님) */
+  --ss-malachite:#5F7D6A;     /* 바랜 석록 */
+
+  /* ── 천장 · 하늘 (차가움) ── */
+  --ss-pitch:var(--sg-ink-deep);         /* 칠흑 */
+  --ss-tin:#C9CEC8;           /* 주석 — 청동 테의 선 */
+  --ss-jade:#9FB8A8;          /* 옥 — 별·하늘의 점과 선 */
+  --ss-gold-dot:#D4B26A;      /* 금점 — 별점 크기의 점 한두 개뿐. 선·면 금지 */
+
+  /* ── 돌 · 기억 (온도 없음) ── */
+  --ss-stone-deep:#3B3530;    /* 짙은 돌 */
+  --ss-stone:#8A8072;         /* 돌 */
+  --ss-carve:#CFC6B5;         /* 새김 빛 */
+
+  /* ── 주사 — 한 화면 한 곳, 면적 5% 이하. 확정 인장·운명선·기억의 핵심 표식에만 ── */
+  --ss-cinnabar:#C8452F;
+
+  /* ── 범주색 다섯(오행) + 금빛 강조 — 2026-10-09 개정. 범주(능력·병종·자원·세력 표지)에만, 바탕·판에는 쓰지 않는다 ── */
+  --ss-wx-wood:#5E8F6E;       /* 木 */
+  --ss-wx-fire:#A8573F;       /* 火 — 주사(확정)와 구별되는 벽돌빛 */
+  --ss-wx-earth:#C9A24E;      /* 土 */
+  --ss-wx-metal:#D9D4C7;      /* 金 */
+  --ss-wx-water:#4F6E99;      /* 水 — 현(玄), 어둠과 겹치지 않게 짙은 청 */
+  --ss-gold:#E0B062;          /* 금빛 강조 — 장수 이름·화면 제목·고른 것의 가장 밝은 점(글자·점만, 테두리 금지) */
+
+  /* ── 글자 색(회벽 기준 단계) ── */
+  --ss-ink-1:var(--ss-plaster);              /* 지금 누를 것·제목 */
+  --ss-ink-2:color-mix(in srgb,var(--sg-text-muted-dark) 72%,transparent);          /* 본문 보조 */
+  --ss-ink-3:color-mix(in srgb,var(--sg-text-muted-dark) 48%,transparent);          /* 꼬리표·비활성 이유 */
+  --ss-ink-off:color-mix(in srgb,var(--sg-text-muted-dark) 30%,transparent);        /* 못 쓰는 것 */
+
+  /* ── 선: 세 굵기 · 두 성질 ── */
+  --ss-line-edge:2.5px;       /* 판 바깥 테두리 */
+  --ss-line-edge-decide:3px;  /* 결정 판 */
+  --ss-line-struct:1px;       /* 구획선·표 행 */
+  --ss-line-deco:.5px;        /* 빗금·눈금·별자리 보조선 */
+  --ss-line-tin:rgba(201,206,200,.38);       /* 철선(UI) 기본 */
+  --ss-line-tin-hi:rgba(201,206,200,.70);
+  --ss-line-hair:color-mix(in srgb,var(--sg-text-muted-dark) 12%,transparent);      /* 구획선 */
+  --ss-carve-shadow:0 1px 0 color-mix(in srgb,var(--sg-shadow-black) 55%,transparent); /* 새김 — 아래 그림자 1px */
+
+  /* ── 격자 · 모양 ── */
+  --ss-u:4px;                 /* 격자 단위. 여백·두께·주기는 4의 배수 */
+  --ss-chamfer:6px;           /* 모서리는 깎는다(둥글리지 않음) */
+  --ss-chamfer-decide:10px;   /* 결정 판 */
+  --ss-row:64px;              /* 목간 행 높이(1366 폭에서 58) */
+  --ss-hit:44px;              /* 최소 클릭 영역 */
+
+  /* ── 글자 ── */
+  --ss-title:var(--sg-font-heading); /* 장수 이름·장면 제목(2026-10-09 비교 후 선택 — 목판·비석 획) */
+  --ss-serif:var(--sg-font-heading);
+  --ss-sans:var(--sg-font-body);
+  --ss-fs-scene:34px;         /* 장면 제목 */
+  --ss-fs-name:28px;          /* 장수 이름 */
+  --ss-fs-stat:20px;          /* 능력치·숫자(고정폭 숫자) */
+  --ss-fs-body:16px;          /* 본문 16~18, 행간 1.5 */
+  --ss-fs-small:13px;         /* 꼬리표 */
+
+  /* ── 빛 ── 등불(따뜻함)은 고른 것 쪽으로 옮겨 간다. 판 테두리 밝은 면은 등불 쪽(왼쪽 위) */
+  --ss-lamp-glow:radial-gradient(closest-side,rgba(211,154,82,.34),rgba(211,154,82,.12) 55%,rgba(211,154,82,0));
+  --ss-vignette:radial-gradient(120% 90% at 50% 45%,color-mix(in srgb,var(--sg-ink) 0%,transparent) 40%,color-mix(in srgb,var(--sg-ink) 55%,transparent) 75%,color-mix(in srgb,var(--sg-ink-deep) 92%,transparent));
+  --ss-shadow-sunk:inset 0 1px 0 color-mix(in srgb,var(--sg-shadow-black) 60%,transparent),inset 0 -1px 0 color-mix(in srgb,var(--sg-text-muted-dark) 5%,transparent);
+  --ss-shadow-lift:0 6px 18px color-mix(in srgb,var(--sg-shadow-black) 55%,transparent),0 1px 0 color-mix(in srgb,var(--sg-shadow-black) 80%,transparent);
+
+  /* ── 움직임 — 사물의 동작으로. 0.3초 이내 응답, 숨 쉬기 8초 ── */
+  --ss-t-pick:.15s;           /* 고르기: 등불이 옮겨 감 */
+  --ss-t-seal:.25s;           /* 확정: 인장 누름 */
+  --ss-t-slide:.2s;           /* 목록 넘김 */
+  --ss-t-enter:.3s;           /* 장면 진입(첫 진입 1.2초) */
+  --ss-t-enter-first:1.2s;
+  --ss-t-turn:.6s;            /* 차례 끝 빛줄기 */
+  --ss-t-layer:.4s;           /* 층 전환 */
+  --ss-t-breath:8s;           /* 대기 숨 쉬기 */
+  --ss-ease:cubic-bezier(.2,.7,.2,1);
+
+  /* ── 에셋 자리 ── 부품 그림이 채택되면 아래 이름으로 값을 준다(정의하지 않으면 parts.css 의 SVG·CSS 대체 모양).
+     --ss-img-panel-slice · --ss-img-panel-decide-slice · --ss-img-frame-slice (border-image 전체 값)
+     --ss-img-slip · --ss-img-button · --ss-img-niche · --ss-img-cloth · --ss-img-band-sky · --ss-img-band-stone (background-image 값) */
+}
+
+@media (prefers-reduced-motion:reduce){
+  :root{--ss-t-pick:0s;--ss-t-seal:0s;--ss-t-slide:0s;--ss-t-enter:0s;--ss-t-enter-first:0s;--ss-t-turn:0s;--ss-t-layer:0s}
+}

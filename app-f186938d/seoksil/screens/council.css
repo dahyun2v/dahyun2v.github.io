@@ -1,0 +1,147 @@
+/* SC07 평정 — 목표 그림 T-sc07-council v2 구도. 위 띠 6% · 장면(위) · 흑칠 탁자(아래 40%) 위에 놓인 물건.
+   물건 표면은 모두 에셋 그림(/assets/seoksil/a4 — 챗방 생성 + tools/design/grade.py 보정), 코드는 자리·글자·상태(빛·명도)만.
+   명암 75:20:5, 가장 밝은 곳 = 등불과 고른 것. 주사는 결의 자국 한 곳. */
+
+.cc3{position:fixed;inset:0;min-height:600px;overflow:hidden;background:var(--sg-ink-deep);color:var(--ss-ink-1);--top:6vh;--table:40vh}
+.cc3::after{display:none}
+.cc3-empty{margin:auto;color:var(--ss-ink-2)}
+
+/* ── 위 띠: 흑칠 테(A10) + 세력·날짜 · 결의 점 · 지도로 ── */
+.cc3-top{position:absolute;left:0;right:0;top:0;height:var(--top);z-index:6;display:flex;align-items:center;gap:1.4vw;padding:0 2vw;
+  background:url(/assets/seoksil/a4/topbar.webp) center/auto 100% repeat-x,var(--sg-ink-pressed);box-shadow:0 3px 12px color-mix(in srgb,var(--sg-shadow-black) 75%,transparent)}
+.cc3-top__crest{--d:clamp(30px,4.2vh,46px);--fc:var(--ss-stone)}
+.cc3-top__name{font:400 clamp(18px,2.4vh,26px)/1.1 var(--sg-font-name);letter-spacing:.1em;color:var(--ss-gold);text-shadow:0 1px 2px var(--sg-shadow-black)}
+.cc3-top__name small{margin-left:14px;font:400 .62em var(--sg-font-name);letter-spacing:.14em;color:var(--ss-ink-2)}
+.cc3-top__res{margin-left:auto;display:flex;align-items:center;gap:12px}
+.cc3-top__res em{font:400 13px var(--sg-font-heading);font-style:normal;letter-spacing:.12em;color:var(--ss-ink-3)}
+.cc3-res{width:10px;height:10px;border-radius:50%;background:var(--ss-plaster)}
+.cc3-res.is-active{width:16px;height:16px;background:none;box-shadow:inset 0 0 0 1.5px var(--ss-plaster),inset 0 0 0 4px var(--sg-ink),inset 0 0 0 8px color-mix(in srgb,var(--sg-text-muted-dark) 55%,transparent)}
+.cc3-res.is-broken{background:color-mix(in srgb,var(--sg-text-muted-dark) 25%,transparent)}
+.cc3-res.is-new{animation:ss-stamp var(--ss-t-seal) var(--ss-ease) both}
+.cc3-back{all:unset;box-sizing:border-box;cursor:pointer;padding:6px 14px;font:400 clamp(13px,1.6vh,16px) var(--sg-font-heading);letter-spacing:.14em;color:var(--ss-ink-2);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sg-text-muted-dark) 35%,transparent)}
+.cc3-back:hover{color:var(--ss-ink-1);box-shadow:inset 0 0 0 1px var(--ss-lamp)}
+.cc3-back:focus-visible{outline:2px solid var(--ss-lamp);outline-offset:2px}
+
+/* ── 장면 — 한 장의 그림(가로 띠). 신하들은 분위기 인물, 발언자 자리에 빛 ── */
+.cc3-scene{position:absolute;left:0;right:0;top:var(--top);bottom:calc(var(--table) - 4vh);overflow:hidden;z-index:1;container-type:size;background:var(--sg-ink-deep)}
+.cc3-scene__frame{position:absolute;left:50%;top:44%;translate:-50% -44%;width:max(100cqw,calc(100cqh * var(--arn)));aspect-ratio:var(--ar)}
+.cc3-scene__art{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cc3-scene::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--sg-ink-deep) 35%,transparent),color-mix(in srgb,var(--sg-ink-deep) 0%,transparent) 14%,color-mix(in srgb,var(--sg-ink-deep) 0%,transparent) 72%,var(--sg-ink-deep)),radial-gradient(120% 120% at 50% 40%,color-mix(in srgb,var(--sg-ink-deep) 0%,transparent) 60%,color-mix(in srgb,var(--sg-ink-deep) 60%,transparent))}
+.cc3-glow{position:absolute;left:var(--x);top:var(--y);translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen}
+.cc3-glow--lantern{width:30vh;aspect-ratio:1;background:radial-gradient(closest-side,rgba(211,154,82,.2),rgba(211,154,82,0));animation:ss-breath var(--ss-t-breath) ease-in-out infinite}
+.cc3-glow--speaker{z-index:2;width:30vh;aspect-ratio:1;background:radial-gradient(closest-side,rgba(226,170,96,.5),rgba(211,154,82,.16) 50%,rgba(211,154,82,0));animation:cc3-light var(--ss-t-pick) var(--ss-ease) both}
+@keyframes cc3-light{from{opacity:0}to{opacity:1}}
+.cc3-scene__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:color-mix(in srgb,var(--sg-ink-deep) 0%,transparent);transition:background var(--ss-t-pick)}
+.cc3-scene__shade.is-speaking{background:color-mix(in srgb,var(--sg-ink-deep) 36%,transparent)}
+
+/* ── 탁자(A25) — 물건이 놓이는 흑칠 상판 ── */
+.cc3-table{position:absolute;left:0;right:0;bottom:0;height:var(--table);z-index:3;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:2.2vw;padding:2vh 3vw 2.6vh;
+  background:url(/assets/seoksil/a4/table.webp) center top/auto 100% repeat-x,linear-gradient(180deg,var(--sg-ink),var(--sg-ink-deep));
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--sg-text-muted-dark) 16%,transparent),inset 0 3px 0 color-mix(in srgb,var(--sg-shadow-black) 60%,transparent),0 -16px 28px color-mix(in srgb,var(--sg-shadow-black) 55%,transparent)}
+.cc3-table > *{flex:none}
+
+/* 거울(A01) — 고른 안건. 가운데 꼭지 자리 = 종류 표지, 둘레 초상 고리 셋(A24) */
+.cc3-mirror{position:relative;height:min(36vh,30vw);aspect-ratio:1;filter:drop-shadow(0 10px 16px color-mix(in srgb,var(--sg-shadow-black) 70%,transparent))}
+.cc3-mirror__art{position:absolute;inset:0;width:100%;height:100%;filter:brightness(.82);transition:filter var(--ss-t-pick)}
+.cc3-mirror.is-lit .cc3-mirror__art{filter:brightness(.95)}
+.cc3-knob{position:absolute;left:50%;top:50%;translate:-50% -50%;width:34%;aspect-ratio:1;border-radius:50%;display:grid;place-content:center;justify-items:center;gap:.4vh;text-align:center;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--sg-ink-deep) 90%,transparent) 62%,color-mix(in srgb,var(--sg-ink-deep) 55%,transparent) 82%,color-mix(in srgb,var(--sg-ink-deep) 0%,transparent))}
+.cc3-knob em{font:400 clamp(30px,6.4vh,72px)/1 var(--sg-font-body);font-style:normal;color:var(--ss-carve);text-shadow:0 2px 0 var(--sg-shadow-black),0 0 18px color-mix(in srgb,var(--sg-shadow-black) 90%,transparent)}
+.cc3-mirror.is-lit .cc3-knob em{color:var(--ss-gold)}
+.cc3-knob small{max-width:150%;font:400 clamp(11px,1.35vh,15px)/1.25 var(--sg-font-heading);letter-spacing:.08em;color:var(--ss-ink-1);text-shadow:0 1px 2px var(--sg-shadow-black);white-space:nowrap}
+
+.cc3-seat{all:unset;box-sizing:border-box;position:absolute;width:29%;aspect-ratio:344/384;translate:-50% -50%;cursor:pointer;transition:filter var(--ss-t-pick)}
+.cc3-seat--0{left:50%;top:12%}
+.cc3-seat--1{left:16%;top:76%}
+.cc3-seat--2{left:84%;top:76%}
+.cc3-seat__face{position:absolute;left:50%;top:43.9%;translate:-50% -50%;width:66%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:radial-gradient(var(--sg-disabled-fill),var(--sg-ink-pressed))}
+.cc3-seat__face img,.cc3-tag__face img{width:100%;height:100%;object-fit:cover;object-position:50% 0;transform:scale(2.3);transform-origin:50% 6%}
+.cc3-seat__face img.is-bust,.cc3-tag__face img.is-bust{transform:none;object-position:50% 50%}
+.cc3-seat__ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cc3-seat b{position:absolute;left:50%;top:92%;translate:-50% -50%;font:400 clamp(11px,1.45vh,16px)/1 var(--sg-font-body);letter-spacing:.04em;white-space:nowrap;color:var(--ss-ink-1);text-shadow:0 1px 2px var(--sg-shadow-black)}
+.cc3-seat:not(.is-speaking){filter:brightness(.78)}
+.cc3-seat.is-speaking{filter:drop-shadow(0 0 10px rgba(211,154,82,.6))}
+.cc3-seat.is-speaking b{color:var(--ss-gold)}
+.cc3-seat.is-done:not(.is-speaking){filter:brightness(.5) grayscale(.4)}
+.cc3-seat:hover:not(.is-speaking){filter:brightness(1)}
+.cc3-seat:focus-visible{outline:2px solid var(--ss-lamp);outline-offset:2px;border-radius:50%}
+
+/* 메달(A23) — 보조 명령 */
+.cc3-medals{display:flex;flex-direction:column;gap:2.2vh;align-items:center}
+.cc3-medal{all:unset;box-sizing:border-box;display:grid;justify-items:center;gap:.6vh;cursor:pointer}
+.cc3-medal__face{position:relative;width:min(11vh,9vw);aspect-ratio:1;display:grid;place-items:center;filter:brightness(.85) drop-shadow(0 6px 8px color-mix(in srgb,var(--sg-shadow-black) 60%,transparent));transition:filter var(--ss-t-pick)}
+.cc3-medal__face img{position:absolute;inset:0;width:100%;height:100%}
+.cc3-medal__face em{position:relative;font:400 clamp(20px,4vh,44px)/1 var(--sg-font-body);font-style:normal;color:var(--ss-carve);text-shadow:0 2px 0 var(--sg-shadow-black),0 0 10px color-mix(in srgb,var(--sg-shadow-black) 90%,transparent)}
+.cc3-medal small{font:400 clamp(11px,1.35vh,14px)/1.2 var(--sg-font-heading);letter-spacing:.08em;color:var(--ss-ink-2);text-shadow:0 1px 2px var(--sg-shadow-black);white-space:nowrap}
+.cc3-medal:hover .cc3-medal__face{filter:brightness(1.05) drop-shadow(0 0 10px rgba(211,154,82,.45))}
+.cc3-medal:hover small{color:var(--ss-ink-1)}
+.cc3-medal:active .cc3-medal__face{translate:0 1px}
+.cc3-medal:focus-visible{outline:2px solid var(--ss-lamp);outline-offset:3px}
+.cc3-medal:disabled{cursor:default;opacity:.45}
+
+/* 목독(A02) 셋 — 안건 행 / 군사 후보 행. 그림 1280×314 중 판 = 위 210px(아래는 늘어진 끈), 초상 홈 중심 (272,106) 지름 156 */
+.cc3-tags{display:flex;flex-direction:column;gap:1.4vh;width:clamp(360px,33vw,680px)}
+.cc3-tag{all:unset;box-sizing:border-box;position:relative;display:block;width:100%;aspect-ratio:1280/210;cursor:pointer;transition:filter var(--ss-t-pick)}
+.cc3-tag:nth-child(1){z-index:3}.cc3-tag:nth-child(2){z-index:2}.cc3-tag:nth-child(3){z-index:1}
+.cc3-tag__art{position:absolute;left:0;top:0;width:100%;height:auto;pointer-events:none;filter:drop-shadow(0 5px 6px color-mix(in srgb,var(--sg-shadow-black) 60%,transparent))}
+.cc3-tag__face{position:absolute;left:15.2%;top:13.3%;width:12.2%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:radial-gradient(var(--sg-disabled-fill),var(--sg-ink-pressed));box-shadow:inset 0 2px 4px color-mix(in srgb,var(--sg-shadow-black) 80%,transparent)}
+.cc3-tag__text{position:absolute;left:33%;right:31%;top:12%;bottom:12%;display:grid;align-content:center;gap:.4vh;min-width:0}
+.cc3-tag__text b{font:400 clamp(16px,2.3vh,26px)/1.1 var(--sg-font-body);letter-spacing:.06em;color:var(--ss-ink-1);text-shadow:0 1px 2px var(--sg-shadow-black)}
+.cc3-tag__text small{font:500 clamp(11px,1.3vh,14px)/1.3 var(--sg-font-body);color:var(--ss-ink-2);text-shadow:0 1px 2px var(--sg-shadow-black);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cc3-stats{position:absolute;right:6%;top:50%;translate:0 -50%;display:flex;gap:.5vw}
+.cc3-stats i{display:grid;place-items:center;align-content:center;width:clamp(26px,3.8vh,42px);aspect-ratio:1;border-radius:50%;font:600 clamp(11px,1.4vh,15px)/1 var(--sg-font-num);font-style:normal;font-variant-numeric:tabular-nums;
+  color:var(--ss-ink-1);background:color-mix(in srgb,var(--sg-ink-deep) 55%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sg-text-muted-dark) 35%,transparent);text-shadow:0 1px 1px var(--sg-shadow-black);font-weight:600}
+.cc3-stats em{font:600 clamp(12px,1.6vh,17px)/1 var(--sg-font-num);font-style:normal;color:var(--ss-carve);font-weight:600;font-variant-numeric:tabular-nums}
+.cc3-stats i:has(em):not(:only-child){gap:1px}
+.cc3-stats i.is-held{color:var(--ss-ink-3)}
+.cc3-stats i .ss-seal-mark{--seal:78%}
+.cc3-tag:not(.is-picked){filter:brightness(.8)}
+.cc3-tag:hover:not(.is-picked){filter:brightness(.95)}
+.cc3-tag.is-picked{filter:brightness(1.08) drop-shadow(0 0 12px rgba(211,154,82,.45))}
+.cc3-tag.is-picked .cc3-tag__text b{color:var(--ss-gold)}
+.cc3-tag.is-done:not(.is-picked){filter:brightness(.55) grayscale(.3)}
+.cc3-tag:focus-visible{outline:2px solid var(--ss-lamp);outline-offset:2px}
+.cc3-none{margin:0;padding:2vh 1vw;color:var(--ss-ink-3);font:400 15px var(--sg-font-heading)}
+
+/* 죽간(A03) — 군사 보고 / 안건 내용. 글자는 끈 두 줄 사이(위 21%·아래 29%) */
+.cc3-slips{position:relative;height:36vh;aspect-ratio:822/1024;filter:drop-shadow(0 8px 12px color-mix(in srgb,var(--sg-shadow-black) 65%,transparent))}
+.cc3-slips__art{position:absolute;inset:0;width:100%;height:100%;filter:brightness(.78)}
+.cc3-slips__text{position:absolute;left:14%;right:12%;top:20%;bottom:28%;overflow:auto;scrollbar-width:none;display:grid;align-content:start;gap:.7vh;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--sg-ink-deep) 0%,transparent),color-mix(in srgb,var(--sg-ink-deep) 42%,transparent) 12%,color-mix(in srgb,var(--sg-ink-deep) 42%,transparent) 88%,color-mix(in srgb,var(--sg-ink-deep) 0%,transparent))}
+.cc3-slips__text::-webkit-scrollbar{display:none}
+.cc3-label{margin:0;font:400 clamp(10px,1.2vh,13px)/1.2 var(--sg-font-heading);letter-spacing:.2em;color:var(--ss-jade);text-shadow:0 1px 2px var(--sg-shadow-black)}
+.cc3-line,.cc3-say,.cc3-note,.cc3-facts dd{text-shadow:0 1px 2px var(--sg-shadow-black),0 0 6px color-mix(in srgb,var(--sg-shadow-black) 90%,transparent)}
+.cc3-line{margin:0;font:500 clamp(12px,1.5vh,16px)/1.45 var(--sg-font-body);color:var(--sg-bone)}
+.cc3-line.is-foresight{color:var(--ss-jade)}
+.cc3-say{margin:0;font:400 clamp(13px,1.65vh,18px)/1.4 var(--sg-font-heading);color:var(--sg-bone);text-wrap:pretty}
+.cc3-note{margin:0;font:500 clamp(11px,1.3vh,14px)/1.4 var(--sg-font-body);color:var(--ss-ink-2)}
+.cc3-facts{display:grid;gap:.5vh;margin:0}
+.cc3-facts > div{display:grid;grid-template-columns:3.4em 1fr;gap:6px;align-items:baseline}
+.cc3-facts dt{font:400 clamp(10px,1.2vh,13px)/1.4 var(--sg-font-heading);letter-spacing:.12em;color:var(--ss-ink-3);text-shadow:0 1px 2px var(--sg-shadow-black)}
+.cc3-facts dd{margin:0;font:500 clamp(11px,1.4vh,15px)/1.4 var(--sg-font-body);color:var(--sg-bone)}
+.cc3-stamp{position:absolute;right:16%;top:22%;--seal:min(9vh,90px);z-index:2}
+
+/* 옥인(A04) — 결의. 고른 안건이 있을 때만 등불을 받는다 */
+.cc3-sealbox{display:grid;justify-items:center;gap:.6vh;align-self:flex-end;margin-left:-5vh;margin-bottom:.4vh;z-index:2}
+.cc3-seal{all:unset;box-sizing:border-box;width:min(17vh,14vw);cursor:pointer;transition:filter var(--ss-t-pick),translate var(--ss-t-seal) var(--ss-ease)}
+.cc3-seal img{display:block;width:100%;height:auto;filter:drop-shadow(0 10px 12px color-mix(in srgb,var(--sg-shadow-black) 70%,transparent))}
+.cc3-seal:not(:disabled){filter:brightness(1.05) drop-shadow(0 0 16px rgba(211,154,82,.5))}
+.cc3-seal:not(:disabled):hover{translate:0 -3px}
+.cc3-seal:active:not(:disabled),.cc3-seal.is-pressed{translate:0 4px}
+.cc3-seal:disabled{cursor:default;filter:brightness(.5) saturate(.6)}
+.cc3-seal:focus-visible{outline:2px solid var(--ss-lamp);outline-offset:3px}
+.cc3-sealbox small{max-width:22vh;text-align:center;font:400 clamp(10px,1.25vh,13px)/1.3 var(--sg-font-heading);letter-spacing:.06em;color:var(--ss-ink-3);text-shadow:0 1px 2px var(--sg-shadow-black)}
+.cc3-seal:not(:disabled) + small{color:var(--ss-ink-1)}
+
+@media (max-width:1500px){.cc3-table{gap:1.6vw;padding-inline:2vw}}
+@media (prefers-reduced-motion:reduce){.cc3-glow--speaker,.cc3-glow--lantern{animation:none}}
+
+/* 그림 아이콘(ss-pic) — 꼭지·메달·목독 숫자 칸. 없을 때는 한자 새김(em) */
+.cc3-knob .ss-pic{width:46%;height:auto;margin-top:-4%;filter:drop-shadow(0 2px 2px var(--sg-shadow-black))}
+.cc3-mirror.is-lit .cc3-knob .ss-pic{filter:drop-shadow(0 2px 2px var(--sg-shadow-black)) drop-shadow(0 0 10px rgba(224,176,98,.45)) brightness(1.08)}
+.cc3-medal__face .ss-pic{position:relative;width:64%;height:auto}
+.cc3-stats i .ss-pic{width:70%;height:auto}
+.cc3-stats i:has(.ss-pic):not(:only-child){grid-template-rows:auto auto;gap:0}
+.cc3-stats i:has(.ss-pic) .ss-pic{width:52%}

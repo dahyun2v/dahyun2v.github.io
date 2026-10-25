@@ -1,0 +1,28 @@
+/* 처음 화면(군주 고르기) — 석실 에셋 조립(2026-10-09). 뒤 = 고른 군주의 평정 가로 장면(흐리게·어둡게), 감실 = 돌 감실(A15, 투명 창 x25%·y28%~84%) 안에 원화,
+   이름·단추 = 대나무 쪽(A12). 고른 감실만 등불을 받는다. */
+.sm-start2{position:fixed;inset:0;overflow:hidden;display:grid;place-content:center;justify-items:center;gap:3vh;padding:4vh 2vw;background:var(--sg-ink-deep)}
+.sm-start2>.sm-start2__court{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:blur(3px) brightness(.42) saturate(.8);transform:scale(1.04);z-index:0}
+.sm-start2::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(70% 70% at 50% 55%,color-mix(in srgb,var(--sg-ink-deep) 15%,transparent),color-mix(in srgb,var(--sg-ink-deep) 85%,transparent)),linear-gradient(180deg,color-mix(in srgb,var(--sg-ink-deep) 40%,transparent),color-mix(in srgb,var(--sg-ink-deep) 0%,transparent) 30%,color-mix(in srgb,var(--sg-ink-deep) 60%,transparent))}
+.sm-start2>*:not(.sm-start2__court){position:relative;z-index:2}
+.sm-start2__title{margin:0;font:400 clamp(28px,4.4vh,48px)/1.2 var(--sg-font-heading);letter-spacing:.14em;color:var(--ss-gold);text-shadow:0 2px 4px var(--sg-shadow-black),0 0 24px color-mix(in srgb,var(--sg-shadow-black) 80%,transparent)}
+.sm-start2 .sm-lords{display:flex;gap:3vw;align-items:flex-end}
+.sm-lord2{margin:0;display:grid;justify-items:center;gap:1.2vh}
+.sm-lord2 .sm-lord{position:relative;display:block;height:min(54vh,520px);aspect-ratio:671/1024;padding:0;border:0;background:none;cursor:pointer;transition:filter var(--ss-t-pick),translate var(--ss-t-pick)}
+.sm-lord2__window{position:absolute;left:24.9%;right:24.7%;top:27.6%;bottom:16.3%;overflow:hidden;border-radius:46% 46% 0 0/22% 22% 0 0;background:radial-gradient(120% 80% at 50% 30%,var(--sg-disabled-fill),var(--sg-ink-pressed))}
+.sm-lord2__window img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.sm-lord2__niche{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 14px 22px color-mix(in srgb,var(--sg-shadow-black) 70%,transparent))}
+.sm-lord2:not(.is-picked) .sm-lord{filter:brightness(.55) saturate(.7)}
+.sm-lord2:not(.is-picked) .sm-lord:hover{filter:brightness(.8) saturate(.85)}
+.sm-lord2.is-picked .sm-lord{filter:drop-shadow(0 0 26px rgba(211,154,82,.35));translate:0 -1vh}
+.sm-lord:focus-visible{outline:2px solid var(--ss-lamp);outline-offset:4px}
+/* 대나무 쪽(A12) — 이름표·단추 */
+.sm-slip{display:inline-grid;place-items:center;min-width:180px;padding:10px 34px;background:url(/assets/seoksil/a4/slip.webp) center/100% 100% no-repeat;filter:drop-shadow(0 6px 10px color-mix(in srgb,var(--sg-shadow-black) 60%,transparent))}
+.sm-slip b{font:400 clamp(18px,2.4vh,26px)/1 var(--sg-font-body);letter-spacing:.1em;color:var(--ss-ink-1);text-shadow:0 1px 2px var(--sg-shadow-black)}
+.sm-lord2.is-picked .sm-slip b{color:var(--ss-gold)}
+.sm-start2__acts{display:flex;gap:2vw;margin-top:1vh}
+.sm-start2 .sm-slip--btn{border:0;cursor:pointer;min-width:240px;padding:16px 44px;font:400 clamp(20px,2.6vh,28px)/1 var(--sg-font-button);letter-spacing:.2em;color:var(--ss-ink-1);text-shadow:0 1px 2px var(--sg-shadow-black);transition:filter var(--ss-t-pick),translate var(--ss-t-pick)}
+.sm-slip--btn:hover{filter:brightness(1.15) drop-shadow(0 0 14px rgba(211,154,82,.45));translate:0 -2px}
+.sm-slip--btn:active{translate:0 1px}
+.sm-slip--btn:focus-visible{outline:2px solid var(--ss-lamp);outline-offset:3px}
+#new-game{color:var(--ss-gold)}
+@media (max-width:1400px){.sm-start2 .sm-lords{gap:2vw}}
