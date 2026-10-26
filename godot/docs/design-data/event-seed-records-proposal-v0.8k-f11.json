@@ -1,0 +1,159 @@
+[
+  {
+    "eventSeedId": "INC-F11-P01-01",
+    "policyId": "POL-F11-CORE-01",
+    "factionId": "F11",
+    "scale": "INCIDENT",
+    "title": "空亭突圍",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "척후 또는 전령 부대가 아군 지원 거리 밖에 있다",
+      "적 기동대가 복수의 이동 경로를 차단한다",
+      "현재 위치에 폐건물·초소·협로와 같은 엄폐지가 존재한다",
+      "구조대가 즉시 도착할 수 없는 고립 상태다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "적 기동대가 모든 퇴로를 차단하거나 식량·사료·체온 유지 여력이 소진되기 전까지",
+    "playerChoices": [
+      "병력을 집중해 한 경로로 돌파한다",
+      "엄폐지에서 적을 관측하고 구원 신호를 보낸다",
+      "말과 호위 인원을 분산해 서로 다른 경로로 탈출시킨다",
+      "적 기동대와 협상을 시도한다"
+    ],
+    "costInputs": [
+      "식량",
+      "군마 사료",
+      "체온 유지 물자",
+      "대기·관측·구원 신호 시간"
+    ],
+    "risks": [
+      "대기하는 동안 식량과 군마 사료가 소모된다",
+      "추위에 노출되어 체온 유지가 어려워진다",
+      "돌파 실패로 사상자가 발생한다",
+      "군마를 버리거나 잃는다",
+      "운반하던 정보가 아군에게 전달되지 않는다"
+    ],
+    "counterplay": [
+      "적 기동대가 복수 경로를 차단한다",
+      "적 기동대가 돌파 방향을 관측하고 병력을 집중한다",
+      "적 기동대가 고립 부대의 물자 소진을 기다린다"
+    ],
+    "failureTraces": [
+      "돌파 과정의 사상자",
+      "버려진 군마",
+      "전달되지 못한 정보"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "포위망과 사용 가능한 돌파로",
+      "관측으로 확인된 적만 표시한 정보",
+      "구조대 도착 예상 시점",
+      "군마 상태",
+      "운반 중인 정보"
+    ],
+    "forbiddenAutoResolve": [
+      "장수의 영웅성만으로 돌파를 자동 성공시킬 수 없다",
+      "지도 밖으로 즉시 탈출할 수 없다",
+      "구조대를 순간적으로 출현시킬 수 없다",
+      "팝업 선택만으로 돌파·구원·부대 이동을 완료할 수 없다",
+      "일기토나 마법으로 포위망과 복수의 차단 경로를 제거할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "localSubjectRef": null,
+    "responseDeadlineCondition": "퇴로가 완전히 차단되거나 식량·사료·체온 유지 여력이 소진되기 전에 대응해야 한다",
+    "containmentOptions": [],
+    "spreadConditions": [],
+    "missingFields": [
+      "공손찬이 소수 기병으로 다수 선비 기병과 조우해 빈 정자로 물러난 뒤 돌파한 기록의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "공손찬·척후·전령·호위 담당자의 canonical officer ID가 기존 카드에 기록되지 않아 castSelectors를 비웠다",
+      "빈 정자·폐건물·초소·협로·구조대 경로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "고립 부대의 canonical subject ID가 없어 localSubjectRef를 null로 두었다",
+      "containmentOptions와 spreadConditions가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F11-P01-02",
+    "policyId": "POL-F11-CORE-01",
+    "factionId": "F11",
+    "scale": "SITUATION",
+    "title": "易京固守",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "핵심 성채가 포위되어 있다",
+      "외곽 전초가 순차적으로 공격받는다",
+      "성내에 비축 물자가 남아 있다",
+      "전령로와 우군 관계가 불안정하다",
+      "공손찬 또는 수성 권한을 위임받은 장수가 성내에 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "핵심 성채와 외곽 전초를 포함한 포위가 지속되는 동안",
+    "playerChoices": [
+      "외곽 전초를 구원한다",
+      "외곽 전초를 포기하고 중심 성채를 보존한다",
+      "기병을 출격시켜 적의 배치를 관측한다",
+      "성문을 폐쇄하고 출격을 중단한다",
+      "봉화 암호를 변경한다",
+      "기존 봉화 암호를 유지한다",
+      "민간인을 성채 안으로 수용한다",
+      "군량 보존을 우선해 민간인 수용을 제한한다",
+      "포위망 돌파를 시도한다",
+      "원군과 협공하거나 조건부 협상을 진행한다"
+    ],
+    "costInputs": [],
+    "risks": [
+      "외곽 전초를 계속 버리면 장수들이 구원 약속을 불신하고 이탈한다",
+      "중심 성채만 보존하면 주변 도시와 주민의 관계가 파괴된다",
+      "전령이 포획되어 적에게 정보가 유출된다",
+      "적이 탈취한 봉화 약속과 군서를 이용한다"
+    ],
+    "counterplay": [
+      "포위군이 외곽 전초를 순차적으로 공격해 중심 성채를 고립시킨다",
+      "포위군이 전령을 포획하고 거짓 봉화를 사용한다",
+      "포위군이 위조된 군서로 성내 병력을 출격시킨다"
+    ],
+    "failureTraces": [
+      "무너진 누각",
+      "막힌 지하도",
+      "위조된 군서",
+      "버림받은 외영"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "내곽·외곽 거점",
+      "비축 위치",
+      "전령 경로",
+      "봉화의 진위",
+      "구원을 요청한 장수",
+      "민간인 수용 상태"
+    ],
+    "forbiddenAutoResolve": [
+      "비축 물자가 있다는 이유만으로 성채가 무기한 자동 방어되지 않는다",
+      "거짓 봉화와 위조 문서를 자동으로 판별할 수 없다",
+      "고립된 외곽 전초를 비용 없이 유지할 수 없다",
+      "팝업 선택만으로 요새 건설·포위 해제·주민 이동·충성·보급을 완료할 수 없다",
+      "일기토나 과도한 마법으로 포위군과 봉쇄망을 제거할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "역경의 참호·누각·곡식 축적과 외곽 진영 고립, 탈취된 봉화 약속에 속아 출전한 기록의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "공손찬·수성 장수·외곽 장수·전령의 canonical officer ID가 기존 카드에 기록되지 않아 castSelectors를 비웠다",
+      "핵심 성채·내외곽 거점·비축고·전령로·봉화·외영의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "costInputs가 기존 카드에서 별도 정규 값으로 정의되지 않아 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

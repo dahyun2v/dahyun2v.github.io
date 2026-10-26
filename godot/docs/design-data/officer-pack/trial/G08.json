@@ -1,0 +1,273 @@
+{
+  "id": "G08",
+  "name": "손권",
+  "faction": "F03",
+  "status": "CLAUDE_TRIAL_PLACEHOLDER — GPT 장수 파이프라인 정식 pack 도착 시 교체",
+  "source": {
+    "room": "FIRST3 시험 기록",
+    "method": "first3-initial-state-v1 → officer-pack 시험 변환 (make-trial-packs.py)",
+    "date": "2026-10-03"
+  },
+  "stats": {
+    "지휘": 82,
+    "무용": 63,
+    "지략": 84,
+    "정무": 88,
+    "감화": 91
+  },
+  "sub": {
+    "전열 유지": 83,
+    "기동": 80,
+    "전환": 75,
+    "수습": 90,
+    "힘": 60,
+    "기술": 52,
+    "막아내기": 77,
+    "되받기": 63,
+    "군재": 84,
+    "응변": 88,
+    "속이기": 76,
+    "통찰": 88,
+    "행정": 90,
+    "병참": 85,
+    "인사": 94,
+    "제도": 86,
+    "민정": 91,
+    "설득": 96,
+    "포섭": 94,
+    "결집": 98,
+    "중재": 96
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "명사",
+  "style": "장군",
+  "primaryClass": "TRIAL:명사",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "곁의 장수를 키운다",
+    "text": "맞닿은 아군 이동 +1칸, 맞닿은 아군 장수가 얻는 경험치 +25% — 곁의 장수에게 움직일 범위를 주고 키운다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "MOVE_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 1,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "XP_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 25,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04(사용자 지시 \"특기/전법은 너가 한번 다시 만들어볼래\") · 권한을 남의 손에 맡겨 실제로 작동시키는 의도 유지: 맡긴 부대 공격 +20%(원 독립공세 ×1.20)+성장. 모드 선택·지원 대상 순환은 지도에 없어 특기는 '곁의 장수에게 움직일 범위(이동)와 성장(경험치)'으로 바꿈. 본인 직접 전투 보정 없음(약점 유지).",
+    "formerName": "맡긴 뒤에 본다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "아군 한 부대 북돋기",
+      "text": "2칸 안 아군 1부대에게 이번·다음 차례 첫 공격 피해 +20%와 2턴 동안 경험치 +30%를 맡긴다.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 40,
+          "duration": 2,
+          "condition": null
+        },
+        {
+          "op": "XP_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 2,
+          "condition": null
+        }
+      ],
+      "formerName": "인장을 맡기다"
+    },
+    {
+      "kind": "trait",
+      "name": "민심 달래기",
+      "text": "점령 처리 기간 1턴 단축.",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "회유의 달인"
+    },
+    {
+      "kind": "tactic",
+      "name": "격려",
+      "text": "2칸 안 아군 사기 한 단계 회복.",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 20
+    },
+    {
+      "kind": "trait",
+      "name": "군대 농사",
+      "text": "태수일 때 도시 식량 +15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 15,
+          "duration": 0,
+          "condition": null,
+          "resource": "FOOD"
+        }
+      ],
+      "formerName": "둔전"
+    },
+    {
+      "kind": "trait",
+      "name": "인망 높이기",
+      "text": "태수일 때 도시 인망 산출 +20%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 20,
+          "duration": 0,
+          "condition": null,
+          "resource": "FAME"
+        }
+      ],
+      "formerName": "상업 장려"
+    },
+    {
+      "kind": "trait",
+      "name": "응급 처치",
+      "text": "잃는 병력의 전사 비율 −20%p(그만큼 부상병으로).",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CASUALTY_SHIFT",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "첫 일격",
+      "text": "이번 차례 첫 공격 피해 +10%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "선수필승"
+    },
+    {
+      "kind": "trait",
+      "name": "성 지키기",
+      "text": "성(중심·성문)을 지킬 때 받는 피해 −20%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "formerName": "수성"
+    },
+    {
+      "kind": "trait",
+      "name": "돌파",
+      "text": "이번 차례 첫 공격 피해 +15%.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "FIRST_ROUND"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "빠른 말",
+      "text": "기병일 때 이동 +1칸.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        }
+      ],
+      "formerName": "질풍"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "archetype": "PRESERVER",
+  "balanced": false,
+  "draftPool": [
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "effects": [],
+      "kind": "trait",
+      "name": "먼저 정돈한다",
+      "rarity": "COMMON",
+      "text": "순욱이 직접 공격을 서두르기보다 Brace·Regroup·전열 정돈 계열 행동을 택했을 때 다음 방어 선택의 가치가 커지는 빌드 방향. 즉시 화력 대신 준비와 수습을 반복하게 만드는 공용 특기 후보."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "effects": [],
+      "kind": "trait",
+      "name": "버팀목의 교대",
+      "rarity": "UNCOMMON",
+      "text": "한 지점을 영구 고정하기보다, 위험이 이동하면 다음에 지켜야 할 아군·전열을 바꾸는 플레이를 강화하는 후보. 「한 기둥을 세우다」의 동일 효과를 복제하지 않고 대상 전환 판단을 빌드 차이로 만든다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "effects": [],
+      "kind": "trait",
+      "name": "마무리보다 수습",
+      "rarity": "UNCOMMON",
+      "text": "적을 끝내는 공격보다 이미 흔들린 아군의 기능 복구를 선택했을 때 더 큰 장기 이득을 얻는 방향. PRESERVATION이 아니라 STABILIZATION/RECOVERY 쪽 Run 변형을 노린다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "effects": [],
+      "kind": "trait",
+      "name": "책임선",
+      "rarity": "RARE",
+      "text": "자신이 맡아 지키기로 한 대상·구역과 무관한 싸움에 자원을 흩뿌리지 않고, 책임 범위 안의 행동을 더 효율적으로 만드는 Commitment형 후보. 범용 오라가 아니라 선택한 책임의 경계를 선명하게 만드는 것이 목적이다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "effects": [],
+      "kind": "trait",
+      "name": "남겨 둔 예비",
+      "rarity": "UNCOMMON",
+      "text": "이번 순간의 공격·이동을 모두 쓰지 않고 여지를 남긴 플레이가 다음 위기대응 선택으로 이어지도록 하는 Tempo 후보. 추가 Activation이나 ReactionCapacity 생성은 전제하지 않는다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "effects": [],
+      "kind": "trait",
+      "name": "사람보다 자리",
+      "rarity": "COMMON",
+      "text": "특정 장수의 체력 회복보다 전열·거점·접촉 구조를 유지하는 선택을 우선하게 만드는 ANCHOR/HOLD형 후보. 고유특기 「사직의 마지막 선」의 붕괴 직전 예외와는 다른 평시 운용층을 목표로 한다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "cooldown": null,
+      "effects": [],
+      "kind": "tactic",
+      "name": "전열 교대",
+      "rarity": "UNCOMMON",
+      "text": "압박받는 아군과 아직 질서가 남은 아군 사이의 위치·책임을 바꾸어 한쪽의 붕괴를 늦추는 REPOSITION+COORDINATION 전법 후보. 순간 회복보다 누가 그 자리를 이어받을지를 고르는 행동으로 설계한다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "cooldown": null,
+      "effects": [],
+      "kind": "tactic",
+      "name": "퇴로를 먼저 잡다",
+      "rarity": "UNCOMMON",
+      "text": "아직 붕괴하지 않은 아군에게 미리 안전한 이탈 방향을 준비해 두는 PREPARATION+WITHDRAWAL 전법 후보. 「사직의 마지막 선」처럼 붕괴를 바꾸는 것이 아니라 실패하기 전 선택지를 준비한다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "cooldown": null,
+      "effects": [],
+      "kind": "tactic",
+      "name": "재정렬 명령",
+      "rarity": "COMMON",
+      "text": "이미 흐트러진 아군 하나를 골라 공격 대신 전열 기능 복구에 집중하는 STABILIZATION 전법 후보. 순욱 자신이 모든 전선을 고치는 광역 힐러가 아니라, 지금 복구할 곳 하나를 고르는 선택을 만든다."
+    },
+    {
+      "classTag": [
+        "TMP-CLASS-B01-016"
+      ],
+      "cooldown": null,
+      "effects": [],
+      "kind": "tactic",
+      "name": "한 곳을 비운다",
+      "rarity": "RARE",
+      "text": "두 곳을 동시에 살리려 하지 않고 한쪽 지원을 의도적으로 포기해 다른 한쪽의 방어·수습을 완성하는 COMMITMENT형 전법 후보. 강점과 비용을 같은 선택에서 발생시키는 것이 핵심이다."
+    }
+  ],
+  "faction": "F01",
+  "id": "G04",
+  "implemented": false,
+  "name": "순욱",
+  "ownerApproval": false,
+  "primaryClass": "진지사",
+  "role": "HOLD",
+  "runtimeApplied": false,
+  "secondaryClass": null,
+  "secondaryRole": "GOVERNANCE",
+  "source": {
+    "aptitudeDefaultMeaning": "COMMON_SERIALIZATION_DEFAULT_NOT_EVALUATION",
+    "aptitudeDefaultTroops": [
+      "BT03",
+      "BT04"
+    ],
+    "archetypeApprovalScope": "NOT_CLASS_OR_PACK_APPROVAL",
+    "archetypeCoreApprovalSourceLabel": "USER_CONFIRMED_GAME_CORE_PARENT_REPORTED",
+    "archetypeId": "ARC-CAN-003",
+    "classAssignmentStatus": "TRIAL",
+    "contract": "docs/design-data/officer-pack/EFFECT-OPS-v0.2.md",
+    "gameStatus": "TRIAL_ONLY_REVIEW_PENDING",
+    "manifest": "docs/work-integration/20260928/officer-production/G04/recovered-pack-supplements-v0.1-20261003/export-inputs.json",
+    "originals": {
+      "APTITUDE": "docs/work-integration/20260928/officer-production/G04/recovered-pack-supplements-v0.1-20261003/G04_PACK_APTITUDE_SUPPLEMENT_v0.1_REVIEW.md",
+      "ARCHETYPE": "docs/work-integration/20260928/officer-production/G04/recovered-pack-supplements-v0.1-20261003/G04_ARCHETYPE_PROFILE_v1.1_GAMEPLAY_FIRST.md",
+      "CLASS": "docs/work-integration/20260928/officer-production/G04/recovered-pack-supplements-v0.1-20261003/G04_PACK_CLASS_SUPPLEMENT_v0.1_REVIEW.md",
+      "DRAFT": "docs/work-integration/20260928/officer-production/G04/recovered-pack-supplements-v0.1-20261003/G04_PACK_DRAFT_SUPPLEMENT_v0.1_REVIEW.md",
+      "GAME": "docs/work-integration/20260926/g04-gameplay/game-profile-v0.1.json"
+    },
+    "primaryClassId": "TMP-CLASS-B01-016",
+    "rarityNamespace": "engine"
+  },
+  "stats": {
+    "감화": 93,
+    "무용": 69,
+    "정무": 98,
+    "지략": 98,
+    "지휘": 92
+  },
+  "status": "REVIEW_TRIAL_NOT_RUNTIME_APPLIED",
+  "style": "P05 지점 의존과 FIELD 설치/이전의 게임설계",
+  "sub": {
+    "결집": 96,
+    "군재": 97,
+    "기동": 76,
+    "기술": 66,
+    "되받기": 70,
+    "막아내기": 74,
+    "민정": 86,
+    "병참": 94,
+    "설득": 92,
+    "속이기": 78,
+    "수습": 96,
+    "응변": 95,
+    "인사": 99,
+    "전열 유지": 94,
+    "전환": 91,
+    "제도": 97,
+    "중재": 88,
+    "통찰": 99,
+    "포섭": 90,
+    "행정": 97,
+    "힘": 57
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+  },
+  "uniqueTrait": {
+    "effects": [],
+    "name": "사직의 마지막 선",
+    "text": "활성 「한 기둥을 세우다」 대상이 순욱 4hex 안에 있고 해당 Round의 일반 보전이 이미 소진된 상태에서 BROKEN 또는 ROUTING으로 전이하려 할 때 전투당 1회, 그 붕괴를 DISORDERED+SHAKEN으로 바꾸고 추가 Activation 없이 최대 2hex의 질서후퇴를 시도한다. 병력은 회복하지 않는다. 사전 합법경로가 없으면 미발동·사용권 미소모이며, 경로 commit 뒤 Reaction·사망·차단 등 실행 중 실패는 사용권을 소비하고 이미 받은 피해·상태·Reaction 소비를 되감지 않는다. RetreatZone 도달만으로 EXITED 되지 않으며, 대상의 남은 정상 Activation은 취소한다."
+  }
+}

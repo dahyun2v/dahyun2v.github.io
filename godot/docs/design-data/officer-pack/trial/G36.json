@@ -1,0 +1,117 @@
+{
+  "id": "G36",
+  "name": "순유",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 68,
+    "무용": 31,
+    "지략": 93,
+    "정무": 69,
+    "감화": 76
+  },
+  "sub": {
+    "전열 유지": 73,
+    "기동": 57,
+    "전환": 61,
+    "수습": 67,
+    "힘": 27,
+    "기술": 33,
+    "막아내기": 31,
+    "되받기": 30,
+    "군재": 95,
+    "응변": 91,
+    "속이기": 93,
+    "통찰": 94,
+    "행정": 71,
+    "병참": 61,
+    "인사": 83,
+    "제도": 62,
+    "민정": 55,
+    "설득": 89,
+    "포섭": 77,
+    "결집": 65,
+    "중재": 72
+  },
+  "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+  },
+  "role": "책사",
+  "style": "명사",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "공은 동료에게",
+    "text": "맞닿은 아군이 전열이 흐트러진 적을 공격하면 피해 +15%. 맞닿은 아군 장수의 경험치 +25% — 공은 실행한 사람에게 돌린다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지략",
+      "감화"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 15,
+        "duration": 0,
+        "condition": "TARGET_DISORDERED"
+      },
+      {
+        "op": "XP_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 25,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 피해 0 시험공격으로 적 Brace를 벗기고 실행자가 이어 치는 두 사람 연계(백마 분산·오소)를 '전열 판정 + 받는 피해 증가' 전법과 '흐트러진 적을 치는 인접 아군 강화·경험치' 특기로 나눠 살림. 두 사람 행동이 드는 비싼 연계라는 약점 유지.",
+    "formerName": "공은 실행자에게"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "적의 버팀 꺾기",
+      "text": "2칸 안 적 하나의 버팀을 꺾는다: 전열 판정(가중 25), 이번 턴 받는 피해 +15%. 순유는 공격하지 않는다 — 실행은 다른 아군이 한다.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": -25,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": -15,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "전제 하나를 꺾는다"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION",
+    "TARGET_DISORDERED"
+  ]
+}

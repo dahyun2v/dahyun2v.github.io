@@ -1,0 +1,3330 @@
+{
+  "version": "0.1",
+  "scope": "C327 art-derived UI colors for all 100 existing busts",
+  "officers": {
+    "G24": {
+      "name": "장료",
+      "primary": "#481818",
+      "secondary": "#D89878",
+      "description": "oxblood / copper",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G24.webp",
+        "sha256": "cdb5b51a012673ebad3cc0d00eb54a55f3f6b3f2da2c4617a46c1eec4878e803",
+        "primaryROI": [
+          0,
+          315,
+          85,
+          384
+        ],
+        "secondaryROI": [
+          90,
+          300,
+          180,
+          380
+        ],
+        "primaryWinningPixels": 350,
+        "secondaryWinningPixels": 397,
+        "method": "Opaque pixels (alpha>240), RGB buckets of 16 with midpoint; primary saturation>.20 and value .20-.70; G24 red>1.7*green; auxiliary value>.55. Modal bucket in each ROI. Coordinates refer to 384x384 original.",
+        "documentSearch": "INTERPRETATION / VISUAL_HANDOFF / design files under officer-production searched for palette, colors and hex. No settled personal palette found. G18 interpretation line 667 explicitly does not bind faction colors to personal costume."
+      },
+      "factionComparison": {
+        "faction": "F01",
+        "reference": "#b8433c",
+        "sources": [
+          "prototype/app/design/map-render.mjs:18",
+          "prototype/app/design/map-render.mjs:19",
+          "prototype/app/design/map-render.mjs:20"
+        ],
+        "adjustment": null,
+        "reason": "Keep measured darker costume shade, distinct from bright faction badge. Color applies only to ability interiors; faction emblems and borders stay separate."
+      },
+      "status": "art-derived-ui-sample; does not change officer or faction approval"
+    },
+    "G18": {
+      "name": "관우",
+      "primary": "#486858",
+      "secondary": "#C86848",
+      "description": "pine / copper",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G18.webp",
+        "sha256": "b9b50c4bf3551cce1f79ce7287befaff29c77615eee947386f53e04f680324b8",
+        "primaryROI": [
+          0,
+          300,
+          105,
+          384
+        ],
+        "secondaryROI": [
+          280,
+          320,
+          340,
+          384
+        ],
+        "primaryWinningPixels": 1037,
+        "secondaryWinningPixels": 139,
+        "method": "Opaque pixels (alpha>240), RGB buckets of 16 with midpoint; primary saturation>.20 and value .20-.70; G24 red>1.7*green; auxiliary value>.55. Modal bucket in each ROI. Coordinates refer to 384x384 original.",
+        "documentSearch": "INTERPRETATION / VISUAL_HANDOFF / design files under officer-production searched for palette, colors and hex. No settled personal palette found. G18 interpretation line 667 explicitly does not bind faction colors to personal costume."
+      },
+      "factionComparison": {
+        "faction": "F02",
+        "reference": "#4f8f73",
+        "sources": [
+          "prototype/app/design/map-render.mjs:18",
+          "prototype/app/design/map-render.mjs:19",
+          "prototype/app/design/map-render.mjs:20"
+        ],
+        "adjustment": null,
+        "reason": "Keep measured darker costume shade, distinct from bright faction badge. Color applies only to ability interiors; faction emblems and borders stay separate."
+      },
+      "status": "art-derived-ui-sample; does not change officer or faction approval"
+    },
+    "G04": {
+      "name": "순욱",
+      "primary": "#583828",
+      "secondary": "#D8C8B8",
+      "description": "brown / ivory",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G04.webp",
+        "sha256": "bec301bc7ed863f06cc9f0fecd4fb1d5ede718ff45fe18570a3f54f4e0740e0d",
+        "primaryROI": [
+          0,
+          295,
+          90,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          340,
+          60,
+          384
+        ],
+        "primaryWinningPixels": 967,
+        "secondaryWinningPixels": 212,
+        "method": "Opaque pixels (alpha>240), RGB buckets of 16 with midpoint; primary saturation>.20 and value .20-.70; G24 red>1.7*green; auxiliary value>.55. Modal bucket in each ROI. Coordinates refer to 384x384 original.",
+        "documentSearch": "INTERPRETATION / VISUAL_HANDOFF / design files under officer-production searched for palette, colors and hex. No settled personal palette found. G18 interpretation line 667 explicitly does not bind faction colors to personal costume."
+      },
+      "factionComparison": {
+        "faction": "F01",
+        "reference": "#b8433c",
+        "sources": [
+          "prototype/app/design/map-render.mjs:18",
+          "prototype/app/design/map-render.mjs:19",
+          "prototype/app/design/map-render.mjs:20"
+        ],
+        "adjustment": null,
+        "reason": "Keep measured darker costume shade, distinct from bright faction badge. Color applies only to ability interiors; faction emblems and borders stay separate."
+      },
+      "status": "art-derived-ui-sample; does not change officer or faction approval"
+    },
+    "G27": {
+      "name": "주유",
+      "primary": "#283848",
+      "secondary": "#987858",
+      "description": "slate / antique gold",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G27.webp",
+        "sha256": "70cf595a29ba6dbb51ad4d6a0066549b1841ac2ede9f4f7a67061e01576276c2",
+        "primaryROI": [
+          190,
+          310,
+          290,
+          384
+        ],
+        "secondaryROI": [
+          20,
+          0,
+          85,
+          100
+        ],
+        "primaryWinningPixels": 623,
+        "secondaryWinningPixels": 57,
+        "method": "Opaque pixels (alpha>240), RGB buckets of 16 with midpoint; primary saturation>.20 and value .20-.70; G24 red>1.7*green; auxiliary value>.55. Modal bucket in each ROI. Coordinates refer to 384x384 original.",
+        "documentSearch": "INTERPRETATION / VISUAL_HANDOFF / design files under officer-production searched for palette, colors and hex. No settled personal palette found. G18 interpretation line 667 explicitly does not bind faction colors to personal costume."
+      },
+      "factionComparison": {
+        "faction": "F03",
+        "reference": "#33709f",
+        "sources": [
+          "prototype/app/design/map-render.mjs:18",
+          "prototype/app/design/map-render.mjs:19",
+          "prototype/app/design/map-render.mjs:20"
+        ],
+        "adjustment": null,
+        "reason": "Keep measured darker costume shade, distinct from bright faction badge. Color applies only to ability interiors; faction emblems and borders stay separate."
+      },
+      "status": "art-derived-ui-sample; does not change officer or faction approval"
+    },
+    "G01": {
+      "name": "여포",
+      "primary": "#382828",
+      "secondary": "#E8B8A8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G01.webp",
+        "sha256": "607bcf57c52e52abf42f79e05b110ab201becb7507fb0f7641a4c9e32fe01da8",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1797,
+        "secondaryWinningPixels": 1005,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G02": {
+      "name": "조운",
+      "primary": "#383828",
+      "secondary": "#B88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G02.webp",
+        "sha256": "cab6ced20d790bef924eeaffd072c4fa7622eff966660626d9ddcf5c2f006077",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1550,
+        "secondaryWinningPixels": 1271,
+        "measuredPrimary": "#383828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G03": {
+      "name": "제갈량",
+      "primary": "#986858",
+      "secondary": "#E8B8A8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G03.webp",
+        "sha256": "410491fb582fb7ccd6006d44e3eba9c9a3a91ee57fa64f341bc8db05a8186070",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 776,
+        "secondaryWinningPixels": 2581,
+        "measuredPrimary": "#986858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G05": {
+      "name": "유비",
+      "primary": "#382818",
+      "secondary": "#D89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G05.webp",
+        "sha256": "85b5190440550ea2293e5b76d5a39296f9708dd773d5424bbd64f5d1ff9d66b4",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1303,
+        "secondaryWinningPixels": 838,
+        "measuredPrimary": "#382818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G06": {
+      "name": "황충",
+      "primary": "#482818",
+      "secondary": "#E8C8B8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G06.webp",
+        "sha256": "9a22f2ff4b9424f6880071154278da02012742c67d2caeebe428ca1d76462751",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1588,
+        "secondaryWinningPixels": 1451,
+        "measuredPrimary": "#482818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G07": {
+      "name": "조조",
+      "primary": "#480808",
+      "secondary": "#E8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G07.webp",
+        "sha256": "887a875c280ba3ce534b4437fc82387012909bd3f3c0766849d742eee36ea225",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2073,
+        "secondaryWinningPixels": 620,
+        "measuredPrimary": "#480808",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": "F01",
+        "reference": "#b8433c",
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G08": {
+      "name": "손권",
+      "primary": "#482818",
+      "secondary": "#F8D8B8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G08.webp",
+        "sha256": "e828155a7210f2f06004210dc2414ac64ca54cf830b25b0ac468b83bcdba2af3",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1218,
+        "secondaryWinningPixels": 12223,
+        "measuredPrimary": "#482818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G09": {
+      "name": "원소",
+      "primary": "#A86848",
+      "secondary": "#E8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G09.webp",
+        "sha256": "f9a2bc37e54ec5261d32b9fa8ef5b2e09f0acf90fa772e4309fd2592180cdea1",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 809,
+        "secondaryWinningPixels": 11341,
+        "measuredPrimary": "#A86848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G10": {
+      "name": "원술",
+      "primary": "#680808",
+      "secondary": "#F8C8A8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G10.webp",
+        "sha256": "63dba544c6a557ecee433c63ff6c9c623bd50c12e3ea3d7ed6be5f9aff49f851",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 3261,
+        "secondaryWinningPixels": 1311,
+        "measuredPrimary": "#680808",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G100": {
+      "name": "유훈",
+      "primary": "#884828",
+      "secondary": "#D88858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G100.webp",
+        "sha256": "474568dcd5ea562f07bc837503ad23a0ecc023948f8d811f3abbd338443207b4",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 660,
+        "secondaryWinningPixels": 1664,
+        "measuredPrimary": "#884828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G11": {
+      "name": "동탁",
+      "primary": "#382828",
+      "secondary": "#F8C8B8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G11.webp",
+        "sha256": "3d41b93d20b9408e2b6b0368d1934fcc3d9d56505731b7e1d403298d77f449ac",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 705,
+        "secondaryWinningPixels": 640,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G12": {
+      "name": "마등",
+      "primary": "#381808",
+      "secondary": "#D87848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G12.webp",
+        "sha256": "4c0cc0632087a8ad60ac0df930a5d21faa65aeeb0a95a15c932a03bbff200bfb",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1257,
+        "secondaryWinningPixels": 1153,
+        "measuredPrimary": "#381808",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G13": {
+      "name": "마초",
+      "primary": "#784828",
+      "secondary": "#D88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G13.webp",
+        "sha256": "7ed7508869dc29b5082fd1076cc79c139606f7adc150109d5f6d9869db12b47b",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1212,
+        "secondaryWinningPixels": 1868,
+        "measuredPrimary": "#784828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G14": {
+      "name": "공손찬",
+      "primary": "#785848",
+      "secondary": "#B8A8A8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G14.webp",
+        "sha256": "0a68685745de773998f8dfea7f36fb7e6c2cc280975863b339d33ca8873039d8",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 754,
+        "secondaryWinningPixels": 1979,
+        "measuredPrimary": "#785848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G15": {
+      "name": "유장",
+      "primary": "#985838",
+      "secondary": "#E8A878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G15.webp",
+        "sha256": "7f4d676a59d46505f68dca00afa3cb932fd1860fbaa922b804f4532ec73fafb1",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1107,
+        "secondaryWinningPixels": 3589,
+        "measuredPrimary": "#985838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G16": {
+      "name": "장로",
+      "primary": "#985838",
+      "secondary": "#985838",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G16.webp",
+        "sha256": "e5db97c8fe91999255e01cdc927f244f16afcc92ded70551fb4791e1f90f3957",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 834,
+        "secondaryWinningPixels": 834,
+        "measuredPrimary": "#985838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G17": {
+      "name": "맹획",
+      "primary": "#582818",
+      "secondary": "#985838",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G17.webp",
+        "sha256": "1dfaeeddad8f2efc9fe0268243868cda0e5983c1c6b386a95c36f48a88324dbc",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1854,
+        "secondaryWinningPixels": 962,
+        "measuredPrimary": "#582818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G19": {
+      "name": "장비",
+      "primary": "#381808",
+      "secondary": "#B86848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G19.webp",
+        "sha256": "9d3faec3a0ad759c77abed0b78055b45f8712ddabb8cc45f5bbfb542a495d94b",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1243,
+        "secondaryWinningPixels": 935,
+        "measuredPrimary": "#381808",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G20": {
+      "name": "손책",
+      "primary": "#381818",
+      "secondary": "#E8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G20.webp",
+        "sha256": "3f9f8828e467d69144ead796b52c84d788ee42ae0d775438917233192150e477",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 937,
+        "secondaryWinningPixels": 2392,
+        "measuredPrimary": "#381818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G21": {
+      "name": "방통",
+      "primary": "#383828",
+      "secondary": "#C8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G21.webp",
+        "sha256": "91eb97065970f0333865bcbca26d66a24d3ee22b1b88d92808de83c8b8471b26",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2041,
+        "secondaryWinningPixels": 1049,
+        "measuredPrimary": "#383828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G22": {
+      "name": "곽가",
+      "primary": "#481818",
+      "secondary": "#F8D8C8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G22.webp",
+        "sha256": "be0db61af4e331c721e6ab14cb584614d1b3513591733e751709313537e40d56",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 774,
+        "secondaryWinningPixels": 2509,
+        "measuredPrimary": "#481818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G23": {
+      "name": "사마의",
+      "primary": "#382828",
+      "secondary": "#B87858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G23.webp",
+        "sha256": "0dfa6e4a75efc959e60d74ca895838542563be1f75ef6f6b13b45591d5bdf2fc",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1482,
+        "secondaryWinningPixels": 357,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G25": {
+      "name": "허저",
+      "primary": "#683828",
+      "secondary": "#B87858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G25.webp",
+        "sha256": "cdf5f513facb83faa34b30cac594ac92deb56917a6b525ac87fc8b87bc59a305",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 3732,
+        "secondaryWinningPixels": 1998,
+        "measuredPrimary": "#683828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": "F01",
+        "reference": "#b8433c",
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G26": {
+      "name": "초선",
+      "primary": "#382828",
+      "secondary": "#E8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G26.webp",
+        "sha256": "862097ad480319a5309242155d80e1b72b4aed9cf68bbf9f3b29811a46db28da",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1570,
+        "secondaryWinningPixels": 2863,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G28": {
+      "name": "육손",
+      "primary": "#282838",
+      "secondary": "#F8C8A8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G28.webp",
+        "sha256": "6ba68836190d04b507baa2ebb733e01340456db15111654f5804827790c895fd",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 892,
+        "secondaryWinningPixels": 3406,
+        "measuredPrimary": "#282838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G29": {
+      "name": "감녕",
+      "primary": "#A86848",
+      "secondary": "#A86848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G29.webp",
+        "sha256": "ad01b29ceaec5b8b11c15e7c832a3864f2ace0316b5dbb667b0730f02213186c",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2028,
+        "secondaryWinningPixels": 2028,
+        "measuredPrimary": "#A86848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G30": {
+      "name": "태사자",
+      "primary": "#383828",
+      "secondary": "#A86848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G30.webp",
+        "sha256": "ada6c1c850e47dfdecc38ac3f7c1bd3f5e3f6563b57508910e65e2c314e39424",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1431,
+        "secondaryWinningPixels": 814,
+        "measuredPrimary": "#383828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G31": {
+      "name": "진궁",
+      "primary": "#885848",
+      "secondary": "#E8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G31.webp",
+        "sha256": "df3ee7b2f544b34bd3d1ee2f7b632400037a6c0673e3bbfaeccff301b80cbe63",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1358,
+        "secondaryWinningPixels": 1595,
+        "measuredPrimary": "#885848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G32": {
+      "name": "고순",
+      "primary": "#683828",
+      "secondary": "#C88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G32.webp",
+        "sha256": "9ee0e3c138b2e1d5e5948d4030258575ab42de0b80d6b55621560c36bdfecdcf",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1809,
+        "secondaryWinningPixels": 1452,
+        "measuredPrimary": "#683828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G33": {
+      "name": "하후돈",
+      "primary": "#484858",
+      "secondary": "#E8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G33.webp",
+        "sha256": "573bf8c17a348fb7598cb43636c4a72fbb578f3ced439ae6a0d33c8c838d1428",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 916,
+        "secondaryWinningPixels": 667,
+        "measuredPrimary": "#484858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": "F01",
+        "reference": "#b8433c",
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G34": {
+      "name": "조인",
+      "primary": "#784828",
+      "secondary": "#C88858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G34.webp",
+        "sha256": "8797369fafe1e843ff090b708551fd31b14422c51fe48e30ae02ca4c659aad98",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1193,
+        "secondaryWinningPixels": 640,
+        "measuredPrimary": "#784828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": "F01",
+        "reference": "#b8433c",
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G35": {
+      "name": "가후",
+      "primary": "#A87858",
+      "secondary": "#A87858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G35.webp",
+        "sha256": "8fbe7b489ecad37fc85b96a7de855b8193a40d53515474a13bf885b3aa787aec",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1407,
+        "secondaryWinningPixels": 1407,
+        "measuredPrimary": "#A87858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G36": {
+      "name": "순유",
+      "primary": "#382828",
+      "secondary": "#F8A878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G36.webp",
+        "sha256": "27fdacfe4297d41cb3d5b498a94b591d79787f37a90cb6beaf87829a7def689c",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1233,
+        "secondaryWinningPixels": 696,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G37": {
+      "name": "장합",
+      "primary": "#382828",
+      "secondary": "#C89888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G37.webp",
+        "sha256": "6aed39870a02a15162892a66f6e5afa65e7ad683fc9d5ca1057372ba7a82544b",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1551,
+        "secondaryWinningPixels": 1176,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G38": {
+      "name": "전풍",
+      "primary": "#382818",
+      "secondary": "#C88858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G38.webp",
+        "sha256": "0055232fd3c60d0f4da304cdc518647ca28cd9374e8e0f3321100a2d1b32f42b",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2304,
+        "secondaryWinningPixels": 1022,
+        "measuredPrimary": "#382818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G39": {
+      "name": "저수",
+      "primary": "#986848",
+      "secondary": "#E8A878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G39.webp",
+        "sha256": "4f8d11ec2d542f06e3d0a44bb21798fc9f5bd275aa088bcee68cbe5694ea59a4",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1260,
+        "secondaryWinningPixels": 1903,
+        "measuredPrimary": "#986848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G40": {
+      "name": "여몽",
+      "primary": "#885838",
+      "secondary": "#D89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G40.webp",
+        "sha256": "a264740a045a7b41b9ab12f31a15cff042b19d3e8fe963e1cedaa2829500339c",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 567,
+        "secondaryWinningPixels": 1233,
+        "measuredPrimary": "#885838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G41": {
+      "name": "노숙",
+      "primary": "#081848",
+      "secondary": "#D88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G41.webp",
+        "sha256": "3492490feb22b4a948e1d18f05c03128014ba67e052db779e63029a2967b53e5",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2467,
+        "secondaryWinningPixels": 977,
+        "measuredPrimary": "#081848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G42": {
+      "name": "위연",
+      "primary": "#381808",
+      "secondary": "#F8D8C8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G42.webp",
+        "sha256": "828791875f6618963ad4b46b81e1825eb0ae6deaffbabe2cf8ab2e866b58e733",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1490,
+        "secondaryWinningPixels": 602,
+        "measuredPrimary": "#381808",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G43": {
+      "name": "법정",
+      "primary": "#A87858",
+      "secondary": "#D8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G43.webp",
+        "sha256": "e01c79b644b8d8706ba01074f62eeada27ea39cf943c94965b191966daab2ee1",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 715,
+        "secondaryWinningPixels": 1738,
+        "measuredPrimary": "#A87858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G44": {
+      "name": "한수",
+      "primary": "#382818",
+      "secondary": "#D8C8B8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G44.webp",
+        "sha256": "786ce57e085a26471ea7c6898bfce773a75372d587d000c18b2c0bd82ba4865c",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1145,
+        "secondaryWinningPixels": 767,
+        "measuredPrimary": "#382818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G45": {
+      "name": "방덕",
+      "primary": "#482818",
+      "secondary": "#986848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G45.webp",
+        "sha256": "a26468fca0a43cd427a7ad851cbdfd5bd214f86a57ba0c689b9d5bfb54205756",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1532,
+        "secondaryWinningPixels": 1311,
+        "measuredPrimary": "#482818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G46": {
+      "name": "이각",
+      "primary": "#382818",
+      "secondary": "#A86848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G46.webp",
+        "sha256": "f78d01774ccf23c31dd2ef33ca4b5fa0e88045c100a182d9c5ec1b24f49ce9ff",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1283,
+        "secondaryWinningPixels": 941,
+        "measuredPrimary": "#382818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G47": {
+      "name": "장임",
+      "primary": "#584838",
+      "secondary": "#D89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G47.webp",
+        "sha256": "a9e958310c07e742a51c915a7a258f301237e99c1626fe9cb6426bb2ac1f8549",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 677,
+        "secondaryWinningPixels": 570,
+        "measuredPrimary": "#584838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G48": {
+      "name": "염포",
+      "primary": "#A86848",
+      "secondary": "#A86848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G48.webp",
+        "sha256": "ec12befe68417fc0fa88e1191b7421df0a5c3d02c16059bd8a8debdc51bd3e28",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2102,
+        "secondaryWinningPixels": 2102,
+        "measuredPrimary": "#A86848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G49": {
+      "name": "기령",
+      "primary": "#481818",
+      "secondary": "#F8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G49.webp",
+        "sha256": "4b38d7e28684881ebda6cd093102b5c77b3ce5f982e372fcd1a5d40769408c1c",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2006,
+        "secondaryWinningPixels": 1344,
+        "measuredPrimary": "#481818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G50": {
+      "name": "황개",
+      "primary": "#382828",
+      "secondary": "#B87858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G50.webp",
+        "sha256": "136ee4e22114c796882ca15e7ac303a4c175b343c9de23c91f74fe2ffeba2e82",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 765,
+        "secondaryWinningPixels": 989,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G51": {
+      "name": "하후연",
+      "primary": "#784838",
+      "secondary": "#D89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G51.webp",
+        "sha256": "58f2b7ba64839288413863ddb475f07033506f360204720771993508ac4d51a2",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 922,
+        "secondaryWinningPixels": 2620,
+        "measuredPrimary": "#784838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G52": {
+      "name": "서황",
+      "primary": "#382818",
+      "secondary": "#F8F8E8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G52.webp",
+        "sha256": "99c0f0b0fce002db7d1c17d6cecd2913e98c53ae3ef568322f310c4f5bca012e",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1537,
+        "secondaryWinningPixels": 1660,
+        "measuredPrimary": "#382818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G53": {
+      "name": "우금",
+      "primary": "#986858",
+      "secondary": "#E8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G53.webp",
+        "sha256": "fb231b0b09f2598e658f03ef410c3e2d312d20c894c9adee0dfdbec26785c43f",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 700,
+        "secondaryWinningPixels": 1317,
+        "measuredPrimary": "#986858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G54": {
+      "name": "악진",
+      "primary": "#985838",
+      "secondary": "#985838",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G54.webp",
+        "sha256": "19dc4cee22009cd1f44ae4e3a926949906995c83c40c4b769d43022f339a9be6",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1390,
+        "secondaryWinningPixels": 1390,
+        "measuredPrimary": "#985838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G55": {
+      "name": "이전",
+      "primary": "#A88878",
+      "secondary": "#E8C8B8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G55.webp",
+        "sha256": "ccd24f09fe6077716f9d183b5d1dd287a022da09c55a282351e73c77a28dcd59",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 567,
+        "secondaryWinningPixels": 2668,
+        "measuredPrimary": "#A88878",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G56": {
+      "name": "전위",
+      "primary": "#583828",
+      "secondary": "#B87858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G56.webp",
+        "sha256": "8a75b4eff1cd85a6b4262bde95b1b3b3fa43c18c8e0b4d683fe7a493eed02a52",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2160,
+        "secondaryWinningPixels": 1625,
+        "measuredPrimary": "#583828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G57": {
+      "name": "정욱",
+      "primary": "#483838",
+      "secondary": "#988878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G57.webp",
+        "sha256": "0379edbc1c80c727c2e7ab80c16358773603b28f4502e478141d31b1e0564326",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 825,
+        "secondaryWinningPixels": 679,
+        "measuredPrimary": "#483838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G58": {
+      "name": "만총",
+      "primary": "#583828",
+      "secondary": "#C89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G58.webp",
+        "sha256": "faac6598a92dd4949fa977134fb2214213eb84ff9d19a44e2b1a76ba6b1a3caa",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 602,
+        "secondaryWinningPixels": 1272,
+        "measuredPrimary": "#583828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G59": {
+      "name": "강유",
+      "primary": "#985838",
+      "secondary": "#E8A878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G59.webp",
+        "sha256": "0e2110a062f63b9600f3da0052e1c5708c169a479b46c9dbe62f67ca56ee80a9",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1409,
+        "secondaryWinningPixels": 2113,
+        "measuredPrimary": "#985838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G60": {
+      "name": "마량",
+      "primary": "#484838",
+      "secondary": "#D8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G60.webp",
+        "sha256": "7d85ce320e54c25597de74ff4a0c75526ee5513e8ecf5386b0733e445cdda967",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 848,
+        "secondaryWinningPixels": 2179,
+        "measuredPrimary": "#484838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G61": {
+      "name": "마속",
+      "primary": "#885838",
+      "secondary": "#F8B888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G61.webp",
+        "sha256": "7314a61add3d6ac60611652d47bf59178dd7a56f56b33010e5dc8e555bfe9a07",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 592,
+        "secondaryWinningPixels": 2468,
+        "measuredPrimary": "#885838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G62": {
+      "name": "장완",
+      "primary": "#887868",
+      "secondary": "#F8E8C8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G62.webp",
+        "sha256": "2bf96faf30eea888b9b5f93ed7145593896cb3886d98ac7a4ccdbcb7f477daea",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 601,
+        "secondaryWinningPixels": 619,
+        "measuredPrimary": "#887868",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G63": {
+      "name": "비의",
+      "primary": "#986848",
+      "secondary": "#986848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G63.webp",
+        "sha256": "197aa15f715a918ca6d49895ed581258f4638fe0aeaaddf71a108c1d8f8679b2",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 2621,
+        "secondaryWinningPixels": 2621,
+        "measuredPrimary": "#986848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G64": {
+      "name": "이엄",
+      "primary": "#684838",
+      "secondary": "#D8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G64.webp",
+        "sha256": "195c1f95064b6537f511f882eddbc50ef40f9730b9159b5f6578af511c41e32b",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 769,
+        "secondaryWinningPixels": 2292,
+        "measuredPrimary": "#684838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G65": {
+      "name": "미축",
+      "primary": "#483828",
+      "secondary": "#F8E8D8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G65.webp",
+        "sha256": "82bd7ca5393984aed3cd118b0fc704f12aa2bb46412081452edfa210dbb2a253",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 898,
+        "secondaryWinningPixels": 1551,
+        "measuredPrimary": "#483828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G66": {
+      "name": "손견",
+      "primary": "#885838",
+      "secondary": "#E8A878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G66.webp",
+        "sha256": "95927a9ac8baeb41f4de2470003877bae3faaf340ea41038f1fa4df41641b5f6",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1221,
+        "secondaryWinningPixels": 3718,
+        "measuredPrimary": "#885838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G67": {
+      "name": "장소",
+      "primary": "#384858",
+      "secondary": "#B89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G67.webp",
+        "sha256": "ae242bd67eaa7511a59269881eab516e1c4a7c0fbe02ef0d6810475dfdf2c1e0",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1719,
+        "secondaryWinningPixels": 1166,
+        "measuredPrimary": "#384858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G68": {
+      "name": "장굉",
+      "primary": "#A88868",
+      "secondary": "#D8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G68.webp",
+        "sha256": "a66fefbecc531ce377c7d5ce946856a6044a595125782e999c71fa9eb37d47e5",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 934,
+        "secondaryWinningPixels": 1755,
+        "measuredPrimary": "#A88868",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G69": {
+      "name": "정보",
+      "primary": "#584838",
+      "secondary": "#C89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G69.webp",
+        "sha256": "f93800f4540cceababf468f0a8d9cbd4bab85f5fc6a621b7fef0d5b32a7713fa",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1101,
+        "secondaryWinningPixels": 1260,
+        "measuredPrimary": "#584838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G70": {
+      "name": "한당",
+      "primary": "#A86848",
+      "secondary": "#F8E8E8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G70.webp",
+        "sha256": "66a90fb214f054c3948ce000aaade624a8750d22f59b118c5d56f2db8a91cb77",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1225,
+        "secondaryWinningPixels": 2000,
+        "measuredPrimary": "#A86848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G71": {
+      "name": "주태",
+      "primary": "#784828",
+      "secondary": "#D89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G71.webp",
+        "sha256": "80ee0635d207a34a35ec507009eada78360f97e2ef8537848975eb2a5d94a317",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 872,
+        "secondaryWinningPixels": 4494,
+        "measuredPrimary": "#784828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G72": {
+      "name": "능통",
+      "primary": "#986848",
+      "secondary": "#D89868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G72.webp",
+        "sha256": "1f41abafd7916041482cf488036da35dd28e3943a9102ba17b0bcc85b4abd797",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 828,
+        "secondaryWinningPixels": 1347,
+        "measuredPrimary": "#986848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G73": {
+      "name": "안량",
+      "primary": "#684838",
+      "secondary": "#987858",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G73.webp",
+        "sha256": "2354cf559088a31e27999949b9c4f54883e76e15fd080dfa733cbcdb93eef2b2",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1319,
+        "secondaryWinningPixels": 393,
+        "measuredPrimary": "#684838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G74": {
+      "name": "문추",
+      "primary": "#985838",
+      "secondary": "#E8A878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G74.webp",
+        "sha256": "51c72af4b0216b00f42c86a14c0c405af8cf2455388a8cdbd04f2392fa711ee8",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 738,
+        "secondaryWinningPixels": 935,
+        "measuredPrimary": "#985838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G75": {
+      "name": "국의",
+      "primary": "#985838",
+      "secondary": "#985838",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G75.webp",
+        "sha256": "ae17a0d7ae2098d5ac43e759c28a91cc247008d742e58dfaeeece410ac9f92b8",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1133,
+        "secondaryWinningPixels": 1133,
+        "measuredPrimary": "#985838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G76": {
+      "name": "허유",
+      "primary": "#885838",
+      "secondary": "#D8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G76.webp",
+        "sha256": "135c7ecdb9bf6078b57f90296a053be87a72ec99da29f9ec394556d68d1db942",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 880,
+        "secondaryWinningPixels": 2035,
+        "measuredPrimary": "#885838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G77": {
+      "name": "진등",
+      "primary": "#685848",
+      "secondary": "#C88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G77.webp",
+        "sha256": "080c01fd6ee930beaa7cf9638951a41a623bfdc47dce1c546d7c2cfa9b5d06be",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1461,
+        "secondaryWinningPixels": 1359,
+        "measuredPrimary": "#685848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G78": {
+      "name": "장패",
+      "primary": "#483838",
+      "secondary": "#C88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G78.webp",
+        "sha256": "726801cf0fde5811eae99738627f66e25943e2fbc43b5925e6eed45adf1c08ef",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1972,
+        "secondaryWinningPixels": 1258,
+        "measuredPrimary": "#483838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G79": {
+      "name": "후성",
+      "primary": "#685848",
+      "secondary": "#A86848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G79.webp",
+        "sha256": "c215813c83f8972b634728c502cd4f7d3390761bf47d028bee99bcd0ed83e94c",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1466,
+        "secondaryWinningPixels": 844,
+        "measuredPrimary": "#685848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G80": {
+      "name": "마대",
+      "primary": "#382818",
+      "secondary": "#D89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G80.webp",
+        "sha256": "71a914a8a58a47e3ecfe28bedd5c2cea8149d3cce7ba9e1eaf92727a5b688eec",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1631,
+        "secondaryWinningPixels": 1072,
+        "measuredPrimary": "#382818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G81": {
+      "name": "성공영",
+      "primary": "#584838",
+      "secondary": "#D8A888",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G81.webp",
+        "sha256": "995e3cf837ae8a198f1b167ec9ad51b6523f11d25f6002d98427cfe4b2981009",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1065,
+        "secondaryWinningPixels": 1515,
+        "measuredPrimary": "#584838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G82": {
+      "name": "염행",
+      "primary": "#382828",
+      "secondary": "#D89878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G82.webp",
+        "sha256": "cbe9b8ebcdc7e9c4199e483b3f7a4e35766b0b1b878b300373320c9e3c1f45e4",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 789,
+        "secondaryWinningPixels": 2983,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G83": {
+      "name": "곽사",
+      "primary": "#483828",
+      "secondary": "#E8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G83.webp",
+        "sha256": "bda1c1fa00d4887027303ad000f23f4e8a3d58e65725217ea0ed8744eb6cc51a",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1557,
+        "secondaryWinningPixels": 658,
+        "measuredPrimary": "#483828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G84": {
+      "name": "이유",
+      "primary": "#583828",
+      "secondary": "#D8D8D8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G84.webp",
+        "sha256": "d9d0481db509355519be9e2fde02a8e9c16adb589982ef8b22a76c077f2f3104",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 609,
+        "secondaryWinningPixels": 1268,
+        "measuredPrimary": "#583828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G85": {
+      "name": "서영",
+      "primary": "#483838",
+      "secondary": "#E8D8C8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G85.webp",
+        "sha256": "5aaa7ba7f09a708f9add1239b79e38a81c8eaf54da03109bbacd0dcfd7a9ebc9",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 678,
+        "secondaryWinningPixels": 354,
+        "measuredPrimary": "#483838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G86": {
+      "name": "장송",
+      "primary": "#382828",
+      "secondary": "#C88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G86.webp",
+        "sha256": "44c003e8355efc26e30b5ef5f93757016f4023983ee8c2866cb3d798f3abb0a3",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1498,
+        "secondaryWinningPixels": 1878,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G87": {
+      "name": "황권",
+      "primary": "#887868",
+      "secondary": "#988878",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G87.webp",
+        "sha256": "c1686a69084a1e14f10ff057180815164e5188d346c311ac32811f40be332c3e",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 731,
+        "secondaryWinningPixels": 832,
+        "measuredPrimary": "#887868",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G88": {
+      "name": "엄안",
+      "primary": "#482818",
+      "secondary": "#E8D8C8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G88.webp",
+        "sha256": "03296f1ac94359e5e519168297ce34e71113f488a53e65600b12df7e571ade7d",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1506,
+        "secondaryWinningPixels": 1294,
+        "measuredPrimary": "#482818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G89": {
+      "name": "유파",
+      "primary": "#382818",
+      "secondary": "#E8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G89.webp",
+        "sha256": "84fae40fe56ccc82cfe4474f476d4c4fffca54391032ecb24a50d94a4a3b1137",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 491,
+        "secondaryWinningPixels": 1230,
+        "measuredPrimary": "#382818",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G90": {
+      "name": "장위",
+      "primary": "#784838",
+      "secondary": "#E8C8B8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G90.webp",
+        "sha256": "69837347a0d4c4c7a042cc443ec6745cb014b667f62b595ee9c727237dc1840d",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 788,
+        "secondaryWinningPixels": 1224,
+        "measuredPrimary": "#784838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G91": {
+      "name": "양앙",
+      "primary": "#382828",
+      "secondary": "#D8A898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G91.webp",
+        "sha256": "c37c58a52971a36c71d55e10dce2f70cf5634ee05c28e7da21e88cbbe408e02a",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 761,
+        "secondaryWinningPixels": 981,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G92": {
+      "name": "양송",
+      "primary": "#887868",
+      "secondary": "#A8A8A8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G92.webp",
+        "sha256": "816455a278c820d3d90496ed6436f9b98026b3ef3ba4130a6bceefb70c715de4",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1278,
+        "secondaryWinningPixels": 1173,
+        "measuredPrimary": "#887868",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G93": {
+      "name": "축융부인",
+      "primary": "#985838",
+      "secondary": "#E89868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G93.webp",
+        "sha256": "e859319bb8dc0829a7e52204c5305ed5874002e1b91e3326a0c2a9645dab376f",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 538,
+        "secondaryWinningPixels": 1468,
+        "measuredPrimary": "#985838",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G94": {
+      "name": "옹개",
+      "primary": "#382828",
+      "secondary": "#A86848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G94.webp",
+        "sha256": "a2bbbcf8bdfa6255286d365ff5f8de66814820d7cdb4e6f7a05bb4c5f5e9dba6",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1392,
+        "secondaryWinningPixels": 1268,
+        "measuredPrimary": "#382828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G95": {
+      "name": "고정",
+      "primary": "#A86848",
+      "secondary": "#C88868",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G95.webp",
+        "sha256": "659f5ca847b1a74e40738dc0245861bb7d5fc9145ffc73391a47b38adda96c97",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 630,
+        "secondaryWinningPixels": 781,
+        "measuredPrimary": "#A86848",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G96": {
+      "name": "전예",
+      "primary": "#786858",
+      "secondary": "#E8D8C8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G96.webp",
+        "sha256": "71ea32c65b02e8f5caf111a5b80e5367200b5730b610237113d7c50ed9a4a5a1",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 674,
+        "secondaryWinningPixels": 1599,
+        "measuredPrimary": "#786858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G97": {
+      "name": "관정",
+      "primary": "#886858",
+      "secondary": "#E8B898",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G97.webp",
+        "sha256": "5194f59cf6ea0f3cf2dbd7115f27502aa77f19b74d5ebf7a508540a0fccc4272",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 660,
+        "secondaryWinningPixels": 1517,
+        "measuredPrimary": "#886858",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G98": {
+      "name": "염상",
+      "primary": "#383828",
+      "secondary": "#F8F8E8",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G98.webp",
+        "sha256": "e147b4c7c335dd1a0292f1a756e299879f60e22c3841f62fc1328981f5d412fd",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 775,
+        "secondaryWinningPixels": 1698,
+        "measuredPrimary": "#383828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    },
+    "G99": {
+      "name": "장훈",
+      "primary": "#483828",
+      "secondary": "#986848",
+      "provenance": {
+        "kind": "원화 측정",
+        "file": "prototype/assets/officer-art/bust/G99.webp",
+        "sha256": "d68e4207527034a62bb458d05f48cf801d564aaf7a1ae12be6accf3d0b6b6f98",
+        "primaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "secondaryROI": [
+          0,
+          261,
+          384,
+          384
+        ],
+        "primaryWinningPixels": 1145,
+        "secondaryWinningPixels": 861,
+        "measuredPrimary": "#483828",
+        "method": "Lower 32% costume ROI; alpha>240; primary HSV saturation>.16, value .18-.72; RGB 16 midpoint modal bucket. Achromatic fallback: visible midtone mode. Secondary value>.55."
+      },
+      "factionComparison": {
+        "faction": null,
+        "reference": null,
+        "adjustment": null,
+        "reason": "Tint only icon interiors; faction badges unchanged."
+      },
+      "status": "art-derived-ui-sample; does not change approval"
+    }
+  }
+}

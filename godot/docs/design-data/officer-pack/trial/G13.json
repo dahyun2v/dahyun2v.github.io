@@ -1,0 +1,127 @@
+{
+  "id": "G13",
+  "name": "마초",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "nanzheng"
+  },
+  "stats": {
+    "지휘": 84,
+    "무용": 91,
+    "지략": 68,
+    "정무": 45,
+    "감화": 73
+  },
+  "sub": {
+    "전열 유지": 78,
+    "기동": 92,
+    "전환": 79,
+    "수습": 81,
+    "힘": 92,
+    "기술": 94,
+    "막아내기": 81,
+    "되받기": 84,
+    "군재": 73,
+    "응변": 72,
+    "속이기": 55,
+    "통찰": 59,
+    "행정": 46,
+    "병참": 57,
+    "인사": 58,
+    "제도": 43,
+    "민정": 31,
+    "설득": 62,
+    "포섭": 84,
+    "결집": 82,
+    "중재": 39
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "선봉의 첫 일격",
+    "text": "이번 차례 첫 공격 피해 +25%, 그 대상은 사기 판정(가중 20). 아군을 강화하지는 않는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "기병"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "BATTLE_START",
+        "target": "SELF",
+        "value": 25,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "BATTLE_START",
+        "target": "TARGET",
+        "value": -20,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 전법은 원 '측면 진입 직접공격 ×1.20'을 FLANK 추가 피해로 살리고 몸을 거는 대가를 붙임. 특기의 '후방 합류 시 보정'은 아군 위치 조건이 없어 '자기만의 첫 돌입 보상'으로 새로 만들고 이름을 바꿈(명성이 동료를 공짜로 움직이지 않는다는 의도 유지).",
+    "formerName": "앞서 달리는 이름"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "목숨 건 선봉 돌격",
+      "text": "적 1부대에 피해 +35% 돌격, 측면·후방에서 치면 +55%. 대가로 이번 턴 마초가 받는 피해 +15%(반격 포함).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 35,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 20,
+          "duration": 0,
+          "condition": "FLANK"
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -15,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "이름을 건 선봉"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK"
+  ]
+}

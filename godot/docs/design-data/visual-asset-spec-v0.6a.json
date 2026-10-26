@@ -1,0 +1,784 @@
+[
+  {
+    "assetSpecId": "FACTION-F01-SYMBOL-SPEC",
+    "scope": {
+      "factionId": "F01",
+      "assetTypes": [
+        "BANNER",
+        "SHIELD",
+        "ARMBAND",
+        "SURFACE_PATTERN"
+      ],
+      "identity": [
+        "붉은 용",
+        "밤의 귀족",
+        "악의 제국"
+      ]
+    },
+    "sourceBatch": [
+      "ARTD-DB v0.2",
+      "ARTD-DB v0.3",
+      "ARTD-DB v0.4",
+      "ARTD-DB v0.5"
+    ],
+    "silhouetteGrammar": {
+      "banner": {
+        "shape": "높고 좁은 장방형",
+        "tail": "하단 V절개 1회",
+        "testRatio": [
+          "1:2",
+          "2:3"
+        ]
+      },
+      "shield": {
+        "outlineRule": "방패 외곽은 병종·시대 공통 베이스 유지",
+        "internalMark": "중앙 역S형 굵은 선과 작은 결합구"
+      },
+      "armband": {
+        "form": "흑색 천 띠를 두 줄로 감은 구조",
+        "testWidth": "상완 노출 길이의 약 14%"
+      },
+      "pattern": {
+        "largeRead": "수직 척추축 1개와 갈고리 1개",
+        "detailRead": "갈고리·척추·구름 회전의 추상 결합"
+      }
+    },
+    "directionalGrammar": {
+      "primaryDirection": "VERTICAL",
+      "secondaryDirection": "HOOKED_CURVE",
+      "bannerRead": "중앙 수직축과 상단 갈고리",
+      "shieldRead": "비대칭 역S형",
+      "armbandRead": "평행 감김선 2개",
+      "patternRead": "수직축을 따라 반복되는 갈고리",
+      "avoid": [
+        "수평 물결 중심 구성",
+        "방사형 꽃 중심 구성"
+      ]
+    },
+    "surfacePatternGrammar": {
+      "motif": "추상 적룡문",
+      "allowedElements": [
+        "갈고리형 선",
+        "수직 척추선",
+        "절제된 구름 회전"
+      ],
+      "allowedSurfaces": [
+        "군기",
+        "방패",
+        "완장",
+        "복식 가장자리",
+        "갑주 표면",
+        "무기 손잡이",
+        "건축",
+        "배경"
+      ],
+      "scaleLevels": {
+        "large": "군기·방패의 단일 표장",
+        "medium": "복식·건축 가장자리 반복띠",
+        "small": "근거리 금속 각인"
+      },
+      "prohibitedElements": [
+        "사실적 용 얼굴",
+        "눈",
+        "이빨",
+        "비늘 피부",
+        "날개",
+        "뿔"
+      ]
+    },
+    "colorRole": {
+      "primary": "진홍",
+      "base": "흑요석",
+      "accent": "암금",
+      "rule": "색상은 보조 식별이며 수직축·V절개·갈고리 형태가 우선",
+      "testValueBands": {
+        "obsidian": "10~20",
+        "crimson": "35~45",
+        "darkGold": "70~85"
+      }
+    },
+    "forbiddenShortcuts": [
+      "사실적 전신 용 문장",
+      "서양식 날개 달린 용",
+      "용머리 방패·무기",
+      "비늘 갑옷 또는 비늘 피부",
+      "뿔 투구와 날개 망토",
+      "상시 불꽃·용염·발광",
+      "검정 일색으로 병종 실루엣 제거",
+      "현대 로고·현대 계급장·기존 저작물 문장 모사"
+    ],
+    "humanFormGuardrail": {
+      "required": true,
+      "rule": "장수와 병사의 얼굴·피부·신체는 인간형",
+      "motifPlacement": "세력 모티프는 장비·복식·무기·건축·병사 장구·배경 표면에만 적용"
+    },
+    "lowFantasyBoundary": {
+      "ambientUse": "밤의 궁정 분위기와 제한된 화계 연출 허용",
+      "prohibited": [
+        "실제 용 소환",
+        "용으로 변신",
+        "용염의 상시 표식화",
+        "신체 발광"
+      ]
+    },
+    "readabilityTests": {
+      "resolution64px": [
+        "높고 좁은 외곽",
+        "V절개",
+        "중앙 수직축",
+        "상단 갈고리"
+      ],
+      "monochrome": "암색 큰 면·중간 수직선·밝은 상단점의 3단계 판독",
+      "redGreen": "진홍 인식 없이 V절개·수직축·갈고리로 식별",
+      "blueYellow": "암금 색상 변화와 관계없이 수직·갈고리 구조 유지",
+      "silhouettePriority": "병종 무기·자세·말·공병 장비를 가리면 실패"
+    },
+    "requiredSourceInputs": [
+      "후한 말 직물 군기 제작자료",
+      "목재·가죽·칠 방패 자료",
+      "한대 용문 원형과 현대 복원물의 권리 구분",
+      "사용 참고 이미지별 기관·유물번호·연대·라이선스"
+    ],
+    "outputTargets": [
+      "전략지도 군기",
+      "전투 군기",
+      "방패 표면",
+      "천 완장",
+      "복식·갑주·무기·건축 표면문양",
+      "64px 판독 테스트 시트"
+    ],
+    "productionStatus": "SPEC_ONLY_NO_IMAGE",
+    "missingFields": [
+      "적룡 갈고리의 최종 방향",
+      "실제 화면 군기 크기와 부대당 수량",
+      "정식 벡터 경로",
+      "색각 시뮬레이션 결과",
+      "자수·칠·금속 각인별 최소 표현 크기",
+      "참고자료별 최종 라이선스"
+    ]
+  },
+  {
+    "assetSpecId": "FACTION-F02-SYMBOL-SPEC",
+    "scope": {
+      "factionId": "F02",
+      "assetTypes": [
+        "BANNER",
+        "SHIELD",
+        "ARMBAND",
+        "SURFACE_PATTERN"
+      ],
+      "identity": [
+        "사람을 모으는 의형제 연합",
+        "연결매듭",
+        "복숭아꽃"
+      ]
+    },
+    "sourceBatch": [
+      "ARTD-DB v0.2",
+      "ARTD-DB v0.3",
+      "ARTD-DB v0.4",
+      "ARTD-DB v0.5"
+    ],
+    "silhouetteGrammar": {
+      "banner": {
+        "shape": "넓은 장방형",
+        "tail": "완만하게 둥근 하단",
+        "testRatio": "2:3"
+      },
+      "shield": {
+        "outlineRule": "방패 외곽은 병종·시대 공통 베이스 유지",
+        "internalMark": "밝은 중앙과 굵은 X형 연결매듭"
+      },
+      "armband": {
+        "form": "녹색 천 띠와 짧은 상아 매듭",
+        "testWidth": "상완 노출 길이의 14~16%"
+      },
+      "pattern": {
+        "largeRead": "연결매듭 1개와 오엽 꽃 1개",
+        "detailRead": "끊기지 않은 연결선이 오엽 복숭아꽃을 감싸는 구조"
+      }
+    },
+    "directionalGrammar": {
+      "primaryDirection": "HORIZONTAL_CONNECTION",
+      "secondaryDirection": "RADIAL_FIVE_PETAL",
+      "bannerRead": "녹색 외곽이 상아 중앙을 감싸는 형태",
+      "shieldRead": "중앙 X형 교차선",
+      "armbandRead": "중앙 매듭과 짧은 양쪽 끝",
+      "patternRead": "수평 연결선과 오엽 방사형",
+      "avoid": [
+        "수직 갈고리 중심 구성",
+        "이중 물결과 사선 3개 중심 구성"
+      ]
+    },
+    "surfacePatternGrammar": {
+      "motif": "연결매듭과 오엽 복숭아꽃",
+      "allowedElements": [
+        "끊기지 않은 연결선",
+        "교차 매듭",
+        "단순 오엽 꽃"
+      ],
+      "allowedSurfaces": [
+        "군기",
+        "방패",
+        "완장",
+        "복식 가장자리",
+        "갑주 표면",
+        "무기 감개",
+        "건축",
+        "배경"
+      ],
+      "scaleLevels": {
+        "large": "군기·방패의 매듭과 오엽 꽃",
+        "medium": "수평 연결 반복띠",
+        "small": "근거리 매듭·봉제 표시"
+      },
+      "prohibitedElements": [
+        "덩굴",
+        "꽃밭",
+        "잎사귀 갑옷",
+        "신체 문신",
+        "치유광"
+      ]
+    },
+    "colorRole": {
+      "primary": "녹색",
+      "base": "상아",
+      "materialTone": "따뜻한 직물·가죽색",
+      "rule": "색상은 보조 식별이며 둥근 하단·매듭·오엽 구조가 우선",
+      "testValueBands": {
+        "green": "30~45",
+        "warmBrown": "45~60",
+        "ivory": "80~90"
+      }
+    },
+    "forbiddenShortcuts": [
+      "엘프·숲 종족 표현",
+      "잎사귀 갑옷과 덩굴 무기",
+      "모든 인원의 동일 녹색 제복",
+      "꽃잎형 방패 외곽",
+      "복숭아꽃을 치유마법으로 표현",
+      "복잡한 전통·종교 매듭의 무검토 복제",
+      "빈곤·누더기만으로 연합 표현",
+      "현대 로고·현대 완장·기존 저작물 문장 모사"
+    ],
+    "humanFormGuardrail": {
+      "required": true,
+      "rule": "장수와 병사의 얼굴·피부·신체는 인간형",
+      "motifPlacement": "매듭과 복숭아꽃은 장비·복식·무기·건축·병사 장구·배경 표면에만 적용"
+    },
+    "lowFantasyBoundary": {
+      "ambientUse": "따뜻한 공동체 분위기와 제한된 화계·지원 연출 허용",
+      "prohibited": [
+        "꽃잎 신체 변화",
+        "자동 치유 꽃가루",
+        "식물 소환",
+        "종족화"
+      ]
+    },
+    "readabilityTests": {
+      "resolution64px": [
+        "밝은 중앙면",
+        "어두운 외곽",
+        "X형 매듭",
+        "오엽 5점"
+      ],
+      "monochrome": "상아 중앙과 녹색 외곽의 명도차 및 X형 교차선",
+      "redGreen": "녹색 인식 없이 둥근 하단·밝은 중앙·매듭·오엽으로 식별",
+      "blueYellow": "상아 고명도와 교차매듭 구조 유지",
+      "silhouettePriority": "병종 무기·자세·말·공병 장비를 가리면 실패"
+    },
+    "requiredSourceInputs": [
+      "후한 말 마직·견직·가죽 복식자료",
+      "직물 매듭과 봉제 제작자료",
+      "복숭아꽃 도상의 시대·문화 자료",
+      "현존 종교 매듭과의 충돌 검토",
+      "사용 참고 이미지별 기관·유물번호·연대·라이선스"
+    ],
+    "outputTargets": [
+      "전략지도 군기",
+      "전투 군기",
+      "방패 표면",
+      "천 매듭 완장",
+      "복식·갑주·무기·건축 표면문양",
+      "64px 판독 테스트 시트"
+    ],
+    "productionStatus": "SPEC_ONLY_NO_IMAGE",
+    "missingFields": [
+      "연결매듭의 최종 구조",
+      "복숭아꽃 보조색 사용 여부",
+      "갑옷 재질과 녹색·상아 배분",
+      "실제 화면 군기 크기와 부대당 수량",
+      "정식 벡터 경로",
+      "색각 시뮬레이션 결과",
+      "참고자료별 최종 라이선스"
+    ]
+  },
+  {
+    "assetSpecId": "FACTION-F03-SYMBOL-SPEC",
+    "scope": {
+      "factionId": "F03",
+      "assetTypes": [
+        "BANNER",
+        "SHIELD",
+        "ARMBAND",
+        "SURFACE_PATTERN"
+      ],
+      "identity": [
+        "푸른 협력 연합",
+        "호랑이",
+        "물결"
+      ]
+    },
+    "sourceBatch": [
+      "ARTD-DB v0.2",
+      "ARTD-DB v0.3",
+      "ARTD-DB v0.4",
+      "ARTD-DB v0.5"
+    ],
+    "silhouetteGrammar": {
+      "banner": {
+        "shape": "중간 폭 장방형",
+        "tail": "하단 2분할 갈라진 꼬리",
+        "testRatio": "2:3"
+      },
+      "shield": {
+        "outlineRule": "방패 외곽은 병종·시대 공통 베이스 유지",
+        "internalMark": "하단 이중 수평선과 상단 사선 3개"
+      },
+      "armband": {
+        "form": "짙은 남색 천 띠, 수평선 2개, 짧은 갈라진 매듭 끝",
+        "testWidth": "상완 노출 길이의 12~14%"
+      },
+      "pattern": {
+        "largeRead": "물결 2줄과 호랑이 이마선 3개",
+        "detailRead": "수평 이중 물결 위에 짧은 사선 3개 반복"
+      }
+    },
+    "directionalGrammar": {
+      "primaryDirection": "HORIZONTAL_FLOW",
+      "secondaryDirection": "THREE_DIAGONAL_STRIPES",
+      "bannerRead": "갈라진 꼬리와 하단 이중 물결",
+      "shieldRead": "하단 수평선 2개와 상단 사선 3개",
+      "armbandRead": "수평선 2개와 갈라진 끝",
+      "patternRead": "수평 흐름 위의 사선 묶음",
+      "avoid": [
+        "수직 갈고리 중심 구성",
+        "중앙 X형 매듭과 오엽 중심 구성"
+      ]
+    },
+    "surfacePatternGrammar": {
+      "motif": "호류문",
+      "allowedElements": [
+        "이중 물결",
+        "호랑이 이마선",
+        "짧은 발톱 각인",
+        "갈라진 매듭 끝"
+      ],
+      "allowedSurfaces": [
+        "군기",
+        "방패",
+        "완장",
+        "복식 가장자리",
+        "갑주 표면",
+        "무기 감개",
+        "건축",
+        "배경"
+      ],
+      "scaleLevels": {
+        "large": "군기·방패의 이중 물결과 사선 3개",
+        "medium": "복식·건축의 수평 물결 반복띠",
+        "small": "지휘관 장비의 짧은 발톱 각인"
+      },
+      "prohibitedElements": [
+        "사실적 호랑이 얼굴",
+        "눈",
+        "이빨",
+        "털",
+        "발톱 돌출",
+        "물·얼음 발광"
+      ]
+    },
+    "colorRole": {
+      "primary": "청색",
+      "base": "짙은 남색",
+      "accent": "밝은 테두리",
+      "rule": "색상은 보조 식별이며 갈라진 꼬리·수평 물결·사선 3개가 우선",
+      "testValueBands": {
+        "navy": "10~20",
+        "blue": "35~50",
+        "lightEdge": "70~80"
+      }
+    },
+    "forbiddenShortcuts": [
+      "호랑이 얼굴 투구·방패",
+      "호랑이 털옷과 수인화",
+      "말·사람 피부의 줄무늬",
+      "상시 물·얼음 오라",
+      "물로 만든 무기",
+      "일본식 노보리·해군복·해적 이미지 모사",
+      "모든 표면에 호랑이와 물결 동시 반복",
+      "현대 로고·스포츠 문장·기존 저작물 모사"
+    ],
+    "humanFormGuardrail": {
+      "required": true,
+      "rule": "장수와 병사의 얼굴·피부·신체는 인간형",
+      "motifPlacement": "호랑이와 물결은 장비·복식·무기·건축·병사 장구·배경 표면에만 적용"
+    },
+    "lowFantasyBoundary": {
+      "ambientUse": "수변 환경·바람·물안개와 제한된 얼음 전법 순간 표현 허용",
+      "prohibited": [
+        "호랑이 소환",
+        "수인 변신",
+        "상시 수류",
+        "신체의 물·얼음화"
+      ]
+    },
+    "readabilityTests": {
+      "resolution64px": [
+        "갈라진 꼬리",
+        "수평 이중선",
+        "사선 3개"
+      ],
+      "monochrome": "수평선과 사선 묶음 및 분할 꼬리로 식별",
+      "redGreen": "청색과 남색의 명도차 및 방향 구조 유지",
+      "blueYellow": "청색 인식 없이 갈라진 꼬리·이중 물결·사선 3개로 식별",
+      "silhouettePriority": "병종 무기·자세·말·공병 장비를 가리면 실패"
+    },
+    "requiredSourceInputs": [
+      "후한 말 강남 직물·칠기·수변 장비자료",
+      "역사 호랑이·물결 도상의 시대 자료",
+      "현대 상표·스포츠 로고와의 유사성 검토",
+      "사용 참고 이미지별 기관·유물번호·연대·라이선스"
+    ],
+    "outputTargets": [
+      "전략지도 군기",
+      "전투 군기",
+      "방패 표면",
+      "천 완장",
+      "복식·갑주·무기·건축 표면문양",
+      "64px 판독 테스트 시트"
+    ],
+    "productionStatus": "SPEC_ONLY_NO_IMAGE",
+    "missingFields": [
+      "호랑이 사선 3개와 물결 2개의 최종 배치",
+      "호랑이와 물결의 자산별 주상징 배분",
+      "실제 화면 군기 크기와 부대당 수량",
+      "정식 벡터 경로",
+      "색각 시뮬레이션 결과",
+      "참고자료별 최종 라이선스"
+    ]
+  },
+  {
+    "assetSpecId": "TROOP-INSIGNIA-SYSTEM-SPEC",
+    "scope": {
+      "troopTypes": [
+        "창병",
+        "기병",
+        "궁병",
+        "공병",
+        "의병",
+        "술병"
+      ],
+      "assetTypes": [
+        "BANNER",
+        "SHIELD",
+        "ARMBAND",
+        "SURFACE_PATTERN"
+      ],
+      "factionOverlays": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "statesCovered": [
+        "이동",
+        "공격",
+        "방어",
+        "퇴각",
+        "기병 행군·돌격·선회",
+        "공병 전개 전·후·파손",
+        "의병 치료 중",
+        "술병 평시·준비·전법 순간"
+      ]
+    },
+    "sourceBatch": [
+      "ARTD-DB v0.3",
+      "ARTD-DB v0.4",
+      "ARTD-DB v0.5"
+    ],
+    "silhouetteGrammar": {
+      "globalPriority": [
+        "얼굴·손·신체 자세",
+        "병종 핵심 무기·도구",
+        "행동·상태",
+        "말·공병 장비",
+        "군기",
+        "방패 표식",
+        "완장",
+        "소형 표면문양"
+      ],
+      "troops": {
+        "창병": {
+          "primaryRead": [
+            "장창 수직군",
+            "창끝 방향",
+            "밀집 전열"
+          ],
+          "insigniaOrder": [
+            "방패 큰 면",
+            "후방 군기",
+            "완장",
+            "소형문양"
+          ]
+        },
+        "기병": {
+          "primaryRead": [
+            "말 몸통·다리",
+            "기수 방향",
+            "고삐",
+            "무기"
+          ],
+          "insigniaOrder": [
+            "안장천",
+            "후열 군기",
+            "기수 완장",
+            "마구문양"
+          ],
+          "horseRule": "문양은 안장천·마구·활집에만 적용하며 말 피부·얼굴에는 적용 금지"
+        },
+        "궁병": {
+          "primaryRead": [
+            "활곡선",
+            "활시위",
+            "화살",
+            "화살통"
+          ],
+          "insigniaOrder": [
+            "측후방 군기",
+            "화살통·활집",
+            "완장",
+            "보조 방패"
+          ]
+        },
+        "공병": {
+          "primaryRead": [
+            "전개 전 사각 수레",
+            "전개 후 넓은 삼각 프레임",
+            "가동부·발사방향"
+          ],
+          "insigniaOrder": [
+            "측후방 군기",
+            "작업자 완장",
+            "비가동 측판 문양",
+            "호위병 방패"
+          ],
+          "stateRule": "세력색·군기 위치가 전개 상태 판독을 대체하면 실패"
+        },
+        "의병": {
+          "primaryRead": [
+            "비균질 장비",
+            "생활복",
+            "넓은 간격",
+            "현재 행동"
+          ],
+          "insigniaOrder": [
+            "집결 군기",
+            "공통 완장",
+            "부분 방패",
+            "생활복 소형문"
+          ],
+          "healingRule": "치료 중에는 손·붕대·약품·부축 자세가 완장과 문양보다 우선"
+        },
+        "술병": {
+          "primaryRead": [
+            "패찰",
+            "신호기",
+            "도자 용기",
+            "화공·의례 도구"
+          ],
+          "insigniaOrder": [
+            "후방 군기",
+            "완장",
+            "도구함·용기 문양",
+            "호위병 방패"
+          ],
+          "stateRule": "평시와 전법 순간은 손·도구 배치로 먼저 구분하며 발광 효과에 의존 금지"
+        }
+      }
+    },
+    "directionalGrammar": {
+      "distanceLevels": {
+        "D0_MAP": "병종 외곽→행동 방향→군기 외곽→세력 대형문양",
+        "D1_BATTLE": "무기·도구→자세→군기→방패 큰 면→완장",
+        "D2_CLOSE": "재질→완장 매듭→방패·장비 표면문양→마모·봉제",
+        "D3_DETAIL": "자수·각인·결속구이며 전투 판독에는 의존 금지"
+      },
+      "troopDirections": {
+        "창병": "창끝·전열 진행방향 우선",
+        "기병": "말과 기수의 이동·선회 방향 우선",
+        "궁병": "조준선·화살 궤적 우선",
+        "공병": "프레임 전개축·포격 방향 우선",
+        "의병": "집결·분산·치료 자세 우선",
+        "술병": "손·도구·대상 방향 우선"
+      }
+    },
+    "surfacePatternGrammar": {
+      "globalRule": "세력 문양은 병종 장비의 비가동 안전면에만 적용",
+      "allowedByTroop": {
+        "창병": [
+          "군기",
+          "방패",
+          "전포 가장자리",
+          "창술·손잡이"
+        ],
+        "기병": [
+          "안장천",
+          "마구",
+          "활집",
+          "기수 완장"
+        ],
+        "궁병": [
+          "화살통",
+          "활집",
+          "팔보호대",
+          "전포 가장자리"
+        ],
+        "공병": [
+          "수레 측판",
+          "도구함",
+          "비가동 안전판",
+          "작업자 완장"
+        ],
+        "의병": [
+          "집결 군기",
+          "소형 방패",
+          "완장",
+          "생활복 가장자리"
+        ],
+        "술병": [
+          "군기",
+          "완장",
+          "패찰집",
+          "도구함",
+          "도자 용기 외면"
+        ]
+      },
+      "neverCover": [
+        "얼굴",
+        "손",
+        "상처·붕대",
+        "무기 날·촉",
+        "활시위·화살",
+        "고삐",
+        "말 관절·얼굴",
+        "공병 밧줄·축·지지대·탄환·발사부",
+        "술병 패찰 문자·용기 입구·점화부"
+      ]
+    },
+    "colorRole": {
+      "rule": "세력색은 보조 식별이며 병종·행동·상태 판독을 대체하지 않음",
+      "factionShapeFallback": {
+        "F01": "수직축·V절개·갈고리",
+        "F02": "둥근 하단·매듭·오엽",
+        "F03": "갈라진 꼬리·이중 물결·사선 3개"
+      },
+      "testOnly": true
+    },
+    "forbiddenShortcuts": [
+      "색상만으로 병종·세력 구분",
+      "군기로 무기·기수·말·공병 장비 차폐",
+      "완장으로 팔꿈치·손목·활시위·고삐 방해",
+      "표면문양을 무기 기능부·기계 가동부에 적용",
+      "세력 표식을 치료·상태이상·전법 효과 아이콘으로 사용",
+      "의병 치료를 마법 치유로 표현",
+      "술병 전법을 상시 발광으로 표현",
+      "기병의 말 피부·얼굴에 세력 문양 적용",
+      "현대식 완장·벨크로·고무밴드·현대 계급장"
+    ],
+    "humanFormGuardrail": {
+      "required": true,
+      "rule": "장수와 모든 병사는 인간형",
+      "motifPlacement": "세력 모티프는 장비·복식·무기·건축·병사 장구·배경 표면에만 적용",
+      "prohibited": [
+        "수인화",
+        "비늘 피부",
+        "뿔",
+        "날개",
+        "발광 눈",
+        "신체 문양의 종족화"
+      ]
+    },
+    "lowFantasyBoundary": {
+      "allowed": [
+        "화계",
+        "발동 순간의 제한된 번개",
+        "발동 순간의 제한된 얼음"
+      ],
+      "rules": [
+        "효과는 얼굴·손·도구·대상 방향을 완전히 가리지 않음",
+        "전법 종료 후 신체 발광이 남지 않음",
+        "세력 모티프가 소환체·변신·자동 치유로 변하지 않음"
+      ]
+    },
+    "readabilityTests": {
+      "testSpecId": "ART-TEST-INSIGNIA-64PX-FIRST3",
+      "rows": [
+        "창병 이동·공격·방어",
+        "기병 행군·돌격·선회",
+        "궁병 이동·조준·발사",
+        "공병 전개 전·전개 후·파손",
+        "의병 이동·방어·치료 중",
+        "술병 평시·준비·전법 순간"
+      ],
+      "columns": [
+        "원색 64px",
+        "단색 64px",
+        "적색약·적색맹",
+        "녹색약·녹색맹",
+        "청황색각",
+        "군기 제거",
+        "방패 제거",
+        "완장·소형문 제거"
+      ],
+      "passRules": [
+        "색 제거 후에도 병종과 행동 상태가 먼저 구분됨",
+        "군기 제거 후에도 핵심 병종 실루엣 유지",
+        "방패·완장·소형문 제거 후에도 전개·치료·전법 상태 유지",
+        "F01과 F02는 수직갈고리 대 매듭·오엽 형태로 구분",
+        "F03은 갈라진 꼬리·이중 물결·사선 3개로 구분",
+        "표식이 얼굴·손·무기·말·공병 가동부를 가리지 않음"
+      ],
+      "numericThresholdStatus": "TEST_PENDING"
+    },
+    "requiredSourceInputs": [
+      "6병종 장비·자세의 역사·문화 자료",
+      "기병 마구·등자 대표 연대 자료",
+      "공병 운반·전개 장비 구조 자료",
+      "의병 생활복·치료도구 자료",
+      "술병 의례도구와 창작 이능 경계 자료",
+      "참고 이미지별 기관·유물번호·연대·라이선스"
+    ],
+    "outputTargets": [
+      "6병종 전략지도 유닛",
+      "6병종 전투 유닛",
+      "군기·방패·완장·표면문양 배치 가이드",
+      "공병 전개 전·후 상태 시트",
+      "의병 치료 상태 시트",
+      "술병 평시·전법 순간 상태 시트",
+      "64px 단색·색각 검수 시트"
+    ],
+    "productionStatus": "SPEC_ONLY_NO_IMAGE",
+    "missingFields": [
+      "실제 군기 크기와 부대당 수량",
+      "병종별 방패 사용 여부와 외곽형",
+      "완장의 갑주 위·아래 부착 규칙",
+      "기병 마구·등자 대표 연대",
+      "공병 전개 장비 최종 구조",
+      "술병 효과 강도",
+      "64px 실제 통과율",
+      "최소 픽셀·명도 기준",
+      "정식 벡터·이미지 제작 시점"
+    ]
+  }
+]
+

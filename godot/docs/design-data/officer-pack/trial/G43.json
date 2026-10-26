@@ -1,0 +1,115 @@
+{
+  "id": "G43",
+  "name": "법정",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 60,
+    "무용": 39,
+    "지략": 90,
+    "정무": 72,
+    "감화": 78
+  },
+  "sub": {
+    "전열 유지": 55,
+    "기동": 57,
+    "전환": 61,
+    "수습": 54,
+    "힘": 35,
+    "기술": 39,
+    "막아내기": 44,
+    "되받기": 40,
+    "군재": 91,
+    "응변": 90,
+    "속이기": 78,
+    "통찰": 94,
+    "행정": 73,
+    "병참": 69,
+    "인사": 77,
+    "제도": 79,
+    "민정": 49,
+    "설득": 91,
+    "포섭": 76,
+    "결집": 58,
+    "중재": 64
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "책사",
+  "style": "명사",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "건드린 자에게 갚는다",
+    "text": "법정이 공격받으면 공격한 적은 1턴 동안 받는 피해 +20%, 법정과 맞닿은 아군은 1턴 고양(공격 +10%).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지략",
+      "감화"
+    ],
+    "effects": [
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "TARGET",
+        "value": -20,
+        "duration": 1,
+        "condition": null
+      },
+      {
+        "op": "STATUS_APPLY",
+        "when": "ON_DEFEND",
+        "target": "ADJACENT_ALLIES",
+        "value": 0,
+        "duration": 1,
+        "condition": null,
+        "status": "INSPIRED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · '자신을 친 적을 아군의 다음 표적으로'(입력 +12)는 공격자 받는 피해 +20%로 살렸다. 몸으로 막아서는 차폐는 피해 전가라 지도에 없어, 정군산식 신호로 아군이 계책을 실행하게 바꿨다. 약한 직접 전투는 능력치로 남는다.",
+    "formerName": "듣는 사람의 문"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "공격 신호",
+      "text": "2칸 안 적 1부대에 신호를 올린다: 대상은 즉시 동요(공격 −20%), 그 적 주변 2칸 안 아군은 1턴 동안 주는 피해 +15%.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "status": "DEMORALIZED"
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 15,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "말이 닿지 않는 자리"
+    }
+  ]
+}

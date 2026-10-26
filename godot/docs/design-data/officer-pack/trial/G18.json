@@ -1,0 +1,124 @@
+{
+  "id": "G18",
+  "name": "관우",
+  "faction": "F02",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 86,
+    "무용": 96,
+    "지략": 71,
+    "정무": 55,
+    "감화": 69
+  },
+  "sub": {
+    "전열 유지": 88,
+    "기동": 89,
+    "전환": 78,
+    "수습": 66,
+    "힘": 96,
+    "기술": 98,
+    "막아내기": 86,
+    "되받기": 87,
+    "군재": 78,
+    "응변": 80,
+    "속이기": 55,
+    "통찰": 61,
+    "행정": 58,
+    "병참": 53,
+    "인사": 49,
+    "제도": 50,
+    "민정": 57,
+    "설득": 68,
+    "포섭": 67,
+    "결집": 80,
+    "중재": 47
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "베고 다시 나아간다",
+    "text": "공격할 때 주는 피해 +15%. 적 부대를 쓰러뜨리면 사기 한 단계 회복, 다음 차례 이동 +2칸(받은 것은 봉해 두고 돌아간다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 15,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "ON_KILL",
+        "target": "SELF",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "MOVE_MOD",
+        "when": "ON_KILL",
+        "target": "SELF",
+        "value": 2,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 목표 선언·Contact 유지를 '큰 일격+대상 속박'으로, 처치 뒤 추격 대신 귀환 보상을 '처치 시 사기 회복·이동'으로 옮김. 주변 지원 효과가 없는 약점 유지.",
+    "formerName": "봉해 둔 보상"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "단칼 일격",
+      "text": "적 1부대에 피해 +50% 공격, 대상은 다음 차례 움직이지 못한다. 맡은 끝을 직접 닫는다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 50,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        }
+      ],
+      "formerName": "맡은 한 점"
+    }
+  ]
+}

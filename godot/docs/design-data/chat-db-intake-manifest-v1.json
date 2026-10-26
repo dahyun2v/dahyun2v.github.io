@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-21",
+  "owner": "Work 기획총괄",
+  "sourcePolicy": {
+    "chatOutputIsCanon": false,
+    "sourceCitationsVerified": false,
+    "runtimeImplementedByDocument": false,
+    "brainstormRequiresUserDecision": true
+  },
+  "canonicalLocks": {
+    "officerIdRange": "G01-G30",
+    "factionIdRange": "F01-F12",
+    "troopTypes": [
+      "창병",
+      "기병",
+      "궁병",
+      "공병",
+      "의병",
+      "술병"
+    ],
+    "mainMap": "64x40",
+    "mainCities": 24,
+    "first3Map": "18x14",
+    "oneOfficerPerUnit": true,
+    "duels": false,
+    "humanOfficerBodies": true,
+    "lowFantasy": true
+  },
+  "records": [
+    {
+      "db": "officer",
+      "threadId": "6ab08482-4c30-83ee-a13a-002549f5af7a",
+      "intakeFile": "../work-integration/20260921/chat-db-intake/officer-db-v0.9.md",
+      "sourceIndexFiles": [
+        "officer-source-index-v1.0a-g01-g15.json",
+        "officer-source-index-v1.0b-g16-g30.json"
+      ],
+      "overlapAuditFiles": [
+        "officer-overlap-audit-v1.1a-g01-g15.json",
+        "officer-overlap-audit-v1.1b-g16-g30.json"
+      ],
+      "overlapReviewFile": "../work-integration/20260921/officer-overlap-review-v1.md",
+      "version": "1.1B-REVIEW/1.1B-AUDIT/1.0B-INDEX/0.9-SOURCE",
+      "status": [
+        "SOURCE_ACCEPTED"
+      ],
+      "acceptedScope": [
+        "G04 source layer",
+        "G24 source layer",
+        "G02 source layer",
+        "G03 source layer",
+        "G27 source layer",
+        "G20 source layer",
+        "G21 source layer",
+        "G09 source layer",
+        "G01 source layer",
+        "G12 source layer",
+        "G13 source layer",
+        "G10 source layer",
+        "G11 source layer",
+        "G14 source layer",
+        "G17 source layer",
+        "G15 source layer",
+        "G16 source layer",
+        "G18 source layer",
+        "G19 source layer",
+        "G05 source layer",
+        "G06 source layer",
+        "G07 source layer",
+        "G08 source layer",
+        "G22 source layer",
+        "G23 source layer",
+        "G25 source layer",
+        "G26 literary-source layer",
+        "G28 source layer",
+        "G29 source layer",
+        "G30 source layer",
+        "G01-G30 each have at least one separated source-layer pass",
+        "G01-G30 source index checked against canonical trait and tactic names",
+        "G26 literary basis kept separate from chronicle-based officers",
+        "G01-G15 overlap risks normalized without changing fixed traits or tactics",
+        "G16-G30 overlap risks normalized without changing fixed traits or tactics",
+        "G01-G30 overlap review keeps fixed cards and narrows unsupported macro-play claims",
+        "G25 and G26 preservedExclusivePlay wording identified for boundary narrowing without new effects"
+      ],
+      "rejectedScope": [
+        "CHR-* IDs",
+        "replacement 30-officer roster"
+      ],
+      "nextBatch": [
+        "propagate condition-first role labels into future tooltips and AI evaluation without changing fixed traits or tactics"
+      ]
+    },
+    {
+      "db": "faction",
+      "threadId": "6ab08485-8b60-83e8-a99a-8061c6732dbd",
+      "intakeFile": "../work-integration/20260921/chat-db-intake/faction-db-v0.6.md",
+      "dataFile": "faction-design-index-v0.7a-f01-f12.json",
+      "version": "0.7A-INDEX/0.6-DESIGN",
+      "status": [
+        "DESIGN_ACCEPTED"
+      ],
+      "acceptedScope": [
+        "F01-F12 roster lock",
+        "F04-F09 project identity lock",
+        "F04-F06 connected design layer",
+        "F07-F09 source layer",
+        "F07-F09 connected design layer",
+        "F10-F12 source layer",
+        "F10-F12 connected design layer",
+        "F01-F12 cross-faction boundary audit",
+        "ALLIANCE-TRIAD EMPIRE-F04-F12 and GRANARY-F08-F09 conflict flags",
+        "F01-F12 machine-readable design index without runtime adoption"
+      ],
+      "rejectedScope": [
+        "downgrading F04-F09 project identity to pending"
+      ],
+      "nextBatch": [
+        "review conflict flag propagation against policy officer and UI indices"
+      ]
+    },
+    {
+      "db": "map",
+      "threadId": "6ab08489-61f8-83e8-ab11-88e1a7ed896a",
+      "intakeFile": "../work-integration/20260921/chat-db-intake/map-db-v0.5-audit.md",
+      "dataFile": "map-city-candidates-v0.4b-p01-p24.json",
+      "warningResolutionFile": "map-city-warning-resolution-v0.6a.json",
+      "version": "0.6A-WARNINGS/0.5-AUDIT/0.4B-DATA",
+      "status": [
+        "PROPOSAL_INTERNAL",
+        "STRUCTURE_NORMALIZED",
+        "AUDITED_WITH_WARNINGS",
+        "AUDIT_COUNT_CORRECTED"
+      ],
+      "acceptedScope": [
+        "main and FIRST3 profile separation",
+        "region city pass and gate object separation",
+        "amplified climate direction",
+        "random start fairness tag structure",
+        "CITY-P01-P24 structured candidates without fixed start bindings",
+        "P01-P24 recursive nested schema normalization without information loss",
+        "P01-P24 era name region duplication climate and gate audit with zero BLOCK findings",
+        "v0.5 table count corrected to PASS13 WARN11 and eleven warning resolutions normalized"
+      ],
+      "pendingScope": [
+        "15 macroregion candidate registry",
+        "24-city candidate adoption",
+        "coordinates and travel values",
+        "era-dependent display names and role boundaries for eleven WARN candidates",
+        "external source verification before candidate adoption"
+      ],
+      "nextBatch": [
+        "verify eleven era-dependent aliases and role boundaries before candidate adoption"
+      ]
+    },
+    {
+      "db": "art",
+      "threadId": "6ab0848c-441c-83ee-9f5c-1808642624f5",
+      "intakeFile": "../work-integration/20260921/chat-db-intake/art-db-v0.5.md",
+      "dataFile": "visual-asset-spec-v0.6a.json",
+      "version": "0.6A-SPEC/0.5-DESIGN",
+      "status": [
+        "DESIGN_ACCEPTED"
+      ],
+      "acceptedScope": [
+        "human-form guardrail",
+        "F01-F03 current visual locks",
+        "Geumseokchaemuk downgraded to proposal",
+        "F01-F03 banner shield armband and surface-pattern specifications",
+        "shape and direction remain readable without faction color",
+        "six troop-type insignia exposure and occlusion rules",
+        "64px monochrome and color-vision test-sheet specification",
+        "F01-F03 and six-troop machine-readable asset specifications without images"
+      ],
+      "pendingScope": [
+        "rendering style",
+        "motif drawings",
+        "image production"
+      ],
+      "nextBatch": [
+        "renderable vector templates after specification review",
+        "actual image production and browser readability proof"
+      ]
+    },
+    {
+      "db": "policy-event",
+      "threadId": "6ab084f4-6ec0-83e8-af6f-474659634573",
+      "intakeFile": "../work-integration/20260921/chat-db-intake/policy-event-db-v0.7b.md",
+      "policyDataFiles": [
+        "policy-records-proposal-v0.7a-f01-f06.json",
+        "policy-records-proposal-v0.7b-f07-f12.json"
+      ],
+      "eventDataFiles": [
+        "event-seed-records-proposal-v0.8a-f01.json",
+        "event-seed-records-proposal-v0.8b-f02.json",
+        "event-seed-records-proposal-v0.8c-f03.json",
+        "event-seed-records-proposal-v0.8d-f04.json",
+        "event-seed-records-proposal-v0.8e-f05.json",
+        "event-seed-records-proposal-v0.8f-f06.json",
+        "event-seed-records-proposal-v0.8g-f07.json",
+        "event-seed-records-proposal-v0.8h-f08.json",
+        "event-seed-records-proposal-v0.8i-f09.json",
+        "event-seed-records-proposal-v0.8j-f10.json",
+        "event-seed-records-proposal-v0.8k-f11.json",
+        "event-seed-records-proposal-v0.8l-f12.json"
+      ],
+      "version": "0.8L-EVENTS/0.7B-POLICY",
+      "status": [
+        "PROPOSAL_INTERNAL"
+      ],
+      "acceptedScope": [
+        "F01-F12 policy source layer",
+        "twenty-four event seeds as internal proposals",
+        "normalized policy and event field schema",
+        "cross-database reference ID rules",
+        "F01-F06 normalized policy proposal records with explicit missing fields",
+        "F07-F12 normalized policy proposal records with explicit missing fields",
+        "F01-F12 normalized EventSeedRecord proposal records with explicit missing fields"
+      ],
+      "pendingScope": [
+        "runtime adoption",
+        "frequency and numeric values"
+      ],
+      "nextBatch": [
+        "audit F01-F12 policy and event proposal references against canonical officer map and city IDs before any runtime adoption"
+      ]
+    },
+    {
+      "db": "troop",
+      "threadId": "6ab084f7-3d4c-83ee-98e3-dcf4b4cc1627",
+      "intakeFile": "../work-integration/20260921/chat-db-intake/troop-db-v0.4-corrected.md",
+      "dataFile": "troop-role-index-v0.5a.json",
+      "version": "0.5A-INDEX/0.4-CORRECTED",
+      "status": [
+        "DESIGN_ACCEPTED",
+        "IMPLEMENTATION_IN_PROGRESS"
+      ],
+      "acceptedScope": [
+        "six fixed troop types",
+        "position direction preparation based counters",
+        "basic command preservation",
+        "militia engineer mystic role boundary",
+        "six commands by six troop types",
+        "allowed and prohibited tactic boundary",
+        "confusion permits basic movement attack defense and retreat",
+        "confusion blocks new active skills and never causes random movement or ally attacks",
+        "UT-G21 changes direct successful confusion duration only when a prior-batch slow remains active",
+        "six-troop machine-readable role index with documented runtime uncertainty"
+      ],
+      "rejectedScope": [
+        "shield infantry",
+        "long weapon troops",
+        "bow crossbow troops",
+        "strategy troops"
+      ],
+      "reviewNotes": [
+        "Section 4-4 contains one can-start typo; current canon reads cannot start",
+        "ROUND-07 Work contract controls status IDs and trial values"
+      ],
+      "nextBatch": [
+        "ROUND-07 ART-G21 runtime integration verification"
+      ]
+    }
+  ],
+  "brainstorm": {
+    "file": "../work-integration/20260921/brainstorm-choice-bundle-v1.md",
+    "status": "USER_DECISION_REQUIRED",
+    "adopted": false
+  }
+}

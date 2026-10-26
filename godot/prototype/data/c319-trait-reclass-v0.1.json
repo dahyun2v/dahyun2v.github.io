@@ -1,0 +1,1945 @@
+{
+  "status": "TRIAL — C319 수치는 시험값",
+  "cards": {
+    "CT-M01": {
+      "name": "적 옆을 스쳐 간다",
+      "before": "통제 구역에서 멈추지 않는다(적 옆을 지나간다).",
+      "proposal": "평지 시작 / 이동 +1 / 숲 공격 −10%",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "value": 1,
+          "condition": "START_PLAIN",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "TERRAIN:FOREST",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M02": {
+      "name": "추격 없이 빠지기",
+      "before": "교전에서 빠질 때 추격을 받지 않는다.",
+      "proposal": "아군 인접 / 추격 피해 −30% / 다음 공격 −10%",
+      "effects": [
+        {
+          "op": "PURSUIT_MOD",
+          "value": -30,
+          "condition": "ALLY_NEAR",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "AFTER_RETREAT",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M03": {
+      "name": "먼저 받아친다",
+      "before": "공격받으면 반격을 먼저 한다.",
+      "proposal": "미이동 방어 / 반격 +20% / 다음 이동 −1",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "value": 20,
+          "condition": "UNMOVED",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "UNMOVED",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M04": {
+      "name": "치고 다시 움직인다",
+      "before": "이번 턴 이동하지 않았으면 공격 뒤에도 움직인다.",
+      "proposal": "미이동 첫 공격 / 피해 +20% / 다음 이동 −1",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 20,
+          "condition": "UNMOVED&FIRST_ROUND",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "UNMOVED&FIRST_ROUND",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M05": {
+      "name": "절대 무너지지 않는다",
+      "before": "사기가 패주까지 떨어지지 않는다.",
+      "proposal": "병력 절반 미만 / 사기 가중 −5 / 공격 −10%",
+      "effects": [
+        {
+          "op": "MORALE_WEIGHT_MOD",
+          "value": -5,
+          "condition": "HP_BELOW:50",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "HP_BELOW:50",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M06": {
+      "name": "반격 없는 공격",
+      "before": "이 부대의 공격은 반격받지 않는다.",
+      "proposal": "측면 공격 / 반격 피해 −30% / 정면 공격 −10%",
+      "effects": [
+        {
+          "op": "COUNTER_TAKEN_MOD",
+          "value": -30,
+          "condition": "ACTUAL_FLANK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "FRONT",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M07": {
+      "name": "성벽 한 방",
+      "before": "내구 50 이하 성 공격 시 남은 내구 제거; 함락은 기존 성 공격 경로로 처리.",
+      "proposal": "내구 50 이하 성 공격 / 내구 피해 +20% / 야전 피해 −10%",
+      "effects": [
+        {
+          "op": "SIEGE_DAMAGE_MOD",
+          "value": 20,
+          "condition": "WALL_BELOW_50",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "TARGET_ARMY",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M08": {
+      "name": "반드시 사로잡는다",
+      "before": "이 부대가 쓰러뜨린 적 장수는 반드시 포로가 된다.",
+      "proposal": "적 격파 / 기존 포획 가중 +10 / 격파 경험치 −10%",
+      "effects": [
+        {
+          "op": "CAPTURE_WEIGHT_MOD",
+          "value": 10,
+          "condition": null,
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "XP_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "eventOnly": true
+        }
+      ]
+    },
+    "CT-M09": {
+      "name": "두 번 행동",
+      "before": "한 턴에 주 행동을 두 번 한다.",
+      "proposal": "첫 일반공격 / 피해 +20% / 반격 피해 +15%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 20,
+          "condition": "NORMAL_ATTACK&FIRST_ROUND",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "COUNTER_TAKEN_MOD",
+          "value": 15,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M10": {
+      "name": "험한 길도 평지처럼",
+      "before": "숲·언덕을 평지처럼 걷고, 다리 없는 강도 건넌다.",
+      "proposal": "숲·언덕 시작 / 이동 +1 / 평지 공격 −10%; 도하 권한 유지",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "value": 1,
+          "condition": "ROUGH_START",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "TERRAIN:PLAIN",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M11": {
+      "name": "보이지 않는 매복",
+      "before": "숲·언덕에 있으면 맞닿기 전까지 적에게 보이지 않는다.",
+      "proposal": "숲·언덕 공격 / 피해 +15% / 평지 방어 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "ROUGH",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "value": -10,
+          "condition": "TERRAIN:PLAIN",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M13": {
+      "name": "성으로 즉시 귀환",
+      "before": "주 행동을 써 가장 가까운 빈 아군 성 중심으로 즉시 귀환.",
+      "proposal": "아군 성 방향 이동 / 이동 +1 / 해당 차례 공격 −10%",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "value": 1,
+          "condition": "TOWARD_CITY",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "TOWARD_CITY",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M14": {
+      "name": "두 칸 너머 공격",
+      "before": "근접 부대인데 2칸 거리에서도 공격한다.",
+      "proposal": "정면 근접공격 / 피해 +15% / 측면 공격 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "FRONT&MELEE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "ACTUAL_FLANK",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M15": {
+      "name": "한 번에 둘을 친다",
+      "before": "공격하면 대상과 맞닿은 다른 적 1부대도 피해 절반을 입는다.",
+      "proposal": "적 둘 인접 / 원대상 피해 +20% / 받는 피해 +10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 20,
+          "condition": "TWO_ENEMIES",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "value": -10,
+          "condition": "TWO_ENEMIES",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M16": {
+      "name": "다가오면 먼저 친다",
+      "before": "방어 태세 중 적이 사거리에 들어오면 즉시 한 번 공격한다.",
+      "proposal": "미이동 방어 / 기존 반격 +20% / 이동 차례 보상 없음",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "value": 20,
+          "condition": "UNMOVED",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M17": {
+      "name": "한 번은 버틴다",
+      "before": "차례·활성 세력 구간마다 한 번 병력 1로 생존.",
+      "proposal": "병력 25% 미만 / 받는 피해 −20% / 주는 피해 −10%",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "value": 20,
+          "condition": "HP_BELOW:25",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "HP_BELOW:25",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M18": {
+      "name": "화살에도 반격",
+      "before": "원거리 공격을 받아도 반격한다.",
+      "proposal": "원거리 피격 / 받는 피해 −20% / 근접 피격 +10%",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "value": 20,
+          "condition": "ATTACKER_RANGED",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "value": -10,
+          "condition": "ATTACKER_MELEE",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M19": {
+      "name": "넓은 포위망",
+      "before": "이 부대의 통제 구역이 2칸이다.",
+      "proposal": "적 둘 인접 / 받는 피해 −15% / 이동 −1",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "value": 15,
+          "condition": "TWO_ENEMIES",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "TWO_ENEMIES",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M20": {
+      "name": "무너지지 않는 기둥",
+      "before": "맞닿은 아군은 패주하지 않는다(동요까지).",
+      "proposal": "아군 인접 / 자신·인접 아군 사기 가중 −5 / 자기 공격 −10%",
+      "effects": [
+        {
+          "op": "MORALE_WEIGHT_MOD",
+          "value": -5,
+          "condition": "ALLY_NEAR",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MORALE_WEIGHT_MOD",
+          "value": -5,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "ADJACENT_ALLIES",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "ALLY_NEAR",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M21": {
+      "name": "바람 소리에도 놀란다",
+      "before": "이 부대와 맞닿은 적은 자기 차례 시작마다 사기 판정을 한다.",
+      "proposal": "정상 공격 / 기존 사기 판정 가중 +5 / 반격 피해 +10%",
+      "effects": [
+        {
+          "op": "TARGET_MORALE_WEIGHT_MOD",
+          "value": 5,
+          "condition": "NORMAL_ATTACK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "COUNTER_TAKEN_MOD",
+          "value": 10,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M22": {
+      "name": "항복병 흡수",
+      "before": "적 부대를 쓰러뜨리면 그 부대 원래 병력의 20%를 내 병력으로 편입한다.",
+      "proposal": "적 격파 / 자기 부상병 회복량 +20% / 경험치 −10%",
+      "effects": [
+        {
+          "op": "WOUNDED_RECOVERY_MOD",
+          "value": 20,
+          "condition": null,
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "durationNext": true
+        },
+        {
+          "op": "XP_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "eventOnly": true
+        }
+      ]
+    },
+    "CT-M23": {
+      "name": "적장 귀순시키기",
+      "before": "소멸시킬 공격이고 귀순 적격이면 장수와 부대를 귀순 처리.",
+      "proposal": "약한 적 공격 / 피해 +15% / 강한 적 공격 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "TARGET_LOWER_MIGHT",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "TARGET_HIGHER_MIGHT",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M24": {
+      "name": "사방에서 성 공격",
+      "before": "성벽 바깥 어느 칸에서도 성을 공격한다.",
+      "proposal": "합법 위치 성 공격 / 내구 피해 +20% / 이동 −1",
+      "effects": [
+        {
+          "op": "SIEGE_DAMAGE_MOD",
+          "value": 20,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M25": {
+      "name": "성 화살을 막는다",
+      "before": "성 사격을 받지 않는다.",
+      "proposal": "성 공격 중 / 성 사격 피해 −30% / 일반공격 −10%",
+      "effects": [
+        {
+          "op": "CITY_SHOT_DEFENSE_MOD",
+          "value": 30,
+          "condition": "ATTACKING_CITY",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "NORMAL_ATTACK",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M26": {
+      "name": "흔들리지 않는 성",
+      "before": "이 부대가 성 중심에 있으면 성 내구도가 피해를 받지 않는다.",
+      "proposal": "성 중심 주둔 / 기존 내구 피해 −20% / 출진 이동 −1",
+      "effects": [
+        {
+          "op": "WALL_DEFENSE_MOD",
+          "value": 20,
+          "condition": "CITY_CENTER",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "FROM_GARRISON",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-M30": {
+      "name": "넓게 배운다",
+      "before": "레벨업 Draft 카드 4장, 다시 뽑기 2회.",
+      "proposal": "레벨업 / 기존 경험치 +15% / 피해 −5%; Draft 규칙 유지",
+      "effects": [
+        {
+          "op": "XP_MOD",
+          "value": 15,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -5,
+          "condition": null,
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C01c": {
+      "name": "치고 빠지기",
+      "before": "돌격 뒤 남은 이동으로 물러날 수 있다(교전 이탈 추격은 그대로).",
+      "proposal": "돌격 명중 / 반격 피해 −20% / 다음 이동 −1",
+      "effects": [
+        {
+          "op": "COUNTER_TAKEN_MOD",
+          "value": -20,
+          "condition": "CHARGE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "CHARGE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C01d": {
+      "name": "적진을 가르고 달린다",
+      "before": "돌격으로 새 패주 유발 시 원대상 칸이 인접·비어 있으면 강제 1칸 전진.",
+      "proposal": "돌격 패주 유발 / 다음 차례 이동 +1 / 다음 첫 공격 −10%",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "value": 1,
+          "condition": "CHARGE",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "CHARGE",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "durationNext": true,
+          "firstOnly": true
+        }
+      ]
+    },
+    "TC-C01e": {
+      "name": "돌파",
+      "before": "흐트러진 적의 통제 구역을 무시하고 지난다. 대가: 돌격한 뒤 자기 전열이 흐트러짐.",
+      "proposal": "흐트러진 적 공격 / 피해 +15% / 자기 전열 저하",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "TARGET_DISORDERED",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "value": -1,
+          "condition": "CHARGE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C02b": {
+      "name": "협공",
+      "before": "대상 반대편에 아군이 있으면 그 아군이 40% 추격타.",
+      "proposal": "대상 반대편 아군 / 원대상 피해 +15% / 단독 공격 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "ALLY_BEHIND_TARGET",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "NO_ALLY_BEHIND",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C02c": {
+      "name": "빈틈을 찌르다",
+      "before": "측면·후방으로 공격하면 상대가 반격하지 못한다.",
+      "proposal": "측후면 공격 / 반격 피해 −30% / 정면 피해 −10%",
+      "effects": [
+        {
+          "op": "COUNTER_TAKEN_MOD",
+          "value": -30,
+          "condition": "FLANK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "FRONT",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C02d": {
+      "name": "매복자",
+      "before": "상대 시야 밖에서 시작한 첫 공격은 후방 공격으로 친다.",
+      "proposal": "시야 밖 시작 첫 공격 / 피해 +15% / 이후 공격 −5%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "HIDDEN_START&FIRST_ROUND",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -5,
+          "condition": "NOT_FIRST",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C02e": {
+      "name": "늘 옆을 친다",
+      "before": "모든 공격이 최소 측면 공격. 대가: 후방 보너스 없음.",
+      "proposal": "실제 측면 공격 / 피해 +20% / 후방 보너스 −10%p",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 20,
+          "condition": "ACTUAL_FLANK",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DIRECTION_BONUS_FLAT",
+          "value": -10,
+          "condition": "REAR",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C03b": {
+      "name": "고슴도치",
+      "before": "정돈 상태면 측면 공격 보너스를 받지 않는다(후방은 받음).",
+      "proposal": "정돈 측면 피격 / 측면 추가 피해 절반 / 이동 −1",
+      "effects": [
+        {
+          "op": "DIRECTION_DAMAGE_MOD",
+          "value": -50,
+          "condition": "SELF_ORDERED&ACTUAL_FLANK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C03c": {
+      "name": "창 세우기",
+      "before": "이번 차례 움직이지 않았으면 정면 돌격 피해의 25%를 되돌려준다.",
+      "proposal": "미이동 정면 방어 / 기존 반격 +25% / 다음 이동 −1",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "value": 25,
+          "condition": "UNMOVED&FRONT",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "UNMOVED&FRONT",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C03d": {
+      "name": "들어오면 먼저 친다",
+      "before": "내 통제 구역에 들어온 첫 적을 상대가 치기 전에 먼저 친다(턴당 1회).",
+      "proposal": "미이동 방어 / 기존 반격 +20% / 이동 차례 보상 없음",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "value": 20,
+          "condition": "UNMOVED",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C03e": {
+      "name": "방진",
+      "before": "측면·후방으로 맞아도 불리함이 없다. 대가: 이동 최대 1칸.",
+      "proposal": "측후면 피격 / 해당 추가 피해 절반 / 이동 최대 1",
+      "effects": [
+        {
+          "op": "DIRECTION_DAMAGE_MOD",
+          "value": -50,
+          "condition": "FLANK",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MAX",
+          "value": 1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C04c": {
+      "name": "철의 의지",
+      "before": "차례마다 첫 사기 저하를 무시.",
+      "proposal": "첫 사기 판정 / 가중 −5 / 다음 공격 −5%",
+      "effects": [
+        {
+          "op": "MORALE_WEIGHT_MOD",
+          "value": -5,
+          "condition": "FIRST_MORALE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -5,
+          "condition": "FIRST_MORALE",
+          "when": "ON_MORALE_CHECK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C04d": {
+      "name": "아홉 목숨",
+      "before": "부대가 소멸할 피해를 한 판에 한 번 버티고 병력 5%로 패주.",
+      "proposal": "병력 25% 미만 / 방어 +20% / 이동 −1",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "value": 20,
+          "condition": "HP_BELOW:25",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": "HP_BELOW:25",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C04e": {
+      "name": "복수의 맹세",
+      "before": "패주한 뒤 3전투 동안 주는 피해 −10%, 그 사이 패주시킨 상대를 이기면 희귀 특기 1장을 바로 얻는다.",
+      "proposal": "패주 후 숙적 격파 / 경험치 +30% / 복수 전 3전투 피해 −10%",
+      "effects": [
+        {
+          "op": "XP_MOD",
+          "value": 30,
+          "condition": "REVENGE_TARGET",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "eventOnly": true
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "REVENGE_PENDING",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C05d": {
+      "name": "포위망",
+      "before": "세 면 포위 시 차례 시작에 내구 직접 감소 및 수비 부대 사기 판정.",
+      "proposal": "세 면 포위 / 주 행동 성 공격 피해 +20% / 이동 −1",
+      "effects": [
+        {
+          "op": "SIEGE_DAMAGE_MOD",
+          "value": 20,
+          "condition": "THREE_SIEGERS",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-C06b": {
+      "name": "원한",
+      "before": "숙적이 보이면 이동 +1·사기 고정. 대가: 그 차례 숙적 쪽으로 가까워져야 한다.",
+      "proposal": "숙적 보임 / 이동 +1·사기 가중 −5 / 숙적 쪽 이동 제약 유지",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "value": 1,
+          "condition": "RIVAL_VISIBLE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MORALE_WEIGHT_MOD",
+          "value": -5,
+          "condition": "RIVAL_VISIBLE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_TOWARD_RIVAL",
+          "value": 1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-V01a": {
+      "name": "흉년 대비",
+      "before": "식량이 창고 상한을 넘치면 넘친 식량 1당 예비병 +5.",
+      "proposal": "창고 가득 / 기존 모집량 +20% / 식량 산출 −10%",
+      "effects": [
+        {
+          "op": "RECRUIT_AMOUNT_MOD",
+          "value": 20,
+          "condition": "FULL_STORAGE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "FOOD"
+        }
+      ]
+    },
+    "TC-V01d": {
+      "name": "천하의 곡창",
+      "before": "이 성의 식량 지원은 포위·거리 제한 없이 닿는다. 대가: 이 성 생산 −2.",
+      "proposal": "평시 합법 지원 / 지원량 +20% / 생산 −2",
+      "effects": [
+        {
+          "op": "SUPPORT_AMOUNT_MOD",
+          "value": 20,
+          "condition": "PEACEFUL",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "PRODUCTION_FLAT",
+          "value": -2,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-V02c": {
+      "name": "인망·과학으로 짓기",
+      "before": "시설 작업의 남은 생산을 인망 2 또는 과학 1당 1씩 대신 치러 즉시 끝낼 수 있다.",
+      "proposal": "시설 건설 중 / 생산 +20% / 과학 −10%; 대체 지불 제거",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": 20,
+          "condition": "BUILDING",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "SCIENCE"
+        }
+      ]
+    },
+    "TC-V02d": {
+      "name": "마지막 한 번 버티는 성벽",
+      "before": "성 내구도가 0이 되는 공격을 한 판에 한 번 버틴다(내구 1). 대가: 성 사격 피해 −50%.",
+      "proposal": "내구 25 이하 / 내구 피해 −20% / 성 사격 −50%",
+      "effects": [
+        {
+          "op": "WALL_DEFENSE_MOD",
+          "value": 20,
+          "condition": "WALL_BELOW_25",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_SHOT_MOD",
+          "value": -50,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-V03b": {
+      "name": "스승의 길",
+      "before": "주기마다 자유 장수에 태수 내정 특기 전수; 보유 수 3 이상은 건너뜀(장착제 잔여 불일치).",
+      "proposal": "자유 장수 성 체류 / 경험치 +20% / 태수 경험치 −10%",
+      "effects": [
+        {
+          "op": "RESIDENT_XP_MOD",
+          "value": 20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "XP_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-V04b": {
+      "name": "포로를 돌려보낸다",
+      "before": "포로를 석방하면 인망 +15, 그 포로 세력의 성 하나 치안 한 단계 악화.",
+      "proposal": "포로 석방 / 자기 인망 +15 / 생산 −10%; 적 치안 변경 제거",
+      "effects": [
+        {
+          "op": "RELEASE_PRESTIGE",
+          "value": 15,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ]
+    },
+    "TC-V04d": {
+      "name": "토호에게 특권 주기",
+      "before": "회유 처리 때 점령 단계 둘을 한 번에 끝낸다. 대가: 그 성 생산 영구 −1(인망 50으로 철회).",
+      "proposal": "회유 처리 / 잔여 점령 기간 −2 / 생산 −1; 새 철회 명령 제거",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "value": 2,
+          "condition": "CONCILIATE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "PRODUCTION_FLAT",
+          "value": -1,
+          "condition": "PRIVILEGED",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-V05b": {
+      "name": "첩자를 잡는다",
+      "before": "성 시야 +2, 사건·전법으로 이 성 치안이 떨어지지 않는다.",
+      "proposal": "사건 발생 / 치안 손실 −30%·시야 +2 / 인망 −10%",
+      "effects": [
+        {
+          "op": "SECURITY_LOSS_MOD",
+          "value": -30,
+          "condition": "EVENT",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_VISION_MOD",
+          "value": 2,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRESTIGE"
+        }
+      ]
+    },
+    "TC-V05d": {
+      "name": "계엄",
+      "before": "이 성 치안은 무엇이 있어도 '안정'. 대가: 생산 −50%.",
+      "proposal": "불안 이상 / 치안 손실 −30% / 생산 −50%",
+      "effects": [
+        {
+          "op": "SECURITY_LOSS_MOD",
+          "value": -30,
+          "condition": "UNREST",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -50,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ]
+    },
+    "TC-V06a": {
+      "name": "정성 들인 등용",
+      "before": "이 성에서 등용한 장수는 첫 레벨업 때 후보 카드 +1장.",
+      "proposal": "등용 후 첫 성장 / 경험치 +20% / 등용 인망 비용 +10%",
+      "effects": [
+        {
+          "op": "FIRST_GROWTH_XP_MOD",
+          "value": 20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "RECRUIT_COST_MOD",
+          "value": 10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "TC-V06b": {
+      "name": "인재의 그물",
+      "before": "이 성에서 다른 아군 성의 재야 장수도 등용할 수 있다.",
+      "proposal": "자기 성 등용 / 인망 비용 −20% / 생산 −10%",
+      "effects": [
+        {
+          "op": "RECRUIT_COST_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ]
+    },
+    "TC-V06c": {
+      "name": "귀순을 이끈다",
+      "before": "아군이 적 성을 함락하면 그 성 자유 장수는 포로 대신 재야로 남는다.",
+      "proposal": "합법 포로 등용 / 인망 비용 −20% / 도시 인망 −10%",
+      "effects": [
+        {
+          "op": "CAPTIVE_RECRUIT_COST_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRESTIGE"
+        }
+      ]
+    },
+    "TC-V07d": {
+      "name": "부상병 먼저 출진",
+      "before": "이 성 출진은 예비병보다 부상병을 먼저 쓴다. 대가: 그 부대 첫 2턴 동요 문턱 ×0.8.",
+      "proposal": "부상병 있는 성 / 기존 회복량 +30% / 새 부대 2턴 사기 문턱 ×0.8",
+      "effects": [
+        {
+          "op": "WOUNDED_RECOVERY_MOD",
+          "value": 30,
+          "condition": "CITY_WOUNDED",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "MUSTER_MORALE_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "CD-02": {
+      "name": "장부 정리",
+      "before": "작업이 끝나는 턴에 남은 생산이 다음 작업으로 넘어간다.",
+      "proposal": "작업 완공 차례 / 생산 +10% / 작업 없는 차례 보상 없음",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": 10,
+          "condition": "COMPLETING_JOB",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ]
+    },
+    "CD-04": {
+      "name": "청렴",
+      "before": "이 성에서 수탈을 고를 수 없다. 대신 치안이 나빠질 원인 1개를 매 정산 무시.",
+      "proposal": "정산 치안 판정 / 손실 −20% / 수탈 불가",
+      "effects": [
+        {
+          "op": "SECURITY_LOSS_MOD",
+          "value": -20,
+          "condition": "SETTLE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "NO_PLUNDER",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "CD-06": {
+      "name": "피란민을 받는다",
+      "before": "5칸 안 아군·중립 성이 함락되면 이 성 인구 +1.",
+      "proposal": "인근 성 함락 후 / 기존 인구 성장 +20% / 식량 소비 +10%",
+      "effects": [
+        {
+          "op": "POPULATION_GROWTH_MOD",
+          "value": 20,
+          "condition": "NEAR_CAPTURE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "FOOD_CONSUMPTION_MOD",
+          "value": 10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "TM-01": {
+      "name": "나라 하나의 창고",
+      "before": "세력 모든 성이 식량 창고 하나를 함께 쓴다(포위된 성 포함). 대가: 합친 창고 상한 −20%.",
+      "proposal": "평시 합법 지원 / 지원량 +20% / 창고 상한 −20%",
+      "effects": [
+        {
+          "op": "SUPPORT_AMOUNT_MOD",
+          "value": 20,
+          "condition": "PEACEFUL",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "STORAGE_CAP_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "TM-02": {
+      "name": "바로 따르는 민심",
+      "before": "이 장수가 점령 처리에 관여한 성은 점령 단계 없이 바로 정상. 대가: 세력 전체 수탈 불가.",
+      "proposal": "점령 처리 / 잔여 기간 −1 / 세력 수탈 불가",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "FACTION_NO_PLUNDER",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "TM-03": {
+      "name": "천하의 인재가 모인다",
+      "before": "5턴마다 이 장수의 성에 아직 나오지 않은 장수 1명이 재야로 나타난다. 대가: 세력 등용 인망 +20%.",
+      "proposal": "자기 성 등용 / 인망 비용 −20% / 생산 −10%; 장수 생성 제거",
+      "effects": [
+        {
+          "op": "RECRUIT_COST_MOD",
+          "value": -20,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ]
+    },
+    "TM-04": {
+      "name": "여러 성을 맡는다",
+      "before": "이 장수는 2칸 안 모든 아군 성의 태수로도 친다(내정 특기가 그 성들에도). 대가: 이 장수는 출진할 수 없다.",
+      "proposal": "현재 맡은 성 / 산출 +15% / 출진 불가; 주변 전파 제거",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": 15,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "NO_MUSTER",
+          "value": 1,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V04": {
+      "name": "창끝 먼저",
+      "before": "창병일 때 측면으로 공격받아도 반격을 먼저 한다.",
+      "proposal": "창병 측면 피격 / 기존 반격 +20% / 정면 반격 보상 없음",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "value": 20,
+          "condition": "TROOP:BT02&ACTUAL_FLANK",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V05": {
+      "name": "붙어서도 쏜다",
+      "before": "궁병일 때 적이 맞닿아 있어도 2칸 사격을 할 수 있다(피해 ×0.7).",
+      "proposal": "교전 밖 궁병 사격 / 피해 +15% / 근접 피격 +10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "TROOP:BT03&NOT_ENGAGED",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "value": -10,
+          "condition": "ATTACKER_MELEE",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V06": {
+      "name": "숲 너머 조준",
+      "before": "궁병 주변 2칸 적의 은신 판정 해제; 문구의 숲 사격보다 넓은 탐지 권한.",
+      "proposal": "이미 보이는 숲 적 사격 / 피해 +15% / 평지 사격 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "TROOP:BT03&VISIBLE_FOREST",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "TARGET_PLAIN",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V07": {
+      "name": "옆에서 거든다",
+      "before": "맞닿은 아군이 공격하면 이 부대가 20% 추가 타격(차례 1회, 행동 소모 없음).",
+      "proposal": "아군 인접 정상 공격 / 피해 +10% / 단독 공격 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 10,
+          "condition": "ALLY_NEAR",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "NO_ALLY",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V09": {
+      "name": "연달아 싸운다",
+      "before": "적 부대를 패주시키면 이번 차례 행동 한 번 더(차례 1회). 대가: 다음 차례 이동 −2칸.",
+      "proposal": "첫 적 패주 유발 / 다음 차례 첫 공격 +20% / 다음 이동 −2",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 20,
+          "condition": null,
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0,
+          "durationNext": true,
+          "firstOnly": true
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -2,
+          "condition": null,
+          "when": "ON_KILL",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V12": {
+      "name": "멀리 던지는 투석",
+      "before": "투석기 사거리 +1칸.",
+      "proposal": "기존 거리 성 공격 / 피해 +15% / 이동 −1",
+      "effects": [
+        {
+          "op": "SIEGE_DAMAGE_MOD",
+          "value": 15,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "MOVE_MOD",
+          "value": -1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V13": {
+      "name": "타고난 운",
+      "before": "소멸 후 장수 운명을 ESCAPED로 돌려 부상·포획 회피.",
+      "proposal": "전투 생존 판정 / 기존 부상·포획 가중 감소 / 경험치 −10%; 확정 탈출 제거",
+      "effects": [
+        {
+          "op": "CAPTURE_WEIGHT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "INJURY_WEIGHT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "XP_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V14": {
+      "name": "피로 뚫는 퇴로",
+      "before": "패주할 때 사로잡히지 않고 통제 구역 1칸을 무시하고 물러난다.",
+      "proposal": "패주 이탈 / 추격 피해 −30% / 다음 공격 −10%; 경로 권한 유지",
+      "effects": [
+        {
+          "op": "PURSUIT_MOD",
+          "value": -30,
+          "condition": "ROUTING",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "AFTER_RETREAT",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V15": {
+      "name": "작은 상처 무시",
+      "before": "정면으로 받은 피해가 병력의 8%를 넘지 못한다.",
+      "proposal": "정면 피격 / 받는 피해 −20% / 측면 피해 +10%",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "value": 20,
+          "condition": "FRONT",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "value": -10,
+          "condition": "ACTUAL_FLANK",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V20": {
+      "name": "멀리 닿는 계략",
+      "before": "지략 전법(혼란·둔화·사기·불) 사거리 +1칸.",
+      "proposal": "기존 거리 지략 전법 / 비교 지략 +5 / 피해형 전법 위력 −10%",
+      "effects": [
+        {
+          "op": "STRATEGY_MOD",
+          "value": 5,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "SCHEME",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V21": {
+      "name": "계략이 빨라진다",
+      "before": "문구는 지략 쿨다운 −1/무용 +1; c33Cooldown 잔존. E/R 게이지 계약과 불일치.",
+      "proposal": "지략 전법 기존 피해 / 피해 +10% / 일반공격 −10%; 게이지 유지",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 10,
+          "condition": "SCHEME",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "NORMAL_ATTACK",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V22": {
+      "name": "속지 않는다",
+      "before": "지략 열세 적의 CONFUSED·ROOTED·TAUNT 차단; 거짓 소문은 ROOTED와 연결.",
+      "proposal": "낮은 지략 적의 판정 / 기존 성공 가중 −5 / 자기 피해 −5%",
+      "effects": [
+        {
+          "op": "STATUS_WEIGHT_MOD",
+          "value": -5,
+          "condition": "LOWER_INT_ATTACKER",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -5,
+          "condition": null,
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V23": {
+      "name": "꿰뚫어 본다",
+      "before": "자기와 맞닿은 아군이 상태이상(혼란·둔화·속박)에 걸리지 않는다.",
+      "proposal": "아군 인접 / 기존 상태 판정 가중 −5 / 자기 피해 −10%",
+      "effects": [
+        {
+          "op": "STATUS_WEIGHT_MOD",
+          "value": -5,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "STATUS_WEIGHT_MOD",
+          "value": -5,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "ADJACENT_ALLIES",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V24": {
+      "name": "모든 계략을 안다",
+      "before": "지략 비교 자동 통과 분기·적 지략 전법 50% 취소·무용 전법 제한.",
+      "proposal": "지략 비교 / 비교치 +5 / 무용 전법 장착 불가; 확정·취소 제거",
+      "effects": [
+        {
+          "op": "STRATEGY_MOD",
+          "value": 5,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "NO_MIGHT_TACTIC",
+          "value": 1,
+          "condition": null,
+          "when": "PASSIVE",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V26": {
+      "name": "끝장내기",
+      "before": "공격 후 생존 병력이 출진 병력 15% 미만인 대상을 확정 패주.",
+      "proposal": "병력 15% 아래 적 공격 / 피해 +20% / 그 외 적 피해 −10%",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 20,
+          "condition": "TARGET_LOW_15",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "TARGET_NOT_LOW_15",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CT-V32": {
+      "name": "가짜 깃발",
+      "before": "적 현재 관측 병력·최대 병력 표시를 2배; 실제 피해 정산은 원래 값.",
+      "proposal": "열세 정상 공격 / 피해 +15% / 우세 피해 −10%; 실제 병력 표시",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "value": 15,
+          "condition": "OUTNUMBERED",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "value": -10,
+          "condition": "OUTNUMBERING",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "duration": 0
+        }
+      ]
+    },
+    "CD-08": {
+      "name": "세금 앞당겨 걷기",
+      "before": "명령: 다음 3턴 생산을 지금 한 번에 받는다. 대가: 그 3턴 생산 0 + 치안 한 단계 악화.",
+      "proposal": "창고 가득 / 생산 +20% / 식량 산출 −10%; 선지급 제거",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": 20,
+          "condition": "FULL_STORAGE",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "FOOD"
+        }
+      ]
+    },
+    "CD-14": {
+      "name": "어진 정치",
+      "before": "그 성 치안이 저절로 나빠지지 않는다(사건·전법 제외).",
+      "proposal": "자연 치안 판정 / 손실 −30% / 생산 −10%",
+      "effects": [
+        {
+          "op": "SECURITY_LOSS_MOD",
+          "value": -30,
+          "condition": "NATURAL",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ]
+    },
+    "CD-15": {
+      "name": "도적 소탕",
+      "before": "그 성과 3칸 안에 도적 사건이 일어나지 않는다.",
+      "proposal": "도적 사건 / 기존 피해 −30% / 생산 −10%",
+      "effects": [
+        {
+          "op": "EVENT_DAMAGE_MOD",
+          "value": -30,
+          "condition": "BANDIT",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -10,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRODUCTION"
+        }
+      ]
+    },
+    "CD-16": {
+      "name": "하늘에 비는 제사",
+      "before": "그 성은 재해 사건을 받지 않는다. 대가: 세력 과학 −15%.",
+      "proposal": "재해 사건 / 피해 −30% / 세력 과학 −15%",
+      "effects": [
+        {
+          "op": "EVENT_DAMAGE_MOD",
+          "value": -30,
+          "condition": "DISASTER",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "FACTION_SCIENCE_MOD",
+          "value": -15,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        }
+      ]
+    },
+    "CD-17": {
+      "name": "이민족과 친교",
+      "before": "이민족 사건을 우호로 바꾸고 기병 100 용병 정보를 부여; 인망 −30%. 별도 모집 명령 완결은 미확인.",
+      "proposal": "이민족 사건 / 기존 우호 선택 비용 −20% / 도시 인망 −30%",
+      "effects": [
+        {
+          "op": "EVENT_COST_MOD",
+          "value": -20,
+          "condition": "TRIBAL",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "value": -30,
+          "condition": null,
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "duration": 0,
+          "resource": "PRESTIGE"
+        }
+      ]
+    }
+  }
+}

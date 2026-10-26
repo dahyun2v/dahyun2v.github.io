@@ -1,0 +1,623 @@
+[
+  {
+    "policyId": "POL-F01-CORE-01",
+    "factionId": "F01",
+    "sourceRefs": [
+      "F01-E-ECO-001"
+    ],
+    "projectLockRefs": [],
+    "unlocks": [],
+    "costInputs": [],
+    "risks": [],
+    "counterplay": [],
+    "eligibleOfficers": [],
+    "mapConditions": [],
+    "eventSeedIds": [
+      "SIT-F01-P01-01",
+      "EVT-F01-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: 둔전의 전쟁·기근·군량 회복 앵커 외 세부 출처 ID 미회수",
+      "projectLockRefs: canonical lock ID 미정규화",
+      "unlocks: v0.2 카드 전문 미회수",
+      "costInputs: v0.2 카드 전문 미회수",
+      "risks: v0.2 카드 전문 미회수",
+      "counterplay: v0.2 카드 전문 미회수",
+      "eligibleOfficers: 장수·역할의 canonical ID 미회수",
+      "mapConditions: 실제 위치·경로 조건 전문 미회수"
+    ]
+  },
+  {
+    "policyId": "POL-F02-CORE-01",
+    "factionId": "F02",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [],
+    "costInputs": [],
+    "risks": [],
+    "counterplay": [],
+    "eligibleOfficers": [],
+    "mapConditions": [],
+    "eventSeedIds": [
+      "INC-F02-P01-01",
+      "SIT-F02-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: exact source ID 미회수",
+      "projectLockRefs: canonical lock ID 미정규화",
+      "unlocks: v0.2 카드 전문 미회수",
+      "costInputs: v0.2 카드 전문 미회수",
+      "risks: v0.2 카드 전문 미회수",
+      "counterplay: v0.2 카드 전문 미회수",
+      "eligibleOfficers: 장수·역할의 canonical ID 미회수",
+      "mapConditions: 실제 위치·경로 조건 전문 미회수"
+    ]
+  },
+  {
+    "policyId": "POL-F03-CORE-01",
+    "factionId": "F03",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [],
+    "costInputs": [],
+    "risks": [],
+    "counterplay": [],
+    "eligibleOfficers": [],
+    "mapConditions": [],
+    "eventSeedIds": [
+      "EVT-F03-P01-01",
+      "SIT-F03-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: exact source ID 미회수",
+      "projectLockRefs: canonical lock ID 미정규화",
+      "unlocks: v0.2 카드 전문 미회수",
+      "costInputs: v0.2 카드 전문 미회수",
+      "risks: v0.2 카드 전문 미회수",
+      "counterplay: v0.2 카드 전문 미회수",
+      "eligibleOfficers: 장수·역할의 canonical ID 미회수",
+      "mapConditions: 실제 위치·경로 조건 전문 미회수"
+    ]
+  },
+  {
+    "policyId": "POL-F04-CORE-01",
+    "factionId": "F04",
+    "sourceRefs": [
+      "SRC-YUANSHAO-LINEAGE-001",
+      "SRC-YUANSHAO-FOURPROVINCES-001",
+      "SRC-YUANSHAO-IMPERIAL-001"
+    ],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "문벌 서한",
+        "targetKinds": [
+          "귀족",
+          "호족",
+          "관료"
+        ],
+        "requiredPresence": "서한 작성 담당자와 실제 사절 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "귀순·연합·관직 교섭",
+        "targetKinds": [
+          "장수",
+          "도시",
+          "세력"
+        ],
+        "requiredPresence": "사절이 대상 위치에 도착해야 함",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "황족 명분회의",
+        "targetKinds": [
+          "황족 후보",
+          "관료",
+          "유력 장수"
+        ],
+        "requiredPresence": "회의 도시와 참가자 집결 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "다전선 도독 위임",
+        "targetKinds": [
+          "전선",
+          "도독부",
+          "유력 장수"
+        ],
+        "requiredPresence": "실제 관직·지휘권·부임 경로 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "복수 참모안 선택",
+        "targetKinds": [
+          "참모",
+          "작전안"
+        ],
+        "requiredPresence": "참모의 보고와 회의 시간 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "귀순 귀족 편입",
+        "targetKinds": [
+          "귀순자",
+          "영지",
+          "관직"
+        ],
+        "requiredPresence": "귀순자와 편입 담당자의 접촉 필요",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "인망",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "사절 이동·회의·도독 부임 시간",
+        "physicalInputs": [
+          "서한",
+          "전령",
+          "현지 비축",
+          "보급로"
+        ],
+        "officerCommitment": "외교·명망·군사 담당 장수의 임무 점유"
+      },
+      {
+        "walletRefs": [],
+        "timeRequirement": "관직·영지·지휘권 인계 시간",
+        "physicalInputs": [
+          "실제 관직",
+          "영지",
+          "지휘권"
+        ],
+        "officerCommitment": "임명권자와 피임명자의 현장 또는 사절 연결 필요"
+      }
+    ],
+    "risks": [
+      "명령 전달 지연",
+      "문벌과 유력 장수의 파벌 충돌",
+      "추대 또는 귀순 제안 거절",
+      "경쟁 세력의 정통성 주장",
+      "서명 귀족의 병력 제공 거부",
+      "복수 전선에 대한 엇갈린 지원",
+      "도독의 독자 외교 또는 이탈",
+      "잘못된 참모안 선택의 후속 흔적"
+    ],
+    "counterplay": [
+      "대상 세력의 거절 또는 중립 유지",
+      "경쟁 세력의 황실 명분 선전",
+      "외곽 도독과의 개별 화친",
+      "사절 체포·회유",
+      "문서 탈취",
+      "보고와 명령 전달 지연",
+      "보급로 차단"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G09"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "외교",
+          "명망",
+          "군사호위",
+          "전선지휘",
+          "참모"
+        ],
+        "relationshipRequirements": [
+          "교섭 대상 또는 유력 장수와 접촉 가능한 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "회의 도시 또는 사절 출발지",
+        "targetLocation": "추대·귀순·연합 대상 도시",
+        "requiredRouteState": "사절이 실제 이동할 수 있는 연결로",
+        "terrainTags": [],
+        "climateTags": [],
+        "supplyConnection": "전령과 사절의 왕복 경로 필요",
+        "cityState": "회의와 접견이 가능한 도시"
+      },
+      {
+        "officerLocation": "수도·도독부·복수 전선 중 담당 위치",
+        "targetLocation": "위임 대상 전선과 도독부",
+        "requiredRouteState": "부임로와 명령 전달로 유지",
+        "terrainTags": [],
+        "climateTags": [],
+        "supplyConnection": "각 전선의 실제 보급로와 현지 비축 필요",
+        "cityState": null
+      }
+    ],
+    "eventSeedIds": [
+      "EVT-F04-P01-01",
+      "SIT-F04-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "projectLockRefs: 빛의 제국·귀족과 황족의 종합 강세·자동 승리 금지의 canonical lock ID 미정규화",
+      "unlocks[].unlockId: 하위 접근권 canonical ID 미부여",
+      "sourceRefs: 《삼국지》 권6·《후한서》 권74상 locator의 canonical source ID 대조 필요"
+    ]
+  },
+  {
+    "policyId": "POL-F05-CORE-01",
+    "factionId": "F05",
+    "sourceRefs": [
+      "SRC-LUBU-FLYINGGENERAL-001",
+      "SRC-LUBU-HALBERD-001",
+      "SRC-LUBU-XIAPI-001"
+    ],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "현장 위압 교섭",
+        "targetKinds": [
+          "적장",
+          "중립 세력",
+          "교섭 집단"
+        ],
+        "requiredPresence": "여포가 교섭 현장에 실제로 존재",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "제3자 중재·제한 철군",
+        "targetKinds": [
+          "교전 세력",
+          "구원군"
+        ],
+        "requiredPresence": "외교 담당자의 접촉과 협상 거리·시간 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "포위망 특정 구간 탈출로 개척",
+        "targetKinds": [
+          "봉쇄 구간",
+          "후퇴로"
+        ],
+        "requiredPresence": "여포와 기동 부대가 돌파 위치에 있어야 함",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "적 주력 고정 양동",
+        "targetKinds": [
+          "적 주력",
+          "전장 구간"
+        ],
+        "requiredPresence": "여포가 적이 관측 가능한 현장에 존재",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "성문 밖 기병·성내 수비 분리",
+        "targetKinds": [
+          "기동 부대",
+          "성내 수비대"
+        ],
+        "requiredPresence": "신뢰할 수 있는 성내 방어 담당자 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "전장 시위 후 조건 협상",
+        "targetKinds": [
+          "적군",
+          "협상 상대"
+        ],
+        "requiredPresence": "전장 접촉 이후 실제 사절 왕복 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "생존 가능한 기동로 전환",
+        "targetKinds": [
+          "부대",
+          "후퇴 경로"
+        ],
+        "requiredPresence": "말·이동 가능 지형·열린 후퇴로 필요",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "행동력"
+        ],
+        "timeRequirement": "현장 이동·전투 접촉·협상 왕복 시간",
+        "physicalInputs": [
+          "탑승 가능한 말",
+          "열린 후퇴로",
+          "성문",
+          "연락 수단"
+        ],
+        "officerCommitment": "여포와 외교·호위·성내 방어 담당자의 임무 점유"
+      }
+    ],
+    "risks": [
+      "장기 봉쇄와 보급 차단",
+      "부하와 참모의 내부 불화",
+      "구원군의 불출병",
+      "여포 출성 후 성문 폐쇄",
+      "후퇴로 차단",
+      "장기 통치·보급·동맹망의 취약",
+      "고립 시 전장 압력 지속 불가"
+    ],
+    "counterplay": [
+      "여포와 정면으로 교전하지 않고 성과 보급로 봉쇄",
+      "협로와 성채를 이용한 이동 지연",
+      "후퇴로 차단",
+      "후방 또는 동맹 세력 공격",
+      "구원군과 성내 수비대의 관계 분리",
+      "기습과 공동 경계",
+      "보급 차단 후 목표 달성"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G01"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "외교",
+          "호위",
+          "성내방어",
+          "기병지휘"
+        ],
+        "relationshipRequirements": [
+          "여포와 명령을 주고받을 수 있는 신뢰 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "여포가 교섭·양동·돌파 대상 현장에 위치",
+        "targetLocation": "봉쇄 구간·적 보급로·후퇴로·성문",
+        "requiredRouteState": "말과 부대가 실제 이동 가능한 경로",
+        "terrainTags": [
+          "기병 이동 가능 지형",
+          "협로",
+          "성곽 접근로"
+        ],
+        "climateTags": [],
+        "supplyConnection": "최소 식량과 생존 가능한 후퇴로 필요",
+        "cityState": "성내 수비대와 성문 통제 상태 확인"
+      },
+      {
+        "officerLocation": "외교 담당자의 사절 출발 위치",
+        "targetLocation": "중재·구원 요청 대상",
+        "requiredRouteState": "실제 사절 접근로",
+        "terrainTags": [],
+        "climateTags": [],
+        "supplyConnection": null,
+        "cityState": null
+      }
+    ],
+    "eventSeedIds": [
+      "INC-F05-P01-01",
+      "SIT-F05-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "projectLockRefs: 인간형 천재지변·신의 징벌·일기토 금지·정면전 자동승리 금지의 canonical lock ID 미정규화",
+      "unlocks[].unlockId: 하위 접근권 canonical ID 미부여",
+      "eligibleOfficers: 진궁·고순의 canonical G ID가 본 카드 회수본에 없음"
+    ]
+  },
+  {
+    "policyId": "POL-F06-CORE-01",
+    "factionId": "F06",
+    "sourceRefs": [
+      "SRC-MATENG-EXPEDITION-001",
+      "SRC-MACHAO-TONGPASS-001",
+      "SRC-GUANXI-COALITION-001"
+    ],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "기마 원정연합 편성",
+        "targetKinds": [
+          "기병 부대",
+          "연합 장수"
+        ],
+        "requiredPresence": "참가 장수와 부대의 실제 집결 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "원정 보급선 설정",
+        "targetKinds": [
+          "목초지",
+          "우물",
+          "시장",
+          "우호 도시"
+        ],
+        "requiredPresence": "담당자가 경유지와 실제 연결로를 확인해야 함",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "선봉·우회·후위·군마 보호 지정",
+        "targetKinds": [
+          "참가 부대",
+          "수송대",
+          "군마"
+        ],
+        "requiredPresence": "역할을 맡을 각 부대의 집결 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "중간 집결지·교대 주둔지 협상",
+        "targetKinds": [
+          "도시",
+          "취락",
+          "우호 세력"
+        ],
+        "requiredPresence": "연락 담당자의 현장 접촉 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "관문·도하점 돌파 목표 지정",
+        "targetKinds": [
+          "관문",
+          "도하점",
+          "협곡"
+        ],
+        "requiredPresence": "선봉과 후속 부대가 실제 접근 가능해야 함",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "통행·사료·숙영지 요청",
+        "targetKinds": [
+          "중립 세력",
+          "우호 도시",
+          "현지 집단"
+        ],
+        "requiredPresence": "사절 이동과 관계 조건 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "목표 축소·기동 철수",
+        "targetKinds": [
+          "원정 목표",
+          "집결지",
+          "후퇴로"
+        ],
+        "requiredPresence": "보급 단절 전에 명령 전달과 재집결 필요",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "집결·원정·교대 주둔·재집결 시간",
+        "physicalInputs": [
+          "말",
+          "사료",
+          "보급로",
+          "집결지",
+          "우물",
+          "시장",
+          "숙영지"
+        ],
+        "officerCommitment": "G12·G13 및 기병·연락 담당자의 임무 점유"
+      }
+    ],
+    "risks": [
+      "선봉 고립",
+      "말과 병력의 피로",
+      "후퇴로 봉쇄",
+      "보급로 단절",
+      "후방 보급 거점 피습",
+      "연합 분열",
+      "통행 협상 파기",
+      "강제 재집결로 인한 원정 목표 축소"
+    ],
+    "counterplay": [
+      "선봉 유인",
+      "후방 보급 거점 공격",
+      "보급로 차단",
+      "관문·협곡·도하점 봉쇄",
+      "기병 이동이 불리한 지형으로 유도",
+      "위조 서한",
+      "연합 장수와의 개별 협상",
+      "통행·사료·숙영지 제공 거부"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G12"
+        ],
+        "requiredRoleTags": [
+          "원정지속"
+        ],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [
+          "G13"
+        ],
+        "requiredRoleTags": [
+          "선봉돌파"
+        ],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "기병지휘",
+          "연락",
+          "보급",
+          "후위"
+        ],
+        "relationshipRequirements": [
+          "연합 참가 장수 사이의 통행·명령 합의"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "각 주장과 부대의 실제 집결·행군 위치",
+        "targetLocation": "현재 지도상의 관문·도하점·협곡·집결지",
+        "requiredRouteState": "출발지와 목표 사이의 연결된 실제 보급로",
+        "terrainTags": [
+          "기병 이동 가능 지형",
+          "도로",
+          "들판",
+          "목초지",
+          "구릉",
+          "강",
+          "관문",
+          "도하점"
+        ],
+        "climateTags": [],
+        "supplyConnection": "식량·사료·교대 주둔지를 잇는 보급 연결 필요",
+        "cityState": "시장·우호 도시·중립 통행 협상 상태 확인"
+      }
+    ],
+    "eventSeedIds": [
+      "INC-F06-P01-01",
+      "SIT-F06-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "projectLockRefs: 빠른 유목 기마군·동관돌파·보급 무시 금지·고정 시작 금지의 canonical lock ID 미정규화",
+      "unlocks[].unlockId: 하위 접근권 canonical ID 미부여",
+      "costInputs: 말 교대·장비 수리에 관한 별도 canonical 물자 ID 미정규화"
+    ]
+  }
+]

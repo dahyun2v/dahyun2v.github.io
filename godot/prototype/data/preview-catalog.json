@@ -1,0 +1,11 @@
+{
+  "version": "preview-catalog-1",
+  "status": "development-preview-only",
+  "description": "컨셉을 확인하는 세 세력의 미리보기. 정식 시작 시나리오·인물 소속·병력 배치를 확정하지 않음.",
+  "sourceRefs": ["세력-장수-컨셉:F01-F03", "장수-특기-전법-30인:G07,G05,G08", "지도-규모-이동-시험표:M33"],
+  "factions": [
+    {"id": "F01", "name": "조조", "characterId": "G07", "mark": "曹", "theme": "cao", "image": "/images/caocao.png", "identity": "질서와 실력의 군사국가", "description": "서로 다른 인재의 역할을 나누고, 여러 부대의 힘을 한곳에 모읍니다."},
+    {"id": "F02", "name": "유비", "characterId": "G05", "mark": "劉", "theme": "liu", "image": "/images/liubei.png", "identity": "사람을 모으는 의형제 연합", "description": "동료의 호위와 사기 유지로 버티고, 흩어진 전열을 다시 세웁니다."},
+    {"id": "F03", "name": "손권", "characterId": "G08", "mark": "孫", "theme": "sun", "image": "/images/sunquan.png", "identity": "서로 다른 재주가 맞물리는 연합", "description": "전열을 묶는 군주, 돌파하는 무장, 화공을 맡는 책사가 함께 움직입니다."}
+  ]
+}

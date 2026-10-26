@@ -1,0 +1,148 @@
+[
+  {
+    "eventSeedId": "INC-F05-P01-01",
+    "policyId": "POL-F05-CORE-01",
+    "factionId": "F05",
+    "scale": "INCIDENT",
+    "title": "轅門射戟",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "두 세력의 군대가 교전을 앞두고 가까이 대치한다",
+      "분쟁 당사자 중 한쪽이 중재 또는 원조를 요청한다",
+      "여포가 중재 장소까지 실제로 이동할 수 있다",
+      "초청과 이동이 진행되는 동안 양측의 공격 준비가 계속된다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "중재 요청을 받은 뒤 양측의 공격이 시작되기 전까지",
+    "playerChoices": [
+      "공개 시위의 결과를 조건으로 철군을 요구한다",
+      "한쪽 세력에 일방 철군을 요구한다",
+      "보상을 조건으로 분쟁을 중단시킨다",
+      "동맹 또는 공동 행동으로 분쟁 구조를 바꾼다",
+      "공격을 연기하고 추가 협상을 진행한다"
+    ],
+    "costInputs": [],
+    "risks": [
+      "공개 시위가 실패한다",
+      "양측이 사전에 합의한 규칙을 부정한다",
+      "중재 장소에서 기습이 발생한다",
+      "양측 모두 중재자를 불신한다"
+    ],
+    "counterplay": [
+      "분쟁 당사자가 중재 규칙의 해석을 다툰다",
+      "분쟁 당사자가 중재 장소 또는 이동 중인 상대를 기습한다",
+      "분쟁 당사자가 합의 후 철군을 이행하지 않는다"
+    ],
+    "failureTraces": [
+      "보증된 휴전",
+      "파기된 휴전",
+      "도전받은 위신",
+      "보호받아 빚을 졌다고 기억하는 세력"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "중재 장소",
+      "각 당사자의 도착 예상 시점",
+      "각 당사자의 현재 의도"
+    ],
+    "forbiddenAutoResolve": [
+      "공개 시위나 장수 개인의 무용만으로 분쟁과 철군을 확정할 수 없다",
+      "팝업 선택만으로 양측의 이동·충성·휴전 이행을 완료할 수 없다",
+      "초청 대상과 호위는 실제 위치에서 중재 장소까지 이동해야 한다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "localSubjectRef": null,
+    "responseDeadlineCondition": "양측의 공격 준비가 실제 교전으로 전환되기 전에 중재해야 한다",
+    "containmentOptions": [],
+    "spreadConditions": [],
+    "missingFields": [
+      "여포의 유비·기령 중재와 원문사극 앵커에 연결할 canonical source ID가 확정되지 않아 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "여포·유비·기령·외교 담당·호위 담당의 canonical officer ID가 완비되지 않아 castSelectors를 비웠다",
+      "양측 군영·중립 중재 지점·이동 경로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "costInputs의 구체 항목이 기존 카드에서 별도 값으로 정의되지 않아 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "분쟁 당사자 집단의 canonical subject ID가 없어 localSubjectRef를 null로 두었다",
+      "containmentOptions와 spreadConditions가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F05-P01-02",
+    "policyId": "POL-F05-CORE-01",
+    "factionId": "F05",
+    "scale": "SITUATION",
+    "title": "下邳之圍",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "여포가 위치한 도시가 포위되어 있다",
+      "도시 외부의 보급로가 차단되었거나 봉쇄가 준비되고 있다",
+      "성내 장수들의 관계와 지휘 신뢰가 불안정하다",
+      "적 보급로 또는 구원군 접근로에 도달할 수 있는 성외 기동로가 존재한다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "도시 포위가 유지되고 성내 비축·지휘 관계·구원 가능성이 남아 있는 동안",
+    "playerChoices": [
+      "여포가 출성해 적 보급로를 차단하고 성내 방어를 다른 장수에게 위임한다",
+      "전군으로 봉쇄선을 돌파한다",
+      "성을 유지하며 구원 외교를 진행한다",
+      "일부 병력과 주민을 탈출시킨다",
+      "도시·인질·금전을 조건으로 항복 또는 퇴로를 협상한다"
+    ],
+    "costInputs": [],
+    "risks": [
+      "장기 포위로 식량이 감소하고 내부 관계가 악화된다",
+      "적이 봉쇄를 강화하고 외부 보급로를 차단한다",
+      "성내 장수의 불신으로 방어와 명령 전달이 지연된다",
+      "요청한 원군이 출병하지 않는다",
+      "여포가 출성한 사이 성문이 폐쇄된다"
+    ],
+    "counterplay": [
+      "포위군이 진입로와 퇴로를 좁힌다",
+      "포위군이 도시와 외부 보급원을 분리한다",
+      "포위군이 보급로와 구원군 접근로를 차단한다",
+      "외부 세력이 구원 요청을 거절하거나 출병을 미룬다",
+      "성내 반대 세력이 출성한 지휘관의 귀환을 막는다"
+    ],
+    "failureTraces": [
+      "굶주린 도시",
+      "투항 장수와 잔류 장수의 단절",
+      "탈출에 사용된 샛길",
+      "버려진 군마",
+      "압수된 병기",
+      "실패한 구원 약속"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "도시 비축",
+      "봉쇄 구간",
+      "성내 신뢰",
+      "구원 회신 예상 시점",
+      "사용 가능한 돌파로"
+    ],
+    "forbiddenAutoResolve": [
+      "여포의 전투력이나 장수 개인의 결투만으로 포위·식량 부족·내부 배신을 일괄 제거할 수 없다",
+      "팝업 선택만으로 봉쇄 돌파·보급 확보·충성 회복·병력과 주민의 이동을 완료할 수 없다",
+      "출성·돌파·탈출·구원은 실제 위치와 이동 경로를 사용해야 한다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "하비 장기 포위·외부 출격안·성내 지휘관 불화·구원 실패 앵커에 연결할 canonical source ID가 확정되지 않아 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "여포·성내 지휘관·구원 요청 대상의 canonical officer ID가 완비되지 않아 castSelectors를 비웠다",
+      "포위 도시·성외 기병 주둔 후보지·적 보급로·구원군 접근로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "costInputs의 구체 항목이 기존 카드에서 별도 값으로 정의되지 않아 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

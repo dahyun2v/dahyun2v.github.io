@@ -1,0 +1,150 @@
+[
+  {
+    "eventSeedId": "INC-F02-P01-01",
+    "policyId": "POL-F02-CORE-01",
+    "factionId": "F02",
+    "scale": "INCIDENT",
+    "title": "성문 앞의 굶주린 마을",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "기근 또는 전투 피해를 입은 주민이 존재한다",
+      "주민 대표가 성문 또는 주둔지에 도착한다",
+      "창고가 부족하거나 적의 접근이 예상된다",
+      "창고에서 피해 마을까지 식량을 실제로 운송해야 한다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "주민이 보유한 식량이 소진되기 전",
+    "playerChoices": [
+      "주민을 도시로 수용하고 공동 배급한다",
+      "마을에 식량을 보내 현지 정착을 돕는다",
+      "상단에 운송을 맡기고 추후 상환한다",
+      "군량 부족을 공개하고 일부 주민을 우선 보호한다",
+      "수용을 거절하고 안전한 이동 경로를 제공한다"
+    ],
+    "costInputs": [
+      "식량",
+      "운송 물자",
+      "배급 인력",
+      "운송·배급 시간"
+    ],
+    "risks": [
+      "운송대가 습격당한다",
+      "배급 지연으로 신뢰가 하락한다",
+      "과잉 수용으로 기존 주민이 반발한다"
+    ],
+    "counterplay": [
+      "적 또는 약탈 세력이 구호 운송대를 습격한다",
+      "적의 접근이 배급과 주민 수용을 방해한다"
+    ],
+    "failureTraces": [
+      "보호 공동체",
+      "미이행 약속",
+      "원주민과 이주민의 긴장",
+      "구호길",
+      "공동취사장",
+      "임시거처"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "주민 위치",
+      "결정 가능 시간",
+      "운송 경로",
+      "보유 비축",
+      "담당 장수"
+    ],
+    "forbiddenAutoResolve": [
+      "유비가 실제 위치에 없으면 자동 설득과 자동 배급을 허용하지 않는다",
+      "팝업 선택만으로 구호·주민 이동·식량 전달·관계 회복을 완료할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "localSubjectRef": null,
+    "responseDeadlineCondition": "주민 식량이 소진되거나 적이 접근하기 전에 대응해야 한다",
+    "containmentOptions": [],
+    "spreadConditions": [],
+    "missingFields": [
+      "역사·문화 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "유비·제갈량·조운의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "피해 마을·성문·창고의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "주민 집단의 canonical subject ID가 없어 localSubjectRef를 null로 두었다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "containmentOptions와 spreadConditions가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F02-P01-02",
+    "policyId": "POL-F02-CORE-01",
+    "factionId": "F02",
+    "scale": "SITUATION",
+    "title": "함께 가겠다는 사람들",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "세력이 열세 상태에서 철수한다",
+      "주민이 잔류할 경우 보복이나 약탈을 우려한다",
+      "세력과 주민 사이에 관계가 축적되어 있다",
+      "피난 행렬이 출발 도시에서 육상로와 나루터를 거쳐 목적지로 이동해야 한다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "철수 개시부터 피난 목적지 도착 전까지",
+    "playerChoices": [
+      "전 주민을 육로로 동행시킨다",
+      "전투 가능자와 취약 주민을 나누어 이동시킨다",
+      "수로 운송을 분담한다",
+      "본대는 전진시키고 별도 병력이 주민을 보호한다",
+      "제삼자와 임시 보호 협상을 진행한다"
+    ],
+    "costInputs": [],
+    "risks": [
+      "주민 이동 속도로 철수가 지연된다",
+      "나루터 또는 선박 확보가 늦어져 추격을 허용한다",
+      "후방이 공격받는다",
+      "목적지의 수용 여력이 부족하다",
+      "가족이 분리된다"
+    ],
+    "counterplay": [
+      "추격군이 지연된 피난 행렬을 공격한다",
+      "나루터와 수로가 차단된다"
+    ],
+    "failureTraces": [
+      "피난민 정착지",
+      "구출된 사람",
+      "실종된 사람",
+      "버려졌다고 기억하는 사람",
+      "기억된 피난로",
+      "관계 서사"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "행렬의 현재 위치",
+      "피난 목적지",
+      "추격 도달 예상",
+      "운송 수단",
+      "목적지 수용 여력"
+    ],
+    "forbiddenAutoResolve": [
+      "인망만으로 주민을 즉시 이동시킬 수 없다",
+      "인망만으로 추격을 취소하거나 충성을 확정할 수 없다",
+      "팝업 선택만으로 이동·호위·보급·협상을 성공 처리할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "형주 주민 합류·당양 철수 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "유비·조운·제갈량의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "출발 도시·육상로·나루터·피난 목적지의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "costInputs의 구체 항목이 기존 카드에서 정의되지 않아 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

@@ -1,0 +1,1658 @@
+{
+  "schema": "officers-first-play-v1",
+  "status": "사용자 위임에 따른 작업 결정·시험값",
+  "updated": "2026-09-19",
+  "scope": "첫 축소판: 조조·유비·손권 각 3명, 총 9명",
+  "sources": {
+    "concept": "../세력-장수-컨셉.md",
+    "roster": "../장수-특기-전법-30인.md",
+    "growth_rules": "../장수-육성-일괄결정표.md",
+    "combat": "../전투-최소실행표-v1.md",
+    "economy": "city-economy-v1.json"
+  },
+  "rules": {
+    "stat_order": [
+      "공격지휘",
+      "방어지휘",
+      "기동지휘",
+      "사기유지",
+      "완력",
+      "치명",
+      "공속",
+      "체력",
+      "군략",
+      "모략",
+      "간파",
+      "회피",
+      "농정",
+      "행정",
+      "민정",
+      "병참",
+      "사기회복",
+      "체력회복",
+      "등용",
+      "친화"
+    ],
+    "major_stat_display": "하위 4개 단순평균 반올림",
+    "stat_randomization": "첫판 재현을 위해 아래 초기값 고정. 본편 인물 생성 시 정한 범위에서 1회 추첨 후 저장",
+    "start_level": 1,
+    "xp_to_next": "60 + 10 × (현재 레벨 - 1)",
+    "xp_cap_per_officer_per_turn": 20,
+    "aptitude_per_level": 1,
+    "initial_aptitude": "대표 병종 B, 같은 장수의 다른 허용 병종 C",
+    "aptitude_upgrade_costs": {
+      "C→B": 2,
+      "B→A": 3,
+      "A→S": 5,
+      "S→S+": 8
+    },
+    "aptitude_time_discount": {
+      "C": 0,
+      "B": 0.05,
+      "A": 0.1,
+      "S": 0.15,
+      "S+": 0.2
+    },
+    "time_source": "전투·지도 MAPTIME-v1: 0.05일=1틱, 기본일수×(1-할인)을 틱으로 올림, 최소1틱",
+    "energy_source": "최대기력=50+floor(체력/2). 최대치 증가 시 현재기력은 충전하지 않고, 감소 시 새 최대치로 절삭",
+    "first_play_disabled": [
+      "치명",
+      "회피"
+    ],
+    "gacha": "본인 고유특기+조건을 만족하는 공통특기에서 균등 추첨, 최대5단계 특기 제외, 타인 고유특기 제외",
+    "active_limits": {
+      "common_traits": 4,
+      "extra_tactics": 2
+    },
+    "level_up_apply": "결과 단계에서 1회 적용, 다음 명령부터 사용"
+  },
+  "officers": [
+    {
+      "id": "G07",
+      "name": "조조",
+      "faction_id": "F01",
+      "roles": [
+        "장군",
+        "문관"
+      ],
+      "allowed_units": [
+        "창병",
+        "궁병",
+        "공병"
+      ],
+      "representative_unit": "창병",
+      "initial_aptitude": {
+        "창병": "B",
+        "궁병": "C",
+        "공병": "C"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 90,
+        "방어지휘": 82,
+        "기동지휘": 86,
+        "사기유지": 86,
+        "완력": 70,
+        "치명": 64,
+        "공속": 70,
+        "체력": 76,
+        "군략": 91,
+        "모략": 86,
+        "간파": 90,
+        "회피": 85,
+        "농정": 82,
+        "행정": 92,
+        "민정": 86,
+        "병참": 92,
+        "사기회복": 84,
+        "체력회복": 68,
+        "등용": 92,
+        "친화": 92
+      },
+      "initial_major_stats": {
+        "통솔": 86,
+        "무력": 70,
+        "지력": 88,
+        "정치": 88,
+        "매력": 84
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "공격지휘",
+          "increment": 1
+        },
+        {
+          "substat": "방어지휘",
+          "increment": 1
+        },
+        {
+          "substat": "군략",
+          "increment": 1
+        },
+        {
+          "substat": "간파",
+          "increment": 1
+        },
+        {
+          "substat": "행정",
+          "increment": 1
+        },
+        {
+          "substat": "병참",
+          "increment": 1
+        },
+        {
+          "substat": "등용",
+          "increment": 1
+        },
+        {
+          "substat": "친화",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 88,
+      "unique_trait": {
+        "id": "UT-G07",
+        "name": "난세의 포석",
+        "level": 1,
+        "effect": "다른 아군이 현재 공격하는 적을 함께 공격할 때 자신의 피해가 높아진다.",
+        "growth": "협공 피해 보너스",
+        "condition": "자동으로 아군 표적을 바꾸지 않는다. 돌격·포격·책략에 중복 가산하지 않으며 같은 고무는 중첩 저장하지 않는다."
+      },
+      "representative_tactic": {
+        "id": "ART-G07",
+        "name": "난세의 군령",
+        "command": "지원",
+        "allowed_units": [
+          "창병",
+          "궁병",
+          "공병"
+        ],
+        "stat": "공격지휘",
+        "cooldown_family": "공격 고무",
+        "burden": "보통",
+        "effect": "아군 한 부대가 제한 시간 안에 가하는 다음 일반 공격 한 번의 위력을 높인다.",
+        "condition": "자동으로 아군 표적을 바꾸지 않는다. 돌격·포격·책략에 중복 가산하지 않으며 같은 고무는 중첩 저장하지 않는다.",
+        "source": "../장수-특기-전법-30인.md#G07"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C15",
+          "name": "맞춘 보폭",
+          "effect": "아군과 같은 적을 공격할 때 일반 공격 위력을 높인다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "같은 적을 공격할 때 일반 공격 위력 강화"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "공격지휘",
+              "from": 90,
+              "to": 91
+            },
+            {
+              "substat": "방어지휘",
+              "from": 82,
+              "to": 83
+            },
+            {
+              "substat": "군략",
+              "from": 91,
+              "to": 92
+            },
+            {
+              "substat": "간파",
+              "from": 90,
+              "to": 91
+            },
+            {
+              "substat": "행정",
+              "from": 92,
+              "to": 93
+            },
+            {
+              "substat": "병참",
+              "from": 92,
+              "to": 93
+            },
+            {
+              "substat": "등용",
+              "from": 92,
+              "to": 93
+            },
+            {
+              "substat": "친화",
+              "from": 92,
+              "to": 93
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 87,
+            "무력": 70,
+            "지력": 89,
+            "정치": 89,
+            "매력": 85
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G04",
+      "name": "순욱",
+      "faction_id": "F01",
+      "roles": [
+        "문관"
+      ],
+      "allowed_units": [
+        "공병",
+        "창병"
+      ],
+      "representative_unit": "공병",
+      "initial_aptitude": {
+        "공병": "B",
+        "창병": "C"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 44,
+        "방어지휘": 64,
+        "기동지휘": 46,
+        "사기유지": 62,
+        "완력": 28,
+        "치명": 24,
+        "공속": 24,
+        "체력": 44,
+        "군략": 82,
+        "모략": 84,
+        "간파": 98,
+        "회피": 88,
+        "농정": 96,
+        "행정": 100,
+        "민정": 98,
+        "병참": 90,
+        "사기회복": 82,
+        "체력회복": 76,
+        "등용": 86,
+        "친화": 92
+      },
+      "initial_major_stats": {
+        "통솔": 54,
+        "무력": 30,
+        "지력": 88,
+        "정치": 96,
+        "매력": 84
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "방어지휘",
+          "increment": 1
+        },
+        {
+          "substat": "사기유지",
+          "increment": 1
+        },
+        {
+          "substat": "간파",
+          "increment": 1
+        },
+        {
+          "substat": "회피",
+          "increment": 1
+        },
+        {
+          "substat": "농정",
+          "increment": 1
+        },
+        {
+          "substat": "행정",
+          "increment": 1
+        },
+        {
+          "substat": "민정",
+          "increment": 1
+        },
+        {
+          "substat": "병참",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 72,
+      "unique_trait": {
+        "id": "UT-G04",
+        "name": "왕좌의 경륜",
+        "level": 1,
+        "effect": "태수로 실제 근무하는 도시의 시설 건설·복구 생산력을 높인다.",
+        "growth": "작업 생산력 보너스",
+        "condition": "설치·시전 중 포격할 수 없다. 자신이 이동하거나 대상이 인접 범위를 벗어나면 끝난다. 새 길막 타일을 만들지 않는다."
+      },
+      "representative_tactic": {
+        "id": "ART-G04",
+        "name": "겹널 방책",
+        "command": "지원",
+        "allowed_units": [
+          "공병"
+        ],
+        "stat": "행정",
+        "cooldown_family": "직접 피해 보호",
+        "burden": "보통",
+        "effect": "짧은 설치 후 인접 아군 한 부대를 작은 방책으로 엄호하여 직접 공격 피해를 줄인다.",
+        "condition": "설치·시전 중 포격할 수 없다. 자신이 이동하거나 대상이 인접 범위를 벗어나면 끝난다. 새 길막 타일을 만들지 않는다.",
+        "source": "../장수-특기-전법-30인.md#G04"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C08",
+          "name": "정돈한 공방",
+          "effect": "실제 태수 근무 도시의 생산력 보너스.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "실제 태수 근무 도시 생산력 보너스"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "방어지휘",
+              "from": 64,
+              "to": 65
+            },
+            {
+              "substat": "사기유지",
+              "from": 62,
+              "to": 63
+            },
+            {
+              "substat": "간파",
+              "from": 98,
+              "to": 99
+            },
+            {
+              "substat": "회피",
+              "from": 88,
+              "to": 89
+            },
+            {
+              "substat": "농정",
+              "from": 96,
+              "to": 97
+            },
+            {
+              "substat": "행정",
+              "from": 100,
+              "to": 101
+            },
+            {
+              "substat": "민정",
+              "from": 98,
+              "to": 99
+            },
+            {
+              "substat": "병참",
+              "from": 90,
+              "to": 91
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 55,
+            "무력": 30,
+            "지력": 89,
+            "정치": 97,
+            "매력": 84
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G24",
+      "name": "장료",
+      "faction_id": "F01",
+      "roles": [
+        "장군",
+        "맹장"
+      ],
+      "allowed_units": [
+        "창병",
+        "궁병",
+        "기병"
+      ],
+      "representative_unit": "기병",
+      "initial_aptitude": {
+        "창병": "C",
+        "궁병": "C",
+        "기병": "B"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 95,
+        "방어지휘": 88,
+        "기동지휘": 94,
+        "사기유지": 87,
+        "완력": 93,
+        "치명": 85,
+        "공속": 88,
+        "체력": 82,
+        "군략": 86,
+        "모략": 68,
+        "간파": 81,
+        "회피": 73,
+        "농정": 48,
+        "행정": 54,
+        "민정": 56,
+        "병참": 82,
+        "사기회복": 78,
+        "체력회복": 50,
+        "등용": 70,
+        "친화": 90
+      },
+      "initial_major_stats": {
+        "통솔": 91,
+        "무력": 87,
+        "지력": 77,
+        "정치": 60,
+        "매력": 72
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "공격지휘",
+          "increment": 1
+        },
+        {
+          "substat": "기동지휘",
+          "increment": 1
+        },
+        {
+          "substat": "사기유지",
+          "increment": 1
+        },
+        {
+          "substat": "완력",
+          "increment": 1
+        },
+        {
+          "substat": "치명",
+          "increment": 1
+        },
+        {
+          "substat": "공속",
+          "increment": 1
+        },
+        {
+          "substat": "군략",
+          "increment": 1
+        },
+        {
+          "substat": "병참",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 91,
+      "unique_trait": {
+        "id": "UT-G24",
+        "name": "진문을 떠는 북",
+        "level": 1,
+        "effect": "궁병·공병을 근접 공격하면 주대상에게 추가 사기 피해를 준다.",
+        "growth": "조건부 사기 피해량",
+        "condition": "기본 돌격과 재정비를 공유한다. 원거리 부대라고 즉시 접근하거나 설치된 방책을 무시하지 않는다."
+      },
+      "representative_tactic": {
+        "id": "ART-G24",
+        "name": "진문의 돌격",
+        "command": "공격",
+        "allowed_units": [
+          "기병"
+        ],
+        "stat": "완력",
+        "cooldown_family": "돌격",
+        "burden": "보통",
+        "effect": "경로를 확보해 적 한 부대에 돌격하고 접근을 완료한다.",
+        "condition": "기본 돌격과 재정비를 공유한다. 원거리 부대라고 즉시 접근하거나 설치된 방책을 무시하지 않는다.",
+        "source": "../장수-특기-전법-30인.md#G24"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C14",
+          "name": "기억한 길",
+          "effect": "기존 이동 경로의 행군 효율을 높인다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "기존 이동 경로의 행군 효율 증가"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "공격지휘",
+              "from": 95,
+              "to": 96
+            },
+            {
+              "substat": "기동지휘",
+              "from": 94,
+              "to": 95
+            },
+            {
+              "substat": "사기유지",
+              "from": 87,
+              "to": 88
+            },
+            {
+              "substat": "완력",
+              "from": 93,
+              "to": 94
+            },
+            {
+              "substat": "치명",
+              "from": 85,
+              "to": 86
+            },
+            {
+              "substat": "공속",
+              "from": 88,
+              "to": 89
+            },
+            {
+              "substat": "군략",
+              "from": 86,
+              "to": 87
+            },
+            {
+              "substat": "병참",
+              "from": 82,
+              "to": 83
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 92,
+            "무력": 88,
+            "지력": 77,
+            "정치": 60,
+            "매력": 72
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G05",
+      "name": "유비",
+      "faction_id": "F02",
+      "roles": [
+        "명사",
+        "장군"
+      ],
+      "allowed_units": [
+        "의병",
+        "궁병",
+        "창병"
+      ],
+      "representative_unit": "의병",
+      "initial_aptitude": {
+        "의병": "B",
+        "궁병": "C",
+        "창병": "C"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 76,
+        "방어지휘": 88,
+        "기동지휘": 78,
+        "사기유지": 90,
+        "완력": 76,
+        "치명": 66,
+        "공속": 70,
+        "체력": 80,
+        "군략": 75,
+        "모략": 66,
+        "간파": 81,
+        "회피": 86,
+        "농정": 75,
+        "행정": 76,
+        "민정": 88,
+        "병참": 73,
+        "사기회복": 100,
+        "체력회복": 92,
+        "등용": 96,
+        "친화": 96
+      },
+      "initial_major_stats": {
+        "통솔": 83,
+        "무력": 73,
+        "지력": 77,
+        "정치": 78,
+        "매력": 96
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "방어지휘",
+          "increment": 1
+        },
+        {
+          "substat": "사기유지",
+          "increment": 1
+        },
+        {
+          "substat": "군략",
+          "increment": 1
+        },
+        {
+          "substat": "회피",
+          "increment": 1
+        },
+        {
+          "substat": "사기회복",
+          "increment": 1
+        },
+        {
+          "substat": "체력회복",
+          "increment": 1
+        },
+        {
+          "substat": "등용",
+          "increment": 1
+        },
+        {
+          "substat": "친화",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 90,
+      "unique_trait": {
+        "id": "UT-G05",
+        "name": "황숙의 군기",
+        "level": 1,
+        "effect": "자신과 인접 아군이 전투 중 잃는 사기를 줄인다.",
+        "growth": "사기 손실 완화율",
+        "condition": "잃은 사기까지만 회복한다. 체력·현역·기력 회복과 상태 이상 정화는 없다."
+      },
+      "representative_tactic": {
+        "id": "ART-G05",
+        "name": "도원의 재집결",
+        "command": "지원",
+        "allowed_units": [
+          "의병",
+          "궁병",
+          "창병"
+        ],
+        "stat": "사기회복",
+        "cooldown_family": "고무",
+        "burden": "보통",
+        "effect": "범위 안 아군 한 부대의 잃은 사기를 크게 회복한다.",
+        "condition": "잃은 사기까지만 회복한다. 체력·현역·기력 회복과 상태 이상 정화는 없다.",
+        "source": "../장수-특기-전법-30인.md#G05"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C13",
+          "name": "고른 숨",
+          "effect": "자기 부대의 전투 사기 손실을 완화한다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "전투 사기 손실 완화"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "방어지휘",
+              "from": 88,
+              "to": 89
+            },
+            {
+              "substat": "사기유지",
+              "from": 90,
+              "to": 91
+            },
+            {
+              "substat": "군략",
+              "from": 75,
+              "to": 76
+            },
+            {
+              "substat": "회피",
+              "from": 86,
+              "to": 87
+            },
+            {
+              "substat": "사기회복",
+              "from": 100,
+              "to": 101
+            },
+            {
+              "substat": "체력회복",
+              "from": 92,
+              "to": 93
+            },
+            {
+              "substat": "등용",
+              "from": 96,
+              "to": 97
+            },
+            {
+              "substat": "친화",
+              "from": 96,
+              "to": 97
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 84,
+            "무력": 73,
+            "지력": 78,
+            "정치": 78,
+            "매력": 97
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G02",
+      "name": "조운",
+      "faction_id": "F02",
+      "roles": [
+        "장군",
+        "맹장"
+      ],
+      "allowed_units": [
+        "창병",
+        "궁병",
+        "기병"
+      ],
+      "representative_unit": "기병",
+      "initial_aptitude": {
+        "창병": "C",
+        "궁병": "C",
+        "기병": "B"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 88,
+        "방어지휘": 89,
+        "기동지휘": 93,
+        "사기유지": 82,
+        "완력": 94,
+        "치명": 88,
+        "공속": 96,
+        "체력": 90,
+        "군략": 81,
+        "모략": 65,
+        "간파": 86,
+        "회피": 88,
+        "농정": 59,
+        "행정": 64,
+        "민정": 67,
+        "병참": 82,
+        "사기회복": 90,
+        "체력회복": 82,
+        "등용": 74,
+        "친화": 90
+      },
+      "initial_major_stats": {
+        "통솔": 88,
+        "무력": 92,
+        "지력": 80,
+        "정치": 68,
+        "매력": 84
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "공격지휘",
+          "increment": 1
+        },
+        {
+          "substat": "방어지휘",
+          "increment": 1
+        },
+        {
+          "substat": "기동지휘",
+          "increment": 1
+        },
+        {
+          "substat": "완력",
+          "increment": 1
+        },
+        {
+          "substat": "공속",
+          "increment": 1
+        },
+        {
+          "substat": "체력",
+          "increment": 1
+        },
+        {
+          "substat": "간파",
+          "increment": 1
+        },
+        {
+          "substat": "회피",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 95,
+      "unique_trait": {
+        "id": "UT-G02",
+        "name": "호위의 담력",
+        "level": 1,
+        "effect": "자신에게 걸린 혼란·둔화의 지속시간을 줄인다.",
+        "growth": "지속시간 감소율",
+        "condition": "범위를 벗어나면 보호가 끝난다. 창병의 길막·정면 돌격 차단까지 주지 않으며 보호는 가장 강한 효과 하나만 적용한다."
+      },
+      "representative_tactic": {
+        "id": "ART-G02",
+        "name": "호위의 귀로",
+        "command": "지원",
+        "allowed_units": [
+          "창병",
+          "기병",
+          "궁병"
+        ],
+        "stat": "방어지휘",
+        "cooldown_family": "직접 피해 보호",
+        "burden": "보통",
+        "effect": "인접 아군 한 부대가 잠시 받는 직접 공격 피해를 줄인다.",
+        "condition": "범위를 벗어나면 보호가 끝난다. 창병의 길막·정면 돌격 차단까지 주지 않으며 보호는 가장 강한 효과 하나만 적용한다.",
+        "source": "../장수-특기-전법-30인.md#G02"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C16",
+          "name": "읽어 낸 징후",
+          "effect": "자신이 혼란·둔화에 저항하기 쉬워진다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "혼란·둔화 적용 전 저항 보너스"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "공격지휘",
+              "from": 88,
+              "to": 89
+            },
+            {
+              "substat": "방어지휘",
+              "from": 89,
+              "to": 90
+            },
+            {
+              "substat": "기동지휘",
+              "from": 93,
+              "to": 94
+            },
+            {
+              "substat": "완력",
+              "from": 94,
+              "to": 95
+            },
+            {
+              "substat": "공속",
+              "from": 96,
+              "to": 97
+            },
+            {
+              "substat": "체력",
+              "from": 90,
+              "to": 91
+            },
+            {
+              "substat": "간파",
+              "from": 86,
+              "to": 87
+            },
+            {
+              "substat": "회피",
+              "from": 88,
+              "to": 89
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 89,
+            "무력": 93,
+            "지력": 81,
+            "정치": 68,
+            "매력": 84
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G03",
+      "name": "제갈량",
+      "faction_id": "F02",
+      "roles": [
+        "책사",
+        "문관"
+      ],
+      "allowed_units": [
+        "술병",
+        "궁병",
+        "공병",
+        "창병"
+      ],
+      "representative_unit": "술병",
+      "initial_aptitude": {
+        "술병": "B",
+        "궁병": "C",
+        "공병": "C",
+        "창병": "C"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 84,
+        "방어지휘": 89,
+        "기동지휘": 77,
+        "사기유지": 98,
+        "완력": 28,
+        "치명": 32,
+        "공속": 34,
+        "체력": 66,
+        "군략": 99,
+        "모략": 100,
+        "간파": 99,
+        "회피": 94,
+        "농정": 89,
+        "행정": 95,
+        "민정": 90,
+        "병참": 98,
+        "사기회복": 94,
+        "체력회복": 84,
+        "등용": 86,
+        "친화": 92
+      },
+      "initial_major_stats": {
+        "통솔": 87,
+        "무력": 40,
+        "지력": 98,
+        "정치": 93,
+        "매력": 89
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "방어지휘",
+          "increment": 1
+        },
+        {
+          "substat": "사기유지",
+          "increment": 1
+        },
+        {
+          "substat": "군략",
+          "increment": 1
+        },
+        {
+          "substat": "모략",
+          "increment": 1
+        },
+        {
+          "substat": "간파",
+          "increment": 1
+        },
+        {
+          "substat": "행정",
+          "increment": 1
+        },
+        {
+          "substat": "병참",
+          "increment": 1
+        },
+        {
+          "substat": "사기회복",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 83,
+      "unique_trait": {
+        "id": "UT-G03",
+        "name": "와룡의 미로",
+        "level": 1,
+        "effect": "좁은 구역의 적 이동을 늦추는 고유 책략을 제공한다.",
+        "growth": "이동 둔화율",
+        "condition": "고유특기가 제공하는 바로 그 전법이다. 속박의 진·속박과 같은 계열의 기술·대기시간을 공유한다. 지속 지형·추가 피해·완전 속박은 없다."
+      },
+      "representative_tactic": {
+        "id": "ART-G03",
+        "name": "반룡의 매듭",
+        "command": "책략",
+        "allowed_units": [
+          "술병",
+          "궁병",
+          "공병",
+          "창병"
+        ],
+        "stat": "모략",
+        "cooldown_family": "이동 둔화",
+        "burden": "높음",
+        "effect": "시전 완료 때 지정한 작은 구역 안의 적에게 이동 둔화를 건다.",
+        "condition": "고유특기가 제공하는 바로 그 전법이다. 속박의 진·속박과 같은 계열의 기술·대기시간을 공유한다. 지속 지형·추가 피해·완전 속박은 없다.",
+        "source": "../장수-특기-전법-30인.md#G03"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C18",
+          "name": "귀를 흐린 부적",
+          "effect": "정신 교란 계열 단일 혼란 사용 권한을 준다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "정신 교란 계열 단일 혼란 사용 권한"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "방어지휘",
+              "from": 89,
+              "to": 90
+            },
+            {
+              "substat": "사기유지",
+              "from": 98,
+              "to": 99
+            },
+            {
+              "substat": "군략",
+              "from": 99,
+              "to": 100
+            },
+            {
+              "substat": "모략",
+              "from": 100,
+              "to": 101
+            },
+            {
+              "substat": "간파",
+              "from": 99,
+              "to": 100
+            },
+            {
+              "substat": "행정",
+              "from": 95,
+              "to": 96
+            },
+            {
+              "substat": "병참",
+              "from": 98,
+              "to": 99
+            },
+            {
+              "substat": "사기회복",
+              "from": 94,
+              "to": 95
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 88,
+            "무력": 40,
+            "지력": 99,
+            "정치": 94,
+            "매력": 89
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G08",
+      "name": "손권",
+      "faction_id": "F03",
+      "roles": [
+        "명사",
+        "장군"
+      ],
+      "allowed_units": [
+        "의병",
+        "궁병",
+        "창병"
+      ],
+      "representative_unit": "궁병",
+      "initial_aptitude": {
+        "의병": "C",
+        "궁병": "B",
+        "창병": "C"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 75,
+        "방어지휘": 83,
+        "기동지휘": 80,
+        "사기유지": 90,
+        "완력": 60,
+        "치명": 52,
+        "공속": 63,
+        "체력": 77,
+        "군략": 84,
+        "모략": 76,
+        "간파": 88,
+        "회피": 88,
+        "농정": 86,
+        "행정": 90,
+        "민정": 91,
+        "병참": 85,
+        "사기회복": 98,
+        "체력회복": 76,
+        "등용": 94,
+        "친화": 96
+      },
+      "initial_major_stats": {
+        "통솔": 82,
+        "무력": 63,
+        "지력": 84,
+        "정치": 88,
+        "매력": 91
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "방어지휘",
+          "increment": 1
+        },
+        {
+          "substat": "사기유지",
+          "increment": 1
+        },
+        {
+          "substat": "군략",
+          "increment": 1
+        },
+        {
+          "substat": "농정",
+          "increment": 1
+        },
+        {
+          "substat": "행정",
+          "increment": 1
+        },
+        {
+          "substat": "민정",
+          "increment": 1
+        },
+        {
+          "substat": "사기회복",
+          "increment": 1
+        },
+        {
+          "substat": "친화",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 88,
+      "unique_trait": {
+        "id": "UT-G08",
+        "name": "벽안의 기백",
+        "level": 1,
+        "effect": "자신과 다른 기본병종인 인접 아군에게 자신이 사기를 회복시킬 때 회복량을 높인다.",
+        "growth": "조건부 사기 회복량 보너스",
+        "condition": "대상은 시전 완료 때 다시 확인하며 잃은 사기까지만 회복한다. 자기·동일 병종·패주 부대는 제외하고 다른 시전자의 회복에 보너스를 전파하지 않는다."
+      },
+      "representative_tactic": {
+        "id": "ART-G08",
+        "name": "벽안의 군기",
+        "command": "지원",
+        "allowed_units": [
+          "의병",
+          "궁병",
+          "창병"
+        ],
+        "stat": "사기회복",
+        "cooldown_family": "고무",
+        "burden": "높음",
+        "effect": "자신과 다른 기본병종인 인접 아군 최대 두 부대의 잃은 사기를 회복한다. 자신은 대상에서 제외한다.",
+        "condition": "대상은 시전 완료 때 다시 확인하며 잃은 사기까지만 회복한다. 자기·동일 병종·패주 부대는 제외하고 다른 시전자의 회복에 보너스를 전파하지 않는다.",
+        "source": "../장수-특기-전법-30인.md#G08"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C15",
+          "name": "맞춘 보폭",
+          "effect": "아군과 같은 적을 공격할 때 일반 공격 위력을 높인다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "같은 적을 공격할 때 일반 공격 위력 강화"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "방어지휘",
+              "from": 83,
+              "to": 84
+            },
+            {
+              "substat": "사기유지",
+              "from": 90,
+              "to": 91
+            },
+            {
+              "substat": "군략",
+              "from": 84,
+              "to": 85
+            },
+            {
+              "substat": "농정",
+              "from": 86,
+              "to": 87
+            },
+            {
+              "substat": "행정",
+              "from": 90,
+              "to": 91
+            },
+            {
+              "substat": "민정",
+              "from": 91,
+              "to": 92
+            },
+            {
+              "substat": "사기회복",
+              "from": 98,
+              "to": 99
+            },
+            {
+              "substat": "친화",
+              "from": 96,
+              "to": 97
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 83,
+            "무력": 63,
+            "지력": 84,
+            "정치": 89,
+            "매력": 92
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G20",
+      "name": "손책",
+      "faction_id": "F03",
+      "roles": [
+        "맹장",
+        "장군"
+      ],
+      "allowed_units": [
+        "기병",
+        "창병",
+        "궁병"
+      ],
+      "representative_unit": "기병",
+      "initial_aptitude": {
+        "기병": "B",
+        "창병": "C",
+        "궁병": "C"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 95,
+        "방어지휘": 78,
+        "기동지휘": 97,
+        "사기유지": 94,
+        "완력": 99,
+        "치명": 92,
+        "공속": 93,
+        "체력": 84,
+        "군략": 78,
+        "모략": 53,
+        "간파": 66,
+        "회피": 79,
+        "농정": 57,
+        "행정": 57,
+        "민정": 58,
+        "병참": 80,
+        "사기회복": 91,
+        "체력회복": 64,
+        "등용": 84,
+        "친화": 97
+      },
+      "initial_major_stats": {
+        "통솔": 91,
+        "무력": 92,
+        "지력": 69,
+        "정치": 63,
+        "매력": 84
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "공격지휘",
+          "increment": 1
+        },
+        {
+          "substat": "기동지휘",
+          "increment": 1
+        },
+        {
+          "substat": "사기유지",
+          "increment": 1
+        },
+        {
+          "substat": "완력",
+          "increment": 1
+        },
+        {
+          "substat": "치명",
+          "increment": 1
+        },
+        {
+          "substat": "공속",
+          "increment": 1
+        },
+        {
+          "substat": "체력",
+          "increment": 1
+        },
+        {
+          "substat": "사기회복",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 92,
+      "unique_trait": {
+        "id": "UT-G20",
+        "name": "소패왕의 선봉",
+        "level": 1,
+        "effect": "현역 병력이 부대 정원의 절반 이상일 때 돌격 피해가 높아진다.",
+        "growth": "조건부 돌격 피해 보너스",
+        "condition": "손실 병력을 특기로 채우지 않는다. 정면 창진·경로·재정비를 지키며 기병 이외의 편성에서는 전법을 사용할 수 없다."
+      },
+      "representative_tactic": {
+        "id": "ART-G20",
+        "name": "패왕의 진격",
+        "command": "공격",
+        "allowed_units": [
+          "기병"
+        ],
+        "stat": "완력",
+        "cooldown_family": "돌격",
+        "burden": "높음",
+        "effect": "유효한 접근로를 따라 적 한 부대에 힘을 실은 돌격을 가한다.",
+        "condition": "손실 병력을 특기로 채우지 않는다. 정면 창진·경로·재정비를 지키며 기병 이외의 편성에서는 전법을 사용할 수 없다.",
+        "source": "../장수-특기-전법-30인.md#G20"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C02",
+          "name": "힘 실은 창",
+          "effect": "기병 돌격 위력을 높인다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "기병 돌격 위력 강화"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "공격지휘",
+              "from": 95,
+              "to": 96
+            },
+            {
+              "substat": "기동지휘",
+              "from": 97,
+              "to": 98
+            },
+            {
+              "substat": "사기유지",
+              "from": 94,
+              "to": 95
+            },
+            {
+              "substat": "완력",
+              "from": 99,
+              "to": 100
+            },
+            {
+              "substat": "치명",
+              "from": 92,
+              "to": 93
+            },
+            {
+              "substat": "공속",
+              "from": 93,
+              "to": 94
+            },
+            {
+              "substat": "체력",
+              "from": 84,
+              "to": 85
+            },
+            {
+              "substat": "사기회복",
+              "from": 91,
+              "to": 92
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 92,
+            "무력": 93,
+            "지력": 69,
+            "정치": 63,
+            "매력": 84
+          }
+        },
+        "next_xp_required": 70
+      }
+    },
+    {
+      "id": "G27",
+      "name": "주유",
+      "faction_id": "F03",
+      "roles": [
+        "책사",
+        "장군"
+      ],
+      "allowed_units": [
+        "술병",
+        "궁병",
+        "창병"
+      ],
+      "representative_unit": "술병",
+      "initial_aptitude": {
+        "술병": "B",
+        "궁병": "C",
+        "창병": "C"
+      },
+      "level": 1,
+      "xp": 0,
+      "xp_to_next": 60,
+      "initial_substats": {
+        "공격지휘": 91,
+        "방어지휘": 80,
+        "기동지휘": 91,
+        "사기유지": 98,
+        "완력": 48,
+        "치명": 60,
+        "공속": 67,
+        "체력": 81,
+        "군략": 97,
+        "모략": 98,
+        "간파": 94,
+        "회피": 91,
+        "농정": 69,
+        "행정": 86,
+        "민정": 86,
+        "병참": 91,
+        "사기회복": 93,
+        "체력회복": 79,
+        "등용": 83,
+        "친화": 97
+      },
+      "initial_major_stats": {
+        "통솔": 90,
+        "무력": 64,
+        "지력": 95,
+        "정치": 83,
+        "매력": 88
+      },
+      "growth_profile_per_level": [
+        {
+          "substat": "공격지휘",
+          "increment": 1
+        },
+        {
+          "substat": "기동지휘",
+          "increment": 1
+        },
+        {
+          "substat": "사기유지",
+          "increment": 1
+        },
+        {
+          "substat": "군략",
+          "increment": 1
+        },
+        {
+          "substat": "모략",
+          "increment": 1
+        },
+        {
+          "substat": "간파",
+          "increment": 1
+        },
+        {
+          "substat": "행정",
+          "increment": 1
+        },
+        {
+          "substat": "사기회복",
+          "increment": 1
+        }
+      ],
+      "max_energy_formula": "50 + floor(체력 / 2)",
+      "initial_max_energy": 90,
+      "unique_trait": {
+        "id": "UT-G27",
+        "name": "주랑의 불씨",
+        "level": 1,
+        "effect": "자신이 만든 화계 구역의 피해량이 높아진다.",
+        "growth": "화계 피해 보너스",
+        "condition": "삼매진화과 동일 계열이다. 자동 확산·도시 파괴·날씨 변경은 없고 이후 진입한 아군도 피해를 받는다."
+      },
+      "representative_tactic": {
+        "id": "ART-G27",
+        "name": "주랑의 화선",
+        "command": "책략",
+        "allowed_units": [
+          "술병",
+          "궁병",
+          "창병"
+        ],
+        "stat": "모략",
+        "cooldown_family": "화계",
+        "burden": "높음",
+        "effect": "현재 보이는 작은 구역에 한정된 시간 동안 화계 피해를 준다.",
+        "condition": "삼매진화과 동일 계열이다. 자동 확산·도시 파괴·날씨 변경은 없고 이후 진입한 아군도 피해를 받는다.",
+        "source": "../장수-특기-전법-30인.md#G27"
+      },
+      "level_up_1_result": {
+        "from_level": 1,
+        "to_level": 2,
+        "xp_consumed": 60,
+        "aptitude_points_gained": 1,
+        "gacha": {
+          "id": "C19",
+          "name": "불씨를 담은 종이",
+          "effect": "삼매진화 계열 화계 사용 권한을 준다.",
+          "source": "공통 특기 C-ID",
+          "effect_reference": "삼매진화 계열 화계 사용 권한"
+        },
+        "auto_growth": {
+          "increments": [
+            {
+              "substat": "공격지휘",
+              "from": 91,
+              "to": 92
+            },
+            {
+              "substat": "기동지휘",
+              "from": 91,
+              "to": 92
+            },
+            {
+              "substat": "사기유지",
+              "from": 98,
+              "to": 99
+            },
+            {
+              "substat": "군략",
+              "from": 97,
+              "to": 98
+            },
+            {
+              "substat": "모략",
+              "from": 98,
+              "to": 99
+            },
+            {
+              "substat": "간파",
+              "from": 94,
+              "to": 95
+            },
+            {
+              "substat": "행정",
+              "from": 86,
+              "to": 87
+            },
+            {
+              "substat": "사기회복",
+              "from": 93,
+              "to": 94
+            }
+          ],
+          "major_stats_after": {
+            "통솔": 91,
+            "무력": 64,
+            "지력": 96,
+            "정치": 83,
+            "매력": 88
+          }
+        },
+        "next_xp_required": 70
+      }
+    }
+  ]
+}

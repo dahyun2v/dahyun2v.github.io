@@ -1,0 +1,4096 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+11200",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +11200"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+5",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+20",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 남피 생산으로",
+    "target": "south"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "south",
+    "name": "남피",
+    "u": 0.6223,
+    "v": 0.529,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "pingyuan",
+    "name": "평원",
+    "u": 0.5897,
+    "v": 0.6448,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ },
+ "city": {
+  "screen": "city-domestic",
+  "cityId": "south",
+  "name": "남피",
+  "prevId": null,
+  "nextId": null,
+  "policy": "성 방침 · 균형 ▸",
+  "facilities": [
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "office",
+    "name": "관청",
+    "hanja": "官",
+    "sub": "가장 안쪽 높은 곳 · 성의 일을 정하는 곳",
+    "mark": "seal",
+    "role": "성의 일 · 인사 → 내정 운영",
+    "officer": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "line": "전부가 아니라 지금 무너지면 안 되는 하나를 고른다.",
+    "others": [
+     {
+      "name": "조조",
+      "note": "저택"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-office.webp",
+    "route": "domestic",
+    "commands": [],
+    "feast": null,
+    "lede": "",
+    "empty": "이 성에 찾아갈 장수가 없습니다."
+   },
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "residence",
+    "name": "저택",
+    "hanja": "宅",
+    "sub": "조용한 안쪽 · 장수들이 머무는 곳",
+    "mark": "open",
+    "role": "머무는 장수 → 방문 · 대화",
+    "officer": {
+     "id": "G07",
+     "name": "조조",
+     "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+     "head": {
+      "w": 522,
+      "h": 888,
+      "cx": 318,
+      "cy": 103,
+      "side": 114
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G07-seat.webp",
+     "role": "군주",
+     "affinity": 30,
+     "relation": "보통",
+     "stats": {
+      "leadership": 93,
+      "might": 72,
+      "intelligence": 95,
+      "politics": 91,
+      "charisma": 87
+     }
+    },
+    "line": "새 정보가 오면 사람과 계획의 값을 다시 매긴다.",
+    "others": [
+     {
+      "name": "순욱",
+      "note": "관청"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-residence.webp",
+    "route": "scene",
+    "commands": [
+     {
+      "label": "찾아가기 · 순욱",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G04",
+       "choice": 1
+      },
+      "reason": null
+     },
+     {
+      "label": "찾아가기 · 장료",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G24",
+       "choice": 1
+      },
+      "reason": null
+     },
+     {
+      "label": "찾아가기 · 허저",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G25",
+       "choice": 1
+      },
+      "reason": null
+     },
+     {
+      "label": "찾아가기 · 하후돈",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G33",
+       "choice": 1
+      },
+      "reason": null
+     },
+     {
+      "label": "찾아가기 · 조인",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G34",
+       "choice": 1
+      },
+      "reason": null
+     }
+    ],
+    "feast": null,
+    "lede": "장수들이 머무는 곳. 찾아가 이야기를 나눌 수 있다.",
+    "empty": "이 성에 찾아갈 장수가 없습니다."
+   },
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "market",
+    "name": "시장",
+    "hanja": "市",
+    "sub": "길이 만나는 곳",
+    "mark": "scale",
+    "role": "추가 시 · 저장 +20000 → 식량 비축 한도 / 인망 +1 → 정책 · 장수 등용",
+    "officer": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "line": "전부가 아니라 지금 무너지면 안 되는 하나를 고른다.",
+    "others": [
+     {
+      "name": "조조",
+      "note": "저택"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-market.webp",
+    "route": "domestic",
+    "commands": [],
+    "feast": null,
+    "lede": "",
+    "empty": "이 성에 찾아갈 장수가 없습니다."
+   },
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "granary",
+    "name": "곡창",
+    "hanja": "倉",
+    "sub": "곡식 창고 구역",
+    "mark": "cong",
+    "role": "추가 시 · 저장 +20000 → 식량 비축 한도",
+    "officer": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "line": "전부가 아니라 지금 무너지면 안 되는 하나를 고른다.",
+    "others": [
+     {
+      "name": "조조",
+      "note": "저택"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-granary.webp",
+    "route": "domestic",
+    "commands": [],
+    "feast": null,
+    "lede": "",
+    "empty": "이 성에 찾아갈 장수가 없습니다."
+   },
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "tavern",
+    "name": "주점",
+    "hanja": "酒",
+    "sub": "시장과 성문 사이 · 골목 안",
+    "mark": "open",
+    "role": "소문 · 재야 인재 → 만남 · 등용",
+    "officer": null,
+    "line": "이곳엔 소문이 먼저 닿습니다.",
+    "others": [
+     {
+      "name": "순욱",
+      "note": "관청"
+     },
+     {
+      "name": "조조",
+      "note": "저택"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-tavern.webp",
+    "route": "scene",
+    "commands": [],
+    "feast": {
+     "title": "성마다 한 달에 한 번 · 함께한 모든 짝 친밀도 +8 · 인망 20 소모",
+     "people": [
+      {
+       "id": "G04",
+       "name": "순욱",
+       "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+       "head": {
+        "w": 471,
+        "h": 945,
+        "cx": 291,
+        "cy": 91,
+        "side": 139
+       },
+       "wanderer": false,
+       "seat": "assets/officer-art/cutout/G04-seat.webp",
+       "role": "태수",
+       "affinity": 85,
+       "relation": "친우",
+       "stats": {
+        "leadership": 68,
+        "might": 29,
+        "intelligence": 90,
+        "politics": 93,
+        "charisma": 87
+       }
+      },
+      {
+       "id": "G07",
+       "name": "조조",
+       "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+       "head": {
+        "w": 522,
+        "h": 888,
+        "cx": 318,
+        "cy": 103,
+        "side": 114
+       },
+       "wanderer": false,
+       "seat": "assets/officer-art/cutout/G07-seat.webp",
+       "role": "군주",
+       "affinity": 30,
+       "relation": "보통",
+       "stats": {
+        "leadership": 93,
+        "might": 72,
+        "intelligence": 95,
+        "politics": 91,
+        "charisma": 87
+       }
+      },
+      {
+       "id": "G24",
+       "name": "장료",
+       "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+       "head": {
+        "w": 808,
+        "h": 1153,
+        "cx": 303,
+        "cy": 116,
+        "side": 144
+       },
+       "wanderer": false,
+       "seat": "assets/officer-art/cutout/G24-seat.webp",
+       "role": "",
+       "affinity": 70,
+       "relation": "신뢰",
+       "stats": {
+        "leadership": 94,
+        "might": 90,
+        "intelligence": 84,
+        "politics": 57,
+        "charisma": 83
+       }
+      },
+      {
+       "id": "G25",
+       "name": "허저",
+       "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+       "head": {
+        "w": 546,
+        "h": 865,
+        "cx": 277,
+        "cy": 67,
+        "side": 108
+       },
+       "wanderer": false,
+       "seat": "assets/officer-art/cutout/G25-seat.webp",
+       "role": "",
+       "affinity": 85,
+       "relation": "친우",
+       "stats": {
+        "leadership": 77,
+        "might": 94,
+        "intelligence": 71,
+        "politics": 64,
+        "charisma": 73
+       }
+      },
+      {
+       "id": "G33",
+       "name": "하후돈",
+       "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+       "head": {
+        "w": 531,
+        "h": 950,
+        "cx": 311,
+        "cy": 114,
+        "side": 141
+       },
+       "wanderer": false,
+       "seat": "assets/officer-art/cutout/G33-seat.webp",
+       "role": "",
+       "affinity": 85,
+       "relation": "친우",
+       "stats": {
+        "leadership": 77,
+        "might": 82,
+        "intelligence": 62,
+        "politics": 76,
+        "charisma": 73
+       }
+      },
+      {
+       "id": "G34",
+       "name": "조인",
+       "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+       "head": {
+        "w": 591,
+        "h": 857,
+        "cx": 299,
+        "cy": 85,
+        "side": 104
+       },
+       "wanderer": false,
+       "seat": "assets/officer-art/cutout/G34-seat.webp",
+       "role": "",
+       "affinity": 82,
+       "relation": "친우",
+       "stats": {
+        "leadership": 89,
+        "might": 88,
+        "intelligence": 78,
+        "politics": 64,
+        "charisma": 74
+       }
+      }
+     ],
+     "options": [
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G07"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G07",
+         "G24"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G07",
+         "G25"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G07",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G07",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G24"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G24",
+         "G25"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G24",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G24",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G25"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G25",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G25",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G33",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G04",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G24"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G24",
+         "G25"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G24",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G24",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G25"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G25",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G25",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G33",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G07",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G24",
+         "G25"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G24",
+         "G25",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G24",
+         "G25",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G24",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G24",
+         "G33",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G24",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G25",
+         "G33"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G25",
+         "G33",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G25",
+         "G34"
+        ]
+       },
+       "reason": null
+      },
+      {
+       "command": {
+        "type": "FEAST",
+        "cityId": "south",
+        "officerIds": [
+         "G33",
+         "G34"
+        ]
+       },
+       "reason": null
+      }
+     ],
+     "visits": [
+      {
+       "label": "찾아가기 · 순욱",
+       "command": {
+        "type": "VISIT",
+        "officerId": "G04",
+        "choice": 1
+       },
+       "reason": null
+      },
+      {
+       "label": "찾아가기 · 장료",
+       "command": {
+        "type": "VISIT",
+        "officerId": "G24",
+        "choice": 1
+       },
+       "reason": null
+      },
+      {
+       "label": "찾아가기 · 허저",
+       "command": {
+        "type": "VISIT",
+        "officerId": "G25",
+        "choice": 1
+       },
+       "reason": null
+      },
+      {
+       "label": "찾아가기 · 하후돈",
+       "command": {
+        "type": "VISIT",
+        "officerId": "G33",
+        "choice": 1
+       },
+       "reason": null
+      },
+      {
+       "label": "찾아가기 · 조인",
+       "command": {
+        "type": "VISIT",
+        "officerId": "G34",
+        "choice": 1
+       },
+       "reason": null
+      }
+     ],
+     "reason": null
+    },
+    "lede": "떠돌이 인재와 소문이 모이는 곳. 마음 맞는 장수들과 술자리를 열 수도 있다.",
+    "empty": "이 성에 재야 장수가 없습니다."
+   },
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "barracks",
+    "name": "병영",
+    "hanja": "營",
+    "sub": "성벽 안쪽 · 진입로 옆",
+    "mark": "tally",
+    "role": "추가 불가 · 시설을 지을 빈 칸이 없습니다.",
+    "officer": null,
+    "line": "",
+    "others": [
+     {
+      "name": "순욱",
+      "note": "관청"
+     },
+     {
+      "name": "조조",
+      "note": "저택"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-barracks.webp",
+    "route": "barracks",
+    "commands": [],
+    "feast": null,
+    "lede": "",
+    "empty": "이 성에 찾아갈 장수가 없습니다."
+   },
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "workshop",
+    "name": "공방",
+    "hanja": "工",
+    "sub": "중심에서 조금 떨어진 곳",
+    "mark": "cong",
+    "role": "추가 시 · 생산 +2.67 → 건설 · 모집 속도",
+    "officer": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "line": "전부가 아니라 지금 무너지면 안 되는 하나를 고른다.",
+    "others": [
+     {
+      "name": "조조",
+      "note": "저택"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-workshop.webp",
+    "route": "domestic",
+    "commands": [],
+    "feast": null,
+    "lede": "",
+    "empty": "이 성에 찾아갈 장수가 없습니다."
+   },
+   {
+    "overview": {
+     "wall": "100 / 100",
+     "food": "20 / 80",
+     "reserve": "9,000",
+     "production": 5,
+     "security": "안정"
+    },
+    "residents": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G04-seat.webp",
+      "role": "태수",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 68,
+       "might": 29,
+       "intelligence": 90,
+       "politics": 93,
+       "charisma": 87
+      }
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G24-seat.webp",
+      "role": "",
+      "affinity": 70,
+      "relation": "신뢰",
+      "stats": {
+       "leadership": 94,
+       "might": 90,
+       "intelligence": 84,
+       "politics": 57,
+       "charisma": 83
+      }
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G25-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 94,
+       "intelligence": 71,
+       "politics": 64,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G33-seat.webp",
+      "role": "",
+      "affinity": 85,
+      "relation": "친우",
+      "stats": {
+       "leadership": 77,
+       "might": 82,
+       "intelligence": 62,
+       "politics": 76,
+       "charisma": 73
+      }
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "wanderer": false,
+      "seat": "assets/officer-art/cutout/G34-seat.webp",
+      "role": "",
+      "affinity": 82,
+      "relation": "친우",
+      "stats": {
+       "leadership": 89,
+       "might": 88,
+       "intelligence": 78,
+       "politics": 64,
+       "charisma": 74
+      }
+     }
+    ],
+    "governor": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "guest": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "military": {
+     "reserve": "9,000",
+     "wounded": "0",
+     "food": 20,
+     "nearby": 0,
+     "reinforcement": "다음 차례 충원 0 · 이 성에서 부대로",
+     "canTransfer": false
+    },
+    "yields": {
+     "bonus": 0,
+     "specialistCauses": [
+      {
+       "resource": "production",
+       "label": "장수 관계 — 생산 +10%",
+       "amount": 0.4860000000000005
+      }
+     ],
+     "raw": {
+      "food": 11200,
+      "gold": 400,
+      "production": 5.346000000000001,
+      "science": 20,
+      "prestige": 1
+     },
+     "relationSecurity": false,
+     "securityLevel": 0,
+     "securityCauses": [],
+     "workBonus": 0,
+     "food": 11200,
+     "gold": 400,
+     "production": 5,
+     "science": 20,
+     "prestige": 1,
+     "capacity": 300000,
+     "people": 200000,
+     "territory": [
+      "3,17",
+      "3,18",
+      "4,16",
+      "5,15"
+     ],
+     "granary": 100000,
+     "treasury": 3000,
+     "units": {
+      "food": "석",
+      "gold": "금",
+      "people": "명"
+     }
+    },
+    "yieldsText": {
+     "food": "+1.1만",
+     "production": "+5",
+     "science": "+20",
+     "prestige": "+1"
+    },
+    "governorPolitics": 93,
+    "id": "gate",
+    "name": "성문",
+    "hanja": "門",
+    "sub": "바깥 경계",
+    "mark": "pushou",
+    "role": "성벽 · 출입 → 성 방어",
+    "officer": {
+     "id": "G04",
+     "name": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "wanderer": false,
+     "seat": "assets/officer-art/cutout/G04-seat.webp",
+     "role": "태수",
+     "affinity": 85,
+     "relation": "친우",
+     "stats": {
+      "leadership": 68,
+      "might": 29,
+      "intelligence": 90,
+      "politics": 93,
+      "charisma": 87
+     }
+    },
+    "line": "전부가 아니라 지금 무너지면 안 되는 하나를 고른다.",
+    "others": [
+     {
+      "name": "조조",
+      "note": "저택"
+     }
+    ],
+    "bg": "assets/ui-v3/city-stage-ink/facility-gate.webp",
+    "route": "domestic",
+    "commands": [],
+    "feast": null,
+    "lede": "",
+    "empty": "이 성에 찾아갈 장수가 없습니다."
+   }
+  ],
+  "stage": {
+   "spots": {
+    "office": {
+     "x": 810.92,
+     "y": 246.542
+    },
+    "granary": {
+     "x": 498.256,
+     "y": 397.102
+    },
+    "barracks": {
+     "x": 1090.144,
+     "y": 428.15500000000003
+    },
+    "market": {
+     "x": 459.8,
+     "y": 578.715
+    },
+    "workshop": {
+     "x": 1011.56,
+     "y": 604.1220000000001
+    },
+    "tavern": {
+     "x": 1212.2,
+     "y": 550.485
+    },
+    "residence": {
+     "x": 280.896,
+     "y": 399.925
+    },
+    "gate": {
+     "x": 924.6160000000001,
+     "y": 785.735
+    }
+   },
+   "art": "assets/ui-v3/scenes/plate-city-F01.webp",
+   "w": 1672,
+   "h": 941,
+   "light": {
+    "x": 471,
+    "y": 416,
+    "rx": 100.80000000000001,
+    "ry": 40
+   }
+  },
+  "current": {
+   "kind": "farm",
+   "name": "농지",
+   "image": "assets/ui-kit/own/screens-v5/city/farm.webp",
+   "turns": 2,
+   "progress": 0,
+   "blocked": null
+  },
+  "next": {
+   "kind": "granary",
+   "name": "곡창",
+   "image": "assets/ui-kit/own/screens-v5/city/granary.webp",
+   "turns": 4
+  },
+  "population": {
+   "value": 2,
+   "max": 8,
+   "growth": 0,
+   "hint": "다음 인구까지 약 1차례(식량 순증 기준) · 재고 12 이상 필요"
+  },
+  "yields": [
+   {
+    "key": "food",
+    "label": "식량",
+    "text": "+2,200",
+    "sign": 1
+   },
+   {
+    "key": "production",
+    "label": "생산",
+    "text": "+5",
+    "sign": 1
+   },
+   {
+    "key": "learning",
+    "label": "학문",
+    "text": "+20",
+    "sign": 1
+   },
+   {
+    "key": "renown",
+    "label": "인망",
+    "text": "+1",
+    "sign": 1
+   }
+  ],
+  "rows": [
+   {
+    "key": "food",
+    "label": "식량",
+    "value": "20 / 80",
+    "hint": "",
+    "danger": false
+   },
+   {
+    "key": "reserve",
+    "label": "예비병",
+    "value": "9,000",
+    "hint": "",
+    "danger": false
+   },
+   {
+    "key": "security",
+    "label": "치안",
+    "value": "안정",
+    "hint": "",
+    "danger": false
+   }
+  ],
+  "governor": {
+   "name": "순욱",
+   "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+   "head": {
+    "w": 471,
+    "h": 945,
+    "cx": 291,
+    "cy": 91,
+    "side": 139
+   }
+  },
+  "seats": [
+   {
+    "key": "agriculture",
+    "name": "농업",
+    "officer": null,
+    "art": null,
+    "head": null
+   },
+   {
+    "key": "commerce",
+    "name": "상업",
+    "officer": null,
+    "art": null,
+    "head": null
+   },
+   {
+    "key": "military",
+    "name": "군사",
+    "officer": null,
+    "art": null,
+    "head": null
+   }
+  ],
+  "seatHint": "빈 자리를 눌러 맡기기",
+  "v3": {
+   "chips": [
+    {
+     "key": "food",
+     "label": "곡식",
+     "value": "10만 석",
+     "sub": "−800 · 91차례",
+     "tip": "세력 창고 하나에 모인다. 병사가 먹고 백성을 늘리는 데 쓴다.",
+     "warn": false,
+     "down": true,
+     "icon": "assets/ui-kit/own/sym/resources/food.webp",
+     "glyph": ""
+    },
+    {
+     "key": "gold",
+     "label": "금",
+     "value": "3,000 금",
+     "sub": "+280",
+     "tip": "서두르기 · 군량 사기 · 땅 사기에 쓴다. 백성과 시장에서 들어온다.",
+     "warn": false,
+     "down": false,
+     "icon": null,
+     "glyph": "金"
+    },
+    {
+     "key": "science",
+     "label": "학문",
+     "value": "0",
+     "sub": "다음 카드 200",
+     "tip": "백성과 서원에서 쌓인다. 문턱을 넘을 때마다 카드 세 장 중 한 장을 고른다.",
+     "warn": false,
+     "down": false,
+     "icon": "assets/ui-kit/own/sym/resources/learning.webp",
+     "glyph": ""
+    },
+    {
+     "key": "fame",
+     "label": "인망",
+     "value": "50",
+     "sub": null,
+     "tip": "인재를 부르고 사건에 쓴다. 이기고 업적을 세우면 오른다.",
+     "warn": false,
+     "down": false,
+     "icon": "assets/ui-kit/own/sym/resources/renown.webp",
+     "glyph": ""
+    },
+    {
+     "key": "troops",
+     "label": "병사",
+     "value": "900 명",
+     "sub": null,
+     "tip": "모든 성과 부대의 병사를 더한 수. 한 명이 한 순에 곡식 1석을 먹는다.",
+     "warn": false,
+     "down": false,
+     "icon": "assets/ui-kit/own/sym/resources/troops.webp",
+     "glyph": ""
+    },
+    {
+     "key": "armory",
+     "label": "무기고",
+     "value": "도검 0",
+     "sub": null,
+     "tip": "출진 · 보충 때 병사 한 명에 무구 하나가 저절로 나간다. 기병은 말 하나. 성을 지키는 병사에게는 필요 없다.",
+     "warn": false,
+     "down": false,
+     "icon": null,
+     "glyph": "武"
+    }
+   ],
+   "warnings": [],
+   "ledger": {
+    "title": "세력 창고 · 내역",
+    "lines": [
+     "곡식 10만 석 · −800 / 차례",
+     "남피 · 사람 1만 · 땅 1,200 · 자리 0 · 전문인력 0 · 성격 0 · 치안 안정 · 합 1.1만",
+     "나감: 성 안 병사 · 야전 · 성장 · 비축 채움 포함 · 순증은 다음 정산 예상",
+     "금 3,000 금 · +280 / 차례 · 봉록 120 금"
+    ],
+    "actions": [
+     {
+      "line": "군량 사기 · 남은 한도 2,000 석 · 석당 0.2 금",
+      "label": "군량 사기 · 100금",
+      "command": {
+       "type": "DV3_BUY_GRAIN",
+       "gold": 100
+      },
+      "disabled": false,
+      "tip": "금 100 으로 군량을 산다"
+     },
+     {
+      "line": "창 1.4만 · 도검 0 · 활 0 · 말 1.4만",
+      "label": "말 사기 · 100금",
+      "command": {
+       "type": "DV3_BUY_HORSES",
+       "gold": 100
+      },
+      "disabled": false,
+      "tip": "시장에서 금으로 산다. 한 순에 살 수 있는 수는 시장 수만큼. 거듭 사면 값이 오른다."
+     }
+    ],
+    "alerts": [],
+    "learning": null,
+    "crises": []
+   },
+   "title": "남피 · 군성",
+   "titleTip": "성 등급은 인구로 오른다. 등급이 오르면 성이 커지고 성벽이 늘고 특별기관 자리가 생긴다.",
+   "characters": [],
+   "people": {
+    "value": 200000,
+    "cap": 300000,
+    "text": "20만 / 30만 명",
+    "growth": 3000,
+    "growthText": "다음 차례 +3,000",
+    "tip": "백성이 세금과 병사를 낸다. 창고 곡식을 써서 저절로 는다. 한도는 땅이 먹여 살릴 수 있는 수다."
+   },
+   "grade": {
+    "id": "commandery",
+    "name": "군성",
+    "scaleMax": 500000,
+    "marks": [
+     {
+      "name": "군성",
+      "at": 150000,
+      "label": "15만"
+     },
+     {
+      "name": "대군",
+      "at": 250000,
+      "label": "25만"
+     },
+     {
+      "name": "주도",
+      "at": 400000,
+      "label": "40만"
+     }
+    ],
+    "next": "대군까지 5만명"
+   },
+   "output": [
+    {
+     "key": "food",
+     "label": "곡식",
+     "value": "1.1만",
+     "tip": "사람 1만 · 땅 1,200 · 자리 0 · 전문인력 0 · 성격 0 · 치안 안정 · 합 1.1만",
+     "icon": "assets/ui-kit/own/sym/resources/food.webp",
+     "glyph": ""
+    },
+    {
+     "key": "gold",
+     "label": "금",
+     "value": "400",
+     "tip": "사람 400 · 땅 0 · 자리 0 · 전문인력 0 · 성격 0 · 치안 안정 · 합 400",
+     "icon": null,
+     "glyph": "金"
+    },
+    {
+     "key": "production",
+     "label": "생산",
+     "value": "5",
+     "tip": "사람 2 · 땅 2 · 자리 1 · 전문인력 0 · 성격 0 · 치안 안정 · 합 5",
+     "icon": "assets/ui-kit/own/sym/resources/production.webp",
+     "glyph": ""
+    },
+    {
+     "key": "science",
+     "label": "학문",
+     "value": "20",
+     "tip": "사람 20 · 땅 0 · 자리 0 · 전문인력 0 · 성격 0 · 치안 안정 · 합 20",
+     "icon": "assets/ui-kit/own/sym/resources/learning.webp",
+     "glyph": ""
+    }
+   ],
+   "production": {
+    "name": "농지",
+    "kind": "farm",
+    "art": "assets/ui-kit/own/screens-v5/city/farm.webp",
+    "turns": 2,
+    "progress": 0,
+    "line": "2차례 남음",
+    "next": "곡창",
+    "nextKind": "granary",
+    "hurry": {
+     "label": "서두르기 · 100금",
+     "tip": "남은 생산을 금으로 치르고 바로 끝낸다. 같은 성에서 다시 쓰면 값이 오른다.",
+     "command": {
+      "cityId": "south",
+      "type": "DV3_HURRY"
+     },
+     "disabled": false
+    },
+    "clearReserve": {
+     "cityId": "south",
+     "type": "CITY_RESERVE_JOB",
+     "kind": null
+    },
+    "jobs": [
+     {
+      "kind": "arms",
+      "name": "무구 제작",
+      "art": null,
+      "cost": 10,
+      "turns": 2,
+      "note": "",
+      "blocked": "공방 필요",
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "arms"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "arms"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "tuntian",
+      "name": "둔전",
+      "art": "assets/ui-kit/own/screens-v5/city/tuntian.webp",
+      "cost": 14,
+      "turns": 3,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "tuntian"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "tuntian"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "workshop",
+      "name": "공방",
+      "art": "assets/ui-kit/own/screens-v5/city/workshop.webp",
+      "cost": 12,
+      "turns": 3,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "workshop"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "workshop"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "farm",
+      "name": "농지",
+      "art": "assets/ui-kit/own/screens-v5/city/farm.webp",
+      "cost": 10,
+      "turns": 2,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "farm"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "farm"
+      },
+      "current": true,
+      "reserved": false
+     },
+     {
+      "kind": "granary",
+      "name": "곡창",
+      "art": "assets/ui-kit/own/screens-v5/city/granary.webp",
+      "cost": 20,
+      "turns": 4,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "granary"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "granary"
+      },
+      "current": false,
+      "reserved": true
+     },
+     {
+      "kind": "repair",
+      "name": "수리",
+      "art": "assets/ui-kit/own/screens-v5/city/repair.webp",
+      "cost": 5,
+      "turns": 1,
+      "note": "",
+      "blocked": "고칠 시설이 없음",
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "repair"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "repair"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "market",
+      "name": "시장",
+      "art": "assets/ui-kit/own/screens-v5/city/market.webp",
+      "cost": 20,
+      "turns": 4,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "market"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "market"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "mine",
+      "name": "광산",
+      "art": null,
+      "cost": 20,
+      "turns": 4,
+      "note": "",
+      "blocked": "시설을 지을 칸이 없습니다.",
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "mine"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "mine"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "ranch",
+      "name": "목장",
+      "art": null,
+      "cost": 20,
+      "turns": 4,
+      "note": "",
+      "blocked": "시설을 지을 칸이 없습니다.",
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "ranch"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "ranch"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "trainingGround",
+      "name": "훈련소",
+      "art": "assets/ui-kit/own/screens-v5/city/barracks.webp",
+      "cost": 24,
+      "turns": 5,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "trainingGround"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "trainingGround"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "tavern",
+      "name": "주점",
+      "art": null,
+      "cost": 16,
+      "turns": 4,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "tavern"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "tavern"
+      },
+      "current": false,
+      "reserved": false
+     },
+     {
+      "kind": "academy",
+      "name": "서원",
+      "art": null,
+      "cost": 18,
+      "turns": 4,
+      "note": "",
+      "blocked": null,
+      "start": {
+       "cityId": "south",
+       "type": "CITY_JOB",
+       "kind": "academy"
+      },
+      "reserve": {
+       "cityId": "south",
+       "type": "CITY_RESERVE_JOB",
+       "kind": "academy"
+      },
+      "current": false,
+      "reserved": false
+     }
+    ]
+   },
+   "seats": [
+    {
+     "kind": "office",
+     "name": "관청",
+     "officerId": "G04",
+     "officer": "순욱",
+     "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "state": "근무",
+     "speed": "가속 21.5%",
+     "specialist": "기술자",
+     "training": "다음까지 2차례",
+     "locked": false,
+     "line": "태수 — 생산이 빨라지고 기술자를 기른다",
+     "auto": {
+      "cityId": "south",
+      "type": "DV3_SEAT",
+      "seat": "office",
+      "officerId": null
+     },
+     "options": [
+      {
+       "id": "G07",
+       "name": "조조",
+       "command": {
+        "cityId": "south",
+        "type": "DV3_SEAT",
+        "seat": "office",
+        "officerId": "G07"
+       },
+       "current": false,
+       "label": "조조",
+       "disabled": false
+      },
+      {
+       "id": "G24",
+       "name": "장료",
+       "command": {
+        "cityId": "south",
+        "type": "DV3_SEAT",
+        "seat": "office",
+        "officerId": "G24"
+       },
+       "current": false,
+       "label": "장료",
+       "disabled": false
+      },
+      {
+       "id": "G25",
+       "name": "허저",
+       "command": {
+        "cityId": "south",
+        "type": "DV3_SEAT",
+        "seat": "office",
+        "officerId": "G25"
+       },
+       "current": false,
+       "label": "허저",
+       "disabled": false
+      },
+      {
+       "id": "G33",
+       "name": "하후돈",
+       "command": {
+        "cityId": "south",
+        "type": "DV3_SEAT",
+        "seat": "office",
+        "officerId": "G33"
+       },
+       "current": false,
+       "label": "하후돈",
+       "disabled": false
+      },
+      {
+       "id": "G34",
+       "name": "조인",
+       "command": {
+        "cityId": "south",
+        "type": "DV3_SEAT",
+        "seat": "office",
+        "officerId": "G34"
+       },
+       "current": false,
+       "label": "조인",
+       "disabled": false
+      },
+      {
+       "id": "G04",
+       "name": "순욱",
+       "command": {
+        "cityId": "south",
+        "type": "DV3_SEAT",
+        "seat": "office",
+        "officerId": "G04"
+       },
+       "current": true,
+       "label": "순욱 · 지금 — 눌러 고정",
+       "disabled": false
+      }
+     ]
+    }
+   ],
+   "seatTip": "시설에 앉은 장수는 그 일을 빠르게 하고 전문인력을 기른다. 출진하면 그동안 멈춘다.",
+   "specialists": {
+    "label": "전문인력",
+    "line": "농관 0 · 관료 0 · 기술자 0 · 군관 0 · 학자 0",
+    "tip": "농관 0 · 관료 0 · 기술자 0 · 군관 0 · 학자 0 — 장수가 머무는 동안 길러진다. 장수가 떠나도 남는다. 한 명마다 그 일이 조금 는다."
+   },
+   "security": {
+    "name": "안정",
+    "level": 0,
+    "causes": "악화 원인 없음",
+    "effect": "백성 일이 그대로 돌아간다.",
+    "recover": "까닭이 사라지면 한 단계씩 돌아온다. 성 안 병사가 넉넉하면 더 빨리 돌아온다.",
+    "taxFree": {
+     "label": "세금 면제",
+     "tip": "이 성 세금을 한 순 걷지 않는다 · 다음 순 치안이 한 단계 돌아온다",
+     "command": {
+      "cityId": "south",
+      "type": "DV3_TAX_EXEMPT"
+     }
+    }
+   },
+   "policy": {
+    "effective": "balanced",
+    "name": "균형",
+    "overridden": false,
+    "label": "기본(균형)",
+    "tip": "비었을 때 먼저 지을 것과 곡식을 백성 늘리기에 쓸지를 정한다. 다음 정산부터 바뀐다.",
+    "options": [
+     {
+      "key": "balanced",
+      "name": "균형",
+      "line": "곡식이 넉넉할 때만 백성을 늘린다",
+      "preview": "백성 +3,000명 · 곡식 3,000석 · 징집 5% · 짓는 순서 시장 → 농지 → 곡창",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_POLICY_CITY",
+       "policy": "balanced"
+      },
+      "current": false
+     },
+     {
+      "key": "agriculture",
+      "name": "농업",
+      "line": "백성을 먼저 늘린다 · 농지와 곡창을 먼저",
+      "preview": "백성 +4,500명 · 곡식 4,500석 · 징집 4% · 짓는 순서 농지 → 곡창 → 시장",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_POLICY_CITY",
+       "policy": "agriculture"
+      },
+      "current": false
+     },
+     {
+      "key": "commerce",
+      "name": "상업",
+      "line": "시장을 먼저 짓는다",
+      "preview": "백성 +3,000명 · 곡식 3,000석 · 징집 4% · 짓는 순서 시장 → 주점 → 서원",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_POLICY_CITY",
+       "policy": "commerce"
+      },
+      "current": false
+     },
+     {
+      "key": "military",
+      "name": "군사",
+      "line": "백성을 늘리지 않고 곡식을 군대에 · 훈련소와 공방을 먼저",
+      "preview": "백성 늘리지 않음 · 징집 8% · 짓는 순서 훈련소 → 공방",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_POLICY_CITY",
+       "policy": "military"
+      },
+      "current": false
+     },
+     {
+      "key": "delegated",
+      "name": "위임",
+      "line": "전선은 군사 · 후방은 농업으로 알아서",
+      "preview": "백성 +4,500명 · 곡식 4,500석 · 징집 4% · 짓는 순서 농지 → 곡창 → 시장 · 지금은 농업",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_POLICY_CITY",
+       "policy": "delegated"
+      },
+      "current": false
+     },
+     {
+      "key": "default",
+      "name": "기본 따름",
+      "line": "세력 기본 방침(균형)을 따른다",
+      "preview": "",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_POLICY_CITY",
+       "policy": null
+      },
+      "current": true
+     }
+    ],
+    "recruit": "징집 목표선 1만명 · 다음 봉록 130금 · 군량 10만석",
+    "recruitLevels": [
+     {
+      "key": "low",
+      "name": "낮음 · 3%",
+      "command": {
+       "type": "DV3_RECRUIT_TARGET",
+       "level": "low"
+      },
+      "current": false
+     },
+     {
+      "key": "normal",
+      "name": "보통 · 5%",
+      "command": {
+       "type": "DV3_RECRUIT_TARGET",
+       "level": "normal"
+      },
+      "current": false
+     },
+     {
+      "key": "high",
+      "name": "높음 · 8%",
+      "command": {
+       "type": "DV3_RECRUIT_TARGET",
+       "level": "high"
+      },
+      "current": false
+     },
+     {
+      "key": "total",
+      "name": "총동원 · 12%",
+      "command": {
+       "type": "DV3_RECRUIT_TARGET",
+       "level": "total"
+      },
+      "current": false
+     }
+    ]
+   },
+   "land": {
+    "line": "영역 4칸",
+    "tip": "성이 거두는 칸. 칸마다 곡식 · 생산이 다르고 시설이 그 위에 선다.",
+    "tiles": [
+     {
+      "tileId": "5,14",
+      "label": "5,14 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "5,14"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "6,14",
+      "label": "6,14 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "6,14"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "4,15",
+      "label": "4,15 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "4,15"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "6,15",
+      "label": "6,15 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "6,15"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "7,15",
+      "label": "7,15 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "7,15"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "3,16",
+      "label": "3,16 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "3,16"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "7,16",
+      "label": "7,16 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "7,16"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "2,17",
+      "label": "2,17 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "2,17"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "7,17",
+      "label": "7,17 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "7,17"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "2,18",
+      "label": "2,18 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "2,18"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "6,18",
+      "label": "6,18 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "6,18"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "2,19",
+      "label": "2,19 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "2,19"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "3,19",
+      "label": "3,19 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "3,19"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "4,19",
+      "label": "4,19 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "4,19"
+      },
+      "disabled": false
+     },
+     {
+      "tileId": "5,19",
+      "label": "5,19 · 300금",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_BUY_TILE",
+       "tileId": "5,19"
+      },
+      "disabled": false
+     }
+    ],
+    "inside": "특산 없음",
+    "outside": "보이는 특산 없음"
+   },
+   "emergency": {
+    "label": "비상",
+    "tip": "위급할 때만 쓰는 명령. 대가가 크다.",
+    "orders": [
+     {
+      "id": "EM-RESERVE",
+      "name": "생존비축 헐기",
+      "line": "곡식을 바로 얻는다 · 치안이 나빠지고 이 성은 한동안 자라지 않는다",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_EMERGENCY",
+       "orderId": "EM-RESERVE"
+      },
+      "cooldown": 5
+     },
+     {
+      "id": "EM-DRAFT",
+      "name": "긴급 징병",
+      "line": "병사를 바로 얻는다 · 치안이 나빠지고 한동안 징집이 멈춘다",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_EMERGENCY",
+       "orderId": "EM-DRAFT"
+      },
+      "cooldown": null
+     },
+     {
+      "id": "EM-TAXFREE",
+      "name": "세금 면제",
+      "line": "이 성 세금을 한 순 걷지 않는다 · 다음 순 치안이 한 단계 돌아온다",
+      "command": {
+       "cityId": "south",
+       "type": "DV3_EMERGENCY",
+       "orderId": "EM-TAXFREE"
+      },
+      "cooldown": null
+     }
+    ]
+   }
+  },
+  "domestic": [],
+  "troops": [
+   {
+    "key": "sortie",
+    "label": "출진"
+   },
+   {
+    "key": "transfer",
+    "label": "병력 이송"
+   },
+   {
+    "key": "emergency",
+    "label": "긴급 징병 +3,000명",
+    "reason": null
+   }
+  ]
+ }
+}

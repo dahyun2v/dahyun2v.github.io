@@ -1,0 +1,84 @@
+{
+  "version": "first3-ledger-v1",
+  "status": "cross_team_provisional_input",
+  "purpose": "조조·유비·손권 3세력 축소판의 공통 시작 장부와 담당 간 연결 입력",
+  "turn_days": 10,
+  "references": {
+    "economy": "city-economy-v1",
+    "map": "map-layout-v1",
+    "operations": "OP-01-48",
+    "combat": "전투-최소실행표-v1",
+    "growth": "GR-15"
+  },
+  "shared_start": {
+    "city_stage": "small",
+    "population": 2,
+    "population_cap": 4,
+    "food": 20,
+    "food_cap": 80,
+    "fame": 50,
+    "special_resources": {"iron": 0, "horse": 0},
+    "troops": {
+      "total": 500,
+      "field_detachments": [250, 250],
+      "reserve": 0,
+      "wounded": 0,
+      "captives": 0,
+      "unit_establishment": 1000
+    },
+    "adjacent_tiles": {
+      "total": 6,
+      "plain": 4,
+      "food_plain": 2,
+      "forest": 1,
+      "hill": 1,
+      "citizens_first_assignment": ["food_plain_1", "food_plain_2"],
+      "tile_ids": "지도 담당의 실제 좌표·ID 확정 전 상징 ID"
+    },
+    "facilities": [],
+    "governor": {"level": 1, "xp": 0}
+  },
+  "factions": [
+    {
+      "id": "F01",
+      "name": "조조",
+      "city_id": "west",
+      "ruler": "G07",
+      "governor": "G04",
+      "field_generals": ["G07", "G24"]
+    },
+    {
+      "id": "F02",
+      "name": "유비",
+      "city_id": "south",
+      "ruler": "G05",
+      "governor": "G02",
+      "field_generals": ["G05", "G03"]
+    },
+    {
+      "id": "F03",
+      "name": "손권",
+      "city_id": "east",
+      "ruler": "G08",
+      "governor": "G20",
+      "field_generals": ["G08", "G27"]
+    }
+  ],
+  "ledger_rules": [
+    "시민·병력·예비·부상·포로는 서로 다른 장부이며 같은 인원을 두 번 세지 않는다.",
+    "도시 장부의 병력500은 총량이고, 전투 편성은 야전250명×2로 시작한다.",
+    "도시 경제의 시민당 식량2, 병력1000당 식량2, 도시 중심 식량4·생산2·과학1·명망1을 사용한다.",
+    "시설·인구·모집 완료 효과는 결과 단계 뒤 다음 명령부터 적용한다.",
+    "명망50은 기본 등용 시험값의 비용 단위이며 도시 중심 명망 산출과 중복 지급하지 않는다.",
+    "철·군마는 시작0이며 기본병종 시작에 자동 지급하지 않는다.",
+    "수송은 실제 경로·도착 시점·예약·유지분을 함께 기록하고 평시 손실은0으로 둔다.",
+    "전투 피해·부상·전사와 점령 정상화는 전투·운영 입력이 도착한 뒤 같은 결과 단계에서 한 번만 반영한다.",
+    "장수 경험치는 실제 업무 기여를 기록하고 출정 중 내정 경험치를 중복 지급하지 않는다."
+  ],
+  "open_inputs": [
+    "지도 담당의 food_plain_1/2 등 실제 인접 타일 좌표·ID",
+    "첫 전투에 사용할 각 부대 병종과 전장 위치",
+    "전투 결과의 유효 HP 피해와 이탈 분할 입력",
+    "점령 대상·정상화 방식·수송 계약을 넣는 첫 완주 시나리오"
+  ]
+}

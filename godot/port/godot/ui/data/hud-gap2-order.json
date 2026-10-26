@@ -1,0 +1,5294 @@
+{
+  "screen": "map-hud",
+  "protocol": 1,
+  "troopScale": 10,
+  "ruler": {
+    "id": "G07",
+    "name": "조조",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+      "w": 522,
+      "h": 888,
+      "cx": 318,
+      "cy": 103,
+      "side": 114
+    },
+    "factionId": "F01",
+    "factionName": "조조",
+    "date": "190년 2월 중순 · 5차례 / 26"
+  },
+  "resources": [
+    {
+      "key": "food",
+      "label": "식량",
+      "value": "47",
+      "max": "160",
+      "delta": "+12",
+      "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +12"
+    },
+    {
+      "key": "production",
+      "label": "생산",
+      "value": "6",
+      "max": null,
+      "delta": "+5",
+      "tip": "도시 생산 합 · 다음 정산 산출"
+    },
+    {
+      "key": "science",
+      "label": "학문",
+      "value": "5",
+      "max": "10",
+      "delta": "+2",
+      "tip": "연구 0단계 · 다음 문턱 10"
+    },
+    {
+      "key": "fame",
+      "label": "인망",
+      "value": "64",
+      "max": null,
+      "delta": "+4",
+      "tip": "쓸 수 있는 인망"
+    },
+    {
+      "key": "troops",
+      "label": "병력",
+      "value": "10,000",
+      "max": null,
+      "delta": "",
+      "tip": "부대 병력 합"
+    },
+    {
+      "key": "reserve",
+      "label": "예비",
+      "value": "1,250",
+      "max": null,
+      "delta": "",
+      "tip": "도시 예비병 합"
+    }
+  ],
+  "menu": [
+    {
+      "key": "officers",
+      "label": "장수"
+    },
+    {
+      "key": "council",
+      "label": "평정",
+      "badge": true
+    },
+    {
+      "key": "diplomacy",
+      "label": "외교"
+    },
+    {
+      "key": "faction",
+      "label": "세력"
+    },
+    {
+      "key": "stratagem",
+      "label": "계략"
+    },
+    {
+      "key": "records",
+      "label": "기록"
+    }
+  ],
+  "system": [
+    {
+      "key": "goal",
+      "label": "승리 조건"
+    },
+    {
+      "key": "save",
+      "label": "저장"
+    },
+    {
+      "key": "help",
+      "label": "규칙"
+    },
+    {
+      "key": "settings",
+      "label": "설정"
+    }
+  ],
+  "tasks": {
+    "title": "이번 차례 · 할 일 1",
+    "items": [
+      {
+        "text": "평원 생산 정하기",
+        "target": "pingyuan"
+      }
+    ]
+  },
+  "units": {
+    "title": "부대 3 · 남은 3",
+    "rows": [
+      {
+        "id": "U-F01-G07",
+        "officerId": "G07",
+        "name": "조조",
+        "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+        "head": {
+          "w": 522,
+          "h": 888,
+          "cx": 318,
+          "cy": 103,
+          "side": 114
+        },
+        "troop": "cavalry",
+        "troopName": "기병",
+        "countText": "2,500",
+        "status": "이동 가능 · 주 행동 가능",
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-F01-G24",
+        "officerId": "G24",
+        "name": "장료",
+        "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+        "head": {
+          "w": 808,
+          "h": 1153,
+          "cx": 303,
+          "cy": 116,
+          "side": 144
+        },
+        "troop": "cavalry",
+        "troopName": "기병",
+        "countText": "2,500",
+        "status": "이동 가능 · 주 행동 가능",
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-C16-1",
+        "officerId": "G34",
+        "name": "조인",
+        "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+        "head": {
+          "w": 591,
+          "h": 857,
+          "cx": 299,
+          "cy": 85,
+          "side": 104
+        },
+        "troop": "spear",
+        "troopName": "창병",
+        "countText": "5,000",
+        "status": "이동 가능 · 주 행동 가능",
+        "ended": false,
+        "selected": true
+      }
+    ]
+  },
+  "selected": {
+    "id": "U-C16-1",
+    "officerId": "G34",
+    "name": "조인",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+    "head": {
+      "w": 591,
+      "h": 857,
+      "cx": 299,
+      "cy": 85,
+      "side": 104
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "countText": "5,000",
+    "maxText": "5,000",
+    "countRatio": 1,
+    "ratings": [
+      {
+        "key": "attack",
+        "label": "공격",
+        "value": 77
+      },
+      {
+        "key": "defense",
+        "label": "방어",
+        "value": 88
+      },
+      {
+        "key": "mobility",
+        "label": "이동",
+        "value": 5
+      },
+      {
+        "key": "range",
+        "label": "사거리",
+        "value": 1
+      }
+    ],
+    "engine": {
+      "name": "강장",
+      "resourceName": "버팀",
+      "resource": 0,
+      "max": 3
+    },
+    "traits": {
+      "core": {
+        "name": "천인장군",
+        "full": "천인장군",
+        "text": "조인이 성 · 진지에서 차례를 시작하면 \"철갑\" 2장 — 다음 공격 2회 각각 피해 절반(피해량과 무관하게 공격 하나에 한 장).",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+        "token": null
+      },
+      "equipped": [],
+      "slots": 3
+    },
+    "bonds": [],
+    "klass": {
+      "engine": "강장",
+      "branch": "기본",
+      "merit": "실적 0/3",
+      "merits": "배수장 0/3 · 역습장 0/3",
+      "aptitude": "적성 높음",
+      "troopName": "창병"
+    },
+    "gauge": 20,
+    "gaugeMax": 100,
+    "qwer": [
+      {
+        "key": "Q",
+        "traitId": null,
+        "name": "관통 찌르기",
+        "icon": "assets/ui-kit/own/emblem-v1/72/q-spear.png",
+        "cost": null,
+        "state": "disabled",
+        "reason": "대상 없음"
+      },
+      {
+        "key": "W",
+        "traitId": null,
+        "name": "강장",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+        "cost": null,
+        "state": "disabled",
+        "reason": "버팀 0 / 3"
+      },
+      {
+        "key": "E",
+        "traitId": "G34.pilot.E",
+        "name": "팔문금쇄",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 60,
+        "state": "disabled",
+        "reason": "게이지 20/60"
+      },
+      {
+        "key": "R",
+        "traitId": "G34.card.1",
+        "name": "번성사수",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "state": "disabled",
+        "reason": "게이지 20/100"
+      }
+    ],
+    "orders": [
+      {
+        "key": "move",
+        "label": "이동",
+        "hotkey": "M"
+      },
+      {
+        "key": "attack",
+        "label": "공격",
+        "hotkey": "A",
+        "primary": true,
+        "disabled": true,
+        "tip": "지금 공격할 수 있는 대상이 없습니다"
+      },
+      {
+        "key": "face",
+        "label": "정면",
+        "hotkey": "F",
+        "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+      },
+      {
+        "key": "brace",
+        "label": "방어",
+        "hotkey": "B",
+        "disabled": false,
+        "tip": "이번 차례 방어 태세"
+      },
+      {
+        "key": "regroup",
+        "label": "재정비",
+        "hotkey": "S",
+        "disabled": true,
+        "tip": "동요 상태에서만 가능"
+      },
+      {
+        "key": "wait",
+        "label": "대기",
+        "hotkey": "H"
+      }
+    ]
+  },
+  "sets": null,
+  "docks": [
+    {
+      "id": "U-F01-G07",
+      "officerId": "G07",
+      "name": "조조",
+      "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+      "head": {
+        "w": 522,
+        "h": 888,
+        "cx": 318,
+        "cy": 103,
+        "side": 114
+      },
+      "troop": "cavalry",
+      "troopName": "기병",
+      "countText": "2,500",
+      "maxText": "2,500",
+      "countRatio": 1,
+      "ratings": [
+        {
+          "key": "attack",
+          "label": "공격",
+          "value": 48
+        },
+        {
+          "key": "defense",
+          "label": "방어",
+          "value": 106
+        },
+        {
+          "key": "mobility",
+          "label": "이동",
+          "value": 9
+        },
+        {
+          "key": "range",
+          "label": "사거리",
+          "value": 1
+        }
+      ],
+      "engine": {
+        "name": "책사",
+        "resourceName": "계책",
+        "resource": 3,
+        "max": 3
+      },
+      "traits": {
+        "core": {
+          "name": "난세간웅",
+          "full": "난세간웅",
+          "text": "조조 시야 안 적이 E 전법을 쓰면 그것을 기억한다(최근 하나, 다음 내 차례 끝까지). 조조는 E 칸 대신 기억한 전법을 쓸 수 있다(게이지 비용은 원래 값 · 고유 R 은 기억하지 않음).",
+          "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+          "token": null
+        },
+        "equipped": [
+          {
+            "name": "혈로개척",
+            "full": "피로 뚫는 퇴로",
+            "text": "패주 이탈 · 추격 피해 −30% · 다음 공격 −10%",
+            "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+            "token": null
+          }
+        ],
+        "slots": 3
+      },
+      "bonds": [],
+      "klass": {
+        "engine": "책사",
+        "branch": "기본",
+        "merit": "실적 0/3",
+        "merits": "궤계 0/3 · 군사 0/3",
+        "aptitude": "적성 일정",
+        "troopName": "기병"
+      },
+      "gauge": 40,
+      "gaugeMax": 100,
+      "qwer": [
+        {
+          "key": "Q",
+          "traitId": null,
+          "name": "돌파",
+          "icon": "assets/ui-kit/own/emblem-v1/72/q-cavalry.png",
+          "cost": null,
+          "state": "disabled",
+          "reason": "대상 없음"
+        },
+        {
+          "key": "W",
+          "traitId": null,
+          "name": "책사",
+          "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+          "cost": null,
+          "state": "ready",
+          "reason": "계책 3 / 3"
+        },
+        {
+          "key": "E",
+          "traitId": "G07.combat.CTA-09",
+          "name": "기싸움",
+          "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+          "cost": 40,
+          "state": "ready",
+          "reason": "전법의 범위 안에 유효한 대상이 없습니다."
+        },
+        {
+          "key": "R",
+          "traitId": "G07.card.1",
+          "name": "호령천하",
+          "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+          "cost": 100,
+          "state": "disabled",
+          "reason": "게이지 40/100"
+        }
+      ],
+      "orders": [
+        {
+          "key": "move",
+          "label": "이동",
+          "hotkey": "M"
+        },
+        {
+          "key": "attack",
+          "label": "공격",
+          "hotkey": "A",
+          "primary": true,
+          "disabled": true,
+          "tip": "지금 공격할 수 있는 대상이 없습니다"
+        },
+        {
+          "key": "face",
+          "label": "정면",
+          "hotkey": "F",
+          "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+        },
+        {
+          "key": "brace",
+          "label": "방어",
+          "hotkey": "B",
+          "disabled": false,
+          "tip": "이번 차례 방어 태세"
+        },
+        {
+          "key": "garrison",
+          "label": "복귀",
+          "hotkey": "G",
+          "tip": "부대가 해산되고 병력 2,500이 이 성의 예비병이 됩니다"
+        },
+        {
+          "key": "regroup",
+          "label": "재정비",
+          "hotkey": "S",
+          "disabled": true,
+          "tip": "동요 상태에서만 가능"
+        },
+        {
+          "key": "wait",
+          "label": "대기",
+          "hotkey": "H"
+        }
+      ]
+    },
+    {
+      "id": "U-F01-G24",
+      "officerId": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+        "w": 808,
+        "h": 1153,
+        "cx": 303,
+        "cy": 116,
+        "side": 144
+      },
+      "troop": "cavalry",
+      "troopName": "기병",
+      "countText": "2,500",
+      "maxText": "2,500",
+      "countRatio": 1,
+      "ratings": [
+        {
+          "key": "attack",
+          "label": "공격",
+          "value": 53
+        },
+        {
+          "key": "defense",
+          "label": "방어",
+          "value": 109
+        },
+        {
+          "key": "mobility",
+          "label": "이동",
+          "value": 9
+        },
+        {
+          "key": "range",
+          "label": "사거리",
+          "value": 1
+        }
+      ],
+      "engine": {
+        "name": "맹장",
+        "resourceName": "기세",
+        "resource": 2,
+        "max": 3
+      },
+      "traits": {
+        "core": {
+          "name": "만부막적",
+          "full": "만부막적",
+          "text": "장료가 2칸 이상 이동한 뒤 공격하면 대상과 그 2칸 안 적 모두 사기 판정(가중 10, 적 지휘관 부대면 20).",
+          "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+          "token": null
+        },
+        "equipped": [],
+        "slots": 3
+      },
+      "bonds": [],
+      "klass": {
+        "engine": "맹장",
+        "branch": "기본",
+        "merit": "실적 0/3",
+        "merits": "광장 0/3 · 용장 0/3",
+        "aptitude": "적성 일정",
+        "troopName": "기병"
+      },
+      "gauge": 25,
+      "gaugeMax": 100,
+      "qwer": [
+        {
+          "key": "Q",
+          "traitId": null,
+          "name": "돌파",
+          "icon": "assets/ui-kit/own/emblem-v1/72/q-cavalry.png",
+          "cost": null,
+          "state": "disabled",
+          "reason": "대상 없음"
+        },
+        {
+          "key": "W",
+          "traitId": null,
+          "name": "맹장",
+          "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+          "cost": null,
+          "state": "ready",
+          "reason": "기세 2 / 3"
+        },
+        {
+          "key": "E",
+          "traitId": "G24.pilot.E",
+          "name": "적장돌입",
+          "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+          "cost": 60,
+          "state": "disabled",
+          "reason": "게이지 25/60"
+        },
+        {
+          "key": "R",
+          "traitId": "G24.card.1",
+          "name": "위진소요",
+          "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+          "cost": 100,
+          "state": "disabled",
+          "reason": "게이지 25/100"
+        }
+      ],
+      "orders": [
+        {
+          "key": "move",
+          "label": "이동",
+          "hotkey": "M"
+        },
+        {
+          "key": "attack",
+          "label": "공격",
+          "hotkey": "A",
+          "primary": true,
+          "disabled": true,
+          "tip": "지금 공격할 수 있는 대상이 없습니다"
+        },
+        {
+          "key": "face",
+          "label": "정면",
+          "hotkey": "F",
+          "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+        },
+        {
+          "key": "brace",
+          "label": "방어",
+          "hotkey": "B",
+          "disabled": false,
+          "tip": "이번 차례 방어 태세"
+        },
+        {
+          "key": "garrison",
+          "label": "복귀",
+          "hotkey": "G",
+          "tip": "부대가 해산되고 병력 2,500이 이 성의 예비병이 됩니다"
+        },
+        {
+          "key": "regroup",
+          "label": "재정비",
+          "hotkey": "S",
+          "disabled": true,
+          "tip": "동요 상태에서만 가능"
+        },
+        {
+          "key": "wait",
+          "label": "대기",
+          "hotkey": "H"
+        }
+      ]
+    },
+    {
+      "id": "U-C16-1",
+      "officerId": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+        "w": 591,
+        "h": 857,
+        "cx": 299,
+        "cy": 85,
+        "side": 104
+      },
+      "troop": "spear",
+      "troopName": "창병",
+      "countText": "5,000",
+      "maxText": "5,000",
+      "countRatio": 1,
+      "ratings": [
+        {
+          "key": "attack",
+          "label": "공격",
+          "value": 77
+        },
+        {
+          "key": "defense",
+          "label": "방어",
+          "value": 88
+        },
+        {
+          "key": "mobility",
+          "label": "이동",
+          "value": 5
+        },
+        {
+          "key": "range",
+          "label": "사거리",
+          "value": 1
+        }
+      ],
+      "engine": {
+        "name": "강장",
+        "resourceName": "버팀",
+        "resource": 0,
+        "max": 3
+      },
+      "traits": {
+        "core": {
+          "name": "천인장군",
+          "full": "천인장군",
+          "text": "조인이 성 · 진지에서 차례를 시작하면 \"철갑\" 2장 — 다음 공격 2회 각각 피해 절반(피해량과 무관하게 공격 하나에 한 장).",
+          "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+          "token": null
+        },
+        "equipped": [],
+        "slots": 3
+      },
+      "bonds": [],
+      "klass": {
+        "engine": "강장",
+        "branch": "기본",
+        "merit": "실적 0/3",
+        "merits": "배수장 0/3 · 역습장 0/3",
+        "aptitude": "적성 높음",
+        "troopName": "창병"
+      },
+      "gauge": 20,
+      "gaugeMax": 100,
+      "qwer": [
+        {
+          "key": "Q",
+          "traitId": null,
+          "name": "관통 찌르기",
+          "icon": "assets/ui-kit/own/emblem-v1/72/q-spear.png",
+          "cost": null,
+          "state": "disabled",
+          "reason": "대상 없음"
+        },
+        {
+          "key": "W",
+          "traitId": null,
+          "name": "강장",
+          "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+          "cost": null,
+          "state": "disabled",
+          "reason": "버팀 0 / 3"
+        },
+        {
+          "key": "E",
+          "traitId": "G34.pilot.E",
+          "name": "팔문금쇄",
+          "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+          "cost": 60,
+          "state": "disabled",
+          "reason": "게이지 20/60"
+        },
+        {
+          "key": "R",
+          "traitId": "G34.card.1",
+          "name": "번성사수",
+          "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+          "cost": 100,
+          "state": "disabled",
+          "reason": "게이지 20/100"
+        }
+      ],
+      "orders": [
+        {
+          "key": "move",
+          "label": "이동",
+          "hotkey": "M"
+        },
+        {
+          "key": "attack",
+          "label": "공격",
+          "hotkey": "A",
+          "primary": true,
+          "disabled": true,
+          "tip": "지금 공격할 수 있는 대상이 없습니다"
+        },
+        {
+          "key": "face",
+          "label": "정면",
+          "hotkey": "F",
+          "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+        },
+        {
+          "key": "brace",
+          "label": "방어",
+          "hotkey": "B",
+          "disabled": false,
+          "tip": "이번 차례 방어 태세"
+        },
+        {
+          "key": "regroup",
+          "label": "재정비",
+          "hotkey": "S",
+          "disabled": true,
+          "tip": "동요 상태에서만 가능"
+        },
+        {
+          "key": "wait",
+          "label": "대기",
+          "hotkey": "H"
+        }
+      ]
+    }
+  ],
+  "end": {
+    "label": "다음 차례",
+    "remaining": 3,
+    "ready": false
+  },
+  "tacticReady": {
+    "U-F01-G07:G07.card.1": false,
+    "U-F01-G07:G07.combat.CTA-09": true,
+    "U-F01-G24:G24.card.1": false,
+    "U-F01-G24:G24.pilot.E": false,
+    "U-C16-1:G34.card.1": false,
+    "U-C16-1:G34.pilot.E": false
+  },
+  "advisor": {
+    "scope": "F01",
+    "turn": 5,
+    "interval": 7,
+    "lines": [
+      {
+        "event": "FIRST_CAPTURE",
+        "eventId": "SITUATION:F01:FIRST_CAPTURE",
+        "lineId": "F01:FIRST_CAPTURE:0",
+        "line": "명공, 성을 얻은 뒤에야 다스릴 자격을 증명할 수 있습니다.",
+        "speakerId": "G04",
+        "turn": 5,
+        "displayed": false,
+        "name": "순욱 · 군사",
+        "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+        "head": {
+          "w": 471,
+          "h": 945,
+          "cx": 291,
+          "cy": 91,
+          "side": 139
+        }
+      }
+    ]
+  },
+  "crisis": null,
+  "choice": null,
+  "dejaVu": {
+    "scope": "F01",
+    "turn": 5,
+    "busy": false,
+    "recent": []
+  },
+  "run": {
+    "status": "",
+    "blessing": null,
+    "rewind": {
+      "charges": 2,
+      "available": true,
+      "reason": null
+    },
+    "memory": null
+  },
+  "ambition": {
+    "scope": "F01",
+    "turn": 5,
+    "canChoose": false,
+    "chooseUntil": 3,
+    "bands": [],
+    "offer": {
+      "kind": "order",
+      "key": "F01:order.5",
+      "title": "이번 차례의 군령",
+      "choices": [
+        {
+          "id": "ORD-DEFEAT",
+          "title": "적 부대 둘",
+          "goalText": "5차례 안에 적 부대 둘을 무너뜨린다(병력 0)",
+          "goal": {
+            "type": "DEFEAT_ARMIES",
+            "count": 2
+          },
+          "reward": "REROLL",
+          "images": [
+            "assets/ui-v3/u3/levelup/art-halberd.png"
+          ],
+          "rewardText": "성장 다시 뽑기 +1"
+        },
+        {
+          "id": "ORD-JOINT",
+          "title": "함께 치다",
+          "goalText": "5차례 안에 두 부대가 같은 차례에 같은 적을 친다(협공)",
+          "goal": {
+            "type": "JOINT_ATTACK",
+            "count": 1
+          },
+          "reward": "REROLL",
+          "images": [
+            "assets/ui-v3/u3/levelup/art-crossbow.png"
+          ],
+          "rewardText": "성장 다시 뽑기 +1"
+        },
+        {
+          "id": "ORD-TACTIC",
+          "title": "전법을 펼쳐라",
+          "goalText": "5차례 안에 전법을 세 번 쓴다",
+          "goal": {
+            "type": "TACTICS_USED",
+            "count": 3
+          },
+          "reward": "TACTIC_CARD",
+          "images": [
+            "assets/ui-v3/u3/levelup/art-slips.png"
+          ],
+          "rewardText": "전법 카드 한 장(장수 하나의 성장 카드 즉시 고르기)"
+        }
+      ],
+      "skipLabel": "이번엔 군령 없이",
+      "rulerArt": "assets/officer-art/cutout/G07-decided-hA.webp",
+      "background": "assets/ui-v3/u3/levelup/bg.jpg",
+      "intro": "9차례 말까지 · 하나를 고르거나 이번 군령을 넘기세요"
+    }
+  },
+  "council": {
+    "turn": 4,
+    "status": "CLOSED",
+    "strategistId": "G04",
+    "candidates": [],
+    "report": [
+      "신도의 수비가 얇습니다."
+    ],
+    "proposals": [
+      {
+        "id": "COUNCIL.4.1",
+        "kind": "ATTACK_CITY",
+        "proposerId": "G34",
+        "target": {
+          "cityId": "pingyuan",
+          "armyId": "U-C16-1"
+        },
+        "what": "조인 군으로 평원을 친다",
+        "expected": "평원 내구 29",
+        "risk": "수비가 얇아진다",
+        "decision": "HOLD",
+        "score": 92.1,
+        "unavailableFields": [
+          "n",
+          "비는 성"
+        ],
+        "opinions": [
+          {
+            "officerId": "G34",
+            "stance": "FOR",
+            "reason": "이 안건을 제안했습니다.",
+            "name": "조인",
+            "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+            "label": "제안자"
+          },
+          {
+            "officerId": "G04",
+            "stance": "FOR",
+            "reason": "군주와의 관계를 바탕으로 실행할 만하다고 봅니다.",
+            "name": "순욱",
+            "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+            "label": "찬성"
+          },
+          {
+            "officerId": "G24",
+            "stance": "FOR",
+            "reason": "군주와의 관계를 바탕으로 실행할 만하다고 봅니다.",
+            "name": "장료",
+            "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+            "label": "찬성"
+          },
+          {
+            "officerId": "G25",
+            "stance": "FOR",
+            "reason": "군주와의 관계를 바탕으로 실행할 만하다고 봅니다.",
+            "name": "허저",
+            "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+            "label": "찬성"
+          }
+        ],
+        "label": "공격",
+        "name": "조인",
+        "deadline": "2월 하순",
+        "facts": [
+          [
+            "기대",
+            "평원 내구 29"
+          ],
+          [
+            "위험",
+            "수비가 얇아진다"
+          ],
+          [
+            "채택하면",
+            "조인 · 군주와 친밀 +1"
+          ],
+          [
+            "지키면",
+            "조인 경험 +10 · 친밀 +3"
+          ],
+          [
+            "어기면",
+            "군주와 친밀 -2"
+          ]
+        ]
+      },
+      {
+        "id": "COUNCIL.4.2",
+        "kind": "DIPLOMACY",
+        "proposerId": "G04",
+        "target": {
+          "factionId": "F03",
+          "kind": "TRUCE"
+        },
+        "what": "손권에 휴전을 청한다",
+        "expected": "받아들일 가능성 높음",
+        "risk": "거절당하면 그쪽 마음이 상한다",
+        "decision": "HOLD",
+        "score": 9.75,
+        "unavailableFields": [],
+        "opinions": [
+          {
+            "officerId": "G04",
+            "stance": "FOR",
+            "reason": "이 안건을 제안했습니다.",
+            "name": "순욱",
+            "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+            "label": "제안자"
+          },
+          {
+            "officerId": "G24",
+            "stance": "FOR",
+            "reason": "군주와의 관계를 바탕으로 실행할 만하다고 봅니다.",
+            "name": "장료",
+            "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+            "label": "찬성"
+          },
+          {
+            "officerId": "G34",
+            "stance": "FOR",
+            "reason": "군주와의 관계를 바탕으로 실행할 만하다고 봅니다.",
+            "name": "조인",
+            "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+            "label": "찬성"
+          },
+          {
+            "officerId": "G25",
+            "stance": "FOR",
+            "reason": "군주와의 관계를 바탕으로 실행할 만하다고 봅니다.",
+            "name": "허저",
+            "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+            "label": "찬성"
+          }
+        ],
+        "label": "외교",
+        "name": "순욱",
+        "deadline": "2월 하순",
+        "facts": [
+          [
+            "기대",
+            "받아들일 가능성 높음"
+          ],
+          [
+            "위험",
+            "거절당하면 그쪽 마음이 상한다"
+          ],
+          [
+            "채택하면",
+            "순욱 · 군주와 친밀 +1"
+          ],
+          [
+            "지키면",
+            "순욱 경험 +10 · 친밀 +3"
+          ],
+          [
+            "어기면",
+            "군주와 친밀 -2"
+          ]
+        ]
+      }
+    ],
+    "resolutions": [],
+    "advisorLine": "신도의 수비가 얇습니다.",
+    "appointmentUsed": false,
+    "experienceGranted": true,
+    "skippedKinds": [],
+    "limitations": [
+      "종류 간 공통 점수 미제공",
+      "함락 예상 차례 미제공",
+      "탐험 AI 반환값에 원거리 장소 대상 미제공",
+      "잘린 방어 경로의 성 대상 미제공"
+    ],
+    "reportTopicIds": [
+      "SUPPLY_CUT",
+      "OPPORTUNITY"
+    ],
+    "open": false,
+    "scope": "F01",
+    "factionName": "조조",
+    "date": "5턴 · 190년 2월 중순",
+    "background": "assets/ui-v3/scenes/plate-council.webp",
+    "strategistName": "순욱",
+    "appointText": "첫 평정이다. 곁에서 보고하고 계책을 낼 군사를 고른다. 고르지 않으면 순욱이 맡는다.",
+    "appointNote": "지략 85 이상이면 보고에 적의 다음 수를 짐작하는 한 줄이 붙는다.",
+    "pool": [
+      {
+        "id": "G04",
+        "name": "순욱",
+        "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+        "head": {
+          "w": 471,
+          "h": 945,
+          "cx": 291,
+          "cy": 91,
+          "side": 139
+        },
+        "stats": {
+          "leadership": 68,
+          "might": 29,
+          "intelligence": 90,
+          "politics": 94,
+          "charisma": 88
+        }
+      },
+      {
+        "id": "G24",
+        "name": "장료",
+        "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+        "head": {
+          "w": 808,
+          "h": 1153,
+          "cx": 303,
+          "cy": 116,
+          "side": 144
+        },
+        "stats": {
+          "leadership": 94,
+          "might": 90,
+          "intelligence": 84,
+          "politics": 57,
+          "charisma": 83
+        }
+      },
+      {
+        "id": "G34",
+        "name": "조인",
+        "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+        "head": {
+          "w": 591,
+          "h": 857,
+          "cx": 299,
+          "cy": 85,
+          "side": 104
+        },
+        "stats": {
+          "leadership": 89,
+          "might": 88,
+          "intelligence": 78,
+          "politics": 64,
+          "charisma": 74
+        }
+      }
+    ],
+    "cast": [
+      {
+        "id": "G04",
+        "name": "순욱",
+        "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+        "head": {
+          "w": 471,
+          "h": 945,
+          "cx": 291,
+          "cy": 91,
+          "side": 139
+        }
+      },
+      {
+        "id": "G34",
+        "name": "조인",
+        "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+        "head": {
+          "w": 591,
+          "h": 857,
+          "cx": 299,
+          "cy": 85,
+          "side": 104
+        }
+      }
+    ],
+    "followups": []
+  },
+  "achievementRecords": {
+    "title": "업적 기록",
+    "rows": []
+  },
+  "minimap": {
+    "image": "assets/ui-v3/map/v15-world.webp",
+    "land": {
+      "u0": 0.1631372549019608,
+      "v0": 0.17993079584775087,
+      "u1": 0.8368627450980393,
+      "v1": 0.8200692041522492
+    },
+    "tileToUv": {
+      "au": 0.1819695585900171,
+      "bu": 0.0326185068112803,
+      "av": 0.20069428622415367,
+      "bv": 0.019310046050054604
+    },
+    "cities": [
+      {
+        "id": "south",
+        "name": "남피",
+        "u": 0.6223,
+        "v": 0.529,
+        "own": true,
+        "capital": true
+      },
+      {
+        "id": "yijing",
+        "name": "역경",
+        "u": 0.5082,
+        "v": 0.3938,
+        "own": false,
+        "capital": false
+      },
+      {
+        "id": "xindu",
+        "name": "신도",
+        "u": 0.4103,
+        "v": 0.5869,
+        "own": false,
+        "capital": false
+      },
+      {
+        "id": "pingyuan",
+        "name": "평원",
+        "u": 0.5897,
+        "v": 0.6448,
+        "own": true,
+        "capital": false
+      },
+      {
+        "id": "julu",
+        "name": "거록",
+        "u": 0.3124,
+        "v": 0.6641,
+        "own": false,
+        "capital": false
+      }
+    ],
+    "units": [
+      {
+        "id": "U-F02-G05",
+        "u": 0.3124,
+        "v": 0.6641,
+        "own": false
+      },
+      {
+        "id": "U-F02-G02",
+        "u": 0.2961,
+        "v": 0.6834,
+        "own": false
+      },
+      {
+        "id": "U-F03-G08",
+        "u": 0.5408,
+        "v": 0.3938,
+        "own": false
+      },
+      {
+        "id": "U-F03-G20",
+        "u": 0.4918,
+        "v": 0.3745,
+        "own": false
+      },
+      {
+        "id": "U-C16-2",
+        "u": 0.3777,
+        "v": 0.6255,
+        "own": false
+      },
+      {
+        "id": "U-C16-3",
+        "u": 0.4755,
+        "v": 0.3552,
+        "own": false
+      },
+      {
+        "id": "U-F01-G07",
+        "u": 0.5897,
+        "v": 0.6448,
+        "own": true
+      },
+      {
+        "id": "U-F01-G24",
+        "u": 0.5734,
+        "v": 0.6255,
+        "own": true
+      },
+      {
+        "id": "U-C16-1",
+        "u": 0.5897,
+        "v": 0.6062,
+        "own": true
+      }
+    ]
+  },
+  "map": {
+    "world": {
+      "size": [
+        6120,
+        5549
+      ],
+      "tiles": [
+        {
+          "art": "assets/ui-v3/map/v16/tile-r1c1.png",
+          "u0": 0,
+          "v0": 0,
+          "u1": 0.35326797385620917,
+          "v1": 0.26491259686429985
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r1c2.png",
+          "u0": 0.3133986928104575,
+          "v0": 0,
+          "u1": 0.6866013071895425,
+          "v1": 0.26491259686429985
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r1c3.png",
+          "u0": 0.6467320261437909,
+          "v0": 0,
+          "u1": 1,
+          "v1": 0.26491259686429985
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r2c1.png",
+          "u0": 0,
+          "v0": 0.23499729681023607,
+          "u1": 0.35326797385620917,
+          "v1": 0.515047756352496
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r2c2.png",
+          "u0": 0.3133986928104575,
+          "v0": 0.23499729681023607,
+          "u1": 0.6866013071895425,
+          "v1": 0.515047756352496
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r2c3.png",
+          "u0": 0.6467320261437909,
+          "v0": 0.23499729681023607,
+          "u1": 1,
+          "v1": 0.515047756352496
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r3c1.png",
+          "u0": 0,
+          "v0": 0.48495224364750406,
+          "u1": 0.35326797385620917,
+          "v1": 0.7650027031897639
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r3c2.png",
+          "u0": 0.3133986928104575,
+          "v0": 0.48495224364750406,
+          "u1": 0.6866013071895425,
+          "v1": 0.7650027031897639
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r3c3.png",
+          "u0": 0.6467320261437909,
+          "v0": 0.48495224364750406,
+          "u1": 1,
+          "v1": 0.7650027031897639
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r4c1.png",
+          "u0": 0,
+          "v0": 0.7350874031357001,
+          "u1": 0.35326797385620917,
+          "v1": 1
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r4c2.png",
+          "u0": 0.3133986928104575,
+          "v0": 0.7350874031357001,
+          "u1": 0.6866013071895425,
+          "v1": 1
+        },
+        {
+          "art": "assets/ui-v3/map/v16/tile-r4c3.png",
+          "u0": 0.6467320261437909,
+          "v0": 0.7350874031357001,
+          "u1": 1,
+          "v1": 1
+        }
+      ]
+    },
+    "proj": {
+      "size": 30,
+      "tilt": 0.62,
+      "ou": 0.1819695585900171,
+      "ov": 0.20069428622415367,
+      "ku": 0.0006277434562685442,
+      "kv": 0.0006921163458800933
+    },
+    "tiles": [
+      {
+        "q": 0,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 6,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 7,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 8,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 9,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 17,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 18,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 19,
+        "r": 0,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 6,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 7,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 8,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 9,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 17,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 18,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 19,
+        "r": 1,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 6,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 7,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 8,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 9,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 17,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 18,
+        "r": 2,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 6,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 7,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 8,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 9,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 17,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 18,
+        "r": 3,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 6,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 7,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 8,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 9,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 17,
+        "r": 4,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 6,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 7,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 8,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 9,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 17,
+        "r": 5,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 6,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 7,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 8,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 9,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 6,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 5,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 12,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 13,
+        "r": 7,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 14,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 16,
+        "r": 7,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 12,
+        "r": 8,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 13,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 8,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 12,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 9,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 15,
+        "r": 9,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 10,
+        "vis": "REMEMBERED"
+      },
+      {
+        "q": 12,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 10,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 14,
+        "r": 10,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 11,
+        "vis": "REMEMBERED"
+      },
+      {
+        "q": 11,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 11,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 13,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 14,
+        "r": 11,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 2,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 3,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 11,
+        "r": 12,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 12,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 13,
+        "r": 12,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 13,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 10,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 12,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 13,
+        "r": 13,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 14,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 14,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 14,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 14,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 14,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 14,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 12,
+        "r": 14,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 15,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 15,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 15,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 15,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 15,
+        "vis": "REMEMBERED"
+      },
+      {
+        "q": 3,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 12,
+        "r": 15,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -8,
+        "r": 16,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 16,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 16,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 16,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 16,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -8,
+        "r": 17,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 17,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 17,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 11,
+        "r": 17,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -9,
+        "r": 18,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 18,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 18,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 18,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 18,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 18,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 18,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -9,
+        "r": 19,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 19,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 19,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 19,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 19,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 10,
+        "r": 19,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -10,
+        "r": 20,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 20,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 20,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 20,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 20,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 20,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -10,
+        "r": 21,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 21,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 21,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 21,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 9,
+        "r": 21,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -11,
+        "r": 22,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 22,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 22,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 22,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -11,
+        "r": 23,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 23,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -8,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 23,
+        "vis": "REMEMBERED"
+      },
+      {
+        "q": 5,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 23,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 8,
+        "r": 23,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -12,
+        "r": 24,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 24,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 24,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -8,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 24,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -12,
+        "r": 25,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 25,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 25,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -8,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 0,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 25,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 4,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 7,
+        "r": 25,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -13,
+        "r": 26,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -12,
+        "r": 26,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 26,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 26,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -8,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 26,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 26,
+        "vis": "REMEMBERED"
+      },
+      {
+        "q": 0,
+        "r": 26,
+        "vis": "REMEMBERED"
+      },
+      {
+        "q": 1,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 26,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -13,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -12,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -8,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -1,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 27,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 6,
+        "r": 27,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -14,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -13,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -12,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -3,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -2,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 28,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 28,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -14,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -13,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -12,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -7,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -4,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 29,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 1,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 5,
+        "r": 29,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -15,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -14,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -13,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -12,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -6,
+        "r": 30,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -5,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 30,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 30,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 30,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 30,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 30,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -15,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -14,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -13,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -12,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -11,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -10,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -9,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -8,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -7,
+        "r": 31,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": -6,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -5,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -4,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -3,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -2,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": -1,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 0,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      },
+      {
+        "q": 1,
+        "r": 31,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 2,
+        "r": 31,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 3,
+        "r": 31,
+        "vis": "VISIBLE"
+      },
+      {
+        "q": 4,
+        "r": 31,
+        "vis": "UNEXPLORED"
+      }
+    ],
+    "cities": [
+      {
+        "id": "south",
+        "name": "남피",
+        "q": 5,
+        "r": 17,
+        "own": true,
+        "capital": true,
+        "color": "#b8433c",
+        "besieged": false,
+        "defense": 100,
+        "defenseMax": 100
+      },
+      {
+        "id": "yijing",
+        "name": "역경",
+        "q": 5,
+        "r": 10,
+        "own": false,
+        "capital": false,
+        "color": "#9a8f7a",
+        "besieged": true,
+        "defense": 1,
+        "defenseMax": 60
+      },
+      {
+        "id": "xindu",
+        "name": "신도",
+        "q": -3,
+        "r": 20,
+        "own": false,
+        "capital": false,
+        "color": "#9a8f7a",
+        "besieged": false,
+        "defense": 60,
+        "defenseMax": 60
+      },
+      {
+        "id": "pingyuan",
+        "name": "평원",
+        "q": 1,
+        "r": 23,
+        "own": true,
+        "capital": false,
+        "color": "#b8433c",
+        "besieged": false,
+        "defense": 10,
+        "defenseMax": 60
+      },
+      {
+        "id": "julu",
+        "name": "거록",
+        "q": -8,
+        "r": 24,
+        "own": false,
+        "capital": false,
+        "color": "#4f8f73",
+        "besieged": false,
+        "defense": 20,
+        "defenseMax": 60
+      }
+    ],
+    "units": [
+      {
+        "id": "U-F02-G05",
+        "name": "유비",
+        "q": -8,
+        "r": 24,
+        "own": false,
+        "troop": "sword",
+        "countText": "2,500",
+        "color": "#4f8f73",
+        "art": "assets/officer-art/cutout/G05-decided-hA.webp",
+        "head": {
+          "w": 404,
+          "h": 829,
+          "cx": 252,
+          "cy": 87,
+          "side": 121
+        },
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-F02-G02",
+        "name": "조운",
+        "q": -9,
+        "r": 25,
+        "own": false,
+        "troop": "spear",
+        "countText": "2,500",
+        "color": "#4f8f73",
+        "art": "assets/officer-art/cutout/G02-decided-hA.webp",
+        "head": {
+          "w": 595,
+          "h": 889,
+          "cx": 301,
+          "cy": 89,
+          "side": 130
+        },
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-F03-G08",
+        "name": "손권",
+        "q": 6,
+        "r": 10,
+        "own": false,
+        "troop": "spear",
+        "countText": "2,500",
+        "color": "#33709f",
+        "art": "assets/officer-art/cutout/G08-full-hA.webp",
+        "head": {
+          "w": 777,
+          "h": 1173,
+          "cx": 399,
+          "cy": 105,
+          "side": 107
+        },
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-F03-G20",
+        "name": "손책",
+        "q": 5,
+        "r": 9,
+        "own": false,
+        "troop": "cavalry",
+        "countText": "2,500",
+        "color": "#33709f",
+        "art": "assets/officer-art/cutout/G20-decided-hA.webp",
+        "head": {
+          "w": 608,
+          "h": 846,
+          "cx": 367,
+          "cy": 77,
+          "side": 124
+        },
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-C16-2",
+        "name": "장비",
+        "q": -5,
+        "r": 22,
+        "own": false,
+        "troop": "spear",
+        "countText": "4,500",
+        "color": "#4f8f73",
+        "art": "assets/officer-art/cutout/G19-decided-hA.webp",
+        "head": {
+          "w": 625,
+          "h": 896,
+          "cx": 324,
+          "cy": 224,
+          "side": 118
+        },
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-C16-3",
+        "name": "육손",
+        "q": 5,
+        "r": 8,
+        "own": false,
+        "troop": "spear",
+        "countText": "5,500",
+        "color": "#33709f",
+        "art": "assets/officer-art/cutout/G28-decided-hA.webp",
+        "head": {
+          "w": 477,
+          "h": 922,
+          "cx": 182,
+          "cy": 83,
+          "side": 135
+        },
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-F01-G07",
+        "name": "조조",
+        "q": 1,
+        "r": 23,
+        "own": true,
+        "troop": "cavalry",
+        "countText": "2,500",
+        "color": "#b8433c",
+        "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+        "head": {
+          "w": 522,
+          "h": 888,
+          "cx": 318,
+          "cy": 103,
+          "side": 114
+        },
+        "ended": false,
+        "selected": true
+      },
+      {
+        "id": "U-F01-G24",
+        "name": "장료",
+        "q": 1,
+        "r": 22,
+        "own": true,
+        "troop": "cavalry",
+        "countText": "2,500",
+        "color": "#b8433c",
+        "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+        "head": {
+          "w": 808,
+          "h": 1153,
+          "cx": 303,
+          "cy": 116,
+          "side": 144
+        },
+        "ended": false,
+        "selected": false
+      },
+      {
+        "id": "U-C16-1",
+        "name": "조인",
+        "q": 2,
+        "r": 21,
+        "own": true,
+        "troop": "spear",
+        "countText": "5,000",
+        "color": "#b8433c",
+        "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+        "head": {
+          "w": 591,
+          "h": 857,
+          "cx": 299,
+          "cy": 85,
+          "side": 104
+        },
+        "ended": false,
+        "selected": false
+      }
+    ],
+    "selected": "U-F01-G07",
+    "move": [
+      {
+        "q": 9,
+        "r": 12,
+        "turns": 1
+      },
+      {
+        "q": 7,
+        "r": 13,
+        "turns": 1
+      },
+      {
+        "q": 8,
+        "r": 13,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 14,
+        "turns": 1
+      },
+      {
+        "q": 5,
+        "r": 14,
+        "turns": 1
+      },
+      {
+        "q": 6,
+        "r": 14,
+        "turns": 1
+      },
+      {
+        "q": 7,
+        "r": 14,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 15,
+        "turns": 1
+      },
+      {
+        "q": 5,
+        "r": 15,
+        "turns": 1
+      },
+      {
+        "q": 6,
+        "r": 15,
+        "turns": 1
+      },
+      {
+        "q": 7,
+        "r": 15,
+        "turns": 1
+      },
+      {
+        "q": 8,
+        "r": 15,
+        "turns": 1
+      },
+      {
+        "q": 9,
+        "r": 15,
+        "turns": 1
+      },
+      {
+        "q": 2,
+        "r": 16,
+        "turns": 1
+      },
+      {
+        "q": 3,
+        "r": 16,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 16,
+        "turns": 1
+      },
+      {
+        "q": 5,
+        "r": 16,
+        "turns": 1
+      },
+      {
+        "q": 7,
+        "r": 16,
+        "turns": 1
+      },
+      {
+        "q": 8,
+        "r": 16,
+        "turns": 1
+      },
+      {
+        "q": 9,
+        "r": 16,
+        "turns": 1
+      },
+      {
+        "q": 2,
+        "r": 17,
+        "turns": 1
+      },
+      {
+        "q": 3,
+        "r": 17,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 17,
+        "turns": 1
+      },
+      {
+        "q": 5,
+        "r": 17,
+        "turns": 1
+      },
+      {
+        "q": 7,
+        "r": 17,
+        "turns": 1
+      },
+      {
+        "q": 8,
+        "r": 17,
+        "turns": 1
+      },
+      {
+        "q": 9,
+        "r": 17,
+        "turns": 1
+      },
+      {
+        "q": 0,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 1,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 2,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 3,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 6,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 7,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 8,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 9,
+        "r": 18,
+        "turns": 1
+      },
+      {
+        "q": 2,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": 3,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": 5,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": 6,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": 7,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": 8,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": 9,
+        "r": 19,
+        "turns": 1
+      },
+      {
+        "q": -1,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": 0,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": 1,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": 2,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": 3,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": 5,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": 6,
+        "r": 20,
+        "turns": 1
+      },
+      {
+        "q": -1,
+        "r": 21,
+        "turns": 1
+      },
+      {
+        "q": 0,
+        "r": 21,
+        "turns": 1
+      },
+      {
+        "q": 1,
+        "r": 21,
+        "turns": 1
+      },
+      {
+        "q": 3,
+        "r": 21,
+        "turns": 1
+      },
+      {
+        "q": 4,
+        "r": 21,
+        "turns": 1
+      },
+      {
+        "q": 5,
+        "r": 21,
+        "turns": 1
+      },
+      {
+        "q": -4,
+        "r": 22,
+        "turns": 1
+      },
+      {
+        "q": -3,
+        "r": 22,
+        "turns": 1
+      },
+      {
+        "q": -2,
+        "r": 22,
+        "turns": 1
+      },
+      {
+        "q": -1,
+        "r": 22,
+        "turns": 1
+      },
+      {
+        "q": 0,
+        "r": 22,
+        "turns": 1
+      },
+      {
+        "q": 1,
+        "r": 22,
+        "turns": 1
+      },
+      {
+        "q": -4,
+        "r": 23,
+        "turns": 1
+      },
+      {
+        "q": -3,
+        "r": 23,
+        "turns": 1
+      },
+      {
+        "q": -2,
+        "r": 23,
+        "turns": 1
+      },
+      {
+        "q": -1,
+        "r": 23,
+        "turns": 1
+      },
+      {
+        "q": 0,
+        "r": 23,
+        "turns": 1
+      },
+      {
+        "q": -4,
+        "r": 24,
+        "turns": 1
+      },
+      {
+        "q": -3,
+        "r": 24,
+        "turns": 1
+      },
+      {
+        "q": -2,
+        "r": 24,
+        "turns": 1
+      },
+      {
+        "q": -1,
+        "r": 24,
+        "turns": 1
+      },
+      {
+        "q": -5,
+        "r": 25,
+        "turns": 1
+      },
+      {
+        "q": -4,
+        "r": 25,
+        "turns": 1
+      },
+      {
+        "q": -3,
+        "r": 25,
+        "turns": 1
+      },
+      {
+        "q": -2,
+        "r": 25,
+        "turns": 1
+      },
+      {
+        "q": -5,
+        "r": 26,
+        "turns": 1
+      },
+      {
+        "q": -4,
+        "r": 26,
+        "turns": 1
+      },
+      {
+        "q": -5,
+        "r": 27,
+        "turns": 1
+      }
+    ],
+    "path": {
+      "to": {
+        "q": -4,
+        "r": 23
+      },
+      "turns": 1,
+      "steps": [
+        {
+          "q": 1,
+          "r": 23
+        },
+        {
+          "q": 0,
+          "r": 23
+        },
+        {
+          "q": -1,
+          "r": 23
+        },
+        {
+          "q": -2,
+          "r": 23
+        },
+        {
+          "q": -3,
+          "r": 23
+        },
+        {
+          "q": -4,
+          "r": 23
+        }
+      ],
+      "label": "1차례"
+    },
+    "attacks": [],
+    "names": {
+      "U-F02-G05": "유비",
+      "U-F02-G02": "조운",
+      "U-F03-G08": "손권",
+      "U-F03-G20": "손책",
+      "U-C16-2": "장비",
+      "U-C16-3": "육손",
+      "U-F01-G07": "조조",
+      "U-F01-G24": "장료",
+      "U-C16-1": "조인"
+    }
+  }
+}

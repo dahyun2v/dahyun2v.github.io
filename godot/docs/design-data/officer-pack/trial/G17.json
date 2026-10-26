@@ -1,0 +1,124 @@
+{
+  "id": "G17",
+  "name": "맹획",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 71,
+    "무용": 79,
+    "지략": 65,
+    "정무": 53,
+    "감화": 79
+  },
+  "sub": {
+    "전열 유지": 71,
+    "기동": 64,
+    "전환": 67,
+    "수습": 78,
+    "힘": 84,
+    "기술": 72,
+    "막아내기": 80,
+    "되받기": 73,
+    "군재": 59,
+    "응변": 66,
+    "속이기": 72,
+    "통찰": 61,
+    "행정": 52,
+    "병참": 57,
+    "인사": 60,
+    "제도": 43,
+    "민정": 56,
+    "설득": 81,
+    "포섭": 79,
+    "결집": 83,
+    "중재": 64
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "맹장",
+  "style": "명사",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "쓰러질수록 사납다",
+    "text": "병력이 절반 아래면 내 차례 시작마다 사기 한 단계 회복(패주 → 동요), 주는 피해 +25%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "무용"
+    ],
+    "effects": [
+      {
+        "op": "MORALE_DELTA",
+        "when": "ROUND_START",
+        "target": "SELF",
+        "value": 10,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      },
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 25,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 진입면 예측·밀어내기(Reaction)는 없어 전법을 '진을 다시 짜고(전열 회복) 기다렸다 되받는 자리'로 옮김. 특기의 Regroup 이전은 없어 '져도 다시 일어서는' 회복+역습으로 새로 만들고 이름을 바꿈(패배로 판단을 넘기지 않음).",
+    "formerName": "다시 일어서는 왕"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "진 치고 기다린다",
+      "text": "진을 다시 짜고 적을 기다린다: 내 전열 한 단계 회복, 이번 턴 받는 피해 −15%, 반격 피해 +40%. 적이 오지 않으면 한 턴을 버린다.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 15,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 40,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "다시 시험할 자리"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

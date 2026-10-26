@@ -1,0 +1,547 @@
+{
+  "sourceCount": 100,
+  "highMultipleCount": 27,
+  "multiCount": 13,
+  "officers": {
+    "G01": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 형천/과보; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G02": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비휴/비렴; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G03": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 백택/건목; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G04": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 정위/후토; 역할 문관; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G05": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 여와/비휴; 역할 명사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G06": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비렴/포뢰; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G07": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 백택/후토; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G08": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 솔연/해치; 역할 명사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G09": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 정위/후토; 역할 명사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G10": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 건목/후토; 역할 명사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G11": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 과보/후토; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G12": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 포뢰/건목; 역할 명사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G13": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "spear",
+        "cavalry"
+      ],
+      "reason": "HIGH 우선; Class 과보/형천; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G14": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "cavalry",
+        "bow"
+      ],
+      "reason": "HIGH 우선; Class 천구/형천; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G15": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 비희/후토; 역할 문관; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G16": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 건목/해치; 역할 문관; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G17": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 과보/천구; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G18": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "spear",
+        "cavalry"
+      ],
+      "reason": "HIGH 우선; Class 포뢰/과보; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G19": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희/형천; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G20": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "cavalry",
+        "militia"
+      ],
+      "reason": "HIGH 우선; Class 포뢰/형천; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G21": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 신루/백택; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G22": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 백택/천구; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G23": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희/신루; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G24": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "cavalry",
+        "militia"
+      ],
+      "reason": "HIGH 우선; Class 비렴/과보; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G25": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 금강/치우; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G26": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 신루/해치; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G27": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 필방/솔연; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G28": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 필방/비희; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G29": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "cavalry",
+        "militia"
+      ],
+      "reason": "HIGH 우선; Class 천구/비렴; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G30": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "cavalry",
+        "bow"
+      ],
+      "reason": "HIGH 우선; Class 천구/비휴; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G31": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 솔연/백택; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G32": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 형천/과보; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G33": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 치우/후토; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G34": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희/정위; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G35": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 신루/치우; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G36": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 백택/여와; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G37": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "spear",
+        "cavalry"
+      ],
+      "reason": "HIGH 우선; Class 천구/비렴; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G38": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 정위/백택; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G39": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 건목/정위; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G40": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 신루/후토; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G41": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 해치/건목; 역할 명사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G42": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 천구/비희; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G43": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 솔연/신루; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G44": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 해치/천구; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G45": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "cavalry",
+        "bow"
+      ],
+      "reason": "HIGH 우선; Class 과보/비희; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G46": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 천구/형천; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G47": {
+      "troopType": "bow",
+      "multiTroopTypes": [
+        "spear",
+        "bow"
+      ],
+      "reason": "HIGH 우선; Class 신루/비희; 역할 장군; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G48": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "MEDIUM 우선; Class 후토/해치; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G49": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 금강/과보; 역할 맹장; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G50": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 필방/신루; 역할 책사; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G51": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 솔연; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G52": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "spear",
+        "cavalry"
+      ],
+      "reason": "HIGH 우선; Class 백택; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G53": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 여와; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G54": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 형천; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G55": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 금강; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G56": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G57": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 신루; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G58": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 치우; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G59": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 과보; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G60": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 포뢰; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G61": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 해치; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G62": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 솔연/후토; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G63": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 여와; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G64": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 건목; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G65": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 건목; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G66": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [
+        "spear",
+        "cavalry"
+      ],
+      "reason": "HIGH 우선; Class 형천; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G67": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G68": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 해치; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G69": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 솔연; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G70": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G71": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 금강; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G72": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비렴; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G73": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 과보; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G74": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비렴; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G75": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 치우; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G76": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 솔연; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G77": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 후토; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G78": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 금강; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G79": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 여와; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G80": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비렴; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G81": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 치우; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G82": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 형천; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G83": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 과보; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G84": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 솔연; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G85": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G86": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 건목; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G87": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비휴/여와; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G88": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G89": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 후토/여와; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G90": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G91": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비렴; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G92": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 신루; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G93": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 치우; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G94": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 솔연; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G95": {
+      "troopType": "cavalry",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G96": {
+      "troopType": "bow",
+      "multiTroopTypes": [
+        "spear",
+        "militia",
+        "bow"
+      ],
+      "reason": "HIGH 우선; Class 천구; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G97": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 비희; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G98": {
+      "troopType": "bow",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 해치; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G99": {
+      "troopType": "spear",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 솔연; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    },
+    "G100": {
+      "troopType": "militia",
+      "multiTroopTypes": [],
+      "reason": "HIGH 우선; Class 포뢰; 역할 -; 동률 BT02>BT04>BT01>BT03"
+    }
+  }
+}

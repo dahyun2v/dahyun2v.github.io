@@ -1,0 +1,2051 @@
+{
+ "G01": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G01_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G01-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G01.webp 보존",
+  "headA": {
+   "base": "G01-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G01-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G01.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G02": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G02_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G02-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G02.webp 보존",
+  "baseLabel": "초록 옷",
+  "alts": [
+   {
+    "id": "white",
+    "label": "흰 옷",
+    "file": "G02-white-hA.webp",
+    "headA": {
+     "base": "G02-white.webp",
+     "k": 1.12
+    }
+   }
+  ],
+  "headA": {
+   "base": "G02-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G02-seat.webp",
+   "src": "docs/work-integration/20261011/seat-src/seat-G02-20261011.png",
+   "note": "주점 가운데 탁자에 앉은 모습(시안 page-tavern 의 가운데 인물) — GPT 가 결정본을 보고 자세만 바꿔 새로 그린 것(얼굴이 조금 다르다). 주점에서만 쓴다. 견본 4명(2026-10-11)"
+  }
+ },
+ "G03": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G03_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G03-full-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G03.webp 보존",
+  "baseLabel": "초록 옷",
+  "alts": [
+   {
+    "id": "white",
+    "label": "흰 옷",
+    "file": "G03-white-hA.webp",
+    "headA": {
+     "base": "G03-white.webp",
+     "k": 1.12
+    }
+   }
+  ],
+  "full": {
+   "base": "G03-decided.webp",
+   "extension": "~/Downloads/dots-out-20261010/A/norm/qa/G03_first_native.png",
+   "method": "tools/design/officer-extend-merge.py",
+   "note": "결정본은 무릎·허벅지에서 잘린 그림 — 원본에 있던 곳(얼굴·상체·소품)은 결정본 그림 점 그대로, 모자란 다리·옷자락·옆만 닷토리가 이어 그린 것으로 채움(사용자 2026-10-11 \"다리가 안 보이는 사람… 닷토리한테 맡겨서 정리\"). 결정본 파일은 그대로 보존"
+  },
+  "headA": {
+   "base": "G03-full.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G03-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G03.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G04": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G04_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G04-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G04.webp 보존",
+  "headA": {
+   "base": "G04-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G04-seat.webp",
+   "src": "docs/work-integration/20261011/seat-src/seat-G04-20261011.png",
+   "note": "주점 가운데 탁자에 앉은 모습(시안 page-tavern 의 가운데 인물) — GPT 가 결정본을 보고 자세만 바꿔 새로 그린 것(얼굴이 조금 다르다). 주점에서만 쓴다. 견본 4명(2026-10-11)"
+  }
+ },
+ "G05": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G05_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G05-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G05.png 보존",
+  "headA": {
+   "base": "G05-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G05-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G05.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G06": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G06_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G06-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G06.webp 보존",
+  "headA": {
+   "base": "G06-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G06-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G06.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G07": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G07_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G07-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G07.png 보존",
+  "headA": {
+   "base": "G07-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G07-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G07.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G08": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G08_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G08-full-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G08.png 보존",
+  "full": {
+   "base": "G08-decided.webp",
+   "extension": "~/Downloads/dots-out-20261010/A/norm/qa/G08_first_native.png",
+   "method": "tools/design/officer-extend-merge.py",
+   "note": "결정본은 무릎·허벅지에서 잘린 그림 — 원본에 있던 곳(얼굴·상체·소품)은 결정본 그림 점 그대로, 모자란 다리·옷자락·옆만 닷토리가 이어 그린 것으로 채움(사용자 2026-10-11 \"다리가 안 보이는 사람… 닷토리한테 맡겨서 정리\"). 결정본 파일은 그대로 보존"
+  },
+  "headA": {
+   "base": "G08-full.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G08-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G08.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G09": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G09_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G09-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G09.webp 보존",
+  "headA": {
+   "base": "G09-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G09-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G09.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G10": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G10_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G10-norm-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G10.webp 보존",
+  "norm": {
+   "base": "G10-decided.webp",
+   "method": "tools/design/officer-body-squash.py --scale 0.88",
+   "note": "결정본은 아래에서 올려다본 구도라 머리 크기를 맞추면 혼자 훨씬 길었다(사용자 2026-10-11 \"원술은 비율 자체가 너무 다르고\"). 턱 위는 그대로, 턱 아래 몸만 세로 88%로 줄임 — 다시 그리지 않음. 결정본 파일은 그대로 보존"
+  },
+  "headA": {
+   "base": "G10-norm.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G10-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G10.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G11": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G11_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G11-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G11.webp 보존",
+  "headA": {
+   "base": "G11-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G11-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G11.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G12": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G12_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G12-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G12.webp 보존",
+  "headA": {
+   "base": "G12-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G12-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G12.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G13": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G13_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G13-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G13.webp 보존",
+  "headA": {
+   "base": "G13-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G13-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G13.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G14": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G14_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G14-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G14.webp 보존",
+  "headA": {
+   "base": "G14-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G14-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G14.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G15": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G15_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G15-full-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G15.webp 보존",
+  "full": {
+   "base": "G15-decided.webp",
+   "extension": "~/Downloads/dots-out-20261010/A/norm/G15_full_norm.png",
+   "method": "tools/design/officer-extend-merge.py",
+   "note": "결정본은 무릎·허벅지에서 잘린 그림 — 원본에 있던 곳(얼굴·상체·소품)은 결정본 그림 점 그대로, 모자란 다리·옷자락·옆만 닷토리가 이어 그린 것으로 채움(사용자 2026-10-11 \"다리가 안 보이는 사람… 닷토리한테 맡겨서 정리\"). 결정본 파일은 그대로 보존"
+  },
+  "headA": {
+   "base": "G15-full.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G15-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G15.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G16": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G16_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G16-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G16.webp 보존",
+  "headA": {
+   "base": "G16-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G16-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G16.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G17": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G17_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G17-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G17.webp 보존",
+  "headA": {
+   "base": "G17-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G17-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G17.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G18": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G18_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G18-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G18.webp 보존",
+  "headA": {
+   "base": "G18-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G18-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G18.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G19": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G19_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G19-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G19.webp 보존",
+  "headA": {
+   "base": "G19-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G19-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G19.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G20": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G20_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G20-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G20.webp 보존",
+  "headA": {
+   "base": "G20-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G20-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G20.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G21": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G21_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G21-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G21.webp 보존",
+  "headA": {
+   "base": "G21-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G21-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G21.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G22": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G22_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G22-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G22.webp 보존",
+  "headA": {
+   "base": "G22-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G22-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G22.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G23": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G23_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G23-full-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G23.webp 보존",
+  "full": {
+   "base": "G23-decided.webp",
+   "extension": "~/Downloads/dots-out-20261010/A/norm/G23_full_norm.png",
+   "method": "tools/design/officer-extend-merge.py",
+   "note": "결정본은 무릎·허벅지에서 잘린 그림 — 원본에 있던 곳(얼굴·상체·소품)은 결정본 그림 점 그대로, 모자란 다리·옷자락·옆만 닷토리가 이어 그린 것으로 채움(사용자 2026-10-11 \"다리가 안 보이는 사람… 닷토리한테 맡겨서 정리\"). 결정본 파일은 그대로 보존"
+  },
+  "headA": {
+   "base": "G23-full.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G23-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G23.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G24": {
+  "src": "~/Downloads/dots-out-20261010/A/G24_zhangliao_face1_body2_v2.png",
+  "file": "G24-20261012-hA.webp",
+  "method": "tools/art/birefnet-cut.py — 닷토리 새 그림(새 8안의 1번 얼굴 + 2번 중갑 전신)의 배경을 BiRefNet 으로 다시 지움",
+  "note": "사용자 2026-10-10 \"장료는 이거로 할거야\" · 이전 그림 G24.webp 보존 · 2026-10-12 사용자 \"장료는 누끼 다시 따야겠다 하얀 게 남아 있네\" → 같은 원본을 BiRefNet 으로 다시 땀(머리카락 사이 흰 얼룩 없앰). 이전 누끼 G24-20261010(-hA).webp 보존",
+  "headA": {
+   "base": "G24-20261012.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G24-seat.webp",
+   "src": "docs/work-integration/20261011/seat-src/seat-G24-20261011.png",
+   "note": "주점 가운데 탁자에 앉은 모습(시안 page-tavern 의 가운데 인물) — GPT 가 결정본을 보고 자세만 바꿔 새로 그린 것(얼굴이 조금 다르다). 주점에서만 쓴다. 견본 4명(2026-10-11)"
+  }
+ },
+ "G25": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G25_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G25-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G25.webp 보존",
+  "headA": {
+   "base": "G25-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G25-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G25.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G26": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G26_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G26-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G26.webp 보존",
+  "headA": {
+   "base": "G26-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G26-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G26.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G27": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G27_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G27-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G27.webp 보존",
+  "headA": {
+   "base": "G27-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G27-seat.webp",
+   "src": "docs/work-integration/20261011/seat-src/seat-G27-20261011.png",
+   "note": "주점 가운데 탁자에 앉은 모습(시안 page-tavern 의 가운데 인물) — GPT 가 결정본을 보고 자세만 바꿔 새로 그린 것(얼굴이 조금 다르다). 주점에서만 쓴다. 견본 4명(2026-10-11)"
+  }
+ },
+ "G28": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G28_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G28-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G28.webp 보존",
+  "headA": {
+   "base": "G28-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G28-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G28.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G29": {
+  "src": "~/Downloads/dots-out-20261010/A/revisions/part04/G29_full.png",
+  "file": "G29-20261010-hA.webp",
+  "method": "tools/design/officer-review-cut.py — 닷토리 A 수정본(회색 바탕 지움)",
+  "note": "사용자 2026-10-10 \"감녕·고순·방덕·강유·옹개는 바꿔\" · 이전 그림 G29.webp 보존",
+  "headA": {
+   "base": "G29-20261010.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G29-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G29.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G30": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G30_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G30-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G30.webp 보존",
+  "headA": {
+   "base": "G30-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G30-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G30.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G31": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G31_reference.jpg",
+  "size": [
+   720,
+   960
+  ],
+  "file": "G31-full-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G31.webp 보존",
+  "full": {
+   "base": "G31-decided.webp",
+   "extension": "~/Downloads/dots-out-20261010/A/norm/G31_full_norm.png",
+   "method": "tools/design/officer-extend-merge.py",
+   "note": "결정본은 무릎·허벅지에서 잘린 그림 — 원본에 있던 곳(얼굴·상체·소품)은 결정본 그림 점 그대로, 모자란 다리·옷자락·옆만 닷토리가 이어 그린 것으로 채움(사용자 2026-10-11 \"다리가 안 보이는 사람… 닷토리한테 맡겨서 정리\"). 결정본 파일은 그대로 보존"
+  },
+  "headA": {
+   "base": "G31-full.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G31-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G31.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G32": {
+  "src": "~/Downloads/dots-out-20261010/A/revisions/part03/G32_full.png",
+  "file": "G32-20261010-hA.webp",
+  "method": "tools/design/officer-review-cut.py — 닷토리 A 수정본(회색 바탕 지움)",
+  "note": "사용자 2026-10-10 \"감녕·고순·방덕·강유·옹개는 바꿔\" · 이전 그림 G32.webp 보존",
+  "headA": {
+   "base": "G32-20261010.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G32-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G32.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G33": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G33_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G33-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G33.webp 보존",
+  "headA": {
+   "base": "G33-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G33-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G33.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G34": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G34_v3_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G34-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G34.webp 보존",
+  "headA": {
+   "base": "G34-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G34-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G34.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G35": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G35_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G35-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G35.webp 보존",
+  "headA": {
+   "base": "G35-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G35-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G35.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G36": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G36_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G36-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G36.webp 보존",
+  "headA": {
+   "base": "G36-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G36-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G36.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G37": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G37_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G37-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G37.webp 보존",
+  "headA": {
+   "base": "G37-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G37-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G37.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G38": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G38_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G38-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G38.webp 보존",
+  "headA": {
+   "base": "G38-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G38-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G38.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G39": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G39_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G39-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G39.webp 보존",
+  "headA": {
+   "base": "G39-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G39-seat.webp",
+   "src": "~/Downloads/seat-out-2-a~b.zip :: seat-G39.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G40": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G40_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G40-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G40.webp 보존",
+  "headA": {
+   "base": "G40-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G40-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G40.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G41": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G41_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G41-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G41.webp 보존",
+  "headA": {
+   "base": "G41-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G41-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G41.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G42": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G42_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G42-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G42.webp 보존",
+  "headA": {
+   "base": "G42-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G42-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G42.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G43": {
+  "src": "prototype/assets/officer-art/G43-50105c896f1e.png (10/1 채택본 v6)",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G43-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 2026-10-11 \"법정만 10/1 걸로 하자\" — 10/1 채택 그림(adopted.json 기록과 같은 그림)으로 되돌림. 10/6 결정본은 G43-decided.webp 로 보존(prev)",
+  "prev": {
+   "file": "G43-decided-hA.webp",
+   "headA": {
+    "base": "G43-decided.webp",
+    "k": 1.12,
+    "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+   },
+   "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G43.webp 보존"
+  },
+  "headA": {
+   "base": "G43.webp",
+   "k": 1.12
+  },
+  "seat": {
+   "file": "G43-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G43.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G44": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G44_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G44-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G44.webp 보존",
+  "headA": {
+   "base": "G44-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G44-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G44.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G45": {
+  "src": "~/Downloads/dots-out-20261010/A/revisions/part02/G45_full.png",
+  "file": "G45-20261010-hA.webp",
+  "method": "tools/design/officer-review-cut.py — 닷토리 A 수정본(회색 바탕 지움)",
+  "note": "사용자 2026-10-10 \"감녕·고순·방덕·강유·옹개는 바꿔\" · 이전 그림 G45.webp 보존",
+  "headA": {
+   "base": "G45-20261010.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G45-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G45.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G46": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G46_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G46-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G46.webp 보존",
+  "headA": {
+   "base": "G46-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G46-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G46.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G47": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G47_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G47-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G47.webp 보존",
+  "headA": {
+   "base": "G47-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G47-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G47.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G48": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G48_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G48-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G48.webp 보존",
+  "headA": {
+   "base": "G48-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G48-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G48.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G49": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G49_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G49-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G49.webp 보존",
+  "headA": {
+   "base": "G49-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G49-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G49.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G50": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G50_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G50-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\" · 이전 표시 G50.webp 보존",
+  "headA": {
+   "base": "G50-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G50-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G50.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G51": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G51_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G51-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G51-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G51-seat.webp",
+   "src": "~/Downloads/seat-out-2-c~d.zip :: seat-G51.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G52": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G52_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G52-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G52-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G52-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G52.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G53": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G53_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G53-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G53-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G53-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G53.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G54": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G54_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G54-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G54-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G54-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G54.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G55": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G55_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G55-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G55-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G55-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G55.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G56": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G56_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G56-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G56-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G56-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G56.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G57": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G57_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G57-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G57-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G57-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G57.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G58": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G58_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G58-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G58-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G58-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G58.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G59": {
+  "src": "~/Downloads/dots-out-20261010/A/revisions/part06/G59_full.png",
+  "file": "G59-20261010-hA.webp",
+  "method": "tools/design/officer-review-cut.py — 닷토리 A 수정본(회색 바탕 지움)",
+  "note": "사용자 2026-10-10 \"감녕·고순·방덕·강유·옹개는 바꿔\"",
+  "headA": {
+   "base": "G59-20261010.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G59-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G59.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G60": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G60_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G60-full-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "full": {
+   "base": "G60-decided.webp",
+   "extension": "~/Downloads/dots-out-20261010/A/norm/G60_full_norm.png",
+   "method": "tools/design/officer-extend-merge.py",
+   "note": "결정본은 무릎·허벅지에서 잘린 그림 — 원본에 있던 곳(얼굴·상체·소품)은 결정본 그림 점 그대로, 모자란 다리·옷자락·옆만 닷토리가 이어 그린 것으로 채움(사용자 2026-10-11 \"다리가 안 보이는 사람… 닷토리한테 맡겨서 정리\"). 결정본 파일은 그대로 보존"
+  },
+  "headA": {
+   "base": "G60-full.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G60-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G60.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G61": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G61_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G61-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G61-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G61-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G61.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G62": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G62_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G62-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G62-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G62-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G62.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G63": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G63_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G63-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G63-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G63-seat.webp",
+   "src": "~/Downloads/seat-out-3-a~b.zip :: seat-G63.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G64": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G64_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G64-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G64-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G64-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G64.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G65": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G65_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G65-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G65-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G65-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G65.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G66": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G66_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G66-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G66-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G66-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G66.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G67": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G67_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G67-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G67-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G67-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G67.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G68": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G68_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G68-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G68-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G68-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G68.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G69": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G69_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G69-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G69-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G69-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G69.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G70": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G70_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G70-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G70-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G70-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G70.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G71": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G71_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G71-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G71-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G71-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G71.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G72": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G72_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G72-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G72-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G72-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G72.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G73": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G73_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G73-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G73-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G73-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G73.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G74": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G74_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G74-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G74-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G74-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G74.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G75": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G75_reference.jpg",
+  "size": [
+   800,
+   960
+  ],
+  "file": "G75-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G75-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G75-seat.webp",
+   "src": "~/Downloads/seat-out-3-c~d.zip :: seat-G75.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G76": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G76_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G76-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G76-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G76-seat.webp",
+   "src": "~/Downloads/seat-out-4-a.zip :: seat-G76.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G77": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G77_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G77-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G77-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G77-seat.webp",
+   "src": "~/Downloads/seat-out-4-a.zip :: seat-G77.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G78": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G78_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G78-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G78-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G78-seat.webp",
+   "src": "~/Downloads/seat-out-4-a.zip :: seat-G78.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G79": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G79_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G79-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G79-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G79-seat.webp",
+   "src": "~/Downloads/seat-out-4-a.zip :: seat-G79.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G80": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G80_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G80-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G80-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G80-seat.webp",
+   "src": "~/Downloads/seat-out-4-a.zip :: seat-G80.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G81": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G81_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G81-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G81-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G81-seat.webp",
+   "src": "~/Downloads/seat-out-4-a.zip :: seat-G81.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G82": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G82_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G82-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G82-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G82-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G82.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G83": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G83_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G83-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G83-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G83-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G83.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G84": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G84_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G84-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G84-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G84-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G84.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G85": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G85_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G85-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G85-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G85-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G85.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G86": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G86_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G86-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G86-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G86-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G86.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G87": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G87_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G87-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G87-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G87-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G87.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G88": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G88_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G88-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G88-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G88-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G88.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G89": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G89_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G89-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G89-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G89-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G89.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G90": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G90_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G90-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G90-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G90-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G90.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G91": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G91_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G91-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G91-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G91-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G91.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G92": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G92_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G92-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G92-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G92-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G92.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G93": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G93_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G93-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G93-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G93-seat.webp",
+   "src": "~/Downloads/seat-out-4-b~c.zip :: seat-G93.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G94": {
+  "src": "~/Downloads/dots-out-20261010/A/revisions/part08/G94_full.png",
+  "file": "G94-20261010-hA.webp",
+  "method": "tools/design/officer-review-cut.py — 닷토리 A 수정본(회색 바탕 지움)",
+  "note": "사용자 2026-10-10 \"감녕·고순·방덕·강유·옹개는 바꿔\"",
+  "headA": {
+   "base": "G94-20261010.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G94-seat.webp",
+   "src": "~/Downloads/seat-out-4-d.zip :: seat-G94.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G95": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G95_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G95-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G95-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G95-seat.webp",
+   "src": "~/Downloads/seat-out-4-d.zip :: seat-G95.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G96": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G96_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G96-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G96-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G96-seat.webp",
+   "src": "~/Downloads/seat-out-4-d.zip :: seat-G96.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G97": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G97_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G97-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G97-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G97-seat.webp",
+   "src": "~/Downloads/seat-out-4-d.zip :: seat-G97.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G98": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G98_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G98-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G98-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G98-seat.webp",
+   "src": "~/Downloads/seat-out-4-d.zip :: seat-G98.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G99": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G99_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G99-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G99-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G99-seat.webp",
+   "src": "~/Downloads/seat-out-4-d.zip :: seat-G99.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ },
+ "G100": {
+  "src": "~/Downloads/officer_assets_G01_G100_20261006 :: source_references_jpeg/G100_reference.jpg",
+  "size": [
+   640,
+   960
+  ],
+  "file": "G100-decided-hA.webp",
+  "method": "tools/art/officer-decided-cutouts.py (ComfyUI RemoveBackground birefnet)",
+  "note": "사용자 결정본(10-04 선택·코멘트 반영 → 10-06 패키지의 받은 JPEG) — 사용자 2026-10-11 \"여기 있는 게 내가 결정한 주유임\"",
+  "headA": {
+   "base": "G100-decided.webp",
+   "k": 1.12,
+   "note": "머리만 12% 키움(얼굴 모양·선 그대로, 몸·무기 그대로) — tools/design/officer-head-scale.py --keep-box. 사용자 2026-10-11 \"머리 크기 키우는 건 A 정도 수준이 좋아 보인다 · 얼굴 고정하고 하는 방법은 없니\". 되돌리려면 file 을 headA.base 로"
+  },
+  "seat": {
+   "file": "G100-seat.webp",
+   "src": "~/Downloads/seat-out-1-a~d.zip :: seat-G100.png",
+   "note": "주점 가운데 탁자에 앉은 모습 — 닷토리(ChatGPT Dots)가 결정본을 보고 자세만 바꿔 새로 그린 것. 주점에서만 쓴다(2026-10-11 의뢰 docs/work-integration/20261011/dots-order/ORDER-SEATED.md)"
+  }
+ }
+}

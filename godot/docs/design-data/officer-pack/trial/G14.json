@@ -1,0 +1,114 @@
+{
+  "id": "G14",
+  "name": "공손찬",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 80,
+    "무용": 79,
+    "지략": 66,
+    "정무": 48,
+    "감화": 52
+  },
+  "sub": {
+    "전열 유지": 73,
+    "기동": 88,
+    "전환": 80,
+    "수습": 73,
+    "힘": 79,
+    "기술": 82,
+    "막아내기": 69,
+    "되받기": 83,
+    "군재": 73,
+    "응변": 79,
+    "속이기": 58,
+    "통찰": 49,
+    "행정": 52,
+    "병참": 56,
+    "인사": 55,
+    "제도": 48,
+    "민정": 35,
+    "설득": 64,
+    "포섭": 53,
+    "결집": 70,
+    "중재": 32
+  },
+  "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "맹장",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:맹장",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "되받아치고 쫓는다",
+    "text": "반격하면 그 반격과 다음 차례 공격의 피해 +20%, 다음 차례 이동 +2칸. 쫓아갈지 돌아갈지는 직접 고른다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "기병"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_COUNTER",
+        "target": "SELF",
+        "value": 20,
+        "duration": 2,
+        "condition": null
+      },
+      {
+        "op": "MOVE_MOD",
+        "when": "ON_COUNTER",
+        "target": "SELF",
+        "value": 2,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · Reaction 예약 요격은 없어 '보인 적의 진로를 끊는 백마 기사(騎射)'로, 반격 후 추격/복귀 양자택일은 '반격 뒤 피해·이동 보너스'로 옮김. 과추격·고립 약점은 플레이 선택으로 남김.",
+    "formerName": "도착을 증명하다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "말 위 활쏘기",
+      "text": "2칸 안의 적 1부대에 말 위에서 활을 쏘아 피해 +30%, 대상은 다음 차례 이동 −2칸.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "SLOWED"
+        }
+      ],
+      "formerName": "백마의 응답"
+    }
+  ]
+}

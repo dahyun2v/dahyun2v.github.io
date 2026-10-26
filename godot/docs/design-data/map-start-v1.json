@@ -1,0 +1,206 @@
+{
+  "schema": "삼국지 지도 첫판 입력 v1",
+  "status": "planning_fixture_not_game_save",
+  "purpose": "18×14 축소 지도에서 조조·유비·손권의 시작 상태와 지도 판정을 한 번에 전달하는 첫판 입력. 실행 가능한 게임 저장 파일이나 플레이 완료 기록은 아니다.",
+  "generated": "2026-09-19",
+  "sourceMap": "map-layout-v1.json",
+  "sourceScenario": "ops-scenario-v1.json",
+  "decisionStatus": "사용자 위임에 따른 작업 결정과 담당 시험값",
+  "time": {
+    "turnDays": 10,
+    "tickDays": 0.05,
+    "ticksPerTurn": 200,
+    "movementProgressCarriesAcrossTurn": true,
+    "combatTimebase": "BC-v1 fixed tick"
+  },
+  "board": {
+    "width": 18,
+    "height": 14,
+    "coordinateSystem": "axial q,r",
+    "terrain": ["plain", "forest", "hill", "mountain", "water"],
+    "sourceRoads": "map-layout-v1.json#roads",
+    "sourceCrossings": "map-layout-v1.json#crossings",
+    "crossings": {
+      "bridge": [[7, 3], [8, 3]],
+      "ford": [[7, 10], [8, 10]]
+    }
+  },
+  "movement": {
+    "maneuverReference": 50,
+    "normal": {"plain": 2, "rough": 3, "road": 1.5, "crossingExtra": 2},
+    "cavalry": {"plain": 1.25, "rough": 3, "road": 1, "crossingExtra": 2},
+    "engineer": {"plain": 3, "rough": 4, "road": 2, "crossingExtra": 2},
+    "supply": {"plain": 3, "rough": 4, "road": 2, "crossingExtra": 2},
+    "mountainAndWater": "육상 통과 불가",
+    "maneuverRange": {"minimum": 0, "maximum": 100, "timeMultiplierAtMinimum": 1.2, "timeMultiplierAtMaximum": 0.8},
+    "crossingExtraIgnoresManeuver": true
+  },
+  "vision": {
+    "states": ["unexplored", "remembered", "currently_observed"],
+    "baseRange": 3,
+    "cityRange": 3,
+    "hillBonus": 1,
+    "forestAndMountainOcclusion": true,
+    "hiddenInformationUsedByPathfinding": false
+  },
+  "occupancy": {
+    "oneFieldUnitPerTile": true,
+    "cityCenterCountsAsFieldTile": true,
+    "cityInteriorExtraGarrisonSlots": false,
+    "reserveAndWoundedUseFieldTile": false,
+    "alliedSwap": "two noncombat allied units may swap only when both routes remain valid",
+    "enemyContact": "same-tile arrival becomes combat and blocks the contested edge"
+  },
+  "factions": [
+    {
+      "id": "F01",
+      "name": "조조",
+      "cityId": "west",
+      "leaderId": "G07",
+      "governorId": "G04",
+      "roster": ["G07", "G04", "G24"],
+      "conceptReference": "F01",
+      "uniqueTraitReference": "군령집중",
+      "policyReference": "둔전 정비"
+    },
+    {
+      "id": "F02",
+      "name": "유비",
+      "cityId": "east",
+      "leaderId": "G05",
+      "governorId": "G03",
+      "roster": ["G05", "G02", "G03"],
+      "conceptReference": "F02",
+      "uniqueTraitReference": "인심결집",
+      "policyReference": "도원 구호"
+    },
+    {
+      "id": "F03",
+      "name": "손권",
+      "cityId": "south",
+      "leaderId": "G08",
+      "governorId": "G27",
+      "roster": ["G08", "G20", "G27"],
+      "conceptReference": "F03",
+      "uniqueTraitReference": "연합지휘",
+      "policyReference": "강동 연합 편제"
+    }
+  ],
+  "starts": [
+    {
+      "factionId": "F01",
+      "cityId": "west",
+      "cityCenter": [2, 3],
+      "initialOwnedTiles": [[2, 3], [3, 3], [3, 2], [2, 2], [1, 3], [1, 4], [2, 4]],
+      "citizenAssignments": [
+        {"at": [1, 3], "terrain": "plain", "role": "food_and_production"},
+        {"at": [2, 4], "terrain": "forest", "role": "food_and_production"}
+      ],
+      "population": 2,
+      "stage": "small",
+      "security": "stable",
+      "inventory": {"food": 20, "fame": 50, "iron": 0, "horses": 0, "reserve": 0, "wounded": 0},
+      "mobilizationLimit": 2000,
+      "fieldUnitIds": ["U-F01-G07", "U-F01-G24"]
+    },
+    {
+      "factionId": "F02",
+      "cityId": "east",
+      "cityCenter": [12, 3],
+      "initialOwnedTiles": [[12, 3], [13, 3], [13, 2], [12, 2], [11, 3], [11, 4], [12, 4]],
+      "citizenAssignments": [
+        {"at": [13, 3], "terrain": "plain", "role": "food_and_production"},
+        {"at": [12, 4], "terrain": "forest", "role": "food_and_production"}
+      ],
+      "population": 2,
+      "stage": "small",
+      "security": "stable",
+      "inventory": {"food": 20, "fame": 50, "iron": 0, "horses": 0, "reserve": 0, "wounded": 0},
+      "mobilizationLimit": 2000,
+      "fieldUnitIds": ["U-F02-G05", "U-F02-G02"]
+    },
+    {
+      "factionId": "F03",
+      "cityId": "south",
+      "cityCenter": [4, 10],
+      "initialOwnedTiles": [[4, 10], [5, 10], [5, 9], [4, 9], [3, 10], [3, 11], [4, 11]],
+      "citizenAssignments": [
+        {"at": [3, 10], "terrain": "plain", "role": "food_and_production"},
+        {"at": [4, 11], "terrain": "forest", "role": "food_and_production"}
+      ],
+      "population": 2,
+      "stage": "small",
+      "security": "stable",
+      "inventory": {"food": 20, "fame": 50, "iron": 0, "horses": 0, "reserve": 0, "wounded": 0},
+      "mobilizationLimit": 2000,
+      "fieldUnitIds": ["U-F03-G08", "U-F03-G20"]
+    }
+  ],
+  "units": [
+    {"id": "U-F01-G07", "factionId": "F01", "commanderId": "G07", "type": "창병", "movementClass": "normal", "at": [2, 3], "strength": 250, "state": "field"},
+    {"id": "U-F01-G24", "factionId": "F01", "commanderId": "G24", "type": "기병", "movementClass": "cavalry", "at": [3, 3], "strength": 250, "state": "field"},
+    {"id": "U-F02-G05", "factionId": "F02", "commanderId": "G05", "type": "의병", "movementClass": "normal", "at": [12, 3], "strength": 250, "state": "field"},
+    {"id": "U-F02-G02", "factionId": "F02", "commanderId": "G02", "type": "기병", "movementClass": "cavalry", "at": [11, 3], "strength": 250, "state": "field"},
+    {"id": "U-F03-G08", "factionId": "F03", "commanderId": "G08", "type": "궁병", "movementClass": "normal", "at": [4, 10], "strength": 250, "state": "field"},
+    {"id": "U-F03-G20", "factionId": "F03", "commanderId": "G20", "type": "기병", "movementClass": "cavalry", "at": [5, 10], "strength": 250, "state": "field"}
+  ],
+  "resourcePositions": [
+    {"id": "R01", "kind": "food_cache", "at": [3, 5], "placeId": "P01", "availableAfter": "E01_resolved", "amount": "west_city_citizen_upkeep_2_turns"},
+    {"id": "R02", "kind": "iron_cache", "at": [5, 11], "placeId": "P03", "availableAfter": "E03_resolved", "amount": 2},
+    {"id": "R03", "kind": "horse_mountain_information", "at": [5, 2], "placeId": "P04", "availableAfter": "discovery_only", "automaticGrant": false}
+  ],
+  "explorationPlaces": [
+    {"id": "P01", "eventId": "E01", "label": "성소", "at": [3, 5], "initialState": "unresolved", "resolution": "one_time_choice"},
+    {"id": "P02", "eventId": "E02", "label": "은거지", "at": [12, 5], "initialState": "unresolved", "neutralGeneralId": "G21", "resolution": "recruitment_choice"},
+    {"id": "P03", "eventId": "E03", "label": "옛 진지", "at": [5, 11], "initialState": "unresolved", "resolution": "one_time_choice"},
+    {"id": "P04", "eventId": null, "label": "군마 산지", "at": [5, 2], "initialState": "undiscovered", "resolution": "information_only_until_developed"}
+  ],
+  "supplyTests": [
+    {"id": "SUP-01", "fromCityId": "west", "toCityId": "east", "unitClass": "supply", "closedCrossings": [], "expected": "arrive", "expectedDays": 20},
+    {"id": "SUP-02", "fromCityId": "west", "toCityId": "east", "unitClass": "supply", "closedCrossings": ["bridge"], "expected": "detour_via_ford", "expectedDays": 48},
+    {"id": "SUP-03", "fromCityId": "west", "toCityId": "east", "unitClass": "supply", "closedCrossings": ["bridge", "ford"], "expected": "wait_at_current_position", "expectedDays": null, "senderOwnsInTransit": true},
+    {"id": "SUP-04", "fromCityId": "west", "toCityId": "east", "unitClass": "supply", "closedCrossings": ["bridge"], "event": "destination_lost", "expected": "return_to_sender_or_safe_sender_city", "duplicateArrival": false}
+  ],
+  "withdrawalTest": {
+    "id": "WITHDRAW-01",
+    "fromCityId": "east",
+    "destinationCityId": "west",
+    "closedCrossings": ["bridge", "ford"],
+    "expected": "wait_and_warn_no_teleport",
+    "specialProtectionTurns": 2,
+    "longRouteExtension": "estimated_route_plus_1_turn",
+    "automaticInfiniteExtension": false
+  },
+  "relations": [
+    {"a": "F01", "b": "F02", "status": "neutral", "truceTurns": 0},
+    {"a": "F01", "b": "F03", "status": "neutral", "truceTurns": 0},
+    {"a": "F02", "b": "F03", "status": "neutral", "truceTurns": 0}
+  ],
+  "sourceConflictResolution": {
+    "field": "citizenAssignments",
+    "olderScenarioValue": "ops-scenario-v1 기록의 시작 시민 두 칸 평지",
+    "firstSliceValue": "도시 경제 CE-v1와 최신 도시 담당 연결안에 맞춘 평지 1칸+숲 1칸",
+    "mapChange": "세 도시의 두 번째 시민 타일을 숲으로 표시",
+    "status": "first_slice_override; 운영 원본은 감사용으로 보존"
+  },
+  "expectedChecks": {
+    "mapDimensions": true,
+    "cityCentersAndSixNeighbors": true,
+    "disjointInitialOwnership": true,
+    "onePlainAndOneForestCitizenPerCity": true,
+    "twoFieldUnitsPerFaction": true,
+    "250StrengthPerFieldUnit": true,
+    "startInventoryMatchesCEv1": true,
+    "baseVisionIsThree": true,
+    "supplyBreakAndWithdrawalCasesPresent": true,
+    "notAnActualGameRun": true
+  },
+  "references": [
+    "map-layout-v1.json",
+    "ops-scenario-v1.json",
+    "../지도-탐험-기획.md",
+    "../지도-규모-이동-시험표-v1.md",
+    "../도시-경제-시험값-v1.md",
+    "../전체-운영-설계.md"
+  ]
+}

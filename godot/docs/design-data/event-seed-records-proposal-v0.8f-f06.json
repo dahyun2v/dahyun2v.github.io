@@ -1,0 +1,169 @@
+[
+  {
+    "eventSeedId": "INC-F06-P01-01",
+    "policyId": "POL-F06-CORE-01",
+    "factionId": "F06",
+    "scale": "INCIDENT",
+    "title": "潼關突進",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "적이 관문 또는 도하점의 방비를 완성하지 못했다",
+      "G13 마초와 기마부대가 공격 가능한 거리에 있다",
+      "돌파 이후 진출할 목표가 정해져 있다",
+      "돌파 이후 사용할 퇴로와 후속 집결지가 존재한다",
+      "후방에 군마와 식량을 공급할 지점이 존재한다"
+    ],
+    "castSelectors": [
+      "G12",
+      "G13"
+    ],
+    "locationSelectors": [],
+    "triggerWindow": "적이 관문 또는 도하점의 방비를 완성하기 전까지",
+    "playerChoices": [
+      "정면으로 돌파해 후속 목표까지 진출한다",
+      "정면 공격을 위장하고 다른 도하점으로 우회한다",
+      "관문 수비대를 묶고 별동대로 적 보급로를 공격한다",
+      "통로만 확보하고 후속군을 기다린다",
+      "정보가 불확실하면 돌파를 취소한다"
+    ],
+    "costInputs": [
+      "식량",
+      "금전",
+      "행동력",
+      "말과 사료",
+      "집결·원정·교대 주둔·재집결 시간",
+      "G12·G13과 기병·연락 담당자의 임무 점유"
+    ],
+    "risks": [
+      "적의 유인에 선봉이 깊이 진입한다",
+      "후속군이 지연되어 선봉이 고립된다",
+      "군마가 피로해진다",
+      "후방 집결지가 공격받는다"
+    ],
+    "counterplay": [
+      "적이 선봉을 유인해 후속군과 분리한다",
+      "적이 후방 집결지를 공격한다",
+      "통로만 확보하고 후속군을 기다려 무리한 진출을 피한다"
+    ],
+    "failureTraces": [
+      "돌파된 관문",
+      "고립된 선봉",
+      "소모된 군마",
+      "버려진 장비",
+      "마초를 따라 돌입한 장수와 거부한 장수의 관계"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "돌파 기회 종료 시점",
+      "적의 방비 상태",
+      "돌파 후 목표",
+      "후속군 도착 예상 시점",
+      "사용 가능한 퇴로"
+    ],
+    "forbiddenAutoResolve": [
+      "G13 마초가 존재한다는 이유만으로 관문 수비와 지형을 무시한 돌파 성공을 확정할 수 없다",
+      "팝업 선택만으로 돌진·보급·후속군 이동을 완료할 수 없다",
+      "일기토나 장수 개인의 무용만으로 관문과 차단선을 제거할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "localSubjectRef": null,
+    "responseDeadlineCondition": "적이 관문 또는 도하점의 방비를 완성하기 전에 행동해야 한다",
+    "containmentOptions": [],
+    "spreadConditions": [],
+    "missingFields": [
+      "동관 돌파와 관서 기마 전술 앵커에 직접 연결되는 canonical source ID가 확정되지 않아 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "G12와 G13 이외의 후속군·기병·연락 담당자 ID가 확정되지 않았다",
+      "관문·도하점·돌파 후 집결지·후방 군마 및 식량 지점의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "돌파 대상의 canonical subject ID가 없어 localSubjectRef를 null로 두었다",
+      "containmentOptions와 spreadConditions가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F06-P01-02",
+    "policyId": "POL-F06-CORE-01",
+    "factionId": "F06",
+    "scale": "SITUATION",
+    "title": "十部合從",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "서로 다른 기반을 가진 복수의 기마 장수가 원정에 참가한다",
+      "참가 장수들의 본거지와 군영이 서로 떨어져 있다",
+      "식량·군마 사료·전리품·선봉 임무의 분담이 필요하다",
+      "집결지·개별 군영·후방 보급 거점·사절 경로가 존재한다"
+    ],
+    "castSelectors": [
+      "G12",
+      "G13"
+    ],
+    "locationSelectors": [],
+    "triggerWindow": "연합 원정이 지속되는 동안이며 분담 변경에는 군의와 전령 이동이 필요하다",
+    "playerChoices": [
+      "공동 창고를 설치하고 식량과 사료를 함께 관리한다",
+      "각 부대가 자체 보급을 책임진다",
+      "선봉 임무를 교대한다",
+      "부대별로 서로 다른 목표를 맡긴다",
+      "조건부로 연합을 분리한다"
+    ],
+    "costInputs": [
+      "식량",
+      "군마 사료",
+      "금전",
+      "부대 이동",
+      "군의와 전령 이동 시간",
+      "집결지·군영·보급로 운용"
+    ],
+    "risks": [
+      "배급 불공정으로 참가 장수의 불만이 누적된다",
+      "특정 장수에게 선봉과 공적이 집중된다",
+      "연합 내부의 중재가 지연된다",
+      "적의 개별 회유로 연합 장수가 이탈한다",
+      "공동 창고가 습격당한다"
+    ],
+    "counterplay": [
+      "적이 위조 서신으로 연합 장수 사이를 이간한다",
+      "적이 각 장수에게 서로 다른 조건을 제안한다",
+      "적이 포로를 석방해 특정 장수와 비밀 교섭한다",
+      "적이 공동 창고와 보급 경로를 공격한다"
+    ],
+    "failureTraces": [
+      "함께 원정한 부대 사이의 전우 관계",
+      "배급 불공정과 선봉 독점에 대한 원한",
+      "적과 비밀 교섭한 장수의 기록",
+      "연합을 떠난 부대의 독립 세력화",
+      "마등과 마초 사이에 남은 전략 차이"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "참가 장수",
+      "각 군영의 위치",
+      "보급 책임",
+      "공동 목표",
+      "불만의 원인",
+      "적의 접촉 징후"
+    ],
+    "forbiddenAutoResolve": [
+      "연합 결성만으로 지휘권·식량·전리품을 자동 통합할 수 없다",
+      "팝업 선택만으로 연합·충성·보급·부대 이동을 성공 처리할 수 없다",
+      "장수 개인의 일기토로 연합 내부 갈등이나 적의 이간을 해결할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "마초·한수와 관중 여러 장수의 연합 및 이간 앵커에 직접 연결되는 canonical source ID가 확정되지 않아 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "G12와 G13 이외의 연합 장수에 대한 canonical officer ID가 없어 castSelectors에 추가하지 않았다",
+      "집결지·개별 군영·후방 보급 거점·사절 경로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

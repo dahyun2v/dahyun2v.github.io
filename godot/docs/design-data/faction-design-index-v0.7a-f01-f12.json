@@ -1,0 +1,916 @@
+[
+  {
+    "factionId": "F01",
+    "rulerName": "조조",
+    "sourceBatch": [
+      "v0.2",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "붉은 용의 밤 귀족/악의 제국",
+    "identityLayers": {
+      "source": [
+        "인재 등용",
+        "행정 조직화",
+        "역할에 따른 인재 운용"
+      ],
+      "projectLock": [
+        "붉은 용",
+        "밤 귀족",
+        "악의 제국"
+      ],
+      "creativeBoundary": [
+        "인재를 기능에 맞게 재배열하는 중앙집권형 세력"
+      ]
+    },
+    "battlefieldVerbs": [
+      "등용",
+      "배치",
+      "통제"
+    ],
+    "economyPoliticsHooks": [
+      "영입 장수의 관직·도시·전선 배치",
+      "중앙 명령에 따른 도시·전선 우선순위 재정렬",
+      "통제 강화와 지역·장수 자율성의 교환"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "진홍",
+        "흑요석",
+        "암금"
+      ],
+      "motifs": [
+        "붉은 용",
+        "밤",
+        "귀족 문장"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사의 얼굴·피부·신체는 인간형으로 유지하며 용 모티프는 장비·문양·건축·배경에만 적용한다.",
+    "lowFantasyBoundary": "용은 혈통·종족·변신이 아닌 세력 상징이며 일기토와 자동 승리를 제공하지 않는다.",
+    "conflictFlags": [],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "영입 장수를 새로운 기능에 배치",
+        "중앙 명령으로 도시·전선 우선순위 전환"
+      ],
+      "mandatoryCost": "중앙 통제 강화에 따른 장수·지역 자율성과 관계의 압박"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F02",
+    "rulerName": "유비",
+    "sourceBatch": [
+      "v0.2",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "사람을 모으는 의형제 연합",
+    "identityLayers": {
+      "source": [
+        "인망",
+        "관계 형성",
+        "동료와 주민의 결속"
+      ],
+      "projectLock": [
+        "사람을 모으는 연합",
+        "의형제"
+      ],
+      "creativeBoundary": [
+        "개인적 신뢰와 관계를 넓혀 사람을 모으는 세력"
+      ]
+    },
+    "battlefieldVerbs": [
+      "모음",
+      "맺음",
+      "보호"
+    ],
+    "economyPoliticsHooks": [
+      "인망을 사용한 장수·집단 관계 연결",
+      "패배·피난·분열 상황의 동료·주민 보호",
+      "관계 보호와 단기 효율의 교환"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "녹색",
+        "상아색",
+        "따뜻한 직물색"
+      ],
+      "motifs": [
+        "매듭",
+        "연결",
+        "따뜻한 직물"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사의 얼굴·피부·신체는 인간형으로 유지하며 연합 모티프는 복식·장비·문양에만 적용한다.",
+    "lowFantasyBoundary": "관계와 인망은 초자연적 지배가 아니며 일기토·자동 충성·자동 영입을 허용하지 않는다.",
+    "conflictFlags": [
+      "ALLIANCE-TRIAD"
+    ],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "인망으로 사람·장수·집단의 관계 연결",
+        "희생 대신 동료와 주민을 보호하는 해법 선택"
+      ],
+      "mandatoryCost": "보호와 관계 유지를 위해 빠른 정복·냉정한 희생·단기 효율을 포기"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F03",
+    "rulerName": "손권",
+    "sourceBatch": [
+      "v0.2",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "푸른 협력의 연합",
+    "identityLayers": {
+      "source": [
+        "지역 적응",
+        "분권과 위임",
+        "혼합 운용"
+      ],
+      "projectLock": [
+        "푸른 협력",
+        "연합"
+      ],
+      "creativeBoundary": [
+        "이미 모인 구성원의 역할 분담과 상호 보완을 조율하는 세력"
+      ]
+    },
+    "battlefieldVerbs": [
+      "분담",
+      "조율",
+      "연결"
+    ],
+    "economyPoliticsHooks": [
+      "장수·도시·병종의 역할 분담",
+      "협력자에게 실행권 위임",
+      "협력축 이탈 시 전체 조율 약화"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "청색",
+        "짙은 남색"
+      ],
+      "motifs": [
+        "호랑이",
+        "물결",
+        "흐름"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사의 얼굴·피부·신체는 인간형으로 유지하며 호랑이·물결은 장비·문양·환경에만 적용한다.",
+    "lowFantasyBoundary": "협력과 흐름은 역할 조합을 뜻하며 수인화·물 조종·자동 협동을 제공하지 않는다.",
+    "conflictFlags": [
+      "ALLIANCE-TRIAD"
+    ],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "서로 다른 역할을 한 목표에 배치",
+        "실행권을 위임하고 상황에 맞춰 조합 변경"
+      ],
+      "mandatoryCost": "한 협력축의 이탈이나 단절이 전체 운용을 흔듦"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F04",
+    "rulerName": "원소",
+    "sourceBatch": [
+      "v0.2",
+      "v0.3",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "빛의 제국, 귀족과 황족의 종합 최강. 군사·내정·인재·전선의 폭넓은 강점, 자동 승리 금지",
+    "identityLayers": {
+      "source": [
+        "명문 관료 가문",
+        "문생·고리 네트워크",
+        "연합 맹주",
+        "대규모 인재와 복수 전선",
+        "내부 파벌과 승계 분열"
+      ],
+      "projectLock": [
+        "빛의 제국",
+        "귀족과 황족",
+        "종합 최강"
+      ],
+      "creativeBoundary": [
+        "인재·관직·편제·연합 서열로 폭넓은 강점을 병행하는 제국"
+      ]
+    },
+    "battlefieldVerbs": [
+      "집결",
+      "임명",
+      "전개"
+    ],
+    "economyPoliticsHooks": [
+      "관직·후원·서열을 통한 인재단과 동맹 조직",
+      "군사·내정·인재·복수 전선의 병행",
+      "파벌·명령 지연·전선 과다"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "백금",
+        "청금",
+        "금색"
+      ],
+      "motifs": [
+        "월계",
+        "독수리",
+        "대열",
+        "거대 제국 군기"
+      ],
+      "applications": [
+        "황족 예복",
+        "건축",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사는 인간형이며 독수리·월계 모티프를 얼굴·신체에 적용하지 않는다.",
+    "lowFantasyBoundary": "빛은 제국의 질서와 규모를 나타내는 시각 언어이며 신성 종족·천상 권능·자동 승리를 뜻하지 않는다.",
+    "conflictFlags": [
+      "EMPIRE-F04-F12"
+    ],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "여러 인재단과 동맹을 관직·서열로 조직",
+        "여러 분야와 전선을 동시에 전개"
+      ],
+      "mandatoryCost": "강점의 병행에 따른 파벌 충돌·명령 지연·전선 과다"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F05",
+    "rulerName": "여포",
+    "sourceBatch": [
+      "v0.2",
+      "v0.3",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "인간에게 내려진 천재지변과 신의 징벌. 정면 전투로 이기기 어려우나 봉쇄·고립·보급 차단·외교·목표 달성으로 상대",
+    "identityLayers": {
+      "source": [
+        "강한 기동과 전투 압박",
+        "불안정한 관계망",
+        "조직·보급·신뢰 부족",
+        "고립과 내부 이탈"
+      ],
+      "projectLock": [
+        "인간형 천재지변",
+        "신의 징벌",
+        "정면 전투의 재앙"
+      ],
+      "creativeBoundary": [
+        "격파 외의 대응을 요구하는 이동형 전장 압력"
+      ]
+    },
+    "battlefieldVerbs": [
+      "엄습",
+      "압도",
+      "붕괴"
+    ],
+    "economyPoliticsHooks": [
+      "단기 군수와 이동 점유",
+      "적의 봉쇄·고립·보급 차단을 유발",
+      "장기 통치와 안정적 동맹망의 취약성"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "붉은 하늘색",
+        "검은 폭풍색"
+      ],
+      "motifs": [
+        "번개",
+        "균열",
+        "검은 폭풍",
+        "신벌 장식"
+      ],
+      "applications": [
+        "전장 배경",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기"
+      ]
+    },
+    "humanFormGuardrail": "여포와 모든 병사는 인간형이며 악마·신·괴수의 얼굴이나 신체를 사용하지 않는다.",
+    "lowFantasyBoundary": "번개와 폭풍은 제한된 전장효과와 연출이며 무제한 광역마법·일기토·완전 무적을 허용하지 않는다.",
+    "conflictFlags": [],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "적 전열과 지휘를 재앙처럼 압박",
+        "적에게 봉쇄·고립·목표 달성 등의 우회 대응을 강제"
+      ],
+      "mandatoryCost": "고립되거나 보급·관계망이 끊기면 재앙 압력을 지속하기 어려움"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F06",
+    "rulerName": "마등",
+    "sourceBatch": [
+      "v0.2",
+      "v0.3",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "빠르고 강한 유목 기마군, 동관돌파. G12 마등은 원정 속도 유지, G13 마초는 돌파의 얼굴. 보급 무시·고정 시작 금지",
+    "identityLayers": {
+      "source": [
+        "서북 변경 관계망",
+        "연합과 대립",
+        "중앙과의 협상",
+        "관중·동관 전역"
+      ],
+      "projectLock": [
+        "유목 기마군",
+        "동관돌파",
+        "원정 지속과 돌파"
+      ],
+      "creativeBoundary": [
+        "보급선을 이동시키고 다시 이으며 돌파하는 원정 기병"
+      ]
+    },
+    "battlefieldVerbs": [
+      "달림",
+      "돌파",
+      "이어감"
+    ],
+    "economyPoliticsHooks": [
+      "이동 보급소와 군마 교체",
+      "돌파 후 후속부대 진입로 개방",
+      "사료·보급로·재집결 부담"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "황토",
+        "청색",
+        "가죽색"
+      ],
+      "motifs": [
+        "유목 깃발",
+        "말 장비",
+        "바람 문양"
+      ],
+      "applications": [
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "건축",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사는 인간형이며 말·바람 모티프를 얼굴·신체에 적용하지 않는다.",
+    "lowFantasyBoundary": "바람은 이동의 시각 문법이며 보급·지형을 제거하는 마법이 아니다. 일기토와 고정 역사 시작을 사용하지 않는다.",
+    "conflictFlags": [],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "이동 보급소와 군마 교체로 원정 속도 유지",
+        "돌파로 후속부대의 진입 경로 개방"
+      ],
+      "mandatoryCost": "전진할수록 사료·보급선·재집결 부담 증가"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F07",
+    "rulerName": "동탁",
+    "sourceBatch": [
+      "v0.3",
+      "v0.4",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "서양 기사풍 중무장 군벌. 흑철·암적색·강철, 기사 투구·성문·짐승 문양, 무거운 방패·긴 창",
+    "identityLayers": {
+      "source": [
+        "변경 전투",
+        "사병 결속",
+        "수도·무기고 장악",
+        "장기 비축",
+        "강제이주와 화폐 혼란"
+      ],
+      "projectLock": [
+        "서양 기사풍",
+        "중무장 군벌"
+      ],
+      "creativeBoundary": [
+        "중장병·성문·비축으로 공간을 점유하고 통로를 봉쇄하는 군벌"
+      ]
+    },
+    "battlefieldVerbs": [
+      "징발",
+      "봉쇄",
+      "주둔"
+    ],
+    "economyPoliticsHooks": [
+      "생산물과 군수품의 성문·병영·비축고 집중",
+      "장수에게 수비·점령 권한 위임",
+      "과잉 징발과 민간 피해"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "흑철",
+        "암적색",
+        "강철색"
+      ],
+      "motifs": [
+        "기사 투구",
+        "성문",
+        "짐승 문양"
+      ],
+      "applications": [
+        "중갑",
+        "무거운 방패",
+        "긴 창",
+        "군기",
+        "건축",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사는 인간형이며 짐승 문양과 기사풍은 장비·건축 표면에만 적용한다.",
+    "lowFantasyBoundary": "기사풍은 창작 미학이며 불사 기사·짐승인간·유럽 종족 설정이 아니다. 일기토와 자동 봉쇄를 허용하지 않는다.",
+    "conflictFlags": [],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "군수품을 방어 거점에 집중",
+        "중장병과 위임 장수로 통로·도시 점유"
+      ],
+      "mandatoryCost": "낮은 기동성·높은 유지비·민간 피해·반동맹 형성"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F08",
+    "rulerName": "유장",
+    "sourceBatch": [
+      "v0.3",
+      "v0.4",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "드워프풍 산성 도시국가. 옥색·청동·석재색, 산맥·룬·곡식, 성곽·공방. 인간 외형",
+    "identityLayers": {
+      "source": [
+        "복합 주민사회",
+        "풍부한 곡물·직물·수레·군마",
+        "성도의 방어 여력",
+        "민간 희생을 고려한 항복"
+      ],
+      "projectLock": [
+        "드워프풍",
+        "산성 도시국가",
+        "성곽과 공방"
+      ],
+      "creativeBoundary": [
+        "물자를 저장·가공해 성벽·공방·수송으로 전환하는 인간 도시국가"
+      ]
+    },
+    "battlefieldVerbs": [
+      "비축",
+      "축조",
+      "중재"
+    ],
+    "economyPoliticsHooks": [
+      "곡물·직물·수레의 성곽·공방·원정 지원 배분",
+      "지역 집단의 이해관계 중재",
+      "합의 지연과 폐쇄 수비"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "옥색",
+        "청동색",
+        "석재색"
+      ],
+      "motifs": [
+        "산맥",
+        "룬",
+        "곡식",
+        "성곽",
+        "공방"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "드워프풍은 석재 중량감·공방·저장문화에만 적용하며 장수와 병사의 키·체형·얼굴은 인간형으로 유지한다.",
+    "lowFantasyBoundary": "룬은 공방 표식·재고 기호·건축 서명이며 마법문자나 종족 능력이 아니다. 산악 고정 시작과 자동 수성을 금지한다.",
+    "conflictFlags": [
+      "GRANARY-F08-F09"
+    ],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "비축물을 성곽·공방·원정 지원 중 하나에 배분",
+        "토착민·이주민·유력가·수비대의 이해 중재"
+      ],
+      "mandatoryCost": "합의와 축적에 시간이 들고 폐쇄 수비가 외부 영향력·기동성을 제한"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F09",
+    "rulerName": "장로",
+    "sourceBatch": [
+      "v0.3",
+      "v0.4",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "필요 충족 뒤에도 신앙을 추구하는 공동체. 미색·청색·금빛 등불, 부적·향불·성소·곡창·의례. 새 신앙 지갑 금지",
+    "identityLayers": {
+      "source": [
+        "제주 행정",
+        "의사와 공동 비축",
+        "성실·용서·도로 보수",
+        "피난민 수용",
+        "창고 보존"
+      ],
+      "projectLock": [
+        "필요 충족 이후의 신앙 공동체"
+      ],
+      "creativeBoundary": [
+        "구휼 이후에도 고백·봉사·의례·화해 선택이 지속되는 공동체"
+      ]
+    },
+    "battlefieldVerbs": [
+      "구휼",
+      "고백",
+      "결속"
+    ],
+    "economyPoliticsHooks": [
+      "곡창·의사를 통한 여행자·피난민 지원",
+      "제주 행정과 단계적 용서",
+      "기존 식량·생산력·시간의 공동체 사용"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "미색",
+        "청색",
+        "금빛"
+      ],
+      "motifs": [
+        "등불",
+        "부적",
+        "향불",
+        "성소",
+        "곡창",
+        "의례"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기·도구",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사는 인간형이며 부적·등불·향불을 얼굴·피부·신체의 종족 표식으로 사용하지 않는다.",
+    "lowFantasyBoundary": "의례는 관계와 행동 선택을 열지만 질병 치료 보장·확정 예언·세뇌·주술 공격을 제공하지 않으며 신앙 지갑을 만들지 않는다.",
+    "conflictFlags": [
+      "GRANARY-F08-F09"
+    ],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "곡창과 의사를 열어 필요 충족",
+        "충족 이후 고백·봉사·의례·화해를 지속"
+      ],
+      "mandatoryCost": "공동체에 사용한 식량·생산력·시간만큼 군사 확장과 즉시 생산을 포기"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F10",
+    "rulerName": "맹획",
+    "sourceBatch": [
+      "v0.5",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "야수와 독의 정글 연맹. 짙은 초록·독색·주황, 야수 가죽·독침·덩굴·코끼리 문양. 코끼리는 특수병종/대표 실루엣 후보이며 기본 6병종 추가가 아님",
+    "identityLayers": {
+      "source": [
+        "남중의 이·한 주민에게 미친 영향력",
+        "반복 포획·석방 전승",
+        "현지 지도자 활용",
+        "주둔군과 보급의 문제"
+      ],
+      "projectLock": [
+        "야수와 독",
+        "정글 연맹"
+      ],
+      "creativeBoundary": [
+        "여러 지역집단의 자율성과 생존법을 남긴 채 반복 교섭하는 연맹"
+      ]
+    },
+    "battlefieldVerbs": [
+      "유인",
+      "적응",
+      "교섭"
+    ],
+    "economyPoliticsHooks": [
+      "약재·함정·수송 준비에 기존 자원 배분",
+      "집단별 조건과 수장 회의",
+      "환경 준비와 반복 교섭의 비용"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "짙은 초록",
+        "독색",
+        "주황"
+      ],
+      "motifs": [
+        "야수 가죽",
+        "독침",
+        "덩굴",
+        "코끼리"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사는 인간형이며 야수·코끼리 모티프를 얼굴·피부·신체에 적용하지 않는다.",
+    "lowFantasyBoundary": "독은 대응·회복 가능한 조건부 방해이며 즉사·무제한 살포를 금지한다. 코끼리는 특수병종 후보일 뿐 기본 6병종을 변경하지 않는다.",
+    "conflictFlags": [
+      "ALLIANCE-TRIAD"
+    ],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "함정·독성 방해·은폐 통로로 적 이동 유도",
+        "패배한 집단과 재교섭해 자율적 연맹으로 편입"
+      ],
+      "mandatoryCost": "환경 준비와 집단별 협상에 시간·물자·관계 비용 필요"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F11",
+    "rulerName": "공손찬",
+    "sourceBatch": [
+      "v0.5",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "혹한의 북부대공과 백마 변경령. 설백·빙청·강철색, 서리·백마·성벽, 모피 망토·혹한 요새. 먼저 보고 빠르게 재배치해 방어와 반격",
+    "identityLayers": {
+      "source": [
+        "변경 기병",
+        "북방 집단과의 장기 교전",
+        "빠른 세력 확대",
+        "역경의 다중 방어",
+        "부하 불신과 고립"
+      ],
+      "projectLock": [
+        "혹한의 북부대공",
+        "백마 변경령"
+      ],
+      "creativeBoundary": [
+        "선행 관측 뒤 방어선을 재배치하고 반격하는 반응형 기병 세력"
+      ]
+    },
+    "battlefieldVerbs": [
+      "관측",
+      "재배치",
+      "반격"
+    ],
+    "economyPoliticsHooks": [
+      "봉수·정찰·곡창·군마에 기존 자원 선투자",
+      "전초 지휘권과 구원 약속",
+      "오정보·지원망 단절 시 고립"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "설백",
+        "빙청",
+        "강철색"
+      ],
+      "motifs": [
+        "서리",
+        "백마",
+        "성벽",
+        "모피 망토",
+        "혹한 요새"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사는 인간형이며 백마·서리 모티프를 얼굴·피부·신체에 적용하지 않는다.",
+    "lowFantasyBoundary": "혹한과 서리는 현재 지도 기후와 시각 연출로 판정하며 냉기 마법·설원 고정 시작·순간 재배치를 허용하지 않는다.",
+    "conflictFlags": [],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "적 접근 방향을 먼저 관측해 방어선 교대",
+        "백마 기동대를 취약 지점에 재배치해 반격"
+      ],
+      "mandatoryCost": "정찰 정보가 틀리거나 전초·구원망이 끊기면 요새와 부대가 고립"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  },
+  {
+    "factionId": "F12",
+    "rulerName": "원술",
+    "sourceBatch": [
+      "v0.5",
+      "v0.6"
+    ],
+    "fixedProjectIdentity": "아즈텍풍 주술 제국. 옥청·금색·흑요석·자주, 태양·깃털뱀·계단 신전·제의, 몽환적 안개와 주술 광원. 새 금·주술 지갑 금지",
+    "identityLayers": {
+      "source": [
+        "원씨 명문",
+        "대규모 인구와 과도한 징수",
+        "참위·오행설을 이용한 참칭",
+        "독자 관직과 제사",
+        "사치와 민생·군수 붕괴"
+      ],
+      "projectLock": [
+        "아즈텍풍",
+        "주술 제국"
+      ],
+      "creativeBoundary": [
+        "물자·관계·정보를 제의와 징조로 번역해 경쟁 정통성을 주장하는 제국"
+      ]
+    },
+    "battlefieldVerbs": [
+      "선포",
+      "제의",
+      "과시"
+    ],
+    "economyPoliticsHooks": [
+      "공개 제의와 징조 해석을 통한 정통성 주장",
+      "궁정 위신·군대 지급·민생 배급의 자원 배분",
+      "과시와 결핍·외교 반발의 교환"
+    ],
+    "visualGrammar": {
+      "colors": [
+        "옥청",
+        "금색",
+        "흑요석색",
+        "자주"
+      ],
+      "motifs": [
+        "태양",
+        "깃털뱀",
+        "계단 신전",
+        "제의",
+        "몽환적 안개",
+        "주술 광원"
+      ],
+      "applications": [
+        "건축",
+        "복식",
+        "무기",
+        "병사 장비",
+        "군기",
+        "배경"
+      ]
+    },
+    "humanFormGuardrail": "장수와 병사는 인간형이며 깃털뱀·태양 모티프를 얼굴·피부·신체의 종족 특징으로 사용하지 않는다.",
+    "lowFantasyBoundary": "안개·주술 광원·징조는 제한된 연출과 정보 해석이며 확정 예언·자동 복속·주술 화폐·금 지갑을 제공하지 않는다.",
+    "conflictFlags": [
+      "EMPIRE-F04-F12"
+    ],
+    "crossDbPropagationTargets": [
+      "장수 DB",
+      "정책·사건 DB",
+      "병종 DB",
+      "아트 DB",
+      "도시·지리 DB",
+      "AI·밸런스 DB"
+    ],
+    "proposalOnlyFields": {
+      "uniqueChoices": [
+        "기존 물자·관계·정보를 공개 제의와 징조로 표현",
+        "궁정 위신·군대 지급·민생 배급 중 자원 사용처 선택"
+      ],
+      "mandatoryCost": "과시와 제의에 집중할수록 병사·주민의 결핍과 외교 반발 증가"
+    },
+    "status": "DESIGN_INDEX_NOT_RUNTIME"
+  }
+]
+

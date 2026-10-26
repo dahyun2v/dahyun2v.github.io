@@ -1,0 +1,582 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+11200",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +11200"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+5",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+20",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 남피 생산으로",
+    "target": "south"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "south",
+    "name": "남피",
+    "u": 0.6223,
+    "v": 0.529,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "pingyuan",
+    "name": "평원",
+    "u": 0.5897,
+    "v": 0.6448,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ },
+ "faction": {
+  "screen": "faction",
+  "step": "새 판 1/2",
+  "title": "군주 고르기",
+  "pick": "F02",
+  "lords": [
+   {
+    "id": "F01",
+    "name": "조조",
+    "rulerId": "G07",
+    "ruler": "조조",
+    "title": "간웅",
+    "titleFull": "간웅(奸雄)",
+    "motto": "규약으로 묶는 천하",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+     "w": 522,
+     "h": 888,
+     "cx": 318,
+     "cy": 103,
+     "side": 114
+    },
+    "emblem": "assets/ui-v3/emblems/F01.png",
+    "trait": {
+     "name": "난세간웅",
+     "text": "시야 안 적이 쓴 전법을 내 전법으로 쓴다",
+     "full": "조조 시야 안 적이 E 전법을 쓰면 그것을 기억한다(최근 하나, 다음 내 차례 끝까지). 조조는 E 칸 대신 기억한 전법을 쓸 수 있다(게이지 비용은 원래 값 · 고유 R 은 기억하지 않음).",
+     "icon": {
+      "atlas": "assets/ui-kit/own/trait-icons/ruler-six-v1.webp",
+      "col": 0,
+      "row": 0,
+      "cols": 3,
+      "rows": 2
+     }
+    },
+    "cells": [
+     {
+      "kind": "facility",
+      "name": "둔전",
+      "text": "도시 식량 +3",
+      "full": "도시 식량 +3",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D2-tuntian.png"
+      ]
+     },
+     {
+      "kind": "policy",
+      "name": "편입제국",
+      "text": "함락한 적 성의 큰 시설을\n우리 성에서도 짓는다",
+      "full": "적 성의 가장 발전한 시설을 함락 직전 소유하던 성에서 건설 해금",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D2-sortie.png"
+      ]
+     },
+     {
+      "kind": "troops",
+      "name": "호표기 · 청주병",
+      "text": "호표기 돌격이 전열을 더 자주 흐트러뜨림\n청주병 출진 병력 1.5배",
+      "full": "호표기 돌격 피해 +10% · 전열 판정 1회 추가\n청주병 출진 병력 1.5배",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D3-cavalry.png",
+       "assets/ui-v3/dots-1016/icons/D3-spear.png"
+      ]
+     }
+    ],
+    "companions": [
+     {
+      "id": "G04",
+      "name": "순욱",
+      "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+      "head": {
+       "w": 471,
+       "h": 945,
+       "cx": 291,
+       "cy": 91,
+       "side": 139
+      },
+      "bust": "assets/officer-art/bust/G04.webp"
+     },
+     {
+      "id": "G24",
+      "name": "장료",
+      "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+      "head": {
+       "w": 808,
+       "h": 1153,
+       "cx": 303,
+       "cy": 116,
+       "side": 144
+      },
+      "bust": "assets/officer-art/bust/G24.webp"
+     },
+     {
+      "id": "G33",
+      "name": "하후돈",
+      "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+      "head": {
+       "w": 531,
+       "h": 950,
+       "cx": 311,
+       "cy": 114,
+       "side": 141
+      },
+      "bust": "assets/officer-art/bust/G33.webp"
+     },
+     {
+      "id": "G34",
+      "name": "조인",
+      "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+      "head": {
+       "w": 591,
+       "h": 857,
+       "cx": 299,
+       "cy": 85,
+       "side": 104
+      },
+      "bust": "assets/officer-art/bust/G34.webp"
+     },
+     {
+      "id": "G25",
+      "name": "허저",
+      "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+      "head": {
+       "w": 546,
+       "h": 865,
+       "cx": 277,
+       "cy": 67,
+       "side": 108
+      },
+      "bust": "assets/officer-art/bust/G25.webp"
+     }
+    ]
+   },
+   {
+    "id": "F02",
+    "name": "유비",
+    "rulerId": "G05",
+    "ruler": "유비",
+    "title": "인덕",
+    "titleFull": "인덕(仁德)",
+    "motto": "이어 붙여 함께 버티는 천하",
+    "art": "assets/officer-art/cutout/G05-decided-hA.webp",
+    "head": {
+     "w": 404,
+     "h": 829,
+     "cx": 252,
+     "cy": 87,
+     "side": 121
+    },
+    "emblem": "assets/ui-v3/emblems/F02.png",
+    "trait": {
+     "name": "여민동행",
+     "text": "2칸 안 아군의 전열이 떨어질 때 그 하락을 유비가 대신 진다(아군 전열 유지, 유비 전열 한 단계 하락) — 차례에 한 번",
+     "full": "2칸 안 아군의 전열이 떨어질 때 그 하락을 유비가 대신 진다(아군 전열 유지, 유비 전열 한 단계 하락) — 차례에 한 번. 유비 전열이 이미 붕괴면 꺼짐.",
+     "icon": {
+      "atlas": "assets/ui-kit/own/trait-icons/ruler-six-v1.webp",
+      "col": 1,
+      "row": 0,
+      "cols": 3,
+      "rows": 2
+     }
+    },
+    "cells": [
+     {
+      "kind": "facility",
+      "name": "의원",
+      "text": "도시 부상병 회복 속도 ×2",
+      "full": "도시 부상병 회복 속도 ×2",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D2-clinic.png"
+      ]
+     },
+     {
+      "kind": "policy",
+      "name": "탈출·재정착",
+      "text": "함락 시 주민 절반·예비병·자유 장수 탈출, 피란 대열 재정착. 성 없이도 부대가 있으면 생존",
+      "full": "함락 시 주민 절반·예비병·자유 장수 탈출, 피란 대열 재정착. 성 없이도 부대가 있으면 생존",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D2-sortie.png"
+      ]
+     },
+     {
+      "kind": "troops",
+      "name": "백이병 · 무당비군",
+      "text": "백이병 인접 아군 받는 피해 −15% (중첩 없음)\n무당비군 숲·언덕 이동 비용 = 평지 · 시야 +1",
+      "full": "백이병 인접 아군 받는 피해 −15% (중첩 없음)\n무당비군 숲·언덕 이동 비용 = 평지 · 시야 +1",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D3-melee.png",
+       "assets/ui-v3/dots-1016/icons/D3-bow.png"
+      ]
+     }
+    ],
+    "companions": [
+     {
+      "id": "G02",
+      "name": "조운",
+      "art": "assets/officer-art/cutout/G02-decided-hA.webp",
+      "head": {
+       "w": 595,
+       "h": 889,
+       "cx": 301,
+       "cy": 89,
+       "side": 130
+      },
+      "bust": "assets/officer-art/bust/G02.webp"
+     },
+     {
+      "id": "G03",
+      "name": "제갈량",
+      "art": "assets/officer-art/cutout/G03-full-hA.webp",
+      "head": {
+       "w": 774,
+       "h": 1287,
+       "cx": 385,
+       "cy": 107,
+       "side": 158
+      },
+      "bust": "assets/officer-art/bust/G03.webp"
+     },
+     {
+      "id": "G18",
+      "name": "관우",
+      "art": "assets/officer-art/cutout/G18-decided-hA.webp",
+      "head": {
+       "w": 553,
+       "h": 913,
+       "cx": 234,
+       "cy": 168,
+       "side": 121
+      },
+      "bust": "assets/officer-art/bust/G18.webp"
+     },
+     {
+      "id": "G19",
+      "name": "장비",
+      "art": "assets/officer-art/cutout/G19-decided-hA.webp",
+      "head": {
+       "w": 625,
+       "h": 896,
+       "cx": 324,
+       "cy": 224,
+       "side": 118
+      },
+      "bust": "assets/officer-art/bust/G19.webp"
+     },
+     {
+      "id": "G06",
+      "name": "황충",
+      "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+      "head": {
+       "w": 616,
+       "h": 845,
+       "cx": 281,
+       "cy": 98,
+       "side": 154
+      },
+      "bust": "assets/officer-art/bust/G06.webp"
+     }
+    ]
+   },
+   {
+    "id": "F03",
+    "name": "손권",
+    "rulerId": "G08",
+    "ruler": "손권",
+    "title": "임재",
+    "titleFull": "임재(任才)",
+    "motto": "물길로 잇는 천하",
+    "art": "assets/officer-art/cutout/G08-decided-hA.webp",
+    "head": {
+     "w": 648,
+     "h": 875,
+     "cx": 340,
+     "cy": 108,
+     "side": 129
+    },
+    "emblem": "assets/ui-v3/emblems/F03.png",
+    "trait": {
+     "name": "지인선임",
+     "text": "손권 영의 대상은 \"가까운 순\" 대신 \"손권보다 레벨 낮은 아군 먼저\"",
+     "full": "손권 영의 대상은 \"가까운 순\" 대신 \"손권보다 레벨 낮은 아군 먼저\". 그 아군에게는 영 효과가 두 배(진격령: 측면 판정 + 전열 +1단계 / 수비령: 감소 두 배).",
+     "icon": {
+      "atlas": "assets/ui-kit/own/trait-icons/ruler-six-v1.webp",
+      "col": 2,
+      "row": 0,
+      "cols": 3,
+      "rows": 2
+     }
+    },
+    "cells": [
+     {
+      "kind": "facility",
+      "name": "장막부",
+      "text": "그 성 태수의 별의 길 대기 −1턴, 3칸 안에서 차례를 시작한 부대장의 별의 길 대기 −1턴",
+      "full": "그 성 태수의 별의 길 대기 −1턴, 3칸 안에서 차례를 시작한 부대장의 별의 길 대기 −1턴",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D2-command-tent.png"
+      ]
+     },
+     {
+      "kind": "policy",
+      "name": "별의 길",
+      "text": "부대장·태수의 가장 높은 큰 능력에 맞는 행동 1개",
+      "full": "부대장·태수의 가장 높은 큰 능력에 맞는 행동 1개",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D2-sortie.png"
+      ]
+     },
+     {
+      "kind": "troops",
+      "name": "해번군 · 단양병",
+      "text": "해번군 통과 가능한 사이 칸을 넘어 2칸 공격 · 반격 없음\n단양병 방어 태세 무시 · 숲·언덕에서 공격·반격 피해 +10%",
+      "full": "해번군 통과 가능한 사이 칸을 넘어 2칸 공격 · 반격 없음\n단양병 방어 태세 무시 · 숲·언덕에서 공격·반격 피해 +10%",
+      "icon": [
+       "assets/ui-v3/dots-1016/icons/D3-spear.png",
+       "assets/ui-v3/dots-1016/icons/D3-melee.png"
+      ]
+     }
+    ],
+    "companions": [
+     {
+      "id": "G20",
+      "name": "손책",
+      "art": "assets/officer-art/cutout/G20-decided-hA.webp",
+      "head": {
+       "w": 608,
+       "h": 846,
+       "cx": 367,
+       "cy": 77,
+       "side": 124
+      },
+      "bust": "assets/officer-art/bust/G20.webp"
+     },
+     {
+      "id": "G27",
+      "name": "주유",
+      "art": "assets/officer-art/cutout/G27-decided-hA.webp",
+      "head": {
+       "w": 589,
+       "h": 957,
+       "cx": 242,
+       "cy": 101,
+       "side": 141
+      },
+      "bust": "assets/officer-art/bust/G27.webp"
+     },
+     {
+      "id": "G28",
+      "name": "육손",
+      "art": "assets/officer-art/cutout/G28-decided-hA.webp",
+      "head": {
+       "w": 477,
+       "h": 922,
+       "cx": 182,
+       "cy": 83,
+       "side": 135
+      },
+      "bust": "assets/officer-art/bust/G28.webp"
+     },
+     {
+      "id": "G29",
+      "name": "감녕",
+      "art": "assets/officer-art/cutout/G29-20261010-hA.webp",
+      "head": {
+       "w": 799,
+       "h": 1162,
+       "cx": 347,
+       "cy": 106,
+       "side": 171
+      },
+      "bust": "assets/officer-art/bust/G29.webp"
+     },
+     {
+      "id": "G30",
+      "name": "태사자",
+      "art": "assets/officer-art/cutout/G30-decided-hA.webp",
+      "head": {
+       "w": 625,
+       "h": 858,
+       "cx": 270,
+       "cy": 76,
+       "side": 126
+      },
+      "bust": "assets/officer-art/bust/G30.webp"
+     }
+    ]
+   }
+  ],
+  "note": "시작 도시는 판마다 무작위",
+  "back": "처음 화면",
+  "go": "동료 고르기",
+  "backdrop": "res://ui/art/faction-bg.webp"
+ }
+}

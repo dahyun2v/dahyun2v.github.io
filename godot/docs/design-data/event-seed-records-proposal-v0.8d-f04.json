@@ -1,0 +1,135 @@
+[
+  {
+    "eventSeedId": "EVT-F04-P01-01",
+    "policyId": "POL-F04-CORE-01",
+    "factionId": "F04",
+    "scale": "EVENT",
+    "title": "奉章宗室",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "추대 또는 연합 수장으로 제안할 황실 인물이 생존해 있다",
+      "해당 황실 인물이 F04와 적대 상태가 아니다",
+      "유력 귀족들이 기존 질서의 붕괴를 인식한다",
+      "제안과 회답을 전달할 사절 경로가 존재한다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "귀족 소집과 공동 문서 작성 이후 사절이 회답을 가지고 돌아오기 전까지",
+    "playerChoices": [
+      "황제로 정식 추대한다",
+      "명목상 연합 수장으로 초빙한다",
+      "보호와 영지를 제안하되 추대는 미룬다",
+      "복수의 황실 후보에게 의향을 묻는다",
+      "추대안을 철회하고 공동 원정의 정통성만 요청한다"
+    ],
+    "costInputs": [
+      "인망",
+      "금전",
+      "사절 행동",
+      "사절 이동과 회답 시간",
+      "약속한 관직의 실제 공석",
+      "약속한 보호와 영지를 제공할 여력"
+    ],
+    "risks": [
+      "사절이 포획되거나 회유된다",
+      "공동 문서가 탈취된다",
+      "황실 후보가 거절하거나 중립을 선언한다",
+      "경쟁 세력이 황실을 이용한다고 비난한다",
+      "복수 후보 접촉이 신뢰를 훼손한다"
+    ],
+    "counterplay": [
+      "경쟁 세력이 사절을 포획하거나 회유한다",
+      "경쟁 세력이 문서를 탈취해 추대 의도를 공개한다",
+      "경쟁 세력이 F04의 정통성 주장을 비난한다"
+    ],
+    "failureTraces": [
+      "거절된 추대 상소",
+      "공동 문서에 서명한 귀족",
+      "은혜를 입었다고 기억하는 황실 인물",
+      "모욕이나 이용을 기억하는 황실 인물",
+      "경쟁 세력의 정통성 논쟁"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [],
+    "forbiddenAutoResolve": [
+      "팝업 선택만으로 정통성·영지·충성·외교적 승인을 확정할 수 없다",
+      "약속한 관직·보호·영지는 실제 공석과 제공 여력 없이 성립하지 않는다",
+      "사절의 실제 이동과 회답 시간을 생략할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "decisionAuthority": null,
+    "commitmentScope": null,
+    "branchConsequences": [],
+    "persistentPoliticalTrace": null,
+    "missingFields": [
+      "원소·한복의 유우 추대 시도와 거절 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "원소·한복·황실 후보·서명 귀족의 canonical officer 또는 subject ID가 완비되지 않아 castSelectors를 비웠다",
+      "F04 회의 도시·황실 후보의 도시·사절 경로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "uiMinimum의 기존 상세 항목을 회수하지 못했다",
+      "EVENT 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F04-P01-02",
+    "policyId": "POL-F04-CORE-01",
+    "factionId": "F04",
+    "scale": "SITUATION",
+    "title": "合四州之地",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "복수의 도시와 전선을 보유한다",
+      "수도에서 전선까지 중앙 명령 전달이 지연된다",
+      "복수의 유력 장수와 참모가 서로 다른 전선에 배치될 수 있다",
+      "수도 군의와 각 전선 도독부 사이에 사절·보급로가 존재한다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "전선 지휘관을 정한 뒤 도독 부임과 전령 이동이 완료되기 전까지",
+    "playerChoices": [
+      "전선별 자율 도독을 임명한다",
+      "단일 총감독에게 복수 전선을 맡긴다",
+      "중앙 직할을 유지하고 전령망을 운용한다",
+      "한 전선을 주공으로 정하고 나머지는 지원하게 한다",
+      "귀족 장수와 실무 참모를 공동 배치한다"
+    ],
+    "costInputs": [],
+    "risks": [
+      "외곽 도독이 독자적으로 화친한다",
+      "중앙과 전선의 명령이 일치하지 않는다"
+    ],
+    "counterplay": [
+      "상대 세력이 외곽 도독에게 개별 화친을 제안한다"
+    ],
+    "failureTraces": [
+      "전선별 지휘 계보"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [],
+    "forbiddenAutoResolve": [
+      "팝업 선택만으로 도독 임명·군대 배치·충성·군대 이동·보급을 완료할 수 없다",
+      "도독과 전령은 실제 위치에서 부임하고 이동해야 한다",
+      "복수 전선을 보유했다는 이유만으로 자동 승리하거나 명령 지연이 제거되지 않는다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "저수의 하북 네 주 통합안과 전풍의 분산 압박안에 대한 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "저수·전풍·도독 후보·참모의 canonical officer ID가 완비되지 않아 castSelectors를 비웠다",
+      "수도 군의·각 전선 도독부·사절로·보급로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "costInputs의 구체 항목이 기존 카드에서 분리되어 있지 않아 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "failureTraces와 uiMinimum의 기존 전체 항목을 회수하지 못했다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

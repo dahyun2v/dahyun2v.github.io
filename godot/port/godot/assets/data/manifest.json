@@ -1,0 +1,923 @@
+{
+ "generatedBy": "tools/port/export-assets.mjs",
+ "files": [
+  {
+   "source": "prototype/assets/ui-v3/map/v16/world.webp",
+   "copy": "res://assets/map/world.webp",
+   "bytes": 13253160,
+   "sha256": "a2f23e8dd6d293c7ba2a3df15ed87b818719829a5c29b27ec9f6ef052913607e"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/banner-F01.webp",
+   "copy": "res://assets/troops/banner-F01.webp",
+   "bytes": 9580,
+   "sha256": "2930436849cbc9fc3d7261401df7802e8f9adcebe4ec3876c8ae709a3a28b2fc"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/banner-F02.webp",
+   "copy": "res://assets/troops/banner-F02.webp",
+   "bytes": 9612,
+   "sha256": "a7ebcf6c92e46e02b89536a3a16b521ddd69f6246d6ec42808d9b22c396564ed"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/banner-F03.webp",
+   "copy": "res://assets/troops/banner-F03.webp",
+   "bytes": 9516,
+   "sha256": "67763f015f8367e6eed02abe9a63d8f16b79d129ff31757fb32fa7355eb7f6b0"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/banner-neutral.webp",
+   "copy": "res://assets/troops/banner-neutral.webp",
+   "bytes": 7044,
+   "sha256": "46e69d6f4ed8135b75443aca123f6275ca87f1193cde7c42d936015b66e902f2"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/bow-F01.webp",
+   "copy": "res://assets/troops/bow-F01.webp",
+   "bytes": 44296,
+   "sha256": "74a1d13732634e900c2d7c0a9cd8e7074efada30d0aefe861b401c298d8f4603"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/bow-F02.webp",
+   "copy": "res://assets/troops/bow-F02.webp",
+   "bytes": 44128,
+   "sha256": "bf45c6b483476fcb9fddac397959d67191da5a769f0f82f564bdfbb8838b85a6"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/bow-F03.webp",
+   "copy": "res://assets/troops/bow-F03.webp",
+   "bytes": 44592,
+   "sha256": "ac59cd3f9b53bf5418062f67263c5ab8b682f4353c3cf7905f000841d6a4e34a"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/bow-neutral.webp",
+   "copy": "res://assets/troops/bow-neutral.webp",
+   "bytes": 40338,
+   "sha256": "5a52179437900fed627b8ef411fb6d8f0b90e43fbbe022876971a76ac139764a"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/cavalry-F01.webp",
+   "copy": "res://assets/troops/cavalry-F01.webp",
+   "bytes": 33970,
+   "sha256": "11e6dac54179a90502defe7a9c9bc345a0f8b828c3555c74e87ae185ece27647"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/cavalry-F02.webp",
+   "copy": "res://assets/troops/cavalry-F02.webp",
+   "bytes": 33908,
+   "sha256": "a2e17f9b1313b7bd9c7f36a2112420b8b22649a929fa0ff6f9adb94c6cf33eb8"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/cavalry-F03.webp",
+   "copy": "res://assets/troops/cavalry-F03.webp",
+   "bytes": 33920,
+   "sha256": "38a48d303c7c7be9830aa0716295c6751930410e100300ab02cad9ad4e1de859"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/cavalry-neutral.webp",
+   "copy": "res://assets/troops/cavalry-neutral.webp",
+   "bytes": 31534,
+   "sha256": "01fceaff4ccf1d7f98dc59b28c81d9dab5fe822b1b1f797a3a4a75ab4b8f865e"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/militia-F01.webp",
+   "copy": "res://assets/troops/militia-F01.webp",
+   "bytes": 39638,
+   "sha256": "4c0e2fd76b024611294bc6fbcf60ab1dff891626ee6131b20cf43c03df13ac15"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/militia-F02.webp",
+   "copy": "res://assets/troops/militia-F02.webp",
+   "bytes": 39452,
+   "sha256": "1e7d0d16162353be6354fd357ea72abd656542430c10b7450e9bb396dceaae05"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/militia-F03.webp",
+   "copy": "res://assets/troops/militia-F03.webp",
+   "bytes": 39892,
+   "sha256": "c67019a0665d45e0863e15ada8fd4962e6d40eddc8e3a3c769715cd112d2c9c4"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/militia-neutral.webp",
+   "copy": "res://assets/troops/militia-neutral.webp",
+   "bytes": 36646,
+   "sha256": "5dc2598192564a4e8cb85146736a32f83074c73ecc6a1536e2457b16552157c8"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/ring-F01.webp",
+   "copy": "res://assets/troops/ring-F01.webp",
+   "bytes": 17246,
+   "sha256": "af178bbd0817d2907f281122185698d54f04cf1603f7a5a20c8f9231b6cd490c"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/ring-F02.webp",
+   "copy": "res://assets/troops/ring-F02.webp",
+   "bytes": 17034,
+   "sha256": "631fe3ea6e5c1c13bd461bb4c2f5c56e72b9afb2b469f975d2f2a24fc4dde1c9"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/ring-F03.webp",
+   "copy": "res://assets/troops/ring-F03.webp",
+   "bytes": 17082,
+   "sha256": "83196932a9eadb47e01bd4f7c3fd42eb6d4b863b8df6f008042020efb0c729b3"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/ring-neutral.webp",
+   "copy": "res://assets/troops/ring-neutral.webp",
+   "bytes": 14034,
+   "sha256": "0044680e5d99ccf8f1b0502694efab0887caa002357ad7a3d131fb1c6b6b24c1"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/spear-F01.webp",
+   "copy": "res://assets/troops/spear-F01.webp",
+   "bytes": 35964,
+   "sha256": "66141b7be270fed03f0dee236417763b02b316f2e2d4966e9c804c63bc4edc01"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/spear-F02.webp",
+   "copy": "res://assets/troops/spear-F02.webp",
+   "bytes": 35846,
+   "sha256": "db80858a73f18f81802a974ebd316139689c6b67e7d93d77929d3024152d7d1c"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/spear-F03.webp",
+   "copy": "res://assets/troops/spear-F03.webp",
+   "bytes": 36088,
+   "sha256": "1c4ca4409620a569970b53a8f39c922a08b193fe1dd89112a2582ff6f9bd2e69"
+  },
+  {
+   "source": "prototype/assets/troop-art/lod/spear-neutral.webp",
+   "copy": "res://assets/troops/spear-neutral.webp",
+   "bytes": 33026,
+   "sha256": "9e916b0ad8bbadde50c3565e3b78a0480ff7d8e7678a16809bf9c0be043d42ec"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F01.png",
+   "copy": "res://assets/emblems/F01.png",
+   "bytes": 26446,
+   "sha256": "401bf39d47673c70f765d988d9bdff4cf00d400dae4fa95ee9a596044f968248"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F02.png",
+   "copy": "res://assets/emblems/F02.png",
+   "bytes": 26848,
+   "sha256": "528a3ec6710e606ce38ea882c8ef5440f2373c5202f8eeb3d178d52c82be2517"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F03.png",
+   "copy": "res://assets/emblems/F03.png",
+   "bytes": 25632,
+   "sha256": "584d483b92a1de6d6498aa85a022c4812fd348cf136eedc4cb5a7b5f699f973b"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F04.png",
+   "copy": "res://assets/emblems/F04.png",
+   "bytes": 37418,
+   "sha256": "77831c4d9ad031ee625f50cbb68939118e8a02a2e54ea3b2a0523faf8095b798"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F05.png",
+   "copy": "res://assets/emblems/F05.png",
+   "bytes": 40201,
+   "sha256": "57fc691dab4eebef7486dd6112f099b3ec90468e77e68bcce02d7cec51a7a2de"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F06.png",
+   "copy": "res://assets/emblems/F06.png",
+   "bytes": 35370,
+   "sha256": "1aa76ff1c3022c64b353a2ee0073a26c0e308c15dd57f57a438742fe7764ad04"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F07.png",
+   "copy": "res://assets/emblems/F07.png",
+   "bytes": 31242,
+   "sha256": "5cf9cba34dba582d7fa519a2b865cdde8347e4b265b34d65af32dfd03107191d"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F08.png",
+   "copy": "res://assets/emblems/F08.png",
+   "bytes": 25222,
+   "sha256": "695c87cd6506017bcebd280250afd8ec501e84670a4adb5f8ce076787eca26ef"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F09.png",
+   "copy": "res://assets/emblems/F09.png",
+   "bytes": 44275,
+   "sha256": "416c2322c6c36897a1d3f9455c4286f335359f239cbb0f83f972aa66bb061704"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F10.png",
+   "copy": "res://assets/emblems/F10.png",
+   "bytes": 25719,
+   "sha256": "916f1d7e678f1d84183e3efd528486477700f63bd2c4f7f9312d6a6ba6c490df"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F11.png",
+   "copy": "res://assets/emblems/F11.png",
+   "bytes": 25448,
+   "sha256": "5cc763ae8bea05de102d855cd94cc6c0b5bd1b6732a68c20b7bcb9aed8d89c1e"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/F12.png",
+   "copy": "res://assets/emblems/F12.png",
+   "bytes": 32910,
+   "sha256": "eacf0acdf4a105105ed341b42f3693cf80d9e3f0c8218137615cd3d9a12bb0c9"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/neutral.png",
+   "copy": "res://assets/emblems/neutral.png",
+   "bytes": 21321,
+   "sha256": "710575c8e7f27b181cd29149677c199a4e3020eb7c5d1065d801cacc854861b9"
+  },
+  {
+   "source": "prototype/assets/ui-v3/emblems/occupied-ring.png",
+   "copy": "res://assets/emblems/occupied-ring.png",
+   "bytes": 13435,
+   "sha256": "9b6dcb8c87cce1bb787d6f14c9cd331d9388686749f3f0220656f857ec5c2850"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-1-blue.png",
+   "copy": "res://assets/ink/ribbon-1-blue.png",
+   "bytes": 9309,
+   "sha256": "b0154c2cadd851db7edeb3d083971cb9e3f0da7e1da081944c6bb7cddc693c7c"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-1-green.png",
+   "copy": "res://assets/ink/ribbon-1-green.png",
+   "bytes": 9663,
+   "sha256": "9a8382838981fca54ca6184ad9e6ec3c2fa40bbb40e55b6197756b0c9c809036"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-1-red.png",
+   "copy": "res://assets/ink/ribbon-1-red.png",
+   "bytes": 9524,
+   "sha256": "b3f940e9409fa72052fc0743f9cf35010ac752cc0e8b5313db9e39b1cbb2edfe"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-1.png",
+   "copy": "res://assets/ink/ribbon-1.png",
+   "bytes": 9476,
+   "sha256": "f377635c2de4ed50e68662afcdc4be8ede4b5c4a3a700c2a23150c2083270c8a"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-2-blue.png",
+   "copy": "res://assets/ink/ribbon-2-blue.png",
+   "bytes": 12008,
+   "sha256": "9f0841dd44cbe150ca77be2249081cc41ada0d793b2d29724f6ac38ac7319a58"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-2-green.png",
+   "copy": "res://assets/ink/ribbon-2-green.png",
+   "bytes": 12516,
+   "sha256": "72c1b72a66bef8a08f706dae4efb36bed10b10b49758fdfc6eb5c6d3770b25b9"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-2-red.png",
+   "copy": "res://assets/ink/ribbon-2-red.png",
+   "bytes": 12240,
+   "sha256": "2b748e993f1dca59cd85b48a049193301670cf5fae7c19c2a6531b2db09fba64"
+  },
+  {
+   "source": "prototype/assets/ui-v3/ink/ribbon-2.png",
+   "copy": "res://assets/ink/ribbon-2.png",
+   "bytes": 12148,
+   "sha256": "81111246f1690be426af2f496e9d66eddac951e0fb34ff5796dbb44a55c1f6ab"
+  },
+  {
+   "source": "prototype/assets/ui-v3/units-ink/c170-bow.png",
+   "copy": "res://assets/units/c170-bow.png",
+   "bytes": 3997,
+   "sha256": "ef45edec1d0e6996ae190d193a8789c45ad4dea5beb9ec835c65bca00b612ffe"
+  },
+  {
+   "source": "prototype/assets/ui-v3/units-ink/c170-cavalry.png",
+   "copy": "res://assets/units/c170-cavalry.png",
+   "bytes": 6054,
+   "sha256": "d90de8054be76be6f07ad40ac8b7886867ff1d4158ff3bdc8c00682e41981620"
+  },
+  {
+   "source": "prototype/assets/ui-v3/units-ink/c170-militia.png",
+   "copy": "res://assets/units/c170-militia.png",
+   "bytes": 4926,
+   "sha256": "38801c64352ce3fd9a6580c99db446a2e60c7b03598329f9f0b9496ef9e33a13"
+  },
+  {
+   "source": "prototype/assets/ui-v3/units-ink/c170-spear.png",
+   "copy": "res://assets/units/c170-spear.png",
+   "bytes": 2430,
+   "sha256": "5f44b5f3b7e9d1cee5f87d7f1fb3d577ef9bb80057675a64fa51fc2eaa4713ee"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G01.webp",
+   "copy": "res://assets/bust/G01.webp",
+   "bytes": 34364,
+   "sha256": "607bcf57c52e52abf42f79e05b110ab201becb7507fb0f7641a4c9e32fe01da8"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G02.webp",
+   "copy": "res://assets/bust/G02.webp",
+   "bytes": 35792,
+   "sha256": "cab6ced20d790bef924eeaffd072c4fa7622eff966660626d9ddcf5c2f006077"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G03.webp",
+   "copy": "res://assets/bust/G03.webp",
+   "bytes": 40744,
+   "sha256": "410491fb582fb7ccd6006d44e3eba9c9a3a91ee57fa64f341bc8db05a8186070"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G04.webp",
+   "copy": "res://assets/bust/G04.webp",
+   "bytes": 36558,
+   "sha256": "bec301bc7ed863f06cc9f0fecd4fb1d5ede718ff45fe18570a3f54f4e0740e0d"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G05.webp",
+   "copy": "res://assets/bust/G05.webp",
+   "bytes": 40980,
+   "sha256": "85b5190440550ea2293e5b76d5a39296f9708dd773d5424bbd64f5d1ff9d66b4"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G06.webp",
+   "copy": "res://assets/bust/G06.webp",
+   "bytes": 39782,
+   "sha256": "9a22f2ff4b9424f6880071154278da02012742c67d2caeebe428ca1d76462751"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G07.webp",
+   "copy": "res://assets/bust/G07.webp",
+   "bytes": 33086,
+   "sha256": "887a875c280ba3ce534b4437fc82387012909bd3f3c0766849d742eee36ea225"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G08.webp",
+   "copy": "res://assets/bust/G08.webp",
+   "bytes": 19096,
+   "sha256": "e828155a7210f2f06004210dc2414ac64ca54cf830b25b0ac468b83bcdba2af3"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G09.webp",
+   "copy": "res://assets/bust/G09.webp",
+   "bytes": 25882,
+   "sha256": "f9a2bc37e54ec5261d32b9fa8ef5b2e09f0acf90fa772e4309fd2592180cdea1"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G10.webp",
+   "copy": "res://assets/bust/G10.webp",
+   "bytes": 25154,
+   "sha256": "63dba544c6a557ecee433c63ff6c9c623bd50c12e3ea3d7ed6be5f9aff49f851"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G100.webp",
+   "copy": "res://assets/bust/G100.webp",
+   "bytes": 38912,
+   "sha256": "474568dcd5ea562f07bc837503ad23a0ecc023948f8d811f3abbd338443207b4"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G11.webp",
+   "copy": "res://assets/bust/G11.webp",
+   "bytes": 40394,
+   "sha256": "3d41b93d20b9408e2b6b0368d1934fcc3d9d56505731b7e1d403298d77f449ac"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G12.webp",
+   "copy": "res://assets/bust/G12.webp",
+   "bytes": 35358,
+   "sha256": "4c0cc0632087a8ad60ac0df930a5d21faa65aeeb0a95a15c932a03bbff200bfb"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G13.webp",
+   "copy": "res://assets/bust/G13.webp",
+   "bytes": 38580,
+   "sha256": "7ed7508869dc29b5082fd1076cc79c139606f7adc150109d5f6d9869db12b47b"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G14.webp",
+   "copy": "res://assets/bust/G14.webp",
+   "bytes": 36136,
+   "sha256": "0a68685745de773998f8dfea7f36fb7e6c2cc280975863b339d33ca8873039d8"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G15.webp",
+   "copy": "res://assets/bust/G15.webp",
+   "bytes": 35846,
+   "sha256": "7f4d676a59d46505f68dca00afa3cb932fd1860fbaa922b804f4532ec73fafb1"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G16.webp",
+   "copy": "res://assets/bust/G16.webp",
+   "bytes": 37486,
+   "sha256": "e5db97c8fe91999255e01cdc927f244f16afcc92ded70551fb4791e1f90f3957"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G17.webp",
+   "copy": "res://assets/bust/G17.webp",
+   "bytes": 29458,
+   "sha256": "1dfaeeddad8f2efc9fe0268243868cda0e5983c1c6b386a95c36f48a88324dbc"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G18.webp",
+   "copy": "res://assets/bust/G18.webp",
+   "bytes": 29382,
+   "sha256": "b9b50c4bf3551cce1f79ce7287befaff29c77615eee947386f53e04f680324b8"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G19.webp",
+   "copy": "res://assets/bust/G19.webp",
+   "bytes": 34308,
+   "sha256": "9d3faec3a0ad759c77abed0b78055b45f8712ddabb8cc45f5bbfb542a495d94b"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G20.webp",
+   "copy": "res://assets/bust/G20.webp",
+   "bytes": 36278,
+   "sha256": "3f9f8828e467d69144ead796b52c84d788ee42ae0d775438917233192150e477"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G21.webp",
+   "copy": "res://assets/bust/G21.webp",
+   "bytes": 34660,
+   "sha256": "91eb97065970f0333865bcbca26d66a24d3ee22b1b88d92808de83c8b8471b26"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G22.webp",
+   "copy": "res://assets/bust/G22.webp",
+   "bytes": 35386,
+   "sha256": "be0db61af4e331c721e6ab14cb584614d1b3513591733e751709313537e40d56"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G23.webp",
+   "copy": "res://assets/bust/G23.webp",
+   "bytes": 30036,
+   "sha256": "0dfa6e4a75efc959e60d74ca895838542563be1f75ef6f6b13b45591d5bdf2fc"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G24.webp",
+   "copy": "res://assets/bust/G24.webp",
+   "bytes": 30640,
+   "sha256": "cdb5b51a012673ebad3cc0d00eb54a55f3f6b3f2da2c4617a46c1eec4878e803"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G25.webp",
+   "copy": "res://assets/bust/G25.webp",
+   "bytes": 30300,
+   "sha256": "cdf5f513facb83faa34b30cac594ac92deb56917a6b525ac87fc8b87bc59a305"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G26.webp",
+   "copy": "res://assets/bust/G26.webp",
+   "bytes": 29578,
+   "sha256": "862097ad480319a5309242155d80e1b72b4aed9cf68bbf9f3b29811a46db28da"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G27.webp",
+   "copy": "res://assets/bust/G27.webp",
+   "bytes": 41248,
+   "sha256": "70cf595a29ba6dbb51ad4d6a0066549b1841ac2ede9f4f7a67061e01576276c2"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G28.webp",
+   "copy": "res://assets/bust/G28.webp",
+   "bytes": 36004,
+   "sha256": "6ba68836190d04b507baa2ebb733e01340456db15111654f5804827790c895fd"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G29.webp",
+   "copy": "res://assets/bust/G29.webp",
+   "bytes": 31128,
+   "sha256": "ad01b29ceaec5b8b11c15e7c832a3864f2ace0316b5dbb667b0730f02213186c"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G30.webp",
+   "copy": "res://assets/bust/G30.webp",
+   "bytes": 42094,
+   "sha256": "ada6c1c850e47dfdecc38ac3f7c1bd3f5e3f6563b57508910e65e2c314e39424"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G31.webp",
+   "copy": "res://assets/bust/G31.webp",
+   "bytes": 47218,
+   "sha256": "df3ee7b2f544b34bd3d1ee2f7b632400037a6c0673e3bbfaeccff301b80cbe63"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G32.webp",
+   "copy": "res://assets/bust/G32.webp",
+   "bytes": 29536,
+   "sha256": "9ee0e3c138b2e1d5e5948d4030258575ab42de0b80d6b55621560c36bdfecdcf"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G33.webp",
+   "copy": "res://assets/bust/G33.webp",
+   "bytes": 45784,
+   "sha256": "573bf8c17a348fb7598cb43636c4a72fbb578f3ced439ae6a0d33c8c838d1428"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G34.webp",
+   "copy": "res://assets/bust/G34.webp",
+   "bytes": 30844,
+   "sha256": "8797369fafe1e843ff090b708551fd31b14422c51fe48e30ae02ca4c659aad98"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G35.webp",
+   "copy": "res://assets/bust/G35.webp",
+   "bytes": 40602,
+   "sha256": "8fbe7b489ecad37fc85b96a7de855b8193a40d53515474a13bf885b3aa787aec"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G36.webp",
+   "copy": "res://assets/bust/G36.webp",
+   "bytes": 29532,
+   "sha256": "27fdacfe4297d41cb3d5b498a94b591d79787f37a90cb6beaf87829a7def689c"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G37.webp",
+   "copy": "res://assets/bust/G37.webp",
+   "bytes": 37208,
+   "sha256": "6aed39870a02a15162892a66f6e5afa65e7ad683fc9d5ca1057372ba7a82544b"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G38.webp",
+   "copy": "res://assets/bust/G38.webp",
+   "bytes": 37806,
+   "sha256": "0055232fd3c60d0f4da304cdc518647ca28cd9374e8e0f3321100a2d1b32f42b"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G39.webp",
+   "copy": "res://assets/bust/G39.webp",
+   "bytes": 37072,
+   "sha256": "4f8d11ec2d542f06e3d0a44bb21798fc9f5bd275aa088bcee68cbe5694ea59a4"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G40.webp",
+   "copy": "res://assets/bust/G40.webp",
+   "bytes": 45700,
+   "sha256": "a264740a045a7b41b9ab12f31a15cff042b19d3e8fe963e1cedaa2829500339c"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G41.webp",
+   "copy": "res://assets/bust/G41.webp",
+   "bytes": 40036,
+   "sha256": "3492490feb22b4a948e1d18f05c03128014ba67e052db779e63029a2967b53e5"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G42.webp",
+   "copy": "res://assets/bust/G42.webp",
+   "bytes": 32102,
+   "sha256": "828791875f6618963ad4b46b81e1825eb0ae6deaffbabe2cf8ab2e866b58e733"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G43.webp",
+   "copy": "res://assets/bust/G43.webp",
+   "bytes": 38252,
+   "sha256": "e01c79b644b8d8706ba01074f62eeada27ea39cf943c94965b191966daab2ee1"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G44.webp",
+   "copy": "res://assets/bust/G44.webp",
+   "bytes": 38192,
+   "sha256": "786ce57e085a26471ea7c6898bfce773a75372d587d000c18b2c0bd82ba4865c"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G45.webp",
+   "copy": "res://assets/bust/G45.webp",
+   "bytes": 33918,
+   "sha256": "a26468fca0a43cd427a7ad851cbdfd5bd214f86a57ba0c689b9d5bfb54205756"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G46.webp",
+   "copy": "res://assets/bust/G46.webp",
+   "bytes": 41712,
+   "sha256": "f78d01774ccf23c31dd2ef33ca4b5fa0e88045c100a182d9c5ec1b24f49ce9ff"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G47.webp",
+   "copy": "res://assets/bust/G47.webp",
+   "bytes": 42328,
+   "sha256": "a9e958310c07e742a51c915a7a258f301237e99c1626fe9cb6426bb2ac1f8549"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G48.webp",
+   "copy": "res://assets/bust/G48.webp",
+   "bytes": 36340,
+   "sha256": "ec12befe68417fc0fa88e1191b7421df0a5c3d02c16059bd8a8debdc51bd3e28"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G49.webp",
+   "copy": "res://assets/bust/G49.webp",
+   "bytes": 28150,
+   "sha256": "4b38d7e28684881ebda6cd093102b5c77b3ce5f982e372fcd1a5d40769408c1c"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G50.webp",
+   "copy": "res://assets/bust/G50.webp",
+   "bytes": 37812,
+   "sha256": "136ee4e22114c796882ca15e7ac303a4c175b343c9de23c91f74fe2ffeba2e82"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G51.webp",
+   "copy": "res://assets/bust/G51.webp",
+   "bytes": 40166,
+   "sha256": "58f2b7ba64839288413863ddb475f07033506f360204720771993508ac4d51a2"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G52.webp",
+   "copy": "res://assets/bust/G52.webp",
+   "bytes": 27950,
+   "sha256": "99c0f0b0fce002db7d1c17d6cecd2913e98c53ae3ef568322f310c4f5bca012e"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G53.webp",
+   "copy": "res://assets/bust/G53.webp",
+   "bytes": 29532,
+   "sha256": "fb231b0b09f2598e658f03ef410c3e2d312d20c894c9adee0dfdbec26785c43f"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G54.webp",
+   "copy": "res://assets/bust/G54.webp",
+   "bytes": 38386,
+   "sha256": "19dc4cee22009cd1f44ae4e3a926949906995c83c40c4b769d43022f339a9be6"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G55.webp",
+   "copy": "res://assets/bust/G55.webp",
+   "bytes": 32882,
+   "sha256": "ccd24f09fe6077716f9d183b5d1dd287a022da09c55a282351e73c77a28dcd59"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G56.webp",
+   "copy": "res://assets/bust/G56.webp",
+   "bytes": 32608,
+   "sha256": "8a75b4eff1cd85a6b4262bde95b1b3b3fa43c18c8e0b4d683fe7a493eed02a52"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G57.webp",
+   "copy": "res://assets/bust/G57.webp",
+   "bytes": 30026,
+   "sha256": "0379edbc1c80c727c2e7ab80c16358773603b28f4502e478141d31b1e0564326"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G58.webp",
+   "copy": "res://assets/bust/G58.webp",
+   "bytes": 35256,
+   "sha256": "faac6598a92dd4949fa977134fb2214213eb84ff9d19a44e2b1a76ba6b1a3caa"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G59.webp",
+   "copy": "res://assets/bust/G59.webp",
+   "bytes": 32186,
+   "sha256": "0e2110a062f63b9600f3da0052e1c5708c169a479b46c9dbe62f67ca56ee80a9"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G60.webp",
+   "copy": "res://assets/bust/G60.webp",
+   "bytes": 33276,
+   "sha256": "7d85ce320e54c25597de74ff4a0c75526ee5513e8ecf5386b0733e445cdda967"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G61.webp",
+   "copy": "res://assets/bust/G61.webp",
+   "bytes": 41750,
+   "sha256": "7314a61add3d6ac60611652d47bf59178dd7a56f56b33010e5dc8e555bfe9a07"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G62.webp",
+   "copy": "res://assets/bust/G62.webp",
+   "bytes": 37280,
+   "sha256": "2bf96faf30eea888b9b5f93ed7145593896cb3886d98ac7a4ccdbcb7f477daea"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G63.webp",
+   "copy": "res://assets/bust/G63.webp",
+   "bytes": 46126,
+   "sha256": "197aa15f715a918ca6d49895ed581258f4638fe0aeaaddf71a108c1d8f8679b2"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G64.webp",
+   "copy": "res://assets/bust/G64.webp",
+   "bytes": 36464,
+   "sha256": "195c1f95064b6537f511f882eddbc50ef40f9730b9159b5f6578af511c41e32b"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G65.webp",
+   "copy": "res://assets/bust/G65.webp",
+   "bytes": 36288,
+   "sha256": "82bd7ca5393984aed3cd118b0fc704f12aa2bb46412081452edfa210dbb2a253"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G66.webp",
+   "copy": "res://assets/bust/G66.webp",
+   "bytes": 38348,
+   "sha256": "95927a9ac8baeb41f4de2470003877bae3faaf340ea41038f1fa4df41641b5f6"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G67.webp",
+   "copy": "res://assets/bust/G67.webp",
+   "bytes": 33520,
+   "sha256": "ae242bd67eaa7511a59269881eab516e1c4a7c0fbe02ef0d6810475dfdf2c1e0"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G68.webp",
+   "copy": "res://assets/bust/G68.webp",
+   "bytes": 40374,
+   "sha256": "a66fefbecc531ce377c7d5ce946856a6044a595125782e999c71fa9eb37d47e5"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G69.webp",
+   "copy": "res://assets/bust/G69.webp",
+   "bytes": 36972,
+   "sha256": "f93800f4540cceababf468f0a8d9cbd4bab85f5fc6a621b7fef0d5b32a7713fa"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G70.webp",
+   "copy": "res://assets/bust/G70.webp",
+   "bytes": 34682,
+   "sha256": "66a90fb214f054c3948ce000aaade624a8750d22f59b118c5d56f2db8a91cb77"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G71.webp",
+   "copy": "res://assets/bust/G71.webp",
+   "bytes": 40598,
+   "sha256": "80ee0635d207a34a35ec507009eada78360f97e2ef8537848975eb2a5d94a317"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G72.webp",
+   "copy": "res://assets/bust/G72.webp",
+   "bytes": 34986,
+   "sha256": "1f41abafd7916041482cf488036da35dd28e3943a9102ba17b0bcc85b4abd797"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G73.webp",
+   "copy": "res://assets/bust/G73.webp",
+   "bytes": 37594,
+   "sha256": "2354cf559088a31e27999949b9c4f54883e76e15fd080dfa733cbcdb93eef2b2"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G74.webp",
+   "copy": "res://assets/bust/G74.webp",
+   "bytes": 33224,
+   "sha256": "51c72af4b0216b00f42c86a14c0c405af8cf2455388a8cdbd04f2392fa711ee8"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G75.webp",
+   "copy": "res://assets/bust/G75.webp",
+   "bytes": 25122,
+   "sha256": "ae17a0d7ae2098d5ac43e759c28a91cc247008d742e58dfaeeece410ac9f92b8"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G76.webp",
+   "copy": "res://assets/bust/G76.webp",
+   "bytes": 32682,
+   "sha256": "135c7ecdb9bf6078b57f90296a053be87a72ec99da29f9ec394556d68d1db942"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G77.webp",
+   "copy": "res://assets/bust/G77.webp",
+   "bytes": 37796,
+   "sha256": "080c01fd6ee930beaa7cf9638951a41a623bfdc47dce1c546d7c2cfa9b5d06be"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G78.webp",
+   "copy": "res://assets/bust/G78.webp",
+   "bytes": 32822,
+   "sha256": "726801cf0fde5811eae99738627f66e25943e2fbc43b5925e6eed45adf1c08ef"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G79.webp",
+   "copy": "res://assets/bust/G79.webp",
+   "bytes": 45192,
+   "sha256": "c215813c83f8972b634728c502cd4f7d3390761bf47d028bee99bcd0ed83e94c"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G80.webp",
+   "copy": "res://assets/bust/G80.webp",
+   "bytes": 40310,
+   "sha256": "71a914a8a58a47e3ecfe28bedd5c2cea8149d3cce7ba9e1eaf92727a5b688eec"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G81.webp",
+   "copy": "res://assets/bust/G81.webp",
+   "bytes": 45542,
+   "sha256": "995e3cf837ae8a198f1b167ec9ad51b6523f11d25f6002d98427cfe4b2981009"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G82.webp",
+   "copy": "res://assets/bust/G82.webp",
+   "bytes": 46546,
+   "sha256": "cbe9b8ebcdc7e9c4199e483b3f7a4e35766b0b1b878b300373320c9e3c1f45e4"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G83.webp",
+   "copy": "res://assets/bust/G83.webp",
+   "bytes": 41124,
+   "sha256": "bda1c1fa00d4887027303ad000f23f4e8a3d58e65725217ea0ed8744eb6cc51a"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G84.webp",
+   "copy": "res://assets/bust/G84.webp",
+   "bytes": 32352,
+   "sha256": "d9d0481db509355519be9e2fde02a8e9c16adb589982ef8b22a76c077f2f3104"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G85.webp",
+   "copy": "res://assets/bust/G85.webp",
+   "bytes": 40008,
+   "sha256": "5aaa7ba7f09a708f9add1239b79e38a81c8eaf54da03109bbacd0dcfd7a9ebc9"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G86.webp",
+   "copy": "res://assets/bust/G86.webp",
+   "bytes": 44922,
+   "sha256": "44c003e8355efc26e30b5ef5f93757016f4023983ee8c2866cb3d798f3abb0a3"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G87.webp",
+   "copy": "res://assets/bust/G87.webp",
+   "bytes": 27760,
+   "sha256": "c1686a69084a1e14f10ff057180815164e5188d346c311ac32811f40be332c3e"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G88.webp",
+   "copy": "res://assets/bust/G88.webp",
+   "bytes": 41610,
+   "sha256": "03296f1ac94359e5e519168297ce34e71113f488a53e65600b12df7e571ade7d"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G89.webp",
+   "copy": "res://assets/bust/G89.webp",
+   "bytes": 39084,
+   "sha256": "84fae40fe56ccc82cfe4474f476d4c4fffca54391032ecb24a50d94a4a3b1137"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G90.webp",
+   "copy": "res://assets/bust/G90.webp",
+   "bytes": 39642,
+   "sha256": "69837347a0d4c4c7a042cc443ec6745cb014b667f62b595ee9c727237dc1840d"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G91.webp",
+   "copy": "res://assets/bust/G91.webp",
+   "bytes": 47204,
+   "sha256": "c37c58a52971a36c71d55e10dce2f70cf5634ee05c28e7da21e88cbbe408e02a"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G92.webp",
+   "copy": "res://assets/bust/G92.webp",
+   "bytes": 38018,
+   "sha256": "816455a278c820d3d90496ed6436f9b98026b3ef3ba4130a6bceefb70c715de4"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G93.webp",
+   "copy": "res://assets/bust/G93.webp",
+   "bytes": 47560,
+   "sha256": "e859319bb8dc0829a7e52204c5305ed5874002e1b91e3326a0c2a9645dab376f"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G94.webp",
+   "copy": "res://assets/bust/G94.webp",
+   "bytes": 34918,
+   "sha256": "a2bbbcf8bdfa6255286d365ff5f8de66814820d7cdb4e6f7a05bb4c5f5e9dba6"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G95.webp",
+   "copy": "res://assets/bust/G95.webp",
+   "bytes": 40302,
+   "sha256": "659f5ca847b1a74e40738dc0245861bb7d5fc9145ffc73391a47b38adda96c97"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G96.webp",
+   "copy": "res://assets/bust/G96.webp",
+   "bytes": 43492,
+   "sha256": "71ea32c65b02e8f5caf111a5b80e5367200b5730b610237113d7c50ed9a4a5a1"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G97.webp",
+   "copy": "res://assets/bust/G97.webp",
+   "bytes": 43004,
+   "sha256": "5194f59cf6ea0f3cf2dbd7115f27502aa77f19b74d5ebf7a508540a0fccc4272"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G98.webp",
+   "copy": "res://assets/bust/G98.webp",
+   "bytes": 35120,
+   "sha256": "e147b4c7c335dd1a0292f1a756e299879f60e22c3841f62fc1328981f5d412fd"
+  },
+  {
+   "source": "prototype/assets/officer-art/bust/G99.webp",
+   "copy": "res://assets/bust/G99.webp",
+   "bytes": 32964,
+   "sha256": "d68e4207527034a62bb458d05f48cf801d564aaf7a1ae12be6accf3d0b6b6f98"
+  },
+  {
+   "source": "docs/work-integration/20261023/uiux/godot-skirmish/assets/infantry.glb",
+   "copy": "res://assets/models/infantry.glb",
+   "bytes": 793728,
+   "sha256": "2ad7dbda13f98f391df25f015320c78a2edfb8afcdc1624284b631b41a4131e5"
+  },
+  {
+   "source": "docs/work-integration/20261023/uiux/godot-skirmish/assets/model-manifest.json",
+   "copy": "res://assets/models/model-manifest.json",
+   "bytes": 1155,
+   "sha256": "4ab0addd8242a317f70d2eb8c8d57e9d13391e014d564ca47627d8eb778bf76b"
+  }
+ ]
+}

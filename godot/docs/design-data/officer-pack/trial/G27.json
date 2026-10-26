@@ -1,0 +1,280 @@
+{
+  "id": "G27",
+  "name": "주유",
+  "faction": "F03",
+  "status": "CLAUDE_TRIAL_PLACEHOLDER — GPT 장수 파이프라인 정식 pack 도착 시 교체",
+  "source": {
+    "room": "FIRST3 시험 기록",
+    "method": "first3-initial-state-v1 → officer-pack 시험 변환 (make-trial-packs.py)",
+    "date": "2026-10-03"
+  },
+  "stats": {
+    "지휘": 90,
+    "무용": 64,
+    "지략": 95,
+    "정무": 83,
+    "감화": 88
+  },
+  "sub": {
+    "전열 유지": 80,
+    "기동": 91,
+    "전환": 91,
+    "수습": 98,
+    "힘": 48,
+    "기술": 60,
+    "막아내기": 81,
+    "되받기": 67,
+    "군재": 97,
+    "응변": 91,
+    "속이기": 98,
+    "통찰": 94,
+    "행정": 86,
+    "병참": 91,
+    "인사": 83,
+    "제도": 69,
+    "민정": 86,
+    "설득": 97,
+    "포섭": 83,
+    "결집": 93,
+    "중재": 97
+  },
+  "troopAptitude": {
+    "BT01": "LOW",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "LOW"
+  },
+  "role": "책사",
+  "style": "장군",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "흐트러진 박자를 친다",
+    "text": "공격받으면 곧바로 전열 한 단계 회복. 전열이 흐트러진(박자가 어긋난) 적을 치면 주는 피해 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "지략"
+    ],
+    "effects": [
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "TARGET_DISORDERED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04(사용자 지시 \"특기/전법은 너가 한번 다시 만들어볼래\") · 준비한 두 부대가 서로 다른 진입면에서 같은 순간에 치게 하는 전법은 첫 공격 +25%와 FLANK +15%로 살림. 예약이 취소돼도 준비를 보존하던 특기는 예약 개념이 없어서, 어긋난 박자를 바로잡고(자기 전열 회복) 적의 어긋남을 짚는(TARGET_DISORDERED) 효과로 바꿈(曲有誤 周郞顧). 옛 시험 pack의 화선·불씨는 원 카드가 화공 공로를 황개로 분리해서 쓰지 않음.",
+    "formerName": "어긋난 음을 짚다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "일제 공격 신호",
+      "text": "2칸 안의 아군 1부대를 지정하면 그 부대와 주변 2칸 안 아군은 이번 턴 첫 공격 피해 +25%. 측면·후방에서 치면 피해 +15%가 더해진다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 50,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 15,
+          "duration": 1,
+          "condition": "FLANK"
+        }
+      ],
+      "formerName": "한 박자에 맞춘다"
+    },
+    {
+      "kind": "trait",
+      "name": "숲의 매복",
+      "text": "숲에서 공격할 때 주는 피해 +15%.",
+      "rarity": "RARE",
+      "classTag": "책략",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "TERRAIN:FOREST"
+        }
+      ]
+    },
+    {
+      "kind": "tactic",
+      "name": "불 공격",
+      "text": "숲에 있는 적 1부대를 1차례 혼란(다음 차례 공격 불가).",
+      "rarity": "EPIC",
+      "classTag": "책략",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": "TERRAIN:FOREST",
+          "status": "CONFUSED"
+        }
+      ],
+      "cost": 25,
+      "formerName": "화공"
+    },
+    {
+      "kind": "trait",
+      "name": "군대 농사",
+      "text": "태수일 때 도시 식량 +15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 15,
+          "duration": 0,
+          "condition": null,
+          "resource": "FOOD"
+        }
+      ],
+      "formerName": "둔전"
+    },
+    {
+      "kind": "trait",
+      "name": "인망 높이기",
+      "text": "태수일 때 도시 인망 산출 +20%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 20,
+          "duration": 0,
+          "condition": null,
+          "resource": "FAME"
+        }
+      ],
+      "formerName": "상업 장려"
+    },
+    {
+      "kind": "trait",
+      "name": "응급 처치",
+      "text": "잃는 병력의 전사 비율 −20%p(그만큼 부상병으로).",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CASUALTY_SHIFT",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "민심 달래기",
+      "text": "점령 처리 기간 1턴 단축.",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "회유의 달인"
+    },
+    {
+      "kind": "tactic",
+      "name": "격려",
+      "text": "2칸 안 아군 사기 한 단계 회복.",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 20
+    },
+    {
+      "kind": "trait",
+      "name": "첫 일격",
+      "text": "이번 차례 첫 공격 피해 +10%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "선수필승"
+    },
+    {
+      "kind": "trait",
+      "name": "성 지키기",
+      "text": "성(중심·성문)을 지킬 때 받는 피해 −20%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "formerName": "수성"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION",
+    "TARGET_DISORDERED",
+    "FLANK"
+  ]
+}

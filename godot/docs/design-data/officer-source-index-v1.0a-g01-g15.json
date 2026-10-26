@@ -1,0 +1,374 @@
+[
+  {
+    "officerId": "G01",
+    "name": "여포",
+    "sourceBatch": "v0.4",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "짓누른다",
+      "꿰뚫는다",
+      "위협한다",
+      "전환한다",
+      "이탈한다"
+    ],
+    "uniquePlayQuestion": "여포와 정면으로 싸우지 않고 봉쇄·고립·보급 차단·외교 분리로 목표를 달성할 수 있는가?",
+    "overlapRiskOfficerIds": [
+      "G13",
+      "G20",
+      "G24"
+    ],
+    "specialSourceCaveats": [
+      "비장·돌파·부대전 위압은 정사 본전과 배송지 주석에 근거한다.",
+      "초선·연환계는 문학층이며 적토와 인중여포 표현은 주석 인용층이다.",
+      "천재지변·신벌·붉은 파문은 창작 해석이며 개인 결투·초자연적 광역 피해·대응 불가 효과의 근거가 아니다."
+    ],
+    "fixedTraitName": "비장의 위압",
+    "fixedTacticName": "붉은 극의 파문",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G02",
+    "name": "조운",
+    "sourceBatch": "v0.2",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "보호한다",
+      "회수한다",
+      "호위한다",
+      "수습한다",
+      "절제한다"
+    ],
+    "uniquePlayQuestion": "전황이 무너질 때 반드시 지켜야 할 것을 회수해 오는가?",
+    "overlapRiskOfficerIds": [],
+    "specialSourceCaveats": [
+      "주요 근거는 《삼국지》 권36과 배송지 주석이다.",
+      "유명한 조운 일화 상당수는 본전보다 《조운별전》에 의존하므로 본전과 동일한 확실도로 처리하지 않는다.",
+      "v0.2에서 정확한 고정 특기명과 전법명이 회수되지 않았다."
+    ],
+    "fixedTraitName": "호위의 담력",
+    "fixedTacticName": "호위의 귀로",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G03",
+    "name": "제갈량",
+    "sourceBatch": "v0.3",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "구조화한다",
+      "연결한다",
+      "준비한다",
+      "유지한다",
+      "정비한다"
+    ],
+    "uniquePlayQuestion": "여러 턴 동안 작전이 굴러가게 만드는가?",
+    "overlapRiskOfficerIds": [],
+    "specialSourceCaveats": [
+      "정사층의 중심은 군정·행정·병참을 총괄한 재상이다.",
+      "학창의·윤건·우선과 마법사 이미지는 연의·후대 문화층이므로 정사 외형이나 초자연적 공격 능력으로 확정하지 않는다.",
+      "술병·공병 연결은 프로젝트 제안층이며 v0.3에서 정확한 고정 특기명과 전법명이 회수되지 않았다."
+    ],
+    "fixedTraitName": "와룡의 미로",
+    "fixedTacticName": "반룡의 매듭",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G04",
+    "name": "순욱",
+    "sourceBatch": "v0.2",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "예견한다",
+      "보전한다",
+      "연결한다",
+      "바로잡는다",
+      "간언한다"
+    ],
+    "uniquePlayQuestion": "싸움을 지속할 기반·명분·사람을 미리 마련하는가?",
+    "overlapRiskOfficerIds": [],
+    "specialSourceCaveats": [
+      "주요 근거는 《삼국지》 권10이다.",
+      "《위씨춘추》의 빈 그릇과 자결설은 낮은 등급의 충돌 자료이며 사망 방식은 확정하지 않는다.",
+      "향기 관련 일화는 후대 자료층이며 v0.2에서 정확한 고정 특기명과 전법명이 회수되지 않았다."
+    ],
+    "fixedTraitName": "왕좌의 경륜",
+    "fixedTacticName": "겹널 방책",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G05",
+    "name": "유비",
+    "sourceBatch": "v0.7",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "모으다",
+      "받아들이다",
+      "버티다",
+      "다시 잇다",
+      "맡기다"
+    ],
+    "uniquePlayQuestion": "패전 뒤 흩어진 사람·약속·피난민·동맹을 어떻게 다시 공동체로 만들 것인가?",
+    "overlapRiskOfficerIds": [
+      "G07",
+      "G08"
+    ],
+    "specialSourceCaveats": [
+      "반복된 패배 뒤 인물과 병력이 다시 모이는 패턴은 정사 본전에 근거한다.",
+      "황숙 공인 장면과 도원결의는 주로 연의·후대 문화층이며 정사 확정 사건이 아니다.",
+      "사람을 버리지 않는 행동을 순수한 자비나 정치적 계산 중 하나로만 단정하지 않는다."
+    ],
+    "fixedTraitName": "황숙의 군기",
+    "fixedTacticName": "도원의 재집결",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G06",
+    "name": "황충",
+    "sourceBatch": "v0.7",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "겨누다",
+      "기다리다",
+      "증명하다",
+      "선도하다",
+      "갱신하다"
+    ],
+    "uniquePlayQuestion": "이미 낮게 평가된 인물에게 어떤 제한된 기회를 맡겨 기존 서열을 뒤집을 것인가?",
+    "overlapRiskOfficerIds": [],
+    "specialSourceCaveats": [
+      "입촉전의 선등과 정군산 전투는 정사 본전에 근거한다.",
+      "정사 본전은 황충의 정확한 나이와 활 명중 일화를 기록하지 않는다.",
+      "노장·백발·명궁 이미지는 연의·희곡·게임이 누적한 문화층이다."
+    ],
+    "fixedTraitName": "노장의 시위",
+    "fixedTacticName": "노장의 조준",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G07",
+    "name": "조조",
+    "sourceBatch": "v0.7",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "배치하다",
+      "시험하다",
+      "전용하다",
+      "규율하다",
+      "선점하다"
+    ],
+    "uniquePlayQuestion": "눈앞의 전투가 시작되기 전에 인재·군량·명분·퇴로를 어떻게 배치해 여러 결과를 모두 자신의 다음 수로 바꿀 것인가?",
+    "overlapRiskOfficerIds": [
+      "G05",
+      "G08"
+    ],
+    "specialSourceCaveats": [
+      "둔전·구현령·인재 발탁·전장 재구성은 정사와 배송지 주석에 근거한다.",
+      "배송지 주석에는 조조의 문무 능력과 엄격한 법 집행·기만·보복적 살해가 함께 전한다.",
+      "간웅·현대적 능력주의자·특정 명언 이미지는 후대 해석과 이문을 분리해야 한다."
+    ],
+    "fixedTraitName": "난세의 포석",
+    "fixedTacticName": "난세의 군령",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G08",
+    "name": "손권",
+    "sourceBatch": "v0.7",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "잇다",
+      "맡기다",
+      "저울질하다",
+      "버티다",
+      "재동맹하다"
+    ],
+    "uniquePlayQuestion": "서로 경쟁하는 명장·가문·동맹을 제거하지 않고 어떤 권한 배분과 양보로 같은 전선에 남길 것인가?",
+    "overlapRiskOfficerIds": [
+      "G05",
+      "G07"
+    ],
+    "specialSourceCaveats": [
+      "젊은 승계자의 세력 수습·인재 위임·적벽 항전 결정은 정사 본전에 근거한다.",
+      "말년의 후계 분쟁과 의심·살육 증가는 초기의 조정 능력과 분리하지 않고 함께 보존한다.",
+      "정사 주석은 눈에 빛이 있었다고 전하지만 벽안 표상은 연의와 후대 문화에서 강화됐다."
+    ],
+    "fixedTraitName": "벽안의 기백",
+    "fixedTacticName": "벽안의 군기",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G09",
+    "name": "원소",
+    "sourceBatch": "v0.4",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "모은다",
+      "겹친다",
+      "포괄한다",
+      "세운다",
+      "재단한다"
+    ],
+    "uniquePlayQuestion": "다층 군단·참모·지역 기반을 어떻게 겹치고 조정해 하나의 결단으로 만들 것인가?",
+    "overlapRiskOfficerIds": [
+      "G07",
+      "G08"
+    ],
+    "specialSourceCaveats": [
+      "원전은 대규모 인재·군단·지역 기반의 결합과 결정 지연을 함께 기록한다.",
+      "《영웅기》 주석과 연의·인터넷 밈의 명문가 무능 이미지는 정사 사실과 분리한다.",
+      "종합 최강의 군주라는 프로젝트 계약은 자동 승리나 모든 장수의 상위호환을 뜻하지 않는다."
+    ],
+    "fixedTraitName": "겹진의 군기",
+    "fixedTacticName": "겹진의 수호",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G10",
+    "name": "원술",
+    "sourceBatch": "v0.5",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "모은다",
+      "봉헌한다",
+      "선포한다",
+      "소모한다",
+      "감싼다"
+    ],
+    "uniquePlayQuestion": "기존 물자를 의례·보호·외교 중 어디에 사용하고 실제 기반을 얼마나 희생할 것인가?",
+    "overlapRiskOfficerIds": [
+      "G01",
+      "G09",
+      "G11"
+    ],
+    "specialSourceCaveats": [
+      "황제 참칭과 물자·상징 집중은 정사 본전에 근거한다.",
+      "원술이 직접 사람을 살해했다는 서술은 본전과 《영웅기》 사이에 충돌이 있다.",
+      "꿀물을 구했다는 일화는 배송지가 인용한 《오서》 자료층이며 무한 재화나 신적 가호의 근거가 아니다."
+    ],
+    "fixedTraitName": "금옥의 곳간",
+    "fixedTacticName": "금옥의 가호",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G11",
+    "name": "동탁",
+    "sourceBatch": "v0.5",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "흡수한다",
+      "징발한다",
+      "위압한다",
+      "내리친다",
+      "틀어박힌다"
+    ],
+    "uniquePlayQuestion": "병력·무기·비축을 강제로 집중해 위세를 만들되 징발과 민간 피해를 어떻게 감당할 것인가?",
+    "overlapRiskOfficerIds": [],
+    "specialSourceCaveats": [
+      "주요 근거는 《삼국지》 권6과 배송지 주석이다.",
+      "강제 동원·징발·권력 집중은 역사층에 근거하지만 세부 잔혹행위는 자료별 차이를 구분한다.",
+      "흑갑 이미지는 고정 계약의 디자인 언어이며 초인적 방어 또는 개인 필살기의 역사 근거가 아니다."
+    ],
+    "fixedTraitName": "흑갑의 위세",
+    "fixedTacticName": "흑갑의 일격",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G12",
+    "name": "마등",
+    "sourceBatch": "v0.4",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "모은다",
+      "먹인다",
+      "이동시킨다",
+      "중재한다",
+      "버틴다"
+    ],
+    "uniquePlayQuestion": "변경 부대와 군량을 다음 집결지까지 이어 원정을 중단하지 않게 하는가?",
+    "overlapRiskOfficerIds": [
+      "G13",
+      "G20"
+    ],
+    "specialSourceCaveats": [
+      "마등에게는 독립 본전이 없으며 여러 본전과 배송지 주석에 기록이 분산돼 있다.",
+      "군량·집결 방향은 간접 사료와 프로젝트 해석의 비중이 크다.",
+      "원정 속도와 보급 지속은 창작 해석층이며 보급 무시나 고정된 서북 시작 위치를 뜻하지 않는다."
+    ],
+    "fixedTraitName": "서풍의 군량",
+    "fixedTacticName": "서풍 집결",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G13",
+    "name": "마초",
+    "sourceBatch": "v0.4",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "쐐기 박는다",
+      "추격한다",
+      "호응시킨다",
+      "뒤흔든다",
+      "재기한다"
+    ],
+    "uniquePlayQuestion": "이미 생긴 균열에 부대를 박아 넣고 적이 재정비하기 전까지 추격 선택지를 연속으로 만들 수 있는가?",
+    "overlapRiskOfficerIds": [
+      "G12",
+      "G20"
+    ],
+    "specialSourceCaveats": [
+      "동관·관중 전투와 세력 이동은 정사 본전과 관련 열전에 근거한다.",
+      "금마초 호칭과 화려한 기병 영웅 이미지는 후대 문화층의 영향을 함께 받는다.",
+      "돌파와 추격은 후속 부대·퇴로·연합 관계를 필요로 하며 개인 결투나 자동 전열 붕괴의 근거가 아니다."
+    ],
+    "fixedTraitName": "금마초의 추격",
+    "fixedTacticName": "금마의 쐐기",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G14",
+    "name": "공손찬",
+    "sourceBatch": "v0.5",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "발견한다",
+      "달려간다",
+      "가로막는다",
+      "되돈다",
+      "고립시킨다"
+    ],
+    "uniquePlayQuestion": "먼저 확인한 위협에 백마부대를 보내 길목을 막고 전열을 돌려 재배치하되 오정보와 외곽 고립을 어떻게 감당할 것인가?",
+    "overlapRiskOfficerIds": [],
+    "specialSourceCaveats": [
+      "주요 근거는 《삼국지》 권8과 《영웅기》 등 배송지 주석이다.",
+      "백마의종·변경 전투 이미지는 사료층에 근거하지만 후대의 순수 영웅적 백마기사 이미지는 분리한다.",
+      "기병 방향은 무료 부대·고정 북방 시작·항상 우월한 기동을 뜻하지 않는다."
+    ],
+    "fixedTraitName": "백마의 행군",
+    "fixedTacticName": "백마 회진",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G15",
+    "name": "유장",
+    "sourceBatch": "v0.6",
+    "historicalBasis": "CHRONICLE",
+    "primaryCoreVerbs": [
+      "보존한다",
+      "달랜다",
+      "맡긴다",
+      "기다린다",
+      "멈춘다"
+    ],
+    "uniquePlayQuestion": "전쟁을 계속할 능력이 남아 있어도 도시와 주민의 생존을 위해 휴전·피난·권한 양도 같은 비파괴 해법을 여는가?",
+    "overlapRiskOfficerIds": [],
+    "specialSourceCaveats": [
+      "유장 기록은 촉한 성립의 정당화와 결부돼 우유부단함이 강조됐을 가능성을 유의한다.",
+      "항복·위임·민간 피해 중단은 원전 사건에서 출발하지만 비파괴 사건 해법은 프로젝트 해석층이다.",
+      "익주의 고요와 안민의 북은 자동 평화·세뇌·무료 치안을 뜻하지 않는다."
+    ],
+    "fixedTraitName": "익주의 고요",
+    "fixedTacticName": "안민의 북",
+    "status": "SOURCE_INDEX_NOT_RUNTIME"
+  }
+]
+

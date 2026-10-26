@@ -1,0 +1,20 @@
+{
+  "schema": "tactic-gauge-v0.2",
+  "status": "TRIAL — C229 게이지 비용과 충전 수치는 시험값. 기존 카드 효과와 문구 유지.",
+  "base": 5,
+  "dealt": 10,
+  "taken": 10,
+  "result": 15,
+  "periodCap": 30,
+  "storeMax": 100,
+  "cost": {
+    "E": [
+      40,
+      60
+    ],
+    "R": [
+      80,
+      100
+    ]
+  }
+}

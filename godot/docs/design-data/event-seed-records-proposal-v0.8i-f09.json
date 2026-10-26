@@ -1,0 +1,151 @@
+[
+  {
+    "eventSeedId": "INC-F09-P01-01",
+    "policyId": "POL-F09-CORE-01",
+    "factionId": "F09",
+    "scale": "INCIDENT",
+    "title": "量腹取足",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "한 의사의 식량 재고가 다음 수송대 도착 전에 부족해질 전망이다",
+      "피난민·상인·부대 낙오자 가운데 둘 이상의 이용 집단이 도착한다",
+      "제사주 또는 대리인이 의사 현장에 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "현재 재고가 소진되기 전부터 다음 수송대가 도착하기 전까지",
+    "playerChoices": [
+      "각 이용자에게 필요량을 묻고 배급한다",
+      "모든 이용자에게 동일한 몫을 배급한다",
+      "인근 창고의 식량을 의사로 전용한다",
+      "의사를 임시 폐쇄하고 다음 수송대를 호송한다"
+    ],
+    "costInputs": [],
+    "risks": [
+      "필요량 조사 지연으로 대기 행렬이 길어지고 집단 간 충돌이 발생한다",
+      "편파 배급이 관리자와 소외 집단의 관계를 손상한다",
+      "과잉 반출로 다음 이용자가 결식한다"
+    ],
+    "counterplay": [
+      "대기 집단이 충돌해 배급을 중단시킨다",
+      "대기자가 창고문을 파손하고 식량을 반출한다"
+    ],
+    "failureTraces": [
+      "배급 명부",
+      "파손된 창고문",
+      "굶주린 대기자",
+      "관리자의 착복 혐의"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "남은 식량",
+      "대기 인원",
+      "다음 수송대의 위치",
+      "다음 수송대의 도착 예상 시점",
+      "현장 담당자"
+    ],
+    "forbiddenAutoResolve": [
+      "팝업 선택만으로 구휼·배급·수송대 호송·식량 보급을 완료할 수 없다",
+      "필요량을 확인했다는 이유만으로 부족한 식량이 자동 보충되지 않는다",
+      "신앙을 별도 자원으로 사용해 배급 부족이나 집단 갈등을 제거할 수 없다",
+      "일기토로 배급 갈등과 수송 문제를 해결할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "localSubjectRef": null,
+    "responseDeadlineCondition": "현재 의사 재고가 소진되거나 다음 수송대가 도착하기 전에 대응해야 한다",
+    "containmentOptions": [],
+    "spreadConditions": [],
+    "missingFields": [
+      "행인이 필요한 만큼 의사의 쌀과 고기를 취했다는 기록에 직접 연결되는 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "제사주·대리인·수송 담당자의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "의사·인근 창고·수송대 경로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "costInputs의 구체 항목이 기존 카드에서 별도 값으로 정의되지 않아 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "이용 집단의 canonical subject ID가 없어 localSubjectRef를 null로 두었다",
+      "containmentOptions와 spreadConditions가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F09-P01-02",
+    "policyId": "POL-F09-CORE-01",
+    "factionId": "F09",
+    "scale": "SITUATION",
+    "title": "祭酒治民",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "의사가 일정 기간 운영되어 최소한의 식량과 숙소를 제공한다",
+      "현지에 행정 공백이 있거나 주민과 피난민 사이의 분쟁이 반복된다",
+      "제사주 임명 후보가 현장에 머물고 있다",
+      "임명 후보와 기존 관리·호족·주민 대표 사이의 관계를 판정할 수 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "기본적인 식량·숙소 제공이 유지되고 현지 행정 공백 또는 반복 분쟁이 존재하는 동안",
+    "playerChoices": [
+      "제사주가 단독으로 관리한다",
+      "제사주와 기존 관리가 공동으로 관리한다",
+      "배급과 중재 장부를 공개한다",
+      "세부 판단을 현장 담당자의 재량에 맡긴다",
+      "배상을 중심으로 분쟁을 중재한다",
+      "제한된 용서를 허용한다",
+      "사건을 기존 행정기관의 정식 처벌로 이관한다",
+      "자발적 회합을 유지한다",
+      "주민집단에 군사 협력을 요청한다",
+      "주민집단의 정치적 중립을 보장한다"
+    ],
+    "costInputs": [
+      "식량",
+      "숙소",
+      "현장 관리자의 임무 점유",
+      "관리와 중재 시간"
+    ],
+    "risks": [
+      "구호와 복종을 교환하면 강요된 참여와 이탈이 발생한다",
+      "관리자의 편향으로 주민이 떠나고 기존 관리가 반발한다",
+      "후임 관리자가 없으면 공동체가 분열된다"
+    ],
+    "counterplay": [
+      "기존 관리와 호족이 제사주의 편향 또는 권한 확대에 반발한다",
+      "소외된 주민집단이 공동체를 이탈한다"
+    ],
+    "failureTraces": [
+      "중재 기록",
+      "공동 관리 규약",
+      "이탈자의 거처",
+      "파기된 배상 약속"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "기본 필요 충족 여부",
+      "관리 후보",
+      "참여 집단",
+      "미해결 분쟁",
+      "기존 행정 권한과의 경계"
+    ],
+    "forbiddenAutoResolve": [
+      "신앙 수치로 분쟁을 자동 판결할 수 없다",
+      "주민의 영구적 복종을 자동 확정할 수 없다",
+      "담당자 없이 원격으로 공동체를 운영할 수 없다",
+      "팝업 선택만으로 교단 통치·주민 이동·충성·구휼·보급을 완료할 수 없다",
+      "일기토로 행정 분쟁이나 공동체 관계를 해결할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "장로가 일반 장리 대신 제사주를 통해 지역과 집단을 관리했다는 기록에 직접 연결되는 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "제사주 후보·기존 관리·호족·주민 대표의 canonical officer 또는 subject ID가 없어 castSelectors를 비웠다",
+      "의사와 관리 대상 지역의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

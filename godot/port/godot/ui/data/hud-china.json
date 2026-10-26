@@ -1,0 +1,222 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+12000",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +12000"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+5",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+20",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 허창 생산으로",
+    "target": "west"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "res://ui/art/minimap-china.webp",
+  "land": {
+   "u0": 0,
+   "v0": 0.05,
+   "u1": 1,
+   "v1": 0.873
+  },
+  "map": "china",
+  "tileToUv": {
+   "au": 0.006166495375128468,
+   "bu": 0.010680683294361011,
+   "av": 0.007067137809187279,
+   "bv": 0.01060070671378092
+  },
+  "cities": [
+   {
+    "id": "west",
+    "name": "허창",
+    "u": 0.6417,
+    "v": 0.3993,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "chenliu",
+    "name": "진류",
+    "u": 0.663,
+    "v": 0.3781,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "luoyang",
+    "name": "낙양",
+    "u": 0.6043,
+    "v": 0.3675,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "runan",
+    "name": "여남",
+    "u": 0.6577,
+    "v": 0.4523,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "juancheng",
+    "name": "견성",
+    "u": 0.6844,
+    "v": 0.3357,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "ye",
+    "name": "업",
+    "u": 0.6577,
+    "v": 0.3039,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "wan",
+    "name": "완",
+    "u": 0.5936,
+    "v": 0.4523,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "xiangyang",
+    "name": "양양",
+    "u": 0.5829,
+    "v": 0.4947,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ }
+}

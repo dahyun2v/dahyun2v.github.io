@@ -1,0 +1,164 @@
+[
+  {
+    "eventSeedId": "EVT-F08-P01-01",
+    "policyId": "POL-F08-CORE-01",
+    "factionId": "F08",
+    "scale": "EVENT",
+    "title": "葭萌迎客",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "외부 세력의 압박을 받고 있다",
+      "객군 초청을 둘러싸고 내부 장수 사이에 불신이 존재한다",
+      "초청 대상 세력과 연결되는 변경 관문과 회합 도시가 존재한다",
+      "초청 사절이 대상 세력에 도착해야 협상을 시작할 수 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "초청 사절이 출발한 뒤 입성·주둔 조건을 확정하기 전까지",
+    "playerChoices": [
+      "객군에게 변경 수비를 맡긴다",
+      "객군과 공동 원정을 진행한다",
+      "인질을 교환하고 제한된 입성을 허용한다",
+      "초청을 철회하고 입성을 거부한다"
+    ],
+    "costInputs": [
+      "식량",
+      "금전",
+      "행동력",
+      "사절 이동 시간",
+      "객군을 수용하는 도시의 부담"
+    ],
+    "risks": [
+      "과도한 보급으로 객군이 독자적인 거점을 형성한다",
+      "현지 장수의 반대로 입성과 공동 작전이 지연된다",
+      "협상 내용과 통행 정보가 외부에 유출된다",
+      "현지 담당자가 관문 개방이나 보급 제공을 거부한다"
+    ],
+    "counterplay": [
+      "현지 반대 세력이 입성과 보급을 지연한다",
+      "현지 반대 세력이 협상 조건과 이동 정보를 유출한다",
+      "초청받은 세력이 제공받은 보급과 주둔지를 독자 기반으로 전환한다"
+    ],
+    "failureTraces": [
+      "객군 창고",
+      "공동작전 문서",
+      "파기된 서약",
+      "개방된 관문"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "객군의 현재 위치",
+      "허용된 활동 구역",
+      "제공할 보급",
+      "계약 기한",
+      "보증 담당자",
+      "철수 조건"
+    ],
+    "forbiddenAutoResolve": [
+      "객군 초청만으로 충성·즉시 합류·영구 동맹을 확정할 수 없다",
+      "팝업 선택만으로 입성·영지 인계·보급·병력 이동을 완료할 수 없다",
+      "사절과 객군은 실제 경로를 따라 이동해야 한다",
+      "일기토로 입성 조건이나 세력 관계를 해결할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "decisionAuthority": null,
+    "commitmentScope": null,
+    "branchConsequences": [],
+    "persistentPoliticalTrace": null,
+    "missingFields": [
+      "유장이 법정을 보내 외부 세력을 맞이하고 장로 공격용 병력·물자를 제공한 뒤 객군이 유장에게 돌아선 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "초청자·사절·객군 지휘관·현지 반대 장수의 역할은 있으나 기존 카드에 canonical officer ID가 기록되지 않아 castSelectors를 비웠다",
+      "변경 관문·회합 도시·객군 이동로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 흔적에 연결되는 canonical event ID가 없어 followupRefs를 비웠다",
+      "EVENT 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F08-P01-02",
+    "policyId": "POL-F08-CORE-01",
+    "factionId": "F08",
+    "scale": "SITUATION",
+    "title": "成都圍守",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "성도가 포위되어 있다",
+      "외부로 연결되는 관문 가운데 일부가 차단되어 있다",
+      "도시 안에 수비 병력과 공방이 남아 있다",
+      "토착민·동주병·이주민 등 서로 다른 지역집단이 함께 있다",
+      "유장 또는 항복 권한을 위임받은 담당자가 성내에 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "성도 포위가 지속되고 식량·공방·협상 권한이 남아 있는 동안",
+    "playerChoices": [
+      "성벽과 병기 공방을 우선 운용한다",
+      "식량 배급을 우선한다",
+      "야간 보급로를 개척한다",
+      "외부 보급 시도 대신 기존 비축을 보존한다",
+      "지역집단별로 수비 구역을 맡긴다",
+      "서로 다른 집단을 혼합해 수비대를 편성한다",
+      "도시에서 최후까지 항전한다",
+      "민간인 대피를 협상한다",
+      "조건부 항복을 협상한다"
+    ],
+    "costInputs": [],
+    "risks": [
+      "집단별 배급 격차가 커진다",
+      "식량 창고를 둘러싼 폭동이 발생한다",
+      "지역집단 사이에 충돌이 발생한다",
+      "공방 과로로 화재가 발생한다",
+      "군수 생산 때문에 민간 도구가 부족해진다",
+      "장기 방어로 수비병과 주민의 사상자가 누적된다"
+    ],
+    "counterplay": [],
+    "failureTraces": [
+      "불평등한 배급 기록",
+      "습격당한 식량 창고",
+      "지역집단 간 충돌",
+      "불탄 공방",
+      "부족해진 민간 도구",
+      "파괴된 도시 구역",
+      "생존 주민",
+      "남겨진 식량",
+      "사상자와 매장지",
+      "포위전의 폐허",
+      "항복 이후 점령 상태"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "포위 구역",
+      "식량 저장 위치",
+      "담당 장수",
+      "집단별 수비·배급 요구",
+      "누적된 민간 피해",
+      "협상 가능한 상대"
+    ],
+    "forbiddenAutoResolve": [
+      "식량이 남아 있다는 이유만으로 도시가 무기한 자동 방어되지 않는다",
+      "성벽과 공방을 비용 없이 즉시 수리할 수 없다",
+      "항복 선택으로 기존 관계 갈등과 도시 피해가 삭제되지 않는다",
+      "팝업 선택만으로 포위 해제·주민 이동·보급·충성·항복 인계를 완료할 수 없다",
+      "일기토로 포위전이나 지역집단 갈등을 해결할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "성도 포위와 유장의 항복 과정에 직접 연결되는 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "유장·위임 담당자·수비 장수·공방 담당자의 canonical officer ID가 기존 카드에 기록되지 않아 castSelectors를 비웠다",
+      "성도·외부 관문·야간 보급로·식량 창고·공방의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "costInputs의 구체 항목이 기존 카드에서 별도 값으로 정의되지 않아 비웠다",
+      "counterplay의 구체 항목이 기존 카드에서 별도 값으로 정의되지 않아 비웠다",
+      "항복 이후 점령 후속의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

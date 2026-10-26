@@ -1,0 +1,167 @@
+[
+  {
+    "eventSeedId": "INC-F10-P01-01",
+    "policyId": "POL-F10-CORE-01",
+    "factionId": "F10",
+    "scale": "INCIDENT",
+    "title": "啞泉",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "부대가 숲·습지·고온 지형을 이동하고 있다",
+      "조사되지 않은 수원에 접근한다",
+      "부대가 휴대한 식량 또는 안전한 물이 부족하다",
+      "척후·현지 안내자·의술 담당자가 지연되거나 본대와 분리되어 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "미조사 수원을 발견한 뒤 부대가 취수하거나 기존 식수가 소진되기 전까지",
+    "playerChoices": [
+      "해당 수원에서 취수하지 못하게 한다",
+      "물을 채취해 표본을 검사한다",
+      "현지 주민과 안내자에게 수원 정보를 묻는다",
+      "소량만 취수한 뒤 증상을 관찰한다",
+      "중독자가 발생하면 치료·후송하고 해독재를 탐색한다"
+    ],
+    "costInputs": [
+      "식량",
+      "금전",
+      "행동력",
+      "조사 시간",
+      "치료 담당자의 임무 점유",
+      "안전한 물의 수송"
+    ],
+    "risks": [
+      "성급하게 이동하면 중독 증상이 악화된다",
+      "중독자가 낙오한다",
+      "판단 오류로 안전한 수원을 폐쇄한다",
+      "판단 오류로 오염된 수원의 사용을 계속한다"
+    ],
+    "counterplay": [
+      "수원 표본을 검사한다",
+      "현지 주민과 안내자의 정보를 확인한다",
+      "안전한 물을 외부에서 수송한다",
+      "노출자를 치료·후송하고 해독재를 탐색한다"
+    ],
+    "failureTraces": [
+      "봉쇄된 샘",
+      "중독자 야영지",
+      "치료 기록",
+      "현지 안내자에 대한 신뢰 또는 불신"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "수원 조사 상태",
+      "노출된 부대",
+      "중독 증상 단계",
+      "치료 담당자",
+      "안전한 물 수송대의 도착 예상 시점"
+    ],
+    "forbiddenAutoResolve": [
+      "독성 수원을 자동으로 탐지할 수 없다",
+      "기도·부적·주문으로 중독을 즉시 해독할 수 없다",
+      "중독된 부대가 정상 이동 속도를 유지할 수 없다",
+      "팝업 선택만으로 치료·후송·환경 적응·안전한 물 보급을 완료할 수 없다",
+      "독을 즉사 효과나 대응 불가능한 상태로 확장할 수 없다",
+      "일기토로 환경 노출과 중독 상태를 해결할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "localSubjectRef": null,
+    "responseDeadlineCondition": "부대의 안전한 물이 소진되거나 노출자의 증상이 악화되기 전에 대응해야 한다",
+    "containmentOptions": [],
+    "spreadConditions": [],
+    "missingFields": [
+      "《삼국연의》의 독천 앵커를 오염 수원·독성 식생으로 해석한 카드에 직접 연결되는 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "척후·현지 안내자·의술 담당자의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "수원·야영지·안전한 물 수송로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "노출 부대 또는 중독자 집단의 canonical subject ID가 없어 localSubjectRef를 null로 두었다",
+      "containmentOptions와 spreadConditions가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "EVT-F10-P01-02",
+    "policyId": "POL-F10-CORE-01",
+    "factionId": "F10",
+    "scale": "EVENT",
+    "title": "木鹿驅獸",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "전선 인근에 야생동물 서식지가 존재한다",
+      "동물을 다룰 수 있는 인간 조련 집단이 존재한다",
+      "맹획 또는 교섭 담당 장수가 거점에 실제로 방문한다",
+      "동물 운용에 배속할 기존 부대가 존재한다",
+      "동물용 식량·물과 실제 이동 경로가 확보되어 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "교섭 담당 장수가 조련 거점에 도착한 뒤 운용 계약과 이동 계획을 확정하기 전까지",
+    "playerChoices": [
+      "코끼리를 물자 운반에 사용한다",
+      "동물을 이용해 방책과 장애물을 제거한다",
+      "동물을 전개해 적을 위압한다",
+      "제한된 구역으로 야수를 몰아낸다",
+      "조련 계약을 거절한다"
+    ],
+    "costInputs": [
+      "식량",
+      "금전",
+      "행동력",
+      "동물용 물",
+      "조련과 휴식 시간",
+      "기존 부대의 임무 점유"
+    ],
+    "risks": [
+      "불이나 큰 소리로 동물이 공황에 빠진다",
+      "부상과 좁은 이동로 때문에 동물이 통제에서 벗어난다",
+      "아군 대열이 붕괴한다",
+      "조련사가 다치거나 사망한다",
+      "민가와 농지가 훼손된다",
+      "동물이 유실된다"
+    ],
+    "counterplay": [
+      "상대가 불과 큰 소리로 동물을 놀라게 한다",
+      "상대가 좁은 길과 장애물을 이용해 이동 경로를 제한한다",
+      "부상과 피로 누적으로 조련 통제가 약화된다"
+    ],
+    "failureTraces": [
+      "파손된 방책",
+      "놀란 가축",
+      "조련 계약",
+      "민가·농지 훼손에 대한 배상 요구"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "배속된 기존 부대",
+      "담당 조련사",
+      "동물 이동 경로",
+      "동물의 현재 상태",
+      "불과 소음 위험",
+      "예상되는 민간 피해 범위"
+    ],
+    "forbiddenAutoResolve": [
+      "코끼리와 야수를 영구적인 신규 병종으로 생성할 수 없다",
+      "동물을 주문이나 무료 소환으로 전장에 출현시킬 수 없다",
+      "계약과 휴식 없이 동물 운용을 무료로 반복할 수 없다",
+      "코끼리 운용만으로 방책 돌파와 전투 승리를 확정할 수 없다",
+      "팝업 선택만으로 동물 이동·조련 계약·충성·전투를 성공 처리할 수 없다",
+      "주문·풍우 조종·일기토로 동물 운용의 물리적 조건을 대체할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "decisionAuthority": null,
+    "commitmentScope": null,
+    "branchConsequences": [],
+    "persistentPoliticalTrace": null,
+    "missingFields": [
+      "《삼국연의》 목록대왕의 백상·맹수·조련사 문화 앵커에 직접 연결되는 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "맹획·교섭 담당 장수·조련사·배속 부대 담당자의 canonical ID가 기존 카드에 기록되지 않아 castSelectors를 비웠다",
+      "야생동물 서식지·조련 거점·전선·이동 경로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "EVENT 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

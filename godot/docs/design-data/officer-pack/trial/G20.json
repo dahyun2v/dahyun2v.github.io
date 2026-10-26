@@ -1,0 +1,284 @@
+{
+  "id": "G20",
+  "name": "손책",
+  "faction": "F03",
+  "status": "CLAUDE_TRIAL_PLACEHOLDER — GPT 장수 파이프라인 정식 pack 도착 시 교체",
+  "source": {
+    "room": "FIRST3 시험 기록",
+    "method": "first3-initial-state-v1 → officer-pack 시험 변환 (make-trial-packs.py)",
+    "date": "2026-10-03"
+  },
+  "stats": {
+    "지휘": 91,
+    "무용": 92,
+    "지략": 69,
+    "정무": 63,
+    "감화": 84
+  },
+  "sub": {
+    "전열 유지": 78,
+    "기동": 97,
+    "전환": 95,
+    "수습": 94,
+    "힘": 99,
+    "기술": 92,
+    "막아내기": 84,
+    "되받기": 93,
+    "군재": 78,
+    "응변": 79,
+    "속이기": 53,
+    "통찰": 66,
+    "행정": 57,
+    "병참": 80,
+    "인사": 84,
+    "제도": 57,
+    "민정": 58,
+    "설득": 97,
+    "포섭": 84,
+    "결집": 91,
+    "중재": 97
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "이기면 모두 달린다",
+    "text": "적 부대를 쓰러뜨리면 맞닿은 아군이 2턴 고양(공격 +10%). 성을 함락하면 둘레 2칸 안 아군(자신 포함)이 2턴 동안 이동 +2칸.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "감화"
+    ],
+    "effects": [
+      {
+        "op": "STATUS_APPLY",
+        "when": "ON_KILL",
+        "target": "ADJACENT_ALLIES",
+        "value": 0,
+        "duration": 2,
+        "condition": null,
+        "status": "INSPIRED"
+      },
+      {
+        "op": "MOVE_MOD",
+        "when": "ON_CAPTURE_CITY",
+        "target": "ALL_ALLIES_IN_BATTLE",
+        "value": 2,
+        "duration": 2,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04(사용자 지시 \"특기/전법은 너가 한번 다시 만들어볼래\") · '빈칸으로 이동 후 공격해 Formation 악화→합류점'을 돌격(CHARGE) 시 전열 판정+주변 아군 방어로 살림. 점유 역할 위임은 '이긴 뒤 아군이 움직일 판(고양·이동)'으로. 뒤의 정착 공백(점령 보너스 없음) 약점 유지.",
+    "formerName": "열어 두는 몫"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "앞장서는 돌진",
+      "text": "적 1부대에 피해 +35% 공격, 이번 차례 이동한 뒤 쓰면 대상 전열 판정(가중 15). 그 적 둘레 2칸 안 아군(손책 포함)은 이번 턴 받는 피해 −15%.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 35,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": -15,
+          "duration": 0,
+          "condition": "CHARGE"
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 15,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "먼저 닿은 땅"
+    },
+    {
+      "kind": "trait",
+      "name": "물러설 곳 없다",
+      "text": "상대 병력이 더 많으면 주는 피해 +25%.",
+      "rarity": "EPIC",
+      "classTag": "맹장",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "OUTNUMBERED"
+        }
+      ],
+      "formerName": "배수진"
+    },
+    {
+      "kind": "tactic",
+      "name": "고함",
+      "text": "맞닿은 적 모두 사기 판정(가중 15).",
+      "rarity": "UNCOMMON",
+      "classTag": "맹장",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": -15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 15
+    },
+    {
+      "kind": "trait",
+      "name": "돌파",
+      "text": "이번 차례 첫 공격 피해 +15%.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "FIRST_ROUND"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "빠른 말",
+      "text": "기병일 때 이동 +1칸.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        }
+      ],
+      "formerName": "질풍"
+    },
+    {
+      "kind": "tactic",
+      "name": "급습",
+      "text": "적 1부대에 피해 +30% 공격.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 20
+    },
+    {
+      "kind": "trait",
+      "name": "방어 대형",
+      "text": "공격받을 때 받는 피해 −15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "방진"
+    },
+    {
+      "kind": "trait",
+      "name": "장창 버티기",
+      "text": "장병일 때 반격 피해 +25%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "TROOP:BT02"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "첫 일격",
+      "text": "이번 차례 첫 공격 피해 +10%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "선수필승"
+    },
+    {
+      "kind": "trait",
+      "name": "성 지키기",
+      "text": "성(중심·성문)을 지킬 때 받는 피해 −20%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "formerName": "수성"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION",
+    "CHARGE"
+  ]
+}

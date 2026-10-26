@@ -1,0 +1,135 @@
+{
+  "id": "G10",
+  "name": "원술",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "hefei"
+  },
+  "stats": {
+    "지휘": 43,
+    "무용": 47,
+    "지략": 49,
+    "정무": 38,
+    "감화": 52
+  },
+  "sub": {
+    "전열 유지": 44,
+    "기동": 51,
+    "전환": 43,
+    "수습": 34,
+    "힘": 53,
+    "기술": 48,
+    "막아내기": 45,
+    "되받기": 39,
+    "군재": 46,
+    "응변": 52,
+    "속이기": 64,
+    "통찰": 35,
+    "행정": 42,
+    "병참": 32,
+    "인사": 59,
+    "제도": 39,
+    "민정": 24,
+    "설득": 61,
+    "포섭": 66,
+    "결집": 36,
+    "중재": 31
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "명사",
+  "style": "책사",
+  "primaryClass": "TRIAL:명사",
+  "secondaryClass": "TRIAL:책사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "후한 씀씀이",
+    "text": "맞닿은 아군이 잃는 병력의 전사 비율 −10%p. 태수일 때 도시 생산 +25%, 대신 식량 −15%(씀씀이가 크다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "CASUALTY_SHIFT",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 25,
+        "duration": 0,
+        "condition": null,
+        "resource": "PRODUCTION"
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": -15,
+        "duration": 0,
+        "condition": null,
+        "resource": "FOOD"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 큰 몫을 먼저 내주고 곁에 묶는 의도와 '큰 지원 뒤 공백·과도한 약속' 약점 유지. 강화공격/추가 Reaction 선택과 정비권은 지도에 없어 하사 = 부상병 복귀+피해 감소, 대가 = 원술 둔화로, 특기는 곁에 있을 때만 받는 혜택(전사 감소)과 사치 운영(생산↑·식량↓)으로 옮김.",
+    "formerName": "내가 준 자리"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "큰 지원",
+      "text": "인접한 아군 1부대에 부상병 50명을 즉시 복귀시키고 다음 내 차례까지 받는 피해 −20%를 준다. 대신 원술은 다음 차례 이동 −2칸(큰 지원 뒤 공백).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 1,
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 50,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 20,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "SLOWED"
+        }
+      ],
+      "formerName": "큰 이름의 하사"
+    }
+  ]
+}

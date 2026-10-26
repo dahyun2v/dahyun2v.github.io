@@ -1,0 +1,2713 @@
+{
+ "schema": "db-relations-extract-v0.1",
+ "note": "원전DB·해석 JSON 관계 기록을 게임 장수 쌍으로 이은 추출본(수치 없음). 못 이은 이름은 게임 밖 인물이거나 이름 표기 차이",
+ "officerHan": {
+  "G01": "呂布",
+  "G02": "趙雲",
+  "G03": "諸葛亮",
+  "G04": "荀彧",
+  "G05": "劉備",
+  "G06": "黃忠",
+  "G07": "曹操",
+  "G08": "孫權",
+  "G09": "袁紹",
+  "G10": "袁術",
+  "G11": "董卓",
+  "G12": "馬騰",
+  "G13": "馬超",
+  "G14": "公孫瓚",
+  "G15": "劉璋",
+  "G16": "張魯",
+  "G17": "孟獲",
+  "G18": "關羽",
+  "G19": "張飛",
+  "G20": "孫策",
+  "G21": "龐統",
+  "G22": "郭嘉",
+  "G23": "司馬懿",
+  "G24": "張遼",
+  "G25": "許褚",
+  "G26": "貂蟬",
+  "G27": "周瑜",
+  "G28": "陸遜",
+  "G29": "甘寧",
+  "G30": "太史慈",
+  "G31": "陳宮",
+  "G32": "高順",
+  "G33": "夏侯惇",
+  "G34": "曹仁",
+  "G35": "賈詡",
+  "G36": "荀攸",
+  "G37": "張郃",
+  "G38": "田豐",
+  "G39": "沮授",
+  "G40": "呂蒙",
+  "G41": "魯肅",
+  "G42": "魏延",
+  "G43": "法正",
+  "G44": "韓遂",
+  "G45": "龐德",
+  "G46": "李傕",
+  "G47": "張任",
+  "G48": "閻圃",
+  "G49": "紀靈",
+  "G50": "黃蓋",
+  "G51": "夏侯淵",
+  "G52": "徐晃",
+  "G53": "于禁",
+  "G54": "樂進",
+  "G55": "李典",
+  "G56": "典韋",
+  "G57": "程昱",
+  "G58": "滿寵",
+  "G59": "姜維",
+  "G60": "馬良",
+  "G61": "馬謖",
+  "G62": "蔣琬",
+  "G63": "費禕",
+  "G64": "李嚴",
+  "G65": "麋竺",
+  "G66": "孫堅",
+  "G67": "張昭",
+  "G68": "張紘",
+  "G69": "程普",
+  "G70": "韓當",
+  "G71": "周泰",
+  "G72": "淩統",
+  "G73": "顏良",
+  "G74": "文醜",
+  "G75": "麴義",
+  "G76": "許攸",
+  "G77": "陳登",
+  "G78": "臧霸",
+  "G79": "侯成",
+  "G80": "馬岱",
+  "G81": "成公英",
+  "G82": "閻行",
+  "G83": "郭汜",
+  "G84": "李儒",
+  "G85": "徐榮",
+  "G86": "張松",
+  "G87": "黃權",
+  "G88": "嚴顏",
+  "G89": "劉巴",
+  "G90": "張衛",
+  "G91": "楊昂",
+  "G92": "楊松",
+  "G93": "祝融",
+  "G94": "雍闓",
+  "G95": "高定",
+  "G96": "田豫",
+  "G97": "關靖",
+  "G98": "閻象",
+  "G99": "張勳",
+  "G100": "劉勳"
+ },
+ "coverage": {
+  "G03": 9,
+  "G04": 6,
+  "G05": 15,
+  "G06": 7,
+  "G07": 8,
+  "G08": 9,
+  "G09": 7,
+  "G10": 5,
+  "G11": 2,
+  "G12": 3,
+  "G13": 5,
+  "G14": 2,
+  "G15": 6,
+  "G16": 5,
+  "G31": 6
+ },
+ "records": [
+  {
+   "a": "G03",
+   "b": "G05",
+   "aHan": "諸葛亮",
+   "bHan": "劉備",
+   "id": "REL-G03-001",
+   "types": [
+    "RECRUITMENT",
+    "TRUST_DELEGATION",
+    "SUCCESSION_TRUST"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-REC-001",
+    "EV-G03-REL-001",
+    "EV-G03-REL-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G08",
+   "aHan": "諸葛亮",
+   "bHan": "孫權",
+   "id": "REL-G03-004",
+   "types": [
+    "DIPLOMACY",
+    "POLITICAL_ALLIANCE"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-DIP-001",
+    "EV-G03-DIP-002",
+    "EV-G03-POL-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G18",
+   "aHan": "諸葛亮",
+   "bHan": "關羽",
+   "id": "REL-G03-005",
+   "types": [
+    "POLITICAL_COLLEAGUE",
+    "SHARED_COMMAND"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-REL-001",
+    "EV-G03-AUTH-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G19",
+   "aHan": "諸葛亮",
+   "bHan": "張飛",
+   "id": "REL-G03-006",
+   "types": [
+    "POLITICAL_COLLEAGUE",
+    "SHARED_CAMPAIGN"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-REL-001",
+    "EV-G03-AUTH-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G64",
+   "aHan": "諸葛亮",
+   "bHan": "李嚴",
+   "id": "REL-G03-008",
+   "types": [
+    "CO_GUARDIAN",
+    "AUTHORITY_DIVISION",
+    "POLITICAL_CONFLICT"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-REL-002",
+    "EV-G03-REL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G61",
+   "aHan": "諸葛亮",
+   "bHan": "馬謖",
+   "id": "REL-G03-009",
+   "types": [
+    "MENTORSHIP",
+    "PERSONNEL_SELECTION",
+    "PUNISHMENT",
+    "AFTERCARE"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-FAIL-001",
+    "EV-G03-REL-005"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G62",
+   "aHan": "諸葛亮",
+   "bHan": "蔣琬",
+   "id": "REL-G03-010",
+   "types": [
+    "RECOMMENDATION",
+    "SUCCESSOR_PREPARATION"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-SELF-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G63",
+   "aHan": "諸葛亮",
+   "bHan": "費禕",
+   "id": "REL-G03-011",
+   "types": [
+    "RECOMMENDATION",
+    "DIPLOMATIC_DELEGATION",
+    "SUCCESSOR_CARRIER"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-SELF-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G03",
+   "b": "G23",
+   "aHan": "諸葛亮",
+   "bHan": "司馬懿",
+   "id": "REL-G03-012",
+   "types": [
+    "ADVERSARIAL_COMMAND",
+    "ADVERSARIAL_RECOGNITION"
+   ],
+   "boundary": "",
+   "evidence": [
+    "EV-G03-HUMAN-001",
+    "EV-G03-EVAL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G04",
+   "b": "G09",
+   "aHan": "荀彧",
+   "bHan": "袁紹",
+   "id": "REL-G04-002",
+   "types": [
+    "PREJOIN_AFFILIATION",
+    "BREAK_WITH_RULER"
+   ],
+   "boundary": "上賓 대우 뒤 이탈. 적대전환의 정확 과정은 미상.",
+   "evidence": [
+    "EV-G04-SVC-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G04",
+   "b": "G07",
+   "aHan": "荀彧",
+   "bHan": "曹操",
+   "id": "REL-G04-003",
+   "types": [
+    "DIRECT_SERVICE",
+    "TRUST_DELEGATION",
+    "PATRONAGE",
+    "POLITICAL_CONFLICT"
+   ],
+   "boundary": "장기 전략신뢰와 212년 정치갈등을 함께 보존.",
+   "evidence": [
+    "EV-G04-SVC-001",
+    "EV-G04-LDR-001",
+    "EV-G04-STRAT-001",
+    "EV-G04-POL-001",
+    "EV-G04-ADM-001",
+    "EV-G04-STRAT-003",
+    "EV-G04-POL-002",
+    "EV-G04-STAND-001",
+    "EV-G04-COUNTER-001",
+    "EV-G04-POL-003",
+    "EV-G04-END-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G04",
+   "b": "G33",
+   "aHan": "荀彧",
+   "bHan": "夏侯惇",
+   "id": "REL-G04-004",
+   "types": [
+    "TRUST_DELEGATION",
+    "SHARED_CRISIS"
+   ],
+   "boundary": "兗州 위기에서 군사실행과 정치판단의 분업.",
+   "evidence": [
+    "EV-G04-LDR-001",
+    "EV-G04-DIP-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G04",
+   "b": "G57",
+   "aHan": "荀彧",
+   "bHan": "程昱",
+   "id": "REL-G04-005",
+   "types": [
+    "SHARED_CRISIS",
+    "COORDINATION"
+   ],
+   "boundary": "세 도시 보전에 공동 기여.",
+   "evidence": [
+    "EV-G04-LDR-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G04",
+   "b": "G22",
+   "aHan": "荀彧",
+   "bHan": "郭嘉",
+   "id": "REL-G04-008",
+   "types": [
+    "RECOMMENDATION"
+   ],
+   "boundary": "郭嘉 공적을 荀彧에게 재귀속하지 않음.",
+   "evidence": [
+    "EV-G04-PER-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G04",
+   "b": "G36",
+   "aHan": "荀彧",
+   "bHan": "荀攸",
+   "id": "REL-G04-009",
+   "types": [
+    "KINSHIP",
+    "RECOMMENDATION",
+    "POLITICAL_COLLABORATION"
+   ],
+   "boundary": "從子 관계지만 각자 별도 수행자.",
+   "evidence": [
+    "EV-G04-PER-002",
+    "EV-G04-COUNTER-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G05",
+   "b": "G14",
+   "aHan": "劉備",
+   "bHan": "公孫瓚",
+   "id": "REL-G05-001",
+   "types": [
+    "EARLY_COMPANION",
+    "STUDY_PEER",
+    "DIRECT_SERVICE"
+   ],
+   "boundary": "동문·친교와 후일 군사적 종속은 시기가 다름.",
+   "evidence": [
+    "EV-G05-FORM-001",
+    "EV-G05-SVC-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G18",
+   "aHan": "劉備",
+   "bHan": "關羽",
+   "id": "REL-G05-002",
+   "types": [
+    "EARLY_COMPANION",
+    "PERSONAL_TRUST",
+    "SHARED_CAMPAIGN"
+   ],
+   "boundary": "역사적 恩若兄弟와 桃園結義 reception을 구분.",
+   "evidence": [
+    "EV-G05-REL-001",
+    "EV-G05-REL-002",
+    "EV-G05-FAIL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G19",
+   "aHan": "劉備",
+   "bHan": "張飛",
+   "id": "REL-G05-003",
+   "types": [
+    "EARLY_COMPANION",
+    "PERSONAL_TRUST",
+    "SHARED_CAMPAIGN"
+   ],
+   "boundary": "강한 동행관계가 후방실패·부대관리 문제를 지우지 않음.",
+   "evidence": [
+    "EV-G05-REL-001",
+    "EV-G05-FAIL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G65",
+   "aHan": "劉備",
+   "bHan": "麋竺",
+   "id": "REL-G05-005",
+   "types": [
+    "PATRONAGE",
+    "RESOURCE_SUPPORT",
+    "MARRIAGE_LINK",
+    "TRUST"
+   ],
+   "boundary": "재정후원과 동생 麋芳의 항복 책임을 분리.",
+   "evidence": [
+    "EV-G05-ECO-001",
+    "EV-G05-LAW-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G01",
+   "aHan": "劉備",
+   "bHan": "呂布",
+   "id": "REL-G05-006",
+   "types": [
+    "CONFLICT",
+    "TEMPORARY_ACCOMMODATION"
+   ],
+   "boundary": "敵對·화해·재충돌이 반복되어 단일 관계라벨로 평탄화 금지.",
+   "evidence": [
+    "EV-G05-FAIL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G07",
+   "aHan": "劉備",
+   "bHan": "曹操",
+   "id": "REL-G05-007",
+   "types": [
+    "PATRONAGE",
+    "POLITICAL_RIVALRY",
+    "CONFLICT",
+    "ADVERSARIAL_RECOGNITION"
+   ],
+   "boundary": "厚遇·英雄평·모의·전쟁·상호비교가 공존.",
+   "evidence": [
+    "EV-G05-POL-001",
+    "EV-G05-FAIL-002",
+    "EV-G05-MIL-003",
+    "EV-G05-EVAL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G09",
+   "aHan": "劉備",
+   "bHan": "袁紹",
+   "id": "REL-G05-008",
+   "types": [
+    "TEMPORARY_SERVICE",
+    "POLITICAL_ALLIANCE"
+   ],
+   "boundary": "장기 고정복무가 아니라 패전 뒤 이동기.",
+   "evidence": [
+    "EV-G05-SVC-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G03",
+   "aHan": "劉備",
+   "bHan": "諸葛亮",
+   "id": "REL-G05-011",
+   "types": [
+    "RECRUITMENT",
+    "TRUST_DELEGATION",
+    "POLITICAL_COLLABORATION",
+    "ENTRUSTMENT"
+   ],
+   "boundary": "三顧·魚水·사행·행정·託孤는 서로 다른 시기와 기능.",
+   "evidence": [
+    "EV-G05-PER-001",
+    "EV-G05-REL-002",
+    "EV-G05-DIP-001",
+    "EV-G05-SUC-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G08",
+   "aHan": "劉備",
+   "bHan": "孫權",
+   "id": "REL-G05-012",
+   "types": [
+    "POLITICAL_ALLIANCE",
+    "MARRIAGE_ALLIANCE",
+    "CONFLICT",
+    "RECONCILIATION"
+   ],
+   "boundary": "연합·혼인·荊州충돌·전쟁·화해를 한 방향 관계로 단순화하지 않음.",
+   "evidence": [
+    "EV-G05-DIP-001",
+    "EV-G05-DIP-002",
+    "EV-G05-FAIL-003",
+    "EV-G05-DIP-004"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G15",
+   "aHan": "劉備",
+   "bHan": "劉璋",
+   "id": "REL-G05-014",
+   "types": [
+    "INVITATION",
+    "POLITICAL_ALLIANCE",
+    "CONFLICT",
+    "REGIME_TRANSFER"
+   ],
+   "boundary": "초청에서 정복으로 관계가 변함.",
+   "evidence": [
+    "EV-G05-DIP-003",
+    "EV-G05-PER-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G21",
+   "aHan": "劉備",
+   "bHan": "龐統",
+   "id": "REL-G05-015",
+   "types": [
+    "RECOMMENDATION",
+    "TRUST_DELEGATION",
+    "ADMONITION",
+    "RECONCILIATION"
+   ],
+   "boundary": "전략조언뿐 아니라 공개비판·관계회복 자료가 있음.",
+   "evidence": [
+    "EV-G05-DIP-003",
+    "EV-G05-REL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G43",
+   "aHan": "劉備",
+   "bHan": "法正",
+   "id": "REL-G05-016",
+   "types": [
+    "POLITICAL_ALLIANCE",
+    "TRUST_DELEGATION",
+    "STRATEGIC_ADVICE"
+   ],
+   "boundary": "劉璋 신하 출신에서 劉備 핵심참모로 전환.",
+   "evidence": [
+    "EV-G05-DIP-003",
+    "EV-G05-PER-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G87",
+   "aHan": "劉備",
+   "bHan": "黃權",
+   "id": "REL-G05-017",
+   "types": [
+    "FORMER_REGIME_SERVICE",
+    "TRUST_DELEGATION",
+    "ADMONITION",
+    "SEPARATION_WITHOUT_PUNISHMENT"
+   ],
+   "boundary": "조언거부·귀로단절·魏귀순·가족보호를 함께 보존.",
+   "evidence": [
+    "EV-G05-PER-002",
+    "EV-G05-FAIL-004",
+    "EV-G05-LAW-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G42",
+   "aHan": "劉備",
+   "bHan": "魏延",
+   "id": "REL-G05-018",
+   "types": [
+    "TRUST_DELEGATION",
+    "APPOINTMENT"
+   ],
+   "boundary": "예상밖 발탁 한 사례가 전체 인사제도를 증명하지 않음.",
+   "evidence": [
+    "EV-G05-PER-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G05",
+   "b": "G64",
+   "aHan": "劉備",
+   "bHan": "李嚴",
+   "id": "REL-G05-020",
+   "types": [
+    "APPOINTMENT",
+    "ENTRUSTMENT"
+   ],
+   "boundary": "託孤는 諸葛亮 단독이 아니라 李嚴 부수탁 사실도 보존.",
+   "evidence": [
+    "EV-G05-PER-002",
+    "EV-G05-SUC-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+  },
+  {
+   "a": "G06",
+   "b": "G07",
+   "aHan": "黃忠",
+   "bHan": "曹操",
+   "id": "REL-G06-003",
+   "types": [
+    "REGIME_OVERLORD",
+    "OFFICE_CONFIRMATION"
+   ],
+   "boundary": "荊州 장악 뒤 假行裨將軍. 직접 개인관계는 미상.",
+   "evidence": [
+    "EV-G06-AUTH-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G06",
+   "b": "G05",
+   "aHan": "黃忠",
+   "bHan": "劉備",
+   "id": "REL-G06-005",
+   "types": [
+    "SERVICE_TRANSFER",
+    "DIRECT_COMMAND",
+    "PROMOTION",
+    "PATRONAGE"
+   ],
+   "boundary": "귀부·원정·승진의 실제 행동관계.",
+   "evidence": [
+    "EV-G06-CHOICE-001",
+    "EV-G06-MIL-001",
+    "EV-G06-MIL-002",
+    "EV-G06-MIL-003",
+    "EV-G06-AUTH-003",
+    "EV-G06-AUTH-004",
+    "EV-G06-AUTH-005"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G06",
+   "b": "G15",
+   "aHan": "黃忠",
+   "bHan": "劉璋",
+   "id": "REL-G06-006",
+   "types": [
+    "ADVERSARIAL_TARGET"
+   ],
+   "boundary": "益州 정복전 적대군주.",
+   "evidence": [
+    "EV-G06-MIL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G06",
+   "b": "G51",
+   "aHan": "黃忠",
+   "bHan": "夏侯淵",
+   "id": "REL-G06-007",
+   "types": [
+    "BATTLEFIELD_ADVERSARY"
+   ],
+   "boundary": "정사에서 黃忠 지휘 아래 군이 夏侯淵군을 격파. 개인일기토는 Romance.",
+   "evidence": [
+    "EV-G06-MIL-002",
+    "EV-G06-MIL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G06",
+   "b": "G03",
+   "aHan": "黃忠",
+   "bHan": "諸葛亮",
+   "id": "REL-G06-008",
+   "types": [
+    "PERSONNEL_COUNSEL_ABOUT_HUANGZHONG"
+   ],
+   "boundary": "諸葛亮이 임명에 반대한 것이 아니라 내부수용 문제를 경고한 장면.",
+   "evidence": [
+    "EV-G06-STAND-001",
+    "EV-G06-AUTH-005"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G06",
+   "b": "G18",
+   "aHan": "黃忠",
+   "bHan": "關羽",
+   "id": "REL-G06-009",
+   "types": [
+    "STATUS_FRICTION",
+    "INDIRECT_RIVALRY"
+   ],
+   "boundary": "黃忠 본인의 대응행동은 기록되지 않으며 갈등 당사자의 발언은 關羽 측.",
+   "evidence": [
+    "EV-G06-REL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G06",
+   "b": "G02",
+   "aHan": "黃忠",
+   "bHan": "趙雲",
+   "id": "REL-G06-011",
+   "types": [
+    "SHARED_HANZHONG_OPERATION",
+    "SUPPORT_RESPONSE"
+   ],
+   "boundary": "雲別傳의 운량작전·귀환지연 전승.",
+   "evidence": [
+    "EV-G06-ATTN-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G09",
+   "aHan": "曹操",
+   "bHan": "袁紹",
+   "id": "REL-G07-003",
+   "types": [
+    "EARLY_NETWORK",
+    "COALITION",
+    "STRATEGIC_RIVAL",
+    "WAR"
+   ],
+   "boundary": "연합동료→패권경쟁자로 변화.",
+   "evidence": [
+    "EV-G07-STRAT-001",
+    "EV-G07-STRAT-002",
+    "EV-G07-MIL-002",
+    "EV-G07-REL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G04",
+   "aHan": "曹操",
+   "bHan": "荀彧",
+   "id": "REL-G07-005",
+   "types": [
+    "STRATEGIC_TRUST",
+    "CENTRAL_DELEGATION",
+    "MARRIAGE_NETWORK",
+    "LATE_CONFLICT"
+   ],
+   "boundary": "후방·전략신뢰와 후기 魏公 갈등 병존.",
+   "evidence": [
+    "EV-G07-FAIL-002",
+    "EV-G07-DIP-001",
+    "EV-G07-LEG-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G57",
+   "aHan": "曹操",
+   "bHan": "程昱",
+   "id": "REL-G07-006",
+   "types": [
+    "CENTRAL_DELEGATION",
+    "REGIONAL_DEFENSE"
+   ],
+   "boundary": "兗州 보전 공동 Actor.",
+   "evidence": [
+    "EV-G07-FAIL-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G05",
+   "aHan": "曹操",
+   "bHan": "劉備",
+   "id": "REL-G07-008",
+   "types": [
+    "HOSTING",
+    "PERSONNEL_JUDGMENT",
+    "DELEGATION",
+    "BREAK",
+    "WAR"
+   ],
+   "boundary": "협력/감시/이탈/전쟁으로 변화.",
+   "evidence": [
+    "EV-G07-REL-001",
+    "EV-G07-FAIL-005"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G76",
+   "aHan": "曹操",
+   "bHan": "許攸",
+   "id": "REL-G07-012",
+   "types": [
+    "DEFECTION_TO_CAO",
+    "INTELLIGENCE_TRANSFER",
+    "GUANDU_CATALYST"
+   ],
+   "boundary": "官渡 전체를 許攸 단독공로로 환원하지 않음.",
+   "evidence": [
+    "EV-G07-MIL-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G08",
+   "aHan": "曹操",
+   "bHan": "孫權",
+   "id": "REL-G07-013",
+   "types": [
+    "WAR",
+    "DIPLOMACY",
+    "LATE_COOPERATION",
+    "EMPERORSHIP_PROMPT"
+   ],
+   "boundary": "赤壁 적대→219 이해관계 변화.",
+   "evidence": [
+    "EV-G07-FAIL-004",
+    "EV-G07-POL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G13",
+   "aHan": "曹操",
+   "bHan": "馬超",
+   "id": "REL-G07-014",
+   "types": [
+    "ADVERSARIAL_COALITION",
+    "PERSONAL_HISTORY_LEVERAGE",
+    "PSYCHOLOGICAL_WARFARE"
+   ],
+   "boundary": "韓遂와의 옛 관계를 의심유발에 이용.",
+   "evidence": [
+    "EV-G07-MIL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G07",
+   "b": "G44",
+   "aHan": "曹操",
+   "bHan": "韓遂",
+   "id": "REL-G07-014",
+   "types": [
+    "ADVERSARIAL_COALITION",
+    "PERSONAL_HISTORY_LEVERAGE",
+    "PSYCHOLOGICAL_WARFARE"
+   ],
+   "boundary": "韓遂와의 옛 관계를 의심유발에 이용.",
+   "evidence": [
+    "EV-G07-MIL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G20",
+   "aHan": "孫權",
+   "bHan": "孫策",
+   "id": "REL-G08-001",
+   "types": [
+    "BROTHER",
+    "PREDECESSOR",
+    "SUCCESSION_TRANSFER",
+    "EARLY_TRAINING"
+   ],
+   "boundary": "부형 유업과 孫權 본인의 후계행동 분리.",
+   "evidence": [
+    "EV-G08-PRE-001",
+    "EV-G08-SUC-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G67",
+   "aHan": "孫權",
+   "bHan": "張昭",
+   "id": "REL-G08-002",
+   "types": [
+    "GUARDIAN_ADVISER",
+    "REMONSTRANCE",
+    "CONFLICT",
+    "RECONCILIATION"
+   ],
+   "boundary": "평생 신뢰·불복·강압·사과가 모두 존재.",
+   "evidence": [
+    "EV-G08-SUC-001",
+    "EV-G08-BODY-001",
+    "EV-G08-HUMAN-001",
+    "EV-G08-FAIL-004"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G27",
+   "aHan": "孫權",
+   "bHan": "周瑜",
+   "id": "REL-G08-003",
+   "types": [
+    "MILITARY_TRUST",
+    "STRATEGIC_COUNSEL",
+    "DELEGATION"
+   ],
+   "boundary": "抗曹결정과 赤壁 현장지휘 분리.",
+   "evidence": [
+    "EV-G08-DIP-001",
+    "EV-G08-CHOICE-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G41",
+   "aHan": "孫權",
+   "bHan": "魯肅",
+   "id": "REL-G08-004",
+   "types": [
+    "RECOMMENDED_ADVISER",
+    "STRATEGIC_COUNSEL",
+    "DIPLOMATIC_LINE"
+   ],
+   "boundary": "魯肅의 장기구상·동맹선과 군주의 최종결정을 분리.",
+   "evidence": [
+    "EV-G08-PER-001",
+    "EV-G08-CHOICE-001",
+    "EV-G08-SUC-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G40",
+   "aHan": "孫權",
+   "bHan": "呂蒙",
+   "id": "REL-G08-005",
+   "types": [
+    "MILITARY_DELEGATION",
+    "SUCCESSION_OF_COMMAND",
+    "PERSONAL_CARE",
+    "MOURNING"
+   ],
+   "boundary": "전략제안·현장실행은 呂蒙, 임명/돌봄은 孫權.",
+   "evidence": [
+    "EV-G08-SUC-002",
+    "EV-G08-AUTH-002",
+    "EV-G08-HUMAN-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G28",
+   "aHan": "孫權",
+   "bHan": "陸遜",
+   "id": "REL-G08-006",
+   "types": [
+    "MILITARY_DELEGATION",
+    "DIPLOMATIC_TRUST",
+    "POLICY_REVIEW",
+    "LATE_CONFLICT"
+   ],
+   "boundary": "깊은 위임과 말기 정치파탄을 함께 보존.",
+   "evidence": [
+    "EV-G08-AUTH-003",
+    "EV-G08-DIP-002",
+    "EV-G08-LAW-001",
+    "EV-G08-FAIL-005"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G71",
+   "aHan": "孫權",
+   "bHan": "周泰",
+   "id": "REL-G08-008",
+   "types": [
+    "LIFE_SAVING_SERVICE",
+    "PUBLIC_RECOGNITION"
+   ],
+   "boundary": "상처는 周泰의 공적.",
+   "evidence": [
+    "EV-G08-REL-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G07",
+   "aHan": "孫權",
+   "bHan": "曹操",
+   "id": "REL-G08-011",
+   "types": [
+    "ADVERSARY",
+    "DIPLOMATIC_PRESSURE",
+    "RED_CLIFFS",
+    "RUXU"
+   ],
+   "boundary": "敵對뿐 아니라 외교압력·관찰전이 공존.",
+   "evidence": [
+    "EV-G08-DIP-001",
+    "EV-G08-CHOICE-001",
+    "EV-G08-BODY-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G08",
+   "b": "G05",
+   "aHan": "孫權",
+   "bHan": "劉備",
+   "id": "REL-G08-012",
+   "types": [
+    "ALLIANCE",
+    "MARRIAGE_DIPLOMACY",
+    "WAR",
+    "RECONCILIATION"
+   ],
+   "boundary": "동맹→荊州갈등→夷陵→재화친의 변화.",
+   "evidence": [
+    "EV-G08-CHOICE-001",
+    "EV-G08-AUTH-003",
+    "EV-G08-DIP-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G09",
+   "b": "G11",
+   "aHan": "袁紹",
+   "bHan": "董卓",
+   "id": "REL-G09-003",
+   "types": [
+    "POLITICAL_CONFLICT",
+    "BREAK",
+    "ADVERSARY"
+   ],
+   "boundary": "행동/관계의 실제 source scope를 유지",
+   "evidence": [
+    "EV-G09-CHOICE-001",
+    "EV-G09-HOUSE-001",
+    "EV-G09-LDR-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G09",
+   "b": "G07",
+   "aHan": "袁紹",
+   "bHan": "曹操",
+   "id": "REL-G09-004",
+   "types": [
+    "EARLY_ACQUAINTANCE",
+    "COALITION_PEER",
+    "RIVAL",
+    "WAR"
+   ],
+   "boundary": "행동/관계의 실제 source scope를 유지",
+   "evidence": [
+    "EV-G09-DIP-002",
+    "EV-G09-STRAT-002",
+    "EV-G09-FAIL-004"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G09",
+   "b": "G14",
+   "aHan": "袁紹",
+   "bHan": "公孫瓚",
+   "id": "REL-G09-006",
+   "types": [
+    "STRATEGIC_PRESSURE_PARTNER",
+    "RIVAL",
+    "WAR"
+   ],
+   "boundary": "행동/관계의 실제 source scope를 유지",
+   "evidence": [
+    "EV-G09-LDR-002",
+    "EV-G09-MIL-001",
+    "EV-G09-BODY-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G09",
+   "b": "G39",
+   "aHan": "袁紹",
+   "bHan": "沮授",
+   "id": "REL-G09-007",
+   "types": [
+    "RECRUITMENT",
+    "STRATEGIC_TRUST",
+    "BROAD_DELEGATION",
+    "LATE_DISAGREEMENT"
+   ],
+   "boundary": "행동/관계의 실제 source scope를 유지",
+   "evidence": [
+    "EV-G09-PER-002",
+    "EV-G09-STRAT-001",
+    "EV-G09-DIP-002",
+    "EV-G09-LOG-001",
+    "EV-G09-STRAT-002",
+    "EV-G09-LOG-002"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G09",
+   "b": "G38",
+   "aHan": "袁紹",
+   "bHan": "田豐",
+   "id": "REL-G09-008",
+   "types": [
+    "RECRUITMENT",
+    "COUNSEL",
+    "CONFLICT",
+    "IMPRISONMENT",
+    "EXECUTION"
+   ],
+   "boundary": "행동/관계의 실제 source scope를 유지",
+   "evidence": [
+    "EV-G09-PER-002",
+    "EV-G09-CHOICE-002",
+    "EV-G09-FAIL-002",
+    "EV-G09-FAIL-005"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G09",
+   "b": "G75",
+   "aHan": "袁紹",
+   "bHan": "麴義",
+   "id": "REL-G09-009",
+   "types": [
+    "MILITARY_DELEGATION",
+    "SUCCESS",
+    "CONTROL_CONFLICT",
+    "ELIMINATION"
+   ],
+   "boundary": "행동/관계의 실제 source scope를 유지",
+   "evidence": [
+    "EV-G09-MIL-001",
+    "EV-G09-PER-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G09",
+   "b": "G37",
+   "aHan": "袁紹",
+   "bHan": "張郃",
+   "id": "REL-G09-016",
+   "types": [
+    "MILITARY_COMMAND",
+    "DISAGREEMENT",
+    "DEFECTION"
+   ],
+   "boundary": "행동/관계의 실제 source scope를 유지",
+   "evidence": [
+    "EV-G09-FAIL-003"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+  },
+  {
+   "a": "G10",
+   "b": "G09",
+   "aHan": "袁術",
+   "bHan": "袁紹",
+   "id": "REL-G10-001",
+   "types": [
+    "KIN",
+    "CLAN_RIVALRY",
+    "POLITICAL_RIVALRY",
+    "FINAL_TRANSFER_ATTEMPT"
+   ],
+   "boundary": "같은 원씨 가문이지만 동일 정치세력 아님. 정확 현대 친족명칭은 사료 계보 context에 따름.",
+   "evidence": [
+    "EV-G10-CLAN-001",
+    "EV-G10-COLLAPSE-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G10",
+   "b": "G66",
+   "aHan": "袁術",
+   "bHan": "孫堅",
+   "id": "REL-G10-002",
+   "types": [
+    "MILITARY_SPONSORSHIP",
+    "DELEGATION"
+   ],
+   "boundary": "손견의 전공은 손견에게 귀속.",
+   "evidence": [
+    "EV-G10-NY-001",
+    "EV-G10-DELEG-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G10",
+   "b": "G20",
+   "aHan": "袁術",
+   "bHan": "孫策",
+   "id": "REL-G10-003",
+   "types": [
+    "RETINUE_RETURN",
+    "RESOURCE_GRANT",
+    "BROKEN_APPOINTMENT_PROMISE",
+    "FORMER_SUBORDINATE_INDEPENDENCE",
+    "BREAK_AFTER_IMPERIAL_CLAIM"
+   ],
+   "boundary": "강동 정복은 손책의 성과.",
+   "evidence": [
+    "EV-G10-SC-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G10",
+   "b": "G98",
+   "aHan": "袁術",
+   "bHan": "閻象",
+   "id": "REL-G10-005",
+   "types": [
+    "SUBORDINATE",
+    "POLITICAL_DISSENT"
+   ],
+   "boundary": "원술 진영 내부의 칭제 반대.",
+   "evidence": [
+    "EV-G10-CLAIM-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G10",
+   "b": "G01",
+   "aHan": "袁術",
+   "bHan": "呂布",
+   "id": "REL-G10-006",
+   "types": [
+    "MARRIAGE_ALLIANCE_ATTEMPT",
+    "BREAK",
+    "WAR"
+   ],
+   "boundary": "파탄과 전쟁의 다중행위자 맥락 유지.",
+   "evidence": [
+    "EV-G10-DIP-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G11",
+   "b": "G01",
+   "aHan": "董卓",
+   "bHan": "呂布",
+   "id": "REL-G11-004",
+   "types": [
+    "INDUCEMENT",
+    "ASSASSINATION_BY_PROXY",
+    "FORCE_ABSORPTION"
+   ],
+   "boundary": "정원 살해 실행은 여포.",
+   "evidence": [
+    "EV-G11-ABSORB-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G11/recovered-package-v1.0/OHD_G11_DONGZHUO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G11",
+   "b": "G01",
+   "aHan": "董卓",
+   "bHan": "呂布",
+   "id": "REL-G11-007",
+   "types": [
+    "ADOPTIVE_OATH",
+    "BODYGUARD_DEPENDENCE",
+    "VIOLENCE",
+    "ASSASSINATION"
+   ],
+   "boundary": "친밀·공포·폭력이 누적된 관계.",
+   "evidence": [
+    "EV-G11-LUBU-001",
+    "EV-G11-END-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G11/recovered-package-v1.0/OHD_G11_DONGZHUO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G12",
+   "b": "G44",
+   "aHan": "馬騰",
+   "bHan": "韓遂",
+   "id": "REL-G12-001",
+   "types": [
+    "COALITION",
+    "SWORN_BROTHER_TRADITION",
+    "RETINUE_CONFLICT",
+    "WAR",
+    "MEDIATED_PEACE"
+   ],
+   "boundary": "가장 가까운 동맹이자 강한 적수. 상설 단일지휘 아님.",
+   "evidence": [
+    "EV-G12-HANSUI-001",
+    "EV-G12-MEDIATE-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G12/recovered-package-v1.0/OHD_G12_MATENG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G12",
+   "b": "G13",
+   "aHan": "馬騰",
+   "bHan": "馬超",
+   "id": "REL-G12-004",
+   "types": [
+    "KIN",
+    "FIELD_DELEGATION",
+    "RETINUE_SUCCESSION"
+   ],
+   "boundary": "마초의 211 이후 선택은 마등 생전 phase와 분리.",
+   "evidence": [
+    "EV-G12-JOINT-001",
+    "EV-G12-TRANSFER-001",
+    "EV-G12-END-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G12/recovered-package-v1.0/OHD_G12_MATENG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G12",
+   "b": "G45",
+   "aHan": "馬騰",
+   "bHan": "龐德",
+   "id": "REL-G12-005",
+   "types": [
+    "MILITARY_CARRIER",
+    "SUBORDINATE_THEN_SUCCESSOR_CARRIER"
+   ],
+   "boundary": "방덕 전공은 방덕 개인에게 귀속.",
+   "evidence": [
+    "EV-G12-JOINT-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G12/recovered-package-v1.0/OHD_G12_MATENG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G13",
+   "b": "G12",
+   "aHan": "馬超",
+   "bHan": "馬騰",
+   "id": "REL-G13-001",
+   "types": [
+    "KIN",
+    "RETINUE_SUCCESSION"
+   ],
+   "boundary": "부곡 지휘승계와 정치노선 전체 상속을 분리.",
+   "evidence": [
+    "EV-G13-SUC-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G13",
+   "b": "G44",
+   "aHan": "馬超",
+   "bHan": "韓遂",
+   "id": "REL-G13-002",
+   "types": [
+    "COALITION",
+    "TACTICAL_DISAGREEMENT",
+    "MUTUAL_SUSPICION"
+   ],
+   "boundary": "의형제는 마등-한수 전승이며 마초-한수 관계에 자동전이 금지.",
+   "evidence": [
+    "EV-G13-COAL-001",
+    "EV-G13-WEIBEI-001",
+    "EV-G13-DISTRUST-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G13",
+   "b": "G45",
+   "aHan": "馬超",
+   "bHan": "龐德",
+   "id": "REL-G13-003",
+   "types": [
+    "SUBORDINATE_MILITARY_CARRIER",
+    "SHARED_CAMPAIGN"
+   ],
+   "boundary": "곽원 참수는 방덕.",
+   "evidence": [
+    "EV-G13-GUOYUAN-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G13",
+   "b": "G16",
+   "aHan": "馬超",
+   "bHan": "張魯",
+   "id": "REL-G13-006",
+   "types": [
+    "REFUGE",
+    "MILITARY_SUPPORT",
+    "RELATIONSHIP_BREAKDOWN"
+   ],
+   "boundary": "안정적 종속관계 아님.",
+   "evidence": [
+    "EV-G13-ZHANGLU-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G13",
+   "b": "G05",
+   "aHan": "馬超",
+   "bHan": "劉備",
+   "id": "REL-G13-007",
+   "types": [
+    "DEFECTION_OR_REALIGNMENT",
+    "SERVICE"
+   ],
+   "boundary": "연의 일기토가 전환 원인 아님.",
+   "evidence": [
+    "EV-G13-LIUBEI-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G14",
+   "b": "G09",
+   "aHan": "公孫瓚",
+   "bHan": "袁紹",
+   "id": "REL-G14-002",
+   "types": [
+    "RIVALRY",
+    "WAR",
+    "TEMPORARY_ADJUSTMENT",
+    "RENEWED_WAR"
+   ],
+   "boundary": "장기전의 승패 반복.",
+   "evidence": [
+    "EV-G14-JIEQIAO-001",
+    "EV-G14-JUMA-001",
+    "EV-G14-END-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G14/recovered-package-v1.0/OHD_G14_GONGSUNZAN_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G14",
+   "b": "G97",
+   "aHan": "公孫瓚",
+   "bHan": "關靖",
+   "id": "REL-G14-007",
+   "types": [
+    "ADVICE",
+    "FINAL_LOYALTY"
+   ],
+   "boundary": "출격을 막은 조언과 최후 동반사의 도덕평가 분리.",
+   "evidence": [
+    "SRC-G14-F11-V1"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G14/recovered-package-v1.0/OHD_G14_GONGSUNZAN_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G15",
+   "b": "G16",
+   "aHan": "劉璋",
+   "bHan": "張魯",
+   "id": "REL-G15-002",
+   "types": [
+    "FORMER_SUBORDINATE_LAYER",
+    "DISOBEDIENCE",
+    "FAMILY_KILLING",
+    "WAR"
+   ],
+   "boundary": "장로 독립세력.",
+   "evidence": [
+    "EV-G15-ZHANGLU-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G15",
+   "b": "G86",
+   "aHan": "劉璋",
+   "bHan": "張松",
+   "id": "REL-G15-004",
+   "types": [
+    "ADVICE",
+    "LIAISON",
+    "INTERNAL_DEFECTION"
+   ],
+   "boundary": "제안·연락·내응과 유장 최종승인을 분리.",
+   "evidence": [
+    "EV-G15-LIUBEIINVITE-001",
+    "EV-G15-ZHANGSONG-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G15",
+   "b": "G43",
+   "aHan": "劉璋",
+   "bHan": "法正",
+   "id": "REL-G15-004",
+   "types": [
+    "ADVICE",
+    "LIAISON",
+    "INTERNAL_DEFECTION"
+   ],
+   "boundary": "제안·연락·내응과 유장 최종승인을 분리.",
+   "evidence": [
+    "EV-G15-LIUBEIINVITE-001",
+    "EV-G15-ZHANGSONG-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G15",
+   "b": "G87",
+   "aHan": "劉璋",
+   "bHan": "黃權",
+   "id": "REL-G15-005",
+   "types": [
+    "REMONSTRANCE",
+    "OPPOSITION",
+    "CONTINUED_SERVICE"
+   ],
+   "boundary": "반대의 존재 자체를 보존.",
+   "evidence": [
+    "EV-G15-LIUBEIINVITE-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G15",
+   "b": "G89",
+   "aHan": "劉璋",
+   "bHan": "劉巴",
+   "id": "REL-G15-005",
+   "types": [
+    "REMONSTRANCE",
+    "OPPOSITION",
+    "CONTINUED_SERVICE"
+   ],
+   "boundary": "반대의 존재 자체를 보존.",
+   "evidence": [
+    "EV-G15-LIUBEIINVITE-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G15",
+   "b": "G05",
+   "aHan": "劉璋",
+   "bHan": "劉備",
+   "id": "REL-G15-006",
+   "types": [
+    "INVITATION",
+    "GUEST_ALLIANCE",
+    "RESOURCE_SUPPORT",
+    "WAR",
+    "SURRENDER"
+   ],
+   "boundary": "초청 시점과 전쟁 시점 분리.",
+   "evidence": [
+    "EV-G15-LIUBEIINVITE-001",
+    "EV-G15-SUPPORT-001",
+    "EV-G15-SURRENDER-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G16",
+   "b": "G15",
+   "aHan": "張魯",
+   "bHan": "劉璋",
+   "id": "REL-G16-003",
+   "types": [
+    "DISOBEDIENCE",
+    "FAMILY_KILLING_AGAINST_ZHANG",
+    "WAR"
+   ],
+   "boundary": "F08와 F09 독립 historical lines.",
+   "evidence": [
+    "EV-G16-BREAK-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G16",
+   "b": "G48",
+   "aHan": "張魯",
+   "bHan": "閻圃",
+   "id": "REL-G16-004",
+   "types": [
+    "COUNSEL",
+    "ROYAL_TITLE_RESTRAINT",
+    "SURRENDER_TIMING"
+   ],
+   "boundary": "전략 판단의 공동 actor.",
+   "evidence": [
+    "EV-G16-ROYAL-001",
+    "EV-G16-YANPU-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G16",
+   "b": "G90",
+   "aHan": "張魯",
+   "bHan": "張衛",
+   "id": "REL-G16-005",
+   "types": [
+    "KIN",
+    "MILITARY_COMMAND",
+    "STRATEGIC_DISAGREEMENT"
+   ],
+   "boundary": "장위의 항전의지를 장로에게 합산 금지.",
+   "evidence": [
+    "EV-G16-SURRENDERPREF-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G16",
+   "b": "G13",
+   "aHan": "張魯",
+   "bHan": "馬超",
+   "id": "REL-G16-006",
+   "types": [
+    "REFUGE",
+    "ROLE_ASSIGNMENT",
+    "MARRIAGE_CONSIDERATION",
+    "MILITARY_SUPPORT",
+    "DEPARTURE"
+   ],
+   "boundary": "안정적 핵심편입 실패.",
+   "evidence": [
+    "EV-G16-MACHAO-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G16",
+   "b": "G07",
+   "aHan": "張魯",
+   "bHan": "曹操",
+   "id": "REL-G16-007",
+   "types": [
+    "WAR",
+    "NEGOTIATED_SURRENDER",
+    "INTEGRATION"
+   ],
+   "boundary": "215 패배와 정치적 편입을 한 순간 붕괴로 합치지 않음.",
+   "evidence": [
+    "EV-G16-SURRENDERPREF-001",
+    "EV-G16-INTEGRATE-001"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+  },
+  {
+   "a": "G31",
+   "b": "G07",
+   "aHan": "陳宮",
+   "bHan": "曹操",
+   "id": "REL-G31-CAOCAO",
+   "types": [
+    "FOLLOWER",
+    "TRUSTED_COMMANDER",
+    "POLITICAL_BROKER_TRADITION",
+    "DEFECTION",
+    "ENEMY",
+    "FINAL_PERSONAL_DIALOGUE"
+   ],
+   "boundary": "가장 큰 변화축. ‘徐州학살/邊讓에 대한 도덕적 반발 때문에 떠났다’는 역사적 동기는 직접 증명되지 않음.",
+   "evidence": [
+    "EV-G31-002",
+    "EV-G31-003",
+    "EV-G31-004",
+    "EV-G31-005",
+    "EV-G31-014",
+    "EV-G31-015",
+    "EV-G31-016"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+  },
+  {
+   "a": "G31",
+   "b": "G01",
+   "aHan": "陳宮",
+   "bHan": "呂布",
+   "id": "REL-G31-LVBU",
+   "types": [
+    "RECRUITER/KINGMAKER",
+    "ALLY",
+    "GENERAL",
+    "ADVISER",
+    "PROTECTED_SUBORDINATE",
+    "REPEATED_COUNSEL_REJECTION",
+    "FINAL_COMMAND_FRICTION"
+   ],
+   "boundary": "진궁이 선택·옹립한 강자와 결합했으나 실제 결정권은 呂布에게 있었고 핵심 작전이 반복 미채택되는 긴장이 확인됨.",
+   "evidence": [
+    "EV-G31-004",
+    "EV-G31-005",
+    "EV-G31-007",
+    "EV-G31-008",
+    "EV-G31-009",
+    "EV-G31-010",
+    "EV-G31-011",
+    "EV-G31-014"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+  },
+  {
+   "a": "G31",
+   "b": "G32",
+   "aHan": "陳宮",
+   "bHan": "高順",
+   "id": "REL-G31-GAOSHUN",
+   "types": [
+    "SAME_CAMP",
+    "CO_DEFENSE_CANDIDATES",
+    "REPORTED_DISCORD"
+   ],
+   "boundary": "‘素不和’는 呂布 아내 발언을 전하는 《英雄記》 간접증언. 상시 적대관계로 확대 금지.",
+   "evidence": [
+    "EV-G31-010",
+    "EV-G31-013"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+  },
+  {
+   "a": "G31",
+   "b": "G57",
+   "aHan": "陳宮",
+   "bHan": "程昱",
+   "id": "REL-G31-CHENGYU_XUNYOU_GUOJIA",
+   "types": [
+    "ADVERSARIES",
+    "COUNTER_PLANNERS",
+    "ENEMY_EVALUATORS"
+   ],
+   "boundary": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+   "evidence": [
+    "EV-G31-006",
+    "EV-G31-012"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+  },
+  {
+   "a": "G31",
+   "b": "G36",
+   "aHan": "陳宮",
+   "bHan": "荀攸",
+   "id": "REL-G31-CHENGYU_XUNYOU_GUOJIA",
+   "types": [
+    "ADVERSARIES",
+    "COUNTER_PLANNERS",
+    "ENEMY_EVALUATORS"
+   ],
+   "boundary": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+   "evidence": [
+    "EV-G31-006",
+    "EV-G31-012"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+  },
+  {
+   "a": "G31",
+   "b": "G22",
+   "aHan": "陳宮",
+   "bHan": "郭嘉",
+   "id": "REL-G31-CHENGYU_XUNYOU_GUOJIA",
+   "types": [
+    "ADVERSARIES",
+    "COUNTER_PLANNERS",
+    "ENEMY_EVALUATORS"
+   ],
+   "boundary": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+   "evidence": [
+    "EV-G31-006",
+    "EV-G31-012"
+   ],
+   "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+  }
+ ],
+ "unmatched": [
+  [
+   "徐庶",
+   2
+  ],
+  [
+   "劉禪",
+   2
+  ],
+  [
+   "韓馥",
+   2
+  ],
+  [
+   "鍾繇",
+   2
+  ],
+  [
+   "劉表",
+   2
+  ],
+  [
+   "曹丕",
+   2
+  ],
+  [
+   "劉虞",
+   2
+  ],
+  [
+   "劉琦",
+   1
+  ],
+  [
+   "黃承彥之女",
+   1
+  ],
+  [
+   "郭貢",
+   1
+  ],
+  [
+   "戲志才",
+   1
+  ],
+  [
+   "董昭",
+   1
+  ],
+  [
+   "荀惲",
+   1
+  ],
+  [
+   "曹操女/安陽公主",
+   1
+  ],
+  [
+   "漢獻帝",
+   1
+  ],
+  [
+   "陶謙",
+   1
+  ],
+  [
+   "孫權의 누이",
+   1
+  ],
+  [
+   "劉磐",
+   1
+  ],
+  [
+   "韓玄",
+   1
+  ],
+  [
+   "費詩",
+   1
+  ],
+  [
+   "黃敘",
+   1
+  ],
+  [
+   "曹嵩",
+   1
+  ],
+  [
+   "橋玄",
+   1
+  ],
+  [
+   "獻帝",
+   1
+  ],
+  [
+   "棗祗/韓浩/任峻",
+   1
+  ],
+  [
+   "張繡",
+   1
+  ],
+  [
+   "畢諶",
+   1
+  ],
+  [
+   "魏種",
+   1
+  ],
+  [
+   "曹昂/曹安民",
+   1
+  ],
+  [
+   "曹植",
+   1
+  ],
+  [
+   "卞氏/妻妾 household",
+   1
+  ],
+  [
+   "陸抗",
+   1
+  ],
+  [
+   "虞翻",
+   1
+  ],
+  [
+   "劉基",
+   1
+  ],
+  [
+   "公孫淵",
+   1
+  ],
+  [
+   "孫登",
+   1
+  ],
+  [
+   "孫和",
+   1
+  ],
+  [
+   "孫霸",
+   1
+  ],
+  [
+   "孫亮",
+   1
+  ],
+  [
+   "衞溫/諸葛直",
+   1
+  ],
+  [
+   "顧雍",
+   1
+  ],
+  [
+   "袁氏 clan",
+   1
+  ],
+  [
+   "何進",
+   1
+  ],
+  [
+   "袁譚",
+   1
+  ],
+  [
+   "袁熙",
+   1
+  ],
+  [
+   "袁尚",
+   1
+  ],
+  [
+   "高幹",
+   1
+  ],
+  [
+   "審配",
+   1
+  ],
+  [
+   "逢紀",
+   1
+  ],
+  [
+   "馬日磾",
+   1
+  ],
+  [
+   "劉寵/駱俊",
+   1
+  ],
+  [
+   "舒仲應",
+   1
+  ],
+  [
+   "雷薄/陳蘭",
+   1
+  ],
+  [
+   "羌豪帥",
+   1
+  ],
+  [
+   "皇甫嵩",
+   1
+  ],
+  [
+   "何進/何苗",
+   1
+  ],
+  [
+   "周毖/伍瓊",
+   1
+  ],
+  [
+   "蔡邕",
+   1
+  ],
+  [
+   "王允/士孫瑞",
+   1
+  ],
+  [
+   "董旻/董璜",
+   1
+  ],
+  [
+   "張既",
+   1
+  ],
+  [
+   "漢 court / 曹操 layer",
+   1
+  ],
+  [
+   "羌胡/諸戎渠帥",
+   1
+  ],
+  [
+   "楊阜·姜敘·趙昂·梁寬·趙衢",
+   1
+  ],
+  [
+   "白馬義從",
+   1
+  ],
+  [
+   "田楷/嚴綱/單經",
+   1
+  ],
+  [
+   "公孫紀",
+   1
+  ],
+  [
+   "公孫續",
+   1
+  ],
+  [
+   "趙韙",
+   1
+  ],
+  [
+   "董和",
+   1
+  ],
+  [
+   "鄭度",
+   1
+  ],
+  [
+   "劉焉",
+   1
+  ],
+  [
+   "張脩",
+   1
+  ],
+  [
+   "張邈",
+   1
+  ],
+  [
+   "張超/許汜/王楷",
+   1
+  ],
+  [
+   "郝萌/曹性",
+   1
+  ],
+  [
+   "老母/女/妻子",
+   1
+  ]
+ ],
+ "interpretation": [
+  {
+   "a": "G09",
+   "b": "G11",
+   "headline": "REL-G09-003",
+   "heading": "### 06.3 동탁 — REL-G09-003",
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G09",
+   "b": "G07",
+   "headline": "REL-G09-004",
+   "heading": "### 06.4 조조 — REL-G09-004",
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G09",
+   "b": "G14",
+   "headline": "REL-G09-006",
+   "heading": "### 06.6 공손찬 — REL-G09-006",
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G09",
+   "b": "G39",
+   "headline": "REL-G09-007",
+   "heading": "### 06.7 저수 — REL-G09-007",
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G09",
+   "b": "G38",
+   "headline": "REL-G09-008",
+   "heading": "### 06.8 전풍 — REL-G09-008",
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G09",
+   "b": "G75",
+   "headline": "REL-G09-009",
+   "heading": "### 06.9 국의 — REL-G09-009",
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G09",
+   "b": "G37",
+   "headline": "REL-G09-016",
+   "heading": "### 06.16 장합·고람 — REL-G09-016",
+   "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G10",
+   "b": "G09",
+   "headline": "같은 가문이라는 이름을 누가 대표하는가",
+   "heading": "### 8.1 원소 — 같은 가문이라는 이름을 누가 대표하는가",
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+  },
+  {
+   "a": "G10",
+   "b": "G66",
+   "headline": "나의 안목이 발휘되는 유능한 실행자",
+   "heading": "### 8.2 손견 — 나의 안목이 발휘되는 유능한 실행자",
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+  },
+  {
+   "a": "G10",
+   "b": "G20",
+   "headline": "가장 반가운 성장이 가장 불편한 독립이 된다",
+   "heading": "### 8.3 손책 — 가장 반가운 성장이 가장 불편한 독립이 된다",
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+  },
+  {
+   "a": "G10",
+   "b": "G98",
+   "headline": "좋은 의견과 받아들일 의견은 다르다",
+   "heading": "### 8.5 염상 — 좋은 의견과 받아들일 의견은 다르다",
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+  },
+  {
+   "a": "G10",
+   "b": "G01",
+   "headline": "결속을 먼저 정했으나 상대는 다시 선택한다",
+   "heading": "### 8.6 여포 — 결속을 먼저 정했으나 상대는 다시 선택한다",
+   "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+  },
+  {
+   "a": "G15",
+   "b": "G86",
+   "headline": "하나의 배신자 집단으로 뭉개지 않는다",
+   "heading": "### 7.4 장송·법정·맹달 — 하나의 배신자 집단으로 뭉개지 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+  },
+  {
+   "a": "G15",
+   "b": "G43",
+   "headline": "하나의 배신자 집단으로 뭉개지 않는다",
+   "heading": "### 7.4 장송·법정·맹달 — 하나의 배신자 집단으로 뭉개지 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+  },
+  {
+   "a": "G15",
+   "b": "G87",
+   "headline": "반대가 존재했고, 반대는 받아들여지지 않았다",
+   "heading": "### 7.5 황권·왕루·유파 — 반대가 존재했고, 반대는 받아들여지지 않았다",
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+  },
+  {
+   "a": "G15",
+   "b": "G89",
+   "headline": "반대가 존재했고, 반대는 받아들여지지 않았다",
+   "heading": "### 7.5 황권·왕루·유파 — 반대가 존재했고, 반대는 받아들여지지 않았다",
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+  },
+  {
+   "a": "G15",
+   "b": "G05",
+   "headline": "받아들인 사람, 지원한 사람, 전쟁한 사람, 정권을 넘긴 상대",
+   "heading": "### 7.6 유비 — 받아들인 사람, 지원한 사람, 전쟁한 사람, 정권을 넘긴 상대",
+   "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+  },
+  {
+   "a": "G16",
+   "b": "G15",
+   "headline": "되돌릴 수 없는 피해가 있는 상대",
+   "heading": "### 7.3 유장 — 되돌릴 수 없는 피해가 있는 상대",
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+  },
+  {
+   "a": "G16",
+   "b": "G48",
+   "headline": "군주의 결론에 ‘아직’을 말할 수 있는 사람",
+   "heading": "### 7.4 염포 — 군주의 결론에 ‘아직’을 말할 수 있는 사람",
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+  },
+  {
+   "a": "G16",
+   "b": "G90",
+   "headline": "친족이라고 하나의 의지가 되지는 않는다",
+   "heading": "### 7.5 장위 — 친족이라고 하나의 의지가 되지는 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+  },
+  {
+   "a": "G16",
+   "b": "G13",
+   "headline": "자리를 마련해 주는 것만으로 얻을 수 없는 사람",
+   "heading": "### 7.6 마초 — 자리를 마련해 주는 것만으로 얻을 수 없는 사람",
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+  },
+  {
+   "a": "G16",
+   "b": "G07",
+   "headline": "자기 질서의 주인이 아닐 때도 말을 해야 하는 상대",
+   "heading": "### 7.7 조조 — 자기 질서의 주인이 아닐 때도 말을 해야 하는 상대",
+   "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+  },
+  {
+   "a": "G17",
+   "b": "G93",
+   "headline": "후대 소재를 지우지 않고 관계의 자리를 남긴다",
+   "heading": "### 11.8 축융·맹우·맹절 — 후대 소재를 지우지 않고 관계의 자리를 남긴다",
+   "file": "docs/work-integration/20260928/officer-production/G17/recovered-interpretation-v3.0/G17_MENGHUO_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G18",
+   "b": "G05",
+   "headline": "돌아갈 사람, 그러나 관우를 대신 살아 줄 사람은 아니다",
+   "heading": "### 10.1 유비 — 돌아갈 사람, 그러나 관우를 대신 살아 줄 사람은 아니다",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G19",
+   "headline": "같은 출발의 친밀함과 각자의 몫",
+   "heading": "### 10.2 장비 — 같은 출발의 친밀함과 각자의 몫",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G07",
+   "headline": "인정받음과 소속됨을 구분하게 하는 상대",
+   "heading": "### 10.3 조조 — 인정받음과 소속됨을 구분하게 하는 상대",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G24",
+   "headline": "말보다 행동을 함께 본 사람",
+   "heading": "### 10.4 장료 — 말보다 행동을 함께 본 사람",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G03",
+   "headline": "말이 외모의 생활감으로 닿는 접점",
+   "heading": "### 10.5 제갈량 — 말이 외모의 생활감으로 닿는 접점",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G08",
+   "headline": "관우의 결함을 기다리는 장치가 아닌 독립적 상대",
+   "heading": "### 10.8 손권·여몽과 오군 — 관우의 결함을 기다리는 장치가 아닌 독립적 상대",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G34",
+   "headline": "끝내지 못한 목표와 그것을 막은 실제 상대",
+   "heading": "### 10.9 조인·서황 — 끝내지 못한 목표와 그것을 막은 실제 상대",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G52",
+   "headline": "끝내지 못한 목표와 그것을 막은 실제 상대",
+   "heading": "### 10.9 조인·서황 — 끝내지 못한 목표와 그것을 막은 실제 상대",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G53",
+   "headline": "같은 승리 안에서도 결과가 달랐던 사람들",
+   "heading": "### 10.10 우금·방덕 — 같은 승리 안에서도 결과가 달랐던 사람들",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G18",
+   "b": "G45",
+   "headline": "같은 승리 안에서도 결과가 달랐던 사람들",
+   "heading": "### 10.10 우금·방덕 — 같은 승리 안에서도 결과가 달랐던 사람들",
+   "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G19",
+   "b": "G05",
+   "headline": "맡김은 가능해도 경고가 저절로 관철되지는 않는다",
+   "heading": "### 7.1 유비 — 맡김은 가능해도 경고가 저절로 관철되지는 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G19",
+   "b": "G18",
+   "headline": "비교는 가능하되 ‘똑같은 의형제’로 복제하지 않는다",
+   "heading": "### 7.2 관우 — 비교는 가능하되 ‘똑같은 의형제’로 복제하지 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G19",
+   "b": "G88",
+   "headline": "이긴 다음에도 상대를 다시 볼 수 있다",
+   "heading": "### 7.3 엄안 — 이긴 다음에도 상대를 다시 볼 수 있다",
+   "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G19",
+   "b": "G37",
+   "headline": "자기 힘을 보여 줄 상대이기 전에 함께 움직이지 못하게 할 상대",
+   "heading": "### 7.4 장합 — 자기 힘을 보여 줄 상대이기 전에 함께 움직이지 못하게 할 상대",
+   "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G20",
+   "b": "G66",
+   "headline": "아버지의 이름과 지금 움직여야 할 사람들",
+   "heading": "### 7.1. 손견 — 아버지의 이름과 지금 움직여야 할 사람들",
+   "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G20",
+   "b": "G10",
+   "headline": "고마움, 활용, 불신이 한 관계에 공존할 수 있다",
+   "heading": "### 7.3. 원술 — 고마움, 활용, 불신이 한 관계에 공존할 수 있다",
+   "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G20",
+   "b": "G27",
+   "headline": "같은 장면을 꼭 같은 방식으로 차지할 필요가 없는 상대",
+   "heading": "### 7.4. 주유 — 같은 장면을 꼭 같은 방식으로 차지할 필요가 없는 상대",
+   "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G20",
+   "b": "G67",
+   "headline": "자신이 시작한 일의 ‘이후’를 말해 주는 상대",
+   "heading": "### 7.5. 장소 — 자신이 시작한 일의 ‘이후’를 말해 주는 상대",
+   "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G20",
+   "b": "G68",
+   "headline": "자기 말 이외의 언어가 일을 풀게 하는 상대",
+   "heading": "### 7.6. 장굉 — 자기 말 이외의 언어가 일을 풀게 하는 상대",
+   "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G20",
+   "b": "G30",
+   "headline": "어제의 적대가 오늘의 모든 자리를 결정하지 않는다",
+   "heading": "### 7.8. 태사자 — 어제의 적대가 오늘의 모든 자리를 결정하지 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G20",
+   "b": "G08",
+   "headline": "같은 일을 다시 하는 사람이 아니라 다음 일을 맡을 사람",
+   "heading": "### 7.9. 손권 — 같은 일을 다시 하는 사람이 아니라 다음 일을 맡을 사람",
+   "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+  },
+  {
+   "a": "G21",
+   "b": "G03",
+   "headline": "첨부 경계에서만",
+   "heading": "### G03 제갈량 — 첨부 경계에서만",
+   "file": "docs/work-integration/20260928/officer-production/G21/recovered-interpretation-v3.0/G21_PANGTONG_WHOLE_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G23",
+   "b": "G03",
+   "headline": "Reception Mirror",
+   "heading": "## 12.2 제갈량 — Reception Mirror",
+   "file": "docs/work-integration/20260928/officer-production/G23/recovered-interpretation-v3.0/G23_SIMAYI_OFFICER_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G23",
+   "b": "G07",
+   "headline": "Construction Mirror",
+   "heading": "## 12.3 조조 / F01 — Construction Mirror",
+   "file": "docs/work-integration/20260928/officer-production/G23/recovered-interpretation-v3.0/G23_SIMAYI_OFFICER_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G28",
+   "b": "G08",
+   "headline": "“큰 Scope를 주되 최종권한은 비대칭이다”",
+   "heading": "## 7.1 손권 — “큰 Scope를 주되 최종권한은 비대칭이다”",
+   "file": "docs/work-integration/20260928/officer-production/G28/recovered-interpretation-v3.0/G28_LUXUN_OFFICER_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G20",
+   "headline": "받아들여진 경로",
+   "heading": "### 6.2 손책 — 받아들여진 경로",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G08",
+   "headline": "실제로 맡기고, 끝에는 돌보는 군주",
+   "heading": "### 6.3 손권 — 실제로 맡기고, 끝에는 돌보는 군주",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G67",
+   "headline": "책임을 이어갈 사람이라는 추천",
+   "heading": "### 6.4 장소 — 책임을 이어갈 사람이라는 추천",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G27",
+   "headline": "공동 임무 속 판단이 통하는 상관",
+   "heading": "### 6.5 주유 — 공동 임무 속 판단이 통하는 상관",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G41",
+   "headline": "서로를 새로 읽되 같은 해법을 따르지는 않음",
+   "heading": "### 6.7 노숙 — 서로를 새로 읽되 같은 해법을 따르지는 않음",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G72",
+   "headline": "믿고 비울 수 있는 후방, 중재가 필요한 동료",
+   "heading": "### 6.11 능통 — 믿고 비울 수 있는 후방, 중재가 필요한 동료",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G28",
+   "headline": "낮은 명성이 오히려 열어 주는 공간",
+   "heading": "### 6.16 육손 — 낮은 명성이 오히려 열어 주는 공간",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G40",
+   "b": "G18",
+   "headline": "제거해야 할 군사적 위험과 지워지지 않는 책임",
+   "heading": "### 6.19 관우 — 제거해야 할 군사적 위험과 지워지지 않는 책임",
+   "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+  },
+  {
+   "a": "G43",
+   "b": "G15",
+   "headline": "받은 것이 없는 옛 주군이 아니라, 받은 것으로 충분하지 않았던 관계",
+   "heading": "### 6.1 유장 — 받은 것이 없는 옛 주군이 아니라, 받은 것으로 충분하지 않았던 관계",
+   "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G43",
+   "b": "G05",
+   "headline": "쓰임을 주는 사람, 그리고 다른 방식으로 말할 수 있는 사람",
+   "heading": "### 6.2 유비 — 쓰임을 주는 사람, 그리고 다른 방식으로 말할 수 있는 사람",
+   "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G43",
+   "b": "G03",
+   "headline": "같아지지 않고도 함께 일하는 관계",
+   "heading": "### 6.3 제갈량 — 같아지지 않고도 함께 일하는 관계",
+   "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G43",
+   "b": "G86",
+   "headline": "함께 판단을 키웠고, 끝까지 함께 남지는 못한 사람",
+   "heading": "### 6.4 장송 — 함께 판단을 키웠고, 끝까지 함께 남지는 못한 사람",
+   "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G43",
+   "b": "G06",
+   "headline": "다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+   "heading": "### 6.8 황충·황권 — 다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G43",
+   "b": "G87",
+   "headline": "다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+   "heading": "### 6.8 황충·황권 — 다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G12",
+   "headline": "이미 쌓인 경력을 알아보는 최초의 큰 소속",
+   "heading": "## 6.1 마등 — 이미 쌓인 경력을 알아보는 최초의 큰 소속",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G13",
+   "headline": "승리보다 패배 뒤의 동행이 남은 관계",
+   "heading": "## 6.2 마초 — 승리보다 패배 뒤의 동행이 남은 관계",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G16",
+   "headline": "보호와 귀속의 뜻이 같지는 않은 중간 소속",
+   "heading": "## 6.5 장로 — 보호와 귀속의 뜻이 같지는 않은 중간 소속",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G48",
+   "headline": "문학에서 성과의 의미를 바꾸는 두 사람",
+   "heading": "## 6.6 염포·양송 — 문학에서 성과의 의미를 바꾸는 두 사람",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G92",
+   "headline": "문학에서 성과의 의미를 바꾸는 두 사람",
+   "heading": "## 6.6 염포·양송 — 문학에서 성과의 의미를 바꾸는 두 사람",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G07",
+   "headline": "이미 있는 힘을 새 책임으로 받아들인 권력자",
+   "heading": "## 6.7 조조 — 이미 있는 힘을 새 책임으로 받아들인 권력자",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G34",
+   "headline": "친밀도보다 명령과 복귀 방향이 선명한 관계",
+   "heading": "## 6.8 조인 — 친밀도보다 명령과 복귀 방향이 선명한 관계",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G53",
+   "headline": "방덕의 가치를 위해 일생을 낮추지 않을 비교자",
+   "heading": "## 6.9 우금 — 방덕의 가치를 위해 일생을 낮추지 않을 비교자",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G45",
+   "b": "G18",
+   "headline": "상대의 힘을 인정해도, 상대의 임명으로 끝내지는 않는다",
+   "heading": "## 6.13 관우 — 상대의 힘을 인정해도, 상대의 임명으로 끝내지는 않는다",
+   "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+  },
+  {
+   "a": "G46",
+   "b": "G35",
+   "headline": "“말을 듣는가”가 아니라 “무엇을 보존하는 말인가”",
+   "heading": "## 6.1 가후 — “말을 듣는가”가 아니라 “무엇을 보존하는 말인가”",
+   "file": "docs/work-integration/20260928/officer-production/G46/recovered-interpretation-v3.0/G46_LI_JUE_WHOLE_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+  },
+  {
+   "a": "G46",
+   "b": "G83",
+   "headline": "가장 가까운 사람도 다시 배치할 수 있다",
+   "heading": "## 6.2 곽사 — 가장 가까운 사람도 다시 배치할 수 있다",
+   "file": "docs/work-integration/20260928/officer-production/G46/recovered-interpretation-v3.0/G46_LI_JUE_WHOLE_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+  }
+ ],
+ "interpretationCoverage": {
+  "G09": 7,
+  "G10": 5,
+  "G15": 5,
+  "G16": 5,
+  "G17": 1,
+  "G18": 10,
+  "G19": 4,
+  "G20": 7,
+  "G21": 1,
+  "G23": 2,
+  "G28": 1,
+  "G40": 8,
+  "G43": 6,
+  "G45": 9,
+  "G46": 2
+ }
+}

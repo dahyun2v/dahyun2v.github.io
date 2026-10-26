@@ -1,0 +1,123 @@
+{
+  "schema": "first3-i1-primitives-checks-v1",
+  "generatedAt": "2026-09-19T19:36:42.497Z",
+  "scope": "Geometry and static movement costs only; no movement execution, vision, occupancy arbitration, ZOC, combat or browser validation",
+  "summary": {
+    "passed": 28,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "id": "six_axial_neighbors",
+      "status": "pass"
+    },
+    {
+      "id": "distance_symmetry",
+      "status": "pass"
+    },
+    {
+      "id": "board_boundary",
+      "status": "pass"
+    },
+    {
+      "id": "plain_spear",
+      "status": "pass"
+    },
+    {
+      "id": "plain_bow",
+      "status": "pass"
+    },
+    {
+      "id": "plain_militia",
+      "status": "pass"
+    },
+    {
+      "id": "plain_mystic",
+      "status": "pass"
+    },
+    {
+      "id": "plain_cavalry",
+      "status": "pass"
+    },
+    {
+      "id": "plain_engineer",
+      "status": "pass"
+    },
+    {
+      "id": "rough_spear",
+      "status": "pass"
+    },
+    {
+      "id": "rough_cavalry",
+      "status": "pass"
+    },
+    {
+      "id": "rough_engineer",
+      "status": "pass"
+    },
+    {
+      "id": "road_spear",
+      "status": "pass"
+    },
+    {
+      "id": "road_cavalry",
+      "status": "pass"
+    },
+    {
+      "id": "road_engineer",
+      "status": "pass"
+    },
+    {
+      "id": "rough_origin_also_applies",
+      "status": "pass"
+    },
+    {
+      "id": "bridge_keeps_road_cost",
+      "status": "pass"
+    },
+    {
+      "id": "ford_delay_not_discounted",
+      "status": "pass"
+    },
+    {
+      "id": "river_without_crossing_blocked",
+      "status": "pass"
+    },
+    {
+      "id": "closed_bridge_blocked",
+      "status": "pass"
+    },
+    {
+      "id": "mountain_not_passable_with_road",
+      "status": "pass"
+    },
+    {
+      "id": "water_not_passable",
+      "status": "pass"
+    },
+    {
+      "id": "nonadjacent_not_single_edge",
+      "status": "pass"
+    },
+    {
+      "id": "maneuver_clamp",
+      "status": "pass"
+    },
+    {
+      "id": "fractional_ticks_round_up",
+      "status": "pass"
+    },
+    {
+      "id": "invalid_maneuver_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "unknown_troop_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "unknown_edge_not_inferred",
+      "status": "pass"
+    }
+  ]
+}

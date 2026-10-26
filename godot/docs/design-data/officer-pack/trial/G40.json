@@ -1,0 +1,122 @@
+{
+  "id": "G40",
+  "name": "여몽",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 87,
+    "무용": 78,
+    "지략": 91,
+    "정무": 80,
+    "감화": 78
+  },
+  "sub": {
+    "전열 유지": 83,
+    "기동": 88,
+    "전환": 84,
+    "수습": 70,
+    "힘": 70,
+    "기술": 81,
+    "막아내기": 82,
+    "되받기": 73,
+    "군재": 92,
+    "응변": 87,
+    "속이기": 95,
+    "통찰": 87,
+    "행정": 70,
+    "병참": 75,
+    "인사": 90,
+    "제도": 62,
+    "민정": 85,
+    "설득": 80,
+    "포섭": 79,
+    "결집": 74,
+    "중재": 71
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "MEDIUM"
+  },
+  "role": "책사",
+  "style": "장군",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "백성을 건드리지 않는다",
+    "text": "성을 함락하면 맞닿은 적 부대가 모두 사기 판정(가중 20) — 가족이 무사하다는 소식에 적이 흩어진다. 그 성의 점령 처리 1턴 단축(백성의 삿갓 하나도 건드리지 않는다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "지략"
+    ],
+    "effects": [
+      {
+        "op": "MORALE_DELTA",
+        "when": "ON_CAPTURE_CITY",
+        "target": "ADJACENT_ENEMIES",
+        "value": -20,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "OCCUPATION_SPEED",
+        "when": "ON_CAPTURE_CITY",
+        "target": "CITY",
+        "value": 1,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 자기 준비를 인접 아군에게 넘기고 자신은 보호를 잃는 원 전법을 병력 반환·고양 + 자기 방어 감소로 살림. 원 특기(이전받은 공격 Preparation→Brace 변환)는 지도에 준비 상태가 없어 옮길 수 없어, 한 줄 대사를 형주 점령(관우군 와해·민심 보존)으로 새로 만듦.",
+    "formerName": "남겨 둔 기반"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "기반 넘겨주기",
+      "text": "맞닿은 아군 하나에게 자기 기반을 넘긴다: 부상병 40명 복귀, 2턴 고양(공격 +10%). 대신 여몽은 이번 턴 받는 피해 +15%.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 40,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 2,
+          "condition": null,
+          "status": "INSPIRED"
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -15,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "맡길 기반을 돌려준다"
+    }
+  ]
+}

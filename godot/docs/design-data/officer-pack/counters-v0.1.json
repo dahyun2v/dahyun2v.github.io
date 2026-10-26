@@ -1,0 +1,258 @@
+{
+  "schema": "counter-traits-v0.1",
+  "status": "TRIAL — Claude 2026-10-04. 사용자 \"다반영해\"(REF-COMPETITIVE 5번: 카운터 특기에 숙적 이름·'폭로') + 원래 기획 \"카운터 성격의 특기 전법이 생기기도\". 크게 진 직후 다음 레벨업에 1장 보장. 좁은 대응(면역 아님), 칸을 차지함, 이름에 가르쳐 준 장수. 수치 시험값. 레퍼런스: docs/work-integration/20261004/growth-narrative/REF-COMBAT.md(교훈 카드)·REF-COMPETITIVE.md(카운터 아이템).",
+  "trigger": "이 장수 부대가 패주하거나 한 전투에서 출진 병력의 40% 이상을 잃었을 때, 그 피해를 가장 많이 준 방식(아래 beatenBy)과 상대 장수를 기록 → 다음 레벨업 특기 Draft 의 공용 무작위 칸을 해당 카운터 카드로 바꿔 보장(이미 가졌으면 단계 강화 카드).",
+  "nameTemplate": "{rival}에게 배운 {name}",
+  "counters": [
+    {
+      "id": "CT-K01",
+      "beatenBy": "CHARGE",
+      "name": "창을 세우는 법",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "기병 돌격으로 받는 피해 −20%, 돌격해 온 상대에게 반격 +15%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "ATTACKER_CHARGE"
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "ATTACKER_CHARGE"
+        }
+      ],
+      "ref": "토탈워 창병 대돌격 / 오버워치 카운터 픽"
+    },
+    {
+      "id": "CT-K02",
+      "beatenBy": "FLANK",
+      "name": "옆구리를 지킨다",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "측면·후방으로 맞을 때 보너스 절반만 받는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "HALF_FLANK_TAKEN",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "배틀 브라더스 언더독"
+    },
+    {
+      "id": "CT-K03",
+      "beatenBy": "RANGED",
+      "name": "방패 지붕",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "궁병·투석기 사격으로 받는 피해 −25%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "ATTACKER_RANGED"
+        }
+      ],
+      "ref": "로마 테스투도 / 롤 방어구"
+    },
+    {
+      "id": "CT-K04",
+      "beatenBy": "TACTIC",
+      "name": "꺾이지 않는 뜻",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "text": "전투(차례)당 한 번, 적 전법의 통제 효과(이동 불가·혼란·밀기·도발)를 무시.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "TACTIC_WARD",
+          "params": {
+            "uses": 1
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "도타 BKB"
+    },
+    {
+      "id": "CT-K05",
+      "beatenBy": "AMBUSH",
+      "name": "척후의 눈",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "text": "2칸 안 숨은 적(매복)을 드러내고, 시야 +1.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SCOUT_EYE",
+          "params": {
+            "range": 2,
+            "vision": 1
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "도타 MKB·와드"
+    },
+    {
+      "id": "CT-K06",
+      "beatenBy": "FIRE",
+      "name": "젖은 가죽으로 불 막기",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "화계로 받는 피해 −50%, 불 칸에서 전열 판정 없음.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "FIRE_WARD",
+          "params": {
+            "reduce": 50
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "교훈 카드(화공 대비)",
+      "formerName": "젖은 가죽"
+    },
+    {
+      "id": "CT-K07",
+      "beatenBy": "FORTIFIED",
+      "name": "돌파구",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "방어 태세·성 안 수비 부대를 공격할 때 그 방어 보너스의 절반을 무시.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "BREACH_GUARD",
+          "params": {
+            "ratio": 50
+          },
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "롤 도미닉 경의 인사"
+    },
+    {
+      "id": "CT-K08",
+      "beatenBy": "RECOVERY",
+      "name": "보급을 끊는다",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "text": "맞닿은 적 부대의 부상병 복귀·재정비 회복 절반.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "CUT_SUPPLY",
+          "params": {
+            "ratio": 50
+          },
+          "when": "PASSIVE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "롤 치유 감소(처형인의 검)"
+    },
+    {
+      "id": "CT-K09",
+      "beatenBy": "MYTHIC",
+      "name": "특기 봉쇄",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "text": "공격 대상의 특기를 1차례 동안 멈춘다(신화 포함, 판당 2회). 대가: 그 공격 피해 −20%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "EXPOSE",
+          "params": {
+            "uses": 2,
+            "penalty": 20
+          },
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": "그 공격 피해 −20%",
+      "ref": "도타 실버 엣지(패시브 정지) — Crisis 보스 대응",
+      "formerName": "폭로"
+    },
+    {
+      "id": "CT-K10",
+      "beatenBy": "MORALE",
+      "name": "차분한 머리",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "text": "사기 판정(가중) −30%, 도발에 걸리지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "COOL_HEAD",
+          "params": {
+            "reduce": 30
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "교훈 카드(도발·공포 대비)",
+      "formerName": "냉정"
+    }
+  ],
+  "beatenByRules": {
+    "CHARGE": "그 피해가 기병 돌격",
+    "FLANK": "측면·후방 공격",
+    "RANGED": "궁병·투석기 사격",
+    "TACTIC": "적 전법(피해형 또는 통제형)",
+    "AMBUSH": "매복(숨은 상태에서 첫 공격)",
+    "FIRE": "화계",
+    "FORTIFIED": "방어 태세·성 안 수비 부대를 공격하다 반격으로",
+    "RECOVERY": "상대가 회복(부상병 복귀·재정비)하며 버텨 진 전투(상대 회복량 50 이상)",
+    "MYTHIC": "상대 장수가 신화 특기를 가짐(다른 조건보다 우선)",
+    "MORALE": "사기 판정 실패로 패주"
+  },
+  "newConditions": {
+    "ATTACKER_CHARGE": "공격자가 기병 돌격",
+    "ATTACKER_RANGED": "공격자가 원거리(궁병·투석기)"
+  }
+}

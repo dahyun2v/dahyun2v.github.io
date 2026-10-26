@@ -1,0 +1,178 @@
+[
+  {
+    "eventSeedId": "EVT-F07-P01-01",
+    "policyId": "POL-F07-CORE-01",
+    "factionId": "F07",
+    "scale": "EVENT",
+    "title": "徙都長安",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "수도 또는 핵심 도시가 위협받고 있다",
+      "이전 후보 도시까지 연결된 도로가 존재한다",
+      "천도 담당 장수가 출발 도시에 도착해 있다",
+      "관료·창고지기·호송부대 사이의 명령관계를 정해야 한다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "수도 또는 핵심 도시가 위협받은 뒤 이전로가 완전히 봉쇄되기 전까지",
+    "playerChoices": [
+      "주민·관료·군수물자를 포함해 전면 천도한다",
+      "군부와 군수물자를 먼저 이전한다",
+      "보상을 제시해 자발적 이주를 유도한다",
+      "천도를 중단하고 기존 도시에 잔류해 수비한다"
+    ],
+    "costInputs": [
+      "식량",
+      "금전",
+      "행동력",
+      "집결 구역",
+      "복수의 이동 행렬",
+      "호송부대 임무 점유",
+      "이동과 후위 철수 시간"
+    ],
+    "risks": [
+      "도로가 봉쇄되어 이동 행렬이 분단된다",
+      "느린 후위 행렬이 공격에 노출된다",
+      "이주민이 유민으로 남는다",
+      "수송하지 못한 물자가 버려진다",
+      "방화 명령으로 시가지가 파괴되고 생존자의 반감이 남는다",
+      "담당자의 거부로 주민과 창고가 출발 도시에 남는다"
+    ],
+    "counterplay": [
+      "상대 세력이 이전 도로를 봉쇄한다",
+      "상대 세력이 분리된 이동 행렬과 후위대를 공격한다"
+    ],
+    "failureTraces": [
+      "분단된 이동 행렬",
+      "발생한 유민",
+      "버려진 물자",
+      "파괴된 시가지",
+      "생존자의 반감",
+      "출발 도시에 남은 주민과 창고",
+      "귀향 요구",
+      "실종자 수색",
+      "피난민 수용 갈등"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "이전 대상",
+      "각 이동 행렬의 담당자",
+      "경로별 도착 예상 시점",
+      "출발 도시에 남는 인구",
+      "방화 대상"
+    ],
+    "forbiddenAutoResolve": [
+      "팝업 선택 한 번으로 수도·주민·비축 물자를 이전할 수 없다",
+      "주민과 물자는 실제 이동 행렬과 호송 경로를 사용해야 한다",
+      "천도 선택만으로 도로 봉쇄·징발 반발·민간 피해를 제거할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "decisionAuthority": null,
+    "commitmentScope": null,
+    "branchConsequences": [],
+    "persistentPoliticalTrace": null,
+    "missingFields": [
+      "낙양에서 장안으로의 천도·강제이주·방화·재산 수탈 앵커에 직접 연결되는 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "천도 담당 장수·관료·창고지기·호송 담당자의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "출발 도시·이전 후보 도시·연결 도로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "EVENT 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F07-P01-02",
+    "policyId": "POL-F07-CORE-01",
+    "factionId": "F07",
+    "scale": "SITUATION",
+    "title": "築郿塢",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "지정된 거점에서 미오를 건설하거나 증축하고 있다",
+      "전선과 미오가 식량·수레·인력을 동시에 요구한다",
+      "축성 담당 장수와 수비 담당 장수가 다르면 지휘관계를 정해야 한다",
+      "미오와 출발 도시를 연결하는 수송로가 필요하다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "미오의 건설·증축과 장기 비축이 진행되는 동안",
+    "playerChoices": [
+      "전선 수송을 우선한다",
+      "미오 비축을 우선한다",
+      "임금을 지급하고 인력을 징발한다",
+      "부역으로 인력을 동원한다",
+      "공사 규모를 축소한다",
+      "미오에 주민을 수용한다",
+      "군인과 관료만 수용한다",
+      "창고를 공개 점검한다",
+      "창고 운영을 담당자에게 일임한다"
+    ],
+    "costInputs": [
+      "식량",
+      "금전",
+      "수레",
+      "건설 인력",
+      "수송 인력",
+      "축성·수송 시간",
+      "축성·수비 담당자의 임무 점유"
+    ],
+    "risks": [
+      "공사를 강행해 성벽이 붕괴한다",
+      "노동자가 다치거나 사망한다",
+      "징발된 주민이 도주한다",
+      "인력 동원으로 농경이 중단된다",
+      "비축을 우선해 전선에서 결식이 발생한다",
+      "전선 지휘관이 물자 배분에 반발한다",
+      "감독 부재로 장부가 조작된다",
+      "담당자가 창고와 병력을 사병화한다"
+    ],
+    "counterplay": [
+      "전선 지휘관이 미오 우선 배분에 반발한다",
+      "창고 담당자가 감독 부재를 이용해 장부를 조작한다",
+      "축성·수비 담당자의 지휘 충돌로 공사와 수송이 지연된다"
+    ],
+    "failureTraces": [
+      "붕괴한 성벽 구간",
+      "노동자 사상",
+      "도주민",
+      "농경 중단",
+      "전선 결식",
+      "징발촌",
+      "노동자의 무덤",
+      "귀환하지 않은 인부",
+      "완공된 성벽과 창고"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "현재 공정 위치",
+      "축성·수비·창고 담당자",
+      "이동 중인 수송대",
+      "출발 도시의 잔여 물자",
+      "누적된 민간 피해",
+      "전선 결식 경고"
+    ],
+    "forbiddenAutoResolve": [
+      "미오의 비축을 자동으로 보충할 수 없다",
+      "담당자 없이 축성을 완료할 수 없다",
+      "팝업 선택만으로 축성·징발·주민 이동·보급을 성공 처리할 수 없다",
+      "축성과 비축을 선택했다는 이유로 민간 피해와 전선 결식이 제거되지 않는다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "미오 축성과 장기 곡물 비축 앵커에 직접 연결되는 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "축성·수비·창고 담당자의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "미오·출발 도시·전선·수송로의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

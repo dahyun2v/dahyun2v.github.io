@@ -1,0 +1,125 @@
+{
+  "id": "G32",
+  "name": "고순",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 84,
+    "무용": 80,
+    "지략": 75,
+    "정무": 58,
+    "감화": 61
+  },
+  "sub": {
+    "전열 유지": 91,
+    "기동": 75,
+    "전환": 81,
+    "수습": 84,
+    "힘": 75,
+    "기술": 82,
+    "막아내기": 80,
+    "되받기": 83,
+    "군재": 74,
+    "응변": 79,
+    "속이기": 55,
+    "통찰": 78,
+    "행정": 61,
+    "병참": 65,
+    "인사": 59,
+    "제도": 56,
+    "민정": 49,
+    "설득": 47,
+    "포섭": 45,
+    "결집": 80,
+    "중재": 55
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+  },
+  "role": "장군",
+  "style": "맹장",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:맹장",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "흐트러지지 않는 대열",
+    "text": "내 차례 시작에 자기 전열 한 단계 회복(망가진 대열도 내 손으로 다시 세운다). 전열이 정돈돼 있으면 반격 피해 +25%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "보병"
+    ],
+    "effects": [
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ROUND_START",
+        "target": "SELF",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "COUNTER_MOD",
+        "when": "ON_COUNTER",
+        "target": "SELF",
+        "value": 25,
+        "duration": 0,
+        "condition": "SELF_ORDERED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 자기 Brace를 포기하고 인접 아군 Formation 1단계 복구(사기 회복 없음)라는 원 효과를 전열 회복 + 방어 이전으로 거의 그대로 살림. '이동 후에도 Regroup' 특례는 차례 시작 자기 전열 회복과 정돈 시 반격 강화로. 상시 무패화는 피함.",
+    "formerName": "기준은 남는다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "버팀 넘겨주기",
+      "text": "맞닿은 아군 하나의 전열을 한 단계 회복시키고 자기 버팀을 넘겨준다(그 부대 이번 턴 받는 피해 −20%). 대신 고순은 이번 턴 받는 피해 +20%.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 20,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -20,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "함락이 아닌 정렬"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION",
+    "SELF_ORDERED"
+  ]
+}

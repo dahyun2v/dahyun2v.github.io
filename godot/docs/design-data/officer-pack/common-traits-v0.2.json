@@ -1,0 +1,1922 @@
+{
+  "schema": "common-traits-v0.1",
+  "status": "CLAUDE_TRIAL — 공용 특기 풀(모든 장수 Draft 후보). 장수 고유 특기·전법은 GPT 파이프라인 · v0.2: 전술 개념 공용 특기 8장 추가(사용자 2026-10-04 M5 \"나머진 니말대로\" — 측면·후방·돌격·전열, 정본 20 v3.4 §1.2·§5.6·§6.1, EFFECT-OPS v0.3 어휘). 수치 시험값.",
+  "date": "2026-10-04",
+  "effectOps": "EFFECT-OPS-v0.2.md",
+  "gradeRule": "EFFECT-OPS-v0.2.md 등급 6단계(신화는 RULE — 별도 목록)",
+  "traits": [
+    {
+      "id": "CT-C01",
+      "kind": "trait",
+      "name": "단련된 칼날",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "text": "주는 피해 +6%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 6,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Civilization VI 기본 진급(전투력 +5)"
+    },
+    {
+      "id": "CT-C02",
+      "kind": "trait",
+      "name": "두꺼운 갑주",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "text": "받는 피해 −6%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 6,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Battle Brothers 방어구 등급"
+    },
+    {
+      "id": "CT-C03",
+      "kind": "trait",
+      "name": "되받아치기",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "text": "반격 피해 +10%.",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Fire Emblem 반격 보정"
+    },
+    {
+      "id": "CT-C04",
+      "kind": "trait",
+      "name": "군의관",
+      "rarity": "COMMON",
+      "classTag": "정무",
+      "text": "잃는 병력 중 전사 비율 −5%p(부상으로).",
+      "effects": [
+        {
+          "op": "CASUALTY_SHIFT",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 5,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Total War 의무 보정"
+    },
+    {
+      "id": "CT-C05",
+      "kind": "trait",
+      "name": "배움의 자세",
+      "rarity": "COMMON",
+      "classTag": "공용",
+      "text": "이 장수의 경험치 +15%.",
+      "effects": [
+        {
+          "op": "XP_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "XCOM 2 훈련 보너스"
+    },
+    {
+      "id": "CT-C06",
+      "kind": "trait",
+      "name": "둔전 경험",
+      "rarity": "COMMON",
+      "classTag": "정무",
+      "text": "태수일 때 도시 식량 +8%.",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 8,
+          "duration": 0,
+          "condition": null,
+          "resource": "FOOD"
+        }
+      ],
+      "ref": "Civilization VI 총독 기본 보너스"
+    },
+    {
+      "id": "CT-C07",
+      "kind": "trait",
+      "name": "장인 관리",
+      "rarity": "COMMON",
+      "classTag": "정무",
+      "text": "태수일 때 도시 생산 +8%.",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 8,
+          "duration": 0,
+          "condition": null,
+          "resource": "PRODUCTION"
+        }
+      ],
+      "ref": "Civilization VI 총독 기본 보너스"
+    },
+    {
+      "id": "CT-C08",
+      "kind": "trait",
+      "name": "이름난 선비",
+      "rarity": "COMMON",
+      "classTag": "감화",
+      "text": "태수일 때 도시 인망 +10%.",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 10,
+          "duration": 0,
+          "condition": null,
+          "resource": "FAME"
+        }
+      ],
+      "ref": "Total War: Three Kingdoms 명성 보정"
+    },
+    {
+      "id": "CT-U01",
+      "kind": "trait",
+      "name": "숲의 사냥꾼",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "text": "숲에서 공격할 때 피해 +15%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "TERRAIN:FOREST"
+        }
+      ],
+      "ref": "Battle for Wesnoth 엘프 숲 지형 보너스"
+    },
+    {
+      "id": "CT-U02",
+      "kind": "trait",
+      "name": "고지 선점",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "언덕에서 공격받을 때 받는 피해 −15%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "TERRAIN:HILL"
+        }
+      ],
+      "ref": "Civilization 언덕 방어 보너스"
+    },
+    {
+      "id": "CT-U03",
+      "kind": "trait",
+      "name": "선봉",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "이번 차례 첫 공격 피해 +15%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Hades 첫 타격 보너스"
+    },
+    {
+      "id": "CT-U04",
+      "kind": "trait",
+      "name": "철벽 수비",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "성을 지킬 때 받는 피해 −15%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "ref": "Civilization VI 주둔군 진급"
+    },
+    {
+      "id": "CT-U05",
+      "kind": "trait",
+      "name": "기마 돌격",
+      "rarity": "UNCOMMON",
+      "classTag": "기병",
+      "text": "기병일 때 주는 피해 +12%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        }
+      ],
+      "ref": "Total War 기병 돌격 보너스"
+    },
+    {
+      "id": "CT-U06",
+      "kind": "trait",
+      "name": "장창 방벽",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "text": "장병일 때 반격 피해 +20%.",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "TROOP:BT02"
+        }
+      ],
+      "ref": "Total War 창병 대기병 보너스"
+    },
+    {
+      "id": "CT-U07",
+      "kind": "trait",
+      "name": "연노 사격",
+      "rarity": "UNCOMMON",
+      "classTag": "궁병",
+      "text": "궁병일 때 주는 피해 +12%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": "TROOP:BT03"
+        }
+      ],
+      "ref": "Total War 원거리 부대 정예화"
+    },
+    {
+      "id": "CT-U08",
+      "kind": "trait",
+      "name": "방패벽",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "text": "근접보병일 때 받는 피해 −12%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": "TROOP:BT01"
+        }
+      ],
+      "ref": "Total War 방패벽 대형"
+    },
+    {
+      "id": "CT-U09",
+      "kind": "trait",
+      "name": "결사대",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "상대 병력이 더 많으면 주는 피해 +15%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "OUTNUMBERED"
+        }
+      ],
+      "ref": "Battle Brothers 열세 보너스"
+    },
+    {
+      "id": "CT-U10",
+      "kind": "trait",
+      "name": "궁지의 쥐",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "병력이 절반 아래면 받는 피해 −15%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "HP_BELOW:50"
+        }
+      ],
+      "ref": "Fire Emblem 위기 발동 스킬"
+    },
+    {
+      "id": "CT-U11",
+      "kind": "trait",
+      "name": "평원의 질주",
+      "rarity": "UNCOMMON",
+      "classTag": "기병",
+      "text": "평지에 있으면 이동 +1칸.",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TERRAIN:PLAIN"
+        }
+      ],
+      "ref": "Civilization VI 경기병 이동"
+    },
+    {
+      "id": "CT-U12",
+      "kind": "trait",
+      "name": "학자",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "text": "태수일 때 도시 과학 +15%.",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 15,
+          "duration": 0,
+          "condition": null,
+          "resource": "SCIENCE"
+        }
+      ],
+      "ref": "Civilization VI 총독 학문 보너스"
+    },
+    {
+      "id": "CT-R01",
+      "kind": "trait",
+      "name": "발 묶기",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "공격하면 대상이 1턴 둔화(다음 차례 이동 −2칸).",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "SLOWED"
+        }
+      ],
+      "ref": "XCOM 2 억제 사격"
+    },
+    {
+      "id": "CT-R02",
+      "kind": "trait",
+      "name": "위압",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "공격하면 대상이 사기 판정(가중 10).",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": -10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Battle Brothers 공포 유발"
+    },
+    {
+      "id": "CT-R03",
+      "kind": "trait",
+      "name": "승전 고무",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "text": "적 부대를 쓰러뜨리면 맞닿은 아군 사기 한 단계 회복.",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_KILL",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Total War 승리 사기 파급"
+    },
+    {
+      "id": "CT-R04",
+      "kind": "trait",
+      "name": "전리품",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "적 부대를 쓰러뜨리면 부상병 50명 복귀.",
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "value": 50,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Battle Brothers 전리품"
+    },
+    {
+      "id": "CT-R05",
+      "kind": "trait",
+      "name": "수습의 명수",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "내 차례 시작에 사기 한 단계 회복.",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ROUND_START",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Battle for Wesnoth 회복 특성"
+    },
+    {
+      "id": "CT-R06",
+      "kind": "trait",
+      "name": "응급 치료",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "내 차례 시작에 부상병 20명 복귀.",
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ROUND_START",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Battle for Wesnoth 재생 능력"
+    },
+    {
+      "id": "CT-R07",
+      "kind": "trait",
+      "name": "기세",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "적 부대를 쓰러뜨리면 2턴 고양(공격 +10%).",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "value": 0,
+          "duration": 2,
+          "condition": null,
+          "status": "INSPIRED"
+        }
+      ],
+      "ref": "Hades 처치 연쇄 보너스"
+    },
+    {
+      "id": "CT-R08",
+      "kind": "trait",
+      "name": "역습의 기지",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "반격하면 대상이 1턴 혼란(다음 차례 공격 불가).",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_COUNTER",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "CONFUSED"
+        }
+      ],
+      "ref": "Fire Emblem 봉인 스킬"
+    },
+    {
+      "id": "CT-R09",
+      "kind": "trait",
+      "name": "덫",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "공격받으면 공격한 적이 1턴 속박(다음 차례 이동 불가).",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_DEFEND",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        }
+      ],
+      "ref": "Into the Breach 지형 함정"
+    },
+    {
+      "id": "CT-R10",
+      "kind": "trait",
+      "name": "진격의 기세",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "성을 함락하면 다음 차례 이동 +2칸.",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_CAPTURE_CITY",
+          "target": "SELF",
+          "value": 2,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "ref": "Civilization 정복 후 진격"
+    },
+    {
+      "id": "CT-R11",
+      "kind": "trait",
+      "name": "민심 수습",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "text": "성을 함락하면 점령 처리 1턴 단축.",
+      "effects": [
+        {
+          "op": "OCCUPATION_SPEED",
+          "when": "ON_CAPTURE_CITY",
+          "target": "CITY",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Civilization VI 충성도 회복"
+    },
+    {
+      "id": "CT-R12",
+      "kind": "trait",
+      "name": "경계 태세",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "공격받으면 1턴 고양(다음 차례 공격 +10%).",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "INSPIRED"
+        }
+      ],
+      "ref": "XCOM 2 응사"
+    },
+    {
+      "id": "CT-E01",
+      "kind": "trait",
+      "name": "군기",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "text": "맞닿은 아군이 받는 피해 −10%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "PASSIVE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Civilization VI 위대한 장군 오라"
+    },
+    {
+      "id": "CT-E02",
+      "kind": "trait",
+      "name": "진두지휘",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "맞닿은 아군이 주는 피해 +10%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "PASSIVE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Civilization VI 위대한 장군 전투력 +5"
+    },
+    {
+      "id": "CT-E03",
+      "kind": "trait",
+      "name": "협공 신호",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "text": "공격하면 대상 주변 2칸 안 아군이 1턴 고양.",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_ATTACK",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "INSPIRED"
+        }
+      ],
+      "ref": "Battle Brothers 집결"
+    },
+    {
+      "id": "CT-E04",
+      "kind": "trait",
+      "name": "맹공",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "주는 피해 +12%, 반격 피해 +12%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Total War: Three Kingdoms 맹장 기술"
+    },
+    {
+      "id": "CT-E05",
+      "kind": "trait",
+      "name": "성 지키며 받아친다",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "text": "성을 지킬 때 받는 피해 −12%, 반격 피해 +15%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "ref": "Civilization VI 성벽 수비 진급",
+      "formerName": "철옹성"
+    },
+    {
+      "id": "CT-E06",
+      "kind": "trait",
+      "name": "치유의 진",
+      "rarity": "EPIC",
+      "classTag": "정무",
+      "text": "내 차례 시작에 맞닿은 아군 부상병 15명씩 복귀.",
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ROUND_START",
+          "target": "ADJACENT_ALLIES",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Battle for Wesnoth 치유 능력"
+    },
+    {
+      "id": "CT-E07",
+      "kind": "trait",
+      "name": "고무 연설",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "text": "내 차례 시작에 맞닿은 아군 사기 한 단계 회복.",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ROUND_START",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Total War 고무 능력"
+    },
+    {
+      "id": "CT-E08",
+      "kind": "trait",
+      "name": "기동 지휘",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "text": "이동 +1칸, 맞닿은 아군 이동 +1칸.",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "ADJACENT_ALLIES",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Civilization VI 위대한 장군 이동 오라"
+    },
+    {
+      "id": "CT-E09",
+      "kind": "trait",
+      "name": "화공의 대가",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "text": "숲에서 공격할 때 피해 +15%, 대상 1턴 둔화.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "TERRAIN:FOREST"
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": "TERRAIN:FOREST",
+          "status": "SLOWED"
+        }
+      ],
+      "ref": "적벽 화공(역사 모티프) · XCOM 화염"
+    },
+    {
+      "id": "CT-E10",
+      "kind": "trait",
+      "name": "사범",
+      "rarity": "EPIC",
+      "classTag": "공용",
+      "text": "이 장수 경험치 +20%, 맞닿은 아군 경험치 +10%.",
+      "effects": [
+        {
+          "op": "XP_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "XP_MOD",
+          "when": "PASSIVE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "XCOM 2 훈련소"
+    },
+    {
+      "id": "CT-L01",
+      "kind": "trait",
+      "name": "홀로 만 명을 상대한다",
+      "rarity": "LEGENDARY",
+      "classTag": "무용",
+      "text": "주는 피해 +25%, 적 부대를 쓰러뜨리면 2턴 고양, 맞닿은 적 사기 판정.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "value": 0,
+          "duration": 2,
+          "condition": null,
+          "status": "INSPIRED"
+        },
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_KILL",
+          "target": "ADJACENT_ENEMIES",
+          "value": -10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "정사 \"만인지적\"(역사 모티프) · Total War 무쌍 장수",
+      "formerName": "만인지적"
+    },
+    {
+      "id": "CT-L02",
+      "kind": "trait",
+      "name": "불패의 진",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "text": "받는 피해 −20%, 맞닿은 아군 받는 피해 −10%, 반격 피해 +20%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "PASSIVE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Civilization VI 주둔 + 장군 오라"
+    },
+    {
+      "id": "CT-L03",
+      "kind": "trait",
+      "name": "나타났다 사라진다",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "text": "이동 +2칸, 공격하면 대상 1턴 혼란.",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 2,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "CONFUSED"
+        }
+      ],
+      "ref": "XCOM 2 은신 기습",
+      "formerName": "신출귀몰"
+    },
+    {
+      "id": "CT-L04",
+      "kind": "trait",
+      "name": "덕으로 이끈다",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "text": "내 차례 시작에 맞닿은 아군 사기 회복·부상병 20명 복귀, 경험치 +20%.",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ROUND_START",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ROUND_START",
+          "target": "ADJACENT_ALLIES",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "XP_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Total War: Three Kingdoms 인덕 장수",
+      "formerName": "덕장"
+    },
+    {
+      "id": "CT-L05",
+      "kind": "trait",
+      "name": "나라 살림꾼",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "text": "태수일 때 도시 식량·생산·인망 +20%.",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 20,
+          "duration": 0,
+          "condition": null,
+          "resource": "FOOD"
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 20,
+          "duration": 0,
+          "condition": null,
+          "resource": "PRODUCTION"
+        },
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 20,
+          "duration": 0,
+          "condition": null,
+          "resource": "FAME"
+        }
+      ],
+      "ref": "Civilization VI 총독 최종 진급",
+      "formerName": "경세가"
+    },
+    {
+      "id": "CT-L06",
+      "kind": "trait",
+      "name": "질풍 같은 기병",
+      "rarity": "LEGENDARY",
+      "classTag": "기병",
+      "text": "기병일 때 이동 +2칸, 이번 차례 첫 공격 피해 +25%.",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 2,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        }
+      ],
+      "ref": "Civilization 기마 유목 문명 고유 유닛",
+      "formerName": "질풍노도"
+    },
+    {
+      "id": "CT-L07",
+      "kind": "trait",
+      "name": "멀리서 꿰뚫는 활",
+      "rarity": "LEGENDARY",
+      "classTag": "궁병",
+      "text": "궁병일 때 주는 피해 +25%, 공격하면 대상 1턴 둔화.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "TROOP:BT03"
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": "TROOP:BT03",
+          "status": "SLOWED"
+        }
+      ],
+      "ref": "고사 \"백보천양\"(역사 모티프) · Total War 명사수",
+      "formerName": "백보천양"
+    },
+    {
+      "id": "CT-L08",
+      "kind": "trait",
+      "name": "끝까지 싸운다",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "text": "병력이 절반 아래면 주는 피해 +30%, 받는 피해 −20%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 30,
+          "duration": 0,
+          "condition": "HP_BELOW:50"
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "HP_BELOW:50"
+        }
+      ],
+      "ref": "Fire Emblem 위기 각성 · Battle Brothers 결사",
+      "formerName": "배수의 맹세"
+    },
+    {
+      "id": "CT-M01",
+      "kind": "trait",
+      "name": "적 옆을 스쳐 간다",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "통제 구역에서 멈추지 않는다(적 옆을 지나간다).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "IGNORE_ZOC"
+        }
+      ],
+      "ref": "無人之境 · Battle for Wesnoth 척후(skirmisher)",
+      "formerName": "무인지경"
+    },
+    {
+      "id": "CT-M02",
+      "kind": "trait",
+      "name": "추격 없이 빠지기",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "text": "교전에서 빠질 때 추격을 받지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "NO_PURSUIT"
+        }
+      ],
+      "ref": "삼십육계 金蟬脫殼 · Battle Brothers 발놀림",
+      "formerName": "금선탈각"
+    },
+    {
+      "id": "CT-M03",
+      "kind": "trait",
+      "name": "먼저 받아친다",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "공격받으면 반격을 먼저 한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FIRST_STRIKE"
+        }
+      ],
+      "ref": "後發先制 · Fire Emblem 선제 반격",
+      "formerName": "후발선제"
+    },
+    {
+      "id": "CT-M04",
+      "kind": "trait",
+      "name": "치고 다시 움직인다",
+      "rarity": "MYTHIC",
+      "classTag": "기병",
+      "text": "이번 턴 이동하지 않았으면 공격 뒤에도 움직인다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MOVE_AFTER_ATTACK"
+        }
+      ],
+      "ref": "電光石火 · XCOM 2 치고 빠지기",
+      "formerName": "전광석화"
+    },
+    {
+      "id": "CT-M05",
+      "kind": "trait",
+      "name": "절대 무너지지 않는다",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "사기가 패주까지 떨어지지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "NEVER_ROUT"
+        }
+      ],
+      "ref": "不退轉 · Total War 불굴(Unbreakable)",
+      "formerName": "불퇴전"
+    },
+    {
+      "id": "CT-M06",
+      "kind": "trait",
+      "name": "반격 없는 공격",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "이 부대의 공격은 반격받지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "NO_COUNTER_TAKEN"
+        }
+      ],
+      "ref": "無形之擊 · Fire Emblem 반격 봉인",
+      "formerName": "무형지격"
+    },
+    {
+      "id": "CT-M07",
+      "kind": "trait",
+      "name": "성벽 한 방",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "내구도가 50 이하인 성은 이 부대의 공격 한 번으로 함락한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BREACH"
+        }
+      ],
+      "ref": "破壁 · Civilization 공성 돌파",
+      "formerName": "파벽"
+    },
+    {
+      "id": "CT-M08",
+      "kind": "trait",
+      "name": "반드시 사로잡는다",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "text": "이 부대가 쓰러뜨린 적 장수는 반드시 포로가 된다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "CAPTURE_ALWAYS"
+        }
+      ],
+      "ref": "七縱七擒(제갈량·맹획 고사)",
+      "formerName": "칠종칠금"
+    },
+    {
+      "id": "CT-M09",
+      "kind": "trait",
+      "name": "두 번 행동",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "한 턴에 주 행동을 두 번 한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DOUBLE_ACTION"
+        }
+      ],
+      "ref": "一擧兩得 · Into the Breach 추가 행동",
+      "formerName": "일거양득"
+    },
+    {
+      "id": "CT-M10",
+      "kind": "trait",
+      "name": "험한 길도 평지처럼",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "text": "숲·언덕을 평지처럼 걷고, 다리 없는 강도 건넌다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TERRAIN_WALKER"
+        }
+      ],
+      "ref": "縮地法(도술 설화) · Civilization 지형 무시 진급",
+      "formerName": "축지법"
+    },
+    {
+      "id": "CT-M11",
+      "kind": "trait",
+      "name": "보이지 않는 매복",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "text": "숲·언덕에 있으면 맞닿기 전까지 적에게 보이지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "AMBUSH"
+        }
+      ],
+      "ref": "十面埋伏 · XCOM 은신",
+      "formerName": "십면매복"
+    },
+    {
+      "id": "CT-M12",
+      "kind": "trait",
+      "name": "천리안",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "text": "부대 시야가 10칸이 된다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "EAGLE_EYE"
+        }
+      ],
+      "ref": "千里眼(설화) · Civilization 정찰 진급"
+    },
+    {
+      "id": "CT-M13",
+      "kind": "trait",
+      "name": "성으로 즉시 귀환",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "주 행동으로 비어 있는 아군 성 중심으로 즉시 돌아간다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RECALL"
+        }
+      ],
+      "ref": "回軍 · Heroes of Might and Magic 귀환",
+      "formerName": "회군"
+    },
+    {
+      "id": "CT-M14",
+      "kind": "trait",
+      "name": "두 칸 너머 공격",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "근접 부대인데 2칸 거리에서도 공격한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "REACH_2"
+        }
+      ],
+      "ref": "隔空(무협 원거리 격타) · Battle Brothers 장병기 거리",
+      "formerName": "격공"
+    },
+    {
+      "id": "CT-M15",
+      "kind": "trait",
+      "name": "한 번에 둘을 친다",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "공격하면 대상과 맞닿은 다른 적 1부대도 피해 절반을 입는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SPLASH"
+        }
+      ],
+      "ref": "一石二鳥 · Into the Breach 범위 피해",
+      "formerName": "일석이조"
+    },
+    {
+      "id": "CT-M16",
+      "kind": "trait",
+      "name": "다가오면 먼저 친다",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "방어 태세 중 적이 사거리에 들어오면 즉시 한 번 공격한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "OVERWATCH"
+        }
+      ],
+      "ref": "삼십육계 以逸待勞 · XCOM 경계 사격",
+      "formerName": "이일대로"
+    },
+    {
+      "id": "CT-M17",
+      "kind": "trait",
+      "name": "한 번은 버틴다",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "text": "병력이 0이 되는 피해를 받아도 차례마다 한 번 병력 1로 버틴다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "LAST_STAND"
+        }
+      ],
+      "ref": "九死一生 · Fire Emblem 기적",
+      "formerName": "구사일생"
+    },
+    {
+      "id": "CT-M18",
+      "kind": "trait",
+      "name": "화살에도 반격",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "원거리 공격을 받아도 반격한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "COUNTER_ALL"
+        }
+      ],
+      "ref": "以毒制毒 · Fire Emblem 원거리 반격",
+      "formerName": "이독제독"
+    },
+    {
+      "id": "CT-M19",
+      "kind": "trait",
+      "name": "넓은 포위망",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "이 부대의 통제 구역이 2칸이다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "EXTENDED_ZOC"
+        }
+      ],
+      "ref": "天羅地網 · Unity of Command 통제 구역",
+      "formerName": "천라지망"
+    },
+    {
+      "id": "CT-M20",
+      "kind": "trait",
+      "name": "무너지지 않는 기둥",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "text": "맞닿은 아군은 패주하지 않는다(동요까지).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RALLY_AURA"
+        }
+      ],
+      "ref": "中流砥柱 · Total War 장군 사기 오라",
+      "formerName": "중류지주"
+    },
+    {
+      "id": "CT-M21",
+      "kind": "trait",
+      "name": "바람 소리에도 놀란다",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "이 부대와 맞닿은 적은 자기 차례 시작마다 사기 판정을 한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TERROR"
+        }
+      ],
+      "ref": "風聲鶴唳 · Battle Brothers 공포",
+      "formerName": "풍성학려"
+    },
+    {
+      "id": "CT-M22",
+      "kind": "trait",
+      "name": "항복병 흡수",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "text": "적 부대를 쓰러뜨리면 그 부대 원래 병력의 20%를 내 병력으로 편입한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ABSORB"
+        }
+      ],
+      "ref": "以敵制敵 · Total War 포로 편입",
+      "formerName": "이적제적"
+    },
+    {
+      "id": "CT-M23",
+      "kind": "trait",
+      "name": "적장 귀순시키기",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "text": "병력 30% 이하 적 부대를 공격하면 소멸 대신 장수째 귀순시킨다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DEFECTION"
+        }
+      ],
+      "ref": "삼십육계 反間計 · Civilization 매수",
+      "formerName": "반간계"
+    },
+    {
+      "id": "CT-M24",
+      "kind": "trait",
+      "name": "사방에서 성 공격",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "성벽 바깥 어느 칸에서도 성을 공격한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SIEGE_FROM_WALL"
+        }
+      ],
+      "ref": "四面楚歌 · Civilization 포위전",
+      "formerName": "사면초가"
+    },
+    {
+      "id": "CT-M25",
+      "kind": "trait",
+      "name": "성 화살을 막는다",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "성 사격을 받지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SIEGE_IMMUNE"
+        }
+      ],
+      "ref": "刀槍不入(설화) · Civilization 공성 면역 진급",
+      "formerName": "도창불입"
+    },
+    {
+      "id": "CT-M26",
+      "kind": "trait",
+      "name": "흔들리지 않는 성",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "이 부대가 성 중심에 있으면 성 내구도가 피해를 받지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "GARRISON_WALL"
+        }
+      ],
+      "ref": "金城湯池 · Civilization 주둔 수비",
+      "formerName": "금성탕지"
+    },
+    {
+      "id": "CT-M27",
+      "kind": "trait",
+      "name": "밤낮 강행군",
+      "rarity": "MYTHIC",
+      "classTag": "기병",
+      "text": "이동 칸 2배, 대신 이동한 차례 끝에 동요한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORCED_MARCH"
+        }
+      ],
+      "ref": "倍道兼行 · Risk of Rain 2 달 아이템(대가형)",
+      "formerName": "배도겸행"
+    },
+    {
+      "id": "CT-M28",
+      "kind": "trait",
+      "name": "목숨 건 맹공",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "text": "주는 피해 +50%, 대신 받는 반격 2배.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BLOOD_PRICE"
+        }
+      ],
+      "ref": "玉石俱焚 · Risk of Rain 2 달 아이템(대가형)",
+      "formerName": "옥석구분"
+    },
+    {
+      "id": "CT-M29",
+      "kind": "trait",
+      "name": "제자리 사수",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "text": "받는 피해 −30%, 대신 적과 맞닿아 있으면 이동할 수 없다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "NO_RETREAT"
+        }
+      ],
+      "ref": "破釜沈舟(항우 고사) · Risk of Rain 2 달 아이템(대가형)",
+      "formerName": "파부침주"
+    },
+    {
+      "id": "CT-M30",
+      "kind": "trait",
+      "name": "넓게 배운다",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "text": "레벨업 Draft 카드 4장, 다시 뽑기 2회.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DOUBLE_DRAFT"
+        }
+      ],
+      "ref": "博學多識 · Slay the Spire 보상 추가 유물",
+      "formerName": "박학다식"
+    },
+    {
+      "id": "CT-M31",
+      "kind": "trait",
+      "name": "제자를 키운다",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "text": "맞닿은 아군 장수가 얻는 경험치 +50%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MENTOR"
+        }
+      ],
+      "ref": "靑出於藍 · XCOM 2 훈련",
+      "formerName": "청출어람"
+    },
+    {
+      "id": "CT-T01",
+      "kind": "trait",
+      "name": "측면을 파고든다",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "측면·후방으로 공격하면 주는 피해 +10%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": "FLANK"
+        }
+      ],
+      "ref": "Total War 측면 공격 보너스"
+    },
+    {
+      "id": "CT-T02",
+      "kind": "trait",
+      "name": "등 뒤를 노린다",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "후방으로 공격하면 주는 피해 +15%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "REAR"
+        }
+      ],
+      "ref": "XCOM 측면 사격 치명타"
+    },
+    {
+      "id": "CT-T03",
+      "kind": "trait",
+      "name": "돌격 숙련",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "기병 돌격으로 공격하면 주는 피해 +12%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 12,
+          "duration": 0,
+          "condition": "CHARGE"
+        }
+      ],
+      "ref": "Mount & Blade 돌격 피해"
+    },
+    {
+      "id": "CT-T04",
+      "kind": "trait",
+      "name": "돌파의 기세",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "기병 돌격으로 공격하면 상대에게 전열 판정 1회(가중 10).",
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_ATTACK",
+          "target": "TARGET",
+          "value": -10,
+          "duration": 0,
+          "condition": "CHARGE"
+        }
+      ],
+      "ref": "Total War 돌격 후 대열 붕괴"
+    },
+    {
+      "id": "CT-T05",
+      "kind": "trait",
+      "name": "방진 유지",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "text": "측면·후방으로 맞으면 받는 피해 −8%.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 8,
+          "duration": 0,
+          "condition": "FLANK"
+        }
+      ],
+      "ref": "Battle Brothers 방진(Shieldwall)"
+    },
+    {
+      "id": "CT-T06",
+      "kind": "trait",
+      "name": "흐트러진 틈",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "text": "전열이 흐트러진 상대를 공격하면 주는 피해 +10%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 10,
+          "duration": 0,
+          "condition": "TARGET_DISORDERED"
+        }
+      ],
+      "ref": "Total War 사기 붕괴 추격"
+    },
+    {
+      "id": "CT-T07",
+      "kind": "trait",
+      "name": "대열 다잡기",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "내 차례 시작에 이 부대 전열 한 단계 회복.",
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ROUND_START",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "ref": "Battlefield 재정렬 / 정본 20 §6.1"
+    },
+    {
+      "id": "CT-T08",
+      "kind": "trait",
+      "name": "정연한 진격",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "text": "전열이 정돈된 상태로 공격하면 주는 피해 +6%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 6,
+          "duration": 0,
+          "condition": "SELF_ORDERED"
+        }
+      ],
+      "ref": "Civilization 방진 보너스"
+    }
+  ]
+}

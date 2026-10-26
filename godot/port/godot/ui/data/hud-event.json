@@ -1,0 +1,254 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 2,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 중순 · 2차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+4",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +4"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+2",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+1",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 업 생산으로",
+    "target": "west"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "west",
+    "name": "업",
+    "u": 0.2635,
+    "v": 0.7607,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "julu",
+    "name": "거록",
+    "u": 0.3124,
+    "v": 0.6641,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ },
+ "event": {
+  "screen": "event",
+  "eventId": "EV-ANY-01",
+  "scale": "EVENT",
+  "title": "곡창 한 칸의 값",
+  "place": "사건 · 업",
+  "text": "업의 창고 앞에서 순욱의 손이 문짝 하나를 활짝 연다. 곡창 한 칸을 통째로 내주고 벗을 얻던 장면이 누구의 꿈인지 모르게 스친다. 눈앞의 도움을 받아들일까, 이번에는 빚진 마음보다 스스로 채운 창고로 오래갈 신의를 보일까.",
+  "art": "assets/ui-v3/events-ink/E06.webp",
+  "people": [
+   {
+    "id": "G07",
+    "name": "조조",
+    "role": "군주",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+     "w": 522,
+     "h": 888,
+     "cx": 318,
+     "cy": 103,
+     "side": 114
+    }
+   },
+   {
+    "id": "G04",
+    "name": "순욱",
+    "role": "태수",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+    "head": {
+     "w": 471,
+     "h": 945,
+     "cx": 291,
+     "cy": 91,
+     "side": 139
+    }
+   }
+  ],
+  "choices": [
+   {
+    "id": "history",
+    "key": 1,
+    "route": "역사대로",
+    "label": "먼저 내민 도움을 받아들인다",
+    "lines": [
+     "업 식량 +10"
+    ],
+    "blocked": null,
+    "confirm": false
+   },
+   {
+    "id": "twist",
+    "key": 2,
+    "route": "다르게",
+    "label": "받기보다 스스로 비축해 신의를 보인다",
+    "lines": [
+     "맹세 · 3차례 뒤 차례 끝에 업 식량 30 이상",
+     "성공 · 업 식량 +20   실패 · 인망 −5"
+    ],
+    "blocked": null,
+    "confirm": true
+   },
+   {
+    "id": "defer",
+    "key": 3,
+    "route": "미룬다",
+    "label": "미룬다",
+    "lines": [
+     "효과 없음"
+    ],
+    "blocked": null,
+    "confirm": false
+   }
+  ]
+ }
+}

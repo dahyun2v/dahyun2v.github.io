@@ -1,0 +1,9 @@
+{
+  "note": "기병 = 1 기준 화면 키 비율(soldier-build.py)",
+  "scale": {
+    "cavalry-1": 1.0,
+    "spear-1": 0.807,
+    "bow-1": 0.999,
+    "sword-1": 1.033
+  }
+}

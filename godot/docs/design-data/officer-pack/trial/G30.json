@@ -1,0 +1,116 @@
+{
+  "id": "G30",
+  "name": "태사자",
+  "faction": "F03",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 79,
+    "무용": 90,
+    "지략": 78,
+    "정무": 62,
+    "감화": 81
+  },
+  "sub": {
+    "전열 유지": 72,
+    "기동": 89,
+    "전환": 81,
+    "수습": 70,
+    "힘": 82,
+    "기술": 96,
+    "막아내기": 82,
+    "되받기": 81,
+    "군재": 73,
+    "응변": 78,
+    "속이기": 86,
+    "통찰": 80,
+    "행정": 58,
+    "병참": 56,
+    "인사": 70,
+    "제도": 51,
+    "민정": 67,
+    "설득": 82,
+    "포섭": 85,
+    "결집": 76,
+    "중재": 79
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "HIGH",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "명사",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "쏘고 움직인다",
+    "text": "공격하면 다음 차례 이동 +1칸. 궁병일 때 반격 피해 +30%(붙어 오는 추격자를 쏘아 넘긴다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "궁병"
+    ],
+    "effects": [
+      {
+        "op": "MOVE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 1,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "COUNTER_MOD",
+        "when": "ON_COUNTER",
+        "target": "SELF",
+        "value": 30,
+        "duration": 0,
+        "condition": "TROOP:BT03"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 귀환점을 남기고 건넜다 돌아오면 Brace를 복원하던 전법은 치고 나서 귀환할 때까지(추격 포함) 받는 피해 감소로 살림. 같은 적과 대치한 뒤 추격을 견제하며 빠지던 특기는 치고 빠지는 이동 +1과 궁병 반격 강화(북해에서 추격자를 쏘아 넘긴 일화)로 옮김.",
+    "formerName": "익숙해진 틈"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "치고 돌아오기",
+      "text": "2칸 안의 적 1부대를 치고(피해 +30%) 다음 내 차례가 끝날 때까지 받는 피해 −20%(교전 이탈 추격 포함). 건너가 치고 기한 안에 돌아온다.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 20,
+          "duration": 2,
+          "condition": null
+        }
+      ],
+      "formerName": "기한 있는 왕복"
+    }
+  ]
+}

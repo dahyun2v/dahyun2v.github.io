@@ -1,0 +1,118 @@
+{
+  "id": "G37",
+  "name": "장합",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 90,
+    "무용": 84,
+    "지략": 86,
+    "정무": 65,
+    "감화": 70
+  },
+  "sub": {
+    "전열 유지": 86,
+    "기동": 92,
+    "전환": 91,
+    "수습": 94,
+    "힘": 77,
+    "기술": 86,
+    "막아내기": 88,
+    "되받기": 80,
+    "군재": 87,
+    "응변": 86,
+    "속이기": 69,
+    "통찰": 90,
+    "행정": 64,
+    "병참": 72,
+    "인사": 73,
+    "제도": 55,
+    "민정": 54,
+    "설득": 68,
+    "포섭": 59,
+    "결집": 84,
+    "중재": 62
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "책사",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:책사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "막히면 돌아간다",
+    "text": "공격받으면 다음 내 차례 이동 +2칸(막힌 길은 버리고 돈다). 후방에서 공격하면 대상이 사기 판정(가중 20) — 버티게 하는 길을 뒤에서 끊는다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "기병"
+    ],
+    "effects": [
+      {
+        "op": "MOVE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 2,
+        "duration": 2,
+        "condition": null
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "ON_ATTACK",
+        "target": "TARGET",
+        "value": -20,
+        "duration": 0,
+        "condition": "REAR"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 길목을 점유해 적 Regroup·보급을 끊던 의도를 원거리 '동요 + 둔화'로(가정 급수 차단), 길목이 우회되면 이탈하던 특기는 '공격받으면 이동 +2'로. 기동장의 보급로(후방) 타격을 REAR 로 더함.",
+    "formerName": "길이 막히면 바꾼다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "보급로 끊기",
+      "text": "2칸 안 적 하나의 물길·보급로를 끊는다: 즉시 동요, 다음 차례 이동 −2칸(둔화). 장합은 공격하지 않는다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "status": "DEMORALIZED"
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "SLOWED"
+        }
+      ],
+      "formerName": "버티는 길을 끊다"
+    }
+  ],
+  "pendingConcepts": [
+    "REAR"
+  ]
+}

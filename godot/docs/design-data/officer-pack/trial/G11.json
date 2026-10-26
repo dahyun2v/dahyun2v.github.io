@@ -1,0 +1,133 @@
+{
+  "id": "G11",
+  "name": "동탁",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 73,
+    "무용": 79,
+    "지략": 72,
+    "정무": 40,
+    "감화": 60
+  },
+  "sub": {
+    "전열 유지": 71,
+    "기동": 75,
+    "전환": 70,
+    "수습": 64,
+    "힘": 83,
+    "기술": 81,
+    "막아내기": 65,
+    "되받기": 67,
+    "군재": 75,
+    "응변": 70,
+    "속이기": 82,
+    "통찰": 56,
+    "행정": 45,
+    "병참": 65,
+    "인사": 48,
+    "제도": 29,
+    "민정": 18,
+    "설득": 52,
+    "포섭": 77,
+    "결집": 70,
+    "중재": 34
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "전리품 나눠주기",
+    "text": "적 부대를 쓰러뜨리면 맞닿은 아군마다 부상병 40명이 돌아오고, 동탁 곁에 붙어 싸우는 아군은 반격 피해 +15%. 대신 동탁은 측면·후방에서 공격받으면 받는 피해 +15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "무용"
+    ],
+    "effects": [
+      {
+        "op": "HEAL_TROOPS",
+        "when": "ON_KILL",
+        "target": "ADJACENT_ALLIES",
+        "value": 40,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "COUNTER_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 15,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": -15,
+        "duration": 0,
+        "condition": "FLANK"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · Brace 완료·Reaction 예약은 없어 '곁에 남은 아군 보호·사기, 대가로 묶어 둠(ROOTED)'과 '나눠 준 몫(부상병 복귀)'으로 옮김. 원 약점 '밀집해 측후면 취약'은 FLANK 받는 피해 +15%로 살림.",
+    "formerName": "후한 손의 무게"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "버텨 싸워라",
+      "text": "맞닿은 아군 모두 사기 한 단계 회복, 2턴 동안 받는 피해 −20%. 대신 그 아군들은 다음 차례 움직이지 못한다(남아 싸워야 한다).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 0,
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 20,
+          "duration": 2,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        }
+      ],
+      "formerName": "연회의 끝은 전장"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK"
+  ]
+}

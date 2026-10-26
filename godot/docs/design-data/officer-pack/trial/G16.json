@@ -1,0 +1,125 @@
+{
+  "id": "G16",
+  "name": "장로",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "WANDERER",
+    "cityId": "nanzheng"
+  },
+  "stats": {
+    "지휘": 59,
+    "무용": 45,
+    "지략": 62,
+    "정무": 81,
+    "감화": 79
+  },
+  "sub": {
+    "전열 유지": 59,
+    "기동": 46,
+    "전환": 57,
+    "수습": 67,
+    "힘": 41,
+    "기술": 44,
+    "막아내기": 54,
+    "되받기": 42,
+    "군재": 53,
+    "응변": 68,
+    "속이기": 51,
+    "통찰": 65,
+    "행정": 72,
+    "병참": 75,
+    "인사": 74,
+    "제도": 85,
+    "민정": 82,
+    "설득": 74,
+    "포섭": 78,
+    "결집": 83,
+    "중재": 67
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "LOW"
+  },
+  "role": "문관",
+  "style": "명사",
+  "primaryClass": "TRIAL:문관",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "버티는 교단",
+    "text": "병력이 절반 아래면 잃는 병력 중 전사 비율 −20%p. 맞닿은 아군 장수의 경험치 +20%, 태수일 때 도시 인망 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "CASUALTY_SHIFT",
+        "when": "PASSIVE",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      },
+      {
+        "op": "XP_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 20,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 20,
+        "duration": 0,
+        "condition": null,
+        "resource": "FAME"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 보급거점·재고 판정은 없어 창고를 '부상병 복귀'로, 봉인 인계를 '질 때 사람을 남김+다음 사람(곁 장수) 성장+인망'으로 옮김. 거점 의존 약점은 '자기 성에서만 사기 회복'으로 약하게 유지.",
+    "formerName": "봉인한 채 넘긴다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "창고를 연다",
+      "text": "2칸 안 아군 1부대를 골라, 그 부대 둘레 2칸 안 아군마다 부상병 40명 복귀. 장로가 자기 성(중심·성문)에 있으면 그 아군들 사기도 한 단계 회복.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 40,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 10,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "formerName": "불태우지 않은 창고"
+    }
+  ]
+}

@@ -1,0 +1,445 @@
+{
+ "status": "DRAFT — 중국 전역 지도 방 초안(10-24 새벽, 총괄 대행 · 사용자 확인 전). 시험값. 게임 코드 · 저장 불변",
+ "map": "china-v1",
+ "factions": [
+  {
+   "id": "F01",
+   "ruler": "조조",
+   "rulerOfficerId": "G07",
+   "color": "#9e2b25"
+  },
+  {
+   "id": "F02",
+   "ruler": "유비",
+   "rulerOfficerId": "G05",
+   "color": "#3f7d4a"
+  },
+  {
+   "id": "F03",
+   "ruler": "손권",
+   "rulerOfficerId": "G08",
+   "color": "#2f5d9a"
+  },
+  {
+   "id": "F04",
+   "ruler": "원소",
+   "rulerOfficerId": "G09",
+   "color": "#c9a227"
+  },
+  {
+   "id": "F05",
+   "ruler": "여포",
+   "rulerOfficerId": "G01",
+   "color": "#3a3a46"
+  },
+  {
+   "id": "F06",
+   "ruler": "마등",
+   "rulerOfficerId": "G12",
+   "color": "#b07a3c"
+  },
+  {
+   "id": "F07",
+   "ruler": "동탁",
+   "rulerOfficerId": "G11",
+   "color": "#6b6f78"
+  },
+  {
+   "id": "F08",
+   "ruler": "유장",
+   "rulerOfficerId": "G15",
+   "color": "#3f9c8f"
+  },
+  {
+   "id": "F09",
+   "ruler": "장로",
+   "rulerOfficerId": "G16",
+   "color": "#8fb3d9"
+  },
+  {
+   "id": "F10",
+   "ruler": "맹획",
+   "rulerOfficerId": "G17",
+   "color": "#d9772b"
+  },
+  {
+   "id": "F11",
+   "ruler": "공손찬",
+   "rulerOfficerId": "G14",
+   "color": "#cfdde6"
+  },
+  {
+   "id": "F12",
+   "ruler": "원술",
+   "rulerOfficerId": "G10",
+   "color": "#7a4fb0"
+  }
+ ],
+ "startRule": {
+  "mode": "random — 판마다(10-19 사용자 결정: 문명처럼 시작 위치 없는 군주 고르기)",
+  "candidates": [
+   "luoyang",
+   "changan",
+   "xuchang",
+   "xiapi",
+   "linzi",
+   "ye",
+   "nanpi",
+   "ji",
+   "xiangping",
+   "jinyang",
+   "wuwei",
+   "nanzheng",
+   "chengdu",
+   "jiangzhou",
+   "jianning",
+   "wan",
+   "xiangyang",
+   "jiangling",
+   "changsha",
+   "shouchun",
+   "jianye",
+   "kuaiji",
+   "panyu"
+  ],
+  "minPathDistance": 7,
+  "attempts": 64,
+  "feasibility": {
+   "4": 1.0,
+   "5": 1.0,
+   "6": 1.0,
+   "7": 1.0,
+   "8": 1.0,
+   "9": 0.9725
+  },
+  "minorMaxSteps": 8,
+  "perFaction": "수도 = 큰 성 1(무작위) + 8칸 안 가장 가까운 빈 작은 성 1(없으면 부대 1 더). 세력별 고향 묶음은 두지 않음(무작위 결정과 충돌) — 대신 장수 풀은 세력 그대로라 \"어디서 시작해도 그 군주의 사람들\"",
+  "sample": {
+   "F01": {
+    "capital": "jiangzhou",
+    "minor": "zitong",
+    "minorSteps": 8
+   },
+   "F02": {
+    "capital": "xiangyang",
+    "minor": null,
+    "extraArmy": 1
+   },
+   "F03": {
+    "capital": "ji",
+    "minor": "yijing",
+    "minorSteps": 4
+   },
+   "F04": {
+    "capital": "changsha",
+    "minor": "wuling",
+    "minorSteps": 6
+   },
+   "F05": {
+    "capital": "shouchun",
+    "minor": "hefei",
+    "minorSteps": 3
+   },
+   "F06": {
+    "capital": "nanzheng",
+    "minor": null,
+    "extraArmy": 1
+   },
+   "F07": {
+    "capital": "linzi",
+    "minor": "pingyuan",
+    "minorSteps": 6
+   },
+   "F08": {
+    "capital": "ye",
+    "minor": "juancheng",
+    "minorSteps": 4
+   },
+   "F09": {
+    "capital": "jiangling",
+    "minor": "xiakou",
+    "minorSteps": 6
+   },
+   "F10": {
+    "capital": "xuchang",
+    "minor": "chenliu",
+    "minorSteps": 3
+   },
+   "F11": {
+    "capital": "wuwei",
+    "minor": "jincheng",
+    "minorSteps": 8
+   },
+   "F12": {
+    "capital": "panyu",
+    "minor": "cangwu",
+    "minorSteps": 6
+   }
+  },
+  "startFrequency2000": {
+   "nanpi": 1204,
+   "ji": 1177,
+   "jiangling": 1172,
+   "kuaiji": 1168,
+   "changsha": 1165,
+   "panyu": 1161,
+   "xiapi": 1154,
+   "wuwei": 1153,
+   "jiangzhou": 1152,
+   "jianning": 1148,
+   "jinyang": 1144,
+   "nanzheng": 1132,
+   "ye": 1132,
+   "changan": 1129,
+   "linzi": 1128,
+   "chengdu": 1124,
+   "xiangping": 1109,
+   "xiangyang": 765,
+   "shouchun": 764,
+   "xuchang": 763,
+   "luoyang": 732,
+   "jianye": 727,
+   "wan": 697
+  }
+ },
+ "initialScale": {
+  "basis": "FIRST3: 세력당 수도 1 · 부대 2(각 250) · 장수 3 · 성 인구 2/4 · 식량 20",
+  "perFaction": {
+   "cities": 2,
+   "armies": 2,
+   "troopsPerArmy": 250,
+   "officersOnMap": 4,
+   "note": "수도 + 작은 성 1 · 부대 2 · 장수 4(군주 + 3, 작은 성 태수 1명 몫으로 FIRST3 보다 1명 많음)"
+  },
+  "total": {
+   "factionCities": 24,
+   "neutralCities": 28,
+   "armies": 24,
+   "officersOnMap": 48,
+   "officersInPool": 300
+  },
+  "neutral": "중립 28성(큰 성 11 · 작은 성 17) — 수비대만, 장수 없음. 재야 장수는 판마다 일부를 중립 성 · 탐험지에(v3 재야 방식)"
+ },
+ "homeCandidates": {
+  "F01": {
+   "count": 40,
+   "guess": 3,
+   "ruler": "조조",
+   "top5": [
+    "서황",
+    "사마의",
+    "만총",
+    "조인",
+    "하후연"
+   ]
+  },
+  "F02": {
+   "count": 38,
+   "guess": 2,
+   "ruler": "유비",
+   "top5": [
+    "조운",
+    "제갈량",
+    "강유",
+    "노식",
+    "비의"
+   ]
+  },
+  "F03": {
+   "count": 39,
+   "guess": 3,
+   "ruler": "손권",
+   "top5": [
+    "주유",
+    "육손",
+    "여몽",
+    "손견",
+    "손책"
+   ]
+  },
+  "F04": {
+   "count": 31,
+   "guess": 4,
+   "ruler": "원소",
+   "top5": [
+    "장합",
+    "조진",
+    "조비",
+    "이통",
+    "종요"
+   ]
+  },
+  "F05": {
+   "count": 30,
+   "guess": 4,
+   "ruler": "여포",
+   "top5": [
+    "진등",
+    "장패",
+    "고순",
+    "왕윤",
+    "장막"
+   ]
+  },
+  "F06": {
+   "count": 30,
+   "guess": 4,
+   "ruler": "마등",
+   "top5": [
+    "종회",
+    "성공영",
+    "마초",
+    "방덕",
+    "전주"
+   ]
+  },
+  "F07": {
+   "count": 32,
+   "guess": 3,
+   "ruler": "동탁",
+   "top5": [
+    "유표",
+    "서영",
+    "가후",
+    "괴월",
+    "사마휘"
+   ]
+  },
+  "F08": {
+   "count": 30,
+   "guess": 3,
+   "ruler": "유장",
+   "top5": [
+    "황권",
+    "사마사",
+    "이회",
+    "장임",
+    "엄안"
+   ]
+  },
+  "F09": {
+   "count": 31,
+   "guess": 2,
+   "ruler": "장로",
+   "top5": [
+    "장기",
+    "두기",
+    "양부",
+    "서막",
+    "임준"
+   ]
+  },
+  "F10": {
+   "count": 30,
+   "guess": 1,
+   "ruler": "맹획",
+   "top5": [
+    "황보숭",
+    "사마소",
+    "보즐",
+    "포신",
+    "양습"
+   ]
+  },
+  "F11": {
+   "count": 29,
+   "guess": 1,
+   "ruler": "공손찬",
+   "top5": [
+    "전예",
+    "심배",
+    "사마염",
+    "배잠",
+    "장초"
+   ]
+  },
+  "F12": {
+   "count": 28,
+   "guess": 2,
+   "ruler": "원술",
+   "top5": [
+    "육항",
+    "하제",
+    "제갈각",
+    "여범",
+    "사섭"
+   ]
+  }
+ },
+ "homeCandidatesNote": "사용자 10-25: 장수는 드래프트(함께 깨어날 사람 고르기). 이 표는 세력 장수가 아니라 드래프트의 고향 카드(C421 영입 후보 풀 = factionCandidate) 수다. 군주만 세력 고정",
+ "draft": {
+  "now": {
+   "who": "플레이어 세력만",
+   "slots": 5,
+   "minCompanions": 2,
+   "offerSize": 5,
+   "rerolls": 2,
+   "budget": 15,
+   "costBands": 5,
+   "pool": "자기 세력 고향 장수 + 재야(판마다 시드로 일부만)",
+   "unpicked": "뽑지 않은 고향 장수는 중립 작은 성의 재야로",
+   "ai": "AI 세력은 드래프트 없이 원래 명단"
+  },
+  "proposal": {
+   "ruler": "군주만 세력 고정(12명)",
+   "player": "지금과 같음 — 동료 2~5명 · 예산 15 · 제안 5장 · 다시 뽑기 2(세력 장치 그대로: 조조 다시 뽑기 +1 · 유비 인연 가중 · 손권 위임 탐색)",
+   "ai": "AI 11세력도 같은 규칙으로 자동 드래프트 — 제안 카드 가중치 그대로, 예산 안에서 가중치 높은 카드부터 잠금(시드 고정, 판마다 다름)",
+   "order": "플레이어가 먼저 고른 뒤 AI 가 남은 카드에서 고름(플레이어가 고른 장수는 다른 세력 카드에서 빠짐). 고향 카드는 자기 세력 것만 고향 가중치",
+   "pool": "고향 카드 = 그 세력 영입 후보 풀(factionCandidate, 세력마다 약 40명 — 장수 500 기준) · 재야 카드 = 어느 세력 후보도 아닌 사람 + 다른 세력이 안 뽑은 사람",
+   "perGame": "처음 지도 위 장수 = 12 × (군주 + 2~5) = 36~72명, 나머지는 재야(중립 성 · 탐험지)로 판 중에 등용",
+   "engine": "엔진 지금은 플레이어 1세력만 드래프트(applyOfficerDraft · s.playerFactionId) → AI 자동 드래프트 · 12세력 순서는 엔진 방 몫"
+  }
+ },
+ "officerFactionGuessG01G50": {
+  "G01": "F05",
+  "G09": "F04",
+  "G10": "F12",
+  "G11": "F07",
+  "G12": "F06",
+  "G13": "F06",
+  "G14": "F11",
+  "G15": "F08",
+  "G16": "F09",
+  "G17": "F10",
+  "G21": "F02",
+  "G22": "F01",
+  "G23": "F01",
+  "G26": "F05",
+  "G31": "F05",
+  "G32": "F05",
+  "G35": "F07",
+  "G36": "F01",
+  "G37": "F04",
+  "G38": "F04",
+  "G39": "F04",
+  "G40": "F03",
+  "G41": "F03",
+  "G42": "F02",
+  "G43": "F08",
+  "G44": "F06",
+  "G45": "F06",
+  "G46": "F07",
+  "G47": "F08",
+  "G48": "F09",
+  "G49": "F12",
+  "G50": "F03"
+ },
+ "turns": {
+  "now": 26,
+  "draft": 80,
+  "note": "52성 · 12세력. 이웃 성 간격(중앙값 5칸)은 v3 와 같으니 한 성 먹는 데 드는 차례는 비슷 — 성 수 6.5배를 다 먹는 판이 아니라 중반 판세로 끝나게 80"
+ },
+ "victory": {
+  "draft": [
+   "제패: 큰 성 23 중 15 소유(또는 다른 세력 모두 멸망)",
+   "시한: 80차례 끝 점수 1위(큰 성 3 · 작은 성 1 · 주 과반 보너스 2)"
+  ],
+  "now": "FIRST3 = 통일 또는 플레이어 멸망"
+ },
+ "engineGaps": [
+  "세력 3 고정(validateState F01~F03)",
+  "중립 큰 성 불가(중립 = 작은 성)",
+  "시작 배치 maps 설정 · 수도 id(west · east · south) 고정",
+  "차례 시간(MEASURE.md — 세력 3에서도 7~24초)"
+ ]
+}

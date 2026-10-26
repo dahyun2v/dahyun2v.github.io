@@ -1,0 +1,24 @@
+{
+  "schema": "sangoku.history-anchors.v0.1",
+  "status": "WORK_TRIAL — Claude 작성(제안서 PROPOSAL-GAPS 1-7 '역사 비틀기 장부'). 판 끝에 역사 기준점과 견줘 '역사에선 ○○ / 이번엔 △△'. 지도는 하북 8성(재소환 세계) — 원래 역사의 결말을 이 지도의 말로 옮긴 것",
+  "judgeAt": "GAME_END",
+  "list": [
+    {"id": "HA-YE", "history": "업은 끝내 조조의 땅이 되었다", "test": {"type": "CITY_OWNER_AT_END", "city": "west", "faction": "F01"}, "twisted": "업의 주인은 조조가 아니었다"},
+    {"id": "HA-JI", "history": "계(유주)는 끝내 조조에게 넘어갔다", "test": {"type": "CITY_OWNER_AT_END", "city": "east", "faction": "F01"}, "twisted": "계는 조조의 손에 들어가지 않았다"},
+    {"id": "HA-NANPI", "history": "남피는 끝내 조조에게 넘어갔다", "test": {"type": "CITY_OWNER_AT_END", "city": "south", "faction": "F01"}, "twisted": "남피는 조조의 손에 들어가지 않았다"},
+    {"id": "HA-UNIFY", "history": "하북은 조조 아래 하나가 되었다", "test": {"type": "FACTION_RANK_FIRST", "faction": "F01"}, "twisted": "하북의 첫 자리는 조조가 아니었다"},
+    {"id": "HA-YIJING", "history": "공손찬은 역경에서 생을 마쳤다", "test": {"type": "OFFICER_DEAD_AT_END", "officer": "G14"}, "twisted": "공손찬은 살아남았다"},
+    {"id": "HA-GUANYU", "history": "관우는 손권의 손에 쓰러졌다", "test": {"type": "OFFICER_DEAD_AT_END", "officer": "G18"}, "twisted": "관우는 끝까지 살아 있었다"},
+    {"id": "HA-ZHANGFEI", "history": "장비는 부하의 손에 쓰러졌다", "test": {"type": "OFFICER_DEAD_AT_END", "officer": "G19"}, "twisted": "장비는 끝까지 살아 있었다"},
+    {"id": "HA-SUNCE", "history": "손책은 일찍 세상을 떠났다", "test": {"type": "OFFICER_DEAD_AT_END", "officer": "G20"}, "twisted": "손책은 일찍 떠나지 않았다"},
+    {"id": "HA-GUOJIA", "history": "곽가는 요절했다", "test": {"type": "OFFICER_DEAD_OR_ABSENT_AT_END", "officer": "G22"}, "twisted": "곽가는 끝까지 곁에 있었다"},
+    {"id": "HA-LUBU", "history": "여포는 사로잡혀 처형되었다", "test": {"type": "OFFICER_DEAD_OR_ABSENT_AT_END", "officer": "G01"}, "twisted": "여포는 끝까지 살아 누군가의 깃발 아래 있었다"},
+    {"id": "HA-YUANSHAO", "history": "원소는 패한 뒤 병들어 죽었다", "test": {"type": "OFFICER_DEAD_OR_ABSENT_AT_END", "officer": "G09"}, "twisted": "원소는 끝까지 살아 누군가의 깃발 아래 있었다"},
+    {"id": "HA-XUNYU", "history": "순욱은 조조와 끝내 갈라섰다", "test": {"type": "PAIR_NOT_BOUND_AT_END", "officers": ["G07", "G04"]}, "twisted": "순욱과 조조는 끝까지 결의로 이어졌다"},
+    {"id": "HA-ZHAOYUN", "history": "조운은 끝까지 유비 곁을 지켰다", "test": {"type": "OFFICER_SERVES_AT_END", "officer": "G02", "faction": "F02"}, "twisted": "조운은 유비 곁에 있지 않았다"},
+    {"id": "HA-ZHANGLIAO", "history": "장료는 조조의 장수로 이름을 떨쳤다", "test": {"type": "OFFICER_SERVES_AT_END", "officer": "G24", "faction": "F01"}, "twisted": "장료는 조조의 장수가 아니었다"},
+    {"id": "HA-TAISHICI", "history": "태사자는 손씨 아래에서 생을 마쳤다", "test": {"type": "OFFICER_SERVES_AT_END", "officer": "G30", "faction": "F03"}, "twisted": "태사자는 손씨 곁에 있지 않았다"},
+    {"id": "HA-YILING", "history": "유비와 손권의 동맹은 형주를 두고 깨졌다", "test": {"type": "NOT_ALLIED_AT_END", "factions": ["F02", "F03"]}, "twisted": "유비와 손권은 끝까지 동맹이었다"}
+  ],
+  "notes": "OFFICER_DEAD_OR_ABSENT_AT_END = 판 끝에 죽었거나 어느 세력에도 없음(재야 · 미등장 포함)이면 '역사대로'. 판정은 공개 결과 화면용이며 점수 '비틀린 역사' 항(시험값 1개당 +50)과 연대기 줄에 쓴다."
+}

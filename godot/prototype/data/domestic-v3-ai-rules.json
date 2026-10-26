@@ -1,0 +1,129 @@
+{
+  "status": "초안 — 확정 아님(내정 콘텐츠 방 2026-10-24). AI-DOMESTIC-V3.md 의 문턱 · 우선순위. 시험값",
+  "inputs": {
+    "threat": "순위협 = 전쟁 중 상대(휴전 · 화친은 만료 1순 전부터)의 보이는 부대 중 다가오는 것(지난 본 위치보다 가까워짐) 또는 이미 2칸 안 − 그 성 수비대 · 내구 몫. AI-PLAN §2 campaignTruceDefensePlan 과 같은 함수",
+    "grainTurns": "세력 창고 ÷ (병사 군량 + 성장 지출)",
+    "upkeepTurns": "지갑 ÷ 한 순 유지비",
+    "militaryRatio": "내 병사 ÷ 맞닿은 세력 보이는 병력 평균",
+    "turnsLeft": "판 끝까지"
+  },
+  "reevaluate": {
+    "policyEveryTurns": 3,
+    "alsoOn": [
+      "성 주인 바뀜"
+    ],
+    "currentChoiceBonus": 0.25
+  },
+  "policy": {
+    "default": "delegated",
+    "overrides": [
+      {
+        "if": "militaryRatio < 0.6",
+        "then": "후방 성 하나 military"
+      },
+      {
+        "if": "upkeepTurns < 3",
+        "then": "시장 칸이 가장 많은 후방 성 commerce"
+      },
+      {
+        "if": "grainTurns < 3",
+        "then": "모든 성 balanced"
+      },
+      {
+        "if": "militaryRatio > 2.3",
+        "then": "전선 성도 balanced · 작전에 '쓰라' 알림"
+      }
+    ]
+  },
+  "build": {
+    "order": [
+      "땅 안 특수자원 칸의 개량(mine · ranch · farm)",
+      "전선 성: barracks · workshop",
+      "방침 순서"
+    ]
+  },
+  "hurry": {
+    "reserve": "봉록 5순 + 군량 한 번 살 금",
+    "priority": [
+      "위협 있는 성 훈련소 · 공방",
+      "무기고 < 목표 50% 이면 공방 성 무구 제작",
+      "졸업 안 한 첫 시설"
+    ],
+    "stopWhen": "다음 값 > 남은 생산 × 10 × 2"
+  },
+  "buyGrain": {
+    "when": [
+      "grainTurns < 4",
+      "작전 군량(가는 순 + 공성 순) 모자람",
+      "내 땅에 흉년 예고"
+    ],
+    "firstOnlyUnless": "grainTurns < 2"
+  },
+  "buyTile": {
+    "when": "성 인구 = 한도 · 지갑 > 예비",
+    "pick": "인구 한도 + 곡식 + 생산 × 100 + 자원 칸 가점 최대",
+    "onlyIf": "값 < 그 칸 10순 산출의 금 환산"
+  },
+  "emergency": {
+    "reserveBreak": "다음 순 창고 0 · 포위 아님 · 그 성 치안 안정 · 인구 최대 후방 성",
+    "emergencyDraft": "그 성 순위협 > 0 · 2순 안 증원 없음",
+    "taxFree": "치안 불안 · 혼란 · 위협 없음"
+  },
+  "armsMix": {
+    "base": "장수 병종 비율",
+    "seenAdjust": [
+      {
+        "if": "본 적 기병 비중 ≥ 0.3",
+        "then": "spear +0.10"
+      },
+      {
+        "if": "본 적 궁병 비중 ≥ 0.3",
+        "then": "blade +0.10"
+      },
+      {
+        "if": "본 적 창병 비중 ≥ 0.3",
+        "then": "bow +0.10"
+      }
+    ]
+  },
+  "horses": {
+    "when": "기병 장수 있음 · 말 < 다음 출진 필요",
+    "do": [
+      "목장 개량",
+      "시장 사기(upkeepTurns ≥ 5)"
+    ]
+  },
+  "occupation": {
+    "default": "conciliation",
+    "military": "그 성 순위협 > 0",
+    "plunder": "순위협 > 남길 수 있는 병력 × 1.5 또는 turnsLeft ≤ 3"
+  },
+  "learningCard": {
+    "score": {
+      "실제 거느린 병종 계통": 3,
+      "모자란 것을 메우는 내정(grainTurns < 4 → farm · upkeepTurns < 3 → coin)": 2,
+      "같은 계통 다음 단계": 1,
+      "시기 카드가 지금 모자란 것을 메움": 3,
+      "발명가 태수 있음 → 공성 표지": 2
+    }
+  },
+  "crisis": {
+    "response": "crises.json aiDefault",
+    "enemyCrisis": "예고된 위기가 적 땅이면 그 지역 성 목표 점수 가점(작전에 알림)"
+  },
+  "forbidden": [
+    "적 창고 · 금 · 무기고 읽기",
+    "플레이어만 겨냥",
+    "0/1 거부로 출진 전체 미룸",
+    "금 · 병사 끝없이 쌓기"
+  ],
+  "measure": "v3 판 AI 대 AI 5~10판 — 판 끝 금 · 병사/인구 · 굶주림 순 · 봉록 체불 순 · 서두르기/군량/땅 사기 횟수 · 점령 방침 분포 · 막은 사유 집계 · 예비병 묵힌 차례 · muster:OFFICER 횟수 · 순위협 켜진 성-차례 비율",
+  "musterBlocked": {
+    "when": "성 안 병사 > 수비 몫 × 2 가 3순 이어짐 · 출진 거부 사유 muster:OFFICER",
+    "then": [
+      "그 성 방침 military → balanced",
+      "남는 금은 주점 · 등용",
+      "작전에 다른 성 장수가 데려가라 알림"
+    ]
+  }
+}

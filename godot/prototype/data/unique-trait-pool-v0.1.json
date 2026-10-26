@@ -1,0 +1,2913 @@
+{
+  "schema": "unique-trait-pool-v0.1",
+  "status": "pool",
+  "date": "2026-10-20",
+  "basis": "docs/work-integration/20261020/canon-gap/A05-RECLASS.md (b) 열의 규칙 예외 83건. (a) 추천 행도 보관하며 순수 수치 56건은 제외.",
+  "contract": "51 v1.3 §0.2: 상시·조건 규칙 예외 하나. 후보 이름은 연결·교체·승인이 아니다.",
+  "integration": "게임에서 이 파일을 import하거나 Draft/장수에 설치하지 않는다. effects는 C319 수치화 이전 원래 정의를 보존한다. 기존 coreId 자리에 카드 전체를 설치할 때 kind/rarity/domestic/c33 메타데이터를 함께 사용한다.",
+  "validationScope": "기존 campaignEffectValid/cardEffectReady/cardEffectPending 정의 검사에서 83건 중 42건 통과·41건 미등록. 실제 부착·발동·밸런스 검증 아님. attachmentBlocker 7건은 조건형 전환 또는 현행 계약 연결이 별도로 필요하다.",
+  "traits": [
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "IGNORE_ZOC"
+        }
+      ],
+      "id": "UTP-CT-M01",
+      "name": "적 옆을 스쳐 간다",
+      "status": "pool",
+      "sourceCardId": "CT-M01",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "통제 구역에서 멈추지 않는다(적 옆을 지나간다).",
+      "ruleException": "통제 구역 통과",
+      "candidateOfficers": [
+        "조운"
+      ],
+      "candidateProposal": "조운: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "경신약보",
+      "nameHanja": "輕身掠步",
+      "nameGloss": "몸을 가볍게 하여 적 옆을 스쳐 감 — 적 옆을 스쳐 간다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "NO_PURSUIT"
+        }
+      ],
+      "id": "UTP-CT-M02",
+      "name": "추격 없이 빠지기",
+      "status": "pool",
+      "sourceCardId": "CT-M02",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "교전에서 빠질 때 추격을 받지 않는다.",
+      "ruleException": "추격 면역",
+      "candidateOfficers": [
+        "조운"
+      ],
+      "candidateProposal": "조운: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "금선탈각",
+      "nameHanja": "金蟬脫殼",
+      "nameGloss": "매미가 허물 벗듯 추격 없이 빠짐 — 추격 없이 빠지기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FIRST_STRIKE"
+        }
+      ],
+      "id": "UTP-CT-M03",
+      "name": "먼저 받아친다",
+      "status": "pool",
+      "sourceCardId": "CT-M03",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "공격받으면 반격을 먼저 한다.",
+      "ruleException": "반격 순서 변경",
+      "candidateOfficers": [
+        "장료"
+      ],
+      "candidateProposal": "장료: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "후발선제",
+      "nameHanja": "後發先制",
+      "nameGloss": "적의 공격을 읽고 먼저 받아침 — 먼저 받아친다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MOVE_AFTER_ATTACK"
+        }
+      ],
+      "id": "UTP-CT-M04",
+      "name": "치고 다시 움직인다",
+      "status": "pool",
+      "sourceCardId": "CT-M04",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "이번 턴 이동하지 않았으면 공격 뒤에도 움직인다.",
+      "ruleException": "공격 뒤 이동 권한",
+      "candidateOfficers": [
+        "마초"
+      ],
+      "candidateProposal": "마초: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "유기선봉",
+      "nameHanja": "遊騎先鋒",
+      "nameGloss": "적을 치고 난 뒤 다시 자리를 옮김 — 치고 다시 움직인다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "NEVER_ROUT"
+        }
+      ],
+      "id": "UTP-CT-M05",
+      "name": "절대 무너지지 않는다",
+      "status": "pool",
+      "sourceCardId": "CT-M05",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "사기가 패주까지 떨어지지 않는다.",
+      "ruleException": "패주 면역",
+      "candidateOfficers": [
+        "방덕"
+      ],
+      "candidateProposal": "방덕: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "난공불락",
+      "nameHanja": "難攻不落",
+      "nameGloss": "어떤 공격에도 절대 무너지지 않음 — 절대 무너지지 않는다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "NO_COUNTER_TAKEN"
+        }
+      ],
+      "id": "UTP-CT-M06",
+      "name": "반격 없는 공격",
+      "status": "pool",
+      "sourceCardId": "CT-M06",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "이 부대의 공격은 반격받지 않는다.",
+      "ruleException": "반격 차단",
+      "candidateOfficers": [
+        "감녕"
+      ],
+      "candidateProposal": "감녕: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "무형암습",
+      "nameHanja": "無形暗襲",
+      "nameGloss": "적의 반격이 닿지 않게 몰래 침 — 반격 없는 공격"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BREACH"
+        }
+      ],
+      "id": "UTP-CT-M07",
+      "name": "성벽 한 방",
+      "status": "pool",
+      "sourceCardId": "CT-M07",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "내구 50 이하 성 공격 시 남은 내구 제거; 함락은 기존 성 공격 경로로 처리.",
+      "ruleException": "성 잔여 내구 일괄 제거",
+      "candidateOfficers": [
+        "고순"
+      ],
+      "candidateProposal": "고순: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "파성거추",
+      "nameHanja": "破城巨錘",
+      "nameGloss": "단 한 번에 성벽을 부수는 큰 망치 — 성벽 한 방"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "CAPTURE_ALWAYS"
+        }
+      ],
+      "id": "UTP-CT-M08",
+      "name": "반드시 사로잡는다",
+      "status": "pool",
+      "sourceCardId": "CT-M08",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "이 부대가 쓰러뜨린 적 장수는 반드시 포로가 된다.",
+      "ruleException": "포획 결과 확정",
+      "candidateOfficers": [
+        "여몽"
+      ],
+      "candidateProposal": "여몽: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "수망생포",
+      "nameHanja": "收網生捕",
+      "nameGloss": "그물을 거두듯 적장을 반드시 잡음 — 반드시 사로잡는다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DOUBLE_ACTION"
+        }
+      ],
+      "id": "UTP-CT-M09",
+      "name": "두 번 행동",
+      "status": "pool",
+      "sourceCardId": "CT-M09",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "한 턴에 주 행동을 두 번 한다.",
+      "ruleException": "주 행동 추가",
+      "candidateOfficers": [
+        "여포"
+      ],
+      "candidateProposal": "여포: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "질풍재격",
+      "nameHanja": "疾風再擊",
+      "nameGloss": "빠른 바람처럼 두 번 몰아쳐 행동함 — 두 번 행동"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TERRAIN_WALKER"
+        }
+      ],
+      "id": "UTP-CT-M10",
+      "name": "험한 길도 평지처럼",
+      "status": "pool",
+      "sourceCardId": "CT-M10",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "숲·언덕을 평지처럼 걷고, 다리 없는 강도 건넌다.",
+      "ruleException": "지형 무시·강 도하 권한",
+      "candidateOfficers": [
+        "맹획"
+      ],
+      "candidateProposal": "맹획: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "여리지평",
+      "nameHanja": "如履之平",
+      "nameGloss": "험한 산길도 평지를 밟듯 나아감 — 험한 길도 평지처럼"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "AMBUSH"
+        }
+      ],
+      "id": "UTP-CT-M11",
+      "name": "보이지 않는 매복",
+      "status": "pool",
+      "sourceCardId": "CT-M11",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "숲·언덕에 있으면 맞닿기 전까지 적에게 보이지 않는다.",
+      "ruleException": "은신 정보 권한",
+      "candidateOfficers": [
+        "감녕"
+      ],
+      "candidateProposal": "감녕: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "장형은복",
+      "nameHanja": "藏形隱伏",
+      "nameGloss": "모습을 감추어 보이지 않게 매복함 — 보이지 않는 매복"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "POOL_RECALL",
+          "params": {
+            "automatic": true
+          }
+        }
+      ],
+      "id": "UTP-CT-M13",
+      "name": "성으로 즉시 귀환",
+      "status": "pool",
+      "sourceCardId": "CT-M13",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "판에 한 번 이동한 자기 차례 끝에 인접한 빈 아군 성 중심으로 자동 귀환한다.",
+      "ruleException": "이동한 차례 끝 · 인접 빈 아군 성 · 판 1회",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 성 방향 이동 종료 시 귀환하는 조건형 예외로 재설계",
+      "sourceRecommendation": "(a)",
+      "originalEffects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RECALL"
+        }
+      ],
+      "originalText": "주 행동을 써 가장 가까운 빈 아군 성 중심으로 즉시 귀환.",
+      "attachmentRevision": 338,
+      "nameShort": "비익귀환",
+      "nameHanja": "飛翼歸還",
+      "nameGloss": "날개를 단 듯 성으로 즉시 돌아옴 — 성으로 즉시 귀환"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "REACH_2"
+        }
+      ],
+      "id": "UTP-CT-M14",
+      "name": "두 칸 너머 공격",
+      "status": "pool",
+      "sourceCardId": "CT-M14",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "근접 부대인데 2칸 거리에서도 공격한다.",
+      "ruleException": "근접 사거리 권한",
+      "candidateOfficers": [
+        "장비"
+      ],
+      "candidateProposal": "장비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "초원타격",
+      "nameHanja": "超遠打擊",
+      "nameGloss": "두 칸 너머 떨어진 적을 건너 침 — 두 칸 너머 공격"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SPLASH"
+        }
+      ],
+      "id": "UTP-CT-M15",
+      "name": "한 번에 둘을 친다",
+      "status": "pool",
+      "sourceCardId": "CT-M15",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "공격하면 대상과 맞닿은 다른 적 1부대도 피해 절반을 입는다.",
+      "ruleException": "자동 두 번째 타격",
+      "candidateOfficers": [
+        "전위"
+      ],
+      "candidateProposal": "전위: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "양단맹참",
+      "nameHanja": "兩斷猛斬",
+      "nameGloss": "한 번의 칼질로 두 적을 함께 벰 — 한 번에 둘을 친다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "OVERWATCH"
+        }
+      ],
+      "id": "UTP-CT-M16",
+      "name": "다가오면 먼저 친다",
+      "status": "pool",
+      "sourceCardId": "CT-M16",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "방어 태세 중 적이 사거리에 들어오면 즉시 한 번 공격한다.",
+      "ruleException": "자동 경계 타격",
+      "candidateOfficers": [
+        "황충"
+      ],
+      "candidateProposal": "황충: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "선제요격",
+      "nameHanja": "先制邀擊",
+      "nameGloss": "다가오는 적을 길목에서 먼저 침 — 다가오면 먼저 친다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "LAST_STAND"
+        }
+      ],
+      "id": "UTP-CT-M17",
+      "name": "한 번은 버틴다",
+      "status": "pool",
+      "sourceCardId": "CT-M17",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "차례·활성 세력 구간마다 한 번 병력 1로 생존.",
+      "ruleException": "소멸 확정 회피",
+      "candidateOfficers": [
+        "전위"
+      ],
+      "candidateProposal": "전위: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "불사지신",
+      "nameHanja": "不死之身",
+      "nameGloss": "쓰러질 위기에도 한 번은 버텨냄 — 한 번은 버틴다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "COUNTER_ALL"
+        }
+      ],
+      "id": "UTP-CT-M18",
+      "name": "화살에도 반격",
+      "status": "pool",
+      "sourceCardId": "CT-M18",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "원거리 공격을 받아도 반격한다.",
+      "ruleException": "원거리 반격 권한",
+      "candidateOfficers": [
+        "황충"
+      ],
+      "candidateProposal": "황충: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "응현반사",
+      "nameHanja": "應弦反射",
+      "nameGloss": "날아오는 화살에도 지체 없이 반격함 — 화살에도 반격"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "EXTENDED_ZOC"
+        }
+      ],
+      "id": "UTP-CT-M19",
+      "name": "넓은 포위망",
+      "status": "pool",
+      "sourceCardId": "CT-M19",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "이 부대의 통제 구역이 2칸이다.",
+      "ruleException": "통제 구역 범위 확대",
+      "candidateOfficers": [
+        "조인"
+      ],
+      "candidateProposal": "조인: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "천라지망",
+      "nameHanja": "天羅地網",
+      "nameGloss": "하늘과 땅에 넓은 포위망을 펼침 — 넓은 포위망"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RALLY_AURA"
+        }
+      ],
+      "id": "UTP-CT-M20",
+      "name": "무너지지 않는 기둥",
+      "status": "pool",
+      "sourceCardId": "CT-M20",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "맞닿은 아군은 패주하지 않는다(동요까지).",
+      "ruleException": "아군 패주 면역",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "중류지주",
+      "nameHanja": "中流砥柱",
+      "nameGloss": "거센 물살에도 무너지지 않는 기둥 — 무너지지 않는 기둥"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TERROR"
+        }
+      ],
+      "id": "UTP-CT-M21",
+      "name": "바람 소리에도 놀란다",
+      "status": "pool",
+      "sourceCardId": "CT-M21",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "이 부대와 맞닿은 적은 자기 차례 시작마다 사기 판정을 한다.",
+      "ruleException": "행동 없는 사기 판정 생성",
+      "candidateOfficers": [
+        "장비"
+      ],
+      "candidateProposal": "장비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "초목개병",
+      "nameHanja": "草木皆兵",
+      "nameGloss": "풀과 나무만 보고도 적이 놀라게 함 — 바람 소리에도 놀란다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ABSORB"
+        }
+      ],
+      "id": "UTP-CT-M22",
+      "name": "항복병 흡수",
+      "status": "pool",
+      "sourceCardId": "CT-M22",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "적 부대를 쓰러뜨리면 그 부대 원래 병력의 20%를 내 병력으로 편입한다.",
+      "ruleException": "적 병력 직접 편입",
+      "candidateOfficers": [
+        "장각"
+      ],
+      "candidateProposal": "장각: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "초항납반",
+      "nameHanja": "招降納叛",
+      "nameGloss": "항복한 적병을 거두어 군세를 불림 — 항복병 흡수"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DEFECTION"
+        }
+      ],
+      "id": "UTP-CT-M23",
+      "name": "적장 귀순시키기",
+      "status": "pool",
+      "sourceCardId": "CT-M23",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "소멸시킬 공격이고 귀순 적격이면 장수와 부대를 귀순 처리.",
+      "ruleException": "적장·부대 소유권 변경",
+      "candidateOfficers": [
+        "맹획"
+      ],
+      "candidateProposal": "맹획: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "경심회유",
+      "nameHanja": "傾心懷柔",
+      "nameGloss": "마음을 얻어 적장을 귀순시킴 — 적장 귀순시키기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SIEGE_FROM_WALL"
+        }
+      ],
+      "id": "UTP-CT-M24",
+      "name": "사방에서 성 공격",
+      "status": "pool",
+      "sourceCardId": "CT-M24",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "성벽 바깥 어느 칸에서도 성을 공격한다.",
+      "ruleException": "성 공격 위치 권한",
+      "candidateOfficers": [
+        "고순"
+      ],
+      "candidateProposal": "고순: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "사면위공",
+      "nameHanja": "四面圍攻",
+      "nameGloss": "사방에서 에워싸고 성을 몰아침 — 사방에서 성 공격"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SIEGE_IMMUNE"
+        }
+      ],
+      "id": "UTP-CT-M25",
+      "name": "성 화살을 막는다",
+      "status": "pool",
+      "sourceCardId": "CT-M25",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "성 사격을 받지 않는다.",
+      "ruleException": "성 사격 면역",
+      "candidateOfficers": [
+        "주태"
+      ],
+      "candidateProposal": "주태: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "철방차폐",
+      "nameHanja": "鐵盾遮蔽",
+      "nameGloss": "무쇠 방패로 성의 화살을 막아냄 — 성 화살을 막는다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "GARRISON_WALL"
+        }
+      ],
+      "id": "UTP-CT-M26",
+      "name": "흔들리지 않는 성",
+      "status": "pool",
+      "sourceCardId": "CT-M26",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "이 부대가 성 중심에 있으면 성 내구도가 피해를 받지 않는다.",
+      "ruleException": "성 내구 피해 면역",
+      "candidateOfficers": [
+        "조인"
+      ],
+      "candidateProposal": "조인: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "철옹성",
+      "nameHanja": "鐵甕城",
+      "nameGloss": "무쇠 독처럼 흔들리지 않는 성곽 — 흔들리지 않는 성"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DOUBLE_DRAFT"
+        }
+      ],
+      "id": "UTP-CT-M30",
+      "name": "넓게 배운다",
+      "status": "pool",
+      "sourceCardId": "CT-M30",
+      "sourcePath": "docs/design-data/officer-pack/common-traits-v0.2.json",
+      "text": "레벨업 Draft 카드 4장, 다시 뽑기 2회.",
+      "ruleException": "Draft 후보·재추첨 수 변경",
+      "candidateOfficers": [
+        "여몽"
+      ],
+      "candidateProposal": "여몽: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "박학다식",
+      "nameHanja": "博學多識",
+      "nameGloss": "넓게 배워 아는 것이 많고 깊음 — 넓게 배운다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "CANTO",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C01c",
+      "name": "치고 빠지기",
+      "status": "pool",
+      "sourceCardId": "TC-C01c",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "돌격 뒤 남은 이동으로 물러날 수 있다(교전 이탈 추격은 그대로).",
+      "ruleException": "공격 뒤 이동 권한",
+      "candidateOfficers": [
+        "마초"
+      ],
+      "candidateProposal": "마초: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "전격이탈",
+      "nameHanja": "電擊離脫",
+      "nameGloss": "번개처럼 치고 흔적 없이 빠짐 — 치고 빠지기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "ROUT_ADVANCE",
+          "params": {
+            "move": 1
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C01d",
+      "name": "적진을 가르고 달린다",
+      "status": "pool",
+      "sourceCardId": "TC-C01d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "돌격으로 새 패주 유발 시 원대상 칸이 인접·비어 있으면 강제 1칸 전진.",
+      "ruleException": "공격 뒤 강제 전진",
+      "candidateOfficers": [
+        "장료"
+      ],
+      "candidateProposal": "장료: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "종횡무진",
+      "nameHanja": "縱橫無盡",
+      "nameGloss": "적진을 마음대로 가르고 달림 — 적진을 가르고 달린다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "BREAKTHROUGH",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C01e",
+      "name": "돌파",
+      "status": "pool",
+      "sourceCardId": "TC-C01e",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "흐트러진 적의 통제 구역을 무시하고 지난다. 대가: 돌격한 뒤 자기 전열이 흐트러짐.",
+      "ruleException": "통제 구역 통과",
+      "candidateOfficers": [
+        "조운"
+      ],
+      "candidateProposal": "조운: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "추봉돌파",
+      "nameHanja": "錐鋒突破",
+      "nameGloss": "송곳 끝처럼 적진을 뚫고 나감 — 돌파"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "PINCER_FOLLOWUP",
+          "params": {
+            "ratio": 40
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C02b",
+      "name": "협공",
+      "status": "pool",
+      "sourceCardId": "TC-C02b",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "대상 반대편에 아군이 있으면 그 아군이 40% 추격타.",
+      "ruleException": "아군 자동 추격타",
+      "candidateOfficers": [
+        "장합"
+      ],
+      "candidateProposal": "장합: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "양익협공",
+      "nameHanja": "兩翼夾攻",
+      "nameGloss": "양 날개에서 동시에 적을 덮침 — 협공"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "NO_COUNTER_ON_FLANK",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C02c",
+      "name": "빈틈을 찌르다",
+      "status": "pool",
+      "sourceCardId": "TC-C02c",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "측면·후방으로 공격하면 상대가 반격하지 못한다.",
+      "ruleException": "반격 차단",
+      "candidateOfficers": [
+        "감녕"
+      ],
+      "candidateProposal": "감녕: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "승허직입",
+      "nameHanja": "乘虛直入",
+      "nameGloss": "적의 허술한 빈틈을 곧바로 찌름 — 빈틈을 찌르다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "AMBUSHER",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C02d",
+      "name": "매복자",
+      "status": "pool",
+      "sourceCardId": "TC-C02d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "상대 시야 밖에서 시작한 첫 공격은 후방 공격으로 친다.",
+      "ruleException": "공격 방향 판정 대체",
+      "candidateOfficers": [
+        "장료"
+      ],
+      "candidateProposal": "장료: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "복병지장",
+      "nameHanja": "伏兵之將",
+      "nameGloss": "길목마다 숨어 적을 노리는 장수 — 매복자"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "NO_FRONT",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C02e",
+      "name": "늘 옆을 친다",
+      "status": "pool",
+      "sourceCardId": "TC-C02e",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "모든 공격이 최소 측면 공격. 대가: 후방 보너스 없음.",
+      "ruleException": "정면을 측면으로 대체",
+      "candidateOfficers": [
+        "여몽"
+      ],
+      "candidateProposal": "여몽: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "우회측격",
+      "nameHanja": "迂廻側擊",
+      "nameGloss": "돌아가서 늘 적의 옆구리를 침 — 늘 옆을 친다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "HEDGEHOG",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C03b",
+      "name": "고슴도치",
+      "status": "pool",
+      "sourceCardId": "TC-C03b",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "정돈 상태면 측면 공격 보너스를 받지 않는다(후방은 받음).",
+      "ruleException": "측면 규칙 무시",
+      "candidateOfficers": [
+        "조인"
+      ],
+      "candidateProposal": "조인: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "극침방비",
+      "nameHanja": "棘針防備",
+      "nameGloss": "고슴도치 가시처럼 촘촘한 방비 — 고슴도치"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SET_SPEARS",
+          "params": {
+            "reflect": 25
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C03c",
+      "name": "창 세우기",
+      "status": "pool",
+      "sourceCardId": "TC-C03c",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이번 차례 움직이지 않았으면 정면 돌격 피해의 25%를 되돌려준다.",
+      "ruleException": "피해 자동 반사",
+      "candidateOfficers": [
+        "하후돈"
+      ],
+      "candidateProposal": "하후돈: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "검림창우",
+      "nameHanja": "劍林槍雨",
+      "nameGloss": "창을 숲처럼 세워 적을 막아냄 — 창 세우기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "BLADESTORM",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C03d",
+      "name": "들어오면 먼저 친다",
+      "status": "pool",
+      "sourceCardId": "TC-C03d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "내 통제 구역에 들어온 첫 적을 상대가 치기 전에 먼저 친다(턴당 1회).",
+      "ruleException": "진입 자동 타격",
+      "candidateOfficers": [
+        "서황"
+      ],
+      "candidateProposal": "서황: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "영격태세",
+      "nameHanja": "迎擊態勢",
+      "nameGloss": "적이 들어오면 먼저 치는 태세 — 들어오면 먼저 친다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SQUARE",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C03e",
+      "name": "방진",
+      "status": "pool",
+      "sourceCardId": "TC-C03e",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "측면·후방으로 맞아도 불리함이 없다. 대가: 이동 최대 1칸.",
+      "ruleException": "측후면 규칙 무시",
+      "candidateOfficers": [
+        "조인"
+      ],
+      "candidateProposal": "조인: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "밀집방진",
+      "nameHanja": "密集方陣",
+      "nameGloss": "빈틈없이 뭉쳐 지키는 네모 진형 — 방진"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "IRON_NERVE",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C04c",
+      "name": "철의 의지",
+      "status": "pool",
+      "sourceCardId": "TC-C04c",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "차례마다 첫 사기 저하를 무시.",
+      "ruleException": "첫 사기 저하 무효",
+      "candidateOfficers": [
+        "방덕"
+      ],
+      "candidateProposal": "방덕: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "강철의지",
+      "nameHanja": "鋼鐵意志",
+      "nameGloss": "무쇠처럼 단단하여 꺾이지 않는 뜻 — 철의 의지"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "NINE_LIVES",
+          "params": {
+            "uses": 1
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C04d",
+      "name": "아홉 목숨",
+      "status": "pool",
+      "sourceCardId": "TC-C04d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "부대가 소멸할 피해를 한 판에 한 번 버티고 병력 5%로 패주.",
+      "ruleException": "소멸 결과 대체",
+      "candidateOfficers": [
+        "주태"
+      ],
+      "candidateProposal": "주태: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "nameShort": "구사일생",
+      "nameHanja": "九死一生",
+      "nameGloss": "아홉 번 죽을 고비에도 살아남음 — 아홉 목숨"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "OATH_OF_REVENGE",
+          "params": {
+            "turns": 3,
+            "penalty": 10
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C04e",
+      "name": "복수의 맹세",
+      "status": "pool",
+      "sourceCardId": "TC-C04e",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "패주한 뒤 3전투 동안 주는 피해 −10%, 그 사이 패주시킨 상대를 이기면 희귀 특기 1장을 바로 얻는다.",
+      "ruleException": "Draft 밖 카드 획득",
+      "candidateOfficers": [
+        "마초"
+      ],
+      "candidateProposal": "마초: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "설치맹세",
+      "nameHanja": "雪恥盟誓",
+      "nameGloss": "치욕을 씻고 복수하겠다는 맹세 — 복수의 맹세"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "ENCIRCLE",
+          "params": {
+            "durability": 10
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C05d",
+      "name": "포위망",
+      "status": "pool",
+      "sourceCardId": "TC-C05d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "세 면 포위 시 차례 시작에 내구 직접 감소 및 수비 부대 사기 판정.",
+      "ruleException": "차례 시작 자동 성 타격",
+      "candidateOfficers": [
+        "여몽"
+      ],
+      "candidateProposal": "여몽: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "팔방포위",
+      "nameHanja": "八方包圍",
+      "nameGloss": "사방팔방으로 빈틈없이 포위망을 침 — 포위망"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "GRUDGE",
+          "params": {
+            "move": 1
+          },
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-TC-C06b",
+      "name": "원한",
+      "status": "pool",
+      "sourceCardId": "TC-C06b",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "숙적이 보이면 이동 +1·사기 고정. 대가: 그 차례 숙적 쪽으로 가까워져야 한다.",
+      "ruleException": "사기 고정",
+      "candidateOfficers": [
+        "마초"
+      ],
+      "candidateProposal": "마초: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "nameShort": "각골통한",
+      "nameHanja": "刻骨痛恨",
+      "nameGloss": "뼈에 사무쳐 잊지 못하는 깊은 원한 — 원한"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SURPLUS_TO_TROOPS",
+          "params": {
+            "ratio": 5
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V01a",
+      "name": "흉년 대비",
+      "status": "pool",
+      "sourceCardId": "TC-V01a",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "식량이 창고 상한을 넘치면 넘친 식량 1당 예비병 +5.",
+      "ruleException": "넘친 식량을 병력으로 변환",
+      "candidateOfficers": [
+        "조조"
+      ],
+      "candidateProposal": "조조: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: SURPLUS_TO_TROOPS. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "비황축적",
+      "nameHanja": "備荒蓄積",
+      "nameGloss": "흉년에 대비해 곡식을 미리 쌓아 둠 — 흉년 대비"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "UNBLOCKABLE_SUPPLY",
+          "params": {
+            "productionCost": 2
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V01d",
+      "name": "천하의 곡창",
+      "status": "pool",
+      "sourceCardId": "TC-V01d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이 성의 식량 지원은 포위·거리 제한 없이 닿는다. 대가: 이 성 생산 −2.",
+      "ruleException": "보급 포위·거리 제한 무시",
+      "candidateOfficers": [
+        "순욱"
+      ],
+      "candidateProposal": "순욱: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: UNBLOCKABLE_SUPPLY. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "천부지국",
+      "nameHanja": "天府之國",
+      "nameGloss": "하늘이 내린 천하의 풍요로운 곡창 — 천하의 곡창"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "ALT_PAYMENT",
+          "params": {
+            "fame": 2,
+            "science": 1,
+            "automatic": true
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V02c",
+      "name": "인망·과학으로 짓기",
+      "status": "pool",
+      "sourceCardId": "TC-V02c",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "태수 재임 중 시설 작업이 있는 결산에 판 한 번 남은 생산을 과학 1당 1로 자동 지불해 완공한다. 과학이 모자라면 발동하지 않는다.",
+      "ruleException": "시설 작업 결산 · 과학 자동 대체 지불 · 판 1회",
+      "candidateOfficers": [
+        "순욱"
+      ],
+      "candidateProposal": "순욱: 시설 작업 시작 시 자동 대체 지불로 재설계",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: ALT_PAYMENT. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "originalEffects": [
+        {
+          "op": "RULE",
+          "rule": "ALT_PAYMENT",
+          "params": {
+            "fame": 2,
+            "science": 1
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "originalText": "시설 작업의 남은 생산을 인망 2 또는 과학 1당 1씩 대신 치러 즉시 끝낼 수 있다.",
+      "attachmentRevision": 338,
+      "nameShort": "인기축성",
+      "nameHanja": "人和築城",
+      "nameGloss": "인망과 기술로 튼튼하게 성을 쌓음 — 인망·과학으로 짓기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "LAST_WALL",
+          "params": {
+            "uses": 1,
+            "strikePenalty": 50
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V02d",
+      "name": "마지막 한 번 버티는 성벽",
+      "status": "pool",
+      "sourceCardId": "TC-V02d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "성 내구도가 0이 되는 공격을 한 판에 한 번 버틴다(내구 1). 대가: 성 사격 피해 −50%.",
+      "ruleException": "성 파괴 회피",
+      "candidateOfficers": [
+        "만총"
+      ],
+      "candidateProposal": "만총: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: LAST_WALL. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "최후보루",
+      "nameHanja": "最後堡壘",
+      "nameGloss": "무너지기 직전 마지막 한 번을 버팀 — 마지막 한 번 버티는 성벽"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "IMPART",
+          "params": {
+            "period": 3
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V03b",
+      "name": "스승의 길",
+      "status": "pool",
+      "sourceCardId": "TC-V03b",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "주기마다 자유 장수에 태수 내정 특기 전수; 보유 수 3 이상은 건너뜀(장착제 잔여 불일치).",
+      "ruleException": "Draft 밖 특기 전수",
+      "candidateOfficers": [
+        "노식"
+      ],
+      "candidateProposal": "노식: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: IMPART. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "사도전수",
+      "nameHanja": "師道傳授",
+      "nameGloss": "스승의 길을 걸으며 가르침을 전함 — 스승의 길"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "RELEASE_PROPAGANDA",
+          "params": {
+            "fame": 15
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V04b",
+      "name": "포로를 돌려보낸다",
+      "status": "pool",
+      "sourceCardId": "TC-V04b",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "포로를 석방하면 인망 +15, 그 포로 세력의 성 하나 치안 한 단계 악화.",
+      "ruleException": "적 세력 치안 직접 변경",
+      "candidateOfficers": [
+        "가후"
+      ],
+      "candidateProposal": "가후: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: RELEASE_PROPAGANDA. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "종방포로",
+      "nameHanja": "縱放捕虜",
+      "nameGloss": "사로잡은 포로를 풀어 돌려보냄 — 포로를 돌려보낸다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "LOCAL_PRIVILEGE",
+          "params": {
+            "stages": 2,
+            "automatic": true
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V04d",
+      "name": "토호에게 특권 주기",
+      "status": "pool",
+      "sourceCardId": "TC-V04d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "회유 처리 때 점령 단계 둘을 한 번에 끝낸다. 대가: 그 성 생산 영구 −1. 철회할 수 없다.",
+      "ruleException": "회유 선택 조건 · 생산 영구 대가 · 철회 명령 없음",
+      "candidateOfficers": [
+        "손권"
+      ],
+      "candidateProposal": "손권: 회유 선택 시 특권 적용; 새 철회 명령 제거",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: LOCAL_PRIVILEGE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "originalEffects": [
+        {
+          "op": "RULE",
+          "rule": "LOCAL_PRIVILEGE",
+          "params": {
+            "stages": 2,
+            "revoke": 50
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "originalText": "회유 처리 때 점령 단계 둘을 한 번에 끝낸다. 대가: 그 성 생산 영구 −1(인망 50으로 철회).",
+      "attachmentRevision": 338,
+      "nameShort": "후대호족",
+      "nameHanja": "厚待豪族",
+      "nameGloss": "지역 토호에게 특권을 주어 끌어안음 — 토호에게 특권 주기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "COUNTER_SPY",
+          "params": {
+            "vision": 2
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V05b",
+      "name": "첩자를 잡는다",
+      "status": "pool",
+      "sourceCardId": "TC-V05b",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "성 시야 +2, 사건·전법으로 이 성 치안이 떨어지지 않는다.",
+      "ruleException": "사건·전법 치안 면역",
+      "candidateOfficers": [
+        "가후"
+      ],
+      "candidateProposal": "가후: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: COUNTER_SPY. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "색출간세",
+      "nameHanja": "索出奸細",
+      "nameGloss": "숨어든 적의 첩자를 샅샅이 잡아냄 — 첩자를 잡는다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "MARTIAL_LAW",
+          "params": {
+            "production": 50
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V05d",
+      "name": "계엄",
+      "status": "pool",
+      "sourceCardId": "TC-V05d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이 성 치안은 무엇이 있어도 '안정'. 대가: 생산 −50%.",
+      "ruleException": "치안 안정 고정",
+      "candidateOfficers": [
+        "동탁"
+      ],
+      "candidateProposal": "동탁: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: MARTIAL_LAW. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "엄포계엄",
+      "nameHanja": "嚴布戒嚴",
+      "nameGloss": "군율을 엄히 펴서 성 안을 단속함 — 계엄"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "THREE_VISITS",
+          "params": {
+            "extra": 1
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V06a",
+      "name": "정성 들인 등용",
+      "status": "pool",
+      "sourceCardId": "TC-V06a",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이 성에서 등용한 장수는 첫 레벨업 때 후보 카드 +1장.",
+      "ruleException": "첫 Draft 후보 수 변경",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: THREE_VISITS. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "삼고지례",
+      "nameHanja": "三顧之禮",
+      "nameGloss": "온 정성을 다해 어진 인재를 등용함 — 정성 들인 등용"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "REMOTE_RECRUIT",
+          "params": {
+            "automatic": true
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V06b",
+      "name": "인재의 그물",
+      "status": "pool",
+      "sourceCardId": "TC-V06b",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "태수 재임 중 결산에 판 한 번 다른 아군 성의 협의 중이 아닌 재야 장수 하나를 이 성으로 초청한다. 등용은 기존 등용 절차를 따른다.",
+      "ruleException": "태수 결산 · 아군 성 재야 초청 · 판 1회",
+      "candidateOfficers": [
+        "조조"
+      ],
+      "candidateProposal": "조조: 태수 재임 중 원격 대상 허용; 기존 등용 명령 사용",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: REMOTE_RECRUIT. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "originalEffects": [
+        {
+          "op": "RULE",
+          "rule": "REMOTE_RECRUIT",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "originalText": "이 성에서 다른 아군 성의 재야 장수도 등용할 수 있다.",
+      "attachmentRevision": 338,
+      "nameShort": "망라군현",
+      "nameHanja": "網羅群賢",
+      "nameGloss": "인재의 그물을 펼쳐 현자를 모음 — 인재의 그물"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "DEFECTION_WELCOME",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V06c",
+      "name": "귀순을 이끈다",
+      "status": "pool",
+      "sourceCardId": "TC-V06c",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "아군이 적 성을 함락하면 그 성 자유 장수는 포로 대신 재야로 남는다.",
+      "ruleException": "포로를 재야로 대체",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: DEFECTION_WELCOME. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "감화귀순",
+      "nameHanja": "感化歸順",
+      "nameGloss": "덕으로 감화시켜 적의 귀순을 이끎 — 귀순을 이끈다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "BLOODLESS_MUSTER",
+          "params": {
+            "turns": 2,
+            "threshold": 0.8
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-TC-V07d",
+      "name": "부상병 먼저 출진",
+      "status": "pool",
+      "sourceCardId": "TC-V07d",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이 성 출진은 예비병보다 부상병을 먼저 쓴다. 대가: 그 부대 첫 2턴 동요 문턱 ×0.8.",
+      "ruleException": "부상병 출진 자원 권한",
+      "candidateOfficers": [
+        "황개"
+      ],
+      "candidateProposal": "황개: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: BLOODLESS_MUSTER. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "상병선출",
+      "nameHanja": "傷兵先出",
+      "nameGloss": "다친 병사를 먼저 내보내 사기를 올림 — 부상병 먼저 출진"
+    },
+    {
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "COMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "PRODUCTION_OVERFLOW",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-CD-02",
+      "name": "장부 정리",
+      "status": "pool",
+      "sourceCardId": "CD-02",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "작업이 끝나는 턴에 남은 생산이 다음 작업으로 넘어간다.",
+      "ruleException": "생산 잔량 이월 추가",
+      "candidateOfficers": [
+        "만총"
+      ],
+      "candidateProposal": "만총: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: PRODUCTION_OVERFLOW. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "명철회계",
+      "nameHanja": "明澈會計",
+      "nameGloss": "물자와 장부를 한 치 오차 없이 정리함 — 장부 정리"
+    },
+    {
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "INCORRUPTIBLE",
+          "params": {
+            "guard": 1
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-CD-04",
+      "name": "청렴",
+      "status": "pool",
+      "sourceCardId": "CD-04",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이 성에서 수탈을 고를 수 없다. 대신 치안이 나빠질 원인 1개를 매 정산 무시.",
+      "ruleException": "치안 원인 무효",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: INCORRUPTIBLE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "청렴결백",
+      "nameHanja": "淸廉潔白",
+      "nameGloss": "마음이 맑고 깨끗하여 탐욕이 없음 — 청렴"
+    },
+    {
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "REFUGEE_INFLOW",
+          "params": {
+            "range": 5
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "id": "UTP-CD-06",
+      "name": "피란민을 받는다",
+      "status": "pool",
+      "sourceCardId": "CD-06",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "5칸 안 아군·중립 성이 함락되면 이 성 인구 +1.",
+      "ruleException": "인구 유입 경로 추가",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: REFUGEE_INFLOW. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "유민수용",
+      "nameHanja": "流民收容",
+      "nameGloss": "오갈 데 없는 피란민을 받아 안치함 — 피란민을 받는다"
+    },
+    {
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "SHARED_GRANARY",
+          "params": {
+            "capPenalty": 20
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "id": "UTP-TM-01",
+      "name": "나라 하나의 창고",
+      "status": "pool",
+      "sourceCardId": "TM-01",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "세력 모든 성이 식량 창고 하나를 함께 쓴다(포위된 성 포함). 대가: 합친 창고 상한 −20%.",
+      "ruleException": "포위 포함 공동창고 권한",
+      "candidateOfficers": [
+        "순욱"
+      ],
+      "candidateProposal": "순욱: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: SHARED_GRANARY. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "일국부고",
+      "nameHanja": "一國府庫",
+      "nameGloss": "나라 하나를 먹여 살릴 큰 창고 — 나라 하나의 창고"
+    },
+    {
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "INSTANT_ALLEGIANCE",
+          "params": {},
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "id": "UTP-TM-02",
+      "name": "바로 따르는 민심",
+      "status": "pool",
+      "sourceCardId": "TM-02",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이 장수가 점령 처리에 관여한 성은 점령 단계 없이 바로 정상. 대가: 세력 전체 수탈 불가.",
+      "ruleException": "점령 단계 전체 생략",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: INSTANT_ALLEGIANCE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "만민귀심",
+      "nameHanja": "萬民歸心",
+      "nameGloss": "백성의 마음이 곧바로 믿고 따름 — 바로 따르는 민심"
+    },
+    {
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "TALENT_MAGNET",
+          "params": {
+            "period": 5,
+            "recruitPenalty": 20
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "id": "UTP-TM-03",
+      "name": "천하의 인재가 모인다",
+      "status": "pool",
+      "sourceCardId": "TM-03",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "5턴마다 이 장수의 성에 아직 나오지 않은 장수 1명이 재야로 나타난다. 대가: 세력 등용 인망 +20%.",
+      "ruleException": "미출현 장수 생성",
+      "candidateOfficers": [
+        "조조"
+      ],
+      "candidateProposal": "조조: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: TALENT_MAGNET. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "천하귀재",
+      "nameHanja": "天下歸才",
+      "nameGloss": "천하의 뛰어난 인재가 구름처럼 모임 — 천하의 인재가 모인다"
+    },
+    {
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "rule": "REGENT",
+          "params": {
+            "range": 2
+          },
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 0,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "kind": "trait",
+      "domestic": true,
+      "rarity": "MYTHIC",
+      "id": "UTP-TM-04",
+      "name": "여러 성을 맡는다",
+      "status": "pool",
+      "sourceCardId": "TM-04",
+      "sourcePath": "docs/design-data/officer-pack/career-titles-v0.3.json",
+      "text": "이 장수는 2칸 안 모든 아군 성의 태수로도 친다(내정 특기가 그 성들에도). 대가: 이 장수는 출진할 수 없다.",
+      "ruleException": "다른 성 태수 겸임",
+      "candidateOfficers": [
+        "순욱"
+      ],
+      "candidateProposal": "순욱: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: REGENT. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "총할제성",
+      "nameHanja": "總轄諸城",
+      "nameGloss": "여러 성의 살림과 방비를 아울러 맡음 — 여러 성을 맡는다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FLANK_FIRST_STRIKE",
+          "params": {
+            "troop": "BT02"
+          }
+        }
+      ],
+      "id": "UTP-CT-V04",
+      "name": "창끝 먼저",
+      "status": "pool",
+      "sourceCardId": "CT-V04",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "창병일 때 측면으로 공격받아도 반격을 먼저 한다.",
+      "ruleException": "반격 순서 변경",
+      "candidateOfficers": [
+        "장료"
+      ],
+      "candidateProposal": "장료: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: FLANK_FIRST_STRIKE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "선봉예창",
+      "nameHanja": "先鋒銳槍",
+      "nameGloss": "창끝을 먼저 세워 적의 기선을 제압 — 창끝 먼저"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "POINT_BLANK",
+          "params": {
+            "ratio": 70
+          }
+        }
+      ],
+      "id": "UTP-CT-V05",
+      "name": "붙어서도 쏜다",
+      "status": "pool",
+      "sourceCardId": "CT-V05",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "궁병일 때 적이 맞닿아 있어도 2칸 사격을 할 수 있다(피해 ×0.7).",
+      "ruleException": "교전 중 원거리 사격 권한",
+      "candidateOfficers": [
+        "황충"
+      ],
+      "candidateProposal": "황충: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: POINT_BLANK. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "근접영사",
+      "nameHanja": "近接零射",
+      "nameGloss": "적이 코앞에 붙어도 흔들림 없이 쏨 — 붙어서도 쏜다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SHOOT_INTO_FOREST",
+          "params": {}
+        }
+      ],
+      "id": "UTP-CT-V06",
+      "name": "숲 너머 조준",
+      "status": "pool",
+      "sourceCardId": "CT-V06",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "궁병 주변 2칸 적의 은신 판정 해제; 문구의 숲 사격보다 넓은 탐지 권한.",
+      "ruleException": "숨은 적 탐지·공격 권한",
+      "candidateOfficers": [
+        "황충"
+      ],
+      "candidateProposal": "황충: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: SHOOT_INTO_FOREST. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "격림조준",
+      "nameHanja": "隔林照準",
+      "nameGloss": "우거진 숲 너머의 적을 정확히 노림 — 숲 너머 조준"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ASSIST_STRIKE",
+          "params": {
+            "ratio": 20
+          }
+        }
+      ],
+      "id": "UTP-CT-V07",
+      "name": "옆에서 거든다",
+      "status": "pool",
+      "sourceCardId": "CT-V07",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "맞닿은 아군이 공격하면 이 부대가 20% 추가 타격(차례 1회, 행동 소모 없음).",
+      "ruleException": "행동 없는 지원 타격",
+      "candidateOfficers": [
+        "장합"
+      ],
+      "candidateProposal": "장합: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: ASSIST_STRIKE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "측면익조",
+      "nameHanja": "側面翼助",
+      "nameGloss": "아군 곁을 지키며 공격을 거들어 줌 — 옆에서 거든다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "CHAIN_ACTION",
+          "params": {
+            "cost": 2
+          }
+        }
+      ],
+      "id": "UTP-CT-V09",
+      "name": "연달아 싸운다",
+      "status": "pool",
+      "sourceCardId": "CT-V09",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "적 부대를 패주시키면 이번 차례 행동 한 번 더(차례 1회). 대가: 다음 차례 이동 −2칸.",
+      "ruleException": "주 행동 추가",
+      "candidateOfficers": [
+        "여포"
+      ],
+      "candidateProposal": "여포: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: CHAIN_ACTION. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "백전연투",
+      "nameHanja": "百戰連鬪",
+      "nameGloss": "지치지 않고 연달아 싸움을 이어감 — 연달아 싸운다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SIEGE_RANGE",
+          "params": {
+            "extra": 1
+          }
+        }
+      ],
+      "id": "UTP-CT-V12",
+      "name": "멀리 던지는 투석",
+      "status": "pool",
+      "sourceCardId": "CT-V12",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "투석기 사거리 +1칸.",
+      "ruleException": "투석기 사거리 권한",
+      "candidateOfficers": [
+        "황월영"
+      ],
+      "candidateProposal": "황월영: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: SIEGE_RANGE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "비석원투",
+      "nameHanja": "飛石遠投",
+      "nameGloss": "바위를 날려 아주 먼 곳까지 타격함 — 멀리 던지는 투석"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "LUCKY_ESCAPE",
+          "params": {}
+        }
+      ],
+      "id": "UTP-CT-V13",
+      "name": "타고난 운",
+      "status": "pool",
+      "sourceCardId": "CT-V13",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "소멸 후 장수 운명을 ESCAPED로 돌려 부상·포획 회피.",
+      "ruleException": "부상·포획 확정 회피",
+      "candidateOfficers": [
+        "조운"
+      ],
+      "candidateProposal": "조운: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: LUCKY_ESCAPE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "천우신조",
+      "nameHanja": "天佑神助",
+      "nameGloss": "하늘이 돕고 신이 보살피는 타고난 운 — 타고난 운"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BLOODY_PATH",
+          "params": {}
+        }
+      ],
+      "id": "UTP-CT-V14",
+      "name": "피로 뚫는 퇴로",
+      "status": "pool",
+      "sourceCardId": "CT-V14",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "패주할 때 사로잡히지 않고 통제 구역 1칸을 무시하고 물러난다.",
+      "ruleException": "포획 면역·통제 구역 돌파",
+      "candidateOfficers": [
+        "조운"
+      ],
+      "candidateProposal": "조운: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: BLOODY_PATH. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "혈로개척",
+      "nameHanja": "血路開拓",
+      "nameGloss": "포위를 뚫고 살아 나갈 길을 엶 — 피로 뚫는 퇴로"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DAMAGE_CAP",
+          "params": {
+            "cap": 8
+          }
+        }
+      ],
+      "id": "UTP-CT-V15",
+      "name": "작은 상처 무시",
+      "status": "pool",
+      "sourceCardId": "CT-V15",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "정면으로 받은 피해가 병력의 8%를 넘지 못한다.",
+      "ruleException": "단발 피해 상한 보장",
+      "candidateOfficers": [
+        "허저"
+      ],
+      "candidateProposal": "허저: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: DAMAGE_CAP. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "금강불괴",
+      "nameHanja": "金剛不壞",
+      "nameGloss": "작은 상처 따위는 아랑곳 않는 몸 — 작은 상처 무시"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SCHEME_RANGE",
+          "params": {
+            "extra": 1
+          }
+        }
+      ],
+      "id": "UTP-CT-V20",
+      "name": "멀리 닿는 계략",
+      "status": "pool",
+      "sourceCardId": "CT-V20",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "지략 전법(혼란·둔화·사기·불) 사거리 +1칸.",
+      "ruleException": "전법 사거리 권한",
+      "candidateOfficers": [
+        "제갈량"
+      ],
+      "candidateProposal": "제갈량: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: SCHEME_RANGE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "천리신모",
+      "nameHanja": "千里神謀",
+      "nameGloss": "천 리 밖 적에게도 닿는 귀신같은 꾀 — 멀리 닿는 계략"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SCHEME_HASTE",
+          "params": {
+            "automatic": true
+          }
+        }
+      ],
+      "id": "UTP-CT-V21",
+      "name": "계략이 빨라진다",
+      "status": "pool",
+      "sourceCardId": "CT-V21",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "판에 한 번 첫 지략 전법의 공유 게이지 비용 10을 면제한다. 쿨다운은 바꾸지 않는다.",
+      "ruleException": "첫 지략 전법 비용 예외 · 판 1회",
+      "candidateOfficers": [
+        "사마의"
+      ],
+      "candidateProposal": "사마의: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: SCHEME_HASTE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "originalEffects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SCHEME_HASTE",
+          "params": {}
+        }
+      ],
+      "originalText": "문구는 지략 쿨다운 −1/무용 +1; c33Cooldown 잔존. E/R 게이지 계약과 불일치.",
+      "attachmentRevision": 338,
+      "nameShort": "질풍기모",
+      "nameHanja": "疾風奇謀",
+      "nameGloss": "바람처럼 빠르게 짜서 펼치는 계략 — 계략이 빨라진다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SEE_THROUGH",
+          "params": {}
+        }
+      ],
+      "id": "UTP-CT-V22",
+      "name": "속지 않는다",
+      "status": "pool",
+      "sourceCardId": "CT-V22",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "지략 열세 적의 CONFUSED·ROOTED·TAUNT 차단; 거짓 소문은 ROOTED와 연결.",
+      "ruleException": "조건부 확정 상태 면역",
+      "candidateOfficers": [
+        "가후"
+      ],
+      "candidateProposal": "가후: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: SEE_THROUGH. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "명경지수",
+      "nameHanja": "明鏡止水",
+      "nameGloss": "거울처럼 맑아 속임수에 흔들리지 않음 — 속지 않는다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "INSIGHT_AURA",
+          "params": {}
+        }
+      ],
+      "id": "UTP-CT-V23",
+      "name": "꿰뚫어 본다",
+      "status": "pool",
+      "sourceCardId": "CT-V23",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "자기와 맞닿은 아군이 상태이상(혼란·둔화·속박)에 걸리지 않는다.",
+      "ruleException": "주변 아군 상태 면역",
+      "candidateOfficers": [
+        "제갈량"
+      ],
+      "candidateProposal": "제갈량: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: INSIGHT_AURA. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "혜안통찰",
+      "nameHanja": "慧眼洞察",
+      "nameGloss": "적의 속내와 계략을 훤히 꿰뚫어 봄 — 꿰뚫어 본다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DIVINE_CALC",
+          "params": {}
+        }
+      ],
+      "id": "UTP-CT-V24",
+      "name": "모든 계략을 안다",
+      "status": "pool",
+      "sourceCardId": "CT-V24",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "지략 비교 자동 통과 분기·적 지략 전법 50% 취소·무용 전법 제한.",
+      "ruleException": "지략 확정 성공·전법 무효",
+      "candidateOfficers": [
+        "제갈량"
+      ],
+      "candidateProposal": "제갈량: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: DIVINE_CALC. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "만법통달",
+      "nameHanja": "萬法通達",
+      "nameGloss": "세상의 모든 병법과 계략을 다 앎 — 모든 계략을 안다"
+    },
+    {
+      "kind": "trait",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "EXECUTE",
+          "params": {
+            "at": 15
+          }
+        }
+      ],
+      "id": "UTP-CT-V26",
+      "name": "끝장내기",
+      "status": "pool",
+      "sourceCardId": "CT-V26",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "공격 후 생존 병력이 출진 병력 15% 미만인 대상을 확정 패주.",
+      "ruleException": "패주 결과 확정",
+      "candidateOfficers": [
+        "관우"
+      ],
+      "candidateProposal": "관우: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: EXECUTE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "일격필살",
+      "nameHanja": "一擊必殺",
+      "nameGloss": "단 한 번의 마무리로 숨통을 끊음 — 끝장내기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FAKE_BANNERS",
+          "params": {
+            "ratio": 2
+          }
+        }
+      ],
+      "id": "UTP-CT-V32",
+      "name": "가짜 깃발",
+      "status": "pool",
+      "sourceCardId": "CT-V32",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "적 현재 관측 병력·최대 병력 표시를 2배; 실제 피해 정산은 원래 값.",
+      "ruleException": "공개 병력 정보 변조",
+      "candidateOfficers": [
+        "사마의"
+      ],
+      "candidateProposal": "사마의: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: FAKE_BANNERS. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "만산의병",
+      "nameHanja": "滿山疑兵",
+      "nameGloss": "산마다 가짜 깃발을 꽂아 적을 속임 — 가짜 깃발"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TAX_ADVANCE",
+          "params": {
+            "automatic": true
+          }
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-CD-08",
+      "name": "세금 앞당겨 걷기",
+      "status": "pool",
+      "sourceCardId": "CD-08",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "태수 재임 중 작업이 있는 정상 도시의 결산에 판 한 번 생산 3회분을 선지급한다. 그 결산부터 3회 생산 0 · 치안 한 단계 악화.",
+      "ruleException": "작업 결산 자동 선지급 · 판 1회",
+      "candidateOfficers": [
+        "동탁"
+      ],
+      "candidateProposal": "동탁: 작업 시작 시 판 1회 자동 선지급; 별도 명령 제거",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: TAX_ADVANCE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "originalEffects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TAX_ADVANCE",
+          "params": {}
+        }
+      ],
+      "originalText": "명령: 다음 3턴 생산을 지금 한 번에 받는다. 대가: 그 3턴 생산 0 + 치안 한 단계 악화.",
+      "attachmentRevision": 338,
+      "nameShort": "선징군수",
+      "nameHanja": "先徵軍需",
+      "nameGloss": "급한 군수품을 위해 세금을 당겨 걷음 — 세금 앞당겨 걷기"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BENEVOLENT_RULE",
+          "params": {}
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-CD-14",
+      "name": "어진 정치",
+      "status": "pool",
+      "sourceCardId": "CD-14",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "그 성 치안이 저절로 나빠지지 않는다(사건·전법 제외).",
+      "ruleException": "자연 치안 악화 면역",
+      "candidateOfficers": [
+        "유비"
+      ],
+      "candidateProposal": "유비: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: BENEVOLENT_RULE. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "선정애민",
+      "nameHanja": "善政愛民",
+      "nameGloss": "백성을 사랑으로 돌보는 어진 정치 — 어진 정치"
+    },
+    {
+      "kind": "trait",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BANDIT_SWEEP",
+          "params": {}
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-CD-15",
+      "name": "도적 소탕",
+      "status": "pool",
+      "sourceCardId": "CD-15",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "그 성과 3칸 안에 도적 사건이 일어나지 않는다.",
+      "ruleException": "도적 사건 차단",
+      "candidateOfficers": [
+        "손견"
+      ],
+      "candidateProposal": "손견: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(a)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: BANDIT_SWEEP. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "소탕군도",
+      "nameHanja": "掃蕩群盜",
+      "nameGloss": "들끓는 도적 떼를 남김없이 쓸어버림 — 도적 소탕"
+    },
+    {
+      "kind": "trait",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RITUAL",
+          "params": {}
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-CD-16",
+      "name": "하늘에 비는 제사",
+      "status": "pool",
+      "sourceCardId": "CD-16",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "그 성은 재해 사건을 받지 않는다. 대가: 세력 과학 −15%.",
+      "ruleException": "재해 면역",
+      "candidateOfficers": [
+        "장각"
+      ],
+      "candidateProposal": "장각: 현행 예외를 고유 1칸 교체 후보로",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: RITUAL. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "nameShort": "경천기복",
+      "nameHanja": "敬天祈福",
+      "nameGloss": "하늘을 공경하며 제사로 복을 빎 — 하늘에 비는 제사"
+    },
+    {
+      "kind": "trait",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TRIBAL_FRIEND",
+          "params": {
+            "automatic": true
+          }
+        }
+      ],
+      "domestic": true,
+      "id": "UTP-CD-17",
+      "name": "이민족과 친교",
+      "status": "pool",
+      "sourceCardId": "CD-17",
+      "sourcePath": "prototype/src/campaign-rule-registry.mjs",
+      "text": "태수 재임 중 치안이 안정인 첫 결산에 판 한 번 우호 사절이 예비병 100을 보낸다. 대가: 재임 중 그 성 인망 산출 −30%.",
+      "ruleException": "안정 도시 결산 · 우호 사절 예비병 지급 · 판 1회",
+      "candidateOfficers": [
+        "맹획"
+      ],
+      "candidateProposal": "맹획: 이민족 사건 선택 완료 시 우호·병력 보상; 별도 모집 명령 제거",
+      "sourceRecommendation": "(b)",
+      "c33": true,
+      "interpreterBlocker": "C319 수치 재분류 이후 기존 효과 등록 없음: TRIBAL_FRIEND. 엔진 변경 없이 원래 규칙 예외를 즉시 부착할 수 없다.",
+      "originalEffects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TRIBAL_FRIEND",
+          "params": {}
+        }
+      ],
+      "originalText": "이민족 사건을 우호로 바꾸고 기병 100 용병 정보를 부여; 인망 −30%. 별도 모집 명령 완결은 미확인.",
+      "attachmentRevision": 338,
+      "nameShort": "화무이족",
+      "nameHanja": "和撫異族",
+      "nameGloss": "국경 밖 이민족을 달래어 친교를 맺음 — 이민족과 친교"
+    }
+  ]
+}

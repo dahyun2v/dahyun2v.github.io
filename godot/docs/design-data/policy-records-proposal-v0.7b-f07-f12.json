@@ -1,0 +1,899 @@
+[
+  {
+    "policyId": "POL-F07-CORE-01",
+    "factionId": "F07",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "미오 지정",
+        "targetKinds": [
+          "후방 성채",
+          "관문 도시"
+        ],
+        "requiredPresence": "담당 장수가 후보 거점에 실제로 위치",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "군량 전용",
+        "targetKinds": [
+          "도시 창고",
+          "수송대",
+          "미오"
+        ],
+        "requiredPresence": "출발지·도착지와 실제 수송 경로 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "공방 이전",
+        "targetKinds": [
+          "공방",
+          "공방 인력",
+          "이주 행렬"
+        ],
+        "requiredPresence": "이전 담당자와 호송대 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "중장 집결",
+        "targetKinds": [
+          "기존 부대",
+          "갑주",
+          "수레"
+        ],
+        "requiredPresence": "부대와 장비가 지정 거점에 실제 도착",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "후퇴선 선포",
+        "targetKinds": [
+          "전선 부대",
+          "후퇴 경로",
+          "수용 거점"
+        ],
+        "requiredPresence": "전령이 전선과 수용 거점을 연결",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "축성·창고 정리·이주·수송 시간",
+        "physicalInputs": [
+          "수레",
+          "운반 인력",
+          "공방 인력",
+          "호송대"
+        ],
+        "officerCommitment": "축성·군량·호송 담당 장수의 임무 점유"
+      }
+    ],
+    "risks": [
+      "출발 도시의 식량·노동력 감소",
+      "수송대 피습",
+      "관리의 착복",
+      "노동자와 이주민의 이탈",
+      "수비대의 비축물 사유화",
+      "빈 민가·유민 행렬·이산가족·버려진 농지·약탈된 공방 흔적",
+      "미오 함락 후 비축물 약탈·접수·방화"
+    ],
+    "counterplay": [
+      "수송 경로 차단",
+      "수송대 습격",
+      "이주 행렬 분단",
+      "현지 관리·공방 집단 회유",
+      "미오 포위",
+      "전선과 미오가 공유하는 식량·수레·인력의 소진 유도"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G11"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "군량",
+          "축성",
+          "호송"
+        ],
+        "relationshipRequirements": [
+          "현지 관리·공방 집단·호송 장수 중 최소 한 축과 협조 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "후보 미오 또는 연결된 수송 출발지",
+        "targetLocation": "현재 지배 중인 후방 성채·관문 도시",
+        "requiredRouteState": "수레와 이주 행렬이 실제 이동할 수 있는 경로",
+        "terrainTags": [
+          "성채",
+          "관문",
+          "도로"
+        ],
+        "climateTags": [],
+        "supplyConnection": "출발 도시·수송대·미오가 실제 보급 경로로 연결",
+        "cityState": "지배 중이며 창고·수용 공간을 사용할 수 있는 거점"
+      }
+    ],
+    "eventSeedIds": [
+      "EVT-F07-P01-01",
+      "SIT-F07-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: canonical source ID 미부여",
+      "projectLockRefs: canonical lock ID 미부여",
+      "unlocks[].unlockId: canonical 접근권 ID 미부여",
+      "축성·이주·수송 기간과 비용 수치 미확정"
+    ]
+  },
+  {
+    "policyId": "POL-F08-CORE-01",
+    "factionId": "F08",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "산성 연쇄수비",
+        "targetKinds": [
+          "성채",
+          "관문",
+          "수비 부대"
+        ],
+        "requiredPresence": "담당자가 연결된 성채·관문 중 한 곳에 위치",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "공방 분산",
+        "targetKinds": [
+          "공방",
+          "산성",
+          "후방 마을"
+        ],
+        "requiredPresence": "공방 인력과 이전 경로 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "곡물 윤송",
+        "targetKinds": [
+          "도시 창고",
+          "산성 창고",
+          "수송대"
+        ],
+        "requiredPresence": "실제 수송 담당자와 연결 도로 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "향론 조정",
+        "targetKinds": [
+          "토착 호족",
+          "이주민 집단",
+          "공방 대표",
+          "수비 장수"
+        ],
+        "requiredPresence": "회의 도시와 참가자 또는 보증인 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "성문 협상",
+        "targetKinds": [
+          "공격군",
+          "포로",
+          "주민",
+          "통행 요청자"
+        ],
+        "requiredPresence": "협상 권한자와 실제 사절 경로 필요",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "수비선 지정·공방 이전·곡물 수송·집단 회의 시간",
+        "physicalInputs": [
+          "기존 공방",
+          "창고",
+          "수송대",
+          "전령"
+        ],
+        "officerCommitment": "성채·관문·회의·수송 담당 장수의 임무 점유"
+      }
+    ],
+    "risks": [
+      "공방 편중과 분열",
+      "창고 화재",
+      "관문 고립",
+      "곡물 수송대 차단",
+      "지역집단 합의 불이행",
+      "동주병 숙영지·토착민 피해 장부·폐쇄된 성문 흔적",
+      "외부 초청군의 독자 거점 형성"
+    ],
+    "counterplay": [
+      "성채 사이의 연결로 차단",
+      "곡물 수송대 습격",
+      "공방 이전 경로 봉쇄",
+      "지역집단별 개별 회유",
+      "보증인 이탈 유도",
+      "성문 협상 거부",
+      "외부 초청군과 현지 장수의 관계 분리"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G15"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "성곽방어",
+          "공방관리",
+          "군량",
+          "외교",
+          "지역조정"
+        ],
+        "relationshipRequirements": [
+          "지역집단 또는 수비 장수와 협상 가능한 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "대상 성채·관문·회의 도시 중 한 곳",
+        "targetLocation": "연결된 산성·관문·후방 마을·창고",
+        "requiredRouteState": "전령과 수송대가 이동할 수 있는 도로 유지",
+        "terrainTags": [
+          "산성",
+          "관문",
+          "분지",
+          "도로"
+        ],
+        "climateTags": [],
+        "supplyConnection": "창고별 식량과 실제 곡물 수송 경로 필요",
+        "cityState": "공방·창고·지역집단이 존재하는 거점"
+      }
+    ],
+    "eventSeedIds": [
+      "EVT-F08-P01-01",
+      "SIT-F08-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: canonical source ID 미부여",
+      "projectLockRefs: canonical lock ID 미부여",
+      "unlocks[].unlockId: canonical 접근권 ID 미부여",
+      "지역집단과 보증인의 canonical 관계 ID 미부여",
+      "공방 이전·윤송·회의 기간과 비용 수치 미확정"
+    ]
+  },
+  {
+    "policyId": "POL-F09-CORE-01",
+    "factionId": "F09",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "의사 설치",
+        "targetKinds": [
+          "도로",
+          "관문",
+          "도시",
+          "구호소"
+        ],
+        "requiredPresence": "담당자가 설치 위치에 도착하고 식량을 반입",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "양복취족",
+        "targetKinds": [
+          "피난민",
+          "행인",
+          "낙오자",
+          "구호 재고"
+        ],
+        "requiredPresence": "관리자가 현장에서 재고와 신청량을 확인",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "제사주 위임",
+        "targetKinds": [
+          "의사",
+          "현지 공동체"
+        ],
+        "requiredPresence": "인간형 장수 또는 현지 관리 후보가 현장에 체류",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "삼원 조정",
+        "targetKinds": [
+          "경미한 분쟁",
+          "가해자",
+          "피해자"
+        ],
+        "requiredPresence": "관리자와 당사자가 실제 중재 장소에 참석",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "공동체 회합",
+        "targetKinds": [
+          "기본 필요가 충족된 주민",
+          "피난민",
+          "지역 관리자"
+        ],
+        "requiredPresence": "구호 이후 자발적으로 참가한 인원 필요",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "구호소 설치·수송·배급·중재·회합 시간",
+        "physicalInputs": [
+          "구호소",
+          "식량 수송대",
+          "숙소",
+          "배급 장부"
+        ],
+        "officerCommitment": "의사 관리자·수송·중재 담당자의 임무 점유"
+      }
+    ],
+    "risks": [
+      "구호 재고 고갈",
+      "관리자의 착복",
+      "특정 집단 우선 배급",
+      "구호소 주변 치안 악화",
+      "구호와 복종의 교환",
+      "담당자 이동 후 공동체 분열",
+      "빈 의사·거절당한 피난민·파기된 배상 약속 흔적"
+    ],
+    "counterplay": [
+      "구호 수송로 차단",
+      "관리자 회유 또는 이탈 유도",
+      "배급 장부 조작",
+      "집단 간 배급 갈등 조장",
+      "기존 행정의 공동 관리 거부",
+      "주민의 회합 불참 또는 이탈"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G16"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "구호",
+          "군량",
+          "지역행정",
+          "중재"
+        ],
+        "relationshipRequirements": [
+          "현지 주민 또는 피난민과 대화 가능한 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "의사 설치·운영 대상 위치",
+        "targetLocation": "현재 지도상의 도로·관문·도시",
+        "requiredRouteState": "식량 수송대가 접근 가능한 도로",
+        "terrainTags": [
+          "도로",
+          "관문",
+          "도시"
+        ],
+        "climateTags": [],
+        "supplyConnection": "구호 재고와 다음 수송대의 실제 연결 필요",
+        "cityState": "피난민·행인·주민이 체류할 수 있는 위치"
+      }
+    ],
+    "eventSeedIds": [
+      "INC-F09-P01-01",
+      "SIT-F09-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: canonical source ID 미부여",
+      "projectLockRefs: canonical lock ID 미부여",
+      "unlocks[].unlockId: canonical 접근권 ID 미부여",
+      "제사주·현지 관리자 후보의 canonical ID 미부여",
+      "구호소 운영·배급·중재 기간과 비용 수치 미확정"
+    ]
+  },
+  {
+    "policyId": "POL-F10-CORE-01",
+    "factionId": "F10",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "거솔 회맹",
+        "targetKinds": [
+          "촌락 대표",
+          "사냥꾼",
+          "약초꾼",
+          "동물 조련 집단"
+        ],
+        "requiredPresence": "협상 장수가 현지 집단 거점에 도착",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "험로 문답",
+        "targetKinds": [
+          "숲길",
+          "습지",
+          "수원",
+          "매복 지점"
+        ],
+        "requiredPresence": "담당 장수와 현지 안내자가 경로를 실제 조사",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "독물 전처",
+        "targetKinds": [
+          "화살",
+          "함정"
+        ],
+        "requiredPresence": "준비 장소·취급 담당자·기존 물자 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "해독 조달",
+        "targetKinds": [
+          "치료 재료",
+          "안전한 물",
+          "중독 부대"
+        ],
+        "requiredPresence": "현지 관계와 실제 운반 경로 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "구상 협력",
+        "targetKinds": [
+          "기존 부대",
+          "조련사",
+          "코끼리"
+        ],
+        "requiredPresence": "조련사·동물·배속 부대가 같은 위치에 집결",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "야수 몰이",
+        "targetKinds": [
+          "야생동물",
+          "적 이동 경로"
+        ],
+        "requiredPresence": "실제 서식지와 인간 조련 인력 필요",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "경로 조사·독물 준비·해독재 운반·동물 순치 시간",
+        "physicalInputs": [
+          "안전한 물",
+          "치료 재료",
+          "운반 수단",
+          "동물용 식량",
+          "조련 장비"
+        ],
+        "officerCommitment": "협상·안내·치료·조련 담당자의 임무 점유"
+      }
+    ],
+    "risks": [
+      "잘못된 안내",
+      "오염된 수원",
+      "독물 취급 사고",
+      "현지 안내자·조련사 이탈",
+      "코끼리와 야수의 공황·피로·부상",
+      "아군 대열 붕괴",
+      "민가·농지 훼손",
+      "오염 경고·죽은 가축·거솔의 원한 흔적"
+    ],
+    "counterplay": [
+      "현지 집단 회유 또는 통행 거부",
+      "안전한 수원과 해독재 접근 차단",
+      "불·소음으로 동물 공황 유도",
+      "좁은 길과 장애물로 구상 운용 제한",
+      "조련 집단과의 계약 파기 유도",
+      "독 노출 후 치료·후송·휴식으로 대응"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G17"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "현지교섭",
+          "지형조사",
+          "의술",
+          "조련"
+        ],
+        "relationshipRequirements": [
+          "거솔·약초꾼·조련 집단과 협상 가능한 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "대상 숲·습지·촌락·부대",
+        "targetLocation": "조사 경로·수원·동물 서식지",
+        "requiredRouteState": "담당자와 물자의 실제 접근 경로",
+        "terrainTags": [
+          "숲",
+          "습지",
+          "고온 지형",
+          "협로",
+          "수원"
+        ],
+        "climateTags": [
+          "현재 고온·습윤 조건"
+        ],
+        "supplyConnection": "식량·안전한 물·치료 재료의 운반 연결 필요",
+        "cityState": null
+      }
+    ],
+    "eventSeedIds": [
+      "INC-F10-P01-01",
+      "EVT-F10-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: canonical source ID 미부여",
+      "projectLockRefs: canonical lock ID 미부여",
+      "unlocks[].unlockId: canonical 접근권 ID 미부여",
+      "거솔·약초꾼·조련 집단의 canonical ID 미부여",
+      "독 지속·회복·동물 준비 기간과 비용 수치 미확정"
+    ]
+  },
+  {
+    "policyId": "POL-F11-CORE-01",
+    "factionId": "F11",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "백마 전초",
+        "targetKinds": [
+          "기존 기병 부대",
+          "전초 위치",
+          "적 이동 경로"
+        ],
+        "requiredPresence": "척후 기병이 전초 출발지에 실제 위치",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "선제 재배치",
+        "targetKinds": [
+          "수비 부대",
+          "관문",
+          "도로",
+          "취락"
+        ],
+        "requiredPresence": "관측 정보와 실제 이동 경로 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "변경 봉화",
+        "targetKinds": [
+          "전초",
+          "봉화대",
+          "수비 거점"
+        ],
+        "requiredPresence": "교대 인원과 시야가 연결되는 거점 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "설중 호송",
+        "targetKinds": [
+          "고립 부대",
+          "방한 물자",
+          "말 사료"
+        ],
+        "requiredPresence": "호송대가 실제 경로를 이동",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "유인 정찰",
+        "targetKinds": [
+          "소수 기병",
+          "적 추격대",
+          "철수로"
+        ],
+        "requiredPresence": "척후대와 사전 지정 철수로 필요",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "정찰 왕복·봉화 설치·재배치·말 휴식 시간",
+        "physicalInputs": [
+          "말",
+          "말 사료",
+          "방한 물자",
+          "봉화 자재",
+          "호송대"
+        ],
+        "officerCommitment": "척후·기병·변경 수비 담당자의 임무 점유"
+      }
+    ],
+    "risks": [
+      "관측대 실종",
+      "눈길과 적 경로 오판",
+      "말 소진",
+      "봉화 오인",
+      "선제 이동으로 인한 본진 공백",
+      "호송대 고립",
+      "버려진 전초·동사자 매장지·잘못 오른 봉화 흔적"
+    ],
+    "counterplay": [
+      "전초와 봉화대 우회·습격",
+      "거짓 신호와 위조 군서",
+      "척후대 철수로 차단",
+      "본진 공백 공격",
+      "호송로 봉쇄",
+      "혹한과 강설 중 말 사료·방한 물자 소진 유도"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G14"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "기병",
+          "척후",
+          "변경수비",
+          "호송"
+        ],
+        "relationshipRequirements": [
+          "전초 장수와 성 수비 장수 사이의 명령 공유 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "전초 출발지·봉화대·재배치 대상 중 한 곳",
+        "targetLocation": "현재 지도상의 관문·도로·취락·고립 부대",
+        "requiredRouteState": "정찰·호송·재배치가 가능한 실제 경로",
+        "terrainTags": [
+          "변경",
+          "관문",
+          "도로",
+          "설지"
+        ],
+        "climateTags": [
+          "현재 혹한",
+          "현재 강설",
+          "현재 서리"
+        ],
+        "supplyConnection": "식량·말 사료·방한 물자의 실제 호송 연결 필요",
+        "cityState": null
+      }
+    ],
+    "eventSeedIds": [
+      "INC-F11-P01-01",
+      "SIT-F11-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: canonical source ID 미부여",
+      "projectLockRefs: canonical lock ID 미부여",
+      "unlocks[].unlockId: canonical 접근권 ID 미부여",
+      "관측 정보 유효기간·기후 판정·재배치 비용 수치 미확정"
+    ]
+  },
+  {
+    "policyId": "POL-F12-CORE-01",
+    "factionId": "F12",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "unlocks": [
+      {
+        "unlockId": null,
+        "verb": "부명 회의",
+        "targetKinds": [
+          "척후 보고",
+          "농사 상황",
+          "소문",
+          "외교 문서"
+        ],
+        "requiredPresence": "정보 취합 담당자와 해석 담당자가 회의 장소에 위치",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "교사 의례",
+        "targetKinds": [
+          "출정",
+          "즉위",
+          "동맹",
+          "구휼"
+        ],
+        "requiredPresence": "의례 담당자·장소·준비 물자 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "징조 공표",
+        "targetKinds": [
+          "군대",
+          "도시",
+          "외교 상대"
+        ],
+        "requiredPresence": "공표 담당자와 실제 전달 경로 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "반징 검증",
+        "targetKinds": [
+          "정보 출처",
+          "반대 장수",
+          "의례 비용"
+        ],
+        "requiredPresence": "반대 의견을 제출할 담당자와 검토 시간 필요",
+        "accessOnly": true
+      },
+      {
+        "unlockId": null,
+        "verb": "옥새 사절",
+        "targetKinds": [
+          "관직",
+          "혼인",
+          "공동 의례",
+          "외교 상대"
+        ],
+        "requiredPresence": "인간형 사절이 상징물과 문서를 실제 운반",
+        "accessOnly": true
+      }
+    ],
+    "costInputs": [
+      {
+        "walletRefs": [
+          "식량",
+          "금전",
+          "행동력"
+        ],
+        "timeRequirement": "정보 수집·제단 준비·초청·의례·결과 전달 시간",
+        "physicalInputs": [
+          "관측 보고",
+          "외교 문서",
+          "제단",
+          "복식",
+          "의장품",
+          "옥새"
+        ],
+        "officerCommitment": "의례·정보·외교 담당자의 임무 점유"
+      }
+    ],
+    "risks": [
+      "정보 출처 조작",
+      "상충하는 징조 해석",
+      "과도한 의례 비용",
+      "반대자의 공개 이탈",
+      "공표 결과와 실제 결과의 불일치",
+      "병사 배급 지연",
+      "빈 제단·미지급 군량·불태운 참문·반대 상소 흔적"
+    ],
+    "counterplay": [
+      "상충하는 정보와 문서 공개",
+      "반대 관료의 공개 이의 제기",
+      "의례 참가 거부",
+      "사절 억류·회유",
+      "옥새와 의례의 정통성 부정",
+      "보급 차단으로 의례 비용과 군량의 충돌 유도"
+    ],
+    "eligibleOfficers": [
+      {
+        "specificOfficerRefs": [
+          "G10"
+        ],
+        "requiredRoleTags": [],
+        "relationshipRequirements": []
+      },
+      {
+        "specificOfficerRefs": [],
+        "requiredRoleTags": [
+          "의례",
+          "정보취합",
+          "외교",
+          "문서검증"
+        ],
+        "relationshipRequirements": [
+          "관료·장수·도시 주민·외교 상대와 의견을 교환할 수 있는 관계"
+        ]
+      }
+    ],
+    "mapConditions": [
+      {
+        "officerLocation": "의례 도시·회의 장소·사절 출발지",
+        "targetLocation": "공표 대상 군대·도시·외교 상대",
+        "requiredRouteState": "초청자·사절·문서가 실제 이동할 수 있는 경로",
+        "terrainTags": [],
+        "climateTags": [],
+        "supplyConnection": "의례 장소까지 식량·금전·의장품을 운반할 연결 필요",
+        "cityState": "회의·의례·사절 접견이 가능한 거점"
+      }
+    ],
+    "eventSeedIds": [
+      "EVT-F12-P01-01",
+      "INC-F12-P01-02"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "missingFields": [
+      "sourceRefs: canonical source ID 미부여",
+      "projectLockRefs: canonical lock ID 미부여",
+      "unlocks[].unlockId: canonical 접근권 ID 미부여",
+      "정보 출처·반대 관료·의례 담당자의 canonical ID 미부여",
+      "의례 준비 기간과 비용 수치 미확정"
+    ]
+  }
+]

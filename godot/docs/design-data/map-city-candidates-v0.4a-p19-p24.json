@@ -1,0 +1,494 @@
+{
+  "schemaVersion": "GEO-DB v0.4A-4",
+  "mapBoundary": {
+    "mainMap": "64x40",
+    "majorCityCount": 24,
+    "factionStartMode": "F01-F12_RANDOM_ONE_CITY_EACH",
+    "coordinateStatus": "TEST_VALUE_UNASSIGNED",
+    "first3Map": "18x14_SEPARATE_TEST_MAP"
+  },
+  "records": [
+    {
+      "id": "CITY-P19",
+      "historicalName": {
+        "primary": "강릉",
+        "hanja": "江陵",
+        "aliases": [
+          "남군_치소권",
+          "형주_장강거점"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "MIDDLE_YANGTZE",
+          "JIANGHAN_PLAIN",
+          "JINGZHOU_CORE"
+        ],
+        "coordinate": "TEST_VALUE_UNASSIGNED"
+      },
+      "regionId": "MR-12",
+      "borderRegionIds": [
+        "MR-05",
+        "MR-13",
+        "MR-14"
+      ],
+      "waterwayTags": [
+        "MIDDLE_YANGTZE",
+        "HAN_RIVER_NETWORK",
+        "JIANGHAN_WETLANDS"
+      ],
+      "roadPassTags": [
+        "XIANGYANG_SOUTH_ROUTE",
+        "YILING_WEST_ROUTE",
+        "JIANGXIA_EAST_ROUTE"
+      ],
+      "terrainVerbs": [
+        "CROSS_WETLANDS",
+        "FOLLOW_YANGTZE",
+        "HOLD_RIVER_ROADS"
+      ],
+      "strategicFunctions": [
+        "JINGZHOU_CORE",
+        "MIDDLE_YANGTZE_HUB",
+        "EAST_WEST_RIVER_GATE"
+      ],
+      "amplifiedClimateLayer": [
+        "HUMID_RIVER_PLAIN",
+        "SEASONAL_INUNDATION",
+        "MARSH_FOG"
+      ],
+      "randomStartTags": [
+        "RIVER_HUB_START",
+        "MULTI_DIRECTION_ACCESS",
+        "WETLAND_CONSTRAINT",
+        "TEST_REVIEW_REQUIRED"
+      ],
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F02",
+          "anchor": "LIU_BEI_JINGZHOU_CONTEXT",
+          "startBinding": false
+        },
+        {
+          "factionId": "F03",
+          "anchor": "SUN_QUAN_JINGZHOU_CONFLICT",
+          "startBinding": false
+        },
+        {
+          "factionId": "F01",
+          "anchor": "CAO_CAO_JINGZHOU_ADVANCE",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "HHS",
+        "SGZ",
+        "HYZG",
+        "SJZ",
+        "CHGIS",
+        "SRTM",
+        "HYDRO_DATA"
+      ],
+      "status": "PROJECT_PROPOSAL/TEST_VALUE"
+    },
+    {
+      "id": "CITY-P20",
+      "historicalName": {
+        "primary": "수춘",
+        "hanja": "壽春",
+        "aliases": [
+          "구강군_수춘권",
+          "회남_중심"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "HUAI_RIVER_SOUTH",
+          "HUAINAN_PLAIN",
+          "SHOUCHUN_NODE"
+        ],
+        "coordinate": "TEST_VALUE_UNASSIGNED"
+      },
+      "regionId": "MR-13",
+      "borderRegionIds": [
+        "MR-10",
+        "MR-11",
+        "MR-12",
+        "MR-14"
+      ],
+      "waterwayTags": [
+        "HUAI_RIVER",
+        "FEI_RIVER_SYSTEM",
+        "HUAINAN_WATERWAYS"
+      ],
+      "roadPassTags": [
+        "XUCHANG_SOUTH_ROUTE",
+        "XUZHOU_SOUTH_ROUTE",
+        "JIANGDONG_NORTH_ROUTE"
+      ],
+      "terrainVerbs": [
+        "CROSS_HUAI",
+        "FOLLOW_LOWLAND_WATERWAYS",
+        "HOLD_CAUSEWAYS"
+      ],
+      "strategicFunctions": [
+        "HUAINAN_CORE",
+        "HUAI_CROSSING_CONTROL",
+        "CENTRAL_JIANGDONG_RELAY"
+      ],
+      "amplifiedClimateLayer": [
+        "FERTILE_HUAI_TRANSITION",
+        "SEASONAL_FLOODING",
+        "SUMMER_HUMIDITY"
+      ],
+      "randomStartTags": [
+        "CROSSING_HUB_START",
+        "MULTI_REGION_ACCESS",
+        "FLOOD_EXPOSURE",
+        "TEST_REVIEW_REQUIRED"
+      ],
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F12",
+          "anchor": "YUAN_SHU_SHOUCHUN_CAPITAL",
+          "startBinding": false
+        },
+        {
+          "factionId": "F01",
+          "anchor": "CAO_CAO_HUAINAN_CAMPAIGN_CONTEXT",
+          "startBinding": false
+        },
+        {
+          "factionId": "F03",
+          "anchor": "SUN_QUAN_HUAINAN_CONTEST",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "HHS",
+        "SGZ",
+        "HYZG",
+        "SJZ",
+        "CHGIS",
+        "SRTM",
+        "HYDRO_DATA"
+      ],
+      "status": "PROJECT_PROPOSAL/TEST_VALUE"
+    },
+    {
+      "id": "CITY-P21",
+      "historicalName": {
+        "primary": "합비",
+        "hanja": "合肥",
+        "aliases": [
+          "합비현",
+          "회남_동부관문"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "HUAINAN_EAST",
+          "CHAOHU_CORRIDOR",
+          "JIANGHUAI_DIVIDE"
+        ],
+        "coordinate": "TEST_VALUE_UNASSIGNED"
+      },
+      "regionId": "MR-13",
+      "borderRegionIds": [
+        "MR-11",
+        "MR-14"
+      ],
+      "waterwayTags": [
+        "FEI_RIVER_SYSTEM",
+        "CHAOHU_LINK",
+        "HUAI_YANGTZE_TRANSFER"
+      ],
+      "roadPassTags": [
+        "SHOUCHUN_EAST_ROUTE",
+        "RUXU_APPROACH",
+        "JIANGDONG_NORTH_ROUTE"
+      ],
+      "terrainVerbs": [
+        "CROSS_DIVIDE",
+        "CHANNEL_APPROACHES",
+        "HOLD_NARROW_CORRIDOR"
+      ],
+      "strategicFunctions": [
+        "JIANGHUAI_GATE",
+        "HUAINAN_EAST_FORTRESS",
+        "NORTH_SOUTH_CAMPAIGN_NODE"
+      ],
+      "amplifiedClimateLayer": [
+        "HUMID_TRANSITION",
+        "LAKE_MARSH_EDGE",
+        "SEASONAL_MUD"
+      ],
+      "randomStartTags": [
+        "CORRIDOR_START",
+        "DEFENSIBLE_APPROACHES",
+        "LIMITED_ROUTE_REDUNDANCY",
+        "TEST_REVIEW_REQUIRED"
+      ],
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F01",
+          "anchor": "CAO_CAO_HEFEI_DEFENSE_CONTEXT",
+          "startBinding": false
+        },
+        {
+          "factionId": "F03",
+          "anchor": "SUN_QUAN_HEFEI_CAMPAIGNS",
+          "startBinding": false
+        },
+        {
+          "factionId": "F12",
+          "anchor": "YUAN_SHU_HUAINAN_CONTEXT",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "HHS",
+        "SGZ",
+        "HYZG",
+        "SJZ",
+        "CHGIS",
+        "SRTM",
+        "HYDRO_DATA"
+      ],
+      "status": "PROJECT_PROPOSAL/TEST_VALUE"
+    },
+    {
+      "id": "CITY-P22",
+      "historicalName": {
+        "primary": "건업",
+        "hanja": "建業",
+        "aliases": [
+          "말릉",
+          "秣陵",
+          "손권기_개칭명"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "LOWER_YANGTZE",
+          "ZHONGSHAN_FOOTHILLS",
+          "NAME_VALIDITY_REQUIRES_SCENARIO_ERA"
+        ],
+        "coordinate": "TEST_VALUE_UNASSIGNED"
+      },
+      "regionId": "MR-14",
+      "borderRegionIds": [
+        "MR-12",
+        "MR-13"
+      ],
+      "waterwayTags": [
+        "LOWER_YANGTZE",
+        "QINHUAI_SYSTEM",
+        "RIVER_PORT_NETWORK"
+      ],
+      "roadPassTags": [
+        "RUXU_WEST_ROUTE",
+        "WU_COMMANDERY_ROUTE",
+        "DANTU_RIVER_ROUTE"
+      ],
+      "terrainVerbs": [
+        "FOLLOW_LOWER_YANGTZE",
+        "LAND_AT_RIVERBANKS",
+        "HOLD_FOOTHILL_PORT"
+      ],
+      "strategicFunctions": [
+        "JIANGDONG_POLITICAL_HUB",
+        "LOWER_YANGTZE_CONTROL",
+        "RIVER_PORT_RELAY"
+      ],
+      "amplifiedClimateLayer": [
+        "HUMID_RIVERLAND",
+        "RIVER_MIST",
+        "LOW_HILL_WATERFRONT"
+      ],
+      "randomStartTags": [
+        "RIVER_CAPITAL_CANDIDATE",
+        "WATERWAY_ACCESS",
+        "BANK_APPROACH_EXPOSURE",
+        "TEST_REVIEW_REQUIRED"
+      ],
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F03",
+          "anchor": "SUN_QUAN_MOLING_JIANYE_TRANSITION",
+          "startBinding": false
+        },
+        {
+          "factionId": "F12",
+          "anchor": "YUAN_SHU_JIANGHUAI_PREHISTORY_CONTEXT",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "HHS",
+        "SGZ",
+        "HYZG",
+        "SJZ",
+        "CHGIS",
+        "SRTM",
+        "HYDRO_DATA",
+        "NAME_NOTE_MOLING_BEFORE_JIANYE_RENAME"
+      ],
+      "status": "PROJECT_PROPOSAL/TEST_VALUE"
+    },
+    {
+      "id": "CITY-P23",
+      "historicalName": {
+        "primary": "회계·산음",
+        "hanja": "會稽·山陰",
+        "aliases": [
+          "회계군_산음현",
+          "강동_동남거점"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "KUAJI_PLAIN",
+          "SHANYIN_CORE",
+          "ZHEJIANG_HILL_WATER_NETWORK"
+        ],
+        "coordinate": "TEST_VALUE_UNASSIGNED"
+      },
+      "regionId": "MR-14",
+      "borderRegionIds": [
+        "MR-15"
+      ],
+      "waterwayTags": [
+        "ZHEJIANG_RIVER_SYSTEM",
+        "COASTAL_LAGOONS",
+        "CANALIZED_LOWLAND"
+      ],
+      "roadPassTags": [
+        "WU_COMMANDERY_SOUTH_ROUTE",
+        "DANYANG_HILL_ROUTE",
+        "MINYUE_APPROACH"
+      ],
+      "terrainVerbs": [
+        "CROSS_CANALS",
+        "FOLLOW_HILL_VALLEYS",
+        "LINK_COASTAL_BASINS"
+      ],
+      "strategicFunctions": [
+        "SOUTHEAST_JIANGDONG_HUB",
+        "COASTAL_INLAND_RELAY",
+        "HILL_WATER_FRONTIER"
+      ],
+      "amplifiedClimateLayer": [
+        "HUMID_COASTAL_PLAIN",
+        "DENSE_WATERWAYS",
+        "FORESTED_HILLS"
+      ],
+      "randomStartTags": [
+        "COASTAL_BASIN_START",
+        "WATERWAY_DENSITY",
+        "HILL_ROUTE_CONSTRAINT",
+        "TEST_REVIEW_REQUIRED"
+      ],
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F03",
+          "anchor": "SUN_FAMILY_KUAJI_CONTROL",
+          "startBinding": false
+        },
+        {
+          "factionId": "F12",
+          "anchor": "YUAN_SHU_SUN_CE_RELATION_CONTEXT",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "HHS",
+        "SGZ",
+        "HYZG",
+        "SJZ",
+        "CHGIS",
+        "SRTM",
+        "HYDRO_DATA"
+      ],
+      "status": "PROJECT_PROPOSAL/TEST_VALUE"
+    },
+    {
+      "id": "CITY-P24",
+      "historicalName": {
+        "primary": "번우",
+        "hanja": "番禺",
+        "aliases": [
+          "남해군_치소권",
+          "교주_남부거점"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "LINGNAN_COAST",
+          "ANCIENT_PANYU",
+          "MODERN_PEARL_DELTA_RETROJECTION_FORBIDDEN"
+        ],
+        "coordinate": "TEST_VALUE_UNASSIGNED"
+      },
+      "regionId": "MR-15",
+      "borderRegionIds": [
+        "MR-06",
+        "MR-14"
+      ],
+      "waterwayTags": [
+        "ANCIENT_LINGNAN_RIVER_NETWORK",
+        "TIDAL_ESTUARY_EDGE",
+        "HISTORICAL_COASTLINE_UNCERTAINTY"
+      ],
+      "roadPassTags": [
+        "LINGNAN_PASS_ROUTES",
+        "JIAOZHOU_COAST_ROUTE",
+        "XI_RIVER_INLAND_APPROACH"
+      ],
+      "terrainVerbs": [
+        "CROSS_LINGNAN_PASSES",
+        "FOLLOW_TIDAL_WATERS",
+        "NAVIGATE_HILL_RIVER_MOSAIC"
+      ],
+      "strategicFunctions": [
+        "LINGNAN_REGIONAL_HUB",
+        "SOUTHERN_COAST_GATE",
+        "PASS_AND_RIVER_RELAY"
+      ],
+      "amplifiedClimateLayer": [
+        "SUBTROPICAL_HUMIDITY",
+        "MONSOON_RAIN",
+        "DENSE_HILL_FOREST"
+      ],
+      "randomStartTags": [
+        "REMOTE_SOUTH_START",
+        "PASS_DEPENDENCE",
+        "RIVER_COAST_ACCESS",
+        "TEST_REVIEW_REQUIRED"
+      ],
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F03",
+          "anchor": "SUN_WU_JIAOZHOU_EXPANSION_CONTEXT",
+          "startBinding": false
+        },
+        {
+          "factionId": "F10",
+          "anchor": "SOUTHERN_FRONTIER_COMPARISON_ONLY",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "HHS",
+        "SGZ",
+        "HYZG",
+        "SJZ",
+        "CHGIS",
+        "SRTM",
+        "HYDRO_DATA",
+        "CAUTION_NO_MODERN_PEARL_DELTA_RETROJECTION"
+      ],
+      "status": "PROJECT_PROPOSAL/TEST_VALUE"
+    }
+  ]
+}

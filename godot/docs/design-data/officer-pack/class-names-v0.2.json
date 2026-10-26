@@ -1,0 +1,897 @@
+{
+  "schema": "class-names-v0.2",
+  "status": "TRIAL — Claude 2026-10-04. 사용자: \"클래스니까 꼭 ~장,~사 이런것보다도 고유명칭이면 좋을것같아. 삼국지13에 호칭들이 마음에 드는것들이 있었는데 각종 직업/전직개념있는 게임들 참고해볼래?? 블리자드 와우도 좋고. 좀 신화적인 느낌이 있으면 좋겠어\". v0.1(3자 직함·성어)은 이력. B01 원본 보존, 게임 적용은 보류. 2026-10-05: 사용자 \"애자 현녀 신농은 바꾸자(애자는 애자 같고, 현녀는 녀가 들어가 이상하고, 신농은 신이라 느낌이 너무 강함)\" → 치우·백택·건목.",
+  "rule": "기본 18·혼합 6 = 중국 신화 속 존재의 고유명(2~3자) — 그 존재의 이야기가 클래스가 하는 일과 맞는 것. 전문화 36 = \"고유명 · 4자 성어\"(삼국지13 위명처럼 고유명 → 성어 두 층). 피함: 세력 신수 12종 · 실존 인물 별호(와룡·봉추 등) · 레퍼런스 게임 이름 직접 복제 · 사흉 같은 부정적 존재. 피함 추가: 한국어로 다른 뜻·비하어처럼 들리는 독음, 女·神 같은 글자가 이름에 직접 들어가 튀는 것.",
+  "refs": [
+    "삼국지13 PK 위명(威名) 63종·고유 위명 29종 — 최종 단계에 鬼神·白龍·雲龍風虎 같은 신격어",
+    "WoW 영웅 특성(태양의 전령·폭풍인도자·천인의 도관 — 신화 직분명)",
+    "던전앤파이터 각성(검성→검신, 아수라→대암흑천 — 끝 글자 승격·신격)",
+    "수호지 108성 별호·용생구자·산해경 신수"
+  ],
+  "counts": {
+    "BASE": 18,
+    "SPECIALIZATION": 36,
+    "HYBRID": 6
+  },
+  "classes": [
+    {
+      "id": "TMP-CLASS-B01-001",
+      "kind": "BASE",
+      "formerName": "기회돌파장",
+      "role": "RESPONSE",
+      "memoryLine": "남이 만든 짧은 틈에 전력으로 들어가고, 남을지 빠질지는 내가 정한다.",
+      "name": "비렴",
+      "hanja": "飛廉",
+      "myth": "바람의 신 — 바람처럼 틈으로 파고든다",
+      "mythSource": "초사·산해경 풍백",
+      "display": "비렴(飛廉)",
+      "v01Title": "승허장(乘虛將)",
+      "motto": {
+        "name": "승허이입",
+        "hanja": "乘虛而入",
+        "gloss": "빈틈을 타고 들어간다",
+        "source": "성어"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-002",
+      "kind": "BASE",
+      "formerName": "공세설계장",
+      "role": "BREAKTHROUGH",
+      "memoryLine": "지금 한 대를 포기하고, 다음 한 대가 전선을 바꾸도록 설계한다.",
+      "name": "백택",
+      "hanja": "白澤",
+      "myth": "세상 모든 것을 아는 흰 신수 — 적을 다 알고 한 번의 공세를 짠다",
+      "mythSource": "운급칠첨 헌원기",
+      "display": "백택(白澤)",
+      "v01Title": "모정사(謀定師)",
+      "motto": {
+        "name": "모정후동",
+        "hanja": "謀定後動",
+        "gloss": "계책을 세운 뒤에 움직인다 — 이번 한 대를 버리고 다음 한 대로 판을 바꾼다",
+        "source": "병법 성어"
+      },
+      "replaced": [
+        "현녀(玄女)"
+      ]
+    },
+    {
+      "id": "TMP-CLASS-B01-003",
+      "kind": "BASE",
+      "formerName": "압박장",
+      "role": "BREAKTHROUGH",
+      "memoryLine": "한 번 찌른 곳을 놓지 않는다. 적에게 맞서기와 빠지기 사이의 불편한 선택을 남긴다.",
+      "name": "과보",
+      "hanja": "夸父",
+      "myth": "해를 끝까지 쫓은 거인 — 한 번 문 적은 놓지 않는다",
+      "mythSource": "산해경 과보축일",
+      "display": "과보(夸父)",
+      "v01Title": "궁추장(窮追將)",
+      "motto": {
+        "name": "궁추불사",
+        "hanja": "窮追不捨",
+        "gloss": "끝까지 쫓아 놓지 않는다",
+        "source": "성어"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-004",
+      "kind": "BASE",
+      "formerName": "파진장",
+      "role": "BREAKTHROUGH",
+      "memoryLine": "내 전열을 먼저 흐트러뜨려서라도 적의 자리를 빼앗는다.",
+      "name": "형천",
+      "hanja": "刑天",
+      "myth": "머리가 잘려도 방패와 도끼로 싸운 거인 — 제 대열을 부숴서라도 적진을 깬다",
+      "mythSource": "산해경",
+      "display": "형천(刑天)",
+      "v01Title": "함진장(陷陣將)",
+      "motto": {
+        "name": "충봉함진",
+        "hanja": "衝鋒陷陣",
+        "gloss": "앞장서 적진을 무너뜨린다 — 내 대열이 흐트러져도 적 자리를 빼앗는다",
+        "source": "성어"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-005",
+      "kind": "BASE",
+      "formerName": "고수장",
+      "role": "HOLD",
+      "memoryLine": "이 자리를 지키는 동안은 적이 나를 돌아가도록 만든다.",
+      "name": "비희",
+      "hanja": "贔屭",
+      "myth": "무거운 비석을 지고 버티는 용의 아들 — 이 자리는 내주지 않는다",
+      "mythSource": "용생구자",
+      "display": "비희(贔屭)",
+      "v01Title": "당관장(當關將)",
+      "motto": {
+        "name": "일부당관",
+        "hanja": "一夫當關",
+        "gloss": "한 사내가 관문을 막으면 만 명도 못 연다",
+        "source": "이백 촉도난"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-006",
+      "kind": "BASE",
+      "formerName": "응전장",
+      "role": "RESPONSE",
+      "memoryLine": "받아낼 공격과 되돌려줄 공격을 구별한다.",
+      "name": "치우",
+      "hanja": "蚩尤",
+      "myth": "구리 머리 쇠 이마로 받아내고 되친 장수 — 받을 것과 되갚을 것을 가른다",
+      "mythSource": "산해경·사기 오제본기",
+      "display": "치우(蚩尤)",
+      "v01Title": "후발장(後發將)",
+      "motto": {
+        "name": "후발제인",
+        "hanja": "後發制人",
+        "gloss": "늦게 움직여 상대를 제압한다 — 받을 공격과 되돌릴 공격을 가른다",
+        "source": "순자"
+      },
+      "replaced": [
+        "애자(睚眦)"
+      ]
+    },
+    {
+      "id": "TMP-CLASS-B01-007",
+      "kind": "BASE",
+      "formerName": "유격장",
+      "role": "RAID",
+      "memoryLine": "한 대를 덜 세게 치더라도 다음 싸울 자리는 내가 고른다.",
+      "name": "천구",
+      "hanja": "天狗",
+      "myth": "하늘을 가르는 별똥 짐승 — 치고 사라져 다음 자리를 고른다",
+      "mythSource": "산해경·사기 천관서",
+      "display": "천구(天狗)",
+      "v01Title": "유격장(遊擊將)",
+      "motto": {
+        "name": "피실격허",
+        "hanja": "避實擊虛",
+        "gloss": "강한 곳은 피하고 빈 곳을 친다 — 덜 세게 치고 다음 자리를 고른다",
+        "source": "손자 허실편"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-008",
+      "kind": "BASE",
+      "formerName": "기만사",
+      "role": "RAID",
+      "memoryLine": "적이 확인하러 간 자리는 이미 내가 버린 답이다.",
+      "name": "신루",
+      "hanja": "蜃樓",
+      "myth": "신기루를 토하는 큰 조개 — 적이 쫓는 것은 헛것이다",
+      "mythSource": "사기 천관서 해방신기",
+      "display": "신루(蜃樓)",
+      "v01Title": "허실사(虛實師)",
+      "motto": {
+        "name": "허허실실",
+        "hanja": "虛虛實實",
+        "gloss": "허와 실을 섞는다 — 적이 확인하러 간 곳은 이미 버린 자리",
+        "source": "병법 성어"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-009",
+      "kind": "BASE",
+      "formerName": "화공사",
+      "role": "CONTROL",
+      "memoryLine": "적을 불 속에 넣는 것보다, 불 때문에 갈 곳을 고르게 만든다.",
+      "name": "필방",
+      "hanja": "畢方",
+      "myth": "외발 불새, 불난리의 징조 — 불로 적이 갈 길을 정한다",
+      "mythSource": "산해경",
+      "display": "필방(畢方)",
+      "v01Title": "화공사(火攻師)",
+      "motto": {
+        "name": "이화좌공",
+        "hanja": "以火佐攻",
+        "gloss": "불로 공격을 돕는다 — 불로 적이 갈 길을 고르게 한다",
+        "source": "손자 화공편"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-010",
+      "kind": "BASE",
+      "formerName": "연계장",
+      "role": "RESPONSE",
+      "memoryLine": "내 공격의 끝을 동료 공격의 시작으로 만든다.",
+      "name": "솔연",
+      "hanja": "率然",
+      "myth": "머리를 치면 꼬리가 오는 상산의 뱀 — 내 공격 끝이 동료 공격의 시작",
+      "mythSource": "손자 구지편",
+      "display": "솔연(率然)",
+      "v01Title": "호응장(呼應將)",
+      "motto": {
+        "name": "상산지사",
+        "hanja": "常山之蛇",
+        "gloss": "머리를 치면 꼬리가 온다 — 내 공격의 끝을 동료 공격의 시작으로",
+        "source": "손자 구지편"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-011",
+      "kind": "BASE",
+      "formerName": "호위장",
+      "role": "HOLD",
+      "memoryLine": "지켜야 할 사람이 움직이면 내 전선도 움직인다.",
+      "name": "금강",
+      "hanja": "金剛",
+      "myth": "문을 지키는 금강역사 — 지킬 사람 곁을 떠나지 않는다",
+      "mythSource": "불교 수호신",
+      "display": "금강(金剛)",
+      "v01Title": "무위장(武衛將)",
+      "motto": {
+        "name": "형영상수",
+        "hanja": "形影相隨",
+        "gloss": "몸과 그림자처럼 따른다 — 지킬 사람이 움직이면 나도 움직인다",
+        "source": "성어"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-012",
+      "kind": "BASE",
+      "formerName": "수습장",
+      "role": "COHESION",
+      "memoryLine": "무너진 전열을 되세우되, 그 시간을 누가 대신 버틸지 정한다.",
+      "name": "여와",
+      "hanja": "女媧",
+      "myth": "무너진 하늘을 기운 여신 — 무너진 전열을 다시 세운다",
+      "mythSource": "여와보천",
+      "display": "여와(女媧)",
+      "v01Title": "수습장(收拾將)",
+      "motto": {
+        "name": "수습잔국",
+        "hanja": "收拾殘局",
+        "gloss": "무너진 판을 수습한다 — 흐트러진 전열을 다시 세운다",
+        "source": "성어"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-013",
+      "kind": "BASE",
+      "formerName": "선도장",
+      "role": "COHESION",
+      "memoryLine": "뒤에서 힘내라 외치는 대신, 먼저 들어가 싸울 이유를 보여준다.",
+      "name": "포뢰",
+      "hanja": "蒲牢",
+      "myth": "종 위에서 울부짖는 용의 아들 — 앞에서 외쳐 모두를 일으킨다",
+      "mythSource": "용생구자",
+      "display": "포뢰(蒲牢)",
+      "v01Title": "선봉장(先鋒將)",
+      "motto": {
+        "name": "신선사졸",
+        "hanja": "身先士卒",
+        "gloss": "몸소 병사보다 앞장선다 — 먼저 싸워 보여 동료를 세운다",
+        "source": "사기"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-014",
+      "kind": "BASE",
+      "formerName": "구원장",
+      "role": "LOGISTICS",
+      "memoryLine": "이 전투를 못 이겨도, 다음 전쟁에 데려갈 사람은 남긴다.",
+      "name": "비휴",
+      "hanja": "貔貅",
+      "myth": "삼키면 내놓지 않는 신수 — 져도 병사는 잃지 않는다",
+      "mythSource": "신수 전설",
+      "display": "비휴(貔貅)",
+      "v01Title": "전군장(全軍將)",
+      "motto": {
+        "name": "유득청산",
+        "hanja": "留得靑山",
+        "gloss": "푸른 산만 남기면 땔감 걱정 없다 — 져도 사람은 남긴다",
+        "source": "속담(留得青山在)"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-015",
+      "kind": "BASE",
+      "formerName": "병참관",
+      "role": "LOGISTICS",
+      "memoryLine": "병력은 충분하다. 문제는 지금 누구에게 무엇을 먼저 보내느냐다.",
+      "name": "건목",
+      "hanja": "建木",
+      "myth": "하늘과 땅을 잇는 나무 — 끊기지 않는 보급 길",
+      "mythSource": "산해경 해내경",
+      "display": "건목(建木)",
+      "v01Title": "독량관(督糧官)",
+      "motto": {
+        "name": "양초선행",
+        "hanja": "糧草先行",
+        "gloss": "군대보다 군량이 먼저 간다 — 누구에게 먼저 보낼지 정한다",
+        "source": "병법 성어(兵馬未動 糧草先行)"
+      },
+      "replaced": [
+        "신농(神農)"
+      ]
+    },
+    {
+      "id": "TMP-CLASS-B01-016",
+      "kind": "BASE",
+      "formerName": "진지사",
+      "role": "HOLD",
+      "memoryLine": "내가 떠난 뒤에도 쓸 수 있는 자리를 만든다. 대신 적도 그 자리를 빼앗을 수 있다.",
+      "name": "정위",
+      "hanja": "精衛",
+      "myth": "돌을 물어 바다를 메우는 새 — 쉬지 않고 진지를 쌓는다",
+      "mythSource": "산해경",
+      "display": "정위(精衛)",
+      "v01Title": "영루장(營壘將)",
+      "motto": {
+        "name": "안영찰채",
+        "hanja": "安營紮寨",
+        "gloss": "진영을 세우고 목책을 친다 — 떠난 뒤에도 쓸 자리를 만든다",
+        "source": "성어"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-017",
+      "kind": "BASE",
+      "formerName": "군정관",
+      "role": "GOVERNANCE",
+      "memoryLine": "빼앗은 성을 전리품으로 끝내지 않고 다음 전쟁의 발판으로 바꾼다.",
+      "name": "후토",
+      "hanja": "后土",
+      "myth": "땅을 다스리는 신 — 빼앗은 땅을 다시 일군다",
+      "mythSource": "토지신",
+      "display": "후토(后土)",
+      "v01Title": "안집관(安輯官)",
+      "motto": {
+        "name": "인량어적",
+        "hanja": "因糧於敵",
+        "gloss": "적에게서 군량을 얻는다 — 빼앗은 성을 다음 전쟁의 발판으로",
+        "source": "손자 작전편"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-018",
+      "kind": "BASE",
+      "formerName": "회유사",
+      "role": "GOVERNANCE",
+      "memoryLine": "적을 전부 죽이는 대신, 무엇을 내주면 싸움을 끝낼지 고른다.",
+      "name": "해치",
+      "hanja": "獬豸",
+      "myth": "옳고 그름을 가리는 신수 — 싸움을 끝낼 조건을 정한다",
+      "mythSource": "신수 전설(광화문 해태)",
+      "display": "해치(獬豸)",
+      "v01Title": "초무사(招撫使)",
+      "motto": {
+        "name": "부전이승",
+        "hanja": "不戰而勝",
+        "gloss": "싸우지 않고 이긴다 — 무엇을 내주면 끝낼지 고른다",
+        "source": "손자 모공편(不戰而屈人之兵)"
+      }
+    },
+    {
+      "id": "TMP-CLASS-B01-001-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "전격장",
+      "baseId": "TMP-CLASS-B01-001",
+      "name": "직도황룡",
+      "hanja": "直搗黃龍",
+      "gloss": "곧장 적의 심장부를 찌른다 — 들어간 자리에 남아 적 전열을 흔든다",
+      "source": "송사 악비전",
+      "display": "비렴 · 직도황룡(直搗黃龍)"
+    },
+    {
+      "id": "TMP-CLASS-B01-001-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "전환장",
+      "baseId": "TMP-CLASS-B01-001",
+      "name": "교토삼굴",
+      "hanja": "狡兎三窟",
+      "gloss": "꾀 많은 토끼는 굴이 셋 — 들어온 길 말고 옆길로 빠진다",
+      "source": "전국책 풍훤",
+      "display": "비렴 · 교토삼굴(狡兎三窟)"
+    },
+    {
+      "id": "TMP-CLASS-B01-002-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "공성설계장",
+      "baseId": "TMP-CLASS-B01-002",
+      "name": "일고작기",
+      "hanja": "一鼓作氣",
+      "gloss": "첫 북소리에 기세를 다 싣는다 — 굳게 지키는 적에게 준비한 일격",
+      "source": "좌전 조귀론전",
+      "display": "백택 · 일고작기(一鼓作氣)"
+    },
+    {
+      "id": "TMP-CLASS-B01-002-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "변계장",
+      "baseId": "TMP-CLASS-B01-002",
+      "name": "임기응변",
+      "hanja": "臨機應變",
+      "gloss": "때에 맞춰 바꾼다 — 준비한 계획을 다른 대상으로 돌린다",
+      "source": "진서",
+      "display": "백택 · 임기응변(臨機應變)"
+    },
+    {
+      "id": "TMP-CLASS-B01-003-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "추압장",
+      "baseId": "TMP-CLASS-B01-003",
+      "name": "추망축배",
+      "hanja": "追亡逐北",
+      "gloss": "달아나는 적을 쫓는다 — 물러나는 대상을 따라붙는다",
+      "source": "가의 과진론",
+      "display": "과보 · 추망축배(追亡逐北)"
+    },
+    {
+      "id": "TMP-CLASS-B01-003-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "쇄진장",
+      "baseId": "TMP-CLASS-B01-003",
+      "name": "파죽지세",
+      "hanja": "破竹之勢",
+      "gloss": "대나무를 쪼개는 기세 — 쌓은 압박을 한 번에 터뜨린다",
+      "source": "진서 두예전",
+      "display": "과보 · 파죽지세(破竹之勢)"
+    },
+    {
+      "id": "TMP-CLASS-B01-004-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "충격장",
+      "baseId": "TMP-CLASS-B01-004",
+      "name": "석파천경",
+      "hanja": "石破天驚",
+      "gloss": "돌이 깨지고 하늘이 놀란다 — 밀기 대신 충격으로 적 전열을 깬다",
+      "source": "이하 시",
+      "display": "형천 · 석파천경(石破天驚)"
+    },
+    {
+      "id": "TMP-CLASS-B01-004-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "전진장",
+      "baseId": "TMP-CLASS-B01-004",
+      "name": "장구직입",
+      "hanja": "長驅直入",
+      "gloss": "거침없이 곧장 들어간다 — 밀어낸 빈칸으로 전진한다",
+      "source": "성어",
+      "display": "형천 · 장구직입(長驅直入)"
+    },
+    {
+      "id": "TMP-CLASS-B01-005-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "성채장",
+      "baseId": "TMP-CLASS-B01-005",
+      "name": "안여반석",
+      "hanja": "安如磐石",
+      "gloss": "반석처럼 굳건하다 — 지키는 자리 정면 피해를 크게 줄인다",
+      "source": "성어",
+      "display": "비희 · 안여반석(安如磐石)"
+    },
+    {
+      "id": "TMP-CLASS-B01-005-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "선회수비장",
+      "baseId": "TMP-CLASS-B01-005",
+      "name": "응변무방",
+      "hanja": "應變無方",
+      "gloss": "변화에 응하는 데 정해진 방향이 없다 — 지키며 정면을 돌린다",
+      "source": "성어",
+      "display": "비희 · 응변무방(應變無方)"
+    },
+    {
+      "id": "TMP-CLASS-B01-006-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "반격장",
+      "baseId": "TMP-CLASS-B01-006",
+      "name": "반객위주",
+      "hanja": "反客爲主",
+      "gloss": "손님이 주인 자리를 뺏는다 — 받아낸 자세를 반격으로 쓴다",
+      "source": "삼십육계",
+      "display": "치우 · 반객위주(反客爲主)"
+    },
+    {
+      "id": "TMP-CLASS-B01-006-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "철수비장",
+      "baseId": "TMP-CLASS-B01-006",
+      "name": "부동여산",
+      "hanja": "不動如山",
+      "gloss": "산처럼 움직이지 않는다 — 받아낸 자세를 방어로 쓴다",
+      "source": "손자 군쟁편",
+      "display": "치우 · 부동여산(不動如山)"
+    },
+    {
+      "id": "TMP-CLASS-B01-007-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "추격유격장",
+      "baseId": "TMP-CLASS-B01-007",
+      "name": "욕금고종",
+      "hanja": "欲擒故縱",
+      "gloss": "잡으려면 일부러 놓아준다 — 물러난 적을 다시 쫓는다",
+      "source": "삼십육계",
+      "display": "천구 · 욕금고종(欲擒故縱)"
+    },
+    {
+      "id": "TMP-CLASS-B01-007-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "탈출유격장",
+      "baseId": "TMP-CLASS-B01-007",
+      "name": "주위상책",
+      "hanja": "走爲上策",
+      "gloss": "달아나는 것이 상책 — 빠질 때 받는 피해를 줄인다",
+      "source": "삼십육계",
+      "display": "천구 · 주위상책(走爲上策)"
+    },
+    {
+      "id": "TMP-CLASS-B01-008-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "허실사",
+      "baseId": "TMP-CLASS-B01-008",
+      "name": "성동격서",
+      "hanja": "聲東擊西",
+      "gloss": "동쪽에서 소리치고 서쪽을 친다 — 미끼 하나를 진짜와 엮는다",
+      "source": "통전",
+      "display": "신루 · 성동격서(聲東擊西)"
+    },
+    {
+      "id": "TMP-CLASS-B01-008-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "잠행사",
+      "baseId": "TMP-CLASS-B01-008",
+      "name": "암도진창",
+      "hanja": "暗渡陳倉",
+      "gloss": "몰래 진창을 건넌다 — 미끼 뒤에 숨어 움직인다",
+      "source": "삼십육계",
+      "display": "신루 · 암도진창(暗渡陳倉)"
+    },
+    {
+      "id": "TMP-CLASS-B01-009-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "염진사",
+      "baseId": "TMP-CLASS-B01-009",
+      "name": "요원지화",
+      "hanja": "燎原之火",
+      "gloss": "들판을 태우는 불 — 불을 짧은 선으로 놓는다",
+      "source": "서경 반경",
+      "display": "필방 · 요원지화(燎原之火)"
+    },
+    {
+      "id": "TMP-CLASS-B01-009-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "연무사",
+      "baseId": "TMP-CLASS-B01-009",
+      "name": "오리무중",
+      "hanja": "五里霧中",
+      "gloss": "오 리 안개 속 — 연막을 넓게 친다",
+      "source": "후한서 장해전",
+      "display": "필방 · 오리무중(五里霧中)"
+    },
+    {
+      "id": "TMP-CLASS-B01-010-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "교차지휘장",
+      "baseId": "TMP-CLASS-B01-010",
+      "name": "운용지묘",
+      "hanja": "運用之妙",
+      "gloss": "쓰는 묘는 마음에 있다 — 이어받을 동료를 바꾼다",
+      "source": "송사 악비전",
+      "display": "솔연 · 운용지묘(運用之妙)"
+    },
+    {
+      "id": "TMP-CLASS-B01-010-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "연쇄공세장",
+      "baseId": "TMP-CLASS-B01-010",
+      "name": "일기가성",
+      "hanja": "一氣呵成",
+      "gloss": "단숨에 이룬다 — 이어진 공격을 연달아 잇는다",
+      "source": "성어",
+      "display": "솔연 · 일기가성(一氣呵成)"
+    },
+    {
+      "id": "TMP-CLASS-B01-011-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "철위장",
+      "baseId": "TMP-CLASS-B01-011",
+      "name": "사이후이",
+      "hanja": "死而後已",
+      "gloss": "죽은 뒤에야 그만둔다 — 대신 맞는 피해를 줄인다",
+      "source": "제갈량 후출사표",
+      "display": "금강 · 사이후이(死而後已)"
+    },
+    {
+      "id": "TMP-CLASS-B01-011-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "호송장",
+      "baseId": "TMP-CLASS-B01-011",
+      "name": "불리불기",
+      "hanja": "不離不棄",
+      "gloss": "떠나지도 버리지도 않는다 — 엄호한 뒤 함께 움직인다",
+      "source": "성어",
+      "display": "금강 · 불리불기(不離不棄)"
+    },
+    {
+      "id": "TMP-CLASS-B01-012-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "재정렬장",
+      "baseId": "TMP-CLASS-B01-012",
+      "name": "중정기고",
+      "hanja": "重整旗鼓",
+      "gloss": "깃발과 북을 다시 정비한다 — 더 넓은 범위를 수습한다",
+      "source": "성어",
+      "display": "여와 · 중정기고(重整旗鼓)"
+    },
+    {
+      "id": "TMP-CLASS-B01-012-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "전선수습장",
+      "baseId": "TMP-CLASS-B01-012",
+      "name": "동주공제",
+      "hanja": "同舟共濟",
+      "gloss": "한 배를 타고 함께 건넌다 — 내가 흐트러지는 대가로 더 잘 수습한다",
+      "source": "손자 구지편",
+      "display": "여와 · 동주공제(同舟共濟)"
+    },
+    {
+      "id": "TMP-CLASS-B01-013-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "기수장",
+      "baseId": "TMP-CLASS-B01-013",
+      "name": "일호백응",
+      "hanja": "一呼百應",
+      "gloss": "한 번 부르면 백이 응한다 — 깃발로 넓게 모은다",
+      "source": "성어",
+      "display": "포뢰 · 일호백응(一呼百應)"
+    },
+    {
+      "id": "TMP-CLASS-B01-013-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "선봉고무장",
+      "baseId": "TMP-CLASS-B01-013",
+      "name": "일마당선",
+      "hanja": "一馬當先",
+      "gloss": "말 한 필이 앞장선다 — 적 전열을 깬 순간 크게 북돋운다",
+      "source": "성어",
+      "display": "포뢰 · 일마당선(一馬當先)"
+    },
+    {
+      "id": "TMP-CLASS-B01-014-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "후군장",
+      "baseId": "TMP-CLASS-B01-014",
+      "name": "휴로부유",
+      "hanja": "携老扶幼",
+      "gloss": "노인을 이끌고 아이를 부축한다 — 맞닿은 두 부대를 함께 빼낸다",
+      "source": "성어",
+      "display": "비휴 · 휴로부유(携老扶幼)"
+    },
+    {
+      "id": "TMP-CLASS-B01-014-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "구출장",
+      "baseId": "TMP-CLASS-B01-014",
+      "name": "단기구주",
+      "hanja": "單騎救主",
+      "gloss": "홀로 말 달려 주군을 구한다 — 한 부대를 막는 손길을 뚫는다",
+      "source": "삼국지연의 조운",
+      "display": "비휴 · 단기구주(單騎救主)"
+    },
+    {
+      "id": "TMP-CLASS-B01-015-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "전진보급관",
+      "baseId": "TMP-CLASS-B01-015",
+      "name": "천리궤량",
+      "hanja": "千里饋糧",
+      "gloss": "천 리 밖까지 군량을 나른다 — 중계점에서 보급 범위를 넓힌다",
+      "source": "손자 작전편",
+      "display": "건목 · 천리궤량(千里饋糧)"
+    },
+    {
+      "id": "TMP-CLASS-B01-015-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "대열병참관",
+      "baseId": "TMP-CLASS-B01-015",
+      "name": "유비무환",
+      "hanja": "有備無患",
+      "gloss": "대비하면 걱정이 없다 — 보급 묶음을 미리 잡아 손실을 줄인다",
+      "source": "서경 열명",
+      "display": "건목 · 유비무환(有備無患)"
+    },
+    {
+      "id": "TMP-CLASS-B01-016-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "보루사",
+      "baseId": "TMP-CLASS-B01-016",
+      "name": "심구고루",
+      "hanja": "深溝高壘",
+      "gloss": "해자는 깊게 보루는 높게 — 진지를 옆 칸까지 넓힌다",
+      "source": "성어",
+      "display": "정위 · 심구고루(深溝高壘)"
+    },
+    {
+      "id": "TMP-CLASS-B01-016-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "이동진지사",
+      "baseId": "TMP-CLASS-B01-016",
+      "name": "발채기영",
+      "hanja": "拔寨起營",
+      "gloss": "진을 뽑아 다시 세운다 — 진지를 옮긴다",
+      "source": "성어",
+      "display": "정위 · 발채기영(拔寨起營)"
+    },
+    {
+      "id": "TMP-CLASS-B01-017-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "전시군정관",
+      "baseId": "TMP-CLASS-B01-017",
+      "name": "이전양전",
+      "hanja": "以戰養戰",
+      "gloss": "전쟁으로 전쟁을 기른다 — 점령지를 군사용으로 빨리 회복",
+      "source": "성어",
+      "display": "후토 · 이전양전(以戰養戰)"
+    },
+    {
+      "id": "TMP-CLASS-B01-017-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "복구군정관",
+      "baseId": "TMP-CLASS-B01-017",
+      "name": "여민휴식",
+      "hanja": "與民休息",
+      "gloss": "백성과 함께 쉰다 — 점령지 민생을 빨리 정상화",
+      "source": "한서",
+      "display": "후토 · 여민휴식(與民休息)"
+    },
+    {
+      "id": "TMP-CLASS-B01-018-A",
+      "kind": "SPECIALIZATION",
+      "formerName": "귀순교섭사",
+      "baseId": "TMP-CLASS-B01-018",
+      "name": "공심위상",
+      "hanja": "攻心爲上",
+      "gloss": "마음을 치는 것이 으뜸 — 무장 해제로 포로와 병력을 지킨다",
+      "source": "삼국지 마속전 주",
+      "display": "해치 · 공심위상(攻心爲上)"
+    },
+    {
+      "id": "TMP-CLASS-B01-018-B",
+      "kind": "SPECIALIZATION",
+      "formerName": "향촌조정사",
+      "baseId": "TMP-CLASS-B01-018",
+      "name": "안거낙업",
+      "hanja": "安居樂業",
+      "gloss": "편히 살고 즐겁게 일하게 한다 — 고을의 협조를 얻는다",
+      "source": "한서",
+      "display": "해치 · 안거낙업(安居樂業)"
+    },
+    {
+      "id": "TMP-HYB-B01-001",
+      "kind": "HYBRID",
+      "formerName": "전선전환장",
+      "parents": [
+        "TMP-CLASS-B01-001",
+        "TMP-CLASS-B01-012"
+      ],
+      "memoryLine": "틈으로 들어간 내가 동료가 다시 설 자리가 된다.",
+      "name": "천주",
+      "hanja": "天柱",
+      "myth": "하늘을 받치는 기둥 — 틈으로 들어간 내가 동료가 설 자리가 된다",
+      "mythSource": "부주산 전설",
+      "display": "천주(天柱)",
+      "v01Title": "회천장(回天將)",
+      "motto": {
+        "name": "전화위복",
+        "hanja": "轉禍爲福",
+        "gloss": "화를 바꿔 복으로 — 틈으로 들어간 내가 동료가 다시 설 자리가 된다",
+        "source": "전국책"
+      }
+    },
+    {
+      "id": "TMP-HYB-B01-002",
+      "kind": "HYBRID",
+      "formerName": "반격설계장",
+      "parents": [
+        "TMP-CLASS-B01-002",
+        "TMP-CLASS-B01-006"
+      ],
+      "memoryLine": "적의 공격을 받아낼 때 다음 공세의 설계도까지 얻는다.",
+      "name": "천기",
+      "hanja": "天機",
+      "myth": "하늘의 기밀 — 받아낸 공격에서 다음 공세를 읽는다",
+      "mythSource": "성어",
+      "display": "천기(天機)",
+      "v01Title": "역계사(逆計師)",
+      "motto": {
+        "name": "장계취계",
+        "hanja": "將計就計",
+        "gloss": "상대의 계책을 거꾸로 쓴다 — 받아낸 공격에서 다음 공세를 얻는다",
+        "source": "삼국지연의"
+      }
+    },
+    {
+      "id": "TMP-HYB-B01-003",
+      "kind": "HYBRID",
+      "formerName": "유인화공사",
+      "parents": [
+        "TMP-CLASS-B01-008",
+        "TMP-CLASS-B01-009"
+      ],
+      "memoryLine": "안전해 보이는 길을 보여주고, 그 길을 위험으로 바꿀 순간을 고른다.",
+      "name": "축융",
+      "hanja": "祝融",
+      "myth": "불의 신 — 안전해 보이는 길을 불길로 바꾼다",
+      "mythSource": "불의 신 전설",
+      "display": "축융(祝融)",
+      "v01Title": "유적사(誘敵師)",
+      "motto": {
+        "name": "유적심입",
+        "hanja": "誘敵深入",
+        "gloss": "적을 깊이 끌어들인다 — 안전해 보이는 길을 불길로 바꾼다",
+        "source": "병법 성어"
+      }
+    },
+    {
+      "id": "TMP-HYB-B01-004",
+      "kind": "HYBRID",
+      "formerName": "기동중계장",
+      "parents": [
+        "TMP-CLASS-B01-007",
+        "TMP-CLASS-B01-010"
+      ],
+      "memoryLine": "기회는 표적에 붙어 있지 않고, 움직이는 동료 사이로 넘어간다.",
+      "name": "운중군",
+      "hanja": "雲中君",
+      "myth": "구름의 신 — 기회가 움직이는 동료 사이로 흐른다",
+      "mythSource": "초사 구가",
+      "display": "운중군(雲中君)",
+      "v01Title": "유수장(流水將)",
+      "motto": {
+        "name": "행운유수",
+        "hanja": "行雲流水",
+        "gloss": "떠가는 구름 흐르는 물 — 기회가 움직이는 동료 사이로 넘어간다",
+        "source": "송사 소식전"
+      }
+    },
+    {
+      "id": "TMP-HYB-B01-005",
+      "kind": "HYBRID",
+      "formerName": "이동후송관",
+      "parents": [
+        "TMP-CLASS-B01-014",
+        "TMP-CLASS-B01-015"
+      ],
+      "memoryLine": "앞으로 보내던 길을 뒤로 비워, 살아 있는 병력을 실어 나른다.",
+      "name": "곤붕",
+      "hanja": "鯤鵬",
+      "myth": "큰 물고기가 붕새가 되어 구만 리를 난다 — 병력을 멀리 실어 나른다",
+      "mythSource": "장자 소요유",
+      "display": "곤붕(鯤鵬)",
+      "v01Title": "회송관(回送官)",
+      "motto": {
+        "name": "퇴피삼사",
+        "hanja": "退避三舍",
+        "gloss": "사흘 길을 물러난다 — 보내던 길을 비워 병력을 실어 나른다",
+        "source": "좌전"
+      }
+    },
+    {
+      "id": "TMP-HYB-B01-006",
+      "kind": "HYBRID",
+      "formerName": "맹약군정관",
+      "parents": [
+        "TMP-CLASS-B01-017",
+        "TMP-CLASS-B01-018"
+      ],
+      "memoryLine": "점령지의 약속을 지키는 순서가 그곳을 다시 작동시키는 순서가 된다.",
+      "name": "사직",
+      "hanja": "社稷",
+      "myth": "땅과 곡식의 신 — 약속을 지켜 고을을 다시 살린다",
+      "mythSource": "토지·곡신",
+      "display": "사직(社稷)",
+      "v01Title": "약법관(約法官)",
+      "motto": {
+        "name": "약법삼장",
+        "hanja": "約法三章",
+        "gloss": "세 조항만 약속한다 — 점령지 약속을 지키는 순서가 다시 돌아가는 순서",
+        "source": "사기 고조본기"
+      }
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "id": "G25",
+  "name": "허저",
+  "faction": "F01",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 77,
+    "무용": 94,
+    "지략": 71,
+    "정무": 64,
+    "감화": 73
+  },
+  "sub": {
+    "전열 유지": 80,
+    "기동": 65,
+    "전환": 79,
+    "수습": 77,
+    "힘": 97,
+    "기술": 90,
+    "막아내기": 96,
+    "되받기": 84,
+    "군재": 68,
+    "응변": 82,
+    "속이기": 57,
+    "통찰": 74,
+    "행정": 65,
+    "병참": 64,
+    "인사": 67,
+    "제도": 64,
+    "민정": 58,
+    "설득": 60,
+    "포섭": 76,
+    "결집": 84,
+    "중재": 48
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "LOW"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "정면은 내가 막는다",
+    "text": "정면에서 공격받으면 받는 피해 −20%, 측면·후방에서 받으면 오히려 +10%. 허저가 반격한 적은 1턴 둔화(다음 차례 이동 −2칸).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "보병"
+    ],
+    "effects": [
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": -30,
+        "duration": 0,
+        "condition": "FLANK"
+      },
+      {
+        "op": "STATUS_APPLY",
+        "when": "ON_COUNTER",
+        "target": "TARGET",
+        "value": 0,
+        "duration": 1,
+        "condition": null,
+        "status": "SLOWED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 아군이 뒤로 빠지고 허저가 접점을 넘겨받아 Brace하는 전법은 아군 받는 피해(추격 포함) 감소와 허저 반격 강화로 옮김. 반응 대상을 바꾸는 특기는 '반격당한 적 둔화'(어디부터 못 들어오는지)로 바꾸고, 약점 '측후면 동시 위협'은 FLANK 조건 페널티로 남김.",
+    "formerName": "여기서부터는 내가"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "몸으로 막는다",
+      "text": "맞닿은 아군은 이번 턴 받는 피해 −25%(물러날 때 받는 추격 포함), 허저는 반격 피해 +30%. 동료를 뒤로 빼고 접점을 몸으로 받는다.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 25,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 30,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "마지막 통로"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK"
+  ]
+}

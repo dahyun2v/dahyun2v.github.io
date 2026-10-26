@@ -1,0 +1,119 @@
+{
+ "source": {
+  "mapV3": "prototype/app/world/map-v3.mjs",
+  "v3Ui": "prototype/app/design/v3-ui.mjs",
+  "troops": "prototype/app/world/troops.mjs"
+ },
+ "map": {
+  "image": "res://assets/map/world.webp",
+  "version": "v16",
+  "size": 30,
+  "tilt": 0.62,
+  "ring": 624,
+  "land": [
+   2577,
+   2220
+  ],
+  "cityLabelAt": {
+   "west": [
+    1052,
+    2725
+   ],
+   "east": [
+    2286,
+    947
+   ],
+   "south": [
+    2397,
+    1897
+   ],
+   "yijing": [
+    1971,
+    1375
+   ],
+   "zhongshan": [
+    1405,
+    1586
+   ],
+   "xindu": [
+    1603,
+    2080
+   ],
+   "julu": [
+    1207,
+    2333
+   ],
+   "pingyuan": [
+    2273,
+    2246
+   ]
+  }
+ },
+ "factions": {
+  "F01": {
+   "name": "조조",
+   "glyph": "曹",
+   "color": "#b8433c"
+  },
+  "F02": {
+   "name": "유비",
+   "glyph": "劉",
+   "color": "#4f8f73"
+  },
+  "F03": {
+   "name": "손권",
+   "glyph": "孫",
+   "color": "#33709f"
+  },
+  "F04": {
+   "name": "원소",
+   "glyph": "袁",
+   "color": "#917848"
+  },
+  "F05": {
+   "name": "여포",
+   "glyph": "呂",
+   "color": "#8c6590"
+  },
+  "F06": {
+   "name": "마등",
+   "glyph": "馬",
+   "color": "#a37856"
+  },
+  "F07": {
+   "name": "동탁",
+   "glyph": "董",
+   "color": "#676851"
+  },
+  "F08": {
+   "name": "유장",
+   "glyph": "劉",
+   "color": "#658c88"
+  },
+  "F09": {
+   "name": "장로",
+   "glyph": "張",
+   "color": "#777ba1"
+  },
+  "F10": {
+   "name": "맹획",
+   "glyph": "孟",
+   "color": "#9a6854"
+  },
+  "F11": {
+   "name": "공손찬",
+   "glyph": "公",
+   "color": "#a4a294"
+  },
+  "F12": {
+   "name": "원술",
+   "glyph": "袁",
+   "color": "#a18c59"
+  }
+ },
+ "kitTone": {
+  "F01": "red",
+  "F02": "green",
+  "F03": "blue"
+ }
+}

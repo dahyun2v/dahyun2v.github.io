@@ -1,0 +1,632 @@
+{
+ "version": "climate-visual-v1",
+ "status": "DRAFT — 중국 전역 지도 방(10-24) · 그림 층만 · 규칙 불변 · 시험값",
+ "basis": [
+  "GPT6PRO-turn2.md §3(공통 생성기 + 지역 시각 설정 + 특수 지형물, 큰 형태 먼저 · 날씨 나중)",
+  "map-layout-china-v1.json cities[].climate · tiles[].climateClass / climateLevel",
+  "D3 화풍 토큰(prototype/app — --sg-ink · --sg-paper · --sg-gold-line)"
+ ],
+ "rules": [
+  "큰 형태(높이 · 실루엣)가 먼저, 날씨는 그다음 — 날씨를 꺼도 어느 지역인지 구별돼야 함",
+  "칸 중심부는 그 칸 지형 정체성을 강하게, 경계에서만 섞음",
+  "분위기 안개 ≠ 전장의 안개(정보 공개는 규칙 쪽)",
+  "얼어 보이는 강 · 절벽 모양이 실제 통행 규칙과 어긋나면 안 됨(규칙이 먼저)"
+ ],
+ "palette": {
+  "ink": "#0a0e0d",
+  "inkRaised": "#14201e",
+  "paper": "#eee0bd",
+  "goldLine": "#a3845a",
+  "goldName": "#c9b27c",
+  "mapText": "#E9E5DC",
+  "move": "#78A9AB",
+  "danger": "#B64F45"
+ },
+ "textures": {
+  "order1": [
+   "tex-plain",
+   "tex-forest-floor",
+   "tex-hill",
+   "tex-rock",
+   "tex-water",
+   "tex-shore",
+   "tex-farm",
+   "tex-road"
+  ],
+  "order2": [
+   "tex-snow",
+   "tex-ice",
+   "tex-desert-sand",
+   "tex-desert-rock",
+   "tex-oasis",
+   "tex-loess",
+   "tex-cliff-face",
+   "tex-mist-highland",
+   "tex-giant-forest-floor",
+   "tex-jungle-floor",
+   "tex-marsh",
+   "tex-fertile-field"
+  ],
+  "orderRef": [
+   "docs/work-integration/20261024/art-orders/ORDER-GODOT-ART-1.md 묶음 A",
+   "ORDER-GODOT-ART-2.md(기후 질감)"
+  ]
+ },
+ "propSheets": {
+  "snowRock": [
+   "sheet-climate-props",
+   "눈 덮인 바위"
+  ],
+  "snowConifer": [
+   "sheet-climate-props",
+   "눈 덮인 침엽수"
+  ],
+  "desertRock": [
+   "sheet-climate-props",
+   "사막 바위"
+  ],
+  "dryShrub": [
+   "sheet-climate-props",
+   "마른 관목"
+  ],
+  "poplar": [
+   "sheet-climate-props",
+   "호양나무"
+  ],
+  "reedBush": [
+   "sheet-climate-props",
+   "갈대 덤불"
+  ],
+  "drownedTree": [
+   "sheet-climate-props",
+   "물에 잠긴 죽은 나무"
+  ],
+  "bambooClump": [
+   "sheet-climate-props",
+   "대나무 숲 덩어리"
+  ],
+  "jungleClump": [
+   "sheet-climate-props",
+   "넓은 잎 밀림 덩어리"
+  ],
+  "loessPillar": [
+   "sheet-climate-props",
+   "황토 흙기둥"
+  ],
+  "giantTree": [
+   "sheet-climate-props",
+   "거목"
+  ],
+  "worldTree": [
+   "sheet-world-tree",
+   "세계수(지형물 — landmarks 만, 밀도 0)"
+  ],
+  "cliff": [
+   "sheet-cliffs-canyon",
+   "큰 절벽"
+  ],
+  "rockPillar": [
+   "sheet-cliffs-canyon",
+   "돌기둥"
+  ],
+  "canyonBridge": [
+   "sheet-cliffs-canyon",
+   "협곡 다리(지형물 — landmarks 만)"
+  ],
+  "tree": null,
+  "farmPlot": null,
+  "hamlet": null,
+  "bentGrass": null,
+  "gateTower": null,
+  "watchTower": null
+ },
+ "lookNote": "classes[].look = 의뢰 2 묶음 F 갈래별 모습 그림(목표 화면)",
+ "levels": {
+  "1": {
+   "form": 0.35,
+   "props": 0.6,
+   "weather": 0,
+   "note": "약하게 — 바탕만 바뀜, 날씨 없음"
+  },
+  "2": {
+   "form": 0.7,
+   "props": 1.0,
+   "weather": 0.5,
+   "note": "보통 — 소품 · 형태 뚜렷, 날씨 가끔"
+  },
+  "3": {
+   "form": 1.0,
+   "props": 1.4,
+   "weather": 1.0,
+   "note": "극단(PROJECT_LOCK) — 형태 과장 최대 · 지역 표식"
+  }
+ },
+ "readMin": {
+  "goldLine": 1.6,
+  "move": 1.5
+ },
+ "classes": {
+  "snow": {
+   "form": {
+    "heightScale": 1.15,
+    "ridges": "넓은 설원 + 큰 얼음 능선 · 검은 암벽 대비"
+   },
+   "textures": [
+    "tex-snow",
+    "tex-ice",
+    "tex-rock"
+   ],
+   "ground": [
+    "#6f7378",
+    "#d9d8d2",
+    "#f1efe8"
+   ],
+   "props": [
+    [
+     "snowRock",
+     0.6
+    ],
+    [
+     "snowConifer",
+     0.5
+    ]
+   ],
+   "weather": [
+    "snowfall",
+    "groundDrift"
+   ],
+   "mood": "뼈색 눈 · 청회 얼음 · 먹 바위",
+   "readability": {
+    "goldLineContrast": 2.45,
+    "moveContrast": 1.82,
+    "goldLineHalo": null,
+    "moveHalo": null,
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-snow.png"
+  },
+  "desert": {
+   "form": {
+    "heightScale": 1.0,
+    "ridges": "넓은 모래 능선 몇 개 + 드문 검은 암반(잔주름 말고 큰 굴곡)"
+   },
+   "textures": [
+    "tex-desert-sand",
+    "tex-desert-rock",
+    "tex-shore"
+   ],
+   "ground": [
+    "#7a6248",
+    "#c2ab84",
+    "#dccdb0"
+   ],
+   "props": [
+    [
+     "desertRock",
+     0.3
+    ],
+    [
+     "dryShrub",
+     0.4
+    ]
+   ],
+   "weather": [
+    "sandWind"
+   ],
+   "mood": "종이색 모래 · 먹 바위 · 바랜 붉은 퇴적층",
+   "readability": {
+    "goldLineContrast": 1.57,
+    "moveContrast": 1.17,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-desert.png"
+  },
+  "oasis": {
+   "form": {
+    "heightScale": 0.9,
+    "ridges": "사막 속 낮은 분지 + 짙은 초록 섬"
+   },
+   "textures": [
+    "tex-oasis",
+    "tex-desert-sand",
+    "tex-water"
+   ],
+   "ground": [
+    "#4f5a3e",
+    "#9aa078",
+    "#cfc7a6"
+   ],
+   "props": [
+    [
+     "poplar",
+     1.2
+    ],
+    [
+     "reedBush",
+     0.6
+    ]
+   ],
+   "weather": [],
+   "mood": "모래 바다 가운데 물과 나무",
+   "readability": {
+    "goldLineContrast": 1.28,
+    "moveContrast": 1.05,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-oasis.png"
+  },
+  "loess": {
+   "form": {
+    "heightScale": 1.2,
+    "ridges": "황토 계단 · 깊이 파인 골(원 · 량 · 묘)"
+   },
+   "textures": [
+    "tex-loess",
+    "tex-hill",
+    "tex-farm"
+   ],
+   "ground": [
+    "#6e5a45",
+    "#b49c7c",
+    "#d3c3a6"
+   ],
+   "props": [
+    [
+     "loessPillar",
+     0.4
+    ],
+    [
+     "dryShrub",
+     0.2
+    ]
+   ],
+   "weather": [
+    "dustHaze"
+   ],
+   "mood": "황토 절벽 계단 · 마른 골짜기",
+   "readability": {
+    "goldLineContrast": 1.33,
+    "moveContrast": 1.01,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-loess.png"
+  },
+  "giantForest": {
+   "form": {
+    "heightScale": 1.1,
+    "ridges": "세계수 한 그루가 지역 표식, 둘레 숲은 낮은 층"
+   },
+   "textures": [
+    "tex-giant-forest-floor",
+    "tex-forest-floor",
+    "tex-hill"
+   ],
+   "ground": [
+    "#2c362b",
+    "#5e6b52",
+    "#9aa287"
+   ],
+   "props": [
+    [
+     "worldTree",
+     0
+    ],
+    [
+     "giantTree",
+     0.25
+    ],
+    [
+     "tree",
+     2.0
+    ]
+   ],
+   "weather": [
+    "spores"
+   ],
+   "mood": "거목의 바다 · 먹 덩어리 수관",
+   "readability": {
+    "goldLineContrast": 1.62,
+    "moveContrast": 2.18,
+    "goldLineHalo": null,
+    "moveHalo": null,
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-giantForest.png"
+  },
+  "cliffs": {
+   "form": {
+    "heightScale": 1.6,
+    "ridges": "깎아지른 절벽 · 깊은 협곡(높이차는 벽면 메시로)"
+   },
+   "textures": [
+    "tex-cliff-face",
+    "tex-rock",
+    "tex-hill"
+   ],
+   "ground": [
+    "#33302b",
+    "#7d7468",
+    "#b4aa98"
+   ],
+   "props": [
+    [
+     "cliff",
+     0.3
+    ],
+    [
+     "rockPillar",
+     0.4
+    ],
+    [
+     "canyonBridge",
+     0
+    ]
+   ],
+   "weather": [
+    "valleyMist"
+   ],
+   "mood": "검은 암벽 · 옅은 능선",
+   "readability": {
+    "goldLineContrast": 1.31,
+    "moveContrast": 1.76,
+    "goldLineHalo": "ink",
+    "moveHalo": null,
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-cliffs.png"
+  },
+  "mist": {
+   "form": {
+    "heightScale": 1.25,
+    "ridges": "골짜기 · 좁은 연결 지점"
+   },
+   "textures": [
+    "tex-mist-highland",
+    "tex-forest-floor",
+    "tex-rock"
+   ],
+   "ground": [
+    "#3e463f",
+    "#87897c",
+    "#c3c1b2"
+   ],
+   "props": [
+    [
+     "rockPillar",
+     0.2
+    ],
+    [
+     "bambooClump",
+     0.4
+    ]
+   ],
+   "weather": [
+    "lowMist"
+   ],
+   "mood": "운무 · 강 안개 띠(명령 대상 · 칸 경계는 안 가림)",
+   "readability": {
+    "goldLineContrast": 1.02,
+    "moveContrast": 1.37,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-mist.png"
+  },
+  "jungle": {
+   "form": {
+    "heightScale": 1.1,
+    "ridges": "습한 구릉 · 굵은 강 · 큰 잎 덩어리 층"
+   },
+   "textures": [
+    "tex-jungle-floor",
+    "tex-forest-floor",
+    "tex-hill"
+   ],
+   "ground": [
+    "#233026",
+    "#4e604a",
+    "#8d9a7d"
+   ],
+   "props": [
+    [
+     "jungleClump",
+     1.5
+    ],
+    [
+     "bambooClump",
+     0.8
+    ]
+   ],
+   "weather": [
+    "rain"
+   ],
+   "mood": "짙은 녹먹 · 젖은 바위 · 대숲",
+   "readability": {
+    "goldLineContrast": 1.94,
+    "moveContrast": 2.6,
+    "goldLineHalo": null,
+    "moveHalo": null,
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-jungle.png"
+  },
+  "waterland": {
+   "form": {
+    "heightScale": 0.7,
+    "ridges": "낮은 땅 · 얕은 물 · 드러난 둑"
+   },
+   "textures": [
+    "tex-marsh",
+    "tex-shore",
+    "tex-water"
+   ],
+   "ground": [
+    "#3a4741",
+    "#86907f",
+    "#c4c3ad"
+   ],
+   "props": [
+    [
+     "reedBush",
+     1.2
+    ],
+    [
+     "drownedTree",
+     0.2
+    ]
+   ],
+   "weather": [
+    "waterMist"
+   ],
+   "mood": "수향 · 물길 · 갈대 늪",
+   "readability": {
+    "goldLineContrast": 1.05,
+    "moveContrast": 1.28,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-waterland.png"
+  },
+  "fertile": {
+   "form": {
+    "heightScale": 0.8,
+    "ridges": "넓은 들판 · 낮은 둔덕"
+   },
+   "textures": [
+    "tex-fertile-field",
+    "tex-farm",
+    "tex-road"
+   ],
+   "ground": [
+    "#5f5a43",
+    "#aea585",
+    "#d6cfb6"
+   ],
+   "props": [
+    [
+     "farmPlot",
+     1.0
+    ],
+    [
+     "hamlet",
+     0.15
+    ]
+   ],
+   "weather": [],
+   "mood": "끝없는 논밭",
+   "readability": {
+    "goldLineContrast": 1.42,
+    "moveContrast": 1.06,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": "look-fertile.png"
+  },
+  "wind": {
+   "form": {
+    "heightScale": 1.0,
+    "ridges": "해안 구릉"
+   },
+   "textures": [
+    "tex-shore",
+    "tex-plain",
+    "tex-hill"
+   ],
+   "ground": [
+    "#5d5f55",
+    "#a9a68f",
+    "#d2cfbd"
+   ],
+   "props": [
+    [
+     "bentGrass",
+     0.8
+    ]
+   ],
+   "weather": [
+    "wind"
+   ],
+   "mood": "바람 자국 · 기운 풀",
+   "readability": {
+    "goldLineContrast": 1.42,
+    "moveContrast": 1.06,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": null
+  },
+  "pass": {
+   "form": {
+    "heightScale": 1.3,
+    "ridges": "좁은 고개"
+   },
+   "textures": [
+    "tex-rock",
+    "tex-cliff-face",
+    "tex-road"
+   ],
+   "ground": [
+    "#3b3a33",
+    "#837b6c",
+    "#bab09c"
+   ],
+   "props": [
+    [
+     "gateTower",
+     0.1
+    ]
+   ],
+   "weather": [],
+   "mood": "관문",
+   "readability": {
+    "goldLineContrast": 1.2,
+    "moveContrast": 1.61,
+    "goldLineHalo": "ink",
+    "moveHalo": null,
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": null
+  },
+  "walls": {
+   "form": {
+    "heightScale": 1.0,
+    "ridges": "성 둘레"
+   },
+   "textures": [
+    "tex-plain",
+    "tex-road"
+   ],
+   "ground": [
+    "#55534a",
+    "#a8a290",
+    "#d5cfbd"
+   ],
+   "props": [
+    [
+     "watchTower",
+     0.1
+    ]
+   ],
+   "weather": [],
+   "mood": "성벽 강조",
+   "readability": {
+    "goldLineContrast": 1.37,
+    "moveContrast": 1.02,
+    "goldLineHalo": "ink",
+    "moveHalo": "ink",
+    "labels": "이름표는 늘 먹판(#0a0e0d) 위 글자(#E9E5DC) — 땅 색과 상관없이 대비 15.45"
+   },
+   "look": null
+  }
+ }
+}

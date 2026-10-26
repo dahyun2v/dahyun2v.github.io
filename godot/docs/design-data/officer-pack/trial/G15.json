@@ -1,0 +1,122 @@
+{
+  "id": "G15",
+  "name": "유장",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 51,
+    "무용": 36,
+    "지략": 43,
+    "정무": 67,
+    "감화": 61
+  },
+  "sub": {
+    "전열 유지": 56,
+    "기동": 42,
+    "전환": 49,
+    "수습": 55,
+    "힘": 35,
+    "기술": 32,
+    "막아내기": 47,
+    "되받기": 30,
+    "군재": 44,
+    "응변": 53,
+    "속이기": 38,
+    "통찰": 37,
+    "행정": 61,
+    "병참": 65,
+    "인사": 66,
+    "제도": 54,
+    "민정": 77,
+    "설득": 58,
+    "포섭": 55,
+    "결집": 62,
+    "중재": 64
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "문관",
+  "style": "명사",
+  "primaryClass": "TRIAL:문관",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "다친 병사 돌보기",
+    "text": "10일 정산 때 맞닿은 아군마다 부상병 30명이 돌아온다. 태수일 때 도시 식량 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "정무",
+      "감화"
+    ],
+    "effects": [
+      {
+        "op": "HEAL_TROOPS",
+        "when": "TURN_SETTLE",
+        "target": "ADJACENT_ALLIES",
+        "value": 30,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 20,
+        "duration": 0,
+        "condition": null,
+        "resource": "FOOD"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 질서후퇴는 '전열 회복+추격 피해·전사 감소'로 살림(Brace 이월은 없음). 정비 보존 특기는 '정산 때 곁의 부상병 복귀'로 옮김. 직접 공세가 약한 약점 유지(공격 효과 없음).",
+    "formerName": "아직 이어지는 일"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "물러나며 거두기",
+      "text": "2칸 안 아군 1부대(자신 포함)의 다친 병사를 거둔다: 부상병 50 즉시 복귀, 사기 한 단계 회복, 2턴 동안 잃는 병력의 전사 비율 −15%p.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 2,
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 50,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "CASUALTY_SHIFT",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 15,
+          "duration": 2,
+          "condition": null
+        }
+      ],
+      "formerName": "사람이 남는 물러섬"
+    }
+  ]
+}

@@ -1,0 +1,631 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+11200",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +11200"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+5",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+20",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 남피 생산으로",
+    "target": "south"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "south",
+    "name": "남피",
+    "u": 0.6223,
+    "v": 0.529,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "pingyuan",
+    "name": "평원",
+    "u": 0.5897,
+    "v": 0.6448,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ },
+ "draft": {
+  "screen": "draft",
+  "factionId": "F01",
+  "seed": 489,
+  "title": "새 판 2/2 · 동료 고르기",
+  "gimmick": "조조 — 더 많이 보고 필요한 사람을 고른다 · 다시 부르기가 한 번 더 있다",
+  "budget": 15,
+  "lockedCost": 0,
+  "slots": 5,
+  "locked": [],
+  "rerollsLeft": 3,
+  "canReroll": true,
+  "canConfirm": false,
+  "ended": false,
+  "endReason": null,
+  "endNote": "",
+  "canDelegate": false,
+  "owners": [
+   "G07"
+  ],
+  "ruler": {
+   "id": "G07",
+   "name": "조조",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "head": {
+    "w": 522,
+    "h": 888,
+    "cx": 318,
+    "cy": 103,
+    "side": 114
+   }
+  },
+  "sweep": "assets/ui-v3/hud/faction-sweep-F01.webp",
+  "cards": [
+   {
+    "id": "G37",
+    "name": "장합",
+    "cost": 5,
+    "locked": false,
+    "lockBlocked": null,
+    "home": false,
+    "reason": "앞장설 사람이 비어 있다",
+    "art": "assets/officer-art/cutout/G37-decided-hA.webp",
+    "head": {
+     "w": 505,
+     "h": 934,
+     "cx": 233,
+     "cy": 82,
+     "side": 137
+    },
+    "bust": "assets/officer-art/bust/G37.webp",
+    "stone": {
+     "src": "assets/officer-art/stone/G37.webp",
+     "size": [
+      448,
+      864
+     ],
+     "head": [
+      0.5848,
+      0.2005,
+      0.3616
+     ]
+    },
+    "stats": [
+     {
+      "k": "지휘",
+      "v": 90
+     },
+     {
+      "k": "무용",
+      "v": 84
+     },
+     {
+      "k": "지략",
+      "v": 86
+     },
+     {
+      "k": "정무",
+      "v": 65
+     },
+     {
+      "k": "감화",
+      "v": 70
+     }
+    ],
+    "engine": {
+     "id": "CHEOK",
+     "name": "척후",
+     "icon": "assets/ui-kit/own/class-v1/cheok.png"
+    },
+    "pitch": "발 디딘 지형에 맞춰 시시각각 칼끝을 바꾸는 지장",
+    "troops": [
+     {
+      "icon": "assets/ui-kit/own/sym/troops/spear.webp",
+      "short": "창"
+     },
+     {
+      "icon": "assets/ui-kit/own/sym/troops/cavalry.webp",
+      "short": "기"
+     }
+    ],
+    "trait": {
+     "name": "교변지장",
+     "text": "장합이 숲 칸에서 친 공격에는 반격이 없고, 언덕 칸에서 친 공격은 측면에서 친 것으로 친다.",
+     "icon": "assets/ui-kit/own/inline-art/5f9abdc2e4d9db09.png"
+    },
+    "tactic": {
+     "name": "백전노장(임시)",
+     "text": "2칸 안 아군 모두 선 칸의 지형에 따라 하나를 얻는다(숲 = 곧바로 숨음 · 언덕 = 다음 공격 피해 4분의 1 더 · 평지 = 이번 차례 이동 2 더).",
+     "icon": "assets/ui-kit/own/inline-art/96f53b9df2789f05.png"
+    },
+    "tacticE": {
+     "name": "산악기동(임시)",
+     "text": "숲 · 언덕 칸을 평지 비용으로 3칸까지 움직인 뒤 적 하나를 친다. 도착 칸 지형의 특기 효과를 그 공격에 받는다."
+    }
+   },
+   {
+    "id": "G01",
+    "name": "여포",
+    "cost": 2,
+    "locked": false,
+    "lockBlocked": null,
+    "home": false,
+    "reason": "앞장설 사람이 비어 있다",
+    "art": "assets/officer-art/cutout/G01-decided-hA.webp",
+    "head": {
+     "w": 648,
+     "h": 952,
+     "cx": 276,
+     "cy": 238,
+     "side": 102
+    },
+    "bust": "assets/officer-art/bust/G01.webp",
+    "stone": {
+     "src": "assets/officer-art/stone/G01.webp",
+     "size": [
+      448,
+      864
+     ],
+     "head": [
+      0.5446,
+      0.3374,
+      0.3556
+     ]
+    },
+    "stats": [
+     {
+      "k": "지휘",
+      "v": 79
+     },
+     {
+      "k": "무용",
+      "v": 99
+     },
+     {
+      "k": "지략",
+      "v": 53
+     },
+     {
+      "k": "정무",
+      "v": 37
+     },
+     {
+      "k": "감화",
+      "v": 63
+     }
+    ],
+    "engine": {
+     "id": "MAENG",
+     "name": "맹장",
+     "icon": "assets/ui-kit/own/class-v1/maeng.png"
+    },
+    "pitch": "적진을 꿰뚫고 다음 먹잇감으로 갈아타는 무쌍 맹장",
+    "troops": [
+     {
+      "icon": "assets/ui-kit/own/sym/troops/cavalry.webp",
+      "short": "기"
+     }
+    ],
+    "trait": {
+     "name": "무쌍비장",
+     "text": "통제 구역에서 멈추지 않는다. 적 부대를 패주시킨 차례에는 남은 이동을 마저 쓸 수 있다(공격은 더 못 함 · 차례 1회).",
+     "icon": "assets/ui-kit/own/inline-art/4dba519985b8500a.png"
+    },
+    "tactic": {
+     "name": "귀신난무",
+     "text": "광란 — 이번 차례와 다음 내 차례 시작에 가장 가까운 적에게 붙어 기세를 쓰지 않는 2연타. 그동안 병력 1 아래로 내려가지 않는다. 대상은 고를 수 없고 끝나면 전열 붕괴 · 사기 동요.",
+     "icon": "assets/ui-kit/own/inline-art/96f53b9df2789f05.png"
+    },
+    "tacticE": {
+     "name": "적토돌진",
+     "text": "직선 4칸까지 적 사이로 달려 끝 칸에 선다. 지나친 적 최대 2부대 전열 판정 · 끝 칸 옆 적 하나를 친다. 그 적이 패주하면 2칸 안 다른 적에게 한 번 더 돌진(1회)."
+    }
+   },
+   {
+    "id": "G32",
+    "name": "고순",
+    "cost": 3,
+    "locked": false,
+    "lockBlocked": null,
+    "home": false,
+    "reason": "앞장설 사람이 비어 있다",
+    "art": "assets/officer-art/cutout/G32-20261010-hA.webp",
+    "head": {
+     "w": 629,
+     "h": 1161,
+     "cx": 288,
+     "cy": 101,
+     "side": 171
+    },
+    "bust": "assets/officer-art/bust/G32.webp",
+    "stone": {
+     "src": "assets/officer-art/stone/G32.webp",
+     "size": [
+      448,
+      864
+     ],
+     "head": [
+      0.5134,
+      0.207,
+      0.3254
+     ]
+    },
+    "stats": [
+     {
+      "k": "지휘",
+      "v": 84
+     },
+     {
+      "k": "무용",
+      "v": 80
+     },
+     {
+      "k": "지략",
+      "v": 75
+     },
+     {
+      "k": "정무",
+      "v": 58
+     },
+     {
+      "k": "감화",
+      "v": 61
+     }
+    ],
+    "engine": {
+     "id": "MAENG",
+     "name": "맹장",
+     "icon": "assets/ui-kit/own/class-v1/maeng.png"
+    },
+    "pitch": "거듭 두들겨 어떤 단단한 진형도 무너뜨리는 선봉장",
+    "troops": [
+     {
+      "icon": "assets/ui-kit/own/sym/troops/spear.webp",
+      "short": "창"
+     }
+    ],
+    "trait": {
+     "name": "함진영",
+     "text": "고순이 친 적에 \"균열\" 1(최대 3, 다음 내 차례 끝까지 갱신). 균열 2 이상인 적은 정면 선제 · 방어 태세 보정을 잃는다.",
+     "icon": "assets/ui-kit/own/inline-art/4dba519985b8500a.png"
+    },
+    "tactic": {
+     "name": "파성맹돌",
+     "text": "성 · 진지 공격 — 내구 피해 ×2.5, 그리고 그 성 · 진지 2칸 안 적 모두 균열 2.",
+     "icon": "assets/ui-kit/own/inline-art/96f53b9df2789f05.png"
+    },
+    "tacticE": {
+     "name": "파진",
+     "text": "인접 적의 균열 n 을 모두 터뜨려 전열 손상 n단계 + 그 적의 예약(반격 자세 · 응사 · 막기) 해제."
+    }
+   },
+   {
+    "id": "G25",
+    "name": "허저",
+    "cost": 4,
+    "locked": false,
+    "lockBlocked": null,
+    "home": true,
+    "reason": "옛 인연이 먼저 부른다",
+    "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+    "head": {
+     "w": 546,
+     "h": 865,
+     "cx": 277,
+     "cy": 67,
+     "side": 108
+    },
+    "bust": "assets/officer-art/bust/G25.webp",
+    "stone": {
+     "src": "assets/officer-art/stone/G25.webp",
+     "size": [
+      448,
+      864
+     ],
+     "head": [
+      0.5312,
+      0.1761,
+      0.4279
+     ]
+    },
+    "stats": [
+     {
+      "k": "지휘",
+      "v": 77
+     },
+     {
+      "k": "무용",
+      "v": 94
+     },
+     {
+      "k": "지략",
+      "v": 71
+     },
+     {
+      "k": "정무",
+      "v": 64
+     },
+     {
+      "k": "감화",
+      "v": 73
+     }
+    ],
+    "engine": {
+     "id": "HOWI",
+     "name": "호위",
+     "icon": "assets/ui-kit/own/class-v1/howi.png"
+    },
+    "pitch": "주군에게 날아오는 칼을 온몸으로 받아내는 호위장",
+    "troops": [
+     {
+      "icon": "assets/ui-kit/own/sym/troops/spear.webp",
+      "short": "창"
+     }
+    ],
+    "trait": {
+     "name": "호치호위",
+     "text": "연결 아군(군주면 우선)이 공격받을 때 허저가 그 아군과 붙어 있으면 그 공격의 교전자가 허저로 바뀐다(반격 · 방향도 허저 기준) — 차례에 한 번.",
+     "icon": "assets/ui-kit/own/inline-art/4ea5a81ca8aa0e18.png"
+    },
+    "tactic": {
+     "name": "호위결사",
+     "text": "다음 적 구간 동안 허저 2칸 안 아군을 노린 공격은 모두 허저가 받는다(허저가 그 적의 사거리 안일 때). 그동안 허저는 패주하지 않는다.",
+     "icon": "assets/ui-kit/own/inline-art/96f53b9df2789f05.png"
+    },
+    "tacticE": {
+     "name": "나체투마",
+     "text": "이번 차례 주는 피해 +40%. 대가: 다음 적 구간 받는 피해 +25%."
+    }
+   },
+   {
+    "id": "G34",
+    "name": "조인",
+    "cost": 4,
+    "locked": false,
+    "lockBlocked": null,
+    "home": true,
+    "reason": "옛 인연이 먼저 부른다",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+    "head": {
+     "w": 591,
+     "h": 857,
+     "cx": 299,
+     "cy": 85,
+     "side": 104
+    },
+    "bust": "assets/officer-art/bust/G34.webp",
+    "stone": {
+     "src": "assets/officer-art/stone/G34.webp",
+     "size": [
+      448,
+      864
+     ],
+     "head": [
+      0.6786,
+      0.1851,
+      0.2592
+     ]
+    },
+    "stats": [
+     {
+      "k": "지휘",
+      "v": 89
+     },
+     {
+      "k": "무용",
+      "v": 88
+     },
+     {
+      "k": "지략",
+      "v": 78
+     },
+     {
+      "k": "정무",
+      "v": 64
+     },
+     {
+      "k": "감화",
+      "v": 74
+     }
+    ],
+    "engine": {
+     "id": "GANG",
+     "name": "강장",
+     "icon": "assets/ui-kit/own/class-v1/gang.png"
+    },
+    "pitch": "크고 작은 공격을 차곡차곡 막아내며 버티는 수성장",
+    "troops": [
+     {
+      "icon": "assets/ui-kit/own/sym/troops/spear.webp",
+      "short": "창"
+     }
+    ],
+    "trait": {
+     "name": "천인장군",
+     "text": "조인이 성 · 진지에서 차례를 시작하면 \"철갑\" 2장 — 다음 공격 2회 각각 피해 절반(피해량과 무관하게 공격 하나에 한 장).",
+     "icon": "assets/ui-kit/own/inline-art/b368cc6949c8f8fe.png"
+    },
+    "tactic": {
+     "name": "번성사수",
+     "text": "다음 두 적 구간 동안 조인과 붙은 아군 모두 구간마다 철갑 2장 + 조인은 패주하지 않는다.",
+     "icon": "assets/ui-kit/own/inline-art/96f53b9df2789f05.png"
+    },
+    "tacticE": {
+     "name": "팔문금쇄",
+     "text": "2칸 안 아군 각각 철갑 1장(다음 적 구간). 진을 깨는 방법: 한 부대가 두 번 친다."
+    }
+   }
+  ],
+  "assets": {
+   "bg": "assets/ui-v3/scenes/plate-draft.webp",
+   "hero": "assets/ui-kit/own/screens-v6/draft/scene.png",
+   "costSeal": "assets/ui-kit/own/screens-v6/draft/cost-seal.png",
+   "wake": "assets/ui-kit/own/screens-v6/draft/primary-button.png",
+   "emptySeat": "assets/ui-kit/own/screens-v6/draft/empty-seat.png",
+   "paper": "assets/ui-kit/own/paper.webp",
+   "pine": "assets/ui-kit/own/detail-d3/pine.webp",
+   "seal": "assets/ui-kit/own/detail-d3/seal-tall.webp",
+   "prev": "assets/ui-kit/own/sym/controls/prev.webp",
+   "emblem": "assets/ui-v3/emblems/F01.png"
+  }
+ }
+}

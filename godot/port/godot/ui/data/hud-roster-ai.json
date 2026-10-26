@@ -1,0 +1,2222 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 26,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 9월 중순 · 26차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "71",
+   "max": "320",
+   "delta": "+23",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +23"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "19",
+   "max": null,
+   "delta": "+20",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "8",
+   "max": null,
+   "delta": "+2",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "21,690",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "7,560",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 4",
+  "items": [
+   {
+    "text": "업 생산 정하기",
+    "target": "west"
+   },
+   {
+    "text": "중산 생산 정하기",
+    "target": "zhongshan"
+   },
+   {
+    "text": "신도 생산 정하기",
+    "target": "xindu"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 6 · 남은 6",
+  "rows": [
+   {
+    "id": "U-C16-1",
+    "officerId": "G09",
+    "name": "원소",
+    "art": "assets/officer-art/cutout/G09-decided-hA.webp",
+    "head": {
+     "w": 406,
+     "h": 922,
+     "cx": 226,
+     "cy": 72,
+     "side": 118
+    },
+    "troop": "bow",
+    "troopName": "궁병",
+    "countText": "5,000",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-C16-4",
+    "officerId": "G25",
+    "name": "허저",
+    "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+    "head": {
+     "w": 546,
+     "h": 865,
+     "cx": 277,
+     "cy": 67,
+     "side": 108
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "countText": "3,760",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-C16-8",
+    "officerId": "G34",
+    "name": "조인",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+    "head": {
+     "w": 591,
+     "h": 857,
+     "cx": 299,
+     "cy": 85,
+     "side": 104
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "countText": "4,970",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-C16-10",
+    "officerId": "G04",
+    "name": "순욱",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+    "head": {
+     "w": 471,
+     "h": 945,
+     "cx": 291,
+     "cy": 91,
+     "side": 139
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "countText": "4,490",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-C16-13",
+    "officerId": "G38",
+    "name": "전풍",
+    "art": "assets/officer-art/cutout/G38-decided-hA.webp",
+    "head": {
+     "w": 450,
+     "h": 739,
+     "cx": 242,
+     "cy": 78,
+     "side": 131
+    },
+    "troop": "bow",
+    "troopName": "궁병",
+    "countText": "1,470",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-C16-14",
+    "officerId": "G32",
+    "name": "고순",
+    "art": "assets/officer-art/cutout/G32-20261010-hA.webp",
+    "head": {
+     "w": 629,
+     "h": 1161,
+     "cx": 288,
+     "cy": 101,
+     "side": 171
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "countText": "2,000",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": true
+   }
+  ]
+ },
+ "selected": {
+  "id": "U-C16-14",
+  "officerId": "G32",
+  "name": "고순",
+  "art": "assets/officer-art/cutout/G32-20261010-hA.webp",
+  "head": {
+   "w": 629,
+   "h": 1161,
+   "cx": 288,
+   "cy": 101,
+   "side": 171
+  },
+  "troop": "spear",
+  "troopName": "창병",
+  "countText": "2,000",
+  "maxText": "2,000",
+  "countRatio": 1,
+  "ratings": [
+   {
+    "key": "attack",
+    "label": "공격",
+    "value": 30
+   },
+   {
+    "key": "defense",
+    "label": "방어",
+    "value": 84
+   },
+   {
+    "key": "mobility",
+    "label": "이동",
+    "value": 5
+   },
+   {
+    "key": "range",
+    "label": "사거리",
+    "value": 1
+   }
+  ],
+  "engine": {
+   "name": "맹장 · 기본 유지",
+   "resourceName": "기세",
+   "resource": 3,
+   "max": 4
+  },
+  "traits": {
+   "core": {
+    "name": "함진영",
+    "full": "진을 무너뜨리는 부대",
+    "text": "성 내구 피해 +30%. 방어 태세 적을 공격하면 그 효과를 무시한다.",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+    "token": null
+   },
+   "equipped": [
+    {
+     "name": "기백",
+     "full": "기세",
+     "text": "적 부대를 쓰러뜨리면 2턴 고양(공격 +10%).",
+     "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+     "token": null
+    }
+   ],
+   "slots": 3
+  },
+  "bonds": [],
+  "klass": {
+   "engine": "맹장",
+   "branch": "기본 유지",
+   "merit": "",
+   "merits": "광장 0/3 · 용장 0/3",
+   "aptitude": "적성 높음",
+   "troopName": "창병"
+  },
+  "gauge": 40,
+  "gaugeMax": 100,
+  "qwer": [
+   {
+    "key": "Q",
+    "traitId": null,
+    "name": "관통 찌르기",
+    "icon": "assets/ui-kit/own/emblem-v1/72/q-spear.png",
+    "cost": null,
+    "state": "disabled",
+    "reason": "재사용 대기 중"
+   },
+   {
+    "key": "W",
+    "traitId": null,
+    "name": "맹장 · 기본 유지",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+    "cost": null,
+    "state": "ready",
+    "reason": "기세 3 / 4"
+   },
+   {
+    "key": "E",
+    "traitId": null,
+    "name": "",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+    "cost": null,
+    "state": "empty",
+    "reason": null
+   },
+   {
+    "key": "R",
+    "traitId": "G32.card.1",
+    "name": "파성맹돌",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+    "cost": 100,
+    "state": "disabled",
+    "reason": "게이지 40/100"
+   }
+  ],
+  "orders": [
+   {
+    "key": "attack",
+    "label": "공격",
+    "hotkey": "A",
+    "primary": true,
+    "disabled": true,
+    "tip": "지금 공격할 수 있는 대상이 없습니다"
+   },
+   {
+    "key": "face",
+    "label": "정면",
+    "hotkey": "F",
+    "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+   },
+   {
+    "key": "face",
+    "label": "정면",
+    "hotkey": "F",
+    "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+   },
+   {
+    "key": "brace",
+    "label": "방어",
+    "hotkey": "B",
+    "disabled": false,
+    "tip": "이번 차례 방어 태세"
+   },
+   {
+    "key": "garrison",
+    "label": "복귀",
+    "hotkey": "G",
+    "tip": "부대가 해산되고 병력 2,000이 이 성의 예비병이 됩니다"
+   },
+   {
+    "key": "regroup",
+    "label": "재정비",
+    "hotkey": "S",
+    "disabled": true,
+    "tip": "동요 상태에서만 가능"
+   },
+   {
+    "key": "wait",
+    "label": "대기",
+    "hotkey": "H"
+   }
+  ]
+ },
+ "sets": {
+  "rows": [
+   {
+    "id": "ST-04",
+    "name": "하북의 책사와 맹장",
+    "count": 2,
+    "total": 4,
+    "tier": 2,
+    "level": "on",
+    "steps": [
+     2,
+     3,
+     4
+    ],
+    "tip": "하북의 책사와 맹장 2/4\n● 원소  ● 전풍  ○ 저수  ○ 장합\n▶ 2명: 성 수비 부대 받는 피해 −10%\n· 3명: 인망 +2/턴\n· 4명: 출진 생산 −2"
+   },
+   {
+    "id": "ST-03",
+    "name": "조조의 책사들",
+    "count": 1,
+    "total": 4,
+    "tier": 0,
+    "level": "off",
+    "steps": [
+     2,
+     3,
+     4
+    ],
+    "tip": "조조의 책사들 1/4\n● 순욱  ○ 순유  ○ 곽가  ○ 가후\n· 2명: 위보·내응 지략 대결 +10\n· 3명: 태수 성 산출 +5%\n· 4명: 보이는 적 부대의 다음 이동 목표가 지도에 표시"
+   },
+   {
+    "id": "ST-05",
+    "name": "여포군",
+    "count": 1,
+    "total": 3,
+    "tier": 0,
+    "level": "off",
+    "steps": [
+     2,
+     3
+    ],
+    "tip": "여포군 1/3\n○ 여포  ○ 진궁  ● 고순\n· 2명: 돌격 피해 +10%\n· 3명: 패주시킨 적 옆 적에게 사기 판정"
+   }
+  ],
+  "groups": []
+ },
+ "docks": [
+  {
+   "id": "U-C16-1",
+   "officerId": "G09",
+   "name": "원소",
+   "art": "assets/officer-art/cutout/G09-decided-hA.webp",
+   "head": {
+    "w": 406,
+    "h": 922,
+    "cx": 226,
+    "cy": 72,
+    "side": 118
+   },
+   "troop": "bow",
+   "troopName": "궁병",
+   "countText": "5,000",
+   "maxText": "5,000",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 73
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 82
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 4
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 2
+    }
+   ],
+   "engine": {
+    "name": "축성장 · 기본 유지",
+    "resourceName": "자재",
+    "resource": 3,
+    "max": 4
+   },
+   "traits": {
+    "core": {
+     "name": "사세삼공",
+     "full": "명문가에 모이는 병사",
+     "text": "태수일 때 그 성 출진 병력 +50%. 이 부대와 맞닿은 아군 사기 판정 가중 −20%.",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-builder.png",
+     "token": null
+    },
+    "equipped": [
+     {
+      "name": "정돈",
+      "full": "수습의 명수",
+      "text": "내 차례 시작에 사기 한 단계 회복.",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-morale.png",
+      "token": null
+     },
+     {
+      "name": "일격필살",
+      "full": "끝장내기",
+      "text": "병력 15% 아래 적 공격 · 피해 +20% · 그 외 적 피해 −10%",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     },
+     {
+      "name": "원념",
+      "full": "원한",
+      "text": "숙적 보임 · 이동 +1·사기 가중 −5 · 숙적 쪽 이동 제약 유지",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-movement.png",
+      "token": null
+     }
+    ],
+    "slots": 3
+   },
+   "bonds": [
+    {
+     "kind": "set",
+     "name": "하북의 책사와 맹장 2단계",
+     "tip": "성 수비 부대 받는 피해 −10%"
+    }
+   ],
+   "klass": {
+    "engine": "축성장",
+    "branch": "기본 유지",
+    "merit": "",
+    "merits": "공성장 0/3 · 공병장 0/3",
+    "aptitude": "적성 높음",
+    "troopName": "궁병"
+   },
+   "gauge": 90,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "화살비",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+     "cost": null,
+     "state": "ready",
+     "reason": null
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "축성장 · 기본 유지",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-builder.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "자재 3 / 4"
+    },
+    {
+     "key": "E",
+     "traitId": "G09.c33.CTA-45",
+     "name": "대화",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-fire.png",
+     "cost": 60,
+     "state": "ready",
+     "reason": ""
+    },
+    {
+     "key": "R",
+     "traitId": "G09.card.1",
+     "name": "만전제발",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 90/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": false,
+     "tip": "공격할 대상을 고릅니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-C16-4",
+   "officerId": "G25",
+   "name": "허저",
+   "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+   "head": {
+    "w": 546,
+    "h": 865,
+    "cx": 277,
+    "cy": 67,
+    "side": 108
+   },
+   "troop": "spear",
+   "troopName": "창병",
+   "countText": "3,760",
+   "maxText": "3,760",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 57
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 86
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 5
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 1
+    }
+   ],
+   "engine": {
+    "name": "호위 · 기본 유지",
+    "resourceName": "충의",
+    "resource": 3,
+    "max": 4
+   },
+   "traits": {
+    "core": {
+     "name": "호치호위",
+     "full": "호치호위",
+     "text": "연결 아군(군주면 우선)이 공격받을 때 허저가 그 아군과 붙어 있으면 그 공격의 교전자가 허저로 바뀐다(반격 · 방향도 허저 기준) — 차례에 한 번.",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-guardian.png",
+     "token": null
+    },
+    "equipped": [
+     {
+      "name": "구급",
+      "full": "응급 치료",
+      "text": "내 차례 시작에 부상병 20명 복귀.",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     }
+    ],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "호위",
+    "branch": "기본 유지",
+    "merit": "",
+    "merits": "구원장 0/3 · 응징장 0/3",
+    "aptitude": "적성 높음",
+    "troopName": "창병"
+   },
+   "gauge": 45,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "관통 찌르기",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-spear.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "대상 없음"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "호위 · 기본 유지",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-guardian.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "충의 3 / 4"
+    },
+    {
+     "key": "E",
+     "traitId": "G25.pilot.E",
+     "name": "나체투마",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 40,
+     "state": "ready",
+     "reason": ""
+    },
+    {
+     "key": "R",
+     "traitId": "G25.card.1",
+     "name": "호위결사",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 45/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": true,
+     "tip": "지금 공격할 수 있는 대상이 없습니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "garrison",
+     "label": "복귀",
+     "hotkey": "G",
+     "tip": "부대가 해산되고 병력 3,760이 이 성의 예비병이 됩니다"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-C16-8",
+   "officerId": "G34",
+   "name": "조인",
+   "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+   "head": {
+    "w": 591,
+    "h": 857,
+    "cx": 299,
+    "cy": 85,
+    "side": 104
+   },
+   "troop": "spear",
+   "troopName": "창병",
+   "countText": "4,970",
+   "maxText": "4,970",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 77
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 88
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 5
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 1
+    }
+   ],
+   "engine": {
+    "name": "강장 · 기본 유지",
+    "resourceName": "버팀",
+    "resource": 0,
+    "max": 4
+   },
+   "traits": {
+    "core": {
+     "name": "천인장군",
+     "full": "천인장군",
+     "text": "조인이 성 · 진지에서 차례를 시작하면 \"철갑\" 2장 — 다음 공격 2회 각각 피해 절반(피해량과 무관하게 공격 하나에 한 장).",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+     "token": null
+    },
+    "equipped": [
+     {
+      "name": "기백",
+      "full": "기세",
+      "text": "적 부대를 쓰러뜨리면 2턴 고양(공격 +10%).",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     },
+     {
+      "name": "숙적",
+      "full": "숙적을 안다",
+      "text": "숙적에게 주는 피해 +10%, 숙적에게 받는 피해 −10%.",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-defense.png",
+      "token": null
+     }
+    ],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "강장",
+    "branch": "기본 유지",
+    "merit": "",
+    "merits": "배수장 0/3 · 역습장 0/3",
+    "aptitude": "적성 높음",
+    "troopName": "창병"
+   },
+   "gauge": 100,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "관통 찌르기",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-spear.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "대상 없음"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "강장 · 기본 유지",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "버팀 0 / 4"
+    },
+    {
+     "key": "E",
+     "traitId": "G34.pilot.E",
+     "name": "팔문금쇄",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 60,
+     "state": "ready",
+     "reason": ""
+    },
+    {
+     "key": "R",
+     "traitId": "G34.card.1",
+     "name": "번성사수",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "ready",
+     "reason": ""
+    }
+   ],
+   "orders": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": true,
+     "tip": "지금 공격할 수 있는 대상이 없습니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-C16-10",
+   "officerId": "G04",
+   "name": "순욱",
+   "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+   "head": {
+    "w": 471,
+    "h": 945,
+    "cx": 291,
+    "cy": 91,
+    "side": 139
+   },
+   "troop": "spear",
+   "troopName": "창병",
+   "countText": "4,490",
+   "maxText": "4,490",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 41
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 71
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 4
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 1
+    }
+   ],
+   "engine": {
+    "name": "국사 · 기본 유지",
+    "resourceName": "인망",
+    "resource": 0,
+    "max": 4
+   },
+   "traits": {
+    "core": {
+     "name": "왕좌지재",
+     "full": "왕좌지재",
+     "text": "순욱이 그 차례 주 행동을 쓰지 않고 끝내면, 2칸 안에서 이미 행동한 아군 장수 하나가 주 행동(일반공격 · Q · W, E · R 불가) 한 번을 더 한다. 같은 아군 연속 두 구간 불가, 순욱에게 적이 붙었거나 순욱이 동요 이하면 꺼짐",
+     "icon": "assets/ui-kit/own/emblem-v1/72/unique-xun-yu.png",
+     "token": null
+    },
+    "equipped": [
+     {
+      "name": "기제",
+      "full": "공성 병기 발명",
+      "text": "태수일 때 투석기 출진 생산 −30%, 연구 단계가 오를 때마다 공성 피해 +5%(세력).",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     },
+     {
+      "name": "선정애민",
+      "full": "어진 정치",
+      "text": "자연 치안 판정 · 손실 −30% · 생산 −10%",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-domestic.png",
+      "token": null
+     },
+     {
+      "name": "혜안통찰",
+      "full": "꿰뚫어 본다",
+      "text": "아군 인접 · 기존 상태 판정 가중 −5 · 자기 피해 −10%",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     }
+    ],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "국사",
+    "branch": "기본 유지",
+    "merit": "",
+    "merits": "근신 0/3 · 세객 0/3",
+    "aptitude": "적성 낮음",
+    "troopName": "창병"
+   },
+   "gauge": 25,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "관통 찌르기",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-spear.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "대상 없음"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "국사 · 기본 유지",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-statesman.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "인망 0 / 4"
+    },
+    {
+     "key": "E",
+     "traitId": "G04.c33.CTA-56",
+     "name": "지원",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 60,
+     "state": "disabled",
+     "reason": "게이지 25/60"
+    },
+    {
+     "key": "R",
+     "traitId": "G04.card.1",
+     "name": "구호탄랑",
+     "icon": "assets/ui-kit/own/emblem-v1/72/unique-xun-yu.png",
+     "cost": 80,
+     "state": "disabled",
+     "reason": "게이지 25/80"
+    }
+   ],
+   "orders": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": true,
+     "tip": "지금 공격할 수 있는 대상이 없습니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-C16-13",
+   "officerId": "G38",
+   "name": "전풍",
+   "art": "assets/officer-art/cutout/G38-decided-hA.webp",
+   "head": {
+    "w": 450,
+    "h": 739,
+    "cx": 242,
+    "cy": 78,
+    "side": 131
+   },
+   "troop": "bow",
+   "troopName": "궁병",
+   "countText": "1,470",
+   "maxText": "1,470",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 22
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 73
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 4
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 2
+    }
+   ],
+   "engine": {
+    "name": "축성장 · 기본 유지",
+    "resourceName": "자재",
+    "resource": 2,
+    "max": 4
+   },
+   "traits": {
+    "core": {
+     "name": "강직충언",
+     "full": "강직충언",
+     "text": "군주가 2칸 안이면 군주 부대에 \"간언 방패\" — 다음 적 계략 1회 무효(내 차례 시작마다 다시 생김). 방패가 깨진 차례에는 전풍 사기 한 단계 하락(직언의 대가).",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-builder.png",
+     "token": null
+    },
+    "equipped": [
+     {
+      "name": "명장",
+      "full": "이름난 장수",
+      "text": "이 장수가 관여한 점령 처리 −1턴, 석방한 포로 인망 +50%.",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     },
+     {
+      "name": "모병",
+      "full": "의병 모집",
+      "text": "치안이 안정이면 그 성 예비병 증가 +30%.",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     },
+     {
+      "name": "격파세",
+      "full": "돌파의 기세",
+      "text": "기병 돌격으로 공격하면 상대에게 전열 판정 1회(가중 10).",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     }
+    ],
+    "slots": 3
+   },
+   "bonds": [
+    {
+     "kind": "set",
+     "name": "하북의 책사와 맹장 2단계",
+     "tip": "성 수비 부대 받는 피해 −10%"
+    }
+   ],
+   "klass": {
+    "engine": "축성장",
+    "branch": "기본 유지",
+    "merit": "",
+    "merits": "공성장 0/3 · 공병장 0/3",
+    "aptitude": "적성 일정",
+    "troopName": "궁병"
+   },
+   "gauge": 65,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "화살비",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+     "cost": null,
+     "state": "ready",
+     "reason": null
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "축성장 · 기본 유지",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-builder.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "자재 2 / 4"
+    },
+    {
+     "key": "E",
+     "traitId": "G38.c33.CTA-45",
+     "name": "대화",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-fire.png",
+     "cost": 60,
+     "state": "ready",
+     "reason": ""
+    },
+    {
+     "key": "R",
+     "traitId": "G38.card.1",
+     "name": "지피지기",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 80,
+     "state": "disabled",
+     "reason": "게이지 65/80"
+    }
+   ],
+   "orders": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": false,
+     "tip": "공격할 대상을 고릅니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "garrison",
+     "label": "복귀",
+     "hotkey": "G",
+     "tip": "부대가 해산되고 병력 1,470이 이 성의 예비병이 됩니다"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-C16-14",
+   "officerId": "G32",
+   "name": "고순",
+   "art": "assets/officer-art/cutout/G32-20261010-hA.webp",
+   "head": {
+    "w": 629,
+    "h": 1161,
+    "cx": 288,
+    "cy": 101,
+    "side": 171
+   },
+   "troop": "spear",
+   "troopName": "창병",
+   "countText": "2,000",
+   "maxText": "2,000",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 30
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 84
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 5
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 1
+    }
+   ],
+   "engine": {
+    "name": "맹장 · 기본 유지",
+    "resourceName": "기세",
+    "resource": 3,
+    "max": 4
+   },
+   "traits": {
+    "core": {
+     "name": "함진영",
+     "full": "진을 무너뜨리는 부대",
+     "text": "성 내구 피해 +30%. 방어 태세 적을 공격하면 그 효과를 무시한다.",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+     "token": null
+    },
+    "equipped": [
+     {
+      "name": "기백",
+      "full": "기세",
+      "text": "적 부대를 쓰러뜨리면 2턴 고양(공격 +10%).",
+      "icon": "assets/ui-kit/own/emblem-v1/r2/72/trait-attack.png",
+      "token": null
+     }
+    ],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "맹장",
+    "branch": "기본 유지",
+    "merit": "",
+    "merits": "광장 0/3 · 용장 0/3",
+    "aptitude": "적성 높음",
+    "troopName": "창병"
+   },
+   "gauge": 40,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "관통 찌르기",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-spear.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "재사용 대기 중"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "맹장 · 기본 유지",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "기세 3 / 4"
+    },
+    {
+     "key": "E",
+     "traitId": null,
+     "name": "",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": null,
+     "state": "empty",
+     "reason": null
+    },
+    {
+     "key": "R",
+     "traitId": "G32.card.1",
+     "name": "파성맹돌",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 40/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": true,
+     "tip": "지금 공격할 수 있는 대상이 없습니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "garrison",
+     "label": "복귀",
+     "hotkey": "G",
+     "tip": "부대가 해산되고 병력 2,000이 이 성의 예비병이 됩니다"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  }
+ ],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 6,
+  "ready": false
+ },
+ "tacticReady": {
+  "U-C16-1:G09.card.1": false,
+  "U-C16-1:G09.c33.CTA-45": true,
+  "U-C16-4:G25.card.1": false,
+  "U-C16-4:G25.pilot.E": true,
+  "U-C16-8:G34.card.1": true,
+  "U-C16-8:G34.pilot.E": true,
+  "U-C16-10:G04.card.1": false,
+  "U-C16-10:G04.c33.CTA-56": false,
+  "U-C16-13:G38.card.1": false,
+  "U-C16-13:G38.c33.CTA-45": true,
+  "U-C16-14:G32.card.1": false
+ },
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "west",
+    "name": "업",
+    "u": 0.2635,
+    "v": 0.7607,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": true,
+    "capital": false
+   },
+   {
+    "id": "julu",
+    "name": "거록",
+    "u": 0.3124,
+    "v": 0.6641,
+    "own": true,
+    "capital": false
+   },
+   {
+    "id": "pingyuan",
+    "name": "평원",
+    "u": 0.5897,
+    "v": 0.6448,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "zhongshan",
+    "name": "중산",
+    "u": 0.3614,
+    "v": 0.4517,
+    "own": true,
+    "capital": false
+   },
+   {
+    "id": "south",
+    "name": "남피",
+    "u": 0.6223,
+    "v": 0.529,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": [
+   {
+    "id": "U-F02-G05",
+    "u": 0.5571,
+    "v": 0.5676,
+    "own": false
+   },
+   {
+    "id": "U-F02-G02",
+    "u": 0.4103,
+    "v": 0.5097,
+    "own": false
+   },
+   {
+    "id": "U-C16-2",
+    "u": 0.5571,
+    "v": 0.4903,
+    "own": false
+   },
+   {
+    "id": "U-C16-6",
+    "u": 0.4429,
+    "v": 0.6255,
+    "own": false
+   },
+   {
+    "id": "U-C16-11",
+    "u": 0.394,
+    "v": 0.4903,
+    "own": false
+   },
+   {
+    "id": "U-C16-12",
+    "u": 0.4918,
+    "v": 0.5676,
+    "own": false
+   },
+   {
+    "id": "U-C16-1",
+    "u": 0.3614,
+    "v": 0.529,
+    "own": true
+   },
+   {
+    "id": "U-C16-4",
+    "u": 0.4266,
+    "v": 0.5676,
+    "own": true
+   },
+   {
+    "id": "U-C16-8",
+    "u": 0.4755,
+    "v": 0.5097,
+    "own": true
+   },
+   {
+    "id": "U-C16-10",
+    "u": 0.4592,
+    "v": 0.529,
+    "own": true
+   },
+   {
+    "id": "U-C16-13",
+    "u": 0.4266,
+    "v": 0.5676,
+    "own": true
+   },
+   {
+    "id": "U-C16-14",
+    "u": 0.4266,
+    "v": 0.5676,
+    "own": true
+   }
+  ]
+ },
+ "roster": {
+  "screen": "roster",
+  "title": "소속 장수",
+  "backdrop": "assets/ui-v3/scenes/plate-draft.webp",
+  "filters": [
+   {
+    "key": "all",
+    "label": "전체",
+    "selected": true
+   },
+   {
+    "key": "army",
+    "label": "부대장",
+    "selected": false
+   },
+   {
+    "key": "gov",
+    "label": "태수",
+    "selected": false
+   },
+   {
+    "key": "idle",
+    "label": "대기",
+    "selected": false
+   }
+  ],
+  "sort": {
+   "key": "name",
+   "label": "이름순",
+   "options": [
+    {
+     "key": "name",
+     "label": "이름순"
+    },
+    {
+     "key": "leadership",
+     "label": "지휘 ↓"
+    },
+    {
+     "key": "leadership-asc",
+     "label": "지휘 ↑"
+    },
+    {
+     "key": "might",
+     "label": "무용 ↓"
+    },
+    {
+     "key": "might-asc",
+     "label": "무용 ↑"
+    },
+    {
+     "key": "intelligence",
+     "label": "지략 ↓"
+    },
+    {
+     "key": "intelligence-asc",
+     "label": "지략 ↑"
+    },
+    {
+     "key": "politics",
+     "label": "정무 ↓"
+    },
+    {
+     "key": "politics-asc",
+     "label": "정무 ↑"
+    },
+    {
+     "key": "charisma",
+     "label": "감화 ↓"
+    },
+    {
+     "key": "charisma-asc",
+     "label": "감화 ↑"
+    }
+   ]
+  },
+  "search": {
+   "query": "",
+   "placeholder": "이름·칭호 찾기",
+   "count": "11 / 11명",
+   "showCount": false
+  },
+  "columns": [
+   "지휘",
+   "무용",
+   "지략",
+   "정무",
+   "감화"
+  ],
+  "showPotential": true,
+  "rows": [
+   {
+    "id": "G32",
+    "name": "고순",
+    "role": "부대장",
+    "art": "assets/officer-art/cutout/G32-20261010-hA.webp",
+    "head": {
+     "w": 629,
+     "h": 1161,
+     "cx": 288,
+     "cy": 101,
+     "side": 171
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 85,
+      "high": true
+     },
+     {
+      "value": 80,
+      "high": true
+     },
+     {
+      "value": 76,
+      "high": false
+     },
+     {
+      "value": 58,
+      "high": false
+     },
+     {
+      "value": 62,
+      "high": false
+     }
+    ],
+    "potential": "S",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G04",
+    "name": "순욱",
+    "role": "부대장",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+    "head": {
+     "w": 471,
+     "h": 945,
+     "cx": 291,
+     "cy": 91,
+     "side": 139
+    },
+    "selected": true,
+    "stats": [
+     {
+      "value": 70,
+      "high": false
+     },
+     {
+      "value": 29,
+      "high": false
+     },
+     {
+      "value": 92,
+      "high": true
+     },
+     {
+      "value": 98,
+      "high": true
+     },
+     {
+      "value": 90,
+      "high": true
+     }
+    ],
+    "potential": "A",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G01",
+    "name": "여포",
+    "role": "태수 · 중산",
+    "art": "assets/officer-art/cutout/G01-decided-hA.webp",
+    "head": {
+     "w": 648,
+     "h": 952,
+     "cx": 276,
+     "cy": 238,
+     "side": 102
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 81,
+      "high": true
+     },
+     {
+      "value": 101,
+      "high": true
+     },
+     {
+      "value": 54,
+      "high": false
+     },
+     {
+      "value": 38,
+      "high": false
+     },
+     {
+      "value": 63,
+      "high": false
+     }
+    ],
+    "potential": "A",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G09",
+    "name": "원소",
+    "role": "부대장",
+    "art": "assets/officer-art/cutout/G09-decided-hA.webp",
+    "head": {
+     "w": 406,
+     "h": 922,
+     "cx": 226,
+     "cy": 72,
+     "side": 118
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 75,
+      "high": false
+     },
+     {
+      "value": 60,
+      "high": false
+     },
+     {
+      "value": 62,
+      "high": false
+     },
+     {
+      "value": 62,
+      "high": false
+     },
+     {
+      "value": 86,
+      "high": true
+     }
+    ],
+    "potential": "D",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G24",
+    "name": "장료",
+    "role": "대기",
+    "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+    "head": {
+     "w": 808,
+     "h": 1153,
+     "cx": 303,
+     "cy": 116,
+     "side": 144
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 95,
+      "high": true
+     },
+     {
+      "value": 91,
+      "high": true
+     },
+     {
+      "value": 84,
+      "high": true
+     },
+     {
+      "value": 57,
+      "high": false
+     },
+     {
+      "value": 84,
+      "high": true
+     }
+    ],
+    "potential": "S",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G39",
+    "name": "저수",
+    "role": "대기 · 거록",
+    "art": "assets/officer-art/cutout/G39-decided-hA.webp",
+    "head": {
+     "w": 352,
+     "h": 858,
+     "cx": 144,
+     "cy": 78,
+     "side": 126
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 66,
+      "high": false
+     },
+     {
+      "value": 40,
+      "high": false
+     },
+     {
+      "value": 88,
+      "high": true
+     },
+     {
+      "value": 76,
+      "high": false
+     },
+     {
+      "value": 63,
+      "high": false
+     }
+    ],
+    "potential": "C",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G38",
+    "name": "전풍",
+    "role": "부대장",
+    "art": "assets/officer-art/cutout/G38-decided-hA.webp",
+    "head": {
+     "w": 450,
+     "h": 739,
+     "cx": 242,
+     "cy": 78,
+     "side": 131
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 59,
+      "high": false
+     },
+     {
+      "value": 36,
+      "high": false
+     },
+     {
+      "value": 92,
+      "high": true
+     },
+     {
+      "value": 73,
+      "high": false
+     },
+     {
+      "value": 58,
+      "high": false
+     }
+    ],
+    "potential": "B",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G34",
+    "name": "조인",
+    "role": "부대장",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+    "head": {
+     "w": 591,
+     "h": 857,
+     "cx": 299,
+     "cy": 85,
+     "side": 104
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 89,
+      "high": true
+     },
+     {
+      "value": 89,
+      "high": true
+     },
+     {
+      "value": 79,
+      "high": false
+     },
+     {
+      "value": 64,
+      "high": false
+     },
+     {
+      "value": 74,
+      "high": false
+     }
+    ],
+    "potential": "D",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G07",
+    "name": "조조",
+    "role": "군주",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+     "w": 522,
+     "h": 888,
+     "cx": 318,
+     "cy": 103,
+     "side": 114
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 94,
+      "high": true
+     },
+     {
+      "value": 72,
+      "high": false
+     },
+     {
+      "value": 96,
+      "high": true
+     },
+     {
+      "value": 92,
+      "high": true
+     },
+     {
+      "value": 88,
+      "high": true
+     }
+    ],
+    "potential": "B",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   },
+   {
+    "id": "G33",
+    "name": "하후돈",
+    "role": "대기",
+    "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+    "head": {
+     "w": 531,
+     "h": 950,
+     "cx": 311,
+     "cy": 114,
+     "side": 141
+    },
+    "selected": false,
+    "stats": [
+     {
+      "value": 77,
+      "high": false
+     },
+     {
+      "value": 83,
+      "high": true
+     },
+     {
+      "value": 62,
+      "high": false
+     },
+     {
+      "value": 76,
+      "high": false
+     },
+     {
+      "value": 74,
+      "high": false
+     }
+    ],
+    "potential": "A",
+    "terms": {
+     "name": [],
+     "role": []
+    }
+   }
+  ],
+  "page": {
+   "index": 0,
+   "label": "1 / 2",
+   "prev": false,
+   "next": true
+  },
+  "empty": null,
+  "pick": {
+   "id": "G04",
+   "name": "순욱",
+   "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+   "head": {
+    "w": 471,
+    "h": 945,
+    "cx": 291,
+    "cy": 91,
+    "side": 139
+   },
+   "role": "부대장",
+   "line": "창병 · 국사 · 기본 유지",
+   "traits": "왕좌지재 · 혜안통찰 · 기제 · 선정애민",
+   "tactics": "지원",
+   "stats": [
+    {
+     "key": "leadership",
+     "label": "지휘",
+     "value": 70,
+     "pct": 70,
+     "icon": "assets/ui-v3/hud/icons/mode-faction.png",
+     "iconScale": 1.3,
+     "iconAlpha": 1
+    },
+    {
+     "key": "might",
+     "label": "무용",
+     "value": 29,
+     "pct": 29,
+     "icon": "assets/ui-kit/own/sym/actions/attack.webp",
+     "iconScale": 1,
+     "iconAlpha": 0.86
+    },
+    {
+     "key": "intelligence",
+     "label": "지략",
+     "value": 92,
+     "pct": 92,
+     "icon": "assets/ui-kit/own/sym/resources/learning.webp",
+     "iconScale": 1,
+     "iconAlpha": 0.86
+    },
+    {
+     "key": "politics",
+     "label": "정무",
+     "value": 98,
+     "pct": 98,
+     "icon": "assets/ui-kit/own/sym/global/city.webp",
+     "iconScale": 1,
+     "iconAlpha": 0.86
+    },
+    {
+     "key": "charisma",
+     "label": "감화",
+     "value": 90,
+     "pct": 90,
+     "icon": "assets/ui-kit/own/sym/global/officers.webp",
+     "iconScale": 1,
+     "iconAlpha": 0.86
+    }
+   ],
+   "terms": {
+    "role": [],
+    "line": [],
+    "traits": [],
+    "tactics": [],
+    "level": [],
+    "bonds": [
+     [
+      16,
+      2
+     ]
+    ]
+   },
+   "level": "Lv 7 · 경험치 95 / 135",
+   "bonds": "조조 · 심복 / 하후돈 · 친우 / 조인 · 보통 / 장료 · 보통 / 허저 · 보통",
+   "visit": {
+    "ok": false,
+    "reason": "내 세력의 자유 장수를 골라 주세요"
+   }
+  },
+  "pin": null,
+  "compare": null
+ }
+}

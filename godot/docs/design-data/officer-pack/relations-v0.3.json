@@ -1,0 +1,4016 @@
+{
+ "schema": "officer-relations-v0.3",
+ "status": "시험값 — v0.2 쌍·근거 그대로, 사용자 2026-10-07 결정 반영: 보너스 절반 정도, 숙적은 이벤트로만 드물게(싸움만으로는 생기지 않음), 역사 원수 쌍은 처음엔 불화. 수치는 시험값",
+ "source": "db-relations-extract-v0.1.json(원전DB·해석) + relations-v0.1.json(보충)",
+ "range": [
+  0,
+  100
+ ],
+ "defaultValue": 30,
+ "tiers": [
+  {
+   "id": "COLD",
+   "name": "서먹",
+   "min": 0
+  },
+  {
+   "id": "NORMAL",
+   "name": "보통",
+   "min": 20
+  },
+  {
+   "id": "TRUST",
+   "name": "신뢰",
+   "min": 50
+  },
+  {
+   "id": "CLOSE",
+   "name": "친우",
+   "min": 75
+  },
+  {
+   "id": "BOUND",
+   "name": "결의",
+   "min": 90
+  }
+ ],
+ "rivalAt": 15,
+ "kindNames": {
+  "SWORN": "의형제",
+  "BLOOD": "혈연",
+  "SPOUSE": "부부",
+  "LORD": "주종",
+  "MENTOR": "사제",
+  "FRIEND": "친우",
+  "RIVAL": "불화"
+ },
+ "boundNames": {
+  "SWORN": "의형제",
+  "BLOOD": "골육",
+  "SPOUSE": "부부",
+  "LORD": "심복",
+  "MENTOR": "사제",
+  "FRIEND": "맹우"
+ },
+ "gains": {
+  "jointAttack": {
+   "value": 4,
+   "text": "같은 차례에 같은 적을 함께 친 두 부대장"
+  },
+  "sameCityMonth": {
+   "value": 2,
+   "text": "같은 성에 한 달 머문 장수 쌍(태수 포함)"
+  },
+  "nearbyMonth": {
+   "value": 1,
+   "text": "한 달 동안 2칸 안에서 차례를 보낸 같은 세력 부대장 쌍"
+  },
+  "jobComplete": {
+   "value": 3,
+   "text": "성 작업 완료 때 태수와 그 성 장수 쌍"
+  },
+  "victoryWithLord": {
+   "value": 2,
+   "text": "군주 세력 장수가 부대를 이기게 하면 군주와 그 장수"
+  },
+  "feast": {
+   "value": 8,
+   "costPrestige": 20,
+   "text": "주점 술자리 — 함께한 모든 쌍(성마다 월 1회, 2~3명)"
+  },
+  "visit": {
+   "values": [
+    5,
+    10,
+    15
+   ],
+   "text": "저택 대화 — 군주와 그 장수(장수마다 월 1회, 선택지에 따라)"
+  },
+  "defeatedBy": {
+   "value": -5,
+   "text": "적끼리 한쪽이 다른 쪽을 패주·포로로 만들면 — 숙적 아래로는 내려가지 않음(숙적은 이벤트로만)"
+  }
+ },
+ "effects": {
+  "TRUST": {
+   "battle": "같은 세력 2칸 안에 신뢰 이상 짝이 있으면 3턴에 한 번 사기 하락 무시",
+   "domestic": "같은 성 근무 쌍마다 그 성 생산 +3%(성마다 최대 +10%)",
+   "moraleCooldownTurns": 3
+  },
+  "CLOSE": {
+   "battle": "협공: 같은 차례에 친우 이상 짝이 먼저 친 적을 치면 주는 피해 +8%",
+   "domestic": "같은 성 근무 쌍마다 생산 +5%(성마다 최대 +10%)"
+  },
+  "BOUND": {
+   "battle": "결의 세트(아래) · 짝이 패주해도 사기 판정 없음",
+   "domestic": "태수와 결의 짝이 같은 성이면 치안 한 단계 위"
+  },
+  "RIVAL": {
+   "battle": "서로 상대 부대를 칠 때 주는 피해 +5%",
+   "domestic": "같은 성에 두면 그 성 생산 −3%"
+  }
+ },
+ "boundSet": {
+  "text": "결의로 이어진 같은 세력 부대장들이 출진 중(지도 어디든)인 수",
+  "tiers": {
+   "2": "주는 피해 +3%",
+   "3": "사기 판정 가중 −5%",
+   "4": "고유 전법 게이지 충전 +15%"
+  }
+ },
+ "social": {
+  "feastPerCityPerMonth": 1,
+  "visitPerOfficerPerMonth": 1,
+  "aiFeast": "AI 세력도 매달 수도에서 주요 장수 2~3명과 술자리(같은 규칙)"
+ },
+ "pairs": [
+  {
+   "a": "G01",
+   "b": "G05",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "敵對·화해·재충돌이 반복되어 단일 관계라벨로 평탄화 금지.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-006",
+     "tags": [
+      "CONFLICT",
+      "TEMPORARY_ACCOMMODATION"
+     ],
+     "boundary": "敵對·화해·재충돌이 반복되어 단일 관계라벨로 평탄화 금지.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "여포",
+   "bName": "유비"
+  },
+  {
+   "a": "G01",
+   "b": "G10",
+   "kind": "RIVAL",
+   "value": 30,
+   "ref": "혼인 동맹 파탄과 전쟁",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G10-006",
+     "tags": [
+      "MARRIAGE_ALLIANCE_ATTEMPT",
+      "BREAK",
+      "WAR"
+     ],
+     "boundary": "파탄과 전쟁의 다중행위자 맥락 유지.",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "결속을 먼저 정했으나 상대는 다시 선택한다",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "여포",
+   "bName": "원술"
+  },
+  {
+   "a": "G01",
+   "b": "G11",
+   "aName": "여포",
+   "bName": "동탁",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "동탁 살해",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G11-004",
+     "tags": [
+      "INDUCEMENT",
+      "ASSASSINATION_BY_PROXY",
+      "FORCE_ABSORPTION"
+     ],
+     "boundary": "정원 살해 실행은 여포.",
+     "file": "docs/work-integration/20260928/officer-production/G11/recovered-package-v1.0/OHD_G11_DONGZHUO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G11-007",
+     "tags": [
+      "ADOPTIVE_OATH",
+      "BODYGUARD_DEPENDENCE",
+      "VIOLENCE",
+      "ASSASSINATION"
+     ],
+     "boundary": "친밀·공포·폭력이 누적된 관계.",
+     "file": "docs/work-integration/20260928/officer-production/G11/recovered-package-v1.0/OHD_G11_DONGZHUO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    }
+   ],
+   "grudge": true,
+   "valueV02": 10
+  },
+  {
+   "a": "G01",
+   "b": "G24",
+   "aName": "여포",
+   "bName": "장료",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "장료 옛 주군",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G01",
+   "b": "G26",
+   "aName": "여포",
+   "bName": "초선",
+   "kind": "SPOUSE",
+   "value": 90,
+   "ref": "여포·초선",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G01",
+   "b": "G31",
+   "aName": "여포",
+   "bName": "진궁",
+   "kind": "LORD",
+   "value": 68,
+   "ref": "진궁(불화 있음)",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G31-LVBU",
+     "tags": [
+      "RECRUITER/KINGMAKER",
+      "ALLY",
+      "GENERAL",
+      "ADVISER",
+      "PROTECTED_SUBORDINATE",
+      "REPEATED_COUNSEL_REJECTION",
+      "FINAL_COMMAND_FRICTION"
+     ],
+     "boundary": "진궁이 선택·옹립한 강자와 결합했으나 실제 결정권은 呂布에게 있었고 핵심 작전이 반복 미채택되는 긴장이 확인됨.",
+     "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+    }
+   ]
+  },
+  {
+   "a": "G01",
+   "b": "G32",
+   "aName": "여포",
+   "bName": "고순",
+   "kind": "LORD",
+   "value": 75,
+   "ref": "고순(직언)",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G01",
+   "b": "G77",
+   "aName": "여포",
+   "bName": "진등",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "진등 내통",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ],
+   "grudge": true
+  },
+  {
+   "a": "G01",
+   "b": "G78",
+   "aName": "여포",
+   "bName": "장패",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "장패",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G01",
+   "b": "G79",
+   "aName": "여포",
+   "bName": "후성",
+   "kind": "RIVAL",
+   "value": 35,
+   "ref": "후성 배반",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G02",
+   "b": "G05",
+   "aName": "조운",
+   "bName": "유비",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "조운의 충의",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G02",
+   "b": "G06",
+   "kind": "FRIEND",
+   "value": 60,
+   "ref": "한수 운량 작전",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G06-011",
+     "tags": [
+      "SHARED_HANZHONG_OPERATION",
+      "SUPPORT_RESPONSE"
+     ],
+     "boundary": "雲別傳의 운량작전·귀환지연 전승.",
+     "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "조운",
+   "bName": "황충"
+  },
+  {
+   "a": "G02",
+   "b": "G14",
+   "aName": "조운",
+   "bName": "공손찬",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "조운 옛 주군",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G05",
+   "aName": "제갈량",
+   "bName": "유비",
+   "kind": "LORD",
+   "value": 95,
+   "ref": "수어지교",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-001",
+     "tags": [
+      "RECRUITMENT",
+      "TRUST_DELEGATION",
+      "SUCCESSION_TRUST"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-011",
+     "tags": [
+      "RECRUITMENT",
+      "TRUST_DELEGATION",
+      "POLITICAL_COLLABORATION",
+      "ENTRUSTMENT"
+     ],
+     "boundary": "三顧·魚水·사행·행정·託孤는 서로 다른 시기와 기능.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G06",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "임명 내부 수용 경고",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G06-008",
+     "tags": [
+      "PERSONNEL_COUNSEL_ABOUT_HUANGZHONG"
+     ],
+     "boundary": "諸葛亮이 임명에 반대한 것이 아니라 내부수용 문제를 경고한 장면.",
+     "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "제갈량",
+   "bName": "황충"
+  },
+  {
+   "a": "G03",
+   "b": "G08",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "손유 동맹 외교",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-004",
+     "tags": [
+      "DIPLOMACY",
+      "POLITICAL_ALLIANCE"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "제갈량",
+   "bName": "손권"
+  },
+  {
+   "a": "G03",
+   "b": "G18",
+   "kind": "FRIEND",
+   "value": 60,
+   "ref": "함께 형주를 맡음",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-005",
+     "tags": [
+      "POLITICAL_COLLEAGUE",
+      "SHARED_COMMAND"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "말이 외모의 생활감으로 닿는 접점",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "제갈량",
+   "bName": "관우"
+  },
+  {
+   "a": "G03",
+   "b": "G19",
+   "kind": "FRIEND",
+   "value": 62,
+   "ref": "함께 출정",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-006",
+     "tags": [
+      "POLITICAL_COLLEAGUE",
+      "SHARED_CAMPAIGN"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "제갈량",
+   "bName": "장비"
+  },
+  {
+   "a": "G03",
+   "b": "G21",
+   "aName": "제갈량",
+   "bName": "방통",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "와룡·봉추",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "첨부 경계에서만",
+     "file": "docs/work-integration/20260928/officer-production/G21/recovered-interpretation-v3.0/G21_PANGTONG_WHOLE_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G23",
+   "kind": "RIVAL",
+   "value": 30,
+   "ref": "서로 인정한 맞수",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-012",
+     "tags": [
+      "ADVERSARIAL_COMMAND",
+      "ADVERSARIAL_RECOGNITION"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "Reception Mirror",
+     "file": "docs/work-integration/20260928/officer-production/G23/recovered-interpretation-v3.0/G23_SIMAYI_OFFICER_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "제갈량",
+   "bName": "사마의"
+  },
+  {
+   "a": "G03",
+   "b": "G42",
+   "aName": "제갈량",
+   "bName": "위연",
+   "kind": "RIVAL",
+   "value": 25,
+   "ref": "위연 불화",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G43",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "같아지지 않고도 함께 일하는 관계",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "같아지지 않고도 함께 일하는 관계",
+     "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "제갈량",
+   "bName": "법정"
+  },
+  {
+   "a": "G03",
+   "b": "G59",
+   "aName": "제갈량",
+   "bName": "강유",
+   "kind": "MENTOR",
+   "value": 85,
+   "ref": "강유 후계",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G60",
+   "aName": "제갈량",
+   "bName": "마량",
+   "kind": "FRIEND",
+   "value": 76,
+   "ref": "마량",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G61",
+   "aName": "제갈량",
+   "bName": "마속",
+   "kind": "MENTOR",
+   "value": 80,
+   "ref": "마속",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-009",
+     "tags": [
+      "MENTORSHIP",
+      "PERSONNEL_SELECTION",
+      "PUNISHMENT",
+      "AFTERCARE"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G62",
+   "aName": "제갈량",
+   "bName": "장완",
+   "kind": "MENTOR",
+   "value": 80,
+   "ref": "장완",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-010",
+     "tags": [
+      "RECOMMENDATION",
+      "SUCCESSOR_PREPARATION"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G63",
+   "aName": "제갈량",
+   "bName": "비의",
+   "kind": "MENTOR",
+   "value": 76,
+   "ref": "비의",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-011",
+     "tags": [
+      "RECOMMENDATION",
+      "DIPLOMATIC_DELEGATION",
+      "SUCCESSOR_CARRIER"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G03",
+   "b": "G64",
+   "aName": "제갈량",
+   "bName": "이엄",
+   "kind": "RIVAL",
+   "value": 40,
+   "ref": "이엄",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G03-008",
+     "tags": [
+      "CO_GUARDIAN",
+      "AUTHORITY_DIVISION",
+      "POLITICAL_CONFLICT"
+     ],
+     "boundary": "",
+     "file": "docs/work-integration/20260928/officer-production/G03/OHD_G03_ZHUGELIANG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G04",
+   "b": "G07",
+   "aName": "순욱",
+   "bName": "조조",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "왕좌지재",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G04-003",
+     "tags": [
+      "DIRECT_SERVICE",
+      "TRUST_DELEGATION",
+      "PATRONAGE",
+      "POLITICAL_CONFLICT"
+     ],
+     "boundary": "장기 전략신뢰와 212년 정치갈등을 함께 보존.",
+     "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-005",
+     "tags": [
+      "STRATEGIC_TRUST",
+      "CENTRAL_DELEGATION",
+      "MARRIAGE_NETWORK",
+      "LATE_CONFLICT"
+     ],
+     "boundary": "후방·전략신뢰와 후기 魏公 갈등 병존.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G04",
+   "b": "G09",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "上賓 대우 뒤 이탈. 적대전환의 정확 과정은 미상.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G04-002",
+     "tags": [
+      "PREJOIN_AFFILIATION",
+      "BREAK_WITH_RULER"
+     ],
+     "boundary": "上賓 대우 뒤 이탈. 적대전환의 정확 과정은 미상.",
+     "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "순욱",
+   "bName": "원소"
+  },
+  {
+   "a": "G04",
+   "b": "G22",
+   "aName": "순욱",
+   "bName": "곽가",
+   "kind": "FRIEND",
+   "value": 80,
+   "ref": "곽가 천거",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G04-008",
+     "tags": [
+      "RECOMMENDATION"
+     ],
+     "boundary": "郭嘉 공적을 荀彧에게 재귀속하지 않음.",
+     "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G04",
+   "b": "G33",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "연주 위기 분업",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G04-004",
+     "tags": [
+      "TRUST_DELEGATION",
+      "SHARED_CRISIS"
+     ],
+     "boundary": "兗州 위기에서 군사실행과 정치판단의 분업.",
+     "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "순욱",
+   "bName": "하후돈"
+  },
+  {
+   "a": "G04",
+   "b": "G36",
+   "aName": "순욱",
+   "bName": "순유",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "숙질",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G04-009",
+     "tags": [
+      "KINSHIP",
+      "RECOMMENDATION",
+      "POLITICAL_COLLABORATION"
+     ],
+     "boundary": "從子 관계지만 각자 별도 수행자.",
+     "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G04",
+   "b": "G57",
+   "aName": "순욱",
+   "bName": "정욱",
+   "kind": "FRIEND",
+   "value": 60,
+   "ref": "정욱",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G04-005",
+     "tags": [
+      "SHARED_CRISIS",
+      "COORDINATION"
+     ],
+     "boundary": "세 도시 보전에 공동 기여.",
+     "file": "docs/work-integration/20260928/officer-production/G04/recovered-parent-materialized-v1.0/OHD_G04_XUNYU_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G06",
+   "aName": "유비",
+   "bName": "황충",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "노장 중용",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G06-005",
+     "tags": [
+      "SERVICE_TRANSFER",
+      "DIRECT_COMMAND",
+      "PROMOTION",
+      "PATRONAGE"
+     ],
+     "boundary": "귀부·원정·승진의 실제 행동관계.",
+     "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G07",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "후대·영웅론·전쟁",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-007",
+     "tags": [
+      "PATRONAGE",
+      "POLITICAL_RIVALRY",
+      "CONFLICT",
+      "ADVERSARIAL_RECOGNITION"
+     ],
+     "boundary": "厚遇·英雄평·모의·전쟁·상호비교가 공존.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-008",
+     "tags": [
+      "HOSTING",
+      "PERSONNEL_JUDGMENT",
+      "DELEGATION",
+      "BREAK",
+      "WAR"
+     ],
+     "boundary": "협력/감시/이탈/전쟁으로 변화.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "유비",
+   "bName": "조조"
+  },
+  {
+   "a": "G05",
+   "b": "G08",
+   "kind": "FRIEND",
+   "value": 45,
+   "ref": "연합·정략혼·형주 충돌",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-012",
+     "tags": [
+      "POLITICAL_ALLIANCE",
+      "MARRIAGE_ALLIANCE",
+      "CONFLICT",
+      "RECONCILIATION"
+     ],
+     "boundary": "연합·혼인·荊州충돌·전쟁·화해를 한 방향 관계로 단순화하지 않음.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-012",
+     "tags": [
+      "ALLIANCE",
+      "MARRIAGE_DIPLOMACY",
+      "WAR",
+      "RECONCILIATION"
+     ],
+     "boundary": "동맹→荊州갈등→夷陵→재화친의 변화.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "유비",
+   "bName": "손권"
+  },
+  {
+   "a": "G05",
+   "b": "G09",
+   "kind": "FRIEND",
+   "value": 45,
+   "ref": "패전 뒤 의탁",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-008",
+     "tags": [
+      "TEMPORARY_SERVICE",
+      "POLITICAL_ALLIANCE"
+     ],
+     "boundary": "장기 고정복무가 아니라 패전 뒤 이동기.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "유비",
+   "bName": "원소"
+  },
+  {
+   "a": "G05",
+   "b": "G13",
+   "kind": "LORD",
+   "value": 62,
+   "ref": "귀순",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G13-007",
+     "tags": [
+      "DEFECTION_OR_REALIGNMENT",
+      "SERVICE"
+     ],
+     "boundary": "연의 일기토가 전환 원인 아님.",
+     "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "유비",
+   "bName": "마초"
+  },
+  {
+   "a": "G05",
+   "b": "G14",
+   "aName": "유비",
+   "bName": "공손찬",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "노식 문하 동문",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-001",
+     "tags": [
+      "EARLY_COMPANION",
+      "STUDY_PEER",
+      "DIRECT_SERVICE"
+     ],
+     "boundary": "동문·친교와 후일 군사적 종속은 시기가 다름.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G15",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "초청에서 정복으로 관계가 변함.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-014",
+     "tags": [
+      "INVITATION",
+      "POLITICAL_ALLIANCE",
+      "CONFLICT",
+      "REGIME_TRANSFER"
+     ],
+     "boundary": "초청에서 정복으로 관계가 변함.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G15-006",
+     "tags": [
+      "INVITATION",
+      "GUEST_ALLIANCE",
+      "RESOURCE_SUPPORT",
+      "WAR",
+      "SURRENDER"
+     ],
+     "boundary": "초청 시점과 전쟁 시점 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "받아들인 사람, 지원한 사람, 전쟁한 사람, 정권을 넘긴 상대",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "유비",
+   "bName": "유장"
+  },
+  {
+   "a": "G05",
+   "b": "G18",
+   "aName": "유비",
+   "bName": "관우",
+   "kind": "SWORN",
+   "value": 95,
+   "ref": "도원결의",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-002",
+     "tags": [
+      "EARLY_COMPANION",
+      "PERSONAL_TRUST",
+      "SHARED_CAMPAIGN"
+     ],
+     "boundary": "역사적 恩若兄弟와 桃園結義 reception을 구분.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "돌아갈 사람, 그러나 관우를 대신 살아 줄 사람은 아니다",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G19",
+   "aName": "유비",
+   "bName": "장비",
+   "kind": "SWORN",
+   "value": 95,
+   "ref": "도원결의",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-003",
+     "tags": [
+      "EARLY_COMPANION",
+      "PERSONAL_TRUST",
+      "SHARED_CAMPAIGN"
+     ],
+     "boundary": "강한 동행관계가 후방실패·부대관리 문제를 지우지 않음.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "맡김은 가능해도 경고가 저절로 관철되지는 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G21",
+   "aName": "유비",
+   "bName": "방통",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "봉추",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-015",
+     "tags": [
+      "RECOMMENDATION",
+      "TRUST_DELEGATION",
+      "ADMONITION",
+      "RECONCILIATION"
+     ],
+     "boundary": "전략조언뿐 아니라 공개비판·관계회복 자료가 있음.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G42",
+   "aName": "유비",
+   "bName": "위연",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "위연 발탁",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-018",
+     "tags": [
+      "TRUST_DELEGATION",
+      "APPOINTMENT"
+     ],
+     "boundary": "예상밖 발탁 한 사례가 전체 인사제도를 증명하지 않음.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G43",
+   "aName": "유비",
+   "bName": "법정",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "법정 중용",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-016",
+     "tags": [
+      "POLITICAL_ALLIANCE",
+      "TRUST_DELEGATION",
+      "STRATEGIC_ADVICE"
+     ],
+     "boundary": "劉璋 신하 출신에서 劉備 핵심참모로 전환.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "쓰임을 주는 사람, 그리고 다른 방식으로 말할 수 있는 사람",
+     "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G60",
+   "aName": "유비",
+   "bName": "마량",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "백미",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G64",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "託孤는 諸葛亮 단독이 아니라 李嚴 부수탁 사실도 보존.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-020",
+     "tags": [
+      "APPOINTMENT",
+      "ENTRUSTMENT"
+     ],
+     "boundary": "託孤는 諸葛亮 단독이 아니라 李嚴 부수탁 사실도 보존.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "유비",
+   "bName": "이엄"
+  },
+  {
+   "a": "G05",
+   "b": "G65",
+   "aName": "유비",
+   "bName": "미축",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "미축의 헌신",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-005",
+     "tags": [
+      "PATRONAGE",
+      "RESOURCE_SUPPORT",
+      "MARRIAGE_LINK",
+      "TRUST"
+     ],
+     "boundary": "재정후원과 동생 麋芳의 항복 책임을 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ]
+  },
+  {
+   "a": "G05",
+   "b": "G87",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "조언거부·귀로단절·魏귀순·가족보호를 함께 보존.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G05-017",
+     "tags": [
+      "FORMER_REGIME_SERVICE",
+      "TRUST_DELEGATION",
+      "ADMONITION",
+      "SEPARATION_WITHOUT_PUNISHMENT"
+     ],
+     "boundary": "조언거부·귀로단절·魏귀순·가족보호를 함께 보존.",
+     "file": "docs/work-integration/20260928/officer-production/G05/recovered-formal-historical-v1.1/OHD_G05_LIUBEI_HISTORICAL_PACKAGE_v1.1_FORMAL.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "유비",
+   "bName": "황권"
+  },
+  {
+   "a": "G05",
+   "b": "G96",
+   "aName": "유비",
+   "bName": "전예",
+   "kind": "FRIEND",
+   "value": 70,
+   "ref": "전예 이별",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G06",
+   "b": "G07",
+   "kind": "LORD",
+   "value": 40,
+   "ref": "형주 시절 임시 직함",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G06-003",
+     "tags": [
+      "REGIME_OVERLORD",
+      "OFFICE_CONFIRMATION"
+     ],
+     "boundary": "荊州 장악 뒤 假行裨將軍. 직접 개인관계는 미상.",
+     "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "황충",
+   "bName": "조조"
+  },
+  {
+   "a": "G06",
+   "b": "G15",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "益州 정복전 적대군주.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G06-006",
+     "tags": [
+      "ADVERSARIAL_TARGET"
+     ],
+     "boundary": "益州 정복전 적대군주.",
+     "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "황충",
+   "bName": "유장"
+  },
+  {
+   "a": "G06",
+   "b": "G18",
+   "kind": "FRIEND",
+   "value": 40,
+   "ref": "오호 서열 갈등(관우 쪽 발언)",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G06-009",
+     "tags": [
+      "STATUS_FRICTION",
+      "INDIRECT_RIVALRY"
+     ],
+     "boundary": "黃忠 본인의 대응행동은 기록되지 않으며 갈등 당사자의 발언은 關羽 측.",
+     "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "황충",
+   "bName": "관우"
+  },
+  {
+   "a": "G06",
+   "b": "G42",
+   "aName": "황충",
+   "bName": "위연",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "한중 동료",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G06",
+   "b": "G43",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "황충",
+   "bName": "법정"
+  },
+  {
+   "a": "G06",
+   "b": "G51",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "정군산",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G06-007",
+     "tags": [
+      "BATTLEFIELD_ADVERSARY"
+     ],
+     "boundary": "정사에서 黃忠 지휘 아래 군이 夏侯淵군을 격파. 개인일기토는 Romance.",
+     "file": "docs/work-integration/20260928/officer-production/G06/recovered-package-v1.0/OHD_G06_HUANGZHONG_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "황충",
+   "bName": "하후연",
+   "grudge": true,
+   "valueV02": 15
+  },
+  {
+   "a": "G06",
+   "b": "G88",
+   "aName": "황충",
+   "bName": "엄안",
+   "kind": "FRIEND",
+   "value": 62,
+   "ref": "노장",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G08",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "赤壁 적대→219 이해관계 변화.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-013",
+     "tags": [
+      "WAR",
+      "DIPLOMACY",
+      "LATE_COOPERATION",
+      "EMPERORSHIP_PROMPT"
+     ],
+     "boundary": "赤壁 적대→219 이해관계 변화.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-011",
+     "tags": [
+      "ADVERSARY",
+      "DIPLOMATIC_PRESSURE",
+      "RED_CLIFFS",
+      "RUXU"
+     ],
+     "boundary": "敵對뿐 아니라 외교압력·관찰전이 공존.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "조조",
+   "bName": "손권"
+  },
+  {
+   "a": "G07",
+   "b": "G09",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "연합동료→패권경쟁자로 변화.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-003",
+     "tags": [
+      "EARLY_NETWORK",
+      "COALITION",
+      "STRATEGIC_RIVAL",
+      "WAR"
+     ],
+     "boundary": "연합동료→패권경쟁자로 변화.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G09-004",
+     "tags": [
+      "EARLY_ACQUAINTANCE",
+      "COALITION_PEER",
+      "RIVAL",
+      "WAR"
+     ],
+     "boundary": "행동/관계의 실제 source scope를 유지",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "REL-G09-004",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "조조",
+   "bName": "원소"
+  },
+  {
+   "a": "G07",
+   "b": "G13",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "韓遂와의 옛 관계를 의심유발에 이용.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-014",
+     "tags": [
+      "ADVERSARIAL_COALITION",
+      "PERSONAL_HISTORY_LEVERAGE",
+      "PSYCHOLOGICAL_WARFARE"
+     ],
+     "boundary": "韓遂와의 옛 관계를 의심유발에 이용.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "조조",
+   "bName": "마초"
+  },
+  {
+   "a": "G07",
+   "b": "G16",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "215 패배와 정치적 편입을 한 순간 붕괴로 합치지 않음.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G16-007",
+     "tags": [
+      "WAR",
+      "NEGOTIATED_SURRENDER",
+      "INTEGRATION"
+     ],
+     "boundary": "215 패배와 정치적 편입을 한 순간 붕괴로 합치지 않음.",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "자기 질서의 주인이 아닐 때도 말을 해야 하는 상대",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "조조",
+   "bName": "장로"
+  },
+  {
+   "a": "G07",
+   "b": "G18",
+   "kind": "FRIEND",
+   "value": 60,
+   "ref": "후대와 이별 — 인정과 귀속의 구분",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "인정받음과 소속됨을 구분하게 하는 상대",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "조조",
+   "bName": "관우"
+  },
+  {
+   "a": "G07",
+   "b": "G22",
+   "aName": "조조",
+   "bName": "곽가",
+   "kind": "LORD",
+   "value": 92,
+   "ref": "곽가 총애",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G23",
+   "aName": "조조",
+   "bName": "사마의",
+   "kind": "RIVAL",
+   "value": 40,
+   "ref": "사마의 경계",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "Construction Mirror",
+     "file": "docs/work-integration/20260928/officer-production/G23/recovered-interpretation-v3.0/G23_SIMAYI_OFFICER_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G24",
+   "aName": "조조",
+   "bName": "장료",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "장료 귀순",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G25",
+   "aName": "조조",
+   "bName": "허저",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "호치",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G31",
+   "kind": "RIVAL",
+   "value": 30,
+   "ref": "연주에서 이반",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G31-CAOCAO",
+     "tags": [
+      "FOLLOWER",
+      "TRUSTED_COMMANDER",
+      "POLITICAL_BROKER_TRADITION",
+      "DEFECTION",
+      "ENEMY",
+      "FINAL_PERSONAL_DIALOGUE"
+     ],
+     "boundary": "가장 큰 변화축. ‘徐州학살/邊讓에 대한 도덕적 반발 때문에 떠났다’는 역사적 동기는 직접 증명되지 않음.",
+     "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "조조",
+   "bName": "진궁"
+  },
+  {
+   "a": "G07",
+   "b": "G33",
+   "aName": "조조",
+   "bName": "하후돈",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "종친",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G34",
+   "aName": "조조",
+   "bName": "조인",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "종제",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G35",
+   "aName": "조조",
+   "bName": "가후",
+   "kind": "LORD",
+   "value": 62,
+   "ref": "가후 귀순",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G36",
+   "aName": "조조",
+   "bName": "순유",
+   "kind": "LORD",
+   "value": 78,
+   "ref": "순유",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G44",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "韓遂와의 옛 관계를 의심유발에 이용.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-014",
+     "tags": [
+      "ADVERSARIAL_COALITION",
+      "PERSONAL_HISTORY_LEVERAGE",
+      "PSYCHOLOGICAL_WARFARE"
+     ],
+     "boundary": "韓遂와의 옛 관계를 의심유발에 이용.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "조조",
+   "bName": "한수"
+  },
+  {
+   "a": "G07",
+   "b": "G45",
+   "kind": "LORD",
+   "value": 65,
+   "ref": "귀순 장수 중용",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "이미 있는 힘을 새 책임으로 받아들인 권력자",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "조조",
+   "bName": "방덕"
+  },
+  {
+   "a": "G07",
+   "b": "G51",
+   "aName": "조조",
+   "bName": "하후연",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "종친",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G52",
+   "aName": "조조",
+   "bName": "서황",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "서황",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G53",
+   "aName": "조조",
+   "bName": "우금",
+   "kind": "LORD",
+   "value": 75,
+   "ref": "우금",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G54",
+   "aName": "조조",
+   "bName": "악진",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "악진",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G55",
+   "aName": "조조",
+   "bName": "이전",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "이전",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G56",
+   "aName": "조조",
+   "bName": "전위",
+   "kind": "LORD",
+   "value": 90,
+   "ref": "전위 호위",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G57",
+   "aName": "조조",
+   "bName": "정욱",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "정욱",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-006",
+     "tags": [
+      "CENTRAL_DELEGATION",
+      "REGIONAL_DEFENSE"
+     ],
+     "boundary": "兗州 보전 공동 Actor.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G58",
+   "aName": "조조",
+   "bName": "만총",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "만총",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G07",
+   "b": "G76",
+   "aName": "조조",
+   "bName": "허유",
+   "kind": "FRIEND",
+   "value": 65,
+   "ref": "허유는 어릴 적 친구",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G07-012",
+     "tags": [
+      "DEFECTION_TO_CAO",
+      "INTELLIGENCE_TRANSFER",
+      "GUANDU_CATALYST"
+     ],
+     "boundary": "官渡 전체를 許攸 단독공로로 환원하지 않음.",
+     "file": "docs/work-integration/20260928/officer-production/G07/recovered-package-v1.0/OHD_G07_CAOCAO_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G18",
+   "kind": "RIVAL",
+   "value": 25,
+   "ref": "형주 탈취",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "관우의 결함을 기다리는 장치가 아닌 독립적 상대",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "손권",
+   "bName": "관우"
+  },
+  {
+   "a": "G08",
+   "b": "G20",
+   "aName": "손권",
+   "bName": "손책",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "형제",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-001",
+     "tags": [
+      "BROTHER",
+      "PREDECESSOR",
+      "SUCCESSION_TRANSFER",
+      "EARLY_TRAINING"
+     ],
+     "boundary": "부형 유업과 孫權 본인의 후계행동 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "같은 일을 다시 하는 사람이 아니라 다음 일을 맡을 사람",
+     "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G27",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "抗曹결정과 赤壁 현장지휘 분리.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-003",
+     "tags": [
+      "MILITARY_TRUST",
+      "STRATEGIC_COUNSEL",
+      "DELEGATION"
+     ],
+     "boundary": "抗曹결정과 赤壁 현장지휘 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "손권",
+   "bName": "주유"
+  },
+  {
+   "a": "G08",
+   "b": "G28",
+   "aName": "손권",
+   "bName": "육손",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "육손",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-006",
+     "tags": [
+      "MILITARY_DELEGATION",
+      "DIPLOMATIC_TRUST",
+      "POLICY_REVIEW",
+      "LATE_CONFLICT"
+     ],
+     "boundary": "깊은 위임과 말기 정치파탄을 함께 보존.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "“큰 Scope를 주되 최종권한은 비대칭이다”",
+     "file": "docs/work-integration/20260928/officer-production/G28/recovered-interpretation-v3.0/G28_LUXUN_OFFICER_CHARACTERIZATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G29",
+   "aName": "손권",
+   "bName": "감녕",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "감녕",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G40",
+   "aName": "손권",
+   "bName": "여몽",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "여몽",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-005",
+     "tags": [
+      "MILITARY_DELEGATION",
+      "SUCCESSION_OF_COMMAND",
+      "PERSONAL_CARE",
+      "MOURNING"
+     ],
+     "boundary": "전략제안·현장실행은 呂蒙, 임명/돌봄은 孫權.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "실제로 맡기고, 끝에는 돌보는 군주",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G41",
+   "aName": "손권",
+   "bName": "노숙",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "노숙 탑상책",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-004",
+     "tags": [
+      "RECOMMENDED_ADVISER",
+      "STRATEGIC_COUNSEL",
+      "DIPLOMATIC_LINE"
+     ],
+     "boundary": "魯肅의 장기구상·동맹선과 군주의 최종결정을 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G66",
+   "aName": "손권",
+   "bName": "손견",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "부자",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G67",
+   "aName": "손권",
+   "bName": "장소",
+   "kind": "LORD",
+   "value": 62,
+   "ref": "장소 직언",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-002",
+     "tags": [
+      "GUARDIAN_ADVISER",
+      "REMONSTRANCE",
+      "CONFLICT",
+      "RECONCILIATION"
+     ],
+     "boundary": "평생 신뢰·불복·강압·사과가 모두 존재.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G08",
+   "b": "G71",
+   "aName": "손권",
+   "bName": "주태",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "주태 구출",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G08-008",
+     "tags": [
+      "LIFE_SAVING_SERVICE",
+      "PUBLIC_RECOGNITION"
+     ],
+     "boundary": "상처는 周泰의 공적.",
+     "file": "docs/work-integration/20260928/officer-production/G08/recovered-package-v1.0/OHD_G08_SUNQUAN_HISTORICAL_PACKAGE_v1.0.json"
+    }
+   ]
+  },
+  {
+   "a": "G09",
+   "b": "G10",
+   "aName": "원소",
+   "bName": "원술",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "형제지만 반목",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G10-001",
+     "tags": [
+      "KIN",
+      "CLAN_RIVALRY",
+      "POLITICAL_RIVALRY",
+      "FINAL_TRANSFER_ATTEMPT"
+     ],
+     "boundary": "같은 원씨 가문이지만 동일 정치세력 아님. 정확 현대 친족명칭은 사료 계보 context에 따름.",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "같은 가문이라는 이름을 누가 대표하는가",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+    }
+   ],
+   "grudge": true,
+   "valueV02": 15
+  },
+  {
+   "a": "G09",
+   "b": "G11",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "행동/관계의 실제 source scope를 유지",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G09-003",
+     "tags": [
+      "POLITICAL_CONFLICT",
+      "BREAK",
+      "ADVERSARY"
+     ],
+     "boundary": "행동/관계의 실제 source scope를 유지",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "REL-G09-003",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "원소",
+   "bName": "동탁"
+  },
+  {
+   "a": "G09",
+   "b": "G14",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "행동/관계의 실제 source scope를 유지",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G09-006",
+     "tags": [
+      "STRATEGIC_PRESSURE_PARTNER",
+      "RIVAL",
+      "WAR"
+     ],
+     "boundary": "행동/관계의 실제 source scope를 유지",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G14-002",
+     "tags": [
+      "RIVALRY",
+      "WAR",
+      "TEMPORARY_ADJUSTMENT",
+      "RENEWED_WAR"
+     ],
+     "boundary": "장기전의 승패 반복.",
+     "file": "docs/work-integration/20260928/officer-production/G14/recovered-package-v1.0/OHD_G14_GONGSUNZAN_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "REL-G09-006",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "원소",
+   "bName": "공손찬"
+  },
+  {
+   "a": "G09",
+   "b": "G37",
+   "aName": "원소",
+   "bName": "장합",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "장합",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G09-016",
+     "tags": [
+      "MILITARY_COMMAND",
+      "DISAGREEMENT",
+      "DEFECTION"
+     ],
+     "boundary": "행동/관계의 실제 source scope를 유지",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "REL-G09-016",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G09",
+   "b": "G38",
+   "aName": "원소",
+   "bName": "전풍",
+   "kind": "RIVAL",
+   "value": 35,
+   "ref": "전풍 불신",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G09-008",
+     "tags": [
+      "RECRUITMENT",
+      "COUNSEL",
+      "CONFLICT",
+      "IMPRISONMENT",
+      "EXECUTION"
+     ],
+     "boundary": "행동/관계의 실제 source scope를 유지",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "REL-G09-008",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G09",
+   "b": "G39",
+   "aName": "원소",
+   "bName": "저수",
+   "kind": "LORD",
+   "value": 45,
+   "ref": "저수",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G09-007",
+     "tags": [
+      "RECRUITMENT",
+      "STRATEGIC_TRUST",
+      "BROAD_DELEGATION",
+      "LATE_DISAGREEMENT"
+     ],
+     "boundary": "행동/관계의 실제 source scope를 유지",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "REL-G09-007",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G09",
+   "b": "G73",
+   "aName": "원소",
+   "bName": "안량",
+   "kind": "LORD",
+   "value": 78,
+   "ref": "안량",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G09",
+   "b": "G74",
+   "aName": "원소",
+   "bName": "문추",
+   "kind": "LORD",
+   "value": 78,
+   "ref": "문추",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G09",
+   "b": "G75",
+   "aName": "원소",
+   "bName": "국의",
+   "kind": "LORD",
+   "value": 55,
+   "ref": "국의",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G09-009",
+     "tags": [
+      "MILITARY_DELEGATION",
+      "SUCCESS",
+      "CONTROL_CONFLICT",
+      "ELIMINATION"
+     ],
+     "boundary": "행동/관계의 실제 source scope를 유지",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-package-v1.0-r1/OHD_G09_YUANSHAO_HISTORICAL_PACKAGE_v1.0.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "REL-G09-009",
+     "file": "docs/work-integration/20260928/officer-production/G09/recovered-interpretation-v3.0/G09_CHARACTERIZATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G09",
+   "b": "G76",
+   "aName": "원소",
+   "bName": "허유",
+   "kind": "LORD",
+   "value": 48,
+   "ref": "허유(뒤에 이탈)",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G10",
+   "b": "G100",
+   "aName": "원술",
+   "bName": "유훈",
+   "kind": "LORD",
+   "value": 66,
+   "ref": "유훈",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G10",
+   "b": "G20",
+   "kind": "LORD",
+   "value": 45,
+   "ref": "의탁 뒤 독립",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G10-003",
+     "tags": [
+      "RETINUE_RETURN",
+      "RESOURCE_GRANT",
+      "BROKEN_APPOINTMENT_PROMISE",
+      "FORMER_SUBORDINATE_INDEPENDENCE",
+      "BREAK_AFTER_IMPERIAL_CLAIM"
+     ],
+     "boundary": "강동 정복은 손책의 성과.",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "가장 반가운 성장이 가장 불편한 독립이 된다",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "고마움, 활용, 불신이 한 관계에 공존할 수 있다",
+     "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "원술",
+   "bName": "손책"
+  },
+  {
+   "a": "G10",
+   "b": "G49",
+   "aName": "원술",
+   "bName": "기령",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "기령",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G10",
+   "b": "G66",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "손견의 전공은 손견에게 귀속.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G10-002",
+     "tags": [
+      "MILITARY_SPONSORSHIP",
+      "DELEGATION"
+     ],
+     "boundary": "손견의 전공은 손견에게 귀속.",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "나의 안목이 발휘되는 유능한 실행자",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "원술",
+   "bName": "손견"
+  },
+  {
+   "a": "G10",
+   "b": "G98",
+   "aName": "원술",
+   "bName": "염상",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "염상",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G10-005",
+     "tags": [
+      "SUBORDINATE",
+      "POLITICAL_DISSENT"
+     ],
+     "boundary": "원술 진영 내부의 칭제 반대.",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/inputs/historical_original/OHD_G10_YUANSHU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "좋은 의견과 받아들일 의견은 다르다",
+     "file": "docs/work-integration/20260928/officer-production/G10/recovered-interpretation-v3.0/payload/G10_YUANSHU_WHOLE_INTERPRETATION_v1.0_REVIEW.md"
+    }
+   ]
+  },
+  {
+   "a": "G10",
+   "b": "G99",
+   "aName": "원술",
+   "bName": "장훈",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "장훈",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G11",
+   "b": "G26",
+   "aName": "동탁",
+   "bName": "초선",
+   "kind": "RIVAL",
+   "value": 25,
+   "ref": "연환계",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G11",
+   "b": "G46",
+   "aName": "동탁",
+   "bName": "이각",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "이각",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G11",
+   "b": "G83",
+   "aName": "동탁",
+   "bName": "곽사",
+   "kind": "LORD",
+   "value": 68,
+   "ref": "곽사",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G11",
+   "b": "G84",
+   "aName": "동탁",
+   "bName": "이유",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "사위·모주",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G11",
+   "b": "G85",
+   "aName": "동탁",
+   "bName": "서영",
+   "kind": "LORD",
+   "value": 65,
+   "ref": "서영",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G12",
+   "b": "G13",
+   "aName": "마등",
+   "bName": "마초",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "부자",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G12-004",
+     "tags": [
+      "KIN",
+      "FIELD_DELEGATION",
+      "RETINUE_SUCCESSION"
+     ],
+     "boundary": "마초의 211 이후 선택은 마등 생전 phase와 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G12/recovered-package-v1.0/OHD_G12_MATENG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G13-001",
+     "tags": [
+      "KIN",
+      "RETINUE_SUCCESSION"
+     ],
+     "boundary": "부곡 지휘승계와 정치노선 전체 상속을 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    }
+   ]
+  },
+  {
+   "a": "G12",
+   "b": "G44",
+   "aName": "마등",
+   "bName": "한수",
+   "kind": "SWORN",
+   "value": 70,
+   "ref": "마등·한수 의형제(뒤에 반목)",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G12-001",
+     "tags": [
+      "COALITION",
+      "SWORN_BROTHER_TRADITION",
+      "RETINUE_CONFLICT",
+      "WAR",
+      "MEDIATED_PEACE"
+     ],
+     "boundary": "가장 가까운 동맹이자 강한 적수. 상설 단일지휘 아님.",
+     "file": "docs/work-integration/20260928/officer-production/G12/recovered-package-v1.0/OHD_G12_MATENG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    }
+   ]
+  },
+  {
+   "a": "G12",
+   "b": "G45",
+   "aName": "마등",
+   "bName": "방덕",
+   "kind": "LORD",
+   "value": 65,
+   "ref": "방덕",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G12-005",
+     "tags": [
+      "MILITARY_CARRIER",
+      "SUBORDINATE_THEN_SUCCESSOR_CARRIER"
+     ],
+     "boundary": "방덕 전공은 방덕 개인에게 귀속.",
+     "file": "docs/work-integration/20260928/officer-production/G12/recovered-package-v1.0/OHD_G12_MATENG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "이미 쌓인 경력을 알아보는 최초의 큰 소속",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G13",
+   "b": "G16",
+   "kind": "LORD",
+   "value": 45,
+   "ref": "안정적 종속 아님",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G13-006",
+     "tags": [
+      "REFUGE",
+      "MILITARY_SUPPORT",
+      "RELATIONSHIP_BREAKDOWN"
+     ],
+     "boundary": "안정적 종속관계 아님.",
+     "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G16-006",
+     "tags": [
+      "REFUGE",
+      "ROLE_ASSIGNMENT",
+      "MARRIAGE_CONSIDERATION",
+      "MILITARY_SUPPORT",
+      "DEPARTURE"
+     ],
+     "boundary": "안정적 핵심편입 실패.",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "자리를 마련해 주는 것만으로 얻을 수 없는 사람",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "마초",
+   "bName": "장로"
+  },
+  {
+   "a": "G13",
+   "b": "G44",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "연합(의형제는 마등-한수)",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G13-002",
+     "tags": [
+      "COALITION",
+      "TACTICAL_DISAGREEMENT",
+      "MUTUAL_SUSPICION"
+     ],
+     "boundary": "의형제는 마등-한수 전승이며 마초-한수 관계에 자동전이 금지.",
+     "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "마초",
+   "bName": "한수"
+  },
+  {
+   "a": "G13",
+   "b": "G45",
+   "aName": "마초",
+   "bName": "방덕",
+   "kind": "LORD",
+   "value": 72,
+   "ref": "방덕",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G13-003",
+     "tags": [
+      "SUBORDINATE_MILITARY_CARRIER",
+      "SHARED_CAMPAIGN"
+     ],
+     "boundary": "곽원 참수는 방덕.",
+     "file": "docs/work-integration/20260928/officer-production/G13/recovered-package-v1.0/OHD_G13_MACHAO_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "승리보다 패배 뒤의 동행이 남은 관계",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G13",
+   "b": "G80",
+   "aName": "마초",
+   "bName": "마대",
+   "kind": "BLOOD",
+   "value": 78,
+   "ref": "종형제",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G13",
+   "b": "G81",
+   "aName": "마초",
+   "bName": "성공영",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "성공영",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G13",
+   "b": "G82",
+   "aName": "마초",
+   "bName": "염행",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "염행이 마초를 찌름",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ],
+   "grudge": true,
+   "valueV02": 15
+  },
+  {
+   "a": "G14",
+   "b": "G96",
+   "aName": "공손찬",
+   "bName": "전예",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "전예",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G14",
+   "b": "G97",
+   "aName": "공손찬",
+   "bName": "관정",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "관정",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G14-007",
+     "tags": [
+      "ADVICE",
+      "FINAL_LOYALTY"
+     ],
+     "boundary": "출격을 막은 조언과 최후 동반사의 도덕평가 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G14/recovered-package-v1.0/OHD_G14_GONGSUNZAN_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    }
+   ]
+  },
+  {
+   "a": "G15",
+   "b": "G16",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "장로 독립세력.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G15-002",
+     "tags": [
+      "FORMER_SUBORDINATE_LAYER",
+      "DISOBEDIENCE",
+      "FAMILY_KILLING",
+      "WAR"
+     ],
+     "boundary": "장로 독립세력.",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G16-003",
+     "tags": [
+      "DISOBEDIENCE",
+      "FAMILY_KILLING_AGAINST_ZHANG",
+      "WAR"
+     ],
+     "boundary": "F08와 F09 독립 historical lines.",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "되돌릴 수 없는 피해가 있는 상대",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "유장",
+   "bName": "장로"
+  },
+  {
+   "a": "G15",
+   "b": "G43",
+   "aName": "유장",
+   "bName": "법정",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "법정 불우",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G15-004",
+     "tags": [
+      "ADVICE",
+      "LIAISON",
+      "INTERNAL_DEFECTION"
+     ],
+     "boundary": "제안·연락·내응과 유장 최종승인을 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "하나의 배신자 집단으로 뭉개지 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "받은 것이 없는 옛 주군이 아니라, 받은 것으로 충분하지 않았던 관계",
+     "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G15",
+   "b": "G47",
+   "aName": "유장",
+   "bName": "장임",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "장임",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G15",
+   "b": "G86",
+   "aName": "유장",
+   "bName": "장송",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "장송 내통",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G15-004",
+     "tags": [
+      "ADVICE",
+      "LIAISON",
+      "INTERNAL_DEFECTION"
+     ],
+     "boundary": "제안·연락·내응과 유장 최종승인을 분리.",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "하나의 배신자 집단으로 뭉개지 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+    }
+   ]
+  },
+  {
+   "a": "G15",
+   "b": "G87",
+   "aName": "유장",
+   "bName": "황권",
+   "kind": "LORD",
+   "value": 76,
+   "ref": "황권",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G15-005",
+     "tags": [
+      "REMONSTRANCE",
+      "OPPOSITION",
+      "CONTINUED_SERVICE"
+     ],
+     "boundary": "반대의 존재 자체를 보존.",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "반대가 존재했고, 반대는 받아들여지지 않았다",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+    }
+   ]
+  },
+  {
+   "a": "G15",
+   "b": "G88",
+   "aName": "유장",
+   "bName": "엄안",
+   "kind": "LORD",
+   "value": 70,
+   "ref": "엄안",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G15",
+   "b": "G89",
+   "aName": "유장",
+   "bName": "유파",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "유파",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G15-005",
+     "tags": [
+      "REMONSTRANCE",
+      "OPPOSITION",
+      "CONTINUED_SERVICE"
+     ],
+     "boundary": "반대의 존재 자체를 보존.",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-package-v1.0/OHD_G15_LIUZHANG_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "반대가 존재했고, 반대는 받아들여지지 않았다",
+     "file": "docs/work-integration/20260928/officer-production/G15/recovered-interpretation-v3.0/G15_LIUZHANG_WHOLE_INTERPRETATION_v3.0_REVIEW.md"
+    }
+   ]
+  },
+  {
+   "a": "G16",
+   "b": "G45",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "보호와 귀속의 뜻이 같지는 않은 중간 소속",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "보호와 귀속의 뜻이 같지는 않은 중간 소속",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "장로",
+   "bName": "방덕"
+  },
+  {
+   "a": "G16",
+   "b": "G48",
+   "aName": "장로",
+   "bName": "염포",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "염포",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G16-004",
+     "tags": [
+      "COUNSEL",
+      "ROYAL_TITLE_RESTRAINT",
+      "SURRENDER_TIMING"
+     ],
+     "boundary": "전략 판단의 공동 actor.",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "군주의 결론에 ‘아직’을 말할 수 있는 사람",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+    }
+   ]
+  },
+  {
+   "a": "G16",
+   "b": "G90",
+   "aName": "장로",
+   "bName": "장위",
+   "kind": "BLOOD",
+   "value": 85,
+   "ref": "형제",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G16-005",
+     "tags": [
+      "KIN",
+      "MILITARY_COMMAND",
+      "STRATEGIC_DISAGREEMENT"
+     ],
+     "boundary": "장위의 항전의지를 장로에게 합산 금지.",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-files-v1.0/OHD_G16_ZHANGLU_HISTORICAL_PACKAGE_v1.0_REVIEW.json"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "친족이라고 하나의 의지가 되지는 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G16/recovered-interpretation-v3.0/G16_ZHANGLU_WHOLE_INTERPRETATION_v1.0_REVIEW_20261001.md"
+    }
+   ]
+  },
+  {
+   "a": "G16",
+   "b": "G91",
+   "aName": "장로",
+   "bName": "양앙",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "양앙",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G16",
+   "b": "G92",
+   "aName": "장로",
+   "bName": "양송",
+   "kind": "LORD",
+   "value": 50,
+   "ref": "양송",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G17",
+   "b": "G93",
+   "aName": "맹획",
+   "bName": "축융",
+   "kind": "SPOUSE",
+   "value": 95,
+   "ref": "맹획·축융",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "후대 소재를 지우지 않고 관계의 자리를 남긴다",
+     "file": "docs/work-integration/20260928/officer-production/G17/recovered-interpretation-v3.0/G17_MENGHUO_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ]
+  },
+  {
+   "a": "G17",
+   "b": "G94",
+   "aName": "맹획",
+   "bName": "옹개",
+   "kind": "LORD",
+   "value": 58,
+   "ref": "옹개",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G17",
+   "b": "G95",
+   "aName": "맹획",
+   "bName": "고정",
+   "kind": "LORD",
+   "value": 58,
+   "ref": "고정",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G18",
+   "b": "G19",
+   "aName": "관우",
+   "bName": "장비",
+   "kind": "SWORN",
+   "value": 95,
+   "ref": "도원결의",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "같은 출발의 친밀함과 각자의 몫",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "비교는 가능하되 ‘똑같은 의형제’로 복제하지 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ]
+  },
+  {
+   "a": "G18",
+   "b": "G24",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "말보다 행동을 함께 본 사람",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "말보다 행동을 함께 본 사람",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "관우",
+   "bName": "장료"
+  },
+  {
+   "a": "G18",
+   "b": "G28",
+   "aName": "관우",
+   "bName": "육손",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "형주 함락",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ],
+   "grudge": true
+  },
+  {
+   "a": "G18",
+   "b": "G34",
+   "kind": "RIVAL",
+   "value": 30,
+   "ref": "번성에서 맞선 상대",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "끝내지 못한 목표와 그것을 막은 실제 상대",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "관우",
+   "bName": "조인"
+  },
+  {
+   "a": "G18",
+   "b": "G40",
+   "aName": "관우",
+   "bName": "여몽",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "형주 함락",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "제거해야 할 군사적 위험과 지워지지 않는 책임",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "grudge": true,
+   "valueV02": 10
+  },
+  {
+   "a": "G18",
+   "b": "G45",
+   "kind": "RIVAL",
+   "value": 25,
+   "ref": "번성 결전",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "같은 승리 안에서도 결과가 달랐던 사람들",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    },
+    {
+     "type": "INTERPRETATION",
+     "headline": "상대의 힘을 인정해도, 상대의 임명으로 끝내지는 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "관우",
+   "bName": "방덕"
+  },
+  {
+   "a": "G18",
+   "b": "G52",
+   "kind": "RIVAL",
+   "value": 30,
+   "ref": "번성에서 맞선 상대",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "끝내지 못한 목표와 그것을 막은 실제 상대",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "관우",
+   "bName": "서황"
+  },
+  {
+   "a": "G18",
+   "b": "G53",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "번성 항복",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "같은 승리 안에서도 결과가 달랐던 사람들",
+     "file": "docs/work-integration/20260928/officer-production/G18/recovered-interpretation-v3.0/G18_GUANYU_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "관우",
+   "bName": "우금"
+  },
+  {
+   "a": "G19",
+   "b": "G37",
+   "kind": "RIVAL",
+   "value": 30,
+   "ref": "탕거에서 맞선 상대",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "자기 힘을 보여 줄 상대이기 전에 함께 움직이지 못하게 할 상대",
+     "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ],
+   "derived": "원전 근거 + Claude 판단",
+   "aName": "장비",
+   "bName": "장합"
+  },
+  {
+   "a": "G19",
+   "b": "G88",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "이긴 다음에도 상대를 다시 볼 수 있다",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "이긴 다음에도 상대를 다시 볼 수 있다",
+     "file": "docs/work-integration/20260928/officer-production/G19/recovered-interpretation-v3.0/INT_G19_ZHANGFEI_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "장비",
+   "bName": "엄안"
+  },
+  {
+   "a": "G20",
+   "b": "G27",
+   "aName": "손책",
+   "bName": "주유",
+   "kind": "SWORN",
+   "value": 88,
+   "ref": "손책·주유 단금지교",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "같은 장면을 꼭 같은 방식으로 차지할 필요가 없는 상대",
+     "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ]
+  },
+  {
+   "a": "G20",
+   "b": "G29",
+   "aName": "손책",
+   "bName": "감녕",
+   "kind": "LORD",
+   "value": 60,
+   "ref": "감녕",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G20",
+   "b": "G30",
+   "aName": "손책",
+   "bName": "태사자",
+   "kind": "LORD",
+   "value": 85,
+   "ref": "신정 일기토 뒤 귀순",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "어제의 적대가 오늘의 모든 자리를 결정하지 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ]
+  },
+  {
+   "a": "G20",
+   "b": "G40",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "받아들여진 경로",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "받아들여진 경로",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "손책",
+   "bName": "여몽"
+  },
+  {
+   "a": "G20",
+   "b": "G66",
+   "aName": "손책",
+   "bName": "손견",
+   "kind": "BLOOD",
+   "value": 90,
+   "ref": "부자",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "아버지의 이름과 지금 움직여야 할 사람들",
+     "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ]
+  },
+  {
+   "a": "G20",
+   "b": "G67",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "자신이 시작한 일의 ‘이후’를 말해 주는 상대",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "자신이 시작한 일의 ‘이후’를 말해 주는 상대",
+     "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "손책",
+   "bName": "장소"
+  },
+  {
+   "a": "G20",
+   "b": "G68",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "자기 말 이외의 언어가 일을 풀게 하는 상대",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "자기 말 이외의 언어가 일을 풀게 하는 상대",
+     "file": "docs/work-integration/20260928/officer-production/G20/recovered-interpretation-v3.0/G20_SUNCE_WHOLE_INTERPRETATION_v3.0_OWNER_REVIEW_PENDING_20261001.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "손책",
+   "bName": "장굉"
+  },
+  {
+   "a": "G22",
+   "b": "G31",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G31-CHENGYU_XUNYOU_GUOJIA",
+     "tags": [
+      "ADVERSARIES",
+      "COUNTER_PLANNERS",
+      "ENEMY_EVALUATORS"
+     ],
+     "boundary": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+     "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "곽가",
+   "bName": "진궁"
+  },
+  {
+   "a": "G22",
+   "b": "G35",
+   "aName": "곽가",
+   "bName": "가후",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "책사 동료",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G24",
+   "b": "G54",
+   "aName": "장료",
+   "bName": "악진",
+   "kind": "RIVAL",
+   "value": 36,
+   "ref": "불화",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G24",
+   "b": "G55",
+   "aName": "장료",
+   "bName": "이전",
+   "kind": "RIVAL",
+   "value": 32,
+   "ref": "불화(합비에서 화해)",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G25",
+   "b": "G56",
+   "aName": "허저",
+   "bName": "전위",
+   "kind": "FRIEND",
+   "value": 70,
+   "ref": "호위 동료",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G27",
+   "b": "G40",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "공동 임무 속 판단이 통하는 상관",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "공동 임무 속 판단이 통하는 상관",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "주유",
+   "bName": "여몽"
+  },
+  {
+   "a": "G27",
+   "b": "G41",
+   "aName": "주유",
+   "bName": "노숙",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "노숙 천거",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G27",
+   "b": "G50",
+   "aName": "주유",
+   "bName": "황개",
+   "kind": "LORD",
+   "value": 80,
+   "ref": "고육계",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G28",
+   "b": "G40",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "낮은 명성이 오히려 열어 주는 공간",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "낮은 명성이 오히려 열어 주는 공간",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "육손",
+   "bName": "여몽"
+  },
+  {
+   "a": "G29",
+   "b": "G72",
+   "aName": "감녕",
+   "bName": "능통",
+   "kind": "RIVAL",
+   "value": 20,
+   "ref": "부친의 원수(뒤에 화해)",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ],
+   "grudge": true,
+   "valueV02": 15
+  },
+  {
+   "a": "G31",
+   "b": "G32",
+   "aName": "진궁",
+   "bName": "고순",
+   "kind": "FRIEND",
+   "value": 70,
+   "ref": "여포의 두 기둥",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G31-GAOSHUN",
+     "tags": [
+      "SAME_CAMP",
+      "CO_DEFENSE_CANDIDATES",
+      "REPORTED_DISCORD"
+     ],
+     "boundary": "‘素不和’는 呂布 아내 발언을 전하는 《英雄記》 간접증언. 상시 적대관계로 확대 금지.",
+     "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+    }
+   ]
+  },
+  {
+   "a": "G31",
+   "b": "G36",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G31-CHENGYU_XUNYOU_GUOJIA",
+     "tags": [
+      "ADVERSARIES",
+      "COUNTER_PLANNERS",
+      "ENEMY_EVALUATORS"
+     ],
+     "boundary": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+     "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "진궁",
+   "bName": "순유"
+  },
+  {
+   "a": "G31",
+   "b": "G57",
+   "kind": "RIVAL",
+   "value": 28,
+   "ref": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+   "sources": [
+    {
+     "type": "DB_HISTORICAL",
+     "id": "REL-G31-CHENGYU_XUNYOU_GUOJIA",
+     "tags": [
+      "ADVERSARIES",
+      "COUNTER_PLANNERS",
+      "ENEMY_EVALUATORS"
+     ],
+     "boundary": "진궁의 작전을 막거나 평가한 적대 진영 관점.",
+     "file": "docs/work-integration/20260928/officer-production/G31/recovered-package-v0.7/G31_CHEN_GONG_HISTORICAL_DB_v0.7.json"
+    }
+   ],
+   "derived": "원전 태그 추정",
+   "aName": "진궁",
+   "bName": "정욱"
+  },
+  {
+   "a": "G33",
+   "b": "G51",
+   "aName": "하후돈",
+   "bName": "하후연",
+   "kind": "BLOOD",
+   "value": 82,
+   "ref": "종형제",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G34",
+   "b": "G45",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "친밀도보다 명령과 복귀 방향이 선명한 관계",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "친밀도보다 명령과 복귀 방향이 선명한 관계",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "조인",
+   "bName": "방덕"
+  },
+  {
+   "a": "G35",
+   "b": "G46",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "“말을 듣는가”가 아니라 “무엇을 보존하는 말인가”",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "“말을 듣는가”가 아니라 “무엇을 보존하는 말인가”",
+     "file": "docs/work-integration/20260928/officer-production/G46/recovered-interpretation-v3.0/G46_LI_JUE_WHOLE_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "가후",
+   "bName": "이각"
+  },
+  {
+   "a": "G40",
+   "b": "G41",
+   "aName": "여몽",
+   "bName": "노숙",
+   "kind": "MENTOR",
+   "value": 80,
+   "ref": "괄목상대",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "서로를 새로 읽되 같은 해법을 따르지는 않음",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G40",
+   "b": "G67",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "책임을 이어갈 사람이라는 추천",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "책임을 이어갈 사람이라는 추천",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "여몽",
+   "bName": "장소"
+  },
+  {
+   "a": "G40",
+   "b": "G72",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "믿고 비울 수 있는 후방, 중재가 필요한 동료",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "믿고 비울 수 있는 후방, 중재가 필요한 동료",
+     "file": "docs/work-integration/20260928/officer-production/G40/recovered-interpretation-v3.0/G40_WHOLE_CHARACTERIZATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "여몽",
+   "bName": "능통"
+  },
+  {
+   "a": "G43",
+   "b": "G86",
+   "aName": "법정",
+   "bName": "장송",
+   "kind": "FRIEND",
+   "value": 85,
+   "ref": "함께 유비를 맞이함",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "함께 판단을 키웠고, 끝까지 함께 남지는 못한 사람",
+     "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ]
+  },
+  {
+   "a": "G43",
+   "b": "G87",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "다른 사람이 끝낸 일을 자기 계책 안으로 흡수하지 않는다",
+     "file": "docs/work-integration/20260928/officer-production/G43/recovered-interpretation-v3.0/G43_FAZHENG_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "법정",
+   "bName": "황권"
+  },
+  {
+   "a": "G44",
+   "b": "G82",
+   "aName": "한수",
+   "bName": "염행",
+   "kind": "BLOOD",
+   "value": 78,
+   "ref": "사위",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G45",
+   "b": "G48",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "문학에서 성과의 의미를 바꾸는 두 사람",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "문학에서 성과의 의미를 바꾸는 두 사람",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "방덕",
+   "bName": "염포"
+  },
+  {
+   "a": "G45",
+   "b": "G53",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "방덕의 가치를 위해 일생을 낮추지 않을 비교자",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "방덕의 가치를 위해 일생을 낮추지 않을 비교자",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "방덕",
+   "bName": "우금"
+  },
+  {
+   "a": "G45",
+   "b": "G92",
+   "kind": "FRIEND",
+   "value": 50,
+   "ref": "문학에서 성과의 의미를 바꾸는 두 사람",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "문학에서 성과의 의미를 바꾸는 두 사람",
+     "file": "docs/work-integration/20260928/officer-production/G45/recovered-interpretation-v3.0/G45_PANG_DE_WHOLE_INTERPRETATION_v3.0.md"
+    }
+   ],
+   "derived": "해석 소절 추정",
+   "aName": "방덕",
+   "bName": "양송"
+  },
+  {
+   "a": "G46",
+   "b": "G83",
+   "aName": "이각",
+   "bName": "곽사",
+   "kind": "FRIEND",
+   "value": 55,
+   "ref": "함께 장안 장악(뒤에 다툼)",
+   "sources": [
+    {
+     "type": "INTERPRETATION",
+     "headline": "가장 가까운 사람도 다시 배치할 수 있다",
+     "file": "docs/work-integration/20260928/officer-production/G46/recovered-interpretation-v3.0/G46_LI_JUE_WHOLE_CHARACTERIZATION_v3.0_OWNER_REVIEW_PENDING.md"
+    }
+   ]
+  },
+  {
+   "a": "G50",
+   "b": "G66",
+   "aName": "황개",
+   "bName": "손견",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "구신",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G50",
+   "b": "G69",
+   "aName": "황개",
+   "bName": "정보",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "손견 구신",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G66",
+   "b": "G69",
+   "aName": "손견",
+   "bName": "정보",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "구신",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G66",
+   "b": "G70",
+   "aName": "손견",
+   "bName": "한당",
+   "kind": "LORD",
+   "value": 82,
+   "ref": "구신",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G69",
+   "b": "G70",
+   "aName": "정보",
+   "bName": "한당",
+   "kind": "FRIEND",
+   "value": 72,
+   "ref": "손견 구신",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  },
+  {
+   "a": "G73",
+   "b": "G74",
+   "aName": "안량",
+   "bName": "문추",
+   "kind": "FRIEND",
+   "value": 75,
+   "ref": "하북 쌍벽",
+   "sources": [
+    {
+     "type": "CLAUDE_SUPPLEMENT",
+     "note": "Claude 보충(원전 관계 기록에서 아직 못 찾음)"
+    }
+   ]
+  }
+ ],
+ "rivalRule": {
+  "text": "숙적(값 ≤ rivalAt)은 아래 이벤트로만 된다. 그 밖의 감소(defeatedBy 등)는 rivalAt+1 아래로 내려가지 않는다. 이벤트가 터지면 그 쌍 값 = setValue, 한 쌍에 한 번",
+  "floor": 16,
+  "setValue": 10
+ },
+ "rivalEvents": {
+  "pastLife": {
+   "name": "전생의 원한",
+   "chance": 0.5,
+   "text": "역사에서 깊은 원수였던 두 장수(쌍에 grudge 표시)가 이 판에서 처음 맞붙을 때(한쪽이 다른 쪽 부대를 공격) 희미한 기억이 떠오르며 숙적",
+   "line": "{a}은(는) {b}을(를) 보자 이유 모를 분노가 치민다 — 전생의 원한"
+  },
+  "crisisDefeat": {
+   "name": "위기 인물을 꺾을 때",
+   "chance": 0.5,
+   "text": "위기 인물이 해결될 때 위기 인물과 그를 꺾은 장수",
+   "line": "{b}은(는) {a}에게 꺾인 일을 잊지 않는다"
+  },
+  "captiveRelease": {
+   "name": "포로로 잡혔다 풀려날 때",
+   "chance": 0.3333333333333333,
+   "text": "사로잡혔던 장수가 석방·탈출로 풀려날 때 그를 사로잡은 장수(사로잡은 부대장)",
+   "line": "{b}은(는) {a}에게 사로잡혔던 치욕을 가슴에 새긴다"
+  },
+  "atrocity": {
+   "name": "극단적 사건",
+   "chance": 0.5,
+   "text": "서주 대학살 수준의 극단적인 상황에서만(사용자). 지금 게임에서 가장 가까운 선택 = 함락한 성을 수탈 — 그 성 원래 주인 세력의 군주와 수탈한 세력의 군주(Claude 시험 해석)",
+   "line": "{b}은(는) {a}의 수탈을 결코 용서하지 않는다"
+  }
+ },
+ "displayNote": "숙적이 아닌 RIVAL 쌍은 단계 이름 대신 kindNames.RIVAL(불화)로 표시"
+}

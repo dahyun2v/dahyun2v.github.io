@@ -1,0 +1,237 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+11200",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +11200"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+5",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+20",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 남피 생산으로",
+    "target": "south"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "south",
+    "name": "남피",
+    "u": 0.6223,
+    "v": 0.529,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "pingyuan",
+    "name": "평원",
+    "u": 0.5897,
+    "v": 0.6448,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ },
+ "guide": {
+  "screen": "guide",
+  "title": "이 판을 곁에서 이끌 안내자",
+  "state": "reselect",
+  "pick": "G17",
+  "guides": [
+   {
+    "id": "G08",
+    "name": "옥토",
+    "persona": "달에서 약을 찧던 옥토끼 갸루",
+    "art": "assets/guide/G08/full-cut.webp",
+    "intro": [
+     "반가워 나는 옥토야!",
+     "달에서 약만 찧기 심심했는데 나랑 천하를 뒤집어 보자~"
+    ],
+    "voice": false
+   },
+   {
+    "id": "G17",
+    "name": "정위",
+    "persona": "바다를 메우는 새 · 천연 공주",
+    "art": "assets/guide/G17/full-cut.webp",
+    "intro": [
+     "염제의 딸 정위라 하오.",
+     "바다는 아직 넓소.",
+     "그대와 함께 끝없이 돌을 나르겠소."
+    ],
+    "voice": false
+   },
+   {
+    "id": "G51",
+    "name": "창랑",
+    "persona": "신참을 챙기는 늑대",
+    "art": "assets/guide/G51/full-cut.webp",
+    "intro": [
+     "내 이름은 창랑이다.",
+     "신참 같은 풋내기는 내 등 뒤에 바짝 붙어야 살아남을 거다!"
+    ],
+    "voice": false
+   }
+  ],
+  "voice": {
+   "ok": false,
+   "reason": "목소리 준비 중"
+  },
+  "back": "돌아가기",
+  "go": "이 안내자와 함께"
+ }
+}

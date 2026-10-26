@@ -1,0 +1,286 @@
+{
+  "schemaVersion": "GEO-DB v0.6A",
+  "recordType": "CityWarningResolutionProposal",
+  "mapScope": {
+    "mainMap": "64x40",
+    "first3Map": "18x14_SEPARATE_TEST_MAP",
+    "cityCandidateSource": "CITY-P01-P24"
+  },
+  "records": [
+    {
+      "cityId": "CITY-P02",
+      "currentDisplayName": "무위",
+      "currentHistoricalName": "武威",
+      "warningTypes": [
+        "ADMINISTRATIVE_NAME_AS_CITY",
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": "무위는 군명·현명 용례가 함께 존재하며 후한 말 권역 중심 치소와 동일 명칭인지 구분이 필요하다.",
+      "roleOverlapWithCityIds": [
+        "CITY-P01"
+      ],
+      "recommendedEraDisplayRule": "무위를 후보 표시명으로 유지하되 사료층에서 무위군과 치소 고장의 관계를 병기한다.",
+      "recommendedRoleBoundary": "돈황의 서방로 종점 기능과 분리하여 서량 동부의 오아시스 회랑 중계로 한정한다.",
+      "preservedClimateTags": [
+        "서량 사막",
+        "척박",
+        "오아시스"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [
+        "후한 말 무위 표시명이 도시·현·군 중 어느 층을 대표하는지 추가 검증 필요"
+      ],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P03",
+      "currentDisplayName": "천수",
+      "currentHistoricalName": "天水",
+      "warningTypes": [
+        "ERA_NAME_VARIATION",
+        "ADMINISTRATIVE_NAME_AS_CITY"
+      ],
+      "sourceEraIssue": "후한기 한양군과 조위기 천수군의 명칭 차이가 있어 전 기간에 천수를 고정 적용하면 시대 혼용 가능성이 있다.",
+      "roleOverlapWithCityIds": [],
+      "recommendedEraDisplayRule": "시나리오 기준 시대에 따라 한양군·천수군 표기를 구분하고 도시 후보 ID는 유지한다.",
+      "recommendedRoleBoundary": "서량 오아시스 거점이나 관중 중심지가 아닌 위수 상류의 산악분지 연결점으로 유지한다.",
+      "preservedClimateTags": [
+        "위수",
+        "산악분지",
+        "건조 황토"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [
+        "시대별 군명 전환 시점",
+        "후보가 대표하는 치소 범위"
+      ],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P08",
+      "currentDisplayName": "건녕",
+      "currentHistoricalName": "建寧",
+      "warningTypes": [
+        "ERA_NAME_VARIATION",
+        "ADMINISTRATIVE_NAME_AS_CITY"
+      ],
+      "sourceEraIssue": "건녕군 명칭은 촉한기의 개칭과 연결되며 그 이전 익주군 명칭과 구분해야 한다.",
+      "roleOverlapWithCityIds": [],
+      "recommendedEraDisplayRule": "시대에 따라 익주군·건녕군을 구분하고, 치소권 산지명은 사료 확인 전 확정하지 않는다.",
+      "recommendedRoleBoundary": "강주의 익주 동부 수계 관문과 분리하여 남중 동부의 고원분지·계곡 연결 중심으로 유지한다.",
+      "preservedClimateTags": [
+        "안개 고원",
+        "대나무 숲",
+        "건조 계곡",
+        "고원분지"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [
+        "건녕군 개칭 이전 표시명",
+        "미현 치소권과 후보 범위의 정확한 대응"
+      ],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P12",
+      "currentDisplayName": "업",
+      "currentHistoricalName": "鄴",
+      "warningTypes": [
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": null,
+      "roleOverlapWithCityIds": [
+        "CITY-P13"
+      ],
+      "recommendedEraDisplayRule": "업 명칭을 유지한다.",
+      "recommendedRoleBoundary": "남피의 하북 동부 저지대 중계와 분리하여 하북 남부의 광역 정치·도로 중심으로 한정한다.",
+      "preservedClimateTags": [
+        "북부 한랭 경계",
+        "비옥 평야",
+        "겨울 추위"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [
+        "북부 한랭층과 중원 풍요층의 권역 경계는 채택 전 검증 필요"
+      ],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P15",
+      "currentDisplayName": "허창",
+      "currentHistoricalName": "許昌",
+      "warningTypes": [
+        "ERA_NAME_VARIATION",
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": "후한기 허현·허도와 조위기 허창의 명칭 차이가 있어 전 기간 고정 표기는 부적합할 수 있다.",
+      "roleOverlapWithCityIds": [
+        "CITY-P14"
+      ],
+      "recommendedEraDisplayRule": "후한기에는 허현 또는 허도, 조위 개칭 이후에는 허창을 표시하는 시대별 규칙을 검토한다.",
+      "recommendedRoleBoundary": "낙양의 관문·수도 분지 기능과 분리하여 중원 남부의 비옥 평야·농업 병참·행정 중심으로 한정한다.",
+      "preservedClimateTags": [
+        "증폭된 중원 풍요",
+        "넓은 경작 평야",
+        "하천 기반 성장"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [
+        "허도 표현을 정식 지명과 정치적 통칭 중 어느 층으로 저장할지 검증 필요"
+      ],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P18",
+      "currentDisplayName": "양양",
+      "currentHistoricalName": "襄陽",
+      "warningTypes": [
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": null,
+      "roleOverlapWithCityIds": [
+        "CITY-P19"
+      ],
+      "recommendedEraDisplayRule": "양양 명칭을 유지한다.",
+      "recommendedRoleBoundary": "강릉의 장강 중류 동서축과 분리하여 한수 중류의 형주 북부 관문과 남북 진입로 중심으로 한정한다.",
+      "preservedClimateTags": [
+        "습윤 분지",
+        "강안 안개",
+        "산지·평야 전이"
+      ],
+      "preservedGateObjects": [
+        "산악 통로"
+      ],
+      "startBinding": false,
+      "evidenceGap": [],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P19",
+      "currentDisplayName": "강릉",
+      "currentHistoricalName": "江陵",
+      "warningTypes": [
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": null,
+      "roleOverlapWithCityIds": [
+        "CITY-P18"
+      ],
+      "recommendedEraDisplayRule": "강릉 명칭을 유지한다.",
+      "recommendedRoleBoundary": "양양의 한수 북부 관문과 분리하여 장강 중류의 동서 수운·강한평원·형주 남부 중심으로 한정한다.",
+      "preservedClimateTags": [
+        "습윤 하천평야",
+        "계절 범람",
+        "습지 안개"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P20",
+      "currentDisplayName": "수춘",
+      "currentHistoricalName": "壽春",
+      "warningTypes": [
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": null,
+      "roleOverlapWithCityIds": [
+        "CITY-P21"
+      ],
+      "recommendedEraDisplayRule": "수춘 명칭을 유지한다.",
+      "recommendedRoleBoundary": "합비의 협로 방어 기능과 분리하여 회남의 광역 행정·회수 도하·수계 중심으로 한정한다.",
+      "preservedClimateTags": [
+        "비옥한 회수 전이지대",
+        "계절 범람",
+        "여름 습윤"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P21",
+      "currentDisplayName": "합비",
+      "currentHistoricalName": "合肥",
+      "warningTypes": [
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": null,
+      "roleOverlapWithCityIds": [
+        "CITY-P20"
+      ],
+      "recommendedEraDisplayRule": "합비 명칭을 유지한다.",
+      "recommendedRoleBoundary": "수춘의 회남 광역 중심 기능과 분리하여 강회 분수계의 좁은 진입로·방어 회랑으로 한정한다.",
+      "preservedClimateTags": [
+        "습윤 전이지대",
+        "호소·습지 가장자리",
+        "계절성 진창"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P22",
+      "currentDisplayName": "건업",
+      "currentHistoricalName": "建業",
+      "warningTypes": [
+        "ERA_NAME_VARIATION",
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": "손권의 개칭 이전에는 말릉 명칭이 적용되므로 후한 말 전 기간에 건업을 소급할 수 없다.",
+      "roleOverlapWithCityIds": [
+        "CITY-P23"
+      ],
+      "recommendedEraDisplayRule": "개칭 이전에는 말릉, 개칭 이후에는 건업을 표시하고 동일 후보 ID를 유지한다.",
+      "recommendedRoleBoundary": "회계·산음의 동남부 구릉·수로권과 분리하여 장강 하류 정치 중심과 대수운항으로 한정한다.",
+      "preservedClimateTags": [
+        "습윤 강안",
+        "강안 안개",
+        "저구릉 수변"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [
+        "캠페인 시작 시점별 개칭 적용 방식"
+      ],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    },
+    {
+      "cityId": "CITY-P23",
+      "currentDisplayName": "회계·산음",
+      "currentHistoricalName": "會稽·山陰",
+      "warningTypes": [
+        "ADMINISTRATIVE_NAME_AS_CITY",
+        "ROLE_OVERLAP"
+      ],
+      "sourceEraIssue": "회계는 군 단위 명칭이고 산음은 치소명으로, 현재 표시명은 서로 다른 행정단계를 결합한다.",
+      "roleOverlapWithCityIds": [
+        "CITY-P22"
+      ],
+      "recommendedEraDisplayRule": "후보 ID는 유지하되 도시 표시명과 권역 설명에서 산음과 회계군의 행정단계를 분리한다.",
+      "recommendedRoleBoundary": "건업의 장강 하류 정치·대수운 기능과 분리하여 강동 동남부의 운하 저지대·구릉 수로 연결 중심으로 한정한다.",
+      "preservedClimateTags": [
+        "습윤 해안평야",
+        "조밀한 수로",
+        "수림 구릉"
+      ],
+      "preservedGateObjects": [],
+      "startBinding": false,
+      "evidenceGap": [
+        "회계군 치소 변동과 산음 표시 범위의 시대별 검증 필요"
+      ],
+      "adoptionStatus": "PROPOSAL_PENDING_SOURCE_VERIFICATION"
+    }
+  ]
+}
+

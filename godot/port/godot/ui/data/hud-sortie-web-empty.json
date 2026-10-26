@@ -1,0 +1,534 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+4",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +4"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+2",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+1",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 업 생산으로",
+    "target": "west"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "west",
+    "name": "업",
+    "u": 0.2635,
+    "v": 0.7607,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "julu",
+    "name": "거록",
+    "u": 0.3124,
+    "v": 0.6641,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ },
+ "sortie": {
+  "screen": "sortie",
+  "title": "출진 편성",
+  "place": "업 병영",
+  "cityId": "west",
+  "viewId": "G07",
+  "viewed": {
+   "id": "G07",
+   "name": "조조",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "head": {
+    "w": 522,
+    "h": 888,
+    "cx": 318,
+    "cy": 103,
+    "side": 114
+   }
+  },
+  "rows": [
+   {
+    "id": "G07",
+    "name": "조조",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+     "w": 522,
+     "h": 888,
+     "cx": 318,
+     "cy": 103,
+     "side": 114
+    },
+    "troop": "cavalry",
+    "troopName": "기병",
+    "selected": false,
+    "order": null,
+    "countText": null,
+    "count": null,
+    "range": null,
+    "troopLabel": "기본 · 기병",
+    "rowReason": null,
+    "status": "",
+    "disabled": false,
+    "reason": null,
+    "viewing": true,
+    "expanded": false
+   },
+   {
+    "id": "G24",
+    "name": "장료",
+    "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+    "head": {
+     "w": 808,
+     "h": 1153,
+     "cx": 303,
+     "cy": 116,
+     "side": 144
+    },
+    "troop": "cavalry",
+    "troopName": "기병",
+    "selected": false,
+    "order": null,
+    "countText": null,
+    "count": null,
+    "range": null,
+    "troopLabel": "기본 · 기병",
+    "rowReason": null,
+    "status": "",
+    "disabled": false,
+    "reason": null,
+    "viewing": false,
+    "expanded": false
+   },
+   {
+    "id": "G25",
+    "name": "허저",
+    "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+    "head": {
+     "w": 546,
+     "h": 865,
+     "cx": 277,
+     "cy": 67,
+     "side": 108
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "selected": false,
+    "order": null,
+    "countText": null,
+    "count": null,
+    "range": null,
+    "troopLabel": "기본 · 창병",
+    "rowReason": null,
+    "status": "",
+    "disabled": false,
+    "reason": null,
+    "viewing": false,
+    "expanded": false
+   },
+   {
+    "id": "G33",
+    "name": "하후돈",
+    "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+    "head": {
+     "w": 531,
+     "h": 950,
+     "cx": 311,
+     "cy": 114,
+     "side": 141
+    },
+    "troop": "cavalry",
+    "troopName": "기병",
+    "selected": false,
+    "order": null,
+    "countText": null,
+    "count": null,
+    "range": null,
+    "troopLabel": "기본 · 기병",
+    "rowReason": null,
+    "status": "",
+    "disabled": false,
+    "reason": null,
+    "viewing": false,
+    "expanded": false
+   },
+   {
+    "id": "G34",
+    "name": "조인",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+    "head": {
+     "w": 591,
+     "h": 857,
+     "cx": 299,
+     "cy": 85,
+     "side": 104
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "selected": false,
+    "order": null,
+    "countText": null,
+    "count": null,
+    "range": null,
+    "troopLabel": "기본 · 창병",
+    "rowReason": null,
+    "status": "",
+    "disabled": false,
+    "reason": null,
+    "viewing": false,
+    "expanded": false
+   },
+   {
+    "id": "G04",
+    "name": "순욱",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+    "head": {
+     "w": 471,
+     "h": 945,
+     "cx": 291,
+     "cy": 91,
+     "side": 139
+    },
+    "troop": "spear",
+    "troopName": "창병",
+    "selected": false,
+    "order": null,
+    "countText": null,
+    "count": null,
+    "range": null,
+    "troopLabel": "기본 · 창병",
+    "rowReason": null,
+    "status": "태수",
+    "disabled": false,
+    "reason": null,
+    "viewing": false,
+    "expanded": false
+   }
+  ],
+  "totals": null,
+  "reserve": {
+   "before": "9,000",
+   "after": null
+  },
+  "sortie": {
+   "ok": false,
+   "reason": "함께 나갈 장수를 고르세요"
+  },
+  "tabs": [
+   {
+    "key": "all",
+    "label": "전체",
+    "selected": true
+   },
+   {
+    "key": "cavalry"
+   },
+   {
+    "key": "spear"
+   },
+   {
+    "key": "bow"
+   },
+   {
+    "key": "dao"
+   }
+  ],
+  "web": {
+   "head": "업 병영 · 출진 편성",
+   "close": "병영으로 돌아가기 ×",
+   "title": "출진 편성",
+   "sequence": "함께 나갈 장수를 고르세요",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "viewId": "G07",
+   "formations": [],
+   "roster": [
+    {
+     "id": "G07",
+     "name": "조조",
+     "face": "assets/officer-art/cutout/G07-decided-hA.webp",
+     "head": {
+      "w": 522,
+      "h": 888,
+      "cx": 318,
+      "cy": 103,
+      "side": 114
+     },
+     "troopName": "기병",
+     "on": false,
+     "disabled": false,
+     "line": "출진 가능",
+     "refusal": false,
+     "trait": {
+      "ok": true,
+      "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     }
+    },
+    {
+     "id": "G24",
+     "name": "장료",
+     "face": "assets/officer-art/cutout/G24-20261012-hA.webp",
+     "head": {
+      "w": 808,
+      "h": 1153,
+      "cx": 303,
+      "cy": 116,
+      "side": 144
+     },
+     "troopName": "기병",
+     "on": false,
+     "disabled": false,
+     "line": "출진 가능",
+     "refusal": false,
+     "trait": {
+      "ok": true,
+      "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     }
+    },
+    {
+     "id": "G25",
+     "name": "허저",
+     "face": "assets/officer-art/cutout/G25-decided-hA.webp",
+     "head": {
+      "w": 546,
+      "h": 865,
+      "cx": 277,
+      "cy": 67,
+      "side": 108
+     },
+     "troopName": "창병",
+     "on": false,
+     "disabled": false,
+     "line": "출진 가능",
+     "refusal": false,
+     "trait": {
+      "ok": true,
+      "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     }
+    },
+    {
+     "id": "G33",
+     "name": "하후돈",
+     "face": "assets/officer-art/cutout/G33-decided-hA.webp",
+     "head": {
+      "w": 531,
+      "h": 950,
+      "cx": 311,
+      "cy": 114,
+      "side": 141
+     },
+     "troopName": "기병",
+     "on": false,
+     "disabled": false,
+     "line": "출진 가능",
+     "refusal": false,
+     "trait": {
+      "ok": true,
+      "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     }
+    },
+    {
+     "id": "G34",
+     "name": "조인",
+     "face": "assets/officer-art/cutout/G34-decided-hA.webp",
+     "head": {
+      "w": 591,
+      "h": 857,
+      "cx": 299,
+      "cy": 85,
+      "side": 104
+     },
+     "troopName": "창병",
+     "on": false,
+     "disabled": false,
+     "line": "출진 가능",
+     "refusal": false,
+     "trait": {
+      "ok": true,
+      "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     }
+    },
+    {
+     "id": "G04",
+     "name": "순욱",
+     "face": "assets/officer-art/cutout/G04-decided-hA.webp",
+     "head": {
+      "w": 471,
+      "h": 945,
+      "cx": 291,
+      "cy": 91,
+      "side": 139
+     },
+     "troopName": "창병",
+     "on": false,
+     "disabled": false,
+     "line": "태수 · 출진 가능",
+     "refusal": false,
+     "trait": {
+      "ok": true,
+      "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     }
+    }
+   ],
+   "rosterCount": "6명",
+   "totals": {
+    "units": "0",
+    "total": "0",
+    "remaining": "9,000",
+    "food": "0"
+   },
+   "go": false,
+   "note": "고른 순서대로 즉시 출진 · 이번 차례에 이동 가능",
+   "bg": "assets/ui-v3/city-stage-ink/facility-barracks.webp"
+  },
+  "backdrop": "res://ui/art/sortie-bg.webp"
+ }
+}

@@ -1,0 +1,612 @@
+{
+  "schema": "first3-visual-grammar-v1",
+  "version": "1.0.0",
+  "updated": "2026-09-20",
+  "status": "trial_shape_input_not_asset_approval",
+  "scope": "FIRST3 F01-F03 and the actual nine-officer roster only",
+  "sourceRefs": [
+    "../세력-생물모티프-디자인문법-v1.md#2-기존-결정과의-충돌-판정",
+    "../세력-정체성-원전-v1.md#생물신수에서-자산으로--visual-grammar-01",
+    "../세력-정체성-연결계약-v1.md",
+    "first3-initial-state-v1.json",
+    "officers-first-play-v1.json"
+  ],
+  "rules": {
+    "pipeline": [
+      "identity_philosophy",
+      "faction_shape_grammar",
+      "officer_or_facility_variation",
+      "asset"
+    ],
+    "axisVocabulary": [
+      "silhouette",
+      "structure",
+      "surface",
+      "movement",
+      "material",
+      "symbol"
+    ],
+    "selectedAxesPerAsset": {
+      "min": 2,
+      "max": 3
+    },
+    "literalness": {
+      "meaning": "motif readability only; never magic strength, rarity, or stat value",
+      "ordinaryBuilding": 0,
+      "administrativeOrMilitaryBuilding": 1,
+      "coreOrUniqueFacility": 2,
+      "ritualOrSpecialEvent": "2-3"
+    },
+    "commonForbiddenTranslations": [
+      "animal ears, horns, scales, altered pupils, tails, wings, or nonhuman limb ratios on officer bodies",
+      "automatic abilities inferred from animals, including flight, diving, defense buffs, or new troop types",
+      "replacement of an existing personal weapon type or VisualAnchor without owner review",
+      "copying a commander personal emblem onto every ordinary soldier",
+      "treating literalness or shape ratios as combat statistics",
+      "mass regeneration of portraits or replacement of existing assets"
+    ]
+  },
+  "factionGrammars": [
+    {
+      "factionId": "F01",
+      "name": "조조",
+      "reviewStatus": "director_adopted_common_grammar_trial_details",
+      "identityMotifs": [
+        "붉은 용",
+        "밤의 궁정",
+        "통제와 제도",
+        "위압적 집행"
+      ],
+      "shapeMotifs": [
+        "해치의 긴 중앙축",
+        "도철의 정면 대칭",
+        "호랑이의 압축된 힘"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "structure",
+        "material"
+      ],
+      "paletteAnchor": [
+        "진홍",
+        "흑요석",
+        "암금"
+      ],
+      "materialTags": [
+        "검게 산화된 철",
+        "절제된 암금",
+        "짙은 직물"
+      ],
+      "patternTags": [
+        "추상 용선",
+        "정렬된 판",
+        "봉인선"
+      ],
+      "forbiddenTranslations": [
+        "해치나 도철이 붉은 용 정체성을 대체함",
+        "피부 비늘 또는 눈꼬리 선 재사용",
+        "모든 F01 장수를 같은 정면 중갑으로 복제함"
+      ]
+    },
+    {
+      "factionId": "F02",
+      "name": "유비",
+      "reviewStatus": "director_adopted_common_grammar_trial_details",
+      "identityMotifs": [
+        "청록 수해",
+        "포용과 맹약",
+        "함께 돌아올 자리"
+      ],
+      "shapeMotifs": [
+        "기린의 온화한 복합감",
+        "사슴의 분기",
+        "학의 긴 선"
+      ],
+      "selectedAxes": [
+        "structure",
+        "movement",
+        "material"
+      ],
+      "paletteAnchor": [
+        "청록",
+        "숲 녹색",
+        "상아"
+      ],
+      "materialTags": [
+        "목재",
+        "비단",
+        "가죽과 연결된 보호판"
+      ],
+      "patternTags": [
+        "분기선",
+        "이어지는 매듭",
+        "열린 여백"
+      ],
+      "forbiddenTranslations": [
+        "엘프 귀 또는 신수 신체화",
+        "기린 소환이나 치유·부활 능력 자동 생성",
+        "세 인물을 같은 부드러운 숲 인물로 획일화함"
+      ]
+    },
+    {
+      "factionId": "F03",
+      "name": "손권",
+      "reviewStatus": "director_adopted_common_grammar_trial_details",
+      "identityMotifs": [
+        "파랑",
+        "수변 문명",
+        "서로 다른 역할의 협력"
+      ],
+      "shapeMotifs": [
+        "악어의 낮은 중첩판",
+        "물고기의 흐름",
+        "수조류의 연결선"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "movement",
+        "material"
+      ],
+      "paletteAnchor": [
+        "파랑",
+        "짙은 남색",
+        "적동 보조"
+      ],
+      "materialTags": [
+        "옻칠 목재",
+        "적동",
+        "분절된 보호판"
+      ],
+      "patternTags": [
+        "수평 중첩",
+        "유선형",
+        "제한된 비대칭"
+      ],
+      "forbiddenTranslations": [
+        "주색을 청록으로 변경함",
+        "악어 피부·꼬리·잠수 기능을 부여함",
+        "새 수룡 또는 청룡 정체성을 추가함"
+      ]
+    }
+  ],
+  "officerAssets": [
+    {
+      "factionId": "F01",
+      "officerId": "G07",
+      "officerName": "조조",
+      "assetRole": "officer_portrait_and_command_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../세력-그래픽-대조표.md#기존-g-id-시안과의-처리",
+        "../세계관-그래픽-일괄시안.md#조조-v5"
+      ],
+      "reviewStatus": "trial_shape_input_existing_portrait_preserved",
+      "identityAnchorRefs": [
+        "../세력-정체성-원전-v1.md#f01-조조--질서를-독점한-밤의-귀족",
+        "../장수-사건심리-플레이연결-v1.md#g07-조조--재구성--실패를-감정이-아니라-구조의-결함으로-처리한다",
+        "../../assets/concepts/batch-20260919/caocao-v5.png"
+      ],
+      "identityMotifs": [
+        "붉은 용",
+        "밤의 궁정",
+        "재구성과 통제"
+      ],
+      "shapeMotifs": [
+        "해치의 긴 중앙축",
+        "검은 새의 절제된 외곽선"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "material",
+        "symbol"
+      ],
+      "literalness": 2,
+      "materialTags": [
+        "절제된 암금",
+        "먹빛 직물"
+      ],
+      "patternTags": [
+        "진홍 식별선",
+        "추상 용선"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G07]",
+      "forbiddenTranslations": [
+        "피부 비늘",
+        "변형 동공",
+        "뿔 신체화",
+        "해치로 붉은 용을 대체"
+      ]
+    },
+    {
+      "factionId": "F01",
+      "officerId": "G04",
+      "officerName": "순욱",
+      "assetRole": "officer_portrait_and_administrator_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../장수-사건심리-플레이연결-v1.md#g04-순욱--떠받침--지켜-낸-질서가-자신의-목적을-배반할-수-있다"
+      ],
+      "reviewStatus": "trial_shape_input_portrait_not_created",
+      "identityAnchorRefs": [
+        "../장수-사건심리-플레이연결-v1.md#g04-순욱--떠받침--지켜-낸-질서가-자신의-목적을-배반할-수-있다",
+        "../첫플레이-그래픽-자산표.md#첫-플레이-장수-연결"
+      ],
+      "identityMotifs": [
+        "지켜 낼 질서",
+        "원칙과 직책의 긴장"
+      ],
+      "shapeMotifs": [
+        "학의 긴 직선",
+        "해치의 정렬된 중앙축"
+      ],
+      "selectedAxes": [
+        "structure",
+        "material",
+        "movement"
+      ],
+      "literalness": 1,
+      "materialTags": [
+        "정제된 문관 직물",
+        "작은 암금 고정구"
+      ],
+      "patternTags": [
+        "정대칭",
+        "절제된 수직선"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G04]",
+      "forbiddenTranslations": [
+        "생물 날개",
+        "제갈량과 같은 큰 여백과 구름 리듬",
+        "주유와 같은 흐르는 비대칭 자세"
+      ]
+    },
+    {
+      "factionId": "F01",
+      "officerId": "G24",
+      "officerName": "장료",
+      "assetRole": "officer_portrait_and_cavalry_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../장수-사건심리-플레이연결-v1.md#g24-장료--깨뜨림--위협을-없애기보다-무너질-기세를-먼저-끊는다"
+      ],
+      "reviewStatus": "trial_shape_input_portrait_not_created",
+      "identityAnchorRefs": [
+        "../장수-사건심리-플레이연결-v1.md#g24-장료--깨뜨림--위협을-없애기보다-무너질-기세를-먼저-끊는다",
+        "../첫플레이-그래픽-자산표.md#첫-플레이-장수-연결"
+      ],
+      "identityMotifs": [
+        "국소 돌파",
+        "통제된 압력",
+        "되돌아가 수습함"
+      ],
+      "shapeMotifs": [
+        "백호의 정면 폭",
+        "짧은 횡절개"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "structure",
+        "material"
+      ],
+      "literalness": 1,
+      "materialTags": [
+        "은회 금속",
+        "정렬된 철판"
+      ],
+      "patternTags": [
+        "정면 대칭",
+        "짧은 압축선"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G24]",
+      "forbiddenTranslations": [
+        "손책과 같은 전방 곡선 비대칭",
+        "백호 귀·털·꼬리",
+        "개인 문장을 일반 기병 전체에 복제"
+      ]
+    },
+    {
+      "factionId": "F02",
+      "officerId": "G05",
+      "officerName": "유비",
+      "assetRole": "officer_portrait_and_militia_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../세력-그래픽-대조표.md#기존-g-id-시안과의-처리",
+        "../세계관-그래픽-일괄시안.md"
+      ],
+      "reviewStatus": "trial_shape_input_existing_portrait_preserved_body_feature_withdrawn",
+      "identityAnchorRefs": [
+        "../세력-정체성-원전-v1.md#f02-유비--낯선-이를-가족으로-받아들이는-숲의-연맹",
+        "../장수-사건심리-플레이연결-v1.md#g05-유비--묶음--잃은-땅보다-다시-찾아오는-사람이-자신의-존재를-증명한다",
+        "../../assets/concepts/batch-20260919/liubei-v2.png"
+      ],
+      "identityMotifs": [
+        "포용",
+        "귀환처",
+        "사람을 묶는 약속"
+      ],
+      "shapeMotifs": [
+        "기린의 온화한 복합감",
+        "사슴의 나뉘었다 이어지는 분기"
+      ],
+      "selectedAxes": [
+        "structure",
+        "material",
+        "symbol"
+      ],
+      "literalness": 2,
+      "materialTags": [
+        "따뜻한 천",
+        "가죽",
+        "작은 보호판"
+      ],
+      "patternTags": [
+        "이어지는 매듭",
+        "청록 분기선"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G05]",
+      "forbiddenTranslations": [
+        "엘프 귀",
+        "기린 뿔이나 사슴 다리",
+        "쌍검 여부를 새 문법만으로 변경"
+      ]
+    },
+    {
+      "factionId": "F02",
+      "officerId": "G03",
+      "officerName": "제갈량",
+      "assetRole": "officer_portrait_and_strategist_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../세력-그래픽-대조표.md#기존-g-id-시안과의-처리",
+        "../세계관-그래픽-일괄시안.md"
+      ],
+      "reviewStatus": "trial_shape_input_existing_portrait_preserved",
+      "identityAnchorRefs": [
+        "../인물-드라마-정본-G03-제갈량-v1.md",
+        "../../assets/concepts/batch-20260919/zhugeliang-v1.png"
+      ],
+      "identityMotifs": [
+        "준비",
+        "책임",
+        "지속 가능한 선의"
+      ],
+      "shapeMotifs": [
+        "학의 긴 수직선",
+        "구름의 여백",
+        "작은 나비 보조"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "movement",
+        "symbol"
+      ],
+      "literalness": 1,
+      "materialTags": [
+        "회청 장포",
+        "가벼운 직물"
+      ],
+      "patternTags": [
+        "넓은 여백",
+        "수정 흔적 같은 가는 선"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G03]",
+      "forbiddenTranslations": [
+        "실제 부유",
+        "학 날개",
+        "순욱의 정대칭 관료 실루엣",
+        "주유의 수면 리듬"
+      ]
+    },
+    {
+      "factionId": "F02",
+      "officerId": "G02",
+      "officerName": "조운",
+      "assetRole": "officer_portrait_and_cavalry_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../세력-그래픽-대조표.md#기존-g-id-시안과의-처리",
+        "../세계관-그래픽-일괄시안.md"
+      ],
+      "reviewStatus": "trial_shape_input_existing_portrait_preserved",
+      "identityAnchorRefs": [
+        "../장수-사건심리-플레이연결-v1.md#g02-조운--수습--승패와-별개로-자신이-맡은-사람을-데리고-돌아온다",
+        "../../assets/concepts/batch-20260919/zhaoyun-v1.png"
+      ],
+      "identityMotifs": [
+        "수습",
+        "호위",
+        "귀환 대열"
+      ],
+      "shapeMotifs": [
+        "백마의 단일 진행축",
+        "사슴의 작은 분기"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "movement",
+        "material"
+      ],
+      "literalness": 1,
+      "materialTags": [
+        "은백 갑옷",
+        "청백 망토"
+      ],
+      "patternTags": [
+        "전후 진행선",
+        "작은 분기 보호판"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G02]",
+      "forbiddenTranslations": [
+        "말 귀·갈기 신체화",
+        "기존 장창 종류 변경",
+        "백색 복식을 F11 소속 표식으로 오인"
+      ]
+    },
+    {
+      "factionId": "F03",
+      "officerId": "G08",
+      "officerName": "손권",
+      "assetRole": "officer_portrait_and_command_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../세력-그래픽-대조표.md#기존-g-id-시안과의-처리",
+        "../세계관-그래픽-일괄시안.md"
+      ],
+      "reviewStatus": "trial_shape_input_existing_portrait_preserved_body_feature_withdrawn",
+      "identityAnchorRefs": [
+        "../세력-정체성-원전-v1.md#f03-손권--서로-다른-물길을-하나의-바다로-잇는-연합",
+        "../장수-사건심리-플레이연결-v1.md#g08-손권--맡김--남이-만든-유산을-지키려면-남의-힘을-믿어야-한다",
+        "../../assets/concepts/batch-20260919/sunquan-v2.png"
+      ],
+      "identityMotifs": [
+        "파랑",
+        "위임",
+        "서로 다른 역할의 안정된 연결"
+      ],
+      "shapeMotifs": [
+        "악어의 낮은 수평 중첩",
+        "거북의 부드러운 안정감"
+      ],
+      "selectedAxes": [
+        "structure",
+        "material",
+        "movement"
+      ],
+      "literalness": 2,
+      "materialTags": [
+        "옻칠 목재",
+        "둥글게 마감한 적동"
+      ],
+      "patternTags": [
+        "수평 중첩판",
+        "완만한 연결선"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G08]",
+      "forbiddenTranslations": [
+        "관자놀이 동물 줄무늬 재사용",
+        "동물 홍채를 종족 표지로 확정",
+        "악어 피부·꼬리·잠수 기능"
+      ]
+    },
+    {
+      "factionId": "F03",
+      "officerId": "G27",
+      "officerName": "주유",
+      "assetRole": "officer_portrait_and_strategist_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../장수-사건심리-플레이연결-v1.md#g27-주유--연결--서로-다른-재능이-같은-순간에-움직이게-한다"
+      ],
+      "reviewStatus": "trial_shape_input_portrait_not_created",
+      "identityAnchorRefs": [
+        "../장수-사건심리-플레이연결-v1.md#g27-주유--연결--서로-다른-재능이-같은-순간에-움직이게-한다",
+        "../첫플레이-그래픽-자산표.md#첫-플레이-장수-연결"
+      ],
+      "identityMotifs": [
+        "연결",
+        "합주 같은 동시 지휘",
+        "준비된 화공"
+      ],
+      "shapeMotifs": [
+        "백로와 학의 흐르는 긴 선",
+        "잉어의 수면 리듬"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "movement",
+        "material"
+      ],
+      "literalness": 1,
+      "materialTags": [
+        "가벼운 청색 직물",
+        "얇은 적동 고정구"
+      ],
+      "patternTags": [
+        "흐르는 비대칭 선",
+        "수면 리듬"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G27]",
+      "forbiddenTranslations": [
+        "순욱의 정대칭 직선",
+        "제갈량의 큰 정적 여백",
+        "실제 날개·비행",
+        "물고기 비늘 피부"
+      ]
+    },
+    {
+      "factionId": "F03",
+      "officerId": "G20",
+      "officerName": "손책",
+      "assetRole": "officer_portrait_and_cavalry_silhouette",
+      "sourceRefs": [
+        "../세력-생물모티프-디자인문법-v1.md#4-first3-9명-적용-입력",
+        "../장수-사건심리-플레이연결-v1.md#g20-손책--열어젖힘--완성된-질서를-기다리기보다-발판을-먼저-만든다"
+      ],
+      "reviewStatus": "trial_shape_input_portrait_not_created",
+      "identityAnchorRefs": [
+        "../장수-사건심리-플레이연결-v1.md#g20-손책--열어젖힘--완성된-질서를-기다리기보다-발판을-먼저-만든다",
+        "../첫플레이-그래픽-자산표.md#첫-플레이-장수-연결"
+      ],
+      "identityMotifs": [
+        "열어젖힘",
+        "선봉",
+        "새 발판을 만드는 속도"
+      ],
+      "shapeMotifs": [
+        "남방 호랑이의 전방 기울기",
+        "표범의 곡선 절개"
+      ],
+      "selectedAxes": [
+        "silhouette",
+        "movement",
+        "surface"
+      ],
+      "literalness": 1,
+      "materialTags": [
+        "적동",
+        "유연한 가죽"
+      ],
+      "patternTags": [
+        "제한된 비대칭",
+        "전방 곡선"
+      ],
+      "existingWeaponAnchorRef": "officers-first-play-v1.json#officers[id=G20]",
+      "forbiddenTranslations": [
+        "장료의 정면 대칭 철갑",
+        "호랑이 귀·털·꼬리",
+        "새 문법만으로 무기 종류를 변경"
+      ]
+    }
+  ],
+  "validationTargets": {
+    "actualRoster": [
+      "G07",
+      "G04",
+      "G24",
+      "G05",
+      "G03",
+      "G02",
+      "G08",
+      "G27",
+      "G20"
+    ],
+    "explicitIdChecks": {
+      "G07": "조조",
+      "G04": "순욱",
+      "G20": "손책",
+      "G27": "주유"
+    },
+    "contrastChecks": [
+      "G24 장료 is symmetric, frontal, and compressed; G20 손책 is forward-leaning, curved, and selectively asymmetric",
+      "G04 순욱 is ordered and symmetric; G03 제갈량 uses still negative space; G27 주유 uses flowing surface rhythm"
+    ]
+  },
+  "implementationState": {
+    "metadata": "created",
+    "newPortraits": "not_created",
+    "existingPortraitReplacement": "not_performed",
+    "gameCodeIntegration": "not_implemented",
+    "visibilityOrSilhouetteTest": "not_run"
+  }
+}

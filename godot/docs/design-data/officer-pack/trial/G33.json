@@ -1,0 +1,121 @@
+{
+  "id": "G33",
+  "name": "하후돈",
+  "faction": "F01",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 77,
+    "무용": 82,
+    "지략": 62,
+    "정무": 76,
+    "감화": 73
+  },
+  "sub": {
+    "전열 유지": 78,
+    "기동": 77,
+    "전환": 73,
+    "수습": 70,
+    "힘": 84,
+    "기술": 82,
+    "막아내기": 80,
+    "되받기": 77,
+    "군재": 64,
+    "응변": 60,
+    "속이기": 43,
+    "통찰": 55,
+    "행정": 76,
+    "병참": 77,
+    "인사": 74,
+    "제도": 65,
+    "민정": 83,
+    "설득": 67,
+    "포섭": 63,
+    "결집": 82,
+    "중재": 56
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "먼저 맞아 준다",
+    "text": "하후돈이 먼저 공격받으면 맞닿은 아군은 그 턴 동안 받는 피해 −15%(먼저 맞고 자리를 넘긴다). 태수일 때 도시 식량 +20%(몸소 흙을 져 둑을 쌓았다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "ADJACENT_ALLIES",
+        "value": 15,
+        "duration": 1,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 20,
+        "duration": 0,
+        "condition": null,
+        "resource": "FOOD"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 자리교환으로 적 Contact를 떠맡고 아군에게 정비할 틈을 주던 의도를 '맞닿은 적 속박 + 아군 전열 회복'으로, 떠난 뒤에도 남는 Brace는 '먼저 맞으면 옆 아군 방어'로. 위험한 자리로 가는 약점은 자기 보호 없음으로 유지. 한호의 공은 넣지 않음.",
+    "formerName": "내가 없어도 선 자리"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "몸으로 붙잡기",
+      "text": "빈틈에 몸을 세운다: 맞닿은 적은 모두 다음 차례 이동 불가(하후돈에게 붙잡힘), 맞닿은 아군은 전열 한 단계 회복. 하후돈 자신은 아무 보호도 받지 않는다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 0,
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "빈자리에 먼저 선다"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

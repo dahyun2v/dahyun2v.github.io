@@ -1,0 +1,834 @@
+{
+  "phases": {
+    "note": "판 국면 = 세력 정책 P1~P4 와 같은 국면(내정 콘텐츠 방 POLICY-12 §1 이 이 정의를 그대로 씀). 세력마다 먼저 오는 조건으로 넘어감, 늦어도 floorTurn 에는 넘어감",
+    "list": [
+      {
+        "id": "P1",
+        "name": "깨어남 · 평정",
+        "common": [
+          "시작"
+        ],
+        "floorTurn": 1,
+        "world": [
+          "중립 적 · 구디헛 위주 — 규칙으로 막지 않고 배치 · 거리 · 보상으로(세력끼리도 싸울 수 있음, 사용자 10-25 정정)"
+        ]
+      },
+      {
+        "id": "P2",
+        "name": "확장",
+        "common": [
+          "성 4",
+          "근거지 2곳 소탕",
+          "다른 세력과 첫 국경"
+        ],
+        "floorTurn": 16,
+        "world": [
+          "황건 퍼짐 최고조 · 이민족 습격 늘어남"
+        ]
+      },
+      {
+        "id": "P3",
+        "name": "패권 다툼",
+        "common": [
+          "큰 성 4",
+          "한 주 과반",
+          "다른 세력 성 첫 함락"
+        ],
+        "floorTurn": 36,
+        "world": [
+          "Crisis 후보 형성",
+          "이민족 대침공 1회"
+        ]
+      },
+      {
+        "id": "P4",
+        "name": "위기",
+        "common": [
+          "큰 성 8",
+          "두 주 과반"
+        ],
+        "floorTurn": 52,
+        "world": [
+          "Crisis 본격 · 황건 대봉기 · 견제 연합"
+        ]
+      }
+    ],
+    "factionMilestones": {
+      "note": "세력 행적 조건 — 공통 조건과 \"또는\"(먼저 오는 쪽). 내용은 내정 콘텐츠 방 POLICY-12 §1 이 정본, 여기는 자리만. P4 는 세력 행적 없음",
+      "F01": {
+        "P2": null,
+        "P3": null
+      },
+      "F02": {
+        "P2": null,
+        "P3": null
+      },
+      "F07": {
+        "P2": null,
+        "P3": null
+      },
+      "F12": {
+        "P2": null,
+        "P3": null
+      },
+      "source": "docs/work-integration/20261024/naejeong-content/POLICY-12.md §1"
+    }
+  },
+  "bands": {
+    "wuhuan": {
+      "name": "오환",
+      "region": "북(유주 장성 밖)",
+      "troop": "cavalry",
+      "climate": "snow",
+      "behavior": "seasonalRaid",
+      "raidEvery": 8,
+      "reward": [
+        "명마",
+        "기병 숙련"
+      ],
+      "tribute": true
+    },
+    "xianbei": {
+      "name": "선비",
+      "region": "북(병주 · 운중 장성 밖)",
+      "troop": "cavalry",
+      "climate": "snow",
+      "behavior": "seasonalRaid",
+      "raidEvery": 6,
+      "reward": [
+        "명마",
+        "기병 숙련"
+      ],
+      "tribute": true,
+      "note": "가장 사나움 — 습격 주기 짧음, P3 대침공 주역 후보"
+    },
+    "xiongnu": {
+      "name": "남흉노",
+      "region": "북(병주 서하 · 오르도스)",
+      "troop": "cavalry",
+      "climate": "loess",
+      "behavior": "mercenary",
+      "raidEvery": 10,
+      "reward": [
+        "명마",
+        "기병 용병"
+      ],
+      "tribute": true,
+      "note": "조공보다 고용 — 금을 주면 기병 부대를 빌려 줌"
+    },
+    "qiang": {
+      "name": "강",
+      "region": "서(금성 · 농서 서쪽)",
+      "troop": "cavalry",
+      "climate": "desert",
+      "behavior": "uprising",
+      "raidEvery": 8,
+      "reward": [
+        "명마",
+        "경험치"
+      ],
+      "tribute": false,
+      "note": "량주 성 치안이 불안하면 함께 봉기(량주 안에서만 퍼짐)"
+    },
+    "di": {
+      "name": "저",
+      "region": "서(무도 · 한중 서쪽 산지)",
+      "troop": "bow",
+      "climate": "cliffs",
+      "behavior": "holdPass",
+      "raidEvery": 0,
+      "reward": [
+        "궁병 숙련",
+        "산길 정보"
+      ],
+      "tribute": true,
+      "note": "산채를 지킴 — 습격 안 함, 깨면 근처 관문 길이 드러남"
+    },
+    "nanman": {
+      "name": "남만",
+      "region": "남(건녕 · 영창 남쪽 밀림)",
+      "troop": "spear",
+      "climate": "jungle",
+      "behavior": "seasonalRaid",
+      "raidEvery": 9,
+      "reward": [
+        "약초",
+        "코끼리 표지(맹획 정체성 — 특수 병종 아님)"
+      ],
+      "tribute": true
+    },
+    "shanyue": {
+      "name": "산월",
+      "region": "남(회계 남쪽 · 단양 · 예장 동쪽 산지)",
+      "troop": "spear",
+      "climate": "mist",
+      "behavior": "uprising",
+      "raidEvery": 8,
+      "reward": [
+        "백성(인구)",
+        "경험치"
+      ],
+      "tribute": false,
+      "note": "굴복시키면 백성으로 편입(인구 +) — 손오 역사 근사"
+    }
+  },
+  "goodyTypes": [
+    {
+      "kind": "granary",
+      "name": "버려진 군량 창고",
+      "guard": "도적",
+      "reward": "식량 즉시(가장 가까운 내 성) + 그 부대 보급 가득",
+      "where": null,
+      "tiers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "kind": "forge",
+      "name": "숨은 대장간",
+      "guard": "산적",
+      "reward": "그 부대 무구 한 단계 또는 무구 자원 +",
+      "where": [
+        "loess",
+        "cliffs",
+        "fertile"
+      ],
+      "tiers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "kind": "drifter",
+      "name": "떠도는 협객",
+      "guard": "협객 본인(이기면 합류)",
+      "reward": "재야 장수 1명 합류(드래프트에서 안 뽑힌 사람 · 1~2단 비용 1~2, 3단 비용 3)",
+      "where": null,
+      "tiers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "kind": "refugees",
+      "name": "유랑민 무리",
+      "guard": "없음 — 대신 도적이 뒤쫓아 옴(1차례 지키면 됨)",
+      "reward": "가장 가까운 내 성 인구 +1",
+      "where": [
+        "waterland",
+        "fertile",
+        "snow"
+      ],
+      "tiers": [
+        1,
+        2
+      ]
+    },
+    {
+      "kind": "tomb",
+      "name": "옛 무덤",
+      "guard": "도굴꾼",
+      "reward": "금 즉시 · 3단이면 보물(장수 장비 1)",
+      "where": [
+        "loess",
+        "fertile",
+        "desert"
+      ],
+      "tiers": [
+        2,
+        3
+      ]
+    },
+    {
+      "kind": "stable",
+      "name": "숨은 마구간",
+      "guard": "마적",
+      "reward": "조사한 부대장 기병 적성 한 단계 + 명마 자원 소량",
+      "where": [
+        "snow",
+        "desert",
+        "loess",
+        "oasis"
+      ],
+      "tiers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "kind": "library",
+      "name": "버려진 서고",
+      "guard": "없음 — 조사 1차례(지킴이 없는 대신 보상 작음)",
+      "reward": "학문(연구) 진척 · 가끔 문턱 카드 하나 더 보기",
+      "where": [
+        "fertile",
+        "waterland",
+        "mist"
+      ],
+      "tiers": [
+        1,
+        2
+      ]
+    },
+    {
+      "kind": "herbs",
+      "name": "약초 골짜기",
+      "guard": "독충 · 맹수(그 부대 부상 조금)",
+      "reward": "그 부대 부상병 회복 + 약초 자원",
+      "where": [
+        "jungle",
+        "mist",
+        "giantForest"
+      ],
+      "tiers": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "crises": [
+    {
+      "id": "PERSON",
+      "name": "인물 Crisis",
+      "candidate": "플레이어 세력이 아닌 장수 위협도 = 레벨×3 + 칭호×5 + 이긴 교전×2 + 숙적 10 + 고유 전법 사용(최대 10)",
+      "fromPhase": "P3",
+      "fireFrom": "P4",
+      "minThreat": 40,
+      "actor": "위협도 1위",
+      "types": "person-crisis-v0.1 types 그대로",
+      "end": [
+        "Actor 패배",
+        "포로",
+        "12차례"
+      ],
+      "maxActive": 1
+    },
+    {
+      "id": "HEGEMONY",
+      "name": "패권 견제",
+      "candidate": "한 세력이 큰 성 9 이상 또는 두 주 과반",
+      "fromPhase": "P3",
+      "fireFrom": "P3",
+      "actor": "그 세력",
+      "effect": "나머지 세력 관계가 견제로 기울고 견제 연합 제안 · 연합 세력끼리 불가침",
+      "end": [
+        "큰 성 7 이하",
+        "12차례"
+      ],
+      "maxActive": 1
+    },
+    {
+      "id": "YT_UPRISING",
+      "name": "황건 대봉기",
+      "candidate": "치안 불안 성 3곳 이상 또는 황건 점령 성이 남음",
+      "fromPhase": "P4",
+      "fireFrom": "P4",
+      "actor": "이름 있는 두목(재야 또는 무명)",
+      "effect": "세 주에 새 근거지 동시 · 근거지 부대 최대 6",
+      "end": [
+        "근거지 전멸"
+      ],
+      "maxActive": 1
+    },
+    {
+      "id": "INVASION",
+      "name": "이민족 대침공",
+      "candidate": "북 · 서 · 남 경계 성 방비 약함(경계 성 부대 수가 그 무리 부대 수보다 적음)",
+      "fromPhase": "P3",
+      "fireFrom": "P3",
+      "actor": "그 지역 이민족 무리(선비 우선)",
+      "effect": "무리 부대 ×3 · 큰 성까지 노림",
+      "end": [
+        "무리 소탕",
+        "조공(회유 되는 갈래만)"
+      ],
+      "maxActive": 1
+    }
+  ],
+  "gameLength": {
+    "turns": 80,
+    "note": "P4 하한 52차례 + 위기 12차례 × 두 번 여유 + 끝판 정리 → 80. 승리 = 큰 성 15 또는 80차례 끝 점수(SCENARIO-12-DRAFT §4)",
+    "unificationMajorCities": 15
+  },
+  "yellowTurbanNests": [
+    {
+      "id": "yt-julu",
+      "band": "yellowTurban",
+      "name": "거록 근거지(장각)",
+      "lonLat": [
+        114.9,
+        37.05
+      ],
+      "at": [
+        50,
+        24
+      ],
+      "nearCity": "xindu",
+      "distToCity": 3
+    },
+    {
+      "id": "yt-yingchuan",
+      "band": "yellowTurban",
+      "name": "영천 근거지(파재)",
+      "lonLat": [
+        113.15,
+        34.5
+      ],
+      "at": [
+        42,
+        33
+      ],
+      "nearCity": "luoyang",
+      "distToCity": 3
+    },
+    {
+      "id": "yt-runan",
+      "band": "yellowTurban",
+      "name": "여남 근거지",
+      "lonLat": [
+        114.55,
+        33.45
+      ],
+      "at": [
+        42,
+        39
+      ],
+      "nearCity": "xuchang",
+      "distToCity": 3
+    },
+    {
+      "id": "yt-nanyang",
+      "band": "yellowTurban",
+      "name": "남양 근거지(장만성)",
+      "lonLat": [
+        112.75,
+        32.45
+      ],
+      "at": [
+        35,
+        45
+      ],
+      "nearCity": "wan",
+      "distToCity": 4
+    }
+  ],
+  "barbarianCamps": [
+    {
+      "id": "wh-liaoxi",
+      "band": "wuhuan",
+      "name": "오환 요서 무리(답돈)",
+      "lonLat": [
+        120.2,
+        41.1
+      ],
+      "at": [
+        74,
+        7
+      ],
+      "nearCity": "xiangping",
+      "distToCity": 9,
+      "climateHere": "snow"
+    },
+    {
+      "id": "wh-shanggu",
+      "band": "wuhuan",
+      "name": "오환 상곡 무리",
+      "lonLat": [
+        115.4,
+        40.75
+      ],
+      "at": [
+        59,
+        9
+      ],
+      "nearCity": "ji",
+      "distToCity": 5,
+      "climateHere": "snow"
+    },
+    {
+      "id": "xb-yunzhong",
+      "band": "xianbei",
+      "name": "선비 운중 무리(단석괴)",
+      "lonLat": [
+        111.8,
+        40.7
+      ],
+      "at": [
+        49,
+        9
+      ],
+      "nearCity": "jinyang",
+      "distToCity": 12,
+      "climateHere": null
+    },
+    {
+      "id": "xb-dai",
+      "band": "xianbei",
+      "name": "선비 대군 무리",
+      "lonLat": [
+        113.6,
+        40.55
+      ],
+      "at": [
+        54,
+        9
+      ],
+      "nearCity": "zhongshan",
+      "distToCity": 9,
+      "climateHere": "snow"
+    },
+    {
+      "id": "xn-xihe",
+      "band": "xiongnu",
+      "name": "남흉노 서하 무리(어부라)",
+      "lonLat": [
+        110.6,
+        39.4
+      ],
+      "at": [
+        43,
+        14
+      ],
+      "nearCity": "jinyang",
+      "distToCity": 9,
+      "climateHere": "snow"
+    },
+    {
+      "id": "qg-longxi",
+      "band": "qiang",
+      "name": "강 농서 무리",
+      "lonLat": [
+        102.9,
+        35.4
+      ],
+      "at": [
+        12,
+        31
+      ],
+      "nearCity": "jincheng",
+      "distToCity": 3,
+      "climateHere": "desert"
+    },
+    {
+      "id": "qg-xiping",
+      "band": "qiang",
+      "name": "강 서평 무리",
+      "lonLat": [
+        101.9,
+        36.5
+      ],
+      "at": [
+        11,
+        27
+      ],
+      "nearCity": "jincheng",
+      "distToCity": 5,
+      "climateHere": "desert"
+    },
+    {
+      "id": "di-wudu",
+      "band": "di",
+      "name": "저 무도 산채",
+      "lonLat": [
+        105.2,
+        33.55
+      ],
+      "at": [
+        14,
+        39
+      ],
+      "nearCity": "tianshui",
+      "distToCity": 5,
+      "climateHere": "mist"
+    },
+    {
+      "id": "nm-yizhou",
+      "band": "nanman",
+      "name": "남만 익주 무리",
+      "lonLat": [
+        102.8,
+        24.4
+      ],
+      "at": [
+        -12,
+        78
+      ],
+      "nearCity": "jianning",
+      "distToCity": 5,
+      "climateHere": "mist"
+    },
+    {
+      "id": "nm-yongchang",
+      "band": "nanman",
+      "name": "남만 영창 무리",
+      "lonLat": [
+        100.2,
+        25.1
+      ],
+      "at": [
+        -18,
+        75
+      ],
+      "nearCity": "jianning",
+      "distToCity": 11,
+      "climateHere": null
+    },
+    {
+      "id": "sy-danyang",
+      "band": "shanyue",
+      "name": "산월 단양 산채",
+      "lonLat": [
+        118.4,
+        29.8
+      ],
+      "at": [
+        45,
+        55
+      ],
+      "nearCity": "kuaiji",
+      "distToCity": 6,
+      "climateHere": null
+    },
+    {
+      "id": "sy-kuaiji",
+      "band": "shanyue",
+      "name": "산월 회계 남부 산채",
+      "lonLat": [
+        119.6,
+        28.4
+      ],
+      "at": [
+        45,
+        61
+      ],
+      "nearCity": "kuaiji",
+      "distToCity": 6,
+      "climateHere": null
+    },
+    {
+      "id": "sy-yuzhang",
+      "band": "shanyue",
+      "name": "산월 예장 동부 산채",
+      "lonLat": [
+        117.2,
+        27.8
+      ],
+      "at": [
+        37,
+        64
+      ],
+      "nearCity": "yuzhang",
+      "distToCity": 6,
+      "climateHere": null
+    }
+  ],
+  "goodyGen": {
+    "nearA": [
+      3,
+      6
+    ],
+    "nearAMin": 4,
+    "nearB": 15,
+    "nearBMin": 8,
+    "zone": [
+      4,
+      8
+    ],
+    "zoneCount": 24,
+    "gapHut": 3,
+    "gapZone": 5,
+    "gapFoe": 3,
+    "tierRule": "시작 성 둘레 3~6칸 = 1단 · 15칸 안 = 2단 · 중립 지대에서 가장 가까운 시작 성까지 4~5칸 1단 · 6~7칸 2단 · 8칸 3단",
+    "kindWeight": "자리 기후 갈래가 goodyTypes[].where 에 들면 3 · where 없음(어디나) 1 · 안 맞으면 0.5, 그 단에 나올 수 있는 종만",
+    "rng": "판 시드에서 갈라 낸 전용 난수(게임 진행 난수를 쓰지 않음 — 시작 성 뽑기와 같은 방식)",
+    "siteRule": "지나갈 수 있는 평지 · 숲 · 구릉 · 성 둘레 2칸 · 길 · 관문 · 특수 지형물 · 탐험지 칸 밖",
+    "when": "판 시작 — 시작 성 12곳이 정해진 뒤(같은 시드 = 같은 결과)",
+    "check200": {
+      "games": 200,
+      "minWithin6": 4,
+      "minWithin15": 8,
+      "reproducible": true,
+      "hutsMin": 59,
+      "hutsMax": 83,
+      "hutsAvg": 71.1
+    },
+    "noTruce": "사용자 10-25 정정: P1 불가침 없음 — 초반 표적은 배치 · 거리 · 보상으로"
+  },
+  "version": 1,
+  "source": "neutral-foes-crisis/DESIGN.md v0.2; all numeric additions are C506 trial values",
+  "phaseThresholds": {
+    "P2": {
+      "cities": 4,
+      "clearedNests": 2,
+      "firstBorder": true
+    },
+    "P3": {
+      "major": 4,
+      "provinces": 1,
+      "firstCapture": true
+    },
+    "P4": {
+      "major": 8,
+      "provinces": 2
+    }
+  },
+  "phaseMilestones": {
+    "F01": {
+      "P2": [
+        {
+          "key": "neutralAnnexed",
+          "amount": 2
+        }
+      ]
+    },
+    "F02": {
+      "P2": [
+        {
+          "key": "lostHalfArmy",
+          "amount": 1
+        }
+      ]
+    },
+    "F07": {
+      "P2": [
+        {
+          "key": "plunderFood",
+          "amount": 100000
+        }
+      ]
+    },
+    "F12": {
+      "P2": [
+        {
+          "key": "declarationProved",
+          "amount": 1
+        }
+      ]
+    }
+  },
+  "neutral": {
+    "durability": 30,
+    "initialUnits": 2,
+    "initialTroops": 200,
+    "leader": {
+      "attack": 85,
+      "defense": 70,
+      "maneuver": 50
+    },
+    "yellowTurban": {
+      "troops": 150,
+      "growEvery": 5,
+      "growTroops": 20,
+      "maxTroops": 250,
+      "maxUnits": 4,
+      "spreadEvery": 10,
+      "maxNests": 8,
+      "spreadRange": 4,
+      "plunderRange": 3
+    },
+    "raidRange": 6,
+    "raidTurns": 3,
+    "tributeTurns": 12,
+    "tributeGold": 300,
+    "mercenaryGold": 400,
+    "mercenaryTurns": 12,
+    "movementTicks": 200,
+    "damageRate": 0.22,
+    "counterRate": 0.5,
+    "permanentLossRatio": 0.3,
+    "clearXp": 40,
+    "damageXp": 0.1,
+    "killXp": 20,
+    "proficiencyRate": 0.25,
+    "plunderFood": 200,
+    "plunderGold": 10,
+    "rewardFood": 3000,
+    "rewardGold": 120,
+    "rewardPrestige": 5,
+    "horseReward": 100,
+    "herbReward": 1,
+    "populationReward": 1,
+    "peoplePerPopulation": 100000
+  },
+  "goody": {
+    "rngSalt": 3305500123,
+    "guardTroops": [
+      55,
+      100,
+      170
+    ],
+    "respawnEvery": 10,
+    "respawnCount": 2,
+    "xp": [
+      20,
+      35,
+      55
+    ],
+    "food": [
+      2000,
+      4000,
+      7000
+    ],
+    "gold": [
+      100,
+      250,
+      500
+    ],
+    "arms": [
+      100,
+      250,
+      500
+    ],
+    "horses": [
+      50,
+      100,
+      200
+    ],
+    "research": [
+      10,
+      20,
+      35
+    ],
+    "heal": [
+      30,
+      60,
+      100
+    ],
+    "equipmentDamage": 5
+  },
+  "ai": {
+    "nest": 320,
+    "hut": [
+      150,
+      240,
+      360
+    ],
+    "protection": 180,
+    "majorCity": 240,
+    "minorCity": 90,
+    "cityCombatTurns": 3,
+    "lateRange": 2
+  },
+  "crisisRules": {
+    "maxActive": 2,
+    "duration": 12,
+    "hegemonyMajor": 9,
+    "hegemonyProvinces": 2,
+    "hegemonyEndMajor": 7,
+    "unstableCities": 3,
+    "uprisingProvinces": 3,
+    "uprisingUnits": 6,
+    "invasionMultiplier": 3
+  },
+  "features": {
+    "events": true,
+    "exploration": true,
+    "growth": true
+  }
+}

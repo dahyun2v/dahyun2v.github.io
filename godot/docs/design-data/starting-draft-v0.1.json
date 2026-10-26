@@ -1,0 +1,933 @@
+{
+ "officers": {
+  "G01": {
+   "name": "여포",
+   "home": [
+    "F05"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 331
+  },
+  "G02": {
+   "name": "조운",
+   "home": [
+    "F02",
+    "F11"
+   ],
+   "recognition": "A",
+   "cost": 4,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 401
+  },
+  "G03": {
+   "name": "제갈량",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 405
+  },
+  "G04": {
+   "name": "순욱",
+   "home": [
+    "F01"
+   ],
+   "recognition": "B",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 367
+  },
+  "G05": {
+   "name": "유비",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 407
+  },
+  "G06": {
+   "name": "황충",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 353
+  },
+  "G07": {
+   "name": "조조",
+   "home": [
+    "F01"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 438
+  },
+  "G08": {
+   "name": "손권",
+   "home": [
+    "F03"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 358
+  },
+  "G09": {
+   "name": "원소",
+   "home": [
+    "F04"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 336
+  },
+  "G10": {
+   "name": "원술",
+   "home": [
+    "F12"
+   ],
+   "recognition": "B",
+   "cost": 1,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 229
+  },
+  "G13": {
+   "name": "마초",
+   "home": [
+    "F06"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 361
+  },
+  "G14": {
+   "name": "공손찬",
+   "home": [
+    "F11"
+   ],
+   "recognition": "B",
+   "cost": 2,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 325
+  },
+  "G16": {
+   "name": "장로",
+   "home": [
+    "F09"
+   ],
+   "recognition": "B",
+   "cost": 3,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 326
+  },
+  "G18": {
+   "name": "관우",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 4,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 377
+  },
+  "G19": {
+   "name": "장비",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 361
+  },
+  "G20": {
+   "name": "손책",
+   "home": [
+    "F03"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 413
+  },
+  "G21": {
+   "name": "방통",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 2,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 325
+  },
+  "G24": {
+   "name": "장료",
+   "home": [
+    "F01",
+    "F05"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 408
+  },
+  "G25": {
+   "name": "허저",
+   "home": [
+    "F01"
+   ],
+   "recognition": "A",
+   "cost": 4,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 379
+  },
+  "G27": {
+   "name": "주유",
+   "home": [
+    "F03"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "통제",
+   "roleCode": "CONTROL",
+   "power": 405
+  },
+  "G28": {
+   "name": "육손",
+   "home": [
+    "F03"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "통제",
+   "roleCode": "CONTROL",
+   "power": 415
+  },
+  "G29": {
+   "name": "감녕",
+   "home": [
+    "F03"
+   ],
+   "recognition": "B",
+   "cost": 3,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 366
+  },
+  "G30": {
+   "name": "태사자",
+   "home": [
+    "F03"
+   ],
+   "recognition": "B",
+   "cost": 4,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 390
+  },
+  "G31": {
+   "name": "진궁",
+   "home": [
+    "F05"
+   ],
+   "recognition": "B",
+   "cost": 2,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 305
+  },
+  "G32": {
+   "name": "고순",
+   "home": [
+    "F05"
+   ],
+   "recognition": "B",
+   "cost": 3,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 358
+  },
+  "G33": {
+   "name": "하후돈",
+   "home": [
+    "F01"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 370
+  },
+  "G34": {
+   "name": "조인",
+   "home": [
+    "F01"
+   ],
+   "recognition": "B",
+   "cost": 4,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 393
+  },
+  "G35": {
+   "name": "가후",
+   "home": [
+    "F07",
+    "F01"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 337
+  },
+  "G37": {
+   "name": "장합",
+   "home": [
+    "F04",
+    "F01"
+   ],
+   "recognition": "B",
+   "cost": 4,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 395
+  },
+  "G38": {
+   "name": "전풍",
+   "home": [
+    "F04"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 308
+  },
+  "G39": {
+   "name": "저수",
+   "home": [
+    "F04"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 333
+  },
+  "G42": {
+   "name": "위연",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 3,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 363
+  },
+  "G46": {
+   "name": "이각",
+   "home": [
+    "F07"
+   ],
+   "recognition": "B",
+   "cost": 1,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 293
+  },
+  "G49": {
+   "name": "기령",
+   "home": [
+    "F12"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 332
+  },
+  "G51": {
+   "name": "하후연",
+   "home": [
+    "F01"
+   ],
+   "recognition": "B",
+   "cost": 4,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 392
+  },
+  "G52": {
+   "name": "서황",
+   "home": [
+    "F01"
+   ],
+   "recognition": "B",
+   "cost": 5,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 406
+  },
+  "G53": {
+   "name": "우금",
+   "home": [
+    "F01"
+   ],
+   "recognition": "B",
+   "cost": 4,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 375
+  },
+  "G54": {
+   "name": "악진",
+   "home": [
+    "F01"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 347
+  },
+  "G55": {
+   "name": "이전",
+   "home": [
+    "F01"
+   ],
+   "recognition": "C",
+   "cost": 4,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 387
+  },
+  "G56": {
+   "name": "전위",
+   "home": [
+    "F01"
+   ],
+   "recognition": "A",
+   "cost": 2,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 307
+  },
+  "G57": {
+   "name": "정욱",
+   "home": [
+    "F01"
+   ],
+   "recognition": "B",
+   "cost": 3,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 364
+  },
+  "G58": {
+   "name": "만총",
+   "home": [
+    "F01"
+   ],
+   "recognition": "C",
+   "cost": 4,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 394
+  },
+  "G59": {
+   "name": "강유",
+   "home": [
+    "F02"
+   ],
+   "recognition": "A",
+   "cost": 5,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 407
+  },
+  "G60": {
+   "name": "마량",
+   "home": [
+    "F02"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 325
+  },
+  "G61": {
+   "name": "마속",
+   "home": [
+    "F02"
+   ],
+   "recognition": "B",
+   "cost": 2,
+   "role": "통치",
+   "roleCode": "GOVERNANCE",
+   "power": 303
+  },
+  "G62": {
+   "name": "장완",
+   "home": [
+    "F02"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 369
+  },
+  "G63": {
+   "name": "비의",
+   "home": [
+    "F02"
+   ],
+   "recognition": "C",
+   "cost": 4,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 378
+  },
+  "G64": {
+   "name": "이엄",
+   "home": [
+    "F02"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 370
+  },
+  "G65": {
+   "name": "미축",
+   "home": [
+    "F02"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 327
+  },
+  "G66": {
+   "name": "손견",
+   "home": [
+    "F03"
+   ],
+   "recognition": "A",
+   "cost": 4,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 402
+  },
+  "G67": {
+   "name": "장소",
+   "home": [
+    "F03"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 357
+  },
+  "G68": {
+   "name": "장굉",
+   "home": [
+    "F03"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "통치",
+   "roleCode": "GOVERNANCE",
+   "power": 347
+  },
+  "G69": {
+   "name": "정보",
+   "home": [
+    "F03"
+   ],
+   "recognition": "B",
+   "cost": 4,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 389
+  },
+  "G70": {
+   "name": "한당",
+   "home": [
+    "F03"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 358
+  },
+  "G71": {
+   "name": "주태",
+   "home": [
+    "F03"
+   ],
+   "recognition": "B",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 333
+  },
+  "G72": {
+   "name": "능통",
+   "home": [
+    "F03"
+   ],
+   "recognition": "C",
+   "cost": 4,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 382
+  },
+  "G73": {
+   "name": "안량",
+   "home": [
+    "F04"
+   ],
+   "recognition": "B",
+   "cost": 2,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 300
+  },
+  "G74": {
+   "name": "문추",
+   "home": [
+    "F04"
+   ],
+   "recognition": "B",
+   "cost": 2,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 300
+  },
+  "G75": {
+   "name": "국의",
+   "home": [
+    "F04"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 335
+  },
+  "G76": {
+   "name": "허유",
+   "home": [
+    "F04"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 302
+  },
+  "G77": {
+   "name": "진등",
+   "home": [
+    "F05"
+   ],
+   "recognition": "C",
+   "cost": 4,
+   "role": "통치",
+   "roleCode": "GOVERNANCE",
+   "power": 387
+  },
+  "G78": {
+   "name": "장패",
+   "home": [
+    "F05"
+   ],
+   "recognition": "C",
+   "cost": 4,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 382
+  },
+  "G79": {
+   "name": "후성",
+   "home": [
+    "F05"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 304
+  },
+  "G80": {
+   "name": "마대",
+   "home": [
+    "F06"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 328
+  },
+  "G81": {
+   "name": "성공영",
+   "home": [
+    "F06"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 371
+  },
+  "G82": {
+   "name": "염행",
+   "home": [
+    "F06"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 334
+  },
+  "G83": {
+   "name": "곽사",
+   "home": [
+    "F07"
+   ],
+   "recognition": "C",
+   "cost": 1,
+   "role": "돌파",
+   "roleCode": "BREAKTHROUGH",
+   "power": 289
+  },
+  "G84": {
+   "name": "이유",
+   "home": [
+    "F07"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 295
+  },
+  "G85": {
+   "name": "서영",
+   "home": [
+    "F07"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 341
+  },
+  "G86": {
+   "name": "장송",
+   "home": [
+    "F08"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 313
+  },
+  "G87": {
+   "name": "황권",
+   "home": [
+    "F08"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "병참",
+   "roleCode": "LOGISTICS",
+   "power": 374
+  },
+  "G88": {
+   "name": "엄안",
+   "home": [
+    "F08"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 349
+  },
+  "G89": {
+   "name": "유파",
+   "home": [
+    "F08"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "통치",
+   "roleCode": "GOVERNANCE",
+   "power": 298
+  },
+  "G90": {
+   "name": "장위",
+   "home": [
+    "F09"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 313
+  },
+  "G91": {
+   "name": "양앙",
+   "home": [
+    "F09"
+   ],
+   "recognition": "C",
+   "cost": 1,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 282
+  },
+  "G92": {
+   "name": "양송",
+   "home": [
+    "F09"
+   ],
+   "recognition": "C",
+   "cost": 1,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 244
+  },
+  "G93": {
+   "name": "축융부인",
+   "home": [
+    "F10"
+   ],
+   "recognition": "B",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 333
+  },
+  "G94": {
+   "name": "옹개",
+   "home": [
+    "F10"
+   ],
+   "recognition": "C",
+   "cost": 3,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 330
+  },
+  "G95": {
+   "name": "고정",
+   "home": [
+    "F10"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 295
+  },
+  "G96": {
+   "name": "전예",
+   "home": [
+    "F11"
+   ],
+   "recognition": "C",
+   "cost": 4,
+   "role": "유격",
+   "roleCode": "RAID",
+   "power": 404
+  },
+  "G97": {
+   "name": "관정",
+   "home": [
+    "F11"
+   ],
+   "recognition": "C",
+   "cost": 1,
+   "role": "수비",
+   "roleCode": "HOLD",
+   "power": 249
+  },
+  "G98": {
+   "name": "염상",
+   "home": [
+    "F12"
+   ],
+   "recognition": "C",
+   "cost": 1,
+   "role": "통치",
+   "roleCode": "GOVERNANCE",
+   "power": 255
+  },
+  "G99": {
+   "name": "장훈",
+   "home": [
+    "F12"
+   ],
+   "recognition": "C",
+   "cost": 2,
+   "role": "응전",
+   "roleCode": "RESPONSE",
+   "power": 294
+  },
+  "G100": {
+   "name": "유훈",
+   "home": [
+    "F12"
+   ],
+   "recognition": "C",
+   "cost": 1,
+   "role": "결속",
+   "roleCode": "RALLY",
+   "power": 280
+  }
+ },
+ "officersNote": "84명 — 지금 게임에 능력치·병종 자료가 있는 장수 전부. 역할 없는 장수 0명(없음)은 역할 표지 없이 나감. 비용 분포 5:10%·4:20%·3:40%·2:20%·1:10%(능력치 합 순위, 시험값)"
+}

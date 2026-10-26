@@ -1,0 +1,1275 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+3",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +3"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+2",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+1",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "5,000",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "4,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 업 생산으로",
+    "target": "west"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 2 · 남은 2",
+  "rows": [
+   {
+    "id": "U-F01-G07",
+    "officerId": "G07",
+    "name": "조조",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+     "w": 522,
+     "h": 888,
+     "cx": 318,
+     "cy": 103,
+     "side": 114
+    },
+    "troop": "cavalry",
+    "troopName": "기병",
+    "countText": "2,500",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-F01-G24",
+    "officerId": "G06",
+    "name": "황충",
+    "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+    "head": {
+     "w": 616,
+     "h": 845,
+     "cx": 281,
+     "cy": 98,
+     "side": 154
+    },
+    "troop": "bow",
+    "troopName": "궁병",
+    "countText": "2,500",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": true
+   }
+  ]
+ },
+ "selected": {
+  "id": "U-F01-G24",
+  "officerId": "G06",
+  "name": "황충",
+  "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+  "head": {
+   "w": 616,
+   "h": 845,
+   "cx": 281,
+   "cy": 98,
+   "side": 154
+  },
+  "troop": "bow",
+  "troopName": "궁병",
+  "countText": "2,500",
+  "maxText": "2,500",
+  "countRatio": 1,
+  "ratings": [
+   {
+    "key": "attack",
+    "label": "공격",
+    "value": 54
+   },
+   {
+    "key": "defense",
+    "label": "방어",
+    "value": 86
+   },
+   {
+    "key": "mobility",
+    "label": "이동",
+    "value": 4
+   },
+   {
+    "key": "range",
+    "label": "사거리",
+    "value": 2
+   }
+  ],
+  "engine": {
+   "name": "맹장(연사)",
+   "resourceName": "기세",
+   "resource": 2,
+   "max": 3
+  },
+  "traits": {
+   "core": {
+    "name": "노당익장",
+    "full": "노당익장",
+    "text": "이동하지 않은 차례의 사격은 거리 2 에서 도병 직사 차단과 엄폐를 무시하고 전열 손상 +1단계.",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+    "token": null
+   },
+   "equipped": [],
+   "slots": 3
+  },
+  "bonds": [],
+  "klass": {
+   "engine": "맹장(연사)",
+   "branch": "기본",
+   "merit": "실적 0/3",
+   "merits": "광장 0/3 · 용장 0/3",
+   "aptitude": "적성 높음",
+   "troopName": "궁병"
+  },
+  "gauge": 5,
+  "gaugeMax": 100,
+  "qwer": [
+   {
+    "key": "Q",
+    "traitId": null,
+    "name": "화살비",
+    "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+    "cost": null,
+    "state": "disabled",
+    "reason": "적과 붙어 사격 불가"
+   },
+   {
+    "key": "W",
+    "traitId": null,
+    "name": "맹장(연사)",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+    "cost": null,
+    "state": "ready",
+    "reason": "기세 2 / 3"
+   },
+   {
+    "key": "E",
+    "traitId": "G06.pilot.E",
+    "name": "정조준",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+    "cost": 40,
+    "state": "disabled",
+    "reason": "게이지 5/40"
+   },
+   {
+    "key": "R",
+    "traitId": "G06.card.1",
+    "name": "백보천양",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+    "cost": 100,
+    "state": "disabled",
+    "reason": "게이지 5/100"
+   }
+  ],
+  "orders": [
+   {
+    "key": "move",
+    "label": "이동",
+    "hotkey": "M"
+   },
+   {
+    "key": "attack",
+    "label": "공격",
+    "hotkey": "A",
+    "primary": true,
+    "disabled": true,
+    "tip": "조건 미충족"
+   },
+   {
+    "key": "face",
+    "label": "정면",
+    "hotkey": "F",
+    "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+   },
+   {
+    "key": "face",
+    "label": "정면",
+    "hotkey": "F",
+    "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+   },
+   {
+    "key": "brace",
+    "label": "방어",
+    "hotkey": "B",
+    "disabled": false,
+    "tip": "이번 차례 방어 태세"
+   },
+   {
+    "key": "regroup",
+    "label": "재정비",
+    "hotkey": "S",
+    "disabled": true,
+    "tip": "동요 상태에서만 가능"
+   },
+   {
+    "key": "wait",
+    "label": "대기",
+    "hotkey": "H"
+   }
+  ]
+ },
+ "sets": null,
+ "docks": [
+  {
+   "id": "U-F01-G07",
+   "officerId": "G07",
+   "name": "조조",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "head": {
+    "w": 522,
+    "h": 888,
+    "cx": 318,
+    "cy": 103,
+    "side": 114
+   },
+   "troop": "cavalry",
+   "troopName": "기병",
+   "countText": "2,500",
+   "maxText": "2,500",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 48
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 106
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 9
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 1
+    }
+   ],
+   "engine": {
+    "name": "책사",
+    "resourceName": "계책",
+    "resource": 2,
+    "max": 3
+   },
+   "traits": {
+    "core": {
+     "name": "난세간웅",
+     "full": "난세간웅",
+     "text": "조조 시야 안 적이 E 전법을 쓰면 그것을 기억한다(최근 하나, 다음 내 차례 끝까지). 조조는 E 칸 대신 기억한 전법을 쓸 수 있다(게이지 비용은 원래 값 · 고유 R 은 기억하지 않음).",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+     "token": null
+    },
+    "equipped": [],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "책사",
+    "branch": "기본",
+    "merit": "실적 0/3",
+    "merits": "궤계 0/3 · 군사 0/3",
+    "aptitude": "적성 일정",
+    "troopName": "기병"
+   },
+   "gauge": 5,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "돌파",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-cavalry.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "대상 없음"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "책사",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "계책 2 / 3"
+    },
+    {
+     "key": "E",
+     "traitId": "G07.combat.CTA-09",
+     "name": "기싸움",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 40,
+     "state": "disabled",
+     "reason": "게이지 5/40"
+    },
+    {
+     "key": "R",
+     "traitId": "G07.card.1",
+     "name": "호령천하",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 5/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "move",
+     "label": "이동",
+     "hotkey": "M"
+    },
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": false,
+     "tip": "공격할 대상을 고릅니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-F01-G24",
+   "officerId": "G06",
+   "name": "황충",
+   "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+   "head": {
+    "w": 616,
+    "h": 845,
+    "cx": 281,
+    "cy": 98,
+    "side": 154
+   },
+   "troop": "bow",
+   "troopName": "궁병",
+   "countText": "2,500",
+   "maxText": "2,500",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 54
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 86
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 4
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 2
+    }
+   ],
+   "engine": {
+    "name": "맹장(연사)",
+    "resourceName": "기세",
+    "resource": 2,
+    "max": 3
+   },
+   "traits": {
+    "core": {
+     "name": "노당익장",
+     "full": "노당익장",
+     "text": "이동하지 않은 차례의 사격은 거리 2 에서 도병 직사 차단과 엄폐를 무시하고 전열 손상 +1단계.",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+     "token": null
+    },
+    "equipped": [],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "맹장(연사)",
+    "branch": "기본",
+    "merit": "실적 0/3",
+    "merits": "광장 0/3 · 용장 0/3",
+    "aptitude": "적성 높음",
+    "troopName": "궁병"
+   },
+   "gauge": 5,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "화살비",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "적과 붙어 사격 불가"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "맹장(연사)",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "기세 2 / 3"
+    },
+    {
+     "key": "E",
+     "traitId": "G06.pilot.E",
+     "name": "정조준",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 40,
+     "state": "disabled",
+     "reason": "게이지 5/40"
+    },
+    {
+     "key": "R",
+     "traitId": "G06.card.1",
+     "name": "백보천양",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 5/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "move",
+     "label": "이동",
+     "hotkey": "M"
+    },
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": true,
+     "tip": "조건 미충족"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  }
+ ],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 2,
+  "ready": false
+ },
+ "tacticReady": {
+  "U-F01-G07:G07.card.1": false,
+  "U-F01-G07:G07.combat.CTA-09": false,
+  "U-F01-G24:G06.card.1": false,
+  "U-F01-G24:G06.pilot.E": false
+ },
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "west",
+    "name": "업",
+    "u": 0.2635,
+    "v": 0.7607,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "julu",
+    "name": "거록",
+    "u": 0.3124,
+    "v": 0.6641,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "east",
+    "name": "계",
+    "u": 0.5897,
+    "v": 0.2586,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": [
+   {
+    "id": "U-F02-G02",
+    "u": 0.4592,
+    "v": 0.2586,
+    "own": false
+   },
+   {
+    "id": "U-F03-G08",
+    "u": 0.5897,
+    "v": 0.2586,
+    "own": false
+   },
+   {
+    "id": "U-F01-G07",
+    "u": 0.4429,
+    "v": 0.2779,
+    "own": true
+   },
+   {
+    "id": "U-F01-G24",
+    "u": 0.4266,
+    "v": 0.2586,
+    "own": true
+   }
+  ]
+ },
+ "help": {
+  "screen": "help",
+  "title": "도움말",
+  "close": "닫기",
+  "search": "규칙 · 용어 검색",
+  "query": "",
+  "groups": [
+   {
+    "name": "기본",
+    "open": false,
+    "items": [
+     "조작",
+     "이동",
+     "성장",
+     "차례와 승리"
+    ]
+   },
+   {
+    "name": "전투",
+    "open": false,
+    "items": [
+     "공격",
+     "통제",
+     "측면",
+     "후방",
+     "접근사격",
+     "상성",
+     "전열",
+     "화계"
+    ]
+   },
+   {
+    "name": "성과 군량",
+    "open": false,
+    "items": [
+     "성",
+     "군량"
+    ]
+   },
+   {
+    "name": "용어",
+    "open": true,
+    "items": [
+     "동요",
+     "패주",
+     "통제 구역",
+     "보급권",
+     "협공",
+     "돌격",
+     "방어 태세",
+     "재정비",
+     "예비병",
+     "내구",
+     "포위",
+     "점령 단계",
+     "전문인력",
+     "맹세",
+     "피로",
+     "불탄 숲",
+     "여울",
+     "매복",
+     "전개",
+     "인망",
+     "친우",
+     "결의",
+     "숙적",
+     "혼란",
+     "공병대",
+     "방진대",
+     "기마궁",
+     "계략",
+     "유언비어",
+     "이간",
+     "보급 교란"
+    ]
+   }
+  ],
+  "pick": "동요",
+  "entry": {
+   "name": "동요",
+   "head": "동요",
+   "what": "사기가 흔들린 상태",
+   "effect": "공격 피해가 줄어듦",
+   "solve": "재정비로 사기를 회복"
+  },
+  "entries": {
+   "조작": {
+    "name": "조작",
+    "head": "조작",
+    "summary": "부대를 누르고 칸을 누르면 이동 · 적을 누르면 공격 · Shift+끌기 여러 부대 · 끌기 지도 이동 · 휠 확대 · N 다음 부대 · Enter 다음 차례 · Esc 취소",
+    "detail": ""
+   },
+   "이동": {
+    "name": "이동",
+    "head": "이동",
+    "summary": "옅은 옥빛 칸은 이번 차례, 더 먼 칸은 예약 이동.",
+    "detail": "평지 한 차례 기병 8 · 보병 5 · 궁병 4칸."
+   },
+   "성장": {
+    "name": "성장",
+    "head": "성장",
+    "summary": "레벨업마다 특기 카드, Lv 5·10·15…에는 전법 카드.",
+    "detail": ""
+   },
+   "차례와 승리": {
+    "name": "차례와 승리",
+    "head": "차례와 승리",
+    "summary": "한 판 26차례.",
+    "detail": "세 큰 성을 모두 차지하고 차례를 넘기면 통일, 내 성을 모두 잃으면 멸망."
+   },
+   "공격": {
+    "name": "공격",
+    "head": "공격",
+    "summary": "근접 공격을 받은 쪽은 남은 병력으로 반격합니다(궁병의 원거리 공격은 반격 없음).",
+    "detail": "옆 +15%, 뒤 +30%. 지형·강 너머가 피해를 바꿉니다."
+   },
+   "통제": {
+    "name": "통제",
+    "head": "통제",
+    "summary": "적과 맞닿은 칸에 들어가면 멈춥니다.",
+    "detail": "붙어 있다가 떠나면 추격을 받습니다.",
+    "terms": [
+     "통제 구역"
+    ]
+   },
+   "측면": {
+    "name": "측면",
+    "art": "assets/ui-v3/rule-cards/rule-flank.webp",
+    "tags": [
+     "마주봄",
+     "옆으로",
+     "기울어짐"
+    ],
+    "head": "옆을 치면 더 아프다",
+    "effect": "적이 보는 쪽의 옆 칸에서 치면 피해 +15%",
+    "solve": "정면을 적에게 돌림",
+    "solveTerm": null,
+    "folded": [
+     "측면"
+    ]
+   },
+   "후방": {
+    "name": "후방",
+    "art": "assets/ui-v3/rule-cards/rule-rear.webp",
+    "tags": [
+     "돌아 들어감",
+     "등 뒤",
+     "흩어짐"
+    ],
+    "head": "등 뒤가 가장 약하다",
+    "effect": "뒤 칸에서 치면 피해 +30%, 대열이 흩어지기 쉽다",
+    "solve": "정면을 적에게 돌림",
+    "solveTerm": null,
+    "folded": [
+     "후방"
+    ]
+   },
+   "접근사격": {
+    "name": "접근사격",
+    "art": "assets/ui-v3/rule-cards/rule-approach-fire.webp",
+    "tags": [
+     "다가감",
+     "쏨",
+     "지나감"
+    ],
+    "head": "궁병 곁을 지나가면 화살을 맞는다",
+    "effect": "궁병 옆 칸에 들어서는 순간 한 번 쏜다(작은 피해, 멈추지는 않음)",
+    "solve": "궁병 사거리와 접근 경로 확인",
+    "solveTerm": null,
+    "folded": [
+     "접근사격"
+    ]
+   },
+   "상성": {
+    "name": "상성",
+    "art": "assets/ui-v3/rule-cards/rule-matchup.webp",
+    "tags": [
+     "도 › 창",
+     "창 › 기",
+     "기 › 도"
+    ],
+    "head": "창은 말을, 말은 칼을, 칼은 창을",
+    "effect": "이기는 상대를 치면 피해가 늘고 지는 상대에겐 준다",
+    "solve": null,
+    "solveTerm": null,
+    "folded": []
+   },
+   "전열": {
+    "name": "전열",
+    "art": "assets/ui-v3/rule-cards/rule-formation.webp",
+    "tags": [
+     "정돈",
+     "흐트러짐",
+     "붕괴"
+    ],
+    "head": "전열은 세 단계로 무너진다",
+    "effect": "흐트러진 부대는 더 아프게 맞는다",
+    "solve": "재정비로 전열을 회복",
+    "solveTerm": "재정비",
+    "folded": [
+     "흐트러짐",
+     "붕괴"
+    ],
+    "solveTermLines": [
+     "한 차례를 써서 부대 정돈",
+     "사기와 전열 회복",
+     "안전한 자리에서 실행"
+    ]
+   },
+   "화계": {
+    "name": "화계",
+    "art": "assets/ui-v3/rule-cards/rule-fire.webp",
+    "tags": [
+     "바람",
+     "불씨",
+     "번짐"
+    ],
+    "head": "불은 바람을 따라 번진다",
+    "effect": "불은 2차례 지속된다",
+    "solve": "불이 꺼질 때까지 우회",
+    "solveTerm": null,
+    "folded": [
+     "화계",
+     "바람"
+    ]
+   },
+   "성": {
+    "name": "성",
+    "art": "assets/ui-v3/rule-cards/rule-siege.webp",
+    "tags": [
+     "붙음",
+     "깎음",
+     "함락"
+    ],
+    "head": "성은 내구도가 0이 되어야 떨어진다",
+    "effect": "궁병의 성벽 피해는 50%",
+    "solve": null,
+    "solveTerm": null,
+    "folded": [],
+    "summary": "성문 칸에 선 부대가 성을 쳐 내구를 0으로 만들면 함락.",
+    "terms": [
+     "내구",
+     "포위"
+    ]
+   },
+   "군량": {
+    "name": "군량",
+    "art": "assets/ui-v3/rule-cards/rule-supply.webp",
+    "tags": [
+     "보급권 안",
+     "밖으로",
+     "지침"
+    ],
+    "head": "보급권 밖에선 군량이 준다",
+    "effect": "보급권을 벗어나면 휴대 군량이 차례마다 닳는다",
+    "solve": null,
+    "solveTerm": null,
+    "folded": [],
+    "summary": "보급권을 벗어나면 휴대 군량이 차례마다 닳는다",
+    "detail": "내 성 · 보급 거점에서 8칸 안(보급권)에서는 부대 군량이 줄지 않고 가득 채워집니다. 보급권 밖에서는 차례마다 줄어들며(16칸 안 반 차례분, 그 밖 한 차례분) 휴대 군량은 5차례분. 적 성문에 붙은 부대는 가까워도 보급이 닿지 않아 휴대 군량으로 버팁니다. 적 부대를 없애면 한 차례분, 성이나 적 거점을 빼앗으면 가득 얻습니다. 바닥나면 굶주려 병력을 잃습니다.",
+    "terms": [
+     "보급권"
+    ]
+   },
+   "동요": {
+    "name": "동요",
+    "head": "동요",
+    "what": "사기가 흔들린 상태",
+    "effect": "공격 피해가 줄어듦",
+    "solve": "재정비로 사기를 회복"
+   },
+   "패주": {
+    "name": "패주",
+    "head": "패주",
+    "what": "사기가 무너져 물러남",
+    "effect": "명령을 받을 수 없음",
+    "solve": "안전한 곳에서 회복을 기다림"
+   },
+   "통제 구역": {
+    "name": "통제 구역",
+    "head": "통제 구역",
+    "what": "보이는 적 주변의 위협",
+    "effect": "들어가면 이동이 멈춤",
+    "solve": "적을 물리치거나 우회"
+   },
+   "보급권": {
+    "name": "보급권",
+    "head": "보급권",
+    "what": "성·거점과 안전하게 이은 길",
+    "effect": "안에서는 휴대 군량을 채움",
+    "solve": "내 성이나 이어진 거점으로 이동"
+   },
+   "협공": {
+    "name": "협공",
+    "head": "협공",
+    "what": "여러 아군이 적을 압박",
+    "effect": "배치에 따라 공격 피해 증가",
+    "solve": "적을 흩뜨리거나 길을 막음"
+   },
+   "돌격": {
+    "name": "돌격",
+    "head": "돌격",
+    "what": "기병이 이동 후 들이침",
+    "effect": "이동과 돌격 능력에 따라 가산",
+    "solve": "장병의 정면이나 험지로 대응"
+   },
+   "방어 태세": {
+    "name": "방어 태세",
+    "head": "방어 태세",
+    "what": "행동 대신 공격에 대비",
+    "effect": "받는 피해와 전열이 무너지는 것을 완화",
+    "solve": "다음 차례에 해제"
+   },
+   "재정비": {
+    "name": "재정비",
+    "head": "재정비",
+    "what": "한 차례를 써서 부대 정돈",
+    "effect": "사기와 전열 회복",
+    "solve": "안전한 자리에서 실행"
+   },
+   "예비병": {
+    "name": "예비병",
+    "head": "예비병",
+    "what": "성 안에서 출진을 기다리는 병력",
+    "effect": "출진·자동 충원에 사용",
+    "solve": "모집과 회복으로 보충"
+   },
+   "내구": {
+    "name": "내구",
+    "head": "내구",
+    "what": "성을 지키는 성벽의 힘",
+    "effect": "0에서 성 공격을 받으면 함락",
+    "solve": "포위를 풀고 회복"
+   },
+   "포위": {
+    "name": "포위",
+    "head": "포위",
+    "what": "적이 성문을 붙잡은 상태",
+    "effect": "성벽 회복과 보급을 방해",
+    "solve": "성문에 붙은 적을 물리침"
+   },
+   "점령 단계": {
+    "name": "점령 단계",
+    "head": "점령 단계",
+    "what": "빼앗은 성을 안정시키는 과정",
+    "effect": "방식에 따라 정상화까지 대기",
+    "solve": "회유·군정 조건을 충족"
+   },
+   "전문인력": {
+    "name": "전문인력",
+    "head": "전문인력",
+    "what": "성에서 자라는 숙련 인력",
+    "effect": "종류에 따라 성 산출을 높임",
+    "solve": "담당 장수와 성 방침을 확인"
+   },
+   "맹세": {
+    "name": "맹세",
+    "head": "맹세",
+    "what": "사건에서 받아든 목표",
+    "effect": "기한 안 성취 여부가 남음",
+    "solve": "맹세의 목표와 남은 차례 확인"
+   },
+   "피로": {
+    "name": "피로",
+    "head": "피로",
+    "what": "출진과 전투로 쌓이는 지침",
+    "effect": "높으면 출진을 할 수 없음",
+    "solve": "성에서 쉬게 함"
+   },
+   "불탄 숲": {
+    "name": "불탄 숲",
+    "head": "불탄 숲",
+    "what": "화계로 숲이 불탄 흔적",
+    "effect": "숲이 평지로 바뀜",
+    "solve": "새 지형을 보고 경로 선택"
+   },
+   "여울": {
+    "name": "여울",
+    "head": "여울",
+    "what": "강을 건널 수 있는 길",
+    "effect": "건널 때 이동 비용 추가",
+    "solve": "다리나 다른 경로와 비교"
+   },
+   "매복": {
+    "name": "매복",
+    "head": "매복",
+    "what": "보이지 않게 적을 기다림",
+    "effect": "숨은 적과 마주치면 멈춤",
+    "solve": "정찰하며 경로를 나누어 이동"
+   },
+   "전개": {
+    "name": "전개",
+    "head": "전개",
+    "what": "투석기를 사격 위치에 설치",
+    "effect": "전개 후 성벽 원거리 공격",
+    "solve": "이동하려면 접어야 함"
+   },
+   "인망": {
+    "name": "인망",
+    "head": "인망",
+    "what": "세력이 얻은 신뢰",
+    "effect": "등용과 사건 선택 등에 사용",
+    "solve": "성과와 선택으로 쌓음"
+   },
+   "친우": {
+    "name": "친우",
+    "head": "친우",
+    "what": "두 장수가 가까워진 관계",
+    "effect": "관계 효과와 장면이 열림",
+    "solve": "방문과 함께한 경험으로 유지"
+   },
+   "결의": {
+    "name": "결의",
+    "head": "결의",
+    "what": "장수 사이 굳은 약속",
+    "effect": "등용 비용 등 관계 효과",
+    "solve": "친우에서 관계를 더 쌓음"
+   },
+   "숙적": {
+    "name": "숙적",
+    "head": "숙적",
+    "what": "두 장수 사이 깊은 원한",
+    "effect": "만남과 사건에 영향을 줌",
+    "solve": "대면할 때 사건 내용을 확인"
+   },
+   "혼란": {
+    "name": "혼란",
+    "head": "혼란",
+    "what": "성 민심·치안 / 부대의 혼란 효과",
+    "effect": "부대는 일반 공격·전법을 못 씀",
+    "solve": "성은 치안 회복 / 부대는 효과 만료"
+   },
+   "공병대": {
+    "name": "공병대",
+    "head": "공병대",
+    "what": "근접보병 특수 · 성 내구 피해 ×1.5",
+    "effect": "자기 성에서 보수(내구 +15) · 공격 −20%",
+    "solve": "기반: 공방 · 근접보병 장수"
+   },
+   "방진대": {
+    "name": "방진대",
+    "head": "방진대",
+    "what": "창병 특수 · 창병 옆이면 정면 피해 −15%",
+    "effect": "정면 기병 돌격 무효 · 이동 −1칸",
+    "solve": "기반: 병영 · 연구 1단계 · 창병 장수"
+   },
+   "기마궁": {
+    "name": "기마궁",
+    "head": "기마궁",
+    "what": "기병 특수 · 사거리 2 · 이동 뒤 사격",
+    "effect": "근접 −30% · 받는 사격 +15% · 돌격 없음",
+    "solve": "기반: 병영 · 연구 2단계 · 기병 장수"
+   },
+   "계략": {
+    "name": "계략",
+    "head": "계략",
+    "what": "성에 있는 장수의 주 행동",
+    "effect": "보이는 범위 안의 적에게 실행",
+    "solve": "재사용 대기가 끝나면 다시 사용"
+   },
+   "유언비어": {
+    "name": "유언비어",
+    "head": "유언비어",
+    "what": "적 성에 헛소문을 퍼뜨린다",
+    "effect": "식량·생산 산출 감소, 예비병 자동 충원 멈춤",
+    "solve": "표시된 차례가 지나면 끝남"
+   },
+   "이간": {
+    "name": "이간",
+    "head": "이간",
+    "what": "적 부대 장수와 주군을 이간한다",
+    "effect": "사기 동요가 표시된 차례 동안 지속",
+    "solve": "이미 동요·패주인 부대는 그대로"
+   },
+   "보급 교란": {
+    "name": "보급 교란",
+    "head": "보급 교란",
+    "what": "적 부대의 보급을 끊는다",
+    "effect": "휴대 군량 감소",
+    "solve": "안전한 보급권에서 보충"
+   }
+  },
+  "expanded": false,
+  "allGroups": [
+   {
+    "name": "기본",
+    "items": [
+     "조작",
+     "이동",
+     "성장",
+     "차례와 승리"
+    ]
+   },
+   {
+    "name": "전투",
+    "items": [
+     "공격",
+     "통제",
+     "측면",
+     "후방",
+     "접근사격",
+     "상성",
+     "전열",
+     "화계"
+    ]
+   },
+   {
+    "name": "성과 군량",
+    "items": [
+     "성",
+     "군량"
+    ]
+   },
+   {
+    "name": "용어",
+    "items": [
+     "동요",
+     "패주",
+     "통제 구역",
+     "보급권",
+     "협공",
+     "돌격",
+     "방어 태세",
+     "재정비",
+     "예비병",
+     "내구",
+     "포위",
+     "점령 단계",
+     "전문인력",
+     "맹세",
+     "피로",
+     "불탄 숲",
+     "여울",
+     "매복",
+     "전개",
+     "인망",
+     "친우",
+     "결의",
+     "숙적",
+     "혼란",
+     "공병대",
+     "방진대",
+     "기마궁",
+     "계략",
+     "유언비어",
+     "이간",
+     "보급 교란"
+    ]
+   }
+  ],
+  "more": "자세히 보기",
+  "empty": null
+ }
+}

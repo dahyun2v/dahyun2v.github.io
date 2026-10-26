@@ -1,0 +1,112 @@
+{
+  "schema": "first3-i1-checks-v1",
+  "generatedAt": "2026-09-19T19:56:01.234Z",
+  "scope": "I1 movement, contacts, observation, save and I0 regression; no damage, strategic AI, economy or balance proof",
+  "summary": {
+    "passed": 18,
+    "failed": 0
+  },
+  "saveReloadDiff": [
+    {
+      "case": "40_percent",
+      "changedPaths": []
+    },
+    {
+      "case": "last_seen",
+      "changedPaths": []
+    },
+    {
+      "case": "turn_boundary",
+      "changedPaths": []
+    }
+  ],
+  "performance": {
+    "runs": 5,
+    "turnTicks": 200,
+    "armies": 6,
+    "tiles": 252,
+    "unit": "ms",
+    "measurements": [
+      32.8578,
+      30.025199999999927,
+      28.032799999999952,
+      27.25630000000001,
+      26.796400000000062
+    ],
+    "average": 28.99369999999999
+  },
+  "checks": [
+    {
+      "id": "I1-01_multi_tile_route_time_and_remainder",
+      "status": "pass"
+    },
+    {
+      "id": "I1-02_save_at_40_percent_and_resume_exactly",
+      "status": "pass"
+    },
+    {
+      "id": "I1-03_enemy_same_destination",
+      "status": "pass"
+    },
+    {
+      "id": "I1-04_enemy_opposite_edge",
+      "status": "pass"
+    },
+    {
+      "id": "I1-05_friendly_contention_speed_and_id",
+      "status": "pass"
+    },
+    {
+      "id": "I1-06_unexplored_visible_remembered",
+      "status": "pass"
+    },
+    {
+      "id": "I1-07_enemy_minimum_projection_only",
+      "status": "pass"
+    },
+    {
+      "id": "I1-08_enemy_leaves_vision_last_seen_frozen",
+      "status": "pass"
+    },
+    {
+      "id": "I1-09_player_choice_does_not_change_simulation",
+      "status": "pass"
+    },
+    {
+      "id": "friendly_swap_and_stationary_wait",
+      "status": "pass"
+    },
+    {
+      "id": "occupied_enemy_contact_without_damage",
+      "status": "pass"
+    },
+    {
+      "id": "invalid_edge_blocks_without_reroute",
+      "status": "pass"
+    },
+    {
+      "id": "order_lock_and_hold",
+      "status": "pass"
+    },
+    {
+      "id": "turn_boundary_keeps_progress",
+      "status": "pass"
+    },
+    {
+      "id": "static_paths_ignore_enemy_hidden_stats_and_positions",
+      "status": "pass"
+    },
+    {
+      "id": "reference_route_and_river_closures",
+      "status": "pass"
+    },
+    {
+      "id": "vision_hill_city_owner_and_boundary",
+      "status": "pass"
+    },
+    {
+      "id": "reject_corrupt_progress_and_observation",
+      "status": "pass"
+    }
+  ]
+}

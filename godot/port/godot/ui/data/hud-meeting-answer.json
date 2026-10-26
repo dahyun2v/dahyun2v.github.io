@@ -1,0 +1,1334 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "troopScale": 10,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+3",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +3"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+2",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+1",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "5,000",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "4,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 업 생산으로",
+    "target": "west"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 2 · 남은 2",
+  "rows": [
+   {
+    "id": "U-F01-G07",
+    "officerId": "G07",
+    "name": "조조",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+     "w": 522,
+     "h": 888,
+     "cx": 318,
+     "cy": 103,
+     "side": 114
+    },
+    "troop": "cavalry",
+    "troopName": "기병",
+    "countText": "2,500",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-F01-G24",
+    "officerId": "G06",
+    "name": "황충",
+    "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+    "head": {
+     "w": 616,
+     "h": 845,
+     "cx": 281,
+     "cy": 98,
+     "side": 154
+    },
+    "troop": "bow",
+    "troopName": "궁병",
+    "countText": "2,500",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": true
+   }
+  ]
+ },
+ "selected": {
+  "id": "U-F01-G24",
+  "officerId": "G06",
+  "name": "황충",
+  "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+  "head": {
+   "w": 616,
+   "h": 845,
+   "cx": 281,
+   "cy": 98,
+   "side": 154
+  },
+  "troop": "bow",
+  "troopName": "궁병",
+  "countText": "2,500",
+  "maxText": "2,500",
+  "countRatio": 1,
+  "ratings": [
+   {
+    "key": "attack",
+    "label": "공격",
+    "value": 54
+   },
+   {
+    "key": "defense",
+    "label": "방어",
+    "value": 86
+   },
+   {
+    "key": "mobility",
+    "label": "이동",
+    "value": 4
+   },
+   {
+    "key": "range",
+    "label": "사거리",
+    "value": 2
+   }
+  ],
+  "engine": {
+   "name": "맹장(연사)",
+   "resourceName": "기세",
+   "resource": 2,
+   "max": 3
+  },
+  "traits": {
+   "core": {
+    "name": "노당익장",
+    "full": "노당익장",
+    "text": "이동하지 않은 차례의 사격은 거리 2 에서 도병 직사 차단과 엄폐를 무시하고 전열 손상 +1단계.",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+    "token": null
+   },
+   "equipped": [],
+   "slots": 3
+  },
+  "bonds": [],
+  "klass": {
+   "engine": "맹장(연사)",
+   "branch": "기본",
+   "merit": "실적 0/3",
+   "merits": "광장 0/3 · 용장 0/3",
+   "aptitude": "적성 높음",
+   "troopName": "궁병"
+  },
+  "gauge": 5,
+  "gaugeMax": 100,
+  "qwer": [
+   {
+    "key": "Q",
+    "traitId": null,
+    "name": "화살비",
+    "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+    "cost": null,
+    "state": "disabled",
+    "reason": "적과 붙어 사격 불가"
+   },
+   {
+    "key": "W",
+    "traitId": null,
+    "name": "맹장(연사)",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+    "cost": null,
+    "state": "ready",
+    "reason": "기세 2 / 3"
+   },
+   {
+    "key": "E",
+    "traitId": "G06.pilot.E",
+    "name": "정조준",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+    "cost": 40,
+    "state": "disabled",
+    "reason": "게이지 5/40"
+   },
+   {
+    "key": "R",
+    "traitId": "G06.card.1",
+    "name": "백보천양",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+    "cost": 100,
+    "state": "disabled",
+    "reason": "게이지 5/100"
+   }
+  ],
+  "orders": [
+   {
+    "key": "move",
+    "label": "이동",
+    "hotkey": "M"
+   },
+   {
+    "key": "attack",
+    "label": "공격",
+    "hotkey": "A",
+    "primary": true,
+    "disabled": true,
+    "tip": "조건 미충족"
+   },
+   {
+    "key": "face",
+    "label": "정면",
+    "hotkey": "F",
+    "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+   },
+   {
+    "key": "brace",
+    "label": "방어",
+    "hotkey": "B",
+    "disabled": false,
+    "tip": "이번 차례 방어 태세"
+   },
+   {
+    "key": "regroup",
+    "label": "재정비",
+    "hotkey": "S",
+    "disabled": true,
+    "tip": "동요 상태에서만 가능"
+   },
+   {
+    "key": "wait",
+    "label": "대기",
+    "hotkey": "H"
+   }
+  ]
+ },
+ "sets": null,
+ "docks": [
+  {
+   "id": "U-F01-G07",
+   "officerId": "G07",
+   "name": "조조",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "head": {
+    "w": 522,
+    "h": 888,
+    "cx": 318,
+    "cy": 103,
+    "side": 114
+   },
+   "troop": "cavalry",
+   "troopName": "기병",
+   "countText": "2,500",
+   "maxText": "2,500",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 48
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 106
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 9
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 1
+    }
+   ],
+   "engine": {
+    "name": "책사",
+    "resourceName": "계책",
+    "resource": 2,
+    "max": 3
+   },
+   "traits": {
+    "core": {
+     "name": "난세간웅",
+     "full": "난세간웅",
+     "text": "조조 시야 안 적이 E 전법을 쓰면 그것을 기억한다(최근 하나, 다음 내 차례 끝까지). 조조는 E 칸 대신 기억한 전법을 쓸 수 있다(게이지 비용은 원래 값 · 고유 R 은 기억하지 않음).",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+     "token": null
+    },
+    "equipped": [],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "책사",
+    "branch": "기본",
+    "merit": "실적 0/3",
+    "merits": "궤계 0/3 · 군사 0/3",
+    "aptitude": "적성 일정",
+    "troopName": "기병"
+   },
+   "gauge": 5,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "돌파",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-cavalry.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "대상 없음"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "책사",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "계책 2 / 3"
+    },
+    {
+     "key": "E",
+     "traitId": "G07.combat.CTA-09",
+     "name": "기싸움",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 40,
+     "state": "disabled",
+     "reason": "게이지 5/40"
+    },
+    {
+     "key": "R",
+     "traitId": "G07.card.1",
+     "name": "호령천하",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 5/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "move",
+     "label": "이동",
+     "hotkey": "M"
+    },
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": false,
+     "tip": "공격할 대상을 고릅니다"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-F01-G24",
+   "officerId": "G06",
+   "name": "황충",
+   "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+   "head": {
+    "w": 616,
+    "h": 845,
+    "cx": 281,
+    "cy": 98,
+    "side": 154
+   },
+   "troop": "bow",
+   "troopName": "궁병",
+   "countText": "2,500",
+   "maxText": "2,500",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 54
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 86
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 4
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 2
+    }
+   ],
+   "engine": {
+    "name": "맹장(연사)",
+    "resourceName": "기세",
+    "resource": 2,
+    "max": 3
+   },
+   "traits": {
+    "core": {
+     "name": "노당익장",
+     "full": "노당익장",
+     "text": "이동하지 않은 차례의 사격은 거리 2 에서 도병 직사 차단과 엄폐를 무시하고 전열 손상 +1단계.",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+     "token": null
+    },
+    "equipped": [],
+    "slots": 3
+   },
+   "bonds": [],
+   "klass": {
+    "engine": "맹장(연사)",
+    "branch": "기본",
+    "merit": "실적 0/3",
+    "merits": "광장 0/3 · 용장 0/3",
+    "aptitude": "적성 높음",
+    "troopName": "궁병"
+   },
+   "gauge": 5,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "traitId": null,
+     "name": "화살비",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "적과 붙어 사격 불가"
+    },
+    {
+     "key": "W",
+     "traitId": null,
+     "name": "맹장(연사)",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "기세 2 / 3"
+    },
+    {
+     "key": "E",
+     "traitId": "G06.pilot.E",
+     "name": "정조준",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 40,
+     "state": "disabled",
+     "reason": "게이지 5/40"
+    },
+    {
+     "key": "R",
+     "traitId": "G06.card.1",
+     "name": "백보천양",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 5/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "move",
+     "label": "이동",
+     "hotkey": "M"
+    },
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true,
+     "disabled": true,
+     "tip": "조건 미충족"
+    },
+    {
+     "key": "face",
+     "label": "정면",
+     "hotkey": "F",
+     "tip": "이동 대신 바라보는 쪽만 바꿉니다. 옆·뒤를 맞으면 피해가 커집니다."
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B",
+     "disabled": false,
+     "tip": "이번 차례 방어 태세"
+    },
+    {
+     "key": "regroup",
+     "label": "재정비",
+     "hotkey": "S",
+     "disabled": true,
+     "tip": "동요 상태에서만 가능"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "H"
+    }
+   ]
+  }
+ ],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 2,
+  "ready": false
+ },
+ "tacticReady": {
+  "U-F01-G07:G07.card.1": false,
+  "U-F01-G07:G07.combat.CTA-09": false,
+  "U-F01-G24:G06.card.1": false,
+  "U-F01-G24:G06.pilot.E": false
+ },
+ "advisor": {
+  "scope": "F01",
+  "turn": 1,
+  "interval": 7,
+  "lines": []
+ },
+ "crisis": null,
+ "choice": null,
+ "dejaVu": {
+  "scope": "F01",
+  "turn": 1,
+  "busy": false,
+  "recent": []
+ },
+ "run": {
+  "status": "",
+  "blessing": null,
+  "rewind": {
+   "charges": 2,
+   "available": true,
+   "reason": null
+  },
+  "memory": null
+ },
+ "ambition": {
+  "scope": "F01",
+  "turn": 1,
+  "canChoose": false,
+  "chooseUntil": 3,
+  "bands": [],
+  "offer": null
+ },
+ "council": null,
+ "achievementRecords": {
+  "title": "업적 기록",
+  "rows": []
+ },
+ "captives": {
+  "title": "포로",
+  "locked": false,
+  "rows": []
+ },
+ "occupations": {
+  "title": "점령 처리",
+  "locked": false,
+  "rows": []
+ },
+ "visit": {
+  "scope": "F01:190919",
+  "turn": 1,
+  "lordId": "G07",
+  "lordArt": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "lordHead": {
+   "w": 522,
+   "h": 888,
+   "cx": 318.15900000000005,
+   "cy": 103.45200000000001,
+   "side": 114.057
+  },
+  "background": "assets/ui-v3/scenes/plate-visit.webp",
+  "officers": [
+   {
+    "id": "G04",
+    "name": "순욱",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+    "head": {
+     "w": 471,
+     "h": 945,
+     "cx": 291.36060000000003,
+     "cy": 90.6255,
+     "side": 138.7566
+    },
+    "value": 85,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "명공께서 천하를 바로잡으신다면, 이 문약은 끝까지 곁을 지키겠습니다.",
+    "scene": "깊은 밤, 순욱이 직접 차를 따른다.",
+    "line": "명공을 처음 뵈었을 때, 이분이라면 난세를 끝내리라 생각했습니다.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "네가 고른 사람이 틀리지 않았음을 보여 주마.",
+      "gain": 2,
+      "reply": "이미 보여 주고 계십니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G04",
+       "choice": 2
+      }
+     },
+     {
+      "text": "지금도 그렇게 생각하느냐?",
+      "gain": 1,
+      "reply": "……예. 다만 가끔 걱정도 합니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G04",
+       "choice": 1
+      }
+     },
+     {
+      "text": "난세가 끝나면 너는 무엇을 하겠느냐?",
+      "gain": 0,
+      "reply": "글을 읽고 향을 피우겠지요. 그날이 온다면.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G04",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G24",
+    "name": "장료",
+    "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+    "head": {
+     "w": 808,
+     "h": 1153,
+     "cx": 302.83840000000004,
+     "cy": 116.22240000000001,
+     "side": 144.47039999999998
+    },
+    "value": 70,
+    "tier": "TRUST",
+    "tierName": "신뢰",
+    "bound": "명공의 깃발 아래라면, 저는 열 배의 적도 두렵지 않습니다.",
+    "scene": "장료가 지도 위 적의 본진에 손가락을 올린다.",
+    "line": "적이 많을수록 대장의 자리가 드러납니다. 저는 늘 그 자리만 봅니다.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "그 담력이 우리 군의 창끝일세.",
+      "gain": 2,
+      "reply": "창끝은 부러지지 않도록 단련하겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G24",
+       "choice": 2
+      }
+     },
+     {
+      "text": "위험하지 않은가?",
+      "gain": 1,
+      "reply": "위험한 곳에 답이 있습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G24",
+       "choice": 1
+      }
+     },
+     {
+      "text": "너무 앞서 나가지 말게.",
+      "gain": 0,
+      "reply": "……명을 따르겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G24",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G33",
+    "name": "하후돈",
+    "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+    "head": {
+     "w": 531,
+     "h": 950,
+     "cx": 310.9536,
+     "cy": 113.62,
+     "side": 140.715
+    },
+    "value": 85,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "맹덕, 네가 가는 곳이면 지옥이라도 따라간다.",
+    "scene": "술자리 끝, 하후돈이 조조의 어깨를 친다.",
+    "line": "어릴 때 너랑 사냥 다니던 때가 생각나는군. 그땐 이렇게 될 줄 몰랐지.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "그때나 지금이나 내 곁엔 네가 있다.",
+      "gain": 2,
+      "reply": "당연하지. 그게 내 일이니까.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G33",
+       "choice": 2
+      }
+     },
+     {
+      "text": "사냥이나 한번 가자.",
+      "gain": 1,
+      "reply": "좋지! 누가 더 잡나 내기하자고.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G33",
+       "choice": 1
+      }
+     },
+     {
+      "text": "지금은 천하를 사냥하는 중이다.",
+      "gain": 0,
+      "reply": "…거창하긴. 그래도 따라가 준다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G33",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G34",
+    "name": "조인",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+    "head": {
+     "w": 591,
+     "h": 857,
+     "cx": 298.5732,
+     "cy": 85.1001,
+     "side": 104.0751
+    },
+    "value": 82,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "형님이 등을 맡기신다면, 이 자효가 성벽이 되겠습니다.",
+    "scene": "술자리. 조인이 어린 시절 말 타고 놀던 이야기를 꺼낸다.",
+    "line": "형님, 어릴 적 형님이 사고를 치면 수습은 늘 제 몫이었지요.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "그래서 지금도 네게 뒤를 맡기는 거다.",
+      "gain": 2,
+      "reply": "하하, 평생 이러다 끝나겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G34",
+       "choice": 2
+      }
+     },
+     {
+      "text": "기억 안 나는데.",
+      "gain": 1,
+      "reply": "형님은 늘 그러셨습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G34",
+       "choice": 1
+      }
+     },
+     {
+      "text": "그 얘기를 아직도 하냐.",
+      "gain": 0,
+      "reply": "할 때마다 형님 얼굴이 재미있어서요.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G34",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G25",
+    "name": "허저",
+    "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+    "head": {
+     "w": 546,
+     "h": 865,
+     "cx": 277.0404,
+     "cy": 66.5185,
+     "side": 107.6166
+    },
+    "value": 85,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "명공 곁에는 이 허저가 있습니다. 누구도 한 발짝 못 들어옵니다.",
+    "scene": "밤이 깊었다. 허저가 졸음을 참으며 여전히 곁에 서 있다.",
+    "line": "명공, 주무십시오. 저는 안 졸립니다.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "너도 앉아라. 오늘은 같이 마시자.",
+      "gain": 2,
+      "reply": "……한 잔만입니다. 지키는 건 그대로 합니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G25",
+       "choice": 2
+      }
+     },
+     {
+      "text": "졸린 얼굴인데.",
+      "gain": 1,
+      "reply": "얼굴만 그렇습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G25",
+       "choice": 1
+      }
+     },
+     {
+      "text": "그래, 수고해라.",
+      "gain": 0,
+      "reply": "예.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G25",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G06",
+    "name": "황충",
+    "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+    "head": {
+     "w": 616,
+     "h": 845,
+     "cx": 281.204,
+     "cy": 98.2735,
+     "side": 154.1232
+    },
+    "value": 40,
+    "tier": "NORMAL",
+    "tierName": "보통",
+    "bound": "이 몸, 주공과 생사를 함께하겠습니다.",
+    "scene": "황충이(가) 무기를 손질하던 손을 멈추고 일어선다.",
+    "line": "주공께서 이 누추한 곳까지 오셨습니까.",
+    "reason": "내 세력의 자유 장수를 골라 주세요",
+    "choices": [
+     {
+      "text": "그대의 솜씨를 믿고 있소. 불편한 것은 없소?",
+      "gain": 2,
+      "reply": "과분한 말씀입니다. 맡기신 일, 반드시 해내겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G06",
+       "choice": 2
+      }
+     },
+     {
+      "text": "요즘 지내기는 어떻소?",
+      "gain": 1,
+      "reply": "덕분에 무탈합니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G06",
+       "choice": 1
+      }
+     },
+     {
+      "text": "지나는 길에 들렀소.",
+      "gain": 0,
+      "reply": "그러셨습니까. 살펴 가십시오.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G06",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G01",
+    "name": "여포",
+    "art": "assets/officer-art/cutout/G01-decided-hA.webp",
+    "head": {
+     "w": 648,
+     "h": 952,
+     "cx": 275.5296,
+     "cy": 238.09519999999998,
+     "side": 101.736
+    },
+    "value": 30,
+    "tier": "NORMAL",
+    "tierName": "보통",
+    "bound": "이 몸, 주공과 생사를 함께하겠습니다.",
+    "scene": "여포이(가) 무기를 손질하던 손을 멈추고 일어선다.",
+    "line": "주공께서 이 누추한 곳까지 오셨습니까.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "그대의 솜씨를 믿고 있소. 불편한 것은 없소?",
+      "gain": 2,
+      "reply": "과분한 말씀입니다. 맡기신 일, 반드시 해내겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G01",
+       "choice": 2
+      }
+     },
+     {
+      "text": "요즘 지내기는 어떻소?",
+      "gain": 1,
+      "reply": "덕분에 무탈합니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G01",
+       "choice": 1
+      }
+     },
+     {
+      "text": "지나는 길에 들렀소.",
+      "gain": 0,
+      "reply": "그러셨습니까. 살펴 가십시오.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G01",
+       "choice": 0
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "ritual": {
+  "scope": "F01:190919",
+  "enabled": true,
+  "busy": false,
+  "factionId": "F01",
+  "rulerId": "G07",
+  "officers": [
+   {
+    "officerId": "G07",
+    "name": "조조",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp"
+   },
+   {
+    "officerId": "G04",
+    "name": "순욱",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp"
+   },
+   {
+    "officerId": "G24",
+    "name": "장료",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G24-20261012-hA.webp"
+   },
+   {
+    "officerId": "G33",
+    "name": "하후돈",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G33-decided-hA.webp"
+   },
+   {
+    "officerId": "G34",
+    "name": "조인",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp"
+   },
+   {
+    "officerId": "G25",
+    "name": "허저",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G25-decided-hA.webp"
+   },
+   {
+    "officerId": "G06",
+    "name": "황충",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G06-decided-hA.webp"
+   },
+   {
+    "officerId": "G01",
+    "name": "여포",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G01-decided-hA.webp"
+   }
+  ],
+  "enemies": [
+   "F02",
+   "F03"
+  ],
+  "scene": null,
+  "generic": {
+   "bond": [
+    "이 어지러운 천하를 그대와 함께 끝까지 헤쳐 나가겠소.",
+    "보여 주신 믿음에 내 한 목숨과 칼끝으로 답하겠소."
+   ],
+   "bound": [
+    "태어난 날은 달라도 마지막 숨은 같은 자리에서 거둡시다.",
+    "어느 전장에 서더라도 그대의 등 뒤는 내가 지키겠소."
+   ],
+   "rival": [
+    "이 시대의 끝에서 마침내 그대와 승부를 가리게 되었소.",
+    "내 칼끝이 증명할 대의를 그대 눈앞에 똑똑히 보이겠소."
+   ],
+   "death": [
+    "그대가 흘린 붉은 피를 헛된 기억으로 남기지 않겠소.",
+    "남겨진 대업을 그대 손에 맡기고 먼저 눈을 감겠소."
+   ],
+   "betrayal": [
+    "함께 나눈 지난날의 맹세를 오늘 이 자리에서 거두겠소.",
+    "뜻이 갈라진 이상 다음 전장에선 적으로 마주할 것이오."
+   ],
+   "departure": [
+    "함께 걸은 세월을 뒤로하고 그대의 앞날을 빌어 주겠소.",
+    "나누었던 정은 가슴에 묻고 이제 각자의 길을 가겠소."
+   ]
+  }
+ },
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "west",
+    "name": "업",
+    "u": 0.2635,
+    "v": 0.7607,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "julu",
+    "name": "거록",
+    "u": 0.3124,
+    "v": 0.6641,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "east",
+    "name": "계",
+    "u": 0.5897,
+    "v": 0.2586,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": [
+   {
+    "id": "U-F02-G02",
+    "u": 0.4592,
+    "v": 0.2586,
+    "own": false
+   },
+   {
+    "id": "U-F03-G08",
+    "u": 0.5897,
+    "v": 0.2586,
+    "own": false
+   },
+   {
+    "id": "U-F01-G07",
+    "u": 0.4429,
+    "v": 0.2779,
+    "own": true
+   },
+   {
+    "id": "U-F01-G24",
+    "u": 0.4266,
+    "v": 0.2586,
+    "own": true
+   }
+  ]
+ },
+ "diplomacy": {
+  "screen": "diplomacy",
+  "me": {
+   "name": "조조",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "head": {
+    "w": 522,
+    "h": 888,
+    "cx": 318,
+    "cy": 103,
+    "side": 114
+   },
+   "trust": 50,
+   "threat": 0
+  },
+  "rows": [
+   {
+    "id": "F02",
+    "name": "유비",
+    "contact": true,
+    "state": "WAR",
+    "stateText": "전쟁 중",
+    "icon": "hostile",
+    "art": "assets/officer-art/cutout/G05-decided-hA.webp",
+    "head": {
+     "w": 404,
+     "h": 829,
+     "cx": 252,
+     "cy": 87,
+     "side": 121
+    },
+    "selected": true,
+    "waiting": false
+   },
+   {
+    "id": "F03",
+    "name": "손권",
+    "contact": true,
+    "state": "WAR",
+    "stateText": "전쟁 중",
+    "icon": "hostile",
+    "art": "assets/officer-art/cutout/G08-full-hA.webp",
+    "head": {
+     "w": 777,
+     "h": 1173,
+     "cx": 399,
+     "cy": 105,
+     "side": 107
+    },
+    "selected": false,
+    "waiting": false
+   }
+  ],
+  "pick": {
+   "id": "F02",
+   "name": "유비",
+   "contact": true,
+   "stateText": "전쟁 중",
+   "icon": "hostile",
+   "warLine": "지금 우리 세력 · 손권과 싸우는 중",
+   "art": "assets/officer-art/cutout/G05-decided-hA.webp",
+   "attitude": {
+    "label": "보통",
+    "tone": "neutral",
+    "value": 16
+   },
+   "reasons": [
+    {
+     "text": "공동의 적이 있다",
+     "value": 15,
+     "turnsLeft": null
+    },
+    {
+     "text": "군주끼리의 인연",
+     "value": 1,
+     "turnsLeft": null
+    }
+   ],
+   "offers": [
+    {
+     "key": "gift",
+     "label": "선물",
+     "symbol": "friendly",
+     "ok": true,
+     "effect": "우리를 보는 마음 +8",
+     "right": "인망 −10",
+     "detail": "인망 −10 · 우리를 보는 마음 +8(차례마다 1씩 줄어듦, 최대 +16)"
+    },
+    {
+     "key": "truce",
+     "label": "휴전 제안",
+     "symbol": "neutral",
+     "ok": false,
+     "effect": "이미 답변을 기다리는 제안이 있습니다.",
+     "right": "수락 예상 높음",
+     "detail": "이미 답변을 기다리는 제안이 있습니다. · 휴전 기본 -15 · 호감 +4(우리를 보는 마음 16) · 신용 +0(제안자 신용 50) · 군주 감화 +8 · 군주 중재 +3 · 상대가 밀리고 있음 +20 · 3차례만 전선을 쉼 +10 · 다른 전선의 보이는 위협 +8"
+    },
+    {
+     "key": "alliance",
+     "label": "동맹 제안",
+     "symbol": "alliance",
+     "ok": false,
+     "effect": "이미 답변을 기다리는 제안이 있습니다.",
+     "right": "수락 예상 높음",
+     "detail": "이미 답변을 기다리는 제안이 있습니다. · 동맹 기본 -30 · 호감 +4(우리를 보는 마음 16) · 신용 +0(제안자 신용 50) · 군주 감화 +8 · 군주 중재 +3 · 상대가 밀리고 있음 +20"
+    }
+   ]
+  },
+  "meeting": true,
+  "stage": "answer",
+  "rulerName": "유비",
+  "factionLabel": "유비군 · 전쟁 중",
+  "tone": "neutral",
+  "line": "잡은 손은 성이 무너져도 안 놓소",
+  "result": "휴전 제안을 받아들였습니다. 다음 차례부터 적용됩니다."
+ }
+}

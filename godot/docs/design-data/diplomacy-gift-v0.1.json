@@ -1,0 +1,12 @@
+{
+  "version": "0.1",
+  "status": "TEST_VALUE",
+  "cost": 10,
+  "cooldownTurns": 3,
+  "modifier": {
+    "value": 8,
+    "cap": 16,
+    "decayPerTurn": 1,
+    "text": "선물을 받았다"
+  }
+}

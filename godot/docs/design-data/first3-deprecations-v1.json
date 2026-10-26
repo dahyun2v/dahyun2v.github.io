@@ -1,0 +1,15 @@
+{
+  "schema": "first3-deprecations-v1",
+  "decision": "PM-FIRST3-002",
+  "currentInitializer": "docs/design-data/first3-initial-state-v1.json",
+  "policy": "Keep prior artifacts for history. Do not load their deprecated fields into the current initializer or combine old faction bonuses with the new rules.",
+  "entries": [
+    {"path":"docs/design-data/first3-ledger-v1.json","fields":["factions","shared_start"],"status":"deprecated_for_initialization","reason":"F02/F03 city, governor and field assignment superseded by canonical start"},
+    {"path":"docs/design-data/ops-scenario-v1.json","fields":["factions","generals","cities","units"],"status":"archived_initialization_source","reason":"Values have been consolidated; runtime reads the canonical JSON only. G21 stub is not a playable full record."},
+    {"path":"docs/design-data/map-start-v1.json","fields":["starts","units"],"status":"archived_initialization_source","reason":"Current initial values are consolidated; movement, vision and time remain specialist reference inputs."},
+    {"path":"docs/design-data/officers-first-play-v1.json","fields":["rules.major_stat_display","officers[].level_up_1_result.auto_growth.major_stats_after"],"status":"deprecated_runtime_rules","reason":"No mean-based recalculation of baseStats; existing starting numeric values copied as an independent fixed fixture."},
+    {"path":"docs/운영-첫판-처리정책AI저장-v1.md","fields":["0.1일 tick","OP-68 succession before survival","old FIRST3 faction effect formulas"],"status":"deprecated_rules_pending_owner_document_update","reason":"PM-FIRST3-002: 0.05/200, SURVIVAL_GATE before reward, current faction rules without old bonuses."},
+    {"path":"prototype/deprecated/preview-v1","fields":["old initializer","temporary economy","version1 save"],"status":"archived_runtime","reason":"Replaced by active src/core.mjs -> src/first3.mjs. Old browser save key is preserved, not migrated automatically."},
+    {"path":"tools/deprecated/check-first3-links-v1.mjs","fields":["legacy cross-document audit"],"status":"historical_audit","reason":"Current checker exercises canonical runtime and save/reload. Historical 36/2 report remains unchanged."}
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "schema": "sample4-abilities-v1.0",
+  "status": "TRIAL — 수치는 시험값",
+  "officers": [
+    {
+      "id": "G18",
+      "name": "관우",
+      "uniqueTrait": {
+        "id": "G18-S4-0",
+        "kind": "trait",
+        "name": "참장",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "text": "맞수가 전열 붕괴일 때 관우의 투지 치기가 맞으면 사기 판정 없이 즉시 패주, 이 패주는 다음 정산 한 번 수습되지 않는다",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_EXECUTE_RIVAL",
+            "when": "PASSIVE",
+            "target": "SELF",
+            "params": {}
+          }
+        ]
+      },
+      "signatureE": {
+        "id": "G18-S4-1",
+        "kind": "tactic",
+        "name": "단기 돌입",
+        "rarity": "LEGENDARY",
+        "classTag": "고유 E",
+        "range": 6,
+        "text": "이 차례 이동하지 않았을 때: 시야 안 6칸 안 적 하나 옆 빈 칸으로 들어가(통제 구역 · 접근사격 무시) 친다(맞수면 투지 치기로). 다음 내 차례 시작에 출발 칸으로 돌아온다(비었을 때, 이탈 추격 없음)",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_SOLO_ENTRY",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "range": 6,
+              "ratio": 100
+            }
+          }
+        ],
+        "gaugeCost": 60
+      },
+      "signatureTactic": {
+        "id": "G18-S4-2",
+        "kind": "tactic",
+        "name": "위진화하",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "text": "시야 안 모든 적 부대 사기 판정(이번 판 참장 1회마다 세짐, 상한 있음). 동요 이하가 된 부대는 다음 자기 차례에 관우와 붙는 칸으로 들어오지 못한다",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_REALM_TERROR",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "weight": 10,
+              "perExecution": 5,
+              "cap": 30
+            }
+          }
+        ],
+        "gaugeCost": 100
+      }
+    },
+    {
+      "id": "G04",
+      "name": "순욱",
+      "uniqueTrait": {
+        "id": "G04-S4-0",
+        "kind": "trait",
+        "name": "왕좌지재",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "text": "순욱이 그 차례 주 행동을 쓰지 않고 끝내면, 2칸 안에서 이미 행동한 아군 장수 하나가 주 행동(일반공격 · Q · W, E · R 불가) 한 번을 더 한다. 같은 아군 연속 두 구간 불가, 순욱에게 적이 붙었거나 순욱이 동요 이하면 꺼짐",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_PASS_ACTION",
+            "when": "PASSIVE",
+            "target": "SELF",
+            "params": {
+              "range": 2
+            }
+          }
+        ]
+      },
+      "signatureE": {
+        "id": "G04-S4-1",
+        "kind": "tactic",
+        "name": "이호경식",
+        "rarity": "LEGENDARY",
+        "classTag": "고유 E",
+        "range": 3,
+        "text": "지략 비교. 사거리 3 · 시야 안, 서로 붙은 적 둘이 다음 적 구간 끝까지 서로에게서 오는 효과(영 · 오라 · 대신 맞기 · 협공)를 받지 못한다. 둘이 떨어지면 끝",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_BREAK_BOND",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "range": 3
+            }
+          }
+        ],
+        "gaugeCost": 60
+      },
+      "signatureTactic": {
+        "id": "G04-S4-2",
+        "kind": "tactic",
+        "name": "구호탄랑",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "text": "지략 비교. 사거리 2 · 시야 안 적 하나가 붙어 있는 다른 적을 한 번 친다",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_TIGER_COMMAND",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "range": 2,
+              "ratio": 100
+            }
+          }
+        ],
+        "gaugeCost": 80
+      }
+    },
+    {
+      "id": "G56",
+      "name": "전위",
+      "uniqueTrait": {
+        "id": "G56-S4-0",
+        "kind": "trait",
+        "name": "고지악래",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "text": "병력이 0 이 될 공격을 받으면 병력 1 로 남고, 다음 내 차례 끝까지 병력이 1 아래로 내려가지 않으며 패주하지 않는다(판에 한 번). 버팀이 끝나는 순간, 버티는 동안 받은 피해로 생긴 부상병의 절반(시험)이 병력으로 돌아온다 — 버텨 낸 만큼 되살아난다",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_DEFER_DEATH",
+            "when": "PASSIVE",
+            "target": "SELF",
+            "params": {
+              "recoverRatio": 50
+            }
+          }
+        ]
+      },
+      "signatureE": {
+        "id": "G56-S4-1",
+        "kind": "tactic",
+        "name": "양협",
+        "rarity": "LEGENDARY",
+        "classTag": "고유 E",
+        "range": 0,
+        "text": "붙은 적 둘을 함께 친다(각 0.7). 두 적이 전위를 사이에 둔 마주 보는 칸이면 둘 다 전열 판정 한 번 더",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_TWIN_CLAMP",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "ratio": 70,
+              "weight": 10
+            }
+          }
+        ],
+        "gaugeCost": 60
+      },
+      "signatureTactic": {
+        "id": "G56-S4-2",
+        "kind": "tactic",
+        "name": "한 걸음도 들이지 마라",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "text": "다음 적 구간 동안 전위와 붙은 빈 칸에 적이 들어오지 못한다(밀어 넣기도 막음). 이미 붙은 적은 떠날 수 있다. 이 동안 전위는 밀리지 않는다",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_DENY_ENTRY",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "range": 1
+            }
+          }
+        ],
+        "gaugeCost": 80
+      }
+    },
+    {
+      "id": "G27",
+      "name": "주유",
+      "uniqueTrait": {
+        "id": "G27-S4-0",
+        "kind": "trait",
+        "name": "화신",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "text": "주유의 영을 받는 아군은 불 칸에 들어갈 수 있고 불 피해 · 불로 인한 동요를 받지 않는다",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_FIRE_COMMAND",
+            "when": "PASSIVE",
+            "target": "SELF",
+            "params": {}
+          }
+        ]
+      },
+      "signatureE": {
+        "id": "G27-S4-1",
+        "kind": "tactic",
+        "name": "화선령",
+        "rarity": "LEGENDARY",
+        "classTag": "고유 E",
+        "range": 3,
+        "text": "시야 안 · 영을 받는 아군 하나(주유 제외): 그 아군의 다음 공격(일반 · Q)이 맞으면 대상 칸에 불(2차례). 이미 불 칸이면 대신 전열 한 단계 하락. 다음 내 차례 끝 만료",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_FIRE_DELEGATE",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "turns": 2
+            }
+          }
+        ],
+        "gaugeCost": 60
+      },
+      "signatureTactic": {
+        "id": "G27-S4-2",
+        "kind": "tactic",
+        "name": "연환을 태우다",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 3,
+        "text": "사거리 3 안 칸 중심 반경 1 불(부대가 있는 물 칸도 — 배를 태움). 이 불에 붙은 적과 맞붙은 적 부대 칸에도 불이 한 번 옮는다(옮은 곳에서 다시 안 옮음). 불 칸의 적 혼란 판정",
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_S4_CHAIN_FIRE",
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "params": {
+              "range": 3,
+              "radius": 1,
+              "turns": 2
+            }
+          }
+        ],
+        "gaugeCost": 100
+      }
+    }
+  ]
+}

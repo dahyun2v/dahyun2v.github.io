@@ -1,0 +1,284 @@
+{
+  "id": "G07",
+  "name": "조조",
+  "faction": "F01",
+  "status": "CLAUDE_TRIAL_PLACEHOLDER — GPT 장수 파이프라인 정식 pack 도착 시 교체",
+  "source": {
+    "room": "FIRST3 시험 기록",
+    "method": "first3-initial-state-v1 → officer-pack 시험 변환 (make-trial-packs.py)",
+    "date": "2026-10-03"
+  },
+  "stats": {
+    "지휘": 86,
+    "무용": 70,
+    "지략": 88,
+    "정무": 88,
+    "감화": 84
+  },
+  "sub": {
+    "전열 유지": 82,
+    "기동": 86,
+    "전환": 90,
+    "수습": 86,
+    "힘": 70,
+    "기술": 64,
+    "막아내기": 76,
+    "되받기": 70,
+    "군재": 91,
+    "응변": 85,
+    "속이기": 86,
+    "통찰": 90,
+    "행정": 92,
+    "병참": 92,
+    "인사": 92,
+    "제도": 82,
+    "민정": 86,
+    "설득": 92,
+    "포섭": 92,
+    "결집": 84,
+    "중재": 92
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "MEDIUM",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "문관",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:문관",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "옆과 뒤를 찌른다",
+    "text": "측면·후방에서 공격하면 주는 피해 +20%, 대상은 사기 판정(가중 15). 이 장수가 관여한 점령 처리 1턴 단축.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지휘",
+      "지략"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "ON_ATTACK",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "FLANK"
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "ON_ATTACK",
+        "target": "TARGET",
+        "value": -15,
+        "duration": 0,
+        "condition": "FLANK"
+      },
+      {
+        "op": "OCCUPATION_SPEED",
+        "when": "PASSIVE",
+        "target": "CITY",
+        "value": 1,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04(사용자 지시 \"특기/전법은 너가 한번 다시 만들어볼래\") · 같은 정면 대신 다른 접근면을 택할 때의 값(→ 측면·후방 공격 보정)과 새 정보에 맞춰 부대를 다시 놓는 재배치(순서 교환·목적지 재선택 → 2칸 아군 이동+추격 피해 감소) 유지. 사람의 값을 다시 매기는 면은 점령 처리 단축으로. 재배치에 주 행동을 쓰는 약점 유지.",
+    "formerName": "틀린 배열의 값"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "빠져서 다시 배치",
+      "text": "자신과 2칸 안 아군 모두 이번 차례 이동 +2칸, 다음 내 차례까지 받는 피해 −15%(교전 이탈 추격 포함) — 붙은 적에게서 빠져 다른 면으로 다시 배치한다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 0,
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 2,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 15,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "판을 다시 매기다"
+    },
+    {
+      "kind": "trait",
+      "name": "첫 일격",
+      "text": "이번 차례 첫 공격 피해 +10%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "선수필승"
+    },
+    {
+      "kind": "trait",
+      "name": "성 지키기",
+      "text": "성(중심·성문)을 지킬 때 받는 피해 −20%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "formerName": "수성"
+    },
+    {
+      "kind": "trait",
+      "name": "돌파",
+      "text": "이번 차례 첫 공격 피해 +15%.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "FIRST_ROUND"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "빠른 말",
+      "text": "기병일 때 이동 +1칸.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        }
+      ],
+      "formerName": "질풍"
+    },
+    {
+      "kind": "tactic",
+      "name": "급습",
+      "text": "적 1부대에 피해 +30% 공격.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 20
+    },
+    {
+      "kind": "trait",
+      "name": "방어 대형",
+      "text": "공격받을 때 받는 피해 −15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "방진"
+    },
+    {
+      "kind": "trait",
+      "name": "장창 버티기",
+      "text": "장병일 때 반격 피해 +25%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "TROOP:BT02"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "군대 농사",
+      "text": "태수일 때 도시 식량 +15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 15,
+          "duration": 0,
+          "condition": null,
+          "resource": "FOOD"
+        }
+      ],
+      "formerName": "둔전"
+    },
+    {
+      "kind": "trait",
+      "name": "인망 높이기",
+      "text": "태수일 때 도시 인망 산출 +20%.",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "TURN_SETTLE",
+          "target": "CITY",
+          "value": 20,
+          "duration": 0,
+          "condition": null,
+          "resource": "FAME"
+        }
+      ],
+      "formerName": "상업 장려"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK"
+  ]
+}

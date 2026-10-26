@@ -1,0 +1,3176 @@
+{
+  "version": "redesign-50-v0.2",
+  "status": "TRIAL — Claude 2026-10-04. 사용자: \"어떤 특기/전법을 넣을지도 레퍼런스 찾아봐서 적용\", \"특기는 삼국지 특기만 할게아니고 알피지나 디아블로 오버워치 롤 문명 등등 다른 게임들 레퍼런스 찾아서 우리게임 시스템에 접목\", \"전법도 그렇고\". 정체성 = 삼국지 게임(11 특기·14 개성/전법·전략판 고유 전법·삼국살 기술·토탈워), 작동 방식 = 다른 장르(REF-COMBAT·REF-DOMESTIC·REF-COMPETITIVE). 이름 = 하는 일이 보이는 쉬운 우리말(사용자 「이름도 좀 바꿔줘 지금은 잘 이해가 안돼」), 원래 이름(삼국지 시리즈 특기·전법명·고사)은 origin(화면 「유래」 줄). 장수당 고유 특기 1 + 고유 전법 1(고유 전법 = 게이지 전법, C29). 효과는 고유 규칙 U_* (C32 구현). 수치 시험값. v0.1 은 보존. 2026-10-04 보정: 일기토 없음(사용자 결정, 작업기준 :216·MASTER-SPEC :37) — 여포 고유 전법을 부대 연속 공격으로, 태사자·기령 일기토 조건 제거. 고유 전법은 영웅 이상(정본 51 v1.2 대표 전법) — 유장·저수·염포 희귀 → 영웅.",
+  "refs": [
+    "docs/work-integration/20261004/growth-narrative/REF-RTK-GENERIC.md",
+    "REF-COMBAT.md",
+    "REF-DOMESTIC.md",
+    "REF-COMPETITIVE.md",
+    "삼국지11 atwiki 特技一覧",
+    "삼국지14 wikiwiki 戦法·個性",
+    "三國志戰略版 三略库(sanzhan.slgsim.com)",
+    "三國殺 biligame 위키"
+  ],
+  "officers": [
+    {
+      "id": "G01",
+      "name": "여포",
+      "identityRefs": "11 飛将 · 14 飛将/天下無双 · 전략판 天下无双(세 번 주고받는 공격 — 우리 게임은 일기토가 없어 부대 연속 공격으로) · 삼국살 無雙 · 토탈워 적토마·방천화극",
+      "mechanicRefs": "패스 오브 엑자일 키스톤(ZOC 규칙 무시) · 디아블로 연타",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "가로막을 자 없다",
+        "origin": "비장(飛將)",
+        "text": "적 통제 구역을 무시하고 이동한다. 무용이 자기보다 낮은 장수의 부대를 공격하면 피해 +20%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "기병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FLYING_GENERAL",
+            "params": {
+              "lowerMightBonus": 20
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "세 번 몰아치기",
+        "origin": "천하무쌍(天下無雙)",
+        "text": "맞닿은 적 1부대를 세 번 연속 공격(각 ×0.5, 반격 없음), 끝나면 대상 사기 판정(가중 15).",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_TRIPLE_ASSAULT",
+            "params": {
+              "hits": 3,
+              "ratio": 50,
+              "morale": 15
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "결과로 다시 건다",
+        "tactic": "판을 가르는 일격"
+      }
+    },
+    {
+      "id": "G02",
+      "name": "조운",
+      "identityRefs": "11 洞察 · 8R 一身胆(사기 70↑ 계략 면역·ZOC 무시) · 14 洞察/単騎駆 · 전략판 一身是胆 · 삼국살 龍膽 · 토탈워 청강검",
+      "mechanicRefs": "도타 BKB(제어 면역) · 인투 더 브리치 돌파",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "흔들리지 않는 담력",
+        "origin": "일신시담(一身是膽)",
+        "text": "사기가 안정이면 혼란·속박·둔화·도발에 걸리지 않고 통제 구역 1칸을 무시한다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FEARLESS",
+            "params": {
+              "zoc": 1
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "홀로 적진 돌파",
+        "origin": "단기구(單騎驅)",
+        "text": "대상을 공격하고 대상 뒤 빈 칸으로 뚫고 나간다. 지나간 칸과 맞닿은 적 모두 혼란 판정.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_LONE_RIDE",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "돌려놓고 물러난다",
+        "tactic": "돌아오지 않은 한 사람"
+      }
+    },
+    {
+      "id": "G03",
+      "name": "제갈량",
+      "identityRefs": "11 神算 · 8R 伏龍(계략 뒤 아군 전법 재사용) · 14 伏龍/神算鬼謀 · 전략판 神机妙算(적 주동 전법 실패) · 삼국살 觀星/空城",
+      "mechanicRefs": "하데스2 주술(다른 능력이 충전) · 도타 링컨(지정 기술 막기)",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "앞을 내다본 군령",
+        "origin": "복룡(伏龍)",
+        "text": "이 장수가 전법을 쓰면 2칸 안 아군 전법 재사용 대기 −1. 이 부대나 인접 아군을 노린 적 전법은 지략 비교로 25% 무효.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SLEEPING_DRAGON",
+            "params": {
+              "range": 2,
+              "cancel": 25
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "적진을 뒤흔드는 계책",
+        "origin": "신산귀모(神算鬼謀)",
+        "text": "대상과 그 주변 적 모두 혼란 판정, 1차례 주는 피해 −30%.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DIVINE_SCHEME",
+            "params": {
+              "reduce": 30
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "빈 책임을 메우다",
+        "tactic": "이어지는 군령"
+      }
+    },
+    {
+      "id": "G04",
+      "name": "순욱",
+      "identityRefs": "11 眼力 · 14 王佐/王佐の才 · 전략판 王佐之才(내정) · 삼국살 驅虎/節命",
+      "mechanicRefs": "올드 월드 총독 · 발라트로 조커(적끼리)",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "살림 키우는 재상",
+        "origin": "왕좌지재(王佐之才)",
+        "text": "태수일 때 그 성 생산 작업 진행 ×1.3, 세력의 모든 재야 장수 위치를 드러낸다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "정무"
+        ],
+        "domestic": true,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_KINGS_AIDE",
+            "params": {
+              "progress": 1.3
+            },
+            "when": "PASSIVE",
+            "target": "CITY",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "적끼리 물어뜯게",
+        "origin": "구호탄랑(驅虎呑狼)",
+        "text": "지략 비교 — 대상 적 부대가 맞닿은 다른 적 부대를 한 번 공격하게 한다.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DRIVE_TIGER",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "사직의 마지막 선",
+        "tactic": "한 기둥을 세우다"
+      }
+    },
+    {
+      "id": "G05",
+      "name": "유비",
+      "identityRefs": "11 遁走 · 14 脱兎/大器大徳 · 전략판 仁德载世(치료) · 삼국살 仁德/激將 · 토탈워 쌍고검·결속(Unity)",
+      "mechanicRefs": "오버워치 지원가 · CK3 관대",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "아무도 버리지 않는다",
+        "origin": "인덕(仁德)",
+        "text": "2칸 안 아군 부대 병력이 30% 아래면 차례 시작에 부상병 30 복귀 + 패주 판정 가중 절반. 퇴각할 때 통제 구역을 무시한다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "감화"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_BENEVOLENCE",
+            "params": {
+              "heal": 30
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "다시 일어서라",
+        "origin": "대기대덕(大器大德)",
+        "text": "2칸 안 아군 사기 한 단계 회복, 부상병 40 복귀.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_GREAT_VIRTUE",
+            "params": {
+              "heal": 40,
+              "range": 2
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "실패를 묻지 않는다",
+        "tactic": "남은 사람의 다음 자리"
+      }
+    },
+    {
+      "id": "G06",
+      "name": "황충",
+      "identityRefs": "11 弓神 · 8R 老当益壮 · 14 矍鑠/神弓 · 전략판 百步穿杨 · 삼국살 烈弓(피할 수 없음)",
+      "mechanicRefs": "롤 베인 은화살 · 디아블로 확정 치명",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "HIGH",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "늙을수록 매서운 활",
+        "origin": "노당익장(老當益壯)",
+        "text": "사격 피해 +15%, 사격 대상은 방어 태세 효과를 받지 못한다. Lv 10 이상이면 사격 피해 +10% 더.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "궁병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_OLD_VIGOR",
+            "params": {
+              "bonus": 15,
+              "late": 10
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "백 걸음 밖 명중",
+        "origin": "백보천양(百步穿楊)",
+        "text": "반드시 맞는 사격(피해 +40%), 대상이 장수 부대면 사기 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_HUNDRED_PACES",
+            "params": {
+              "bonus": 40
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "몸으로 낸 방향",
+        "tactic": "선착의 함성"
+      }
+    },
+    {
+      "id": "G07",
+      "name": "조조",
+      "identityRefs": "11 虚実 · 14 奸雄/魏武の強 · 전략판 乱世奸雄 · 삼국살 奸雄/護駕 · 토탈워 신용(Credibility)",
+      "mechanicRefs": "도타 오라 · 롤 감전(다른 기술로 쌓기)",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "위세로 이끈다",
+        "origin": "간웅(奸雄)",
+        "text": "2칸 안 아군 주는 피해 +8%. 이 부대를 공격한 적은 전법 하나의 재사용 대기 +1(빼앗긴 기세).",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지휘",
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_HERO_OF_CHAOS",
+            "params": {
+              "aura": 8
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "총공격 명령",
+        "origin": "위무지강(魏武之強)",
+        "text": "2칸 안 아군 주는 피해 +20%·받는 피해 −15%(1차례).",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_WEI_MIGHT",
+            "params": {
+              "atk": 20,
+              "def": 15
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "틀린 배열의 값",
+        "tactic": "판을 다시 매기다"
+      }
+    },
+    {
+      "id": "G08",
+      "name": "손권",
+      "identityRefs": "11 指導 · 14 任才/大虎雄略 · 전략판 坐断东南 · 삼국살 制衡",
+      "mechanicRefs": "TFT 시너지 · 오버워치 궁극기 연계",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "사람을 키워 쓴다",
+        "origin": "임재(任才)",
+        "text": "2칸 안 아군 부대가 3개 이상이면 주는 피해·방어 +12%. 같은 부대·같은 성 장수 경험치 +50%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "감화",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_TALENT_USE",
+            "params": {
+              "bonus": 12,
+              "xp": 50
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "아군 전법 되살리기",
+        "origin": "제형(制衡)",
+        "text": "2칸 안 아군 한 부대의 전법 재사용 대기를 모두 0으로. 대가: 이 장수는 다음 차례 전법 불가.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_BALANCE",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "맡긴 뒤에 본다",
+        "tactic": "인장을 맡기다"
+      }
+    },
+    {
+      "id": "G09",
+      "name": "원소",
+      "identityRefs": "11 名声(징병 +50%) · 14 督将/袁家威光 · 전략판 累世立名 · 삼국살 亂擊/血裔 · 토탈워 가문(Lineage)",
+      "mechanicRefs": "TFT 증강 · 디아블로 범위 기술",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "HIGH",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "명문가에 모이는 병사",
+        "origin": "사세삼공(四世三公)",
+        "text": "태수일 때 그 성 출진 병력 +50%. 이 부대와 맞닿은 아군 사기 판정 가중 −20%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "감화"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FOUR_GENERATIONS",
+            "params": {
+              "muster": 50
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "화살비",
+        "origin": "난격(亂擊)",
+        "text": "궁병 일제 사격 — 대상과 그 주변 적 모두 ×0.6.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_RANDOM_VOLLEY",
+            "params": {
+              "ratio": 60
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "마지막 판단의 자리",
+        "tactic": "이름마다 한 몫"
+      }
+    },
+    {
+      "id": "G10",
+      "name": "원술",
+      "identityRefs": "11 妙計 · 14 詐謀/袁家栄光 · 전략판 符命自立(옥새: 초반 강함, 점점 약해짐) · 삼국살 僞帝",
+      "mechanicRefs": "로그라이크 감소형 버프(하데스 카오스 반대)",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "옥새를 쥔 첫 기세",
+        "origin": "옥새(玉璽)",
+        "text": "판 첫 8턴 동안 주는 피해 +20%(턴마다 −2.5%p). 대가: 인망 산출 −20%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "정무"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_IMPERIAL_SEAL",
+            "params": {
+              "start": 20,
+              "turns": 8
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "명문가의 위압",
+        "origin": "원가영광(袁家榮光)",
+        "text": "대상 주는 피해 −30%(1차례) + 사기 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_YUAN_GLORY",
+            "params": {
+              "reduce": 30
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "내가 준 자리",
+        "tactic": "큰 이름의 하사"
+      }
+    },
+    {
+      "id": "G11",
+      "name": "동탁",
+      "identityRefs": "11 徴税 · 14 梟雄/倒山傾海 · 전략판 酒池肉林 · 삼국살 酒池/肉林/崩壞/暴虐 · 토탈워 위협(Intimidation)",
+      "mechanicRefs": "다키스트 던전 공포 오라 · 롤 디버프 오라",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "LOW",
+        "BT03": "MEDIUM",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "공포 정치",
+        "origin": "효웅(梟雄)",
+        "text": "2칸 안 적 주는 피해 −10%. 대가: 차례마다 이 부대 사기 판정(가중 5, 붕괴).",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SAVAGE_HERO",
+            "params": {
+              "aura": 10
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "주변을 짓밟는다",
+        "origin": "도산경해(倒山傾海)",
+        "text": "맞닿은 적 모두 피해 + 사기 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_MOUNTAIN_FALL",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "후한 손의 무게",
+        "tactic": "연회의 끝은 전장"
+      }
+    },
+    {
+      "id": "G12",
+      "name": "마등",
+      "identityRefs": "11 繁殖 · 14 親羌/万馬奔騰 · 전략판 西凉铁骑 · 토탈워 강족·말 사육",
+      "mechanicRefs": "에이지 오브 엠파이어 문명 보너스 · 도타 오라",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "서량 기마 군단",
+        "origin": "서량철기(西涼鐵騎)",
+        "text": "이끄는 기병 이동 +1. 태수일 때 그 성 기병 출진 생산 −50%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "지휘",
+          "기병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_XILIANG_CAVALRY",
+            "params": {
+              "move": 1
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "만 마리 말의 질주",
+        "origin": "만마분등(萬馬奔騰)",
+        "text": "2칸 안 아군 기병 이번 차례 이동 +2.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_TEN_THOUSAND_HORSES",
+            "params": {
+              "move": 2
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "한 자리의 옆자리",
+        "tactic": "함께 닿는 길"
+      }
+    },
+    {
+      "id": "G13",
+      "name": "마초",
+      "identityRefs": "11 騎神 · 8R 錦馬超 · 14 神威/神威穿貫 · 전략판 槊血纵横(번지는 피해) · 삼국살 鐵騎",
+      "mechanicRefs": "롤 다리우스(많을수록 강함) · 디아블로 관통",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "적이 많을수록 사납다",
+        "origin": "신위(神威)",
+        "text": "2칸 안 적 부대가 3개 이상이면 주는 피해 +20%. 기병 돌격 피해 +10%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "기병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DIVINE_MIGHT",
+            "params": {
+              "bonus": 20
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "꿰뚫는 돌격",
+        "origin": "신위천관(神威穿貫)",
+        "text": "돌격 — 대상과 그 뒤 칸 적까지 꿰뚫음(뒤는 60%) + 대상 혼란 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_PIERCING_CHARGE",
+            "params": {
+              "second": 60
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "앞서 달리는 이름",
+        "tactic": "이름을 건 선봉"
+      }
+    },
+    {
+      "id": "G14",
+      "name": "공손찬",
+      "identityRefs": "11 白馬 · 14 堅守/白馬義従 · 전략판 白马义从 · 토탈워 백마의종(기마궁)",
+      "mechanicRefs": "에이펙스 이동 사격 · 파이어 엠블렘 캔토",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "MEDIUM",
+        "BT03": "HIGH",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "쏘고 빠지는 백마",
+        "origin": "백마의종(白馬義從)",
+        "text": "이끄는 기병이 사거리 1 사격(×0.7), 사격한 뒤 1칸 이동할 수 있다.",
+        "rarity": "EPIC",
+        "classTag": [
+          "무용",
+          "기병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_WHITE_HORSE",
+            "params": {
+              "ratio": 70
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "발 묶는 백마 돌격",
+        "origin": "백마돌진",
+        "text": "피해 + 대상 1차례 이동 불가.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_WHITE_RUSH",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "도착을 증명하다",
+        "tactic": "백마의 응답"
+      }
+    },
+    {
+      "id": "G15",
+      "name": "유장",
+      "identityRefs": "11 없음 · 14 優柔 · 삼국살 據土/邀虎/懷璧(땅을 지킴) · 토탈워 계승",
+      "mechanicRefs": "문명 수비 총독(빅토르)",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "LOW",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "땅을 지키는 주인",
+        "origin": "거토(據土)",
+        "text": "태수일 때 그 성은 포위돼도 생산이 정상, 성 내구 회복 +50%. 대가: 이 장수 부대 주는 피해 −15%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "정무"
+        ],
+        "domestic": true,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_HOLD_LAND",
+            "params": {
+              "repair": 50
+            },
+            "when": "PASSIVE",
+            "target": "CITY",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "성을 지키자",
+        "origin": "수성결의(守城決意)",
+        "text": "성 안·성문의 아군 받는 피해 −30%(1차례).",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_HOLD_RESOLVE",
+            "params": {
+              "reduce": 30
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "아직 이어지는 일",
+        "tactic": "사람이 남는 물러섬"
+      }
+    },
+    {
+      "id": "G16",
+      "name": "장로",
+      "identityRefs": "11 米道 · 14 米道/万法帰一 · 삼국살 義舍/布施/米道",
+      "mechanicRefs": "문명 종교 · 오버워치 정화",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "쌀을 나누는 교단",
+        "origin": "오두미도(五斗米道)",
+        "text": "태수일 때 그 성 식량 +50%, 식량이 모자란 아군 성에 자동으로 식량을 나눈다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "정무"
+        ],
+        "domestic": true,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FIVE_PECKS",
+            "params": {
+              "food": 50
+            },
+            "when": "PASSIVE",
+            "target": "CITY",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "병을 씻는 기도",
+        "origin": "만법귀일(萬法歸一)",
+        "text": "3칸 안 아군 상태이상 해제 + 부상병 30 복귀.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_ALL_LAWS",
+            "params": {
+              "range": 3,
+              "heal": 30
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "봉인한 채 넘긴다",
+        "tactic": "불태우지 않은 창고"
+      }
+    },
+    {
+      "id": "G17",
+      "name": "맹획",
+      "identityRefs": "11 乱戦 · 14 南蛮/蛮王咆哮 · 전략판 南蛮渠魁 · 삼국살 禍首/再起(칠종칠금)",
+      "mechanicRefs": "섀도우 오브 모르도르 네메시스(돌아오는 적)",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "몇 번이고 다시 일어선다",
+        "origin": "재기(再起)",
+        "text": "패주·소멸해도 한 판에 두 번, 3차례 뒤 가장 가까운 아군 성에서 병력 50%로 다시 나온다. 숲·산에서 주는 피해 +15%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_RISE_AGAIN",
+            "params": {
+              "uses": 2,
+              "delay": 3
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "남만왕의 포효",
+        "origin": "만왕포효(蠻王咆哮)",
+        "text": "맞닿은 적 모두 사기 판정(가중 20).",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_KING_ROAR",
+            "params": {
+              "morale": 20
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "다시 일어서는 왕",
+        "tactic": "다시 시험할 자리"
+      }
+    },
+    {
+      "id": "G18",
+      "name": "관우",
+      "identityRefs": "11 神将 · 8R 義心(협공 피해) · 14 神将/軍神 · 전략판 威震华夏 · 삼국살 武聖 · 토탈워 청룡언월도",
+      "mechanicRefs": "도타 오라 · 롤 정복자",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "청룡도의 위엄",
+        "origin": "무성(武聖)",
+        "text": "무용이 자기보다 낮은 장수 부대를 공격하면 피해 +20%. 2칸 안 아군 공격·방어 +10%. 협공 피해 +10%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_MARTIAL_SAINT",
+            "params": {
+              "lowerMightBonus": 20,
+              "aura": 10
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "청룡도 휩쓸기",
+        "origin": "위진화하(威震華夏)",
+        "text": "맞닿은 적 모두 강타(×1.2) + 그중 하나 다음 차례 통상 공격 불가(무장 해제).",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SHAKE_THE_REALM",
+            "params": {
+              "ratio": 120
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "봉해 둔 보상",
+        "tactic": "맡은 한 점"
+      }
+    },
+    {
+      "id": "G19",
+      "name": "장비",
+      "identityRefs": "11 闘神 · 8R 万人敵(적이 많을수록) · 14 闘将(포위 면역)/万人敵 · 전략판 燕人咆哮 · 삼국살 咆哮",
+      "mechanicRefs": "다키스트 던전 공포 · 롤 올라프(불리할수록)",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "만 명도 두렵지 않다",
+        "origin": "포효(咆哮)",
+        "text": "2칸 안 적 부대 수가 아군보다 많으면 주는 피해 +25%. 3면 이상 둘러싸여도 불리함이 없다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_ROAR",
+            "params": {
+              "bonus": 25
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "장판교의 고함",
+        "origin": "장판의 일갈(燕人咆哮)",
+        "text": "2칸 안 적 모두 사기 판정(가중 20) + 1차례 이동 불가.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_CHANGBAN_SHOUT",
+            "params": {
+              "range": 2,
+              "morale": 20
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "뒤가 움직일 때",
+        "tactic": "장판의 고함"
+      }
+    },
+    {
+      "id": "G20",
+      "name": "손책",
+      "identityRefs": "11 勇将 · 14 英名/虎嘯風烈 · 전략판 江东小霸王(추가 맹공·회복) · 삼국살 激昂/魂姿(각성) · 토탈워 오의 유산",
+      "mechanicRefs": "롤 사이온(쓰러질 때 각성) · 하데스 각성",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "한 번 더 몰아친다",
+        "origin": "소패왕(小霸王)",
+        "text": "공격 뒤 35%로 추가 일격(×0.6), 그 피해 20%만큼 병력 회복. 병력 30% 아래가 되면 한 번 각성 — 남은 판 동안 주는 피해 +20%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "감화"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_LITTLE_CONQUEROR",
+            "params": {
+              "extra": 35,
+              "awaken": 20
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "앞장서는 일격",
+        "origin": "호소풍렬(虎嘯風烈)",
+        "text": "피해 + 2칸 안 아군 주는 피해 +20%(1차례).",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_TIGER_ROAR",
+            "params": {
+              "aura": 20
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "열어 두는 몫",
+        "tactic": "먼저 닿은 땅"
+      }
+    },
+    {
+      "id": "G21",
+      "name": "방통",
+      "identityRefs": "11 連環 · 14 鳳雛/連環の計 · 전략판 连环计(사슬로 피해 공유) · 삼국살 連環/涅槃",
+      "mechanicRefs": "패스 오브 엑자일 연쇄 · 롤 브랜드",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "번지는 계책",
+        "origin": "봉추(鳳雛)",
+        "text": "이 장수 전법 효과가 대상 옆 적 1부대에도 50%. 2칸 안 적 전법의 상태이상 성공률 −30%.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_PHOENIX_CHICK",
+            "params": {
+              "chain": 50
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "배를 묶는 사슬",
+        "origin": "연환계(連環計)",
+        "text": "2칸 안 적을 사슬로 묶는다 — 묶인 적이 받는 피해의 30%를 다른 묶인 적도 받고, 2차례 이동 −2.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_CHAIN_SCHEME",
+            "params": {
+              "share": 30
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "승전 뒤의 물음",
+        "tactic": "상중하의 갈림길"
+      }
+    },
+    {
+      "id": "G22",
+      "name": "곽가",
+      "identityRefs": "11 鬼謀(계략 사거리 +1) · 14 神眼/兵貴神速 · 전략판 十胜十败 · 삼국살 天妒/遺計",
+      "mechanicRefs": "오버워치 궁극기 충전(맞으면 참) · 도타 오라",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "LOW",
+        "BT03": "MEDIUM",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "위기에 도는 꾀",
+        "origin": "유계(遺計)",
+        "text": "이 부대가 피해를 받으면 2칸 안 아군 하나의 전법 재사용 대기 −1(차례 1회). 전법 사거리 +1.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_LEGACY_PLAN",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "신속 진군",
+        "origin": "병귀신속(兵貴神速)",
+        "text": "2칸 안 아군 이동 +2, 적 주는 피해 −15%(1차례).",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SWIFT_WAR",
+            "params": {
+              "move": 2
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "급해지는 순간",
+        "tactic": "놓아둔 한 틈"
+      }
+    },
+    {
+      "id": "G23",
+      "name": "사마의",
+      "identityRefs": "11 深謀 · 14 虚実/神機妙算 · 전략판 鹰视狼顾(5회합부터 매 회합 계략) · 삼국살 反饋/鬼才",
+      "mechanicRefs": "롤 나서스(늦게 강해짐) · TFT 늦은 증강",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "MEDIUM",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "때를 기다리는 늑대",
+        "origin": "응시낭고(鷹視狼顧)",
+        "text": "판 첫 4턴은 잠잠하다가 5턴부터 차례마다 2칸 안 적 1부대에 계략 피해 + 상태이상 지속 +1. 이 부대를 공격한 적 전법 하나 재사용 대기 +1.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_HAWK_WOLF",
+            "params": {
+              "from": 5
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "발을 묶는 계책",
+        "origin": "신기묘산(神機妙算)",
+        "text": "대상과 주변 적 혼란·둔화 판정 + 사기 판정.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DIVINE_PLAN",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "작은 이익은 남긴다",
+        "tactic": "답을 늦춘 포위"
+      }
+    },
+    {
+      "id": "G24",
+      "name": "장료",
+      "identityRefs": "11 威風 · 14 威風/遼来遼来 · 전략판 陷阵突袭(적 주장 조준) · 삼국살 突襲",
+      "mechanicRefs": "XCOM 선택받은 자(지휘관 노림) · 다키스트 던전 공포",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "적장을 노린다",
+        "origin": "위풍(威風)",
+        "text": "공격하면 대상 사기 판정(가중 10). 적 지휘관(능력 합 최고 장수) 부대를 공격하면 피해 +15%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "무용",
+          "기병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_AWE",
+            "params": {
+              "bonus": 15
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "장료가 온다",
+        "origin": "요래요래(遼來遼來)",
+        "text": "돌격 피해 + 대상 주는 피해 −50%(1차례) + 2칸 안 적 사기 판정.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_LIAO_IS_COMING",
+            "params": {
+              "reduce": 50
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "돌아오는 진문",
+        "tactic": "진문의 돌격"
+      }
+    },
+    {
+      "id": "G25",
+      "name": "허저",
+      "identityRefs": "11 金剛 · 14 護衛/怪力無比 · 전략판 虎痴 · 삼국살 裸衣",
+      "mechanicRefs": "롤 착취의 손아귀 · 오버워치 탱커",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "장수를 지키는 호위",
+        "origin": "호위(護衛)",
+        "text": "2칸 안 아군 장수는 부상·포로가 되지 않는다. 병력 5% 이하의 작은 피해는 절반만 받는다.",
+        "rarity": "EPIC",
+        "classTag": [
+          "무용",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_BODYGUARD",
+            "params": {
+              "small": 5
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "웃통 벗고 싸운다",
+        "origin": "나의(裸衣)",
+        "text": "이번 차례 주는 피해 +40%. 대가: 받는 피해 +25%(1차례).",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_BARE_CHEST",
+            "params": {
+              "bonus": 40,
+              "cost": 25
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "여기서부터는 내가",
+        "tactic": "마지막 통로"
+      }
+    },
+    {
+      "id": "G26",
+      "name": "초선",
+      "identityRefs": "11 傾国 · 14 傾国/傾国の舞 · 전략판 闭月 · 삼국살 離間/閉月",
+      "mechanicRefs": "발라트로(적끼리 싸우게) · 디아블로 매혹",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "LOW",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "홀리는 미모",
+        "origin": "경국(傾國)",
+        "text": "2칸 안 적 남성 장수 부대 주는 피해 −10%. 이 장수 계략 전법 지략 비교 +15.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "감화",
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FATAL_BEAUTY",
+            "params": {
+              "aura": 10
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "이간질",
+        "origin": "이간(離間)",
+        "text": "지략 비교 — 적 두 부대가 서로 한 번씩 공격한다(반격 없음).",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_ESTRANGE",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "말하지 않은 사이",
+        "tactic": "서로 다른 약속"
+      }
+    },
+    {
+      "id": "G27",
+      "name": "주유",
+      "identityRefs": "11 火神 · 8R 火神 · 14 火神/神火計 · 전략판 神火计 · 삼국살 英姿/反間·神 業炎 · 토탈워 고무하는 기세",
+      "mechanicRefs": "디아블로 화염 원소 · 뱀파이어 서바이버즈 진화",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "MEDIUM",
+        "BT03": "HIGH",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "불의 달인",
+        "origin": "화신(火神)",
+        "text": "화계 피해 ×1.5·반드시 성공, 불 피해를 받지 않는다. 전법이 성공하면 불 붙은 적 모두에게 추가 피해.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FIRE_GOD",
+            "params": {
+              "fire": 1.5
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "적벽의 불길",
+        "origin": "신화계(神火計)",
+        "text": "2칸 안 숲·평지에 불(번짐 1) + 대상 혼란 판정.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DIVINE_FIRE",
+            "params": {
+              "spread": 1
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "어긋난 음을 짚다",
+        "tactic": "한 박자에 맞춘다"
+      }
+    },
+    {
+      "id": "G28",
+      "name": "육손",
+      "identityRefs": "11 鬼謀 · 8R 冷炎 · 14 神機/極焔 · 전략판 火烧连营 · 삼국살 謙遜/連營",
+      "mechanicRefs": "패스 오브 엑자일 점화 확산",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "이어 붙는 불",
+        "origin": "연영(連營)",
+        "text": "불 붙은 적을 공격하면 그 불이 맞닿은 적 칸으로 번진다. 전법 사거리 +1.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_LINKED_CAMPS",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "진영 불태우기",
+        "origin": "극염(極焔)",
+        "text": "대상에 불 + 2차례 주는 피해 −25%.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_EXTREME_FLAME",
+            "params": {
+              "reduce": 25
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "승리의 상한",
+        "tactic": "잠금을 시험하다"
+      }
+    },
+    {
+      "id": "G29",
+      "name": "감녕",
+      "identityRefs": "11 威風 · 8R 鈴甘寧(격파 시 주변 사기 −) · 14 威風/胆力 · 전략판 锦帆百翎 · 삼국살 奇袭",
+      "mechanicRefs": "XCOM 냉혹함(처치 연쇄) · 롤 처치 효과",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "방울 소리의 공포",
+        "origin": "방울 소리(錦帆)",
+        "text": "공격하면 대상 사기 판정. 적 부대를 패주·격파하면 2칸 안 적 모두 사기 판정(가중 20).",
+        "rarity": "EPIC",
+        "classTag": [
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_BELL_SOUND",
+            "params": {
+              "morale": 20
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "백 기병 밤 기습",
+        "origin": "백기겁영(百騎劫營)",
+        "text": "밤 기습 — 반격 없는 공격 + 대상 혼란 판정.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_NIGHT_RAID",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "함께 들어온 몫",
+        "tactic": "먼저 낸 목숨값"
+      }
+    },
+    {
+      "id": "G30",
+      "name": "태사자",
+      "identityRefs": "11 戟神 · 14 剛将/遠矢/瞞天過海 · 전략판 神射(연격) · 삼국살 天義",
+      "mechanicRefs": "디아블로 다중 사격 · 롤 연격",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "LOW",
+        "BT03": "HIGH",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "두 번 쏘는 명궁",
+        "origin": "신사(神射)",
+        "text": "통상 공격이 두 번(두 번째 50%). 두 번째 공격이 맞으면 대상 사기 판정(가중 10).",
+        "rarity": "EPIC",
+        "classTag": [
+          "무용",
+          "궁병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DIVINE_ARCHER",
+            "params": {
+              "second": 50,
+              "morale": 10
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "기세 꺾는 사격",
+        "origin": "만천과해(瞞天過海)",
+        "text": "원거리 피해 + 대상 주는 피해 −25%(1차례).",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DECEIVE_HEAVEN",
+            "params": {
+              "reduce": 25
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "익숙해진 틈",
+        "tactic": "기한 있는 왕복"
+      }
+    },
+    {
+      "id": "G31",
+      "name": "진궁",
+      "identityRefs": "11 掎角 · 14 詐謀/諌止/察知/掎角の計 · 전략판 百计多谋 · 삼국살 明策/智遲",
+      "mechanicRefs": "트라이앵글 스트래티지 협공",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "협공의 계책",
+        "origin": "기각지세(掎角之勢)",
+        "text": "아군 2부대 이상이 같은 적을 공격하면 그 적 혼란 판정. 2칸 안 아군 위보·도발 면역.",
+        "rarity": "EPIC",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_PINCER_STANCE",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "꼼짝 못하게 묶기",
+        "origin": "기각지계(掎角之計)",
+        "text": "대상 2차례 이동 불가 + 사기 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_PINCER_SCHEME",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "실행까지 묻는다",
+        "tactic": "빈 중심의 새 진형"
+      }
+    },
+    {
+      "id": "G32",
+      "name": "고순",
+      "identityRefs": "11 攻城 · 14 崩壁/陥陣営 · 전략판 陷阵营 · 삼국살 陷阵(방어구 무시)",
+      "mechanicRefs": "롤 방어구 관통 · 토탈워 성벽 돌파",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "진을 무너뜨리는 부대",
+        "origin": "함진영(陷陣營)",
+        "text": "성 내구 피해 +30%. 방어 태세 적을 공격하면 그 효과를 무시한다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FORMATION_BREAKER",
+            "params": {
+              "siege": 30
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "성벽 부수기 돌격",
+        "origin": "함진(陷陣)",
+        "text": "성 내구 피해 ×2.5 + 2칸 안 아군 2차례 성 공격 피해 +25%.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_STORM_CAMP",
+            "params": {
+              "siege": 2.5,
+              "aura": 25
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "기준은 남는다",
+        "tactic": "함락이 아닌 정렬"
+      }
+    },
+    {
+      "id": "G33",
+      "name": "하후돈",
+      "identityRefs": "11 騎将 · 8R 不撓不屈 · 14 驍将/求心/怒髪/豪気衝天 · 전략판 刚烈不屈 · 삼국살 剛烈",
+      "mechanicRefs": "롤 가시 갑옷 · 디아블로 가시",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "맞은 만큼 되갚는다",
+        "origin": "강렬(剛烈)",
+        "text": "공격을 받으면 공격자에게 받은 피해의 30%를 되돌린다(반격과 별도). 아군 부대가 쓰러지면 사기 회복.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FIERCE_PRIDE",
+            "params": {
+              "reflect": 30
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "기세를 끌어올린다",
+        "origin": "호기충천(豪氣衝天)",
+        "text": "2칸 안 아군 사기 회복 + 적 주는 피해 −25%(1차례).",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_HEROIC_SPIRIT",
+            "params": {
+              "reduce": 25
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "내가 없어도 선 자리",
+        "tactic": "빈자리에 먼저 선다"
+      }
+    },
+    {
+      "id": "G34",
+      "name": "조인",
+      "identityRefs": "11 鉄壁 · 8R 金剛不壊 · 14 剛将/堅牢/八門金鎖 · 전략판 固若金汤 · 삼국살 據守",
+      "mechanicRefs": "오버워치 방벽 · 도타 오라",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "MEDIUM",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "무쇠 성벽",
+        "origin": "고약금탕(固若金湯)",
+        "text": "성 중심·성문에서 받는 피해 −25%, 협공·측면 보너스를 받지 않는다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_IRON_CITADEL",
+            "params": {
+              "reduce": 25
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "철통 방어진",
+        "origin": "팔문금쇄(八門金鎖)",
+        "text": "2칸 안 아군 받는 피해 −35%(2차례).",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_EIGHT_GATES",
+            "params": {
+              "reduce": 35
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "남아야 이어지는 때",
+        "tactic": "성 밖의 연결"
+      }
+    },
+    {
+      "id": "G35",
+      "name": "가후",
+      "identityRefs": "11 反計 · 14 詭計/封殺/虚誘掩殺 · 전략판 神机莫测 · 삼국살 帷幕/亂武 · 토탈워 그림자 속 칼날",
+      "mechanicRefs": "도타 로터스 오브(반사) · 발라트로 청사진",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "계략 되돌리기",
+        "origin": "반계(反計)",
+        "text": "적 계략 전법을 받으면 지략 비교로 막고 같은 효과를 되돌린다. 지략이 자기보다 낮은 적의 계략 대상이 되지 않는다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_COUNTER_SCHEME",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "꾀어내어 덮치기",
+        "origin": "허유엄살(虛誘掩殺)",
+        "text": "대상 2차례 혼란 + 이동 불가.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FEINT_AMBUSH",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "대답을 바꿀 권리",
+        "tactic": "방금 바뀐 조건"
+      }
+    },
+    {
+      "id": "G36",
+      "name": "순유",
+      "identityRefs": "11 百出 · 14 機略/泰然/封殺/千方百計 · 전략판 十二奇策 · 삼국살 奇策/智愚",
+      "mechanicRefs": "롤 주문검 · 패스 오브 엑자일 쿨다운",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "LOW",
+        "BT03": "MEDIUM",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "쉼 없는 꾀",
+        "origin": "십이기책(十二奇策)",
+        "text": "전법 재사용 대기 −1(최소 1). 전법 뒤 이번 차례 다음 공격 +15%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_TWELVE_PLANS",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "흐트러진 군 다잡기",
+        "origin": "천방백계(千方百計)",
+        "text": "2칸 안 아군 사기 회복 + 3칸 안 아군 상태이상 해제.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_MYRIAD_PLANS",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "공은 실행자에게",
+        "tactic": "전제 하나를 꺾는다"
+      }
+    },
+    {
+      "id": "G37",
+      "name": "장합",
+      "identityRefs": "11 昂揚 · 14 勇将/昂揚/百戦錬磨 · 전략판 大戟士 · 삼국살 巧變",
+      "mechanicRefs": "파이어 엠블렘 캔토 · XCOM 런 앤 건",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "움직이며 친다",
+        "origin": "교변(巧變)",
+        "text": "이동을 다 쓰고도 공격할 수 있고 이동 뒤 공격 불리가 없다. 적을 패주시키면 사기 회복.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지휘",
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_ADAPTIVE",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "백 번 싸운 몸",
+        "origin": "백전연마(百戰鍊磨)",
+        "text": "피해 + 자기 상태이상 해제.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_HUNDRED_BATTLES",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "길이 막히면 바꾼다",
+        "tactic": "버티는 길을 끊다"
+      }
+    },
+    {
+      "id": "G38",
+      "name": "전풍",
+      "identityRefs": "11 없음 · 14 諌止/看破/慎重/策士/能吏 · 전략판 竭忠尽智 · 삼국살 死諫/隨勢",
+      "mechanicRefs": "CK3 조언자 · 롤 수호 천사",
+      "troopAptitude": {
+        "BT01": "LOW",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "목숨 건 직언",
+        "origin": "사간(死諫)",
+        "text": "군주가 2칸 안이거나 같은 성이면 군주 부대 계략 면역 + 주는 피해 +10%. 이 장수가 포로가 되거나 죽으면 그 세력 모든 부대 사기 판정.",
+        "rarity": "EPIC",
+        "classTag": [
+          "지략",
+          "정무"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_DEATH_REMONSTRANCE",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "발목 잡는 계책",
+        "origin": "갈충진지(竭忠盡智)",
+        "text": "대상 둔화 + 혼란 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_LOYAL_WISDOM",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "말과 몸을 함께",
+        "tactic": "지금은 그 길이 아니다"
+      }
+    },
+    {
+      "id": "G39",
+      "name": "저수",
+      "identityRefs": "11 없음 · 14 督励/諌止/察知/慎重 · 전략판 监统震军(상태이상 연장) · 삼국살 渐營/矢北",
+      "mechanicRefs": "디아블로 지속 효과 연장",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "길게 묶어 두기",
+        "origin": "감통진군(監統震軍)",
+        "text": "2칸 안 아군이 건 상태이상 지속 +1차례. 함정·매복 피해 −30%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "지략",
+          "지휘"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SUPERVISE",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "기를 꺾는 계책",
+        "origin": "위모미항(威謀靡亢)",
+        "text": "계략 피해 + 사기 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 2,
+        "cooldown": 2,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_AWE_SCHEME",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "전부 잃지는 않는다",
+        "tactic": "아직 남긴 한 군"
+      }
+    },
+    {
+      "id": "G40",
+      "name": "여몽",
+      "identityRefs": "11 心攻 · 8R 刮目 · 14 一心/胆力/修文練武 · 전략판 白衣渡江 · 삼국살 克己/攻心",
+      "mechanicRefs": "롤 나서스(쌓이는 성장) · 디아블로 은신",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "몰라보게 자란다",
+        "origin": "괄목상대(刮目相對)",
+        "text": "레벨이 오를 때마다 무용·지략 중 낮은 쪽 +1(최대 +10). 공격하면 준 피해 10%만큼 병력 흡수.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략",
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FRESH_EYES",
+            "params": {
+              "cap": 10,
+              "drain": 10
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "흰옷 입고 강 건너기",
+        "origin": "백의도강(白衣渡江)",
+        "text": "다음 차례까지 적 시야에서 숨고 강 건너기 비용 없음. 숨은 채 하는 첫 공격은 후방 판정.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_WHITE_ROBES",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "남겨 둔 기반",
+        "tactic": "맡길 기반을 돌려준다"
+      }
+    },
+    {
+      "id": "G41",
+      "name": "노숙",
+      "identityRefs": "11 富豪 · 8R 深謀遠慮 · 14 沈着/督励/調達/明察秋毫 · 전략판 济贫好施 · 삼국살 好施/締盟",
+      "mechanicRefs": "문명6 교역로 · 올드 월드 외교관",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "아낌없이 베푼다",
+        "origin": "호시(好施)",
+        "text": "태수일 때 다른 성으로 보낸 식량의 20%만큼 인망 +, 세력 생산 +10%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "정무",
+          "감화"
+        ],
+        "domestic": true,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_GENEROUS",
+            "params": {
+              "fame": 20
+            },
+            "when": "PASSIVE",
+            "target": "CITY",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "군심 살피기",
+        "origin": "명찰추호(明察秋毫)",
+        "text": "2칸 안 아군 사기 회복 + 상태이상 해제.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_KEEN_INSIGHT",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "서로 설 수 있어야",
+        "tactic": "먼저 내놓는 몫"
+      }
+    },
+    {
+      "id": "G42",
+      "name": "위연",
+      "identityRefs": "11 連戦 · 14 掃討/豪傑/功名/反骨刃 · 전략판 奇兵间道 · 삼국살 狂骨/奇謀",
+      "mechanicRefs": "롤 주문검 · XCOM 측면 기동",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "이어치기",
+        "origin": "연전(連戰)",
+        "text": "통상 공격 뒤 50%로 추가 공격(×0.5). 맞닿은 적을 공격하면 준 피해 10% 병력 회복.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_CONSECUTIVE",
+            "params": {
+              "chance": 50
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "샛길 기습",
+        "origin": "자오곡 기병(子午谷奇兵)",
+        "text": "이번 차례 이동 +3·산·숲 통과, 다음 공격 후방 판정. 대가: 2차례 받는 피해 +20%.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SECRET_PATH",
+            "params": {
+              "move": 3,
+              "cost": 20
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "끝낼 몫은 내게",
+        "tactic": "떼어 맡긴 길"
+      }
+    },
+    {
+      "id": "G43",
+      "name": "법정",
+      "identityRefs": "11 待伏 · 14 詭計/言毒/地利/法律/機略縦横 · 전략판 以逸待劳 · 삼국살 恩怨/眩惑",
+      "mechanicRefs": "섀도우 오브 모르도르 원한 · 롤 여진",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "LOW",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "은혜도 원한도 갚는다",
+        "origin": "은원(恩怨)",
+        "text": "이 부대를 공격한 장수에게 다음 공격 피해 +15%(원한). 매복 첫 공격 +25%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "지략"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_GRUDGE_AND_GRACE",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "지친 적을 기다린다",
+        "origin": "이일대로(以逸待勞)",
+        "text": "이 부대와 맞닿은 아군 1부대 다음 3번 받는 피해 −30%.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_REST_AND_WAIT",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "듣는 사람의 문",
+        "tactic": "말이 닿지 않는 자리"
+      }
+    },
+    {
+      "id": "G44",
+      "name": "한수",
+      "identityRefs": "11 長駆 · 14 地利/疾走/扇動/叛転必殺 · 전략판 暗藏玄机 · 삼국살 逆亂/驍襲",
+      "mechanicRefs": "롤 주문검 · 홈 어드밴티지(스포츠)",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "고향 땅의 기병",
+        "origin": "구곡(九曲)",
+        "text": "기병 이동 +2. 자기 세력 성 3칸 안에서 주는 피해 +10%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "지휘",
+          "기병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_NINE_BENDS",
+            "params": {
+              "move": 2
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "뒤통수 치기",
+        "origin": "반전필살(叛轉必殺)",
+        "text": "공격 뒤 추가 일격 ×1.4, 대상이 장수 부대면 계략 피해 추가.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_TURNCOAT_STRIKE",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "대화의 퇴로",
+        "tactic": "아직 닿는 사람"
+      }
+    },
+    {
+      "id": "G45",
+      "name": "방덕",
+      "identityRefs": "11 白馬 · 14 遠矢/豪傑/胆力/不屈/白馬鉄騎 · 전략판 抬棺决战·死战不退 · 삼국살 猛進",
+      "mechanicRefs": "롤 올라프 · 오버워치 궁극기 준비",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "HIGH",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "물러서지 않는다",
+        "origin": "사전불퇴(死戰不退)",
+        "text": "병력 10%까지 패주하지 않는다. 받는 피해가 쌓일수록 다음 공격 +5%(최대 +25%).",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_NO_RETREAT",
+            "params": {
+              "stack": 5,
+              "max": 25
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "관을 메고 싸운다",
+        "origin": "대관결전(抬棺決戰)",
+        "text": "1차례 준비 뒤 — 대상 강화 효과 제거 + 피해 ×2.5.",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_COFFIN_BATTLE",
+            "params": {
+              "ratio": 250
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "남이 정할 끝은 없다",
+        "tactic": "수단을 바꿔 끝낸다"
+      }
+    },
+    {
+      "id": "G46",
+      "name": "이각",
+      "identityRefs": "11 없음 · 14 徴税/強奪/悪名/浪費 · 전략판 纵兵劫掠 · 삼국살 狼襲/亦算",
+      "mechanicRefs": "디아블로 처치 보상 · CK3 약탈",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "MEDIUM",
+        "BT03": "LOW",
+        "BT04": "HIGH"
+      },
+      "uniqueTrait": {
+        "name": "약탈",
+        "origin": "강탈(強奪)",
+        "text": "적 부대를 격파하면 식량 +20·인망 +10, 수탈 효과 +50%. 대가: 이 장수 태수 성 치안 한 단계 악화.",
+        "rarity": "EPIC",
+        "classTag": [
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_PLUNDERER",
+            "params": {},
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "날뛰는 병사들",
+        "origin": "종병겁략(縱兵劫掠)",
+        "text": "피해 ×1.7 + 대상 1차례 이동 불가.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_RAMPAGE",
+            "params": {
+              "ratio": 170
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "풀리기 전의 매듭",
+        "tactic": "해산 전에 묶는다"
+      }
+    },
+    {
+      "id": "G47",
+      "name": "장임",
+      "identityRefs": "11 弓将 · 14 剛将/地利/山戦/森戦/天辺必殺 · 전략판 落凤 · 삼국살 穿心/鋒矢",
+      "mechanicRefs": "섀도우 오브 모르도르 매복 · XCOM 은폐",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "HIGH",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "숲속 매복 사격",
+        "origin": "낙봉파(落鳳坡)",
+        "text": "숲·산에서 숨은 채 하는 첫 공격 피해 +50%, 대상이 지략 장수면 +25% 더.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지휘",
+          "궁병"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FALLEN_PHOENIX",
+            "params": {
+              "bonus": 50
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "버티며 노린다",
+        "origin": "천변필살(天邊必殺)",
+        "text": "이 부대 받는 피해 −35%(2차례) + 2칸 안 적 사기 판정.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SKY_EDGE",
+            "params": {
+              "reduce": 35
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "문턱을 넘는 순간",
+        "tactic": "다음 문턱"
+      }
+    },
+    {
+      "id": "G48",
+      "name": "염포",
+      "identityRefs": "11 米道 · 14 教化/米道/工面 · 삼국살 緩圖/避禍",
+      "mechanicRefs": "문명 평화 보너스 · 롤 점멸",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "LOW",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "서두르지 않는 살림",
+        "origin": "완도(緩圖)",
+        "text": "태수일 때 그 성 식량 +30%, 세력이 그 차례 성 공격을 하지 않고 정산하면 인망 +3.",
+        "rarity": "EPIC",
+        "classTag": [
+          "정무"
+        ],
+        "domestic": true,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SLOW_PLAN",
+            "params": {
+              "food": 30
+            },
+            "when": "PASSIVE",
+            "target": "CITY",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "안전하게 물러나기",
+        "origin": "피화(避禍)",
+        "text": "이번 차례 교전 이탈 추격을 받지 않고 1칸 물러난다.",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 0,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_AVOID_CALAMITY",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "받기 전에 남긴 것",
+        "tactic": "아직 찍지 않은 인장"
+      }
+    },
+    {
+      "id": "G49",
+      "name": "기령",
+      "identityRefs": "11 없음 · 14 殿軍/一心/不屈/威霊三尖 · 전략판 威风凛凛 · 삼국살 雙刃",
+      "mechanicRefs": "다키스트 던전 위험 감수형 · 롤 도발",
+      "troopAptitude": {
+        "BT01": "MEDIUM",
+        "BT02": "HIGH",
+        "BT03": "LOW",
+        "BT04": "MEDIUM"
+      },
+      "uniqueTrait": {
+        "name": "양날의 칼",
+        "origin": "쌍인(雙刃)",
+        "text": "공격하면 대상 전열 판정(가중 15) — 흐트러지면 대상 사기 한 단계 하락, 버티면 이 부대는 그 차례 행동 끝. 퇴각 중 받는 피해 −30%.",
+        "rarity": "EPIC",
+        "classTag": [
+          "무용"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_TWIN_BLADES",
+            "params": {
+              "formation": 15,
+              "retreatReduce": 30
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "나를 상대하라",
+        "origin": "위풍늠름(威風凜凜)",
+        "text": "대상 2차례 도발 또는 무장 해제(이쪽을 보거나 통상 공격 불가).",
+        "rarity": "EPIC",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_MAJESTIC",
+            "params": {},
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "끝난 일의 경계",
+        "tactic": "공개된 선에서 거둔다"
+      }
+    },
+    {
+      "id": "G50",
+      "name": "황개",
+      "identityRefs": "11 火攻 · 14 遠矢/火攻/操舵/苦肉の計 · 전략판 苦肉计 · 삼국살 苦肉/詐降",
+      "mechanicRefs": "롤 블라디미르(체력을 써서 강해짐)",
+      "troopAptitude": {
+        "BT01": "HIGH",
+        "BT02": "MEDIUM",
+        "BT03": "MEDIUM",
+        "BT04": "LOW"
+      },
+      "uniqueTrait": {
+        "name": "거짓 항복",
+        "origin": "사항(詐降)",
+        "text": "이 부대 병력이 줄 때마다 다음 화계·공격 피해 +5%(최대 +30%). 화계가 반드시 성공한다.",
+        "rarity": "LEGENDARY",
+        "classTag": [
+          "지략",
+          "감화"
+        ],
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_FALSE_SURRENDER",
+            "params": {
+              "stack": 5,
+              "max": 30
+            },
+            "when": "PASSIVE",
+            "target": "SELF",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "signatureTactic": {
+        "kind": "tactic",
+        "name": "제 몸 바쳐 불 지르기",
+        "origin": "고육계(苦肉計)",
+        "text": "자기 병력 −10%로 대상에 불 + 혼란, 이 부대 받는 피해 −30%(2차례).",
+        "rarity": "LEGENDARY",
+        "classTag": "고유",
+        "range": 1,
+        "cooldown": 3,
+        "effects": [
+          {
+            "op": "RULE",
+            "rule": "U_SELF_INJURY",
+            "params": {
+              "cost": 10
+            },
+            "when": "ON_TACTIC_USE",
+            "target": "TARGET",
+            "value": 0,
+            "duration": 0,
+            "condition": null
+          }
+        ]
+      },
+      "v01": {
+        "trait": "닫은 뒤에는 가른다",
+        "tactic": "반쯤 열린 문"
+      }
+    }
+  ],
+  "methodology": {
+    "refs": [
+      "docs/user-input/20260928/51_OFFICER_ABILITY_SYSTEM_STANDARD_v1.2_MAP_COMBAT.md",
+      "삼국지 기획/53_PERSONAL_SIGNATURE_DESIGN_GRAMMAR_REFERENCE_v0.1.md",
+      "삼국지 기획/52_TRAIT_SUPPORT_INTERACTION_GRAMMAR_v0.2_REVIEW.md",
+      "docs/work-integration/20261004/growth-narrative/REF-PRIOR-RESEARCH.md"
+    ],
+    "checks": "고유 = Remove 검사(빼면 평범해지는가)·Transplant 검사(다른 장수에 붙여도 자연스러우면 공용) · 대가는 같은 메커니즘에서 · 피해량만으로 차이 금지 · 장수 전용 상태 남발 금지 · 고유 핵심은 전수 안 됨",
+    "transplantWeak": [
+      "G10 원술",
+      "G42 위연",
+      "G44 한수",
+      "G46 이각",
+      "G48 염포",
+      "G49 기령"
+    ],
+    "transplantNote": "이 6명은 Transplant 검사에서 공용 카드와 가까움 — 다음 판(v0.3)에서 인물 고유 문법(대표 행동)으로 다시 다듬을 후보"
+  }
+}

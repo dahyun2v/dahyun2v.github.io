@@ -1,0 +1,523 @@
+[
+  {
+    "troopType": "창병",
+    "sourceBatch": [
+      "TROOP-DB-002",
+      "TROOP-DB-003",
+      "TROOP-DB-004-CORRECTED"
+    ],
+    "coreVerbs": [
+      "막다",
+      "버티다",
+      "밀어내다"
+    ],
+    "basicCommands": [
+      "이동",
+      "공격",
+      "방어",
+      "책략",
+      "지원",
+      "퇴각"
+    ],
+    "activeCommandFamilies": [
+      "돌격",
+      "기타능동기술"
+    ],
+    "positionRequirements": [
+      "기병 대응은 기병의 진행 방향을 향한 정면 위치가 필요하다",
+      "측면·후방 공격에는 정면 돌격 차단이 적용되지 않는다",
+      "궁병에게 노출된 접근로에서는 일방적인 전진이 불리하다"
+    ],
+    "preparationRequirements": [
+      "정면 돌격 차단은 유효한 방향과 방어 행동을 요구한다",
+      "이동·공격·방어·퇴각 자체에는 별도 설치나 시전이 필요하지 않다"
+    ],
+    "counters": [
+      {
+        "troopType": "기병",
+        "conditions": [
+          "기병이 정면에서 접근 또는 돌격한다",
+          "창병이 유효 방향을 유지한다",
+          "창병의 차단 행동이 취소되지 않았다"
+        ],
+        "resultBoundary": "돌격 진행과 진입을 제한하지만 자동 승리나 단순 피해 배율을 보장하지 않는다"
+      }
+    ],
+    "counteredBy": [
+      {
+        "troopType": "술병",
+        "conditions": [
+          "술병의 전술 효과가 창병의 방향 유지 또는 행동 선택을 흔든다"
+        ],
+        "resultBoundary": "창병의 기본 행동을 삭제하지 않으며 위치와 행동 조건을 통해 정면 유지가 어려워진다"
+      },
+      {
+        "troopType": "궁병",
+        "conditions": [
+          "궁병이 시야와 사격 위치를 확보한다",
+          "창병이 노출된 접근 또는 방어 행동을 지속한다"
+        ],
+        "resultBoundary": "궁병은 무설치 사격으로 창병의 정면 유지에 대가를 부과하지만 자동 승리하지 않는다"
+      }
+    ],
+    "conditionInteractions": {
+      "둔화": "자발적 경로 이동과 이동이 포함된 접근·퇴각이 느려진다. 공격 속도, 방어 가능 여부, 강제 이동에는 적용하지 않는다.",
+      "혼란": "일반 이동·일반 공격·기본 방어·퇴각은 허용한다. 새 돌격과 기타 능동 기술은 시작할 수 없다. 무작위 이동과 아군 공격은 발생하지 않는다."
+    },
+    "officerTacticCompatibility": {
+      "allowedBoundary": "장수 특기와 병종 적성은 방향 유지, 차단 수행 안정성 또는 조건부 선택을 추가할 수 있다",
+      "prohibitedBoundary": "측후방에서도 정면 차단을 보장하거나 둔화·혼란·지형·시야를 무시하게 할 수 없다",
+      "commandRule": "한 부대에는 한 장수만 연결하며 일기토와 부장 효과를 사용하지 않는다"
+    },
+    "forbiddenCapabilities": [
+      "전방위 돌격 차단",
+      "위치와 방향을 무시한 차단",
+      "기병 자동 격파",
+      "무료 순간이동",
+      "무제한 제어",
+      "기본명령 전체 대체"
+    ],
+    "runtimeConnectionStatus": "DOCUMENTED_NOT_VERIFIED",
+    "missingFields": [
+      "피해 TEST",
+      "사거리 TEST",
+      "준비시간 TEST",
+      "지속시간 TEST",
+      "확률 TEST",
+      "상태 runtime ID",
+      "행동 분류 연결",
+      "방향 판정 연결",
+      "runtime 실제 연결 확인"
+    ]
+  },
+  {
+    "troopType": "기병",
+    "sourceBatch": [
+      "TROOP-DB-002",
+      "TROOP-DB-003",
+      "TROOP-DB-004-CORRECTED"
+    ],
+    "coreVerbs": [
+      "돌파하다",
+      "우회하다",
+      "추격하다"
+    ],
+    "basicCommands": [
+      "이동",
+      "공격",
+      "방어",
+      "책략",
+      "지원",
+      "퇴각"
+    ],
+    "activeCommandFamilies": [
+      "돌격",
+      "기타능동기술"
+    ],
+    "positionRequirements": [
+      "공병·궁병 대응은 접근로와 진입 방향 확보가 필요하다",
+      "창병의 정면과 유효 차단 방향을 피해야 한다",
+      "이동 경로가 막히거나 접근이 노출되면 돌파 선택의 대가가 커진다"
+    ],
+    "preparationRequirements": [
+      "돌격은 유효한 이동 경로와 목표 방향을 요구한다",
+      "일반 이동·일반 공격·기본 방어·퇴각은 돌격 준비 없이 가능하다"
+    ],
+    "counters": [
+      {
+        "troopType": "공병",
+        "conditions": [
+          "기병이 공병의 전개 위치에 접근할 경로를 확보한다",
+          "공병의 설치·시전 준비 중단이 가능한 위치에 도달한다"
+        ],
+        "resultBoundary": "전개와 포격 준비를 압박하지만 완료된 설치를 자동 삭제하지 않는다"
+      },
+      {
+        "troopType": "궁병",
+        "conditions": [
+          "기병이 사격선을 통과해 궁병에게 접근한다",
+          "궁병이 거리와 차폐를 유지하지 못한다"
+        ],
+        "resultBoundary": "사격 위치를 압박하지만 접근 전에 받은 사격과 경로 위험을 무효화하지 않는다"
+      }
+    ],
+    "counteredBy": [
+      {
+        "troopType": "창병",
+        "conditions": [
+          "기병이 창병 정면으로 접근 또는 돌격한다",
+          "창병이 유효 방향과 차단 행동을 유지한다"
+        ],
+        "resultBoundary": "기병의 진입과 돌격이 제한되지만 측후방 접근까지 자동 차단되지는 않는다"
+      }
+    ],
+    "conditionInteractions": {
+      "둔화": "자발적 경로 이동, 돌격의 이동 구간, 접근·추격·퇴각을 느리게 한다. 강제 이동과 공격 속도에는 적용하지 않는다.",
+      "혼란": "일반 이동·일반 공격·기본 방어·퇴각은 허용한다. 새 돌격과 기타 능동 기술은 시작할 수 없다. 무작위 이동과 아군 공격은 발생하지 않는다."
+    },
+    "officerTacticCompatibility": {
+      "allowedBoundary": "장수 특기와 병종 적성은 경로 선택, 돌격 수행 안정성 또는 조건부 이탈 선택을 추가할 수 있다",
+      "prohibitedBoundary": "창병의 유효한 정면 차단, 둔화, 막힌 경로 또는 시야 조건을 삭제할 수 없다",
+      "commandRule": "한 부대에는 한 장수만 연결하며 일기토와 부장 효과를 사용하지 않는다"
+    },
+    "forbiddenCapabilities": [
+      "창병 정면 차단 무시",
+      "경로 없는 돌격",
+      "무료 순간이동",
+      "공병 설치 자동 삭제",
+      "궁병 자동 격파",
+      "기본명령 전체 대체"
+    ],
+    "runtimeConnectionStatus": "DOCUMENTED_NOT_VERIFIED",
+    "missingFields": [
+      "피해 TEST",
+      "사거리 TEST",
+      "이동 TEST",
+      "준비시간 TEST",
+      "확률 TEST",
+      "상태 runtime ID",
+      "행동 분류 연결",
+      "경로·방향 판정 연결",
+      "runtime 실제 연결 확인"
+    ]
+  },
+  {
+    "troopType": "궁병",
+    "sourceBatch": [
+      "TROOP-DB-002",
+      "TROOP-DB-003",
+      "TROOP-DB-004-CORRECTED"
+    ],
+    "coreVerbs": [
+      "쏘다",
+      "견제하다",
+      "집중하다"
+    ],
+    "basicCommands": [
+      "이동",
+      "공격",
+      "방어",
+      "책략",
+      "지원",
+      "퇴각"
+    ],
+    "activeCommandFamilies": [
+      "기타능동기술"
+    ],
+    "positionRequirements": [
+      "사격에는 목표 시야와 유효한 사격 위치가 필요하다",
+      "창병 대응은 창병이 노출된 접근 또는 방어 행동을 지속할 때 성립한다",
+      "기병의 접근로가 열리면 사격 위치 유지가 위험해진다"
+    ],
+    "preparationRequirements": [
+      "일반 사격은 설치 없이 실행한다",
+      "시야와 사격 조건은 유지하며 공병의 전개 후 포격과 동일하게 취급하지 않는다"
+    ],
+    "counters": [
+      {
+        "troopType": "창병",
+        "conditions": [
+          "궁병이 시야와 사격 위치를 확보한다",
+          "창병이 사격에 노출된 이동·방어·차단 행동을 한다"
+        ],
+        "resultBoundary": "창병의 정면 유지와 접근에 대가를 부과하지만 방어와 퇴각을 봉쇄하지 않는다"
+      }
+    ],
+    "counteredBy": [
+      {
+        "troopType": "기병",
+        "conditions": [
+          "기병이 궁병에게 도달할 접근로와 방향을 확보한다",
+          "궁병이 거리 또는 차폐를 유지하지 못한다"
+        ],
+        "resultBoundary": "근접 압박으로 사격 위치를 잃을 수 있지만 기병의 접근 성공을 자동 보장하지 않는다"
+      }
+    ],
+    "conditionInteractions": {
+      "둔화": "사격 자체가 아니라 자발적 재배치·거리 조절·퇴각 이동을 느리게 한다. 공격 속도와 사거리에는 적용하지 않는다.",
+      "혼란": "일반 이동·일반 공격인 무설치 사격·기본 방어·퇴각은 허용한다. 새 능동 기술은 시작할 수 없다. 무작위 이동과 아군 공격은 발생하지 않는다."
+    },
+    "officerTacticCompatibility": {
+      "allowedBoundary": "장수 특기와 병종 적성은 시야 활용, 목표 선택 또는 사격 수행 안정성에 조건부 선택을 추가할 수 있다",
+      "prohibitedBoundary": "시야·사격 위치·기병 접근 위험을 삭제하거나 일반 사격을 전장 전체 공격으로 바꿀 수 없다",
+      "commandRule": "한 부대에는 한 장수만 연결하며 일기토와 부장 효과를 사용하지 않는다"
+    },
+    "forbiddenCapabilities": [
+      "시야 무시 사격",
+      "전장 전체 사격",
+      "무제한 사격",
+      "기병 접근 자동 차단",
+      "공병식 설치 요구로 역할 변경",
+      "기본명령 전체 대체"
+    ],
+    "runtimeConnectionStatus": "DOCUMENTED_NOT_VERIFIED",
+    "missingFields": [
+      "피해 TEST",
+      "사거리 TEST",
+      "사격시간 TEST",
+      "확률 TEST",
+      "시야 판정 연결",
+      "상태 runtime ID",
+      "행동 분류 연결",
+      "runtime 실제 연결 확인"
+    ]
+  },
+  {
+    "troopType": "공병",
+    "sourceBatch": [
+      "TROOP-DB-002",
+      "TROOP-DB-003",
+      "TROOP-DB-004-CORRECTED"
+    ],
+    "coreVerbs": [
+      "전개하다",
+      "설치하다",
+      "포격하다"
+    ],
+    "basicCommands": [
+      "이동",
+      "공격",
+      "방어",
+      "책략",
+      "지원",
+      "퇴각"
+    ],
+    "activeCommandFamilies": [
+      "설치",
+      "시전",
+      "기타능동기술"
+    ],
+    "positionRequirements": [
+      "포격에는 전개가 완료된 위치와 목표 시야 조건이 필요하다",
+      "의병 대응은 의병의 집결·지원 위치를 압박할 수 있을 때 성립한다",
+      "기병의 접근로와 근접 압박에 노출된 전개 위치는 위험하다"
+    ],
+    "preparationRequirements": [
+      "포격 전에 전개가 필요하다",
+      "진행 중 설치·시전은 혼란 시작 또는 적법한 취소 원인으로 취소될 수 있다",
+      "완료된 설치는 혼란만으로 삭제하지 않는다"
+    ],
+    "counters": [
+      {
+        "troopType": "의병",
+        "conditions": [
+          "공병이 전개와 포격 조건을 완료한다",
+          "의병의 집결 또는 지원 위치가 시야와 범위 안에 있다"
+        ],
+        "resultBoundary": "의병의 밀집과 지원 행동에 위치 변경을 강요하지만 자동 붕괴시키지 않는다"
+      }
+    ],
+    "counteredBy": [
+      {
+        "troopType": "기병",
+        "conditions": [
+          "기병이 전개 위치로 접근할 경로를 확보한다",
+          "공병이 설치·시전 중이거나 포격 위치를 이탈하기 어렵다"
+        ],
+        "resultBoundary": "준비 중단과 위치 상실 위험이 커지지만 완료된 설치를 자동 삭제하지 않는다"
+      }
+    ],
+    "conditionInteractions": {
+      "둔화": "자발적 이동·전개 위치 접근·퇴각 이동을 느리게 한다. 설치·시전 준비시간과 포격 속도에는 적용하지 않는다.",
+      "혼란": "일반 이동·일반 공격·기본 방어·퇴각은 허용한다. 새 설치·시전·기타 능동 기술은 시작할 수 없다. 진행 중 설치·시전은 혼란 시작 시 취소하고 완료된 설치는 보존한다."
+    },
+    "officerTacticCompatibility": {
+      "allowedBoundary": "장수 특기와 병종 적성은 전개 수행 안정성, 포격 목표 선택 또는 조건부 철수 선택을 추가할 수 있다",
+      "prohibitedBoundary": "전개 절차, 시야, 위치 위험, 혼란의 설치·시전 차단을 삭제할 수 없다",
+      "commandRule": "한 부대에는 한 장수만 연결하며 일기토와 부장 효과를 사용하지 않는다"
+    },
+    "forbiddenCapabilities": [
+      "무전개 포격",
+      "시야 무시 포격",
+      "이동 중 포격",
+      "기병 접근 무효화",
+      "혼란 중 새 설치·시전",
+      "완료 설치의 혼란 자동 삭제",
+      "기본명령 전체 대체"
+    ],
+    "runtimeConnectionStatus": "DOCUMENTED_NOT_VERIFIED",
+    "missingFields": [
+      "피해 TEST",
+      "사거리 TEST",
+      "전개시간 TEST",
+      "시전시간 TEST",
+      "확률 TEST",
+      "상태 runtime ID",
+      "행동 분류 연결",
+      "설치 생명주기 연결",
+      "runtime 실제 연결 확인"
+    ]
+  },
+  {
+    "troopType": "의병",
+    "sourceBatch": [
+      "TROOP-DB-002",
+      "TROOP-DB-003",
+      "TROOP-DB-004-CORRECTED"
+    ],
+    "coreVerbs": [
+      "모이다",
+      "돕다",
+      "지탱하다"
+    ],
+    "basicCommands": [
+      "이동",
+      "공격",
+      "방어",
+      "책략",
+      "지원",
+      "퇴각"
+    ],
+    "activeCommandFamilies": [
+      "치료",
+      "정화",
+      "기타능동기술"
+    ],
+    "positionRequirements": [
+      "지원 대상에게 도달 가능한 위치와 행동 가능 상태가 필요하다",
+      "술병 대응은 아군의 상태와 전술 영향을 확인하고 지원할 수 있을 때 성립한다",
+      "밀집된 지원 위치는 공병의 전개 후 포격에 노출될 수 있다"
+    ],
+    "preparationRequirements": [
+      "치료·정화는 새 능동 기술 시작으로 분류한다",
+      "일반 이동·일반 공격·기본 방어·퇴각은 치료·정화 준비 없이 가능하다",
+      "혼란 상태의 의병은 새 치료·정화를 시작할 수 없다"
+    ],
+    "counters": [
+      {
+        "troopType": "술병",
+        "conditions": [
+          "의병이 영향을 받은 아군에게 접근하고 지원 행동을 시작할 수 있다",
+          "의병 자신이 혼란으로 능동 기술 시작을 차단당하지 않았다"
+        ],
+        "resultBoundary": "술병의 전술 영향을 대응할 선택을 제공하지만 자동 정화나 무제한 회복을 보장하지 않는다"
+      }
+    ],
+    "counteredBy": [
+      {
+        "troopType": "공병",
+        "conditions": [
+          "의병의 집결·지원 위치가 공병의 전개 후 포격 조건 안에 있다"
+        ],
+        "resultBoundary": "지원 위치와 행동 지속에 대가를 부과하지만 치료·정화를 전장 전체에서 봉쇄하지 않는다"
+      }
+    ],
+    "conditionInteractions": {
+      "둔화": "자발적 이동, 지원 대상 접근, 퇴각 이동을 느리게 한다. 치료·정화 준비시간과 효과량에는 적용하지 않는다.",
+      "혼란": "일반 이동·일반 공격·기본 방어·퇴각은 허용한다. 새 치료·정화와 기타 능동 기술은 시작할 수 없다. 혼란이 없는 다른 의병의 정화 대상이 될 수 있다."
+    },
+    "officerTacticCompatibility": {
+      "allowedBoundary": "장수 특기와 병종 적성은 지원 수행 안정성, 대상 선택 또는 조건부 지원 선택을 추가할 수 있다",
+      "prohibitedBoundary": "무제한 회복, 거리·위치 무시 지원, 혼란 중 새 치료·정화 시작 또는 병종 약점 제거는 허용하지 않는다",
+      "commandRule": "한 부대에는 한 장수만 연결하며 일기토와 부장 효과를 사용하지 않는다"
+    },
+    "forbiddenCapabilities": [
+      "무제한 회복",
+      "전장 전체 치료",
+      "무료 정화",
+      "거리·위치 무시 지원",
+      "혼란 중 새 치료·정화",
+      "공병 포격 자동 무효화",
+      "기본명령 전체 대체"
+    ],
+    "runtimeConnectionStatus": "DOCUMENTED_NOT_VERIFIED",
+    "missingFields": [
+      "치료량 TEST",
+      "사거리 TEST",
+      "준비시간 TEST",
+      "지속시간 TEST",
+      "확률 TEST",
+      "상태 runtime ID",
+      "행동 분류 연결",
+      "치료·정화 연결",
+      "runtime 실제 연결 확인"
+    ]
+  },
+  {
+    "troopType": "술병",
+    "sourceBatch": [
+      "TROOP-DB-002",
+      "TROOP-DB-003",
+      "TROOP-DB-004-CORRECTED"
+    ],
+    "coreVerbs": [
+      "전하다",
+      "흔들다",
+      "유도하다"
+    ],
+    "basicCommands": [
+      "이동",
+      "공격",
+      "방어",
+      "책략",
+      "지원",
+      "퇴각"
+    ],
+    "activeCommandFamilies": [
+      "시전",
+      "기타능동기술"
+    ],
+    "positionRequirements": [
+      "전술 전달에는 대상과의 유효 위치·시야·접근 조건이 필요하다",
+      "창병 대응은 창병의 방향 유지 또는 행동 선택에 개입할 수 있는 위치에서 성립한다",
+      "의병이 대상에게 접근해 대응할 수 있으면 전술 영향의 유지가 불리해진다"
+    ],
+    "preparationRequirements": [
+      "시전은 새 능동 기술 시작으로 분류한다",
+      "술병은 인간으로 구성된 저수준 전술 운반자이며 환경과 거리를 무시하지 않는다",
+      "진행 중 시전은 혼란 시작 시 취소될 수 있다"
+    ],
+    "counters": [
+      {
+        "troopType": "창병",
+        "conditions": [
+          "술병이 유효 위치와 시야에서 전술 행동을 성공시킨다",
+          "그 결과가 창병의 방향 유지 또는 행동 선택에 실제로 관여한다"
+        ],
+        "resultBoundary": "창병의 정면 유지에 선택 비용을 만들지만 기본 행동을 삭제하거나 자동 붕괴시키지 않는다"
+      }
+    ],
+    "counteredBy": [
+      {
+        "troopType": "의병",
+        "conditions": [
+          "의병이 영향을 받은 대상에게 접근한다",
+          "의병이 혼란 상태가 아니며 지원 행동을 시작할 수 있다"
+        ],
+        "resultBoundary": "대응·정화 선택이 생기지만 술병의 효과를 자동 실패시키거나 소급 취소하지 않는다"
+      }
+    ],
+    "conditionInteractions": {
+      "둔화": "자발적 이동, 시전 위치 접근, 지원 접근과 퇴각 이동을 느리게 한다. 시전 준비시간과 성공률에는 적용하지 않는다.",
+      "혼란": "일반 이동·일반 공격·기본 방어·퇴각은 허용한다. 새 시전과 기타 능동 기술은 시작할 수 없다. 진행 중 시전은 혼란 시작 시 취소하며 무작위 이동과 아군 공격은 발생하지 않는다."
+    },
+    "officerTacticCompatibility": {
+      "allowedBoundary": "장수 특기와 병종 적성은 전술 전달의 수행 안정성, 대상 선택 또는 조건부 선택지를 추가할 수 있다",
+      "prohibitedBoundary": "마법 종족화, 환경·시야·거리 무시, 무제한 제어, 기본 행동 박탈 또는 둔화·혼란 규칙 우회는 허용하지 않는다",
+      "commandRule": "한 부대에는 한 장수만 연결하며 일기토와 부장 효과를 사용하지 않는다"
+    },
+    "forbiddenCapabilities": [
+      "마법 종족화",
+      "환경 무시 시전",
+      "거리·시야 무시 시전",
+      "무제한 제어",
+      "무작위 이동 강제",
+      "아군 공격 강제",
+      "혼란 중 새 시전",
+      "기본명령 전체 대체"
+    ],
+    "runtimeConnectionStatus": "DOCUMENTED_NOT_VERIFIED",
+    "missingFields": [
+      "효과량 TEST",
+      "사거리 TEST",
+      "시전시간 TEST",
+      "지속시간 TEST",
+      "확률 TEST",
+      "상태 runtime ID",
+      "행동 분류 연결",
+      "시전 취소 연결",
+      "runtime 실제 연결 확인"
+    ]
+  }
+]
+

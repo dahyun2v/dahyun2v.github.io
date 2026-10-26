@@ -1,0 +1,129 @@
+{
+  "id": "G06",
+  "name": "황충",
+  "faction": "F02",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 79,
+    "무용": 92,
+    "지략": 66,
+    "정무": 49,
+    "감화": 67
+  },
+  "sub": {
+    "전열 유지": 81,
+    "기동": 84,
+    "전환": 71,
+    "수습": 62,
+    "힘": 90,
+    "기술": 97,
+    "막아내기": 80,
+    "되받기": 76,
+    "군재": 66,
+    "응변": 72,
+    "속이기": 47,
+    "통찰": 74,
+    "행정": 48,
+    "병참": 58,
+    "인사": 56,
+    "제도": 39,
+    "민정": 51,
+    "설득": 57,
+    "포섭": 49,
+    "결집": 89,
+    "중재": 44
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "MEDIUM"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "노장이 앞장선다",
+    "text": "이번 차례 첫 공격 피해 +20%, 그 공격 때 맞닿은 아군 모두 1턴 고양(공격 +10%) — 노장이 먼저 들어가면 뒤가 따른다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "궁병"
+    ],
+    "effects": [
+      {
+        "op": "DAMAGE_MOD",
+        "when": "BATTLE_START",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "STATUS_APPLY",
+        "when": "BATTLE_START",
+        "target": "ADJACENT_ALLIES",
+        "value": 0,
+        "duration": 1,
+        "condition": null,
+        "status": "INSPIRED"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 아군의 첫 공격을 내가 먼저 열고 뒤가 따르는 선착 의도 유지. 'Round 아군 첫 공격'·이동 뒤 Brace 권한은 지도에 없어 '내 첫 공격 강화+맞닿은 아군 고양'으로, 원 근접 선두공격(이동 뒤)은 돌격(CHARGE) 추가 피해로 옮김. 첫 공격을 놓치면 평범(약점 유지).",
+    "formerName": "몸으로 낸 방향"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "돌격 함성",
+      "text": "인접한 적 1부대를 피해 +30%로 공격하고 대상을 즉시 동요시킨다. 이번 차례 이동한 뒤(돌격) 쓰면 피해 +15% 더.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 1,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 15,
+          "duration": 0,
+          "condition": "CHARGE"
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "DEMORALIZED"
+        }
+      ],
+      "formerName": "선착의 함성"
+    }
+  ],
+  "pendingConcepts": [
+    "CHARGE"
+  ]
+}

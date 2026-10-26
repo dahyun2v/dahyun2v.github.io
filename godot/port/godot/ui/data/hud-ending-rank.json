@@ -1,0 +1,793 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+11200",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +11200"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+5",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+20",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "0",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "9,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 남피 생산으로",
+    "target": "south"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 0 · 남은 0",
+  "rows": []
+ },
+ "selected": null,
+ "sets": null,
+ "docks": [],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 0,
+  "ready": false
+ },
+ "tacticReady": {},
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "tileToUv": {
+   "au": 0.1819695585900171,
+   "bu": 0.0326185068112803,
+   "av": 0.20069428622415367,
+   "bv": 0.019310046050054604
+  },
+  "cities": [
+   {
+    "id": "south",
+    "name": "남피",
+    "u": 0.6223,
+    "v": 0.529,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "pingyuan",
+    "name": "평원",
+    "u": 0.5897,
+    "v": 0.6448,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": []
+ },
+ "ending": {
+  "screen": "ending",
+  "head": "승리",
+  "won": true,
+  "turnText": "26차례",
+  "reason": "큰 성 · 작은 성이 같아 병력으로 앞섰습니다",
+  "ambition": "하북의 깃발 하나 — 이번 생에도 닿지 못했다. 그래도 끝은 달랐다",
+  "backdrop": "res://ui/art/ending-bg.webp",
+  "tabs": [
+   {
+    "id": "record",
+    "name": "기록"
+   },
+   {
+    "id": "rank",
+    "name": "순위"
+   },
+   {
+    "id": "chronicle",
+    "name": "연대기"
+   },
+   {
+    "id": "replay",
+    "name": "판도 재생"
+   },
+   {
+    "id": "roster",
+    "name": "명부"
+   }
+  ],
+  "tab": "rank",
+  "chronicle": [
+   {
+    "turn": "4차례",
+    "text": "평원을 얻다"
+   },
+   {
+    "turn": "8차례",
+    "text": "신도를 얻다"
+   }
+  ],
+  "records": [
+   [
+    [
+     "큰 성",
+     "1"
+    ],
+    [
+     "작은 성",
+     "2"
+    ],
+    [
+     "병력",
+     "37,980"
+    ]
+   ],
+   [
+    [
+     "교전",
+     "91회"
+    ],
+    [
+     "비틀린 역사",
+     "9"
+    ],
+    [
+     "얻은 칭호",
+     "1"
+    ]
+   ]
+  ],
+  "scoreLabel": "총점",
+  "score": "2,420",
+  "record": "첫 기록",
+  "next": {
+   "title": "다음 판에 남는 것",
+   "line": "깨어날 때마다 조금씩 덜 낯설다"
+  },
+  "home": "처음 화면",
+  "go": "다음 판",
+  "rank": [
+   {
+    "n": 1,
+    "factionId": "F01",
+    "name": "조조",
+    "me": true,
+    "color": "#b8433c",
+    "major": 1,
+    "minor": 2,
+    "troops": "37,980",
+    "ratio": 1
+   },
+   {
+    "n": 2,
+    "factionId": "F02",
+    "name": "유비",
+    "me": false,
+    "color": "#4f8f73",
+    "major": 1,
+    "minor": 2,
+    "troops": "33,470",
+    "ratio": 0.8812532912058978
+   },
+   {
+    "n": 3,
+    "factionId": "F03",
+    "name": "손권",
+    "me": false,
+    "color": "#33709f",
+    "major": 1,
+    "minor": 1,
+    "troops": "18,760",
+    "ratio": 0.4939441811479726
+   }
+  ],
+  "chronAll": [
+   {
+    "turn": "1차례",
+    "text": "조조, 남피에서 일어서다",
+    "kind": "start"
+   },
+   {
+    "turn": "8차례",
+    "text": "신도를 얻다",
+    "kind": "city"
+   },
+   {
+    "turn": "26차례",
+    "text": "역사에선 계(유주)는 끝내 조조에게 넘어갔다 / 이번엔 계는 조조의 손에 들어가지 않았다",
+    "kind": "history"
+   },
+   {
+    "turn": "26차례",
+    "text": "역사에선 관우는 손권의 손에 쓰러졌다 / 이번엔 관우는 끝까지 살아 있었다",
+    "kind": "history"
+   },
+   {
+    "turn": "26차례",
+    "text": "역사에선 여포는 사로잡혀 처형되었다 / 이번엔 여포는 끝까지 살아 누군가의 깃발 아래 있었다",
+    "kind": "history"
+   },
+   {
+    "turn": "26차례",
+    "text": "판이 닫히다",
+    "kind": "end"
+   }
+  ],
+  "replay": {
+   "cities": [
+    {
+     "id": "west",
+     "name": "업",
+     "q": -12,
+     "r": 29,
+     "major": true
+    },
+    {
+     "id": "east",
+     "name": "계",
+     "q": 11,
+     "r": 3,
+     "major": true
+    },
+    {
+     "id": "south",
+     "name": "남피",
+     "q": 5,
+     "r": 17,
+     "major": true
+    },
+    {
+     "id": "yijing",
+     "name": "역경",
+     "q": 5,
+     "r": 10,
+     "major": false
+    },
+    {
+     "id": "zhongshan",
+     "name": "중산",
+     "q": -1,
+     "r": 13,
+     "major": false
+    },
+    {
+     "id": "xindu",
+     "name": "신도",
+     "q": -3,
+     "r": 20,
+     "major": false
+    },
+    {
+     "id": "julu",
+     "name": "거록",
+     "q": -8,
+     "r": 24,
+     "major": false
+    },
+    {
+     "id": "pingyuan",
+     "name": "평원",
+     "q": 1,
+     "r": 23,
+     "major": false
+    }
+   ],
+   "colors": {
+    "F01": "#b8433c",
+    "F02": "#4f8f73",
+    "F03": "#33709f"
+   },
+   "sessionOnly": true,
+   "frames": [
+    {
+     "turn": 1,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": null,
+      "zhongshan": null,
+      "xindu": null,
+      "julu": null,
+      "pingyuan": null
+     },
+     "events": []
+    },
+    {
+     "turn": 2,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": null,
+      "zhongshan": null,
+      "xindu": null,
+      "julu": null,
+      "pingyuan": null
+     },
+     "events": []
+    },
+    {
+     "turn": 3,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": null,
+      "zhongshan": null,
+      "xindu": null,
+      "julu": null,
+      "pingyuan": null
+     },
+     "events": []
+    },
+    {
+     "turn": 4,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": null,
+      "zhongshan": null,
+      "xindu": null,
+      "julu": null,
+      "pingyuan": null
+     },
+     "events": []
+    },
+    {
+     "turn": 5,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": null,
+      "xindu": null,
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": [
+      {
+       "text": "역경 함락",
+       "cityId": "yijing"
+      },
+      {
+       "text": "거록 함락",
+       "cityId": "julu"
+      },
+      {
+       "text": "평원 함락",
+       "cityId": "pingyuan"
+      }
+     ]
+    },
+    {
+     "turn": 6,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": null,
+      "xindu": null,
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 7,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": null,
+      "xindu": null,
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 8,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": null,
+      "xindu": null,
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 9,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": [
+      {
+       "text": "중산 함락",
+       "cityId": "zhongshan"
+      },
+      {
+       "text": "신도 함락",
+       "cityId": "xindu"
+      }
+     ]
+    },
+    {
+     "turn": 10,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 11,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 12,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 13,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 14,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 15,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 16,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 17,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 18,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 19,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 20,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 21,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 22,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 23,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 24,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 25,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    },
+    {
+     "turn": 26,
+     "owners": {
+      "west": "F03",
+      "east": "F02",
+      "south": "F01",
+      "yijing": "F02",
+      "zhongshan": "F02",
+      "xindu": "F01",
+      "julu": "F03",
+      "pingyuan": "F01"
+     },
+     "events": []
+    }
+   ],
+   "runKey": "1.F01.27"
+  },
+  "losses": []
+ }
+}

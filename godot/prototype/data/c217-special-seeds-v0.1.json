@@ -1,0 +1,30 @@
+{
+  "schema": "sangoku.c217-special-seeds.v0.1",
+  "status": "WORK_TRIAL — Claude 설계. 정본 40 v1.2 §12 SpecialTroopSeedDB 의 CORE 씨앗 중 아직 병종이 없는 셋(STS03 공학편제 · STS05 복합방진 · STS12 기동원거리)을 세력 없는 특수병종으로. §13 생성 규칙(부모 Base 하나 · 부모 Affordance 유지 · 복잡도 예산) 그대로. 수치는 시험값",
+  "basis": "docs/user-input/20261011/40_TROOP_SYSTEM_STANDARD_v1.2.md §12 · §13, 대조표 docs/work-integration/20261016/COVERAGE-20261017.md",
+  "troops": {
+    "engineer": {
+      "name": "공병대", "seed": "STS03", "parent": "militia", "factionId": null,
+      "effectLine": "성 공격 내구 피해 ×1.5 · 주 행동 '보수'로 자기 성(성 칸 위) 내구 +15",
+      "costLine": "부대 공격 피해 −20%",
+      "rules": {"siegeMultiplier": 1.5, "repairAction": {"durability": 15, "onOwnCityTile": true, "mainAction": true}, "unitDamageMultiplier": 0.8},
+      "base": {"facility": "workshop"}
+    },
+    "phalanx": {
+      "name": "방진대", "seed": "STS05", "parent": "spear", "factionId": null,
+      "effectLine": "옆에 아군 창병 계열이 있으면 정면에서 받는 피해 −15%(한 번만) · 정면 기병 돌격 무효",
+      "costLine": "이동 −1칸",
+      "rules": {"interlock": {"adjacentFamily": "spear", "frontDamageTaken": 0.85}, "frontChargeImmune": true, "moveDelta": -1},
+      "base": {"facility": "barracks", "researchStage": 1}
+    },
+    "horseArcher": {
+      "name": "기마궁", "seed": "STS12", "parent": "cavalry", "factionId": null,
+      "effectLine": "사거리 2 사격(반격 없음) · 이동한 뒤에도 사격",
+      "costLine": "근접으로 칠 때 피해 −30% · 원거리 사격으로 받는 피해 +15% · 돌격 없음",
+      "rules": {"range": 2, "rangedNoCounter": true, "fireAfterMove": true, "meleeDamageMultiplier": 0.7, "rangedDamageTaken": 1.15, "noCharge": true},
+      "base": {"facility": "barracks", "researchStage": 2}
+    }
+  },
+  "aiUse": "AI 는 같은 계열 장수 · 기반이 있을 때 C198 특수 편성 판단에 그대로 포함(숫자 보너스 없음): 공병대 = 공성 목표가 보일 때, 방진대 = 적 기병이 보일 때, 기마궁 = 들판 교전",
+  "runtimeModule": "prototype/src/campaign-special-troops.mjs#C217"
+}

@@ -1,0 +1,51 @@
+{
+ "schema": "diplomacy-lines-v0.1",
+ "status": "WORK_TRIAL — Claude 시험 대사(외교 만남 화면 자리 채움). 문과 감성 글은 장기적으로 Argon 이 다시 씀(AGENTS §2 10-18) · 군주별 말투는 그때. 규칙: 한 줄 20자 안팎 · 최대 2줄 · 쉼표 0 · 끝 마침표 없음.",
+ "tones": ["positive", "neutral", "negative"],
+ "lines": {
+  "first": {
+   "positive": ["꿈에서 본 얼굴이로군 반갑소"],
+   "neutral": ["어디선가 본 듯한 눈빛이오", "그대도 깨어난 사람이구려"],
+   "negative": ["낯설지 않은 기운이오 그래서 더 경계하오"]
+  },
+  "talk": {
+   "positive": ["그대와 마주하니 마음이 놓이오"],
+   "neutral": ["무슨 일로 사람을 보냈소", "할 말이 있다면 짧게 하시오"],
+   "negative": ["칼을 거두러 온 것이오 아니면 겨누러 온 것이오"]
+  },
+  "offerTruce": {
+   "positive": ["잠시 칼을 내려놓읍시다"],
+   "neutral": ["서로 등을 비울 때가 아니오 휴전을 청하오"],
+   "negative": ["지금은 싸울 때가 아니라 보오 휴전하시겠소"]
+  },
+  "offerAlliance": {
+   "positive": ["같은 길을 걷는다면 손을 잡읍시다"],
+   "neutral": ["적의 적이라면 손잡을 만하오"],
+   "negative": ["믿지는 않소 다만 셈은 맞소"]
+  },
+  "accept": {
+   "positive": ["좋소 약조는 지키리다"],
+   "neutral": ["받아들이겠소 다음 차례부터요"],
+   "negative": ["좋소 이번만은 믿어 보겠소"]
+  },
+  "reject": {
+   "positive": ["아직은 때가 아니오"],
+   "neutral": ["그 말로는 움직이지 않소"],
+   "negative": ["돌아가서 칼이나 갈아 두시오"]
+  },
+  "gift": {
+   "positive": ["마음 고맙게 받겠소"],
+   "neutral": ["뜻은 알겠소"],
+   "negative": ["선물로 마음까지 사지는 못하오"]
+  },
+  "endNotice": {
+   "positive": ["약조는 여기까지요 원망은 마시오"],
+   "neutral": ["동맹은 다음 차례로 끝이오"],
+   "negative": ["이제야 본심을 드러내는구려"]
+  },
+  "greetReply": {
+   "warm": "반갑소 함께 살길을 찾읍시다",
+   "cool": "갈 길은 각자 정할 것이오"
+  }
+ }
+}

@@ -1,0 +1,297 @@
+{
+  "schema": "first3-integration-audit-v1",
+  "generatedAt": "2026-09-19T13:52:05.391Z",
+  "scope": "Read-only data references, arithmetic, and imported active preview core; no browser or complete-game validation",
+  "sources": [
+    {
+      "path": "docs/design-data/map-layout-v1.json",
+      "sha256": "cd1eb96c633e36f2b299f4387c448fe33dbde61b15087a3945c897bde2785252"
+    },
+    {
+      "path": "docs/design-data/map-start-v1.json",
+      "sha256": "5119d6944f54afdf8183915cb14c640e4d5fd86ec41645840aed6e9de671b05e"
+    },
+    {
+      "path": "docs/design-data/ops-scenario-v1.json",
+      "sha256": "28dead846152b83fcf46fc990afdcd92bf0c20f05497aed2c5343075142353da"
+    },
+    {
+      "path": "docs/design-data/officers-first-play-v1.json",
+      "sha256": "fe9e73bd9aaddf6f25744839fd0ff5a81539c91ff9c6431d6e6b6079952c6667"
+    },
+    {
+      "path": "docs/design-data/first3-ledger-v1.json",
+      "sha256": "ac591d548d7028aadf8e5dcb4410928b496793e6fa265f98a4307067232d4d02"
+    },
+    {
+      "path": "docs/design-data/city-economy-v1.json",
+      "sha256": "ca9522aebc5a01b934938250652d5886a6bc6da746f9759bd52eb265b6278544"
+    }
+  ],
+  "summary": {
+    "passed": 36,
+    "failed": 2
+  },
+  "checks": [
+    {
+      "id": "MAP_COUNTS",
+      "status": "pass",
+      "detail": "18x14, 252 unique coordinates"
+    },
+    {
+      "id": "FACTION_COUNTS",
+      "status": "pass",
+      "detail": "3 unique factions"
+    },
+    {
+      "id": "OFFICER_COUNTS",
+      "status": "pass",
+      "detail": "9 first-play officers"
+    },
+    {
+      "id": "FIELD_OCCUPANCY",
+      "status": "pass",
+      "detail": "6 starting field units, no shared tile"
+    },
+    {
+      "id": "TIME",
+      "status": "pass",
+      "detail": "MAPTIME-v1 is 0.05 day x 200 = 10 days"
+    },
+    {
+      "id": "FACTION_LINK_F01",
+      "status": "pass",
+      "detail": {
+        "scenario": {
+          "city": "west",
+          "ruler": "G07",
+          "governor": "G04"
+        },
+        "ledger": {
+          "city": "west",
+          "ruler": "G07",
+          "governor": "G04"
+        }
+      }
+    },
+    {
+      "id": "FACTION_LINK_F02",
+      "status": "fail",
+      "detail": {
+        "scenario": {
+          "city": "east",
+          "ruler": "G05",
+          "governor": "G03"
+        },
+        "ledger": {
+          "city": "south",
+          "ruler": "G05",
+          "governor": "G02"
+        }
+      }
+    },
+    {
+      "id": "FACTION_LINK_F03",
+      "status": "fail",
+      "detail": {
+        "scenario": {
+          "city": "south",
+          "ruler": "G08",
+          "governor": "G27"
+        },
+        "ledger": {
+          "city": "east",
+          "ruler": "G08",
+          "governor": "G20"
+        }
+      }
+    },
+    {
+      "id": "UNIT_LINK_U-F01-G07",
+      "status": "pass",
+      "detail": "IDs, commander, allowed type, strength and coordinates"
+    },
+    {
+      "id": "UNIT_LINK_U-F01-G24",
+      "status": "pass",
+      "detail": "IDs, commander, allowed type, strength and coordinates"
+    },
+    {
+      "id": "UNIT_LINK_U-F02-G05",
+      "status": "pass",
+      "detail": "IDs, commander, allowed type, strength and coordinates"
+    },
+    {
+      "id": "UNIT_LINK_U-F02-G02",
+      "status": "pass",
+      "detail": "IDs, commander, allowed type, strength and coordinates"
+    },
+    {
+      "id": "UNIT_LINK_U-F03-G08",
+      "status": "pass",
+      "detail": "IDs, commander, allowed type, strength and coordinates"
+    },
+    {
+      "id": "UNIT_LINK_U-F03-G20",
+      "status": "pass",
+      "detail": "IDs, commander, allowed type, strength and coordinates"
+    },
+    {
+      "id": "START_CITY_west",
+      "status": "pass",
+      "detail": "city ownership and center"
+    },
+    {
+      "id": "CITIZENS_west",
+      "status": "pass",
+      "detail": "citizen assignment count, terrain and ownership"
+    },
+    {
+      "id": "START_CITY_east",
+      "status": "pass",
+      "detail": "city ownership and center"
+    },
+    {
+      "id": "CITIZENS_east",
+      "status": "pass",
+      "detail": "citizen assignment count, terrain and ownership"
+    },
+    {
+      "id": "START_CITY_south",
+      "status": "pass",
+      "detail": "city ownership and center"
+    },
+    {
+      "id": "CITIZENS_south",
+      "status": "pass",
+      "detail": "citizen assignment count, terrain and ownership"
+    },
+    {
+      "id": "STATS_G07",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G07",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G04",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G04",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G24",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G24",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G05",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G05",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G02",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G02",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G03",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G03",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G08",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G08",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G20",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G20",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    },
+    {
+      "id": "STATS_G27",
+      "status": "pass",
+      "detail": "20 substats and rounded 5-stat averages"
+    },
+    {
+      "id": "ENERGY_G27",
+      "status": "pass",
+      "detail": "existing combat energy formula"
+    }
+  ],
+  "observations": {
+    "activeServerRoutesSrcCore": true,
+    "activeAppImportsSrcCore": true,
+    "previewF03Start": {
+      "factions": [
+        "F03",
+        "AI01",
+        "AI02"
+      ],
+      "westOwner": "F03",
+      "fieldUnits": 0,
+      "fame": 0
+    },
+    "previewFirstTurnWestFoodDelta": 7,
+    "ceV1PlainForestNetFoodWithoutBonuses": 2,
+    "unresolvedFullOfficerReferences": [
+      {
+        "placeId": "P02",
+        "officerId": "G21"
+      }
+    ],
+    "fixtureOverride": {
+      "field": "citizenAssignments",
+      "olderScenarioValue": "ops-scenario-v1 기록의 시작 시민 두 칸 평지",
+      "firstSliceValue": "도시 경제 CE-v1와 최신 도시 담당 연결안에 맞춘 평지 1칸+숲 1칸",
+      "mapChange": "세 도시의 두 번째 시민 타일을 숲으로 표시",
+      "status": "first_slice_override; 운영 원본은 감사용으로 보존"
+    },
+    "level1To30XpAtCurrentFormula": 5800,
+    "minimumTurnsAtXpCap20": 290,
+    "notes": [
+      "Preview observations are gaps against FIRST3, not failures of these data-reference checks.",
+      "G21 has an operations stub; absence here means the nine-officer full runtime dataset does not contain G21.",
+      "Food comparison excludes governor and national bonuses; it demonstrates the preview is not the city-economy implementation.",
+      "Fixed test fixtures must remain distinct from production random generation."
+    ]
+  }
+}

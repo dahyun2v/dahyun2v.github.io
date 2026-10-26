@@ -1,0 +1,5 @@
+# 큰 캐시(만들어 쓰는 견본 판 — ending-model endingLiveSample · 없으면 2~3분 걸려 다시 만듦): 저장소에 넣지 않음
+ending-live-*.json
+crisis-state-*.json
+
+gap2-*-state.json

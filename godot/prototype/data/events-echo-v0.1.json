@@ -1,0 +1,1312 @@
+{
+  "schema": "events-echo-v0.1",
+  "version": "0.1.0",
+  "status": "WORK_TRIAL — 사용자 채택과 별도",
+  "createdAt": "2026-10-16",
+  "setting": "역사가 끝난 뒤 다시 깨어난 이들에게 역사 속 결말과, 다른 생에서 실제로 이룬 끝의 기시감이 함께 돌아온다. 현재 장소는 하북 8성이다.",
+  "inputManifest": [
+    {
+      "file": "BRIEF-ambition-echo.md",
+      "sha256": "df94b7817365de95f18d8fe80611a06cf1ecc78a248b82b33ebe9c37676317fc",
+      "readScope": "전체"
+    },
+    {
+      "file": "EFFECTS.md",
+      "sha256": "695388d72f29a2a1914441a290618be3972937780c233845c81b7322df04614f",
+      "readScope": "전체"
+    },
+    {
+      "file": "EVENT-DECK-DESIGN.md",
+      "sha256": "55d8ae0bb85eee277206b445e0d79fe35b64cc6e15566b187539f84a9a2a0285",
+      "readScope": "전체"
+    },
+    {
+      "file": "ambitions-v0.1.json",
+      "sha256": "56e6bfc353713a443ac3bcc5f43a3d506f989ca19bfad7a7dc2acafc2fff7ce2",
+      "readScope": "전체"
+    },
+    {
+      "file": "deja-vu-v0.1.json",
+      "sha256": "557a98b404105da370a35b53366d6ebe1c8fb81c4bb638625ae00bbdd356b901",
+      "readScope": "전체"
+    },
+    {
+      "file": "events-deck-v1.json",
+      "sha256": "2a65d6b5c4738726a84277b014c98a2fce5277731abbf733a2d36460b9c9d51e",
+      "readScope": "전체"
+    },
+    {
+      "file": "relation-scenes-v0.2.json",
+      "sha256": "053e4fd41cd56ca32866ece2a77141c40ed6c3a87a10e8a442df1184daf62077",
+      "readScope": "전체"
+    },
+    {
+      "file": "roster.csv",
+      "sha256": "65431d8f3ba201ec2b02bbee813175d1ef64f4fd4ede2f955a17feb97ece8b3a",
+      "readScope": "전체"
+    },
+    {
+      "file": "visit-talks-v0.1.json",
+      "sha256": "99c1f7763402c9bbc77786e669b30464df747b8a14ac205a07f92be758f606c2",
+      "readScope": "전체"
+    }
+  ],
+  "contract": {
+    "kind": "기존 사건 덱에 덧붙이는 콘텐츠 확장. 효과·목표·런타임 구현을 추가하는 패치가 아님.",
+    "turnLimit": 26,
+    "playerOnly": true,
+    "maxEventsPerRun": 4,
+    "minimumTurnGap": 4,
+    "oncePerRun": true,
+    "previousRunSeenWeightMultiplier": 0.5,
+    "selection": {
+      "deterministic": true,
+      "rule": "발생 자격은 guards와 roles를 모두 충족해야 한다. 가중치는 기존 결정론 선택기의 입력이며 새 난수 호출을 하지 않는다. 고정된 캠페인 상태·시드·직전 판 기록이 같으면 같은 결과여야 한다. 선택기 자체는 미제공이므로 연동 검사 필요.",
+      "recentPenaltyBasis": "직전 판에 화면에 제시된 카드 ID, history/twist/defer 여부와 무관"
+    },
+    "unlockEligibility": {
+      "source": "ambitions-v0.1.json의 U-EV-<야망 ID> 가로 해금",
+      "rule": "현재 판 생성 시 주입된 이전 완료 판까지의 unlocks에 requiresUnlock이 있어야 후보 덱에 포함한다. 포함과 실제 제시는 다르며 scope·turns·guards·roles를 모두 추가 검사한다.",
+      "sameRun": "이번 판에서 새로 얻은 unlocksEarned를 현재 후보 덱으로 되먹이지 않는다. 다음 판 생성부터 사용한다.",
+      "independentOfCurrentAmbition": true,
+      "notAGrant": "requiresUnlock은 읽기 조건이다. 이 카드는 해금·야망 달성·능력치를 자동 부여하지 않는다."
+    },
+    "mergePolicy": "기존 events 배열에 9장을 ID 중복 없이 덧붙인다. 기존 30장·맹세 기록·연결 태그는 수정하지 않는다. 판당 4장과 최소 4차례 간격은 메아리를 포함한 전체 덱에 공통 적용하며 별도 메아리 슬롯을 만들지 않는다.",
+    "roleResolution": {
+      "freezeAt": "카드 표시 직전; 실제 ID와 이름을 고정하고 이후 재선정하지 않는다.",
+      "localOfficers": "owner=player인 모든 필수 장수는 현재 플레이어 소유이며 활동 가능해야 한다. G09·G01도 예외가 아니며 미등용 상태에서는 해당 카드를 제시하지 않는다.",
+      "foreignSender": "EV-ECHO-F03-RECONCILE의 otherLord만 owner=F02인 G05를 서신 발신자로 조회한다. F03 소유나 현장 동석을 요구하지 않는다. G05가 F02 소속·활동 가능 상태가 아니면 제시하지 않는다.",
+      "cities": "owner와 allowedNames는 후보 집합 필터이다. 필터를 통과한 성에서 pick과 tieBreak를 적용하며, 없으면 카드를 제시하지 않는다. 현재 수도가 달라진 경우 homeCity/capital 조건이 실패할 수 있다.",
+      "pairScenes": "OFFICER_PAIR는 새 관계 단계가 아닌 기존 발생 맥락이다. pair_adjacent·officer_at_city를 충족해야 현장 대사를 제시한다.",
+      "places": "현재 지명은 allowedCityNames만 사용. 역할 셀렉터의 문자열은 기존 엔진 함수명이 아니라 어댑터가 구현할 결정론 질의 명세이다."
+    },
+    "allowedCityNames": [
+      "업",
+      "거록",
+      "신도",
+      "중산",
+      "남피",
+      "계",
+      "역경",
+      "평원"
+    ],
+    "oathTiming": {
+      "signedAt": "플레이어가 twist 선택 시 현재 차례 t",
+      "deadlineAbsolute": "t + deadline; t + deadline <= 26",
+      "firstCheck": "선택 차례의 결과를 소급 인정하지 않고 t+1 차례 끝부터",
+      "pointGoals": "CAPTURE_CITY·DEFEAT_ARMY는 서약 이후 일어난 행위를 t+1..t+N 차례 말에 판정하여 최초 성공 시 1회만 보상한다. 선택 차례 t의 선택 이후 행위도 로그에는 저장하되 가장 빠른 지급은 t+1 끝이다.",
+      "lastTurnGoal": "FOOD_AT_LEAST는 t+N 차례 끝에만 성공/실패 판정한다.",
+      "continuousGoals": "HOLD_CITY·PAIR_TOGETHER·TRUCE_KEEP는 t+1..t+N 차례 끝을 모두 충족해야 성공. HOLD의 잠깐 상실, TRUCE의 먼저 공격은 행동 로그에 실패를 기록하므로 되찾기/재협정으로 덮어쓰지 않는다. PAIR는 명세대로 차례 말 위치만 검사한다.",
+      "onceOnly": "성공과 실패는 배타적이며 각각 중복 지급하지 않는다. 조기 위반을 기록하더라도 penalty 정산은 t+N 끝에 1회.",
+      "campaignEndsEarly": "승패로 조기 종료한 경우 미완료 맹세는 완료/실패를 지어내지 않고 미완료로 기록한다. 목표·기한을 고치지 않는다. 이 종료 정책은 제안 사항으로 어댑터 검수 필요."
+    },
+    "effectRepresentation": "각 효과는 EFFECTS.md의 정확한 효과명을 단일 키로 사용한다. prestige는 숫자, 나머지는 해당 표의 필드를 가진 객체이다. trigger 테스트와 roles의 pick은 효과가 아니다.",
+    "preview": {
+      "template": "이 산출물의 효과 배열과 goal 객체에서 자동 생성한 정적 미리보기.",
+      "units": "예비병 내부 1 = 표시 병력 10명. 다른 수치는 내부 단위를 그대로 표시.",
+      "scope": "요청 변화량과 표시값을 대조한다. 상한·하한에서의 실제 증감량은 엔진 상태를 읽어 별도 보정·표시해야 한다.",
+      "display": "역할 실제 이름과 현재 t에서 계산한 절대 마감 t+deadline을 화면에 함께 표시해야 한다."
+    },
+    "ambitionSeparation": "맹세는 현재 판의 작은 행동 약속이다. HOLD_AT_END·PERSON_BOUND·RECRUIT_KEEP·ALLIANCE_KEEP 같은 야망 목표는 사건 목표로 복사하지 않으며, 원래 야망 검사는 별도 수행한다.",
+    "targetValidityPolicy": "reward/penalty의 원래 대상이 소멸한 경우 처리 규칙은 입력에 없다. 이번 산출물은 새로운 타깃 치환 효과를 발명하지 않는다. 실행 전 엔진에서 소멸 대상의 적용 규칙과 화면 안내를 확정해야 한다.",
+    "runtimeGates": [
+      "requiresUnlock이 다음 판 후보 구성 시 실제로 검사되고, 미보유·다른 세력·당판 새 획득에서는 제시되지 않는지 확인.",
+      "owner=F02인 서신 발신자 G05의 조회를 지원하는지 확인. 자기 소속으로 자동 치환하지 말 것.",
+      "FOOD_LOW의 평원 필터, 함락 성의 문맥·필수 동석, 대상 성의 4차례 내 도달 가능성을 실제 상태에서 확인.",
+      "TRUCE_KEEP는 활성 휴전만 사용한다. 동맹을 휴전으로 간주·연장하는 규칙은 이 자료에서 가정하지 않는다.",
+      "전투·이탈·사망·성 재탈환·선제 공격·기한 경과를 포함한 맹세의 성공/실패/중복 지급 방지와 화면 이름 치환을 실제 엔진에서 확인."
+    ],
+    "economyStatus": "작음/보통 범위와 효과 건수의 정적 감사만 수행. 실제 26차례 자원 경제·발생 빈도·재미·UI 렌더링은 미실행."
+  },
+  "sources": {
+    "EH-WUDI": {
+      "work": "《三國志》卷01〈武帝紀〉",
+      "author": "陳壽",
+      "textLayer": "진수 본문; 현대 공개 전사본에서 관련 대목 대조",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷01",
+      "publicationDate": null,
+      "publicationDateNote": "현대 전사 페이지의 최초 게시일·최종 편집일은 별도로 검증하지 않음. 접속일을 작성일로 쓰지 않음.",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 공개 원문 web.open; 연결 브라우저는 사용하지 않음.",
+      "checkedScope": "官渡에서 원소군을 격파한 대목; 앞서 조조·원소가 거병 뒤의 기반을 논한 회고; 평원·남피 확보와 冀州平, 이후 원정 대목.",
+      "limits": "해당 대목만 확인. 판본 전수 교감·논문 고증은 수행하지 않음. 카드 장면·대사·다른 생의 세월·효과는 창작."
+    },
+    "EH-XUNYU": {
+      "work": "《三國志》卷10〈荀彧傳〉",
+      "author": "陳壽",
+      "textLayer": "진수 본문; 현대 공개 전사본에서 관련 대목 대조",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷10",
+      "publicationDate": null,
+      "publicationDateNote": "현대 전사 페이지의 최초 게시일·최종 편집일은 별도로 검증하지 않음. 접속일을 작성일로 쓰지 않음.",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 공개 원문 web.open; 연결 브라우저는 사용하지 않음.",
+      "checkedScope": "董昭 등이 국공·九錫을 제의하고 순욱이 반대하는 대목부터, 彧疾留壽春·以憂薨까지의 진수 본문. 빈 그릇에 관한 裴注 전승은 카드 근거로 사용하지 않음.",
+      "limits": "해당 대목만 확인. 판본 전수 교감·논문 고증은 수행하지 않음. 카드 장면·대사·다른 생의 세월·효과는 창작."
+    },
+    "EH-LIUBEI": {
+      "work": "《三國志》卷32〈先主傳〉",
+      "author": "陳壽",
+      "textLayer": "진수 본문; 현대 공개 전사본에서 관련 대목 대조",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷32",
+      "publicationDate": null,
+      "publicationDateNote": "현대 전사 페이지의 최초 게시일·최종 편집일은 별도로 검증하지 않음. 접속일을 작성일로 쓰지 않음.",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 공개 원문 web.open; 연결 브라우저는 사용하지 않음.",
+      "checkedScope": "平原令·平原相 재임 대목; 田楷와 도겸을 도우러 가고 서주를 맡는 대목; 呂布乘虛襲下邳 및 재결합·대립 대목.",
+      "limits": "해당 대목만 확인. 판본 전수 교감·논문 고증은 수행하지 않음. 카드 장면·대사·다른 생의 세월·효과는 창작."
+    },
+    "EH-BROTHERS": {
+      "work": "《三國志》卷36〈關羽傳·張飛傳〉",
+      "author": "陳壽",
+      "textLayer": "진수 본문; 현대 공개 전사본에서 관련 대목 대조",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷36",
+      "publicationDate": null,
+      "publicationDateNote": "현대 전사 페이지의 최초 게시일·최종 편집일은 별도로 검증하지 않음. 접속일을 작성일로 쓰지 않음.",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 공개 원문 web.open; 연결 브라우저는 사용하지 않음.",
+      "checkedScope": "관우가 형주 일을 맡은 대목 및 패사; 장비가 관우와 함께 선주를 섬긴 대목, 각지 지휘, 張達·范彊에게 살해된 대목.",
+      "limits": "해당 대목만 확인. 판본 전수 교감·논문 고증은 수행하지 않음. 카드 장면·대사·다른 생의 세월·효과는 창작."
+    },
+    "EH-LUBU": {
+      "work": "《三國志》卷07〈呂布傳〉",
+      "author": "陳壽",
+      "textLayer": "진수 본문; 현대 공개 전사본에서 관련 대목 대조",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷07",
+      "publicationDate": null,
+      "publicationDateNote": "현대 전사 페이지의 최초 게시일·최종 편집일은 별도로 검증하지 않음. 접속일을 작성일로 쓰지 않음.",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 공개 원문 web.open; 연결 브라우저는 사용하지 않음.",
+      "checkedScope": "유비·원술의 대치 중 여포의 下邳 습격과 이후 유비와의 결합·대립 대목. 현재 대사의 주종 말투는 원전 호칭이 아니라 첨부 말투 규칙을 적용.",
+      "limits": "해당 대목만 확인. 판본 전수 교감·논문 고증은 수행하지 않음. 카드 장면·대사·다른 생의 세월·효과는 창작."
+    },
+    "EH-SUNCE": {
+      "work": "《三國志》卷46〈孫策傳〉",
+      "author": "陳壽",
+      "textLayer": "진수 본문; 현대 공개 전사본에서 관련 대목 대조",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷46",
+      "publicationDate": null,
+      "publicationDateNote": "현대 전사 페이지의 최초 게시일·최종 편집일은 별도로 검증하지 않음. 접속일을 작성일로 쓰지 않음.",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 공개 원문 web.open; 연결 브라우저는 사용하지 않음.",
+      "checkedScope": "創甚 이후 손책이 장수들에게 아우 보좌를 부탁하고 손권에게 후사를 맡긴 뒤 至夜卒에 이르는 본문. 부상 원인의 상충하는 주석 세부는 사용하지 않음.",
+      "limits": "해당 대목만 확인. 판본 전수 교감·논문 고증은 수행하지 않음. 카드 장면·대사·다른 생의 세월·효과는 창작."
+    },
+    "EH-SUNQUAN": {
+      "work": "《三國志》卷47〈吳主傳〉",
+      "author": "陳壽",
+      "textLayer": "진수 본문; 현대 공개 전사본에서 관련 대목 대조",
+      "url": "https://zh.wikisource.org/wiki/三國志/卷47",
+      "publicationDate": null,
+      "publicationDateNote": "현대 전사 페이지의 최초 게시일·최종 편집일은 별도로 검증하지 않음. 접속일을 작성일로 쓰지 않음.",
+      "accessedAt": "2026-10-16",
+      "accessMethod": "내장 웹 검색 후 공개 원문 web.open; 연결 브라우저는 사용하지 않음.",
+      "checkedScope": "合肥未下·徹軍還; 관우 공격; 유비의 오 공격과 육손의 승리까지의 본문. 유비 사후 외교 재개 대목과 구분.",
+      "limits": "해당 대목만 확인. 판본 전수 교감·논문 고증은 수행하지 않음. 카드 장면·대사·다른 생의 세월·효과는 창작."
+    }
+  },
+  "events": [
+    {
+      "id": "EV-ECHO-F01-LAND",
+      "title": "깃발 아래 자란 아이",
+      "scope": "F01",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F01-LAND",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          6,
+          14
+        ],
+        "when": "CITY_CAPTURED",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "just_captured_by_player",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "different_resolved_ids",
+            "roles": [
+              "city",
+              "homeCity"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "context_city",
+          "owner": "player",
+          "allowedNames": [
+            "계",
+            "남피"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "homeCity": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "업"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "조조는 원씨 세력과 싸워 평원·남피를 확보하고 기주를 평정한 뒤에도 원정을 이어 간다. (《三國志》卷01〈武帝紀〉)",
+      "sourceRefs": [
+        "EH-WUDI"
+      ],
+      "adaptationNote": "관도 승전이나 깃발 통일 자체를 재연하지 않는다. 업과 두 번째 큰 성 아래 한 세대가 자란 듯한 장면은 이미 이룬 야망의 창작 메아리이다. 실제 지리와 현재 8성 지도는 별개이다.",
+      "text": "{city}에 깃발이 오른다. {lord}는 또 다른 성을 향해 군사를 재촉하던 함성을 들은 듯하다. 그런데 그 소리 너머로, 이 깃발 밑의 아이가 어른이 되어 업에도 같은 기를 거는 모습이 겹친다. 싸움이 끝난 뒤의 세월까지 낯익다. “다음 성만 보느라, 얻은 땅에서 누가 자라는지는 잊었군.”",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 다음 싸움에 쓸 병력을 모은다",
+          "effects": [
+            {
+              "reserves": {
+                "city": "city",
+                "delta": 50
+              }
+            }
+          ],
+          "preview": "{city} 예비병 +500명",
+          "dejaVu": "깃발을 꽂자마자 또 다른 성의 이름을 물었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 새로 얻은 성을 지켜 세월이 머물게 한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "reserves": {
+                  "city": "city",
+                  "delta": 100
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {city} 보유 유지 (한 번도 잃지 않음)"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {city} 보유 유지 (한 번도 잃지 않음) | 성공: {city} 예비병 +1,000명 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "하북의 깃발 하나의 메아리. 정복 직후 다음 전쟁으로 향하는 관성 대신 얻은 큰 성을 3차례 유지한다. 현재 업도 보유한 상태에서만 제시한다. 인구 증가·전쟁 종결·야망 달성 효과는 없다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 성 예비병: history +50, twist 성공 +100(보통, 2배). 즉시 보상 없음, 실패는 인망 −5. 주민 성장 묘사는 기억이며 population 효과가 아니다."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F01-PERSON",
+      "title": "높이를 아는 손",
+      "scope": "F01",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F01-PERSON",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          4,
+          14
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G04",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "순욱은 조조의 국공·구석 추진에 반대하여 뜻이 어긋났고, 뒤에 병으로 수춘에 머물다 죽는다. (《三國志》卷10〈荀彧傳〉 본문)",
+      "sourceRefs": [
+        "EH-XUNYU"
+      ],
+      "adaptationNote": "본문의 이견·병중 이별을 근거로 삼되 빈 그릇 전승은 사용하지 않았다. 노안에 맞추어 받침 높이를 고치던 오랜 습관은 함께 늙은 다른 삶의 창작 기억이다.",
+      "text": "{officer}의 손이 문서 받침을 조금 높인다. “명공, 낮으면 눈이 피로하십니다.” {lord}에게 병든 문약을 먼 곳에 남겨 둔 듯한 서늘함이 스친다. 곧 백발의 두 사람이 같은 높이를 두고 해마다 실랑이하던 광경이 겹친다. “내 눈이 늙는 걸 네가 오래 보아 준 것도 같은데.”",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 직분만 치하하고 거리를 둔다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "멀리서 들려온다는 안부가 어느 날부터 오지 않았던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 오래 눈을 살펴 주던 이를 곁에 둔다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": 10
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {lord}·{officer} 관계 +10 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "순욱과 끝까지의 메아리. EV-F01-06의 반대 의견·빈 문서 칸을 되풀이하지 않고, 병든 채 헤어진 감각과 서로의 노화를 지켜본 감각을 충돌시킨다. 동행은 3차례만 판정하며 결의·생존을 자동 보장하지 않는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "history 인망 +5와 성공 관계 +10은 서로 다른 효과이므로 배율을 계산하지 않는다. 성공은 관계 효과 1개·보통 +10, 실패 인망 −5, 즉시 보상 없음."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F01-RECONCILE",
+      "title": "두 지팡이의 홈",
+      "scope": "F01",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F01-RECONCILE",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          5,
+          14
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G07",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G09",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "lord_current_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "함께 거병한 조조와 원소는 서로 다른 천하 경영 구상을 말했고, 뒤에 관도에서 맞섰다. (《三國志》卷01〈武帝紀〉)",
+      "sourceRefs": [
+        "EH-WUDI"
+      ],
+      "adaptationNote": "현재 원소는 이미 등용되어 있어야 한다. 원전의 각기 다른 기반과 맞선 진영을 같은 뜰의 노년이라는 창작 기억으로 뒤집었다. 지팡이·노화는 현재 능력치나 장비 효과가 아니다.",
+      "text": "{city}의 문턱에 지팡이를 세울 만한 홈이 둘 있다. {officer}의 눈에 서로를 향하던 두 진영이 어른거린다. 그 뒤로는 같은 뜰의 늙은 두 사람이 더 깊이 팬 제 홈을 놓고 다투는 듯하다. “주공, 이쪽은 제 자리였던 듯합니다.” {lord}가 얕은 홈에 발끝을 댄다. “천하보다 작은 걸 다퉜구려.”",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 공은 인정하되 옛 경쟁자로 대우한다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "서로 기대어 설 땅부터 따져 묻던 목소리가 되살아나는 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 다투더라도 함께 늙을 성을 지킨다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 10
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {city} 보유 유지 (한 번도 잃지 않음)"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {city} 보유 유지 (한 번도 잃지 않음) | 성공: 인망 +10 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "원소를 품다의 메아리. 재야 영입을 카드에서 실행하지 않으며 G09가 플레이어 소유·활동 가능·현장 동석인 경우만 제시한다. 맹세는 성 유지이지 원소의 강제 주둔이나 영구 충성이 아니다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "history 인망 +5, 성공 인망 +10(보통, 2배). 실패 인망 −5. 즉시 보상·영입·태수 임명·관계 단계 강제 변경 없음."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F02-LAND",
+      "title": "세 고을의 됫박",
+      "scope": "F02",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F02-LAND",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          4,
+          14
+        ],
+        "when": "FOOD_LOW",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "food_below",
+            "city": "city",
+            "value": 30
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "lowest_food_city",
+          "owner": "player",
+          "allowedNames": [
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "평원상을 지낸 유비는 전란 속에 서주를 구원하러 갔고, 뒤에 그곳을 맡는다. (《三國志》卷32〈先主傳〉)",
+      "sourceRefs": [
+        "EH-LIUBEI"
+      ],
+      "adaptationNote": "유비의 평원 재임과 이후 이동만 역사 근거이다. 계·평원·역경을 함께 다스리며 여러 해 같은 되로 추수를 살핀 듯한 세월은 야망 달성 뒤의 창작 메아리이며 실제 삼국지 지리를 옮긴 것이 아니다.",
+      "text": "새 됫박을 쥔 {lord}의 손이 아직 없는 손잡이의 흠을 찾는다. {city}에서 떠나던 바퀴 소리 너머로, 평원·계·역경의 곡식을 여러 해 같은 되로 재던 장면이 겹친다. 세 고을의 추수가 늘 제 앞으로 돌아왔던 듯하다. 바닥에 얼마 남지 않은 곡식을 세다가 손이 멎는다. “떠날 짐만 헤아린 것은 아니었구나.”",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 떠날 채비로 군량을 모은다",
+          "effects": [
+            {
+              "food": {
+                "city": "city",
+                "delta": 10
+              }
+            }
+          ],
+          "preview": "{city} 식량 +10",
+          "dejaVu": "한 해의 추수를 다 보지 못한 채 수레에 됫박을 실었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 떠날 길보다 평원의 비축을 마련한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "FOOD_AT_LEAST",
+              "city": "city",
+              "value": 30
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "food": {
+                  "city": "city",
+                  "delta": 15
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 뒤 {city} 식량 30 이상"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 뒤 {city} 식량 30 이상 | 성공: {city} 식량 +15 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "평원에서 다시의 메아리. 현재 소유한 평원에서 식량이 30 미만일 때만 제시하며, 3차례 뒤 평원 식량 30 이상을 검사한다. 계·역경의 현재 보유를 거짓으로 전제하지 않고 기억 속에서만 세 고을을 묶는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 성 식량 history +10, 성공 +15(보통, 1.5배). 식량 30은 지급량이 아닌 마감 시 보유 목표이다. 실패 인망 −5, 즉시 보상 없음."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F02-PERSON",
+      "title": "닳고 또 닳은 세 켤레",
+      "scope": "F02",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F02-PERSON",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          4,
+          14
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer2"
+            ]
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "officer",
+              "officer2"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G18",
+          "owner": "player",
+          "required": true
+        },
+        "officer2": {
+          "officerId": "G19",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "관우와 장비는 유비를 오래 섬겼으나 각기 전선을 맡았고, 관우의 패사와 장비의 피살로 동행이 끊긴다. (《三國志》卷36〈關羽傳·張飛傳〉)",
+      "sourceRefs": [
+        "EH-BROTHERS"
+      ],
+      "adaptationNote": "도원결의의 맹세 문장을 재인용하지 않는다. 역사 속 분산된 전선·끊긴 동행과, 서로의 걸음이 느려질 때까지 신을 함께 삼은 창작 기억을 겹친다.",
+      "text": "세 사람의 짚신을 보던 {officer2}가 웃는다. “형, 우리 늙어서도 셋이 신을 고른 것 같아.” {officer}의 기억에는 각기 다른 곳에서 끊긴 소식이 먼저 스친다. 그런데 흰 눈썹 아래서 서로의 느린 걸음을 놀리던 날들도 낯익다. “형님, 그때는 닳을 때마다 셋 것을 다시 삼았소.” {lord}가 웃음을 삼킨다. “내 것만 크게 삼지 마.”",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 각자 맡을 전선을 논한다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "세 켤레가 서로 다른 길을 향한 뒤, 돌아오는 소식이 하나씩 줄었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 운장과 익덕이 발을 맞추게 한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "officer",
+                "officer2"
+              ]
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": 5
+                }
+              },
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer2",
+                  "delta": 5
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 매 차례 끝에 {officer}·{officer2} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 매 차례 끝에 {officer}·{officer2} 같은 칸 또는 이웃 칸 | 성공: {lord}·{officer} 관계 +5 / {lord}·{officer2} 관계 +5 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "도원의 셋의 메아리. 유비·관우·장비 모두 등장하고 제시 시 서로 같은 칸 또는 이웃이다. PAIR_TOGETHER에는 관우·장비 두 명만 넣는다. 성공 시 유비와 두 아우의 관계를 각각 +5로 나누며, 유비의 지속 동행·3인 결의는 판정하지 않는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "history 인망 +5와 관계 보상은 환산하지 않는다. 성공 보상은 관계 +5 두 건으로 같은 계열 합계 +10(보통 1건 수준); +10씩 두 번이 아니다. 실패 인망 −5, 즉시 보상 없음."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F02-RECONCILE",
+      "title": "오래 남은 문지기",
+      "scope": "F02",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F02-RECONCILE",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          5,
+          14
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "lord",
+            "city": "city"
+          },
+          {
+            "test": "officer_at_city",
+            "officer": "officer",
+            "city": "city"
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G05",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G01",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "lord_current_city",
+          "owner": "player",
+          "allowedNames": [
+            "업",
+            "거록",
+            "신도",
+            "중산",
+            "남피",
+            "계",
+            "역경",
+            "평원"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "유비가 원술과 대치하던 사이 여포는 하비를 차지했고, 두 사람은 다시 결합했다가 대립한다. (《三國志》卷07〈呂布傳〉·卷32〈先主傳〉)",
+      "sourceRefs": [
+        "EH-LUBU",
+        "EH-LIUBEI"
+      ],
+      "adaptationNote": "여포가 이미 등용된 현재와 거점을 빼앗겼던 역사 기억을 구분한다. 처형·밧줄 장면을 재현하지 않고, 문짝보다 오래 같은 문을 지켜 온 노년은 다른 끝의 창작 메아리로 쓴다.",
+      "text": "{city}의 문을 살피던 {officer}가 빗장의 닳은 곳을 짚는다. {lord}에게 제 문 안에서 남의 군대가 쏟아져 나오던 밤이 스친다. 이내 문짝을 몇 번이나 갈아도 백발의 봉선만은 그대로 보초를 서던 광경이 겹친다. “봉선, 문보다 오래 남았던 듯하오.” “주공, 고쳐 달 곳도 제가 잘 알았던 것 같습니다.”",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 믿음보다 무용을 앞세워 치하한다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "손을 잡고도 제 성문 쪽을 자꾸 돌아보았던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 봉선이 돌아와 지킬 성을 남긴다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "HOLD_CITY",
+              "city": "city"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 10
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {city} 보유 유지 (한 번도 잃지 않음)"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {city} 보유 유지 (한 번도 잃지 않음) | 성공: 인망 +10 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "여포와 다른 끝의 메아리. G01 미등용·이탈·활동 불가이면 제시하지 않는다. HOLD_CITY는 성 소유 유지일 뿐 여포의 주둔 명령·충성 잠금·태수 임명·자동 영입이 아니다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "history 인망 +5, 성공 인망 +10(보통, 2배), 실패 인망 −5. 성공 보상을 여포 개인에게 주지 않아 성 유지 중 소속이 달라졌을 때 다른 장수로 보상 대상을 바꿀 필요가 없다."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F03-LAND",
+      "title": "북쪽 아이의 고향",
+      "scope": "F03",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F03-LAND",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          6,
+          14
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "enemy_city_reachable",
+            "city": "targetCity",
+            "byArmy": "army",
+            "withinTurns": 4
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "city": {
+          "pick": "capital",
+          "owner": "player",
+          "allowedNames": [
+            "남피"
+          ],
+          "tieBreak": "id_asc",
+          "required": true
+        },
+        "army": {
+          "pick": "army_commanded_by",
+          "officer": "lord",
+          "owner": "player",
+          "required": true
+        },
+        "targetCity": {
+          "pick": "nearest_reachable_enemy_city",
+          "from": "army",
+          "owner": "enemy",
+          "allowedNames": [
+            "업",
+            "계"
+          ],
+          "excludeActiveTruce": true,
+          "tieBreak": "path_cost_then_id_asc",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "손권은 합비를 공격했으나 함락하지 못하고 군사를 거두어 돌아간다. (《三國志》卷47〈吳主傳〉)",
+      "sourceRefs": [
+        "EH-SUNQUAN"
+      ],
+      "adaptationNote": "합비는 역사 근거에만 적고 현재 공성 대상은 업·계 중 실제 도달 가능한 적 성으로 한정한다. 강동은 출신과 공동체의 이름이다. 하북에 강동이나 새 강·도하를 추가하지 않는다.",
+      "text": "{targetCity} 쪽에서 마른 흙바람이 분다. {lord}은 북을 향했다가 군사를 돌리던 피로를 느낀다. 그 바람 속에서 낯선 아이가 “저도 강동 사람이에요” 하던 목소리가 들린 듯하다. 남피와 저 성에서 제 깃발을 보며 자란 아이였다. 건넌 강은 없는데, 한참 다스려 온 고향은 넓어져 있던 것 같다.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 물러날 길부터 살핀다",
+          "effects": [
+            {
+              "xp": {
+                "officer": "lord",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "{lord} 경험치 +20",
+          "dejaVu": "성벽은 그대로인데 돌아갈 길만 익숙해졌던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 남피 밖의 큰 성에도 강동의 이름을 세운다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "CAPTURE_CITY",
+              "city": "targetCity"
+            },
+            "deadline": 4,
+            "reward": [
+              {
+                "xp": {
+                  "officer": "lord",
+                  "delta": 40
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "4차례 안에 {targetCity} 함락"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 4차례 안에 {targetCity} 함락 | 성공: {lord} 경험치 +40 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "강동의 이름으로의 메아리. 남피를 보유하고 업·계 중 활성 휴전 상대가 아닌 적 성에 자기 군주 부대가 4차례 안에 도달할 수 있을 때만 제시한다. 목표 성을 표시 시 고정하며 공성·이동을 자동 실행하지 않는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "동일 장수 경험치 history +20, 성공 +40(보통, 2배). 실패 인망 −5, 즉시 보상 없음. 목표 함락 뒤 남피와 목표를 판 끝까지 보유하는 야망 판정은 별도이다."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F03-PERSON",
+      "title": "둘이 닳게 한 숫돌",
+      "scope": "F03",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F03-PERSON",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          4,
+          14
+        ],
+        "when": "OFFICER_PAIR",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "pair_adjacent",
+            "officers": [
+              "lord",
+              "officer"
+            ]
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "officer": {
+          "officerId": "G20",
+          "owner": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "손책은 깊이 다친 뒤 손권에게 후사를 맡기고 일찍 죽는다. (《三國志》卷46〈孫策傳〉 본문)",
+      "sourceRefs": [
+        "EH-SUNCE"
+      ],
+      "adaptationNote": "후사를 맡기는 역사 방향은 유지하되 기존 카드의 인장 인계를 재연하지 않는다. 혼자 남은 새벽과 형이 늙도록 숫돌을 함께 쓴 세월을 창작 기억으로 대비한다.",
+      "text": "{officer}이 숫돌의 오목한 면을 문지른다. “중모, 네가 갈 때만 한쪽이 깊어졌던 것 같아.” {lord}에게 혼자 칼을 갈던 새벽과, 형의 흰 눈썹을 놀리며 수십 번 봄을 보낸 듯한 낮이 겹친다. “형님도 늘 같은 쪽에 앉으셨습니다.” 너무 익숙한 대답이 먼저 나와 두 형제가 잠시 서로를 본다.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 혼자 결정할 일을 익힌다",
+          "effects": [
+            {
+              "xp": {
+                "officer": "lord",
+                "delta": 20
+              }
+            }
+          ],
+          "preview": "{lord} 경험치 +20",
+          "dejaVu": "칼 가는 소리를 멈추면 대답해 줄 이가 없었던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 숫돌의 다른 쪽을 쓸 형과 동행한다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "PAIR_TOGETHER",
+              "officers": [
+                "lord",
+                "officer"
+              ]
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "relation": {
+                  "a": "lord",
+                  "b": "officer",
+                  "delta": 10
+                }
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 매 차례 끝에 {lord}·{officer} 같은 칸 또는 이웃 칸 | 성공: {lord}·{officer} 관계 +10 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "형님과 함께의 메아리. 손권이 경험치를 얻는 단독 결정 방향과, 형제의 동행을 지켜 관계를 얻는 방향을 나눈다. 손책의 장기 생존·결의 달성을 직접 부여하지 않는다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "history 경험치 +20과 성공 관계 +10은 서로 다른 효과라 배율을 계산하지 않는다. 각각 작음·보통 1건, 실패 인망 −5. 형제에게 별도 경험치·병력 보너스를 더하지 않는다."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    },
+    {
+      "id": "EV-ECHO-F03-RECONCILE",
+      "title": "해마다 돌아온 사신",
+      "scope": "F03",
+      "origin": "ambition-echo",
+      "requiresUnlock": "U-EV-AMB-F03-RECONCILE",
+      "phase": "mid",
+      "trigger": {
+        "turns": [
+          5,
+          14
+        ],
+        "when": "TURN_START",
+        "guards": [
+          {
+            "test": "all_required_roles_resolve"
+          },
+          {
+            "test": "active_truce_covers",
+            "faction": "otherFaction",
+            "turns": 3
+          },
+          {
+            "test": "all_choice_immediate_costs_affordable"
+          }
+        ]
+      },
+      "roles": {
+        "lord": {
+          "officerId": "G08",
+          "owner": "player",
+          "required": true
+        },
+        "otherLord": {
+          "officerId": "G05",
+          "owner": "F02",
+          "required": true
+        },
+        "otherFaction": {
+          "factionId": "F02",
+          "mustHaveActiveTruceWith": "player",
+          "required": true
+        }
+      },
+      "weight": 100,
+      "oncePerRun": true,
+      "history": "손권의 관우 공격 뒤 유비가 오를 공격했고, 육손에게 크게 패한다. (《三國志》卷47〈吳主傳〉)",
+      "sourceRefs": [
+        "EH-SUNQUAN"
+      ],
+      "adaptationNote": "유비는 F02 소속의 활동 가능한 서신 발신자로만 등장한다. 손권 곁에 순간이동시키거나 F03 장수로 처리하지 않는다. 전쟁 없이 노년까지 이어진 교류는 창작 메아리이며, 실제 역사에서 유비 사후 재개된 관계를 유비 생전의 평화로 혼동하지 않는다.",
+      "text": "{otherLord}의 서신에는 길이 거칠어 사신이 늦었다고 적혀 있다. {lord}은 사신의 눈가에서 해마다 하나씩 늘던 주름을 본 듯하다. 진영을 태우던 냄새 너머로, 노년의 현덕과도 이 사람을 통해 안부를 주고받던 세월이 겹친다. 서신 끝에 적힌 “중모, 몸은 좀 어떠하오”가 몹시 오래된 물음 같다.",
+      "choices": [
+        {
+          "id": "history",
+          "label": "역사대로 — 원한의 기억을 들어 경계를 독려한다",
+          "effects": [
+            {
+              "prestige": 5
+            }
+          ],
+          "preview": "인망 +5",
+          "dejaVu": "안부 대신 군세를 묻기 시작한 뒤, 사신의 발길도 끊겼던 듯하다."
+        },
+        {
+          "id": "twist",
+          "label": "다르게 — 현덕의 사신이 다시 올 약속을 지킨다",
+          "effects": [],
+          "oath": {
+            "goal": {
+              "type": "TRUCE_KEEP",
+              "faction": "otherFaction"
+            },
+            "deadline": 3,
+            "reward": [
+              {
+                "prestige": 10
+              }
+            ],
+            "penalty": [
+              {
+                "prestige": -5
+              }
+            ],
+            "goalText": "3차례 동안 {otherFaction} 측과 기존 휴전 유지 (먼저 공격하지 않음)"
+          },
+          "preview": "즉시: 효과 없음 | 맹세: 3차례 동안 {otherFaction} 측과 기존 휴전 유지 (먼저 공격하지 않음) | 성공: 인망 +10 | 실패: 인망 −5"
+        },
+        {
+          "id": "defer",
+          "label": "미룬다",
+          "effects": [],
+          "preview": "효과 없음"
+        }
+      ],
+      "links": {
+        "requiresTwist": [],
+        "setsTag": null
+      },
+      "designNote": "이릉 없는 동맹의 메아리. F02와 이미 맺은 휴전이 최소 3차례 남았을 때만 제시한다. 다르게도 동맹·휴전을 새로 생성하거나 연장하지 않는다. 맹세는 허용된 TRUCE_KEEP만 쓰며 야망의 ALLIANCE_KEEP 달성은 별도이다. F02 발신자 역할은 기존 세력 카드의 자기 소속 기본값과 달라 어댑터 연동 점검이 필요하다.",
+      "ratioBasis": {
+        "excludeCommonEffects": [],
+        "method": "history 인망 +5, 성공 인망 +10(보통, 2배), 실패 인망 −5. 두 선택 모두 즉시 선전포고·휴전 파기·동맹 생성·관계 수치 변경을 실행하지 않는다."
+      },
+      "integrationStatus": "CONTENT_READY_RUNTIME_UNVERIFIED"
+    }
+  ]
+}

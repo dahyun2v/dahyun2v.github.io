@@ -1,0 +1,208 @@
+{
+  "schema": "first3-i0-checks-v1",
+  "generatedAt": "2026-09-19T19:24:30.194Z",
+  "scope": "Active core initialization and save/reload; not browser, combat, full-game or balance validation",
+  "summary": {
+    "passed": 45,
+    "failed": 0
+  },
+  "saveReloadDiff": [
+    {
+      "playerFactionId": "F01",
+      "changedPaths": [],
+      "equal": true
+    },
+    {
+      "playerFactionId": "F02",
+      "changedPaths": [],
+      "equal": true
+    },
+    {
+      "playerFactionId": "F03",
+      "changedPaths": [],
+      "equal": true
+    }
+  ],
+  "checks": [
+    {
+      "id": "time_contract",
+      "status": "pass"
+    },
+    {
+      "id": "world_before_player_selection",
+      "status": "pass"
+    },
+    {
+      "id": "world_identical_for_all_players",
+      "status": "pass"
+    },
+    {
+      "id": "F01_counts_and_ids",
+      "status": "pass"
+    },
+    {
+      "id": "F01_all_owners_governors_armies",
+      "status": "pass"
+    },
+    {
+      "id": "F01_resources",
+      "status": "pass"
+    },
+    {
+      "id": "F01_selection",
+      "status": "pass"
+    },
+    {
+      "id": "F01_save_reload_equal",
+      "status": "pass"
+    },
+    {
+      "id": "F02_counts_and_ids",
+      "status": "pass"
+    },
+    {
+      "id": "F02_all_owners_governors_armies",
+      "status": "pass"
+    },
+    {
+      "id": "F02_resources",
+      "status": "pass"
+    },
+    {
+      "id": "F02_selection",
+      "status": "pass"
+    },
+    {
+      "id": "F02_save_reload_equal",
+      "status": "pass"
+    },
+    {
+      "id": "F03_counts_and_ids",
+      "status": "pass"
+    },
+    {
+      "id": "F03_all_owners_governors_armies",
+      "status": "pass"
+    },
+    {
+      "id": "F03_resources",
+      "status": "pass"
+    },
+    {
+      "id": "F03_selection",
+      "status": "pass"
+    },
+    {
+      "id": "F03_save_reload_equal",
+      "status": "pass"
+    },
+    {
+      "id": "six_distinct_occupied_tiles",
+      "status": "pass"
+    },
+    {
+      "id": "separate_base_and_substats_survive_save",
+      "status": "pass"
+    },
+    {
+      "id": "input_and_other_campaign_not_mutated",
+      "status": "pass"
+    },
+    {
+      "id": "rng_progress_and_zero_restore",
+      "status": "pass"
+    },
+    {
+      "id": "ui_selection_does_not_change_world",
+      "status": "pass"
+    },
+    {
+      "id": "G21_pending_no_invented_officer",
+      "status": "pass"
+    },
+    {
+      "id": "no_role_flags_on_officers",
+      "status": "pass"
+    },
+    {
+      "id": "old_effects_not_executed",
+      "status": "pass"
+    },
+    {
+      "id": "reject_negative_food",
+      "status": "pass"
+    },
+    {
+      "id": "reject_broken_owner",
+      "status": "pass"
+    },
+    {
+      "id": "reject_missing_officer",
+      "status": "pass"
+    },
+    {
+      "id": "reject_unknown_governor",
+      "status": "pass"
+    },
+    {
+      "id": "reject_governor_double_assignment",
+      "status": "pass"
+    },
+    {
+      "id": "reject_duplicate_tile",
+      "status": "pass"
+    },
+    {
+      "id": "reject_bad_commander",
+      "status": "pass"
+    },
+    {
+      "id": "reject_extra_legacy_faction",
+      "status": "pass"
+    },
+    {
+      "id": "reject_invalid_rng",
+      "status": "pass"
+    },
+    {
+      "id": "reject_wrong_tick",
+      "status": "pass"
+    },
+    {
+      "id": "reject_invalid_player",
+      "status": "pass"
+    },
+    {
+      "id": "reject_invalid_ui_city",
+      "status": "pass"
+    },
+    {
+      "id": "reject_missing_pending_choices",
+      "status": "pass"
+    },
+    {
+      "id": "reject_bad_json",
+      "status": "pass"
+    },
+    {
+      "id": "reject_old_save_version",
+      "status": "pass"
+    },
+    {
+      "id": "reject_different_data_revision",
+      "status": "pass"
+    },
+    {
+      "id": "invalid_player_does_not_mutate_world",
+      "status": "pass"
+    },
+    {
+      "id": "unfinished_turn_does_not_apply_legacy_economy",
+      "status": "pass"
+    },
+    {
+      "id": "all_initial_states_validate",
+      "status": "pass"
+    }
+  ]
+}

@@ -1,0 +1,302 @@
+[
+  {
+    "officerId": "G16",
+    "highestOverlapOfficerIds": [
+      "G05",
+      "G15",
+      "G17"
+    ],
+    "overlappingCoreVerbs": [
+      "잇는다",
+      "머물게 한다",
+      "나눈다",
+      "규율한다",
+      "인계한다"
+    ],
+    "preservedExclusivePlay": "숙식·도로·창고·규율을 연결해 유민과 여행자가 계속 이동하고 머물 수 있는 공동체망을 운용하는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G16은 신앙 공동체의 구휼·이동·체류망에 한정하고, G05의 패전 후 관계 재집결, G15의 휴전·피난·권한 양도, G17의 지역 집단 재협상을 대신하지 않으며 의례와 치료를 초자연 효과로 취급하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G17",
+    "highestOverlapOfficerIds": [
+      "G05",
+      "G16",
+      "G29"
+    ],
+    "overlappingCoreVerbs": [
+      "결집한다",
+      "숨긴다",
+      "시험한다",
+      "버틴다",
+      "재협상한다"
+    ],
+    "preservedExclusivePlay": "지역 관계·경로·환경 대응을 해결하고 패배한 집단과 재협상하기 전에는 단일 승리로 전쟁을 끝낼 수 없게 하는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G17은 남중의 복수 지역 집단·은폐 경로·환경 적응과 재협상에 한정하고, G05의 개인적 인망 재집결, G16의 구휼 공동체망, G29의 고위험 침투 부대 지휘를 대신하지 않으며 정사 본문과 배송지 주석의 칠종칠금 서사를 구분한다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G18",
+    "highestOverlapOfficerIds": [
+      "G05",
+      "G13",
+      "G30"
+    ],
+    "overlappingCoreVerbs": [
+      "정한다",
+      "갚는다",
+      "관철한다",
+      "감당한다",
+      "약속한다"
+    ],
+    "preservedExclusivePlay": "하나의 서약이나 목표를 부대 행동의 기준으로 정하고 외교·후방 비용까지 감당하며 끝까지 관철하는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G18은 선택한 서약·목표의 지속과 그 경직성에 한정하고, G05의 폭넓은 관계 복원, G13의 균열 추격, G30의 두 세력 사이 약속과 귀환을 대신하지 않으며 단칼을 일기토·즉사로 해석하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G19",
+    "highestOverlapOfficerIds": [
+      "G14",
+      "G24",
+      "G25"
+    ],
+    "overlappingCoreVerbs": [
+      "가로막는다",
+      "호령한다",
+      "유인한다",
+      "끊는다",
+      "통제한다"
+    ],
+    "preservedExclusivePlay": "협로와 후위 지점을 선택해 고함·기만·차단으로 추격군 전체의 진행을 멈추는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G19는 후위 지형에서의 기만·유인·협로 차단에 한정하고, G14의 선행 관측 후 회진, G24의 선제돌파와 구출, G25의 지휘관 접근 통제를 대신하지 않으며 뇌성을 초자연 번개나 적장 즉사로 표현하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G20",
+    "highestOverlapOfficerIds": [
+      "G01",
+      "G13",
+      "G24"
+    ],
+    "overlappingCoreVerbs": [
+      "치고 나간다",
+      "모은다",
+      "돌파한다",
+      "장악한다",
+      "선제한다"
+    ],
+    "preservedExclusivePlay": "빠른 지역 장악과 인재 흡수를 다음 확장으로 연결하면서 후방 안정과 경호의 부족을 감수하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G20은 승리 이후 지역 장악·인재 흡수·권한 인계가 연쇄되는 확장에 한정하고, G01의 정면 압도, G13의 기존 균열 추격, G24의 붕괴 전 선제 충격과 부대 구출을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G21",
+    "highestOverlapOfficerIds": [
+      "G03",
+      "G22",
+      "G23"
+    ],
+    "overlappingCoreVerbs": [
+      "뒤집는다",
+      "재평가한다",
+      "우회한다",
+      "바로잡는다"
+    ],
+    "preservedExclusivePlay": "서로 다른 비용과 숨은 대가를 가진 복수의 행동 경로를 열어 기존 판단을 뒤집게 하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G21은 선택 이전의 우회로·재평가·뒤집음에 한정하고, G03의 선택 이후 장기 체계 운영, G22의 적 행동 경향을 이용한 기회창 판독, G23의 의도 은폐와 시간 관리를 대신하지 않으며 특기 효과는 미확정 상태를 유지한다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G22",
+    "highestOverlapOfficerIds": [
+      "G21",
+      "G23",
+      "G28"
+    ],
+    "overlappingCoreVerbs": [
+      "징후를 읽는다",
+      "기다린다",
+      "갈라놓는다",
+      "빈틈을 확정한다"
+    ],
+    "preservedExclusivePlay": "적의 반복 행동을 유도하고 관찰해 선택지가 스스로 좁아지는 단기 기회창을 판독하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G22는 가까운 시기의 적 행동 경향과 빈틈 판독에 한정하고, G21의 복수 경로 재평가, G23의 장기 은폐·지연, G28의 지형·피로·연료 조건 축적을 대신하지 않으며 예언이나 자동 간파로 표현하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G23",
+    "highestOverlapOfficerIds": [
+      "G22",
+      "G25",
+      "G28"
+    ],
+    "overlappingCoreVerbs": [
+      "감춘다",
+      "버틴다",
+      "잰다",
+      "늦춘다",
+      "기다린다"
+    ],
+    "preservedExclusivePlay": "자신의 의도와 자원을 숨긴 채 시간을 관리하여 상대가 먼저 계획과 자원을 소모하게 하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G23은 의도 은폐·지연·생존 이후의 급습에 한정하고, G22의 근시일 기회 판독, G25의 물리적 접근·퇴로 통제, G28의 공개된 전선 조건 축적을 대신하지 않으며 후대 진 왕조 전체를 미리 예견한 인물로 만들지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G24",
+    "highestOverlapOfficerIds": [
+      "G01",
+      "G02",
+      "G13",
+      "G20"
+    ],
+    "overlappingCoreVerbs": [
+      "간파한다",
+      "선제한다",
+      "돌파한다",
+      "수습한다",
+      "구출한다"
+    ],
+    "preservedExclusivePlay": "적의 기세가 완성되기 전에 소수 부대로 충격을 주고 재진입하여 아군 질서와 고립 부대를 회복하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G24는 붕괴 전 선제 충격과 돌파 후 재진입·구출의 결합에 한정하고, G01의 지속적인 정면 위압, G02의 붕괴 후 보호 귀환, G13의 균열 추격, G20의 지역 장악형 연쇄 확장을 대신하지 않으며 개인 결투로 축소하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G25",
+    "highestOverlapOfficerIds": [
+      "G02",
+      "G19",
+      "G23"
+    ],
+    "overlappingCoreVerbs": [
+      "가로막는다",
+      "호위한다",
+      "통제한다",
+      "실어 나른다",
+      "자리를 지킨다"
+    ],
+    "preservedExclusivePlay": "지휘관과 공동체가 계속 행동할 수 있도록 접근 통로·호위 거리·퇴로를 물리적으로 통제하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G25는 인물 주변의 접근 관계와 통로·퇴로 통제에 한정하고, G02의 붕괴 후 대상 회수, G19의 협로 기만과 추격 차단, G23의 정보 은폐와 시간 관리를 대신하지 않으며 단순 피해감소 탱커나 초능력 위험 감지로 만들지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G26",
+    "highestOverlapOfficerIds": [
+      "G21",
+      "G22",
+      "G23"
+    ],
+    "overlappingCoreVerbs": [
+      "암시한다",
+      "엇갈리게 한다",
+      "듣는다",
+      "비춘다",
+      "관계를 흔든다"
+    ],
+    "preservedExclusivePlay": "결별하지 못하는 두 권력자에게 서로 다른 정보를 비춰 관계 자체가 내부에서 붕괴하게 하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G26은 특정 관계의 신뢰·질투·정보 비대칭을 흔드는 문학 기반 인물로 한정하고, G21의 행동 경로 뒤집음, G22의 적 성향 판독, G23의 장기 의도 은폐를 대신하지 않으며 실존 전기·마법적 유혹·정신지배로 확장하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G27",
+    "highestOverlapOfficerIds": [
+      "G03",
+      "G20",
+      "G28"
+    ],
+    "overlappingCoreVerbs": [
+      "판독한다",
+      "조율한다",
+      "지휘한다",
+      "점화한다",
+      "화합시킨다"
+    ],
+    "preservedExclusivePlay": "여러 장수와 수상·기후·선박 조건을 조율하여 하나의 결정적 작전 시점을 만드는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G27은 복수 전력과 환경 요소의 동시 조율 및 결정적 작전 지휘에 한정하고, G03의 다턴 장기 체계, G20의 고속 지역 확장, G28의 장기 조건 축적과 전선 전환을 대신하지 않으며 화계는 연료·기후·퇴로가 필요한 물리적 로우판타지로 유지한다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G28",
+    "highestOverlapOfficerIds": [
+      "G22",
+      "G27",
+      "G29"
+    ],
+    "overlappingCoreVerbs": [
+      "참는다",
+      "관찰한다",
+      "말린다",
+      "조건을 쌓는다",
+      "잔불을 잇는다"
+    ],
+    "preservedExclusivePlay": "동료의 조급한 공격을 억제하면서 지형·피로·퇴로·연료 조건을 축적해 전선 전체를 한 번에 전환하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G28은 장기간 조건을 축적한 뒤 전선 전체를 전환하는 판단에 한정하고, G22의 적 행동 기회창 판독, G27의 복수 전력 동시 조율, G29의 최초 침투와 돌파구 개방을 대신하지 않으며 잔화를 자동 광역소각으로 만들지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G29",
+    "highestOverlapOfficerIds": [
+      "G20",
+      "G28",
+      "G30"
+    ],
+    "overlappingCoreVerbs": [
+      "선도한다",
+      "침투한다",
+      "과시한다",
+      "전향한다",
+      "빚을 갚는다"
+    ],
+    "preservedExclusivePlay": "질서 밖에서 모인 위험한 인물들을 명예·보상·공동 위험으로 묶어 정규군이 열지 못하는 최초 돌파구를 만드는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G29는 고위험 침투와 비정규 집단의 선도·전향 비용에 한정하고, G20의 지역 장악형 연쇄 확장, G28의 전선 조건 축적, G30의 사격 통로와 약속·귀환 연결을 대신하지 않으며 해적 이미지를 무질서한 살육이나 무료 습격으로 바꾸지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G30",
+    "highestOverlapOfficerIds": [
+      "G06",
+      "G18",
+      "G29"
+    ],
+    "overlappingCoreVerbs": [
+      "약속한다",
+      "왕복한다",
+      "연결한다",
+      "꿰뚫어 본다",
+      "겨눈다"
+    ],
+    "preservedExclusivePlay": "서로 적대했던 두 집단 사이에서 귀환 약속과 사격 통로를 연결해 양쪽의 신뢰를 완전히 잃지 않고 길을 여는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G30은 두 세력 사이의 약속·왕복·귀환과 부대 사격 통로에 한정하고, G06의 제한된 기회에서의 조준과 증명, G18의 단일 서약 관철, G29의 침투 선봉과 비정규 집단 지휘를 대신하지 않으며 일기토·자동 명중·후대 쌍무기 도상을 역사 사실로 쓰지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  }
+]
+

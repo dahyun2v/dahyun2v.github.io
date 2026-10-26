@@ -1,0 +1,531 @@
+{
+  "schema": "삼국지 운영 시작 상태 연결 자료 v1",
+  "status": "planning_fixture_not_game_save",
+  "purpose": "지도·도시·장수·운영 문서를 같은 초기 상태로 대조하기 위한 기획 자료. 게임 엔진 입력이나 플레이 완료 기록이 아니다.",
+  "generated": "2026-09-19",
+  "source_map": "map-layout-v1.json",
+  "map": {
+    "id": "reduced-18x14-v1",
+    "width": 18,
+    "height": 14,
+    "cities": 3,
+    "turn_days": 10
+  },
+  "rules": {
+    "turn_days": 10,
+    "initial_turn": 1,
+    "initial_day": 0,
+    "city_radius": 2,
+    "initial_population": 2,
+    "city_stage": "small",
+    "security": "stable",
+    "start_food": 20,
+    "start_fame": 50,
+    "start_iron": 0,
+    "start_horses": 0,
+    "start_reserve": 0,
+    "start_wounded": 0,
+    "mobilization_limit_per_population": 1000,
+    "initial_field_armies_per_faction": 2,
+    "initial_field_strength": 250,
+    "starting_tech": "군웅기",
+    "pacts": "none",
+    "war_notice": "declare_in_current_result_effective_next_execution"
+  },
+  "factions": [
+    {
+      "id": "F01",
+      "name": "조조",
+      "city": "west",
+      "leader": "G07",
+      "governor": "G04",
+      "generals": [
+        "G07",
+        "G04",
+        "G24"
+      ],
+      "unique_trait": "군령집중",
+      "policy": "둔전 정비",
+      "policy_state": "locked_until_할거기"
+    },
+    {
+      "id": "F02",
+      "name": "유비",
+      "city": "east",
+      "leader": "G05",
+      "governor": "G03",
+      "generals": [
+        "G05",
+        "G02",
+        "G03"
+      ],
+      "unique_trait": "인심결집",
+      "policy": "도원 구호",
+      "policy_state": "locked_until_할거기"
+    },
+    {
+      "id": "F03",
+      "name": "손권",
+      "city": "south",
+      "leader": "G08",
+      "governor": "G27",
+      "generals": [
+        "G08",
+        "G20",
+        "G27"
+      ],
+      "unique_trait": "연합지휘",
+      "policy": "강동 연합 편제",
+      "policy_state": "locked_until_할거기"
+    }
+  ],
+  "generals": [
+    {
+      "id": "G07",
+      "faction": "F01",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "창병"
+    },
+    {
+      "id": "G04",
+      "faction": "F01",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "공병"
+    },
+    {
+      "id": "G24",
+      "faction": "F01",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "기병"
+    },
+    {
+      "id": "G05",
+      "faction": "F02",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "의병"
+    },
+    {
+      "id": "G02",
+      "faction": "F02",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "기병"
+    },
+    {
+      "id": "G03",
+      "faction": "F02",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "술병"
+    },
+    {
+      "id": "G08",
+      "faction": "F03",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "궁병"
+    },
+    {
+      "id": "G20",
+      "faction": "F03",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "기병"
+    },
+    {
+      "id": "G27",
+      "faction": "F03",
+      "status": "alive",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "술병"
+    },
+    {
+      "id": "G21",
+      "faction": null,
+      "status": "neutral",
+      "level": 1,
+      "aptitude": "B",
+      "representative_unit": "술병"
+    }
+  ],
+  "cities": [
+    {
+      "id": "west",
+      "label": "서쪽 도시",
+      "at": [
+        2,
+        3
+      ],
+      "owner": "F01",
+      "population": 2,
+      "stage": "small",
+      "security": "stable",
+      "food": 20,
+      "iron": 0,
+      "horses": 0,
+      "fame": 50,
+      "governor": "G04",
+      "active_unit_ids": [
+        "U-F01-G07",
+        "U-F01-G24"
+      ],
+      "citizen_tiles": [
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "owned_tiles": [
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "id": "east",
+      "label": "동쪽 도시",
+      "at": [
+        12,
+        3
+      ],
+      "owner": "F02",
+      "population": 2,
+      "stage": "small",
+      "security": "stable",
+      "food": 20,
+      "iron": 0,
+      "horses": 0,
+      "fame": 50,
+      "governor": "G03",
+      "active_unit_ids": [
+        "U-F02-G05",
+        "U-F02-G02"
+      ],
+      "citizen_tiles": [
+        [
+          13,
+          3
+        ],
+        [
+          11,
+          4
+        ]
+      ],
+      "owned_tiles": [
+        [
+          12,
+          3
+        ],
+        [
+          13,
+          3
+        ],
+        [
+          13,
+          2
+        ],
+        [
+          12,
+          2
+        ],
+        [
+          11,
+          3
+        ],
+        [
+          11,
+          4
+        ],
+        [
+          12,
+          4
+        ]
+      ]
+    },
+    {
+      "id": "south",
+      "label": "남쪽 도시",
+      "at": [
+        4,
+        10
+      ],
+      "owner": "F03",
+      "population": 2,
+      "stage": "small",
+      "security": "stable",
+      "food": 20,
+      "iron": 0,
+      "horses": 0,
+      "fame": 50,
+      "governor": "G27",
+      "active_unit_ids": [
+        "U-F03-G08",
+        "U-F03-G20"
+      ],
+      "citizen_tiles": [
+        [
+          3,
+          10
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "owned_tiles": [
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          10
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          4,
+          9
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          11
+        ]
+      ]
+    }
+  ],
+  "units": [
+    {
+      "id": "U-F01-G07",
+      "faction": "F01",
+      "general": "G07",
+      "unit_type": "창병",
+      "at": [
+        2,
+        3
+      ],
+      "strength": 250,
+      "state": "field"
+    },
+    {
+      "id": "U-F01-G24",
+      "faction": "F01",
+      "general": "G24",
+      "unit_type": "기병",
+      "at": [
+        3,
+        3
+      ],
+      "strength": 250,
+      "state": "field"
+    },
+    {
+      "id": "U-F02-G05",
+      "faction": "F02",
+      "general": "G05",
+      "unit_type": "의병",
+      "at": [
+        12,
+        3
+      ],
+      "strength": 250,
+      "state": "field"
+    },
+    {
+      "id": "U-F02-G02",
+      "faction": "F02",
+      "general": "G02",
+      "unit_type": "기병",
+      "at": [
+        11,
+        3
+      ],
+      "strength": 250,
+      "state": "field"
+    },
+    {
+      "id": "U-F03-G08",
+      "faction": "F03",
+      "general": "G08",
+      "unit_type": "궁병",
+      "at": [
+        4,
+        10
+      ],
+      "strength": 250,
+      "state": "field"
+    },
+    {
+      "id": "U-F03-G20",
+      "faction": "F03",
+      "general": "G20",
+      "unit_type": "기병",
+      "at": [
+        5,
+        10
+      ],
+      "strength": 250,
+      "state": "field"
+    }
+  ],
+  "places": [
+    {
+      "id": "P01",
+      "label": "성소",
+      "at": [
+        3,
+        5
+      ],
+      "event": "E01",
+      "state": "unresolved",
+      "fixed_cache": {
+        "resource": "food",
+        "amount": "west_city_citizen_upkeep_2_turns",
+        "reference_city": "west"
+      }
+    },
+    {
+      "id": "P02",
+      "label": "은거지",
+      "at": [
+        12,
+        5
+      ],
+      "event": "E02",
+      "state": "unresolved",
+      "fixed_contact": "G21",
+      "contact_status": "neutral_alive"
+    },
+    {
+      "id": "P03",
+      "label": "옛 진지",
+      "at": [
+        5,
+        11
+      ],
+      "event": "E03",
+      "state": "unresolved",
+      "fixed_cache": {
+        "resource": "iron",
+        "amount": 2
+      }
+    },
+    {
+      "id": "P04",
+      "label": "군마 산지",
+      "at": [
+        5,
+        2
+      ],
+      "event": null,
+      "state": "undiscovered",
+      "discovery_does_not_grant_resource": true
+    }
+  ],
+  "relations": [
+    {
+      "a": "F01",
+      "b": "F02",
+      "status": "neutral",
+      "truce_turns": 0,
+      "alliance": false
+    },
+    {
+      "a": "F01",
+      "b": "F03",
+      "status": "neutral",
+      "truce_turns": 0,
+      "alliance": false
+    },
+    {
+      "a": "F02",
+      "b": "F03",
+      "status": "neutral",
+      "truce_turns": 0,
+      "alliance": false
+    }
+  ],
+  "checks": {
+    "initial_army_total_per_faction": 500,
+    "initial_mobilization_limit_per_faction": 2000,
+    "citizen_tiles_are_adjacent_plain_candidates": true,
+    "no_general_overlap_between_starting_rosters": true,
+    "neutral_contact_not_in_starting_rosters": true,
+    "no_initial_special_resource_grant": true,
+    "map_source_is_unchanged": true,
+    "scenario_only": true
+  },
+  "alternate_fixtures": [
+    {
+      "id": "ALT-E05",
+      "purpose": "E05 와룡의 초려 확인",
+      "change": "F02에서 G03을 제외하고 G03을 neutral_alive로 배정하며 E02와 P02의 사건을 교체",
+      "not_part_of_default_start": true
+    },
+    {
+      "id": "BOUND-S03",
+      "purpose": "도시 두 개 보유 세력의 도시 하나 상실 후 존속",
+      "change": "3도시 기본판의 결과로 사용하지 않고 별도 상태를 주입",
+      "not_part_of_default_start": true
+    }
+  ],
+  "references": [
+    "map-layout-v1.json",
+    "../운영-3세력-시작시나리오-v1.md",
+    "../운영-첫판-처리정책AI저장-v1.md",
+    "../도시-경제-시험값-v1.md",
+    "../장수-특기-전법-30인.md"
+  ]
+}

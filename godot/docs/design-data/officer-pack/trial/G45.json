@@ -1,0 +1,125 @@
+{
+  "id": "G45",
+  "name": "방덕",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 83,
+    "무용": 91,
+    "지략": 66,
+    "정무": 53,
+    "감화": 63
+  },
+  "sub": {
+    "전열 유지": 86,
+    "기동": 83,
+    "전환": 84,
+    "수습": 66,
+    "힘": 91,
+    "기술": 94,
+    "막아내기": 90,
+    "되받기": 87,
+    "군재": 64,
+    "응변": 73,
+    "속이기": 68,
+    "통찰": 61,
+    "행정": 52,
+    "병참": 61,
+    "인사": 49,
+    "제도": 46,
+    "민정": 49,
+    "설득": 51,
+    "포섭": 48,
+    "결집": 74,
+    "중재": 49
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "HIGH"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "물러서지 않는다",
+    "text": "병력이 절반 아래면 반격 피해 +30%, 내 차례 시작마다 사기 한 단계 회복.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "COUNTER_MOD",
+        "when": "ON_COUNTER",
+        "target": "SELF",
+        "value": 30,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      },
+      {
+        "op": "MORALE_DELTA",
+        "when": "ROUND_START",
+        "target": "SELF",
+        "value": 10,
+        "duration": 0,
+        "condition": "HP_BELOW:50"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · '다른 접근면 또는 다른 공격 방식'을 2칸 공격(활)과 FLANK 추가 피해로 살렸고, 공격+이탈 연속은 RULE이라 대상을 묶어 끝을 쥐는 효과로 바꿨다. 실패 뒤 Brace 보존은 꺾여도 무너지지 않고 되받는 특기로 옮겼다(접촉에 남는 약점 유지).",
+    "formerName": "남이 정할 끝은 없다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "병기 바꿔 치기",
+      "text": "병기를 바꿔 든다(사거리 2): 적 1부대에 피해 +30% 공격, 측면·후방에서 치면 +20% 더, 대상 1턴 속박(다음 차례 이동 불가).",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 20,
+          "duration": 0,
+          "condition": "FLANK"
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        }
+      ],
+      "formerName": "수단을 바꿔 끝낸다"
+    }
+  ],
+  "pendingConcepts": [
+    "FLANK"
+  ]
+}

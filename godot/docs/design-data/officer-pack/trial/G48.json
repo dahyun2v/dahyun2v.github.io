@@ -1,0 +1,114 @@
+{
+  "id": "G48",
+  "name": "염포",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 55,
+    "무용": 36,
+    "지략": 81,
+    "정무": 63,
+    "감화": 75
+  },
+  "sub": {
+    "전열 유지": 49,
+    "기동": 53,
+    "전환": 68,
+    "수습": 55,
+    "힘": 28,
+    "기술": 36,
+    "막아내기": 43,
+    "되받기": 32,
+    "군재": 72,
+    "응변": 84,
+    "속이기": 66,
+    "통찰": 86,
+    "행정": 64,
+    "병참": 60,
+    "인사": 72,
+    "제도": 56,
+    "민정": 58,
+    "설득": 84,
+    "포섭": 62,
+    "결집": 52,
+    "중재": 73
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "LOW",
+    "BT03": "MEDIUM",
+    "BT04": "LOW"
+  },
+  "role": "책사",
+  "style": "명사",
+  "primaryClass": "TRIAL:책사",
+  "secondaryClass": "TRIAL:명사",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "많은 적 앞의 버팀",
+    "text": "적이 더 많을 때 받는 피해 −20%. 태수일 때 도시 생산 +20%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "지략",
+      "정무"
+    ],
+    "effects": [
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 20,
+        "duration": 0,
+        "condition": "OUTNUMBERED"
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 20,
+        "duration": 0,
+        "condition": null,
+        "resource": "PRODUCTION"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 행동 순서 늦추기는 Round가 없어, '미루고 1칸 옮긴 뒤 더 좋은 조건으로 결정'을 아군 이동 +1과 다음 첫 공격 강화로 살렸다(염포가 이번 행동을 쓰는 대가). 준비 유지/포기 선택 특기는 불리할 때 전부 걸지 않는 수비와 봉한 창고(생산)로 옮겼다.",
+    "formerName": "받기 전에 남긴 것"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "결정을 미룬다",
+      "text": "결정을 한 번 미룬다: 염포 주변 2칸 안 아군이 1턴 동안 이동 +1칸, 그 사이 첫 공격 피해 +20%.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 0,
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 1,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 40,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "아직 찍지 않은 인장"
+    }
+  ]
+}

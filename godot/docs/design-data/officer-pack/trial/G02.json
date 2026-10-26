@@ -1,0 +1,279 @@
+{
+  "id": "G02",
+  "name": "조운",
+  "faction": "F02",
+  "status": "CLAUDE_TRIAL_PLACEHOLDER — GPT 장수 파이프라인 정식 pack 도착 시 교체",
+  "source": {
+    "room": "FIRST3 시험 기록",
+    "method": "first3-initial-state-v1 → officer-pack 시험 변환 (make-trial-packs.py)",
+    "date": "2026-10-03"
+  },
+  "stats": {
+    "지휘": 88,
+    "무용": 92,
+    "지략": 80,
+    "정무": 68,
+    "감화": 84
+  },
+  "sub": {
+    "전열 유지": 89,
+    "기동": 93,
+    "전환": 88,
+    "수습": 82,
+    "힘": 94,
+    "기술": 88,
+    "막아내기": 90,
+    "되받기": 96,
+    "군재": 81,
+    "응변": 88,
+    "속이기": 65,
+    "통찰": 86,
+    "행정": 64,
+    "병참": 82,
+    "인사": 74,
+    "제도": 59,
+    "민정": 67,
+    "설득": 90,
+    "포섭": 74,
+    "결집": 90,
+    "중재": 90
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "장군",
+  "style": "맹장",
+  "primaryClass": "TRIAL:장군",
+  "secondaryClass": "TRIAL:맹장",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "많은 적 앞에서 버틴다",
+    "text": "상대 병력이 더 많을 때 받는 피해 −25%(교전 이탈 추격 포함). 이 부대가 잃는 병력의 전사 비율 −15%p(30% → 15%).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 25,
+        "duration": 0,
+        "condition": "OUTNUMBERED"
+      },
+      {
+        "op": "CASUALTY_SHIFT",
+        "when": "PASSIVE",
+        "target": "SELF",
+        "value": 15,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04(사용자 지시 \"특기/전법은 너가 한번 다시 만들어볼래\") · 적에 묶인 아군을 구해 제자리로 돌려보내고 추격 없이 물러나는 의도 유지. 위치 교대·Contact 인수·추격 차단은 지도에 없어 대상 사기·부상병·이동 보정과, 수적 열세 때 피해(추격 포함)·전사 감소로 옮김. 공격 대신 구조에 행동을 쓰는 약점 유지.",
+    "formerName": "돌려놓고 물러난다"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "아군 구출",
+      "text": "2칸 안 아군 1부대의 사기를 한 단계 회복시키고 부상병 40명을 복귀시킨다. 그 부대는 이번 차례 이동 +2칸으로 빠져나올 수 있다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 2,
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 40,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 2,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "formerName": "돌아오지 않은 한 사람"
+    },
+    {
+      "kind": "trait",
+      "name": "첫 일격",
+      "text": "이번 차례 첫 공격 피해 +10%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "INITIATIVE_MOD",
+          "when": "BATTLE_START",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "선수필승"
+    },
+    {
+      "kind": "trait",
+      "name": "성 지키기",
+      "text": "성(중심·성문)을 지킬 때 받는 피해 −20%.",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": "DEFENDING_CITY"
+        }
+      ],
+      "formerName": "수성"
+    },
+    {
+      "kind": "trait",
+      "name": "돌파",
+      "text": "이번 차례 첫 공격 피해 +15%.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": "FIRST_ROUND"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "빠른 말",
+      "text": "기병일 때 이동 +1칸.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TROOP:BT04"
+        }
+      ],
+      "formerName": "질풍"
+    },
+    {
+      "kind": "tactic",
+      "name": "급습",
+      "text": "적 1부대에 피해 +30% 공격.",
+      "rarity": "RARE",
+      "classTag": "기병",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 20
+    },
+    {
+      "kind": "trait",
+      "name": "방어 대형",
+      "text": "공격받을 때 받는 피해 −15%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "방진"
+    },
+    {
+      "kind": "trait",
+      "name": "장창 버티기",
+      "text": "장병일 때 반격 피해 +25%.",
+      "rarity": "UNCOMMON",
+      "classTag": "보병",
+      "effects": [
+        {
+          "op": "COUNTER_MOD",
+          "when": "ON_COUNTER",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "TROOP:BT02"
+        }
+      ]
+    },
+    {
+      "kind": "trait",
+      "name": "물러설 곳 없다",
+      "text": "상대 병력이 더 많으면 주는 피해 +25%.",
+      "rarity": "EPIC",
+      "classTag": "맹장",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 25,
+          "duration": 0,
+          "condition": "OUTNUMBERED"
+        }
+      ],
+      "formerName": "배수진"
+    },
+    {
+      "kind": "tactic",
+      "name": "고함",
+      "text": "맞닿은 적 모두 사기 판정(가중 15).",
+      "rarity": "UNCOMMON",
+      "classTag": "맹장",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": -15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "cost": 15
+    }
+  ]
+}

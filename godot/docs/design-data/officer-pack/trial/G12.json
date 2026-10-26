@@ -1,0 +1,125 @@
+{
+  "id": "G12",
+  "name": "마등",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 68,
+    "무용": 68,
+    "지략": 58,
+    "정무": 68,
+    "감화": 70
+  },
+  "sub": {
+    "전열 유지": 66,
+    "기동": 69,
+    "전환": 64,
+    "수습": 68,
+    "힘": 74,
+    "기술": 63,
+    "막아내기": 67,
+    "되받기": 61,
+    "군재": 61,
+    "응변": 63,
+    "속이기": 46,
+    "통찰": 56,
+    "행정": 59,
+    "병참": 67,
+    "인사": 73,
+    "제도": 52,
+    "민정": 75,
+    "설득": 63,
+    "포섭": 72,
+    "결집": 75,
+    "중재": 49
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "LOW",
+    "BT04": "HIGH"
+  },
+  "role": "명사",
+  "style": "장군",
+  "primaryClass": "TRIAL:명사",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "곁을 지키는 대열",
+    "text": "마등과 맞닿은 아군은 내 차례 시작마다 전열 한 단계 회복, 그 차례 첫 공격 피해 +15%. 태수일 때 도시 생산 +15%.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "FORMATION_DELTA",
+        "when": "ROUND_START",
+        "target": "ADJACENT_ALLIES",
+        "value": 10,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "INITIATIVE_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 30,
+        "duration": 0,
+        "condition": null
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 15,
+        "duration": 0,
+        "condition": null,
+        "resource": "PRODUCTION"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 원 특기 '동행자에게 마등과 같은 Formation 보정'을 전열 회복(FORMATION_DELTA)으로 살리고 첫 공격 보정을 더함. 지형비용 면제는 없어 '한 동행자 이동+보호'로 옮김. 전군이 아닌 한 부대만 돕는 약점 유지.",
+    "formerName": "한 자리의 옆자리"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "함께 달린다",
+      "text": "자신 또는 맞닿은 아군 1부대가 2턴 동안 이동 +2칸, 받는 피해 −15%. 동행자는 한 부대뿐이다.",
+      "rarity": "EPIC",
+      "classTag": "고유",
+      "cooldown": 2,
+      "range": 1,
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 2,
+          "duration": 2,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 15,
+          "duration": 2,
+          "condition": null
+        }
+      ],
+      "formerName": "함께 닿는 길"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}

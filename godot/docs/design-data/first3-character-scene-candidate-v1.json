@@ -1,0 +1,468 @@
+{
+  "schema": "first3-character-scene-candidate-v1",
+  "version": 1,
+  "status": "candidate_not_runtime_connected",
+  "scenarioId": "FIRST3-fixed-v1",
+  "updated": "2026-09-20",
+  "scope": "One G03 representative scene plus two name-blind G03 versus unregistered Mi Zhu recruitment comparisons",
+  "sourceRefs": {
+    "characterFramework": "../장수-심리컨셉-6인-v1.md",
+    "g03Canon": "../인물-드라마-정본-G03-제갈량-v1.md",
+    "round03Officer": "../work-integration/20260920/round-03/officer.md",
+    "round03Narrative": "../work-integration/20260920/round-03/narrative.md",
+    "first3State": "first3-initial-state-v1.json",
+    "i1Contract": "../FIRST3-I1-이동관측-검증.md"
+  },
+  "globalRules": {
+    "historicalMemoryPolicy": "Undated FIRST3 uses only era-independent character motives; no Changban, Baidicheng entrustment, Jieting or Jigu recollection in this scene.",
+    "diagnosisPolicy": "No real-person clinical diagnosis or personality-test score is used.",
+    "appearancePolicy": "Officers remain human-shaped; this data creates no body mutation or portrait asset.",
+    "hiddenInformationPolicy": "Conditions may read only the F02 public faction view available after the choice commit.",
+    "rewardPolicy": "Scene display creates no resource, relationship, morale, recruitment, survival or movement reward.",
+    "idempotencyPolicy": "A scene resolution key may produce one reaction record; reload cannot create a second reaction or reward.",
+    "rosterPolicy": "No officer is added to FIRST3 by this file. Mi Zhu has no formal officer ID and remains outside the initial roster."
+  },
+  "actorBindings": {
+    "strategist": {
+      "officerId": "G03",
+      "requiredFactionId": "F02",
+      "requiredCityId": "east",
+      "requiredRoleFact": "city.governorId",
+      "armyId": null
+    },
+    "returnAnchor": {
+      "officerId": "G05",
+      "armyId": "U-F02-G05",
+      "requiredFactionId": "F02",
+      "baselineTileId": "12,3"
+    },
+    "mobileReserve": {
+      "officerId": "G02",
+      "armyId": "U-F02-G02",
+      "requiredFactionId": "F02",
+      "baselineTileId": "11,3"
+    },
+    "comparisonOnlyMiZhu": {
+      "candidateRef": "CAND-MIZHU-UNREGISTERED-01",
+      "displayName": "미축",
+      "officerId": null,
+      "initialRosterMember": false,
+      "formalRecruitmentRecordRequiredBeforeUse": true
+    }
+  },
+  "scene": {
+    "sceneId": "G03-R4-SC01",
+    "title": "돌아올 길의 두 갈래",
+    "contentState": "candidate",
+    "characterQuestion": "알 수 없는 접근 방향에 대비하면서도 두 야전군의 귀환 가능성을 어떻게 함께 책임질 것인가?",
+    "adaptationNote": "ROUND-03 narrative assumed a separate reserve and escort target. FIRST3 has only two F02 field armies, so this candidate uses G05 as the fixed return anchor and G02 as the single mobile reserve; it creates neither a third army nor an escort target.",
+    "eligibility": {
+      "all": [
+        {
+          "fact": "playerFactionId",
+          "operator": "equals",
+          "value": "F02"
+        },
+        {
+          "fact": "city.east.ownerFactionId",
+          "operator": "equals",
+          "value": "F02"
+        },
+        {
+          "fact": "city.east.governorId",
+          "operator": "equals",
+          "value": "G03"
+        },
+        {
+          "fact": "army.U-F02-G05.tileId",
+          "operator": "equals",
+          "value": "12,3"
+        },
+        {
+          "fact": "army.U-F02-G02.tileId",
+          "operator": "equals",
+          "value": "11,3"
+        },
+        {
+          "fact": "army.U-F02-G05.currentOrder",
+          "operator": "is_null"
+        },
+        {
+          "fact": "army.U-F02-G02.currentOrder",
+          "operator": "is_null"
+        },
+        {
+          "fact": "publicThreat.approachLaneKnown",
+          "operator": "equals",
+          "value": false
+        },
+        {
+          "fact": "publicThreat.possibleLaneIds",
+          "operator": "set_equals",
+          "value": [
+            "NORTHWEST",
+            "SOUTHWEST"
+          ]
+        }
+      ],
+      "mustNotRead": [
+        "hiddenEnemy.tileId",
+        "hiddenEnemy.currentOrder",
+        "futureObservation",
+        "rng.futureState"
+      ]
+    },
+    "mapBindings": {
+      "returnAnchorTileId": "12,3",
+      "mobileReserveStartTileId": "11,3",
+      "commonSafeTileId": "12,2",
+      "lanes": [
+        {
+          "laneId": "NORTHWEST",
+          "publicZoneTileIds": [
+            "10,2",
+            "10,3"
+          ],
+          "guardTileId": "10,3"
+        },
+        {
+          "laneId": "SOUTHWEST",
+          "publicZoneTileIds": [
+            "10,4",
+            "11,4"
+          ],
+          "guardTileId": "10,4"
+        }
+      ],
+      "bindingState": "candidate_coordinates_to_be_checked_by_runtime_path_validation"
+    },
+    "publicSituation": {
+      "known": [
+        "G05 army is holding the east city tile as the return anchor.",
+        "G02 army is the only mobile F02 field army at the fork.",
+        "Both approach lane zones and all three candidate destination tiles are currently public map data.",
+        "Only one common MOVE or HOLD order may be committed per army for the current planning opportunity."
+      ],
+      "unknown": [
+        "Which lane will first contain a publicly observed hostile army.",
+        "Whether a future destination remains legal at execution time."
+      ]
+    },
+    "choices": [
+      {
+        "choiceId": "A_GUARD_NORTHWEST_NOW",
+        "label": "북서 길을 지금 맡긴다",
+        "kind": "COMMON_COMMAND",
+        "implementationState": "available_in_i1_as_separate_orders",
+        "intents": [
+          {
+            "armyId": "U-F02-G05",
+            "orderType": "HOLD"
+          },
+          {
+            "armyId": "U-F02-G02",
+            "orderType": "MOVE",
+            "destinationTileId": "10,3"
+          }
+        ],
+        "characterMeaning": "One known route is chosen now; the unchosen lane risk is accepted.",
+        "opportunityCost": "G02 cannot cover SOUTHWEST during the same planning opportunity.",
+        "outcomes": {
+          "successWhenAll": [
+            "firstObservedThreatLane == NORTHWEST",
+            "U-F02-G02 reached 10,3 by legal movement",
+            "U-F02-G05 still holds 12,3"
+          ],
+          "failureReasons": [
+            "FIRST_OBSERVED_LANE_SOUTHWEST",
+            "MOVE_PATH_INVALIDATED",
+            "ARMY_BECAME_INELIGIBLE",
+            "RETURN_ANCHOR_LOST"
+          ]
+        },
+        "reactions": {
+          "success": {
+            "speakerOfficerId": "G03",
+            "text": "한 길을 택한 책임은 남습니다. 돌아온 인원부터 확인합시다.",
+            "sourceRef": "round03Narrative#choice-a-success"
+          },
+          "failure": {
+            "speakerOfficerId": "G02",
+            "text": "길이 비었다고 끝난 것은 아닙니다. 남은 길과 사람을 다시 세우겠습니다.",
+            "sourceRef": "round03Narrative#choice-a-failure"
+          }
+        },
+        "automaticRewards": []
+      },
+      {
+        "choiceId": "B_WITHDRAW_TO_COMMON_SAFE_TILE",
+        "label": "전진을 줄이고 먼저 돌아온다",
+        "kind": "COMMON_COMMAND",
+        "implementationState": "available_in_i1_as_separate_orders",
+        "intents": [
+          {
+            "armyId": "U-F02-G05",
+            "orderType": "HOLD"
+          },
+          {
+            "armyId": "U-F02-G02",
+            "orderType": "MOVE",
+            "destinationTileId": "12,2"
+          }
+        ],
+        "characterMeaning": "The advance objective is reduced so both armies remain near the return anchor.",
+        "opportunityCost": "Neither hostile approach lane is preemptively occupied by F02.",
+        "outcomes": {
+          "successWhenAll": [
+            "U-F02-G02 reached 12,2 by legal movement",
+            "U-F02-G05 still holds 12,3"
+          ],
+          "failureReasons": [
+            "MOVE_PATH_INVALIDATED",
+            "SAFE_TILE_OCCUPIED_OR_BLOCKED",
+            "ARMY_BECAME_INELIGIBLE",
+            "RETURN_ANCHOR_LOST"
+          ]
+        },
+        "reactions": {
+          "success": {
+            "speakerOfficerId": "G05",
+            "text": "돌아온 자리를 지킨 것은 헛된 기다림이 아니오. 다음 길은 함께 정합시다.",
+            "sourceRef": "round03Narrative#choice-b-success"
+          },
+          "failure": {
+            "speakerOfficerId": "G03",
+            "text": "줄인 것은 위험이 아니라 선택의 폭이었군요. 보고된 사실부터 다시 맞추겠습니다.",
+            "sourceRef": "round03Narrative#choice-b-failure"
+          }
+        },
+        "automaticRewards": []
+      },
+      {
+        "choiceId": "C_REGISTER_TWO_RESPONSES",
+        "label": "두 대응을 미리 준비한다",
+        "kind": "UNIQUE_ACTION_CANDIDATE",
+        "ownerOfficerId": "G03",
+        "implementationState": "not_implemented_candidate",
+        "registration": {
+          "conditionSource": "F02_PUBLIC_FACTION_VIEW_AFTER_COMMIT",
+          "conditionType": "FIRST_PUBLICLY_OBSERVED_HOSTILE_LANE",
+          "responses": [
+            {
+              "whenLaneId": "NORTHWEST",
+              "intents": [
+                {
+                  "armyId": "U-F02-G05",
+                  "orderType": "HOLD"
+                },
+                {
+                  "armyId": "U-F02-G02",
+                  "orderType": "MOVE",
+                  "destinationTileId": "10,3"
+                }
+              ]
+            },
+            {
+              "whenLaneId": "SOUTHWEST",
+              "intents": [
+                {
+                  "armyId": "U-F02-G05",
+                  "orderType": "HOLD"
+                },
+                {
+                  "armyId": "U-F02-G02",
+                  "orderType": "MOVE",
+                  "destinationTileId": "10,4"
+                }
+              ]
+            }
+          ],
+          "executeAt": "NEXT_LEGAL_ACTION_POINT_AFTER_PUBLIC_CONDITION",
+          "maxResponsesExecuted": 1,
+          "sameTickRetroactiveExecution": false,
+          "reserveArmyIds": [
+            "U-F02-G02"
+          ],
+          "staminaLockAtRegistration": false,
+          "preparedOptionAutoConsumption": false
+        },
+        "characterMeaning": "Responsibility is assigned before the information gap, while the actual lane remains unknown.",
+        "opportunityCost": "G02 is unavailable for another committed order while this candidate registration remains active.",
+        "outcomes": {
+          "successWhenAll": [
+            "one registered lane became publicly observed",
+            "the matching response was still legal at its next action point",
+            "exactly one response committed"
+          ],
+          "failureReasons": [
+            "FEATURE_NOT_IMPLEMENTED",
+            "NO_LANE_PUBLICLY_OBSERVED_BEFORE_EXPIRY",
+            "BOTH_LANES_SAME_OBSERVATION_PRIORITY_UNRESOLVED",
+            "MATCHING_RESPONSE_ILLEGAL_AT_EXECUTION",
+            "RESERVED_ARMY_BECAME_INELIGIBLE"
+          ]
+        },
+        "reactions": {
+          "success": {
+            "speakerOfficerId": "G03",
+            "text": "정해 둔 길 하나만 열렸습니다. 남은 한 길은 다음 판단을 위해 비워 둡시다.",
+            "sourceRef": "round03Narrative#choice-c-success"
+          },
+          "failure": {
+            "speakerOfficerId": "G05",
+            "text": "준비하지 않은 것이 아니라, 돌아올 길이 바뀐 것이오. 지금 남은 길을 보겠소.",
+            "sourceRef": "round03Narrative#choice-c-failure"
+          }
+        },
+        "automaticRewards": []
+      }
+    ],
+    "resultContract": {
+      "requiredFacts": [
+        "choiceId",
+        "choiceCommitGlobalTick",
+        "firstObservedThreatLane",
+        "resolvedArmyTileIds",
+        "orderStatuses",
+        "returnAnchorOwnerAndOccupant",
+        "uniqueRegistrationState"
+      ],
+      "writes": [
+        "one idempotent scene reaction record keyed by sceneId and choiceCommitGlobalTick"
+      ],
+      "mustNotWrite": [
+        "prestige",
+        "morale",
+        "stamina",
+        "troopCount",
+        "relationshipScore",
+        "recruitmentState",
+        "armyPosition",
+        "orderState"
+      ]
+    },
+    "uiContract": {
+      "showBeforeChoice": [
+        "public known facts",
+        "unknown lane marker",
+        "A and B as common commands",
+        "C as unsupported unique-action candidate unless the runtime reports support",
+        "each choice opportunity cost"
+      ],
+      "showAfterResolution": [
+        "selected choice",
+        "factual success or failure reason",
+        "one matching reaction",
+        "no reward banner unless another owning system supplies an independent reward"
+      ]
+    }
+  },
+  "nameBlindRecruitmentComparisons": [
+    {
+      "comparisonId": "NB-R01-TWO-LANES-SUPPLY-SUFFICIENT",
+      "title": "물자는 충분하고 적이 올 길이 둘이다",
+      "publicInputs": {
+        "currentSupplySufficient": true,
+        "possibleObservedLaneCount": 2,
+        "oneReserveCanCoverBothAtOnce": false,
+        "hostileLaneKnownAtRecruitmentDecision": false,
+        "futureDeliveryNeededForCurrentOperation": false
+      },
+      "anonymousCandidates": [
+        {
+          "slot": "A",
+          "publicCapability": "공개 관측 조건 하나와 합법 대응 두 갈래를 사전에 등록한다.",
+          "publicCost": "예비 부대와 다른 작전 기회를 묶는다.",
+          "reveal": {
+            "candidateRef": "G03",
+            "displayName": "제갈량"
+          }
+        },
+        {
+          "slot": "B",
+          "publicCapability": "상대의 현재 재고와 내 미래 납품을 묶는 약정을 체결한다.",
+          "publicCost": "미래 생산과 실제 배송 책임을 묶는다.",
+          "reveal": {
+            "candidateRef": "CAND-MIZHU-UNREGISTERED-01",
+            "displayName": "미축",
+            "officerId": null
+          }
+        }
+      ],
+      "availableDecisions": [
+        "RECRUIT_A_NOW",
+        "RECRUIT_B_NOW",
+        "DEFER_RECRUITMENT"
+      ],
+      "expectedDistinctChoice": "RECRUIT_A_NOW",
+      "reason": "The bottleneck is the information gap between commitment and the next command, not supply.",
+      "automaticRecruitment": false,
+      "automaticRewards": []
+    },
+    {
+      "comparisonId": "NB-R02-SUPPLY-GAP-PATH-KNOWN",
+      "title": "길은 확보됐고 물자는 기회가 끝난 뒤 생긴다",
+      "publicInputs": {
+        "currentSupplySufficient": false,
+        "routeObservedAndSecured": true,
+        "branchingResponseNeeded": false,
+        "counterpartyHasCurrentStock": true,
+        "ownFutureProductionCanCoverPromise": true,
+        "deliveryCanArriveBeforeOpportunityCloses": true
+      },
+      "anonymousCandidates": [
+        {
+          "slot": "A",
+          "publicCapability": "공개 관측 조건 하나와 합법 대응 두 갈래를 사전에 등록한다.",
+          "publicCost": "예비 부대와 다른 작전 기회를 묶는다.",
+          "reveal": {
+            "candidateRef": "G03",
+            "displayName": "제갈량"
+          }
+        },
+        {
+          "slot": "B",
+          "publicCapability": "상대의 현재 재고와 내 미래 납품을 묶는 약정을 체결한다.",
+          "publicCost": "미래 생산과 실제 배송 책임을 묶는다.",
+          "reveal": {
+            "candidateRef": "CAND-MIZHU-UNREGISTERED-01",
+            "displayName": "미축",
+            "officerId": null
+          }
+        }
+      ],
+      "availableDecisions": [
+        "RECRUIT_A_NOW",
+        "RECRUIT_B_NOW",
+        "DEFER_RECRUITMENT"
+      ],
+      "expectedDistinctChoice": "RECRUIT_B_NOW",
+      "reason": "The bottleneck is current supply versus future production; a prepared response creates no stock or delivery.",
+      "automaticRecruitment": false,
+      "automaticRewards": []
+    }
+  ],
+  "validationRules": {
+    "requiredChoiceIds": [
+      "A_GUARD_NORTHWEST_NOW",
+      "B_WITHDRAW_TO_COMMON_SAFE_TILE",
+      "C_REGISTER_TWO_RESPONSES"
+    ],
+    "commonChoiceKinds": [
+      "A_GUARD_NORTHWEST_NOW",
+      "B_WITHDRAW_TO_COMMON_SAFE_TILE"
+    ],
+    "uniqueCandidateChoiceId": "C_REGISTER_TWO_RESPONSES",
+    "requiredComparisonIds": [
+      "NB-R01-TWO-LANES-SUPPLY-SUFFICIENT",
+      "NB-R02-SUPPLY-GAP-PATH-KNOWN"
+    ],
+    "forbiddenAutomaticFields": [
+      "prestigeDelta",
+      "moraleDelta",
+      "relationshipDelta",
+      "freeAction",
+      "freeRecruitment"
+    ]
+  }
+}

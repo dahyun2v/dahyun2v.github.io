@@ -1,0 +1,126 @@
+{
+  "id": "G09",
+  "name": "원소",
+  "faction": null,
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": null,
+  "stats": {
+    "지휘": 73,
+    "무용": 60,
+    "지략": 61,
+    "정무": 61,
+    "감화": 81
+  },
+  "sub": {
+    "전열 유지": 74,
+    "기동": 65,
+    "전환": 53,
+    "수습": 80,
+    "힘": 62,
+    "기술": 61,
+    "막아내기": 64,
+    "되받기": 50,
+    "군재": 68,
+    "응변": 58,
+    "속이기": 70,
+    "통찰": 49,
+    "행정": 67,
+    "병참": 55,
+    "인사": 70,
+    "제도": 44,
+    "민정": 54,
+    "설득": 81,
+    "포섭": 93,
+    "결집": 79,
+    "중재": 48
+  },
+  "troopAptitude": {
+    "BT01": "MEDIUM",
+    "BT02": "MEDIUM",
+    "BT03": "HIGH",
+    "BT04": "MEDIUM"
+  },
+  "role": "명사",
+  "style": "장군",
+  "primaryClass": "TRIAL:명사",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "명문가의 진형",
+    "text": "원소의 전열이 정돈되어 있으면 맞닿은 아군 반격 피해 +20%, 받는 피해 −10%. 태수일 때 도시 인망 +25%. 원소가 곁을 떠나거나 전열이 흐트러지면 진형 보정이 사라진다.",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "감화",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "COUNTER_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 20,
+        "duration": 0,
+        "condition": "SELF_ORDERED"
+      },
+      {
+        "op": "DEFENSE_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 10,
+        "duration": 0,
+        "condition": "SELF_ORDERED"
+      },
+      {
+        "op": "CITY_OUTPUT_MOD",
+        "when": "TURN_SETTLE",
+        "target": "CITY",
+        "value": 25,
+        "duration": 0,
+        "condition": null,
+        "resource": "FAME"
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 여러 부대에 몫을 나눠 큰 진형 하나로 세우는 의도(FormationCheck 보정 → 2칸 아군 전열·사기 회복)와 '중심이 지켜질 때만 연합 보정'(정돈된 원소 곁 아군만 보정, 떠나거나 흐트러지면 상실) 약점 유지. 명문의 이름은 태수 인망으로.",
+    "formerName": "마지막 판단의 자리"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "흩어진 군 다시 세우기",
+      "text": "자신과 2칸 안 아군 모두 전열 한 단계 회복, 사기 한 단계 회복 — 서로 다른 부대를 한 진형으로 다시 세운다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 0,
+      "effects": [
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ALL_ALLIES_IN_BATTLE",
+          "value": 10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "formerName": "이름마다 한 몫"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION",
+    "SELF_ORDERED"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "status": "WORK_TRIAL",
+  "catapult": {"range": 3, "siegeMultiplier": 2.5, "unitDamageMultiplier": 0.5},
+  "brace": {"preemptMultiplier": 1.5, "momentumTiles": 2}
+}

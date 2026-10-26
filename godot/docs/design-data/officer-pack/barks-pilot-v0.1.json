@@ -1,0 +1,56 @@
+{
+ "schema": "barks-pilot-v0.1",
+ "status": "시안(Claude 2026-10-10) — 세 군주 외침 8종·목소리 설계문. 음성 시험용이며 게임에는 아직 연결하지 않음. 사용자 지시: \"유비·조조·손권만 대사/음성 만들어볼래? 로컬로\"",
+ "rules": "말투는 visit-talks-v0.1.json 의 speechRules(군주 기본 하오체, 가까운 사이 반말). 과거 일은 단정하지 않고 희미한 기억으로만. 외침은 한 호흡(3초 안팎)에 끝난다.",
+ "slots": {"select": "부대를 고름", "move": "이동 명령", "attack": "공격", "tactic": "전법 사용", "victory": "전투 승리", "retreat": "패주·후퇴", "levelup": "레벨업", "recruit": "장수를 맞아들임"},
+ "officers": {
+  "G07": {
+   "name": "조조",
+   "voiceNote": "40대 중반, 낮고 건조한 중저음. 차갑고 단호하며 짧게 끊어 말한다. 여유 있는 비웃음이 살짝 섞인다.",
+   "instruct": "A Korean man in his mid-forties with a low, dry, resonant baritone. He speaks with cold authority in short clipped phrases, calm and unhurried, with a faint sardonic ease. Firm, decisive sentence endings. A ruler and strategist used to being obeyed.",
+   "refText": "나는 조맹덕이다. 천하는 재주 있는 자의 것. 쓸 만한 사람이라면 누구든 내 곁에 둔다.",
+   "lines": {
+    "select": "말하라.",
+    "move": "지체하지 마라. 간다.",
+    "attack": "쳐라! 망설이는 자부터 벤다.",
+    "tactic": "전군, 일제히 몰아쳐라!",
+    "victory": "이긴 싸움이다. 다음을 준비하라.",
+    "retreat": "물러난다. 이 빚은 반드시 갚는다.",
+    "levelup": "그래, 이 감각. 낯설지 않군.",
+    "recruit": "재주가 있으면 족하다. 내 곁에 서라."
+   }
+  },
+  "G05": {
+   "name": "유비",
+   "voiceNote": "40대, 부드럽고 낮은 온화한 목소리. 느리고 진중하며 따뜻하지만 오래 떠돈 사람의 피로가 배어 있다.",
+   "instruct": "A Korean man in his forties with a warm, gentle, low tenor-baritone voice. He speaks slowly and sincerely, humble and kind, with a quiet weariness of someone who has wandered for years, yet steady resolve underneath. Soft, polite sentence endings.",
+   "refText": "유현덕이오. 가진 것은 없으나, 함께 가겠다는 사람들을 두고 떠날 수는 없소. 그것이 내가 가는 길이오.",
+   "lines": {
+    "select": "말씀하시오.",
+    "move": "가세. 백성이 기다리고 있소.",
+    "attack": "물러설 곳이 없소. 나아가세!",
+    "tactic": "모두, 나와 함께 버텨 주시오!",
+    "victory": "모두 무사하오? 잘 싸워 주었소.",
+    "retreat": "살아야 다시 일어서오. 물러나세.",
+    "levelup": "어쩐지, 전에도 이 길을 걸은 듯하오.",
+    "recruit": "어서 오시오. 함께 갑시다."
+   }
+  },
+  "G08": {
+   "name": "손권",
+   "voiceNote": "20대 후반, 맑고 탄탄한 중음. 밝고 자신감 있지만 가볍지 않다. 젊은 군주의 패기와 신중함이 같이 있다.",
+   "instruct": "A Korean man in his late twenties with a clear, bright, firm mid-range voice. Confident and energetic but composed, the voice of a young ruler who is bold yet careful. Crisp articulation and lively rhythm.",
+   "refText": "손중모다. 강동은 물길로 이어진 땅이다. 사람을 귀히 여기고, 지킬 것은 반드시 지킨다.",
+   "lines": {
+    "select": "말해 보라.",
+    "move": "물길을 따라 간다. 서둘러라.",
+    "attack": "지금이다, 몰아쳐라!",
+    "tactic": "강동의 힘을 보여 줘라!",
+    "victory": "좋아, 해냈다! 형님께 자랑할 일이 생겼군.",
+    "retreat": "분하지만 물러난다. 배를 돌려라.",
+    "levelup": "이 느낌, 꿈에서 본 것 같군.",
+    "recruit": "잘 왔다. 강동은 사람을 귀히 여긴다."
+   }
+  }
+ }
+}

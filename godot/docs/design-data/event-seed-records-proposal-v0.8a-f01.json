@@ -1,0 +1,147 @@
+[
+  {
+    "eventSeedId": "SIT-F01-P01-01",
+    "policyId": "POL-F01-CORE-01",
+    "factionId": "F01",
+    "scale": "SITUATION",
+    "title": "버려진 밭의 주인들",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "보유 도시 인근에 황폐 농지가 존재한다",
+      "유민 또는 귀환민이 해당 지역에 도착한다",
+      "둔전 설치에 토지조사·등록·농우 배정·파종이 필요하다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "파종 전",
+    "playerChoices": [
+      "관유 농우를 배정하고 수확을 분배한다",
+      "호족에게 위탁하되 유민 보호를 조건으로 건다",
+      "주민 자치와 낮은 납부를 허용한다",
+      "설치를 연기하고 다른 지역으로 이동한다"
+    ],
+    "costInputs": [
+      "농우",
+      "종자",
+      "관리자",
+      "호위 병력",
+      "내정 일정"
+    ],
+    "risks": [
+      "파종기를 놓친다",
+      "과징수로 주민이 도주하거나 생산물을 은닉한다",
+      "호족 의존이 심화된다",
+      "도적 또는 적 정찰대가 농우와 종자를 탈취한다"
+    ],
+    "counterplay": [
+      "도적 또는 적 정찰대가 설치 과정과 수송을 공격한다"
+    ],
+    "failureTraces": [
+      "정착한 둔전촌",
+      "유민 이탈촌",
+      "호족 위탁지",
+      "납부 신뢰",
+      "징수 반감"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "대상 위치",
+      "파종 마감",
+      "담당자",
+      "주민 수용 의사",
+      "주변 위협"
+    ],
+    "forbiddenAutoResolve": [
+      "정치 능력만으로 토지조사와 주민 설득을 생략할 수 없다",
+      "팝업 선택만으로 설치·이동·보급을 완료할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "역사·문화 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "임준·조지 계열 농정 담당, 순욱 후보와 호위 담당의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "대상 도시와 농지의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 흔적의 canonical event ID가 없어 followupRefs를 비웠다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "EVT-F01-P01-02",
+    "policyId": "POL-F01-CORE-01",
+    "factionId": "F01",
+    "scale": "EVENT",
+    "title": "관도로 가는 군량",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "전선이 장기 대치 상태다",
+      "후방 창고에는 군량이 있으나 전선 비축은 부족하다",
+      "수송로가 적 영향권 또는 도적 활동권을 통과한다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "수송 준비와 행군 중 전선의 기존 비축이 소진되기 전",
+    "playerChoices": [
+      "대규모 수송대를 한 번에 호송한다",
+      "여러 경로로 수송대를 분산한다",
+      "전선 일부를 후퇴시킨다",
+      "적 약탈대를 선제 제거한다",
+      "공격을 늦추고 중간 창고를 건설한다"
+    ],
+    "costInputs": [
+      "군량",
+      "호위 병력",
+      "준비 시간",
+      "행군 시간",
+      "전선의 기존 비축"
+    ],
+    "risks": [
+      "적의 수송대 공격",
+      "거짓 정보로 인한 경로 오판",
+      "분산 수송대의 도착 시점 불일치",
+      "전선 비축 소진"
+    ],
+    "counterplay": [
+      "적이 노출된 수송 구간을 공격한다",
+      "적이 거짓 경로 정보를 흘린다",
+      "약탈대가 수송대를 차단한다"
+    ],
+    "failureTraces": [
+      "약탈당한 수레",
+      "폐쇄된 길",
+      "검증된 군량로",
+      "전선 지연 또는 후퇴",
+      "담당 장수의 공적 또는 책임"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "수송 경로",
+      "예상 도착 시기",
+      "노출 구간",
+      "전선 잔여 비축"
+    ],
+    "forbiddenAutoResolve": [
+      "후방 군량을 전선으로 즉시 이전할 수 없다",
+      "팝업 선택만으로 수송·호위·전선 유지가 성공하지 않는다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "decisionAuthority": null,
+    "commitmentScope": null,
+    "branchConsequences": [],
+    "persistentPoliticalTrace": null,
+    "missingFields": [
+      "관도전 군량 수송대·약탈 대응 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "순욱과 장료의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "후방 둔전도시·중간 창고·전선 야영지의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "EVENT 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]

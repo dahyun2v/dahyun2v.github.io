@@ -1,0 +1,739 @@
+{
+ "screen": "map-hud",
+ "protocol": 1,
+ "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
+ "turn": 1,
+ "turnLimit": 26,
+ "ruler": {
+  "id": "G07",
+  "name": "조조",
+  "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "head": {
+   "w": 522,
+   "h": 888,
+   "cx": 318,
+   "cy": 103,
+   "side": 114
+  },
+  "factionId": "F01",
+  "factionName": "조조",
+  "date": "190년 1월 상순 · 1차례 / 26"
+ },
+ "resources": [
+  {
+   "key": "food",
+   "label": "식량",
+   "value": "20",
+   "max": "80",
+   "delta": "+3",
+   "tip": "세력이 쌓아 둔 식량 · 다음 정산 산출 +3"
+  },
+  {
+   "key": "production",
+   "label": "생산",
+   "value": "0",
+   "max": null,
+   "delta": "+2",
+   "tip": "도시 생산 합 · 다음 정산 산출"
+  },
+  {
+   "key": "science",
+   "label": "학문",
+   "value": "0",
+   "max": "10",
+   "delta": "+1",
+   "tip": "연구 0단계 · 다음 문턱 10"
+  },
+  {
+   "key": "fame",
+   "label": "인망",
+   "value": "50",
+   "max": null,
+   "delta": "+1",
+   "tip": "쓸 수 있는 인망"
+  },
+  {
+   "key": "troops",
+   "label": "병력",
+   "value": "5,000",
+   "max": null,
+   "delta": "",
+   "tip": "부대 병력 합"
+  },
+  {
+   "key": "reserve",
+   "label": "예비",
+   "value": "4,000",
+   "max": null,
+   "delta": "",
+   "tip": "도시 예비병 합"
+  }
+ ],
+ "menu": [
+  {
+   "key": "officers",
+   "label": "장수"
+  },
+  {
+   "key": "council",
+   "label": "평정",
+   "badge": true
+  },
+  {
+   "key": "diplomacy",
+   "label": "외교"
+  },
+  {
+   "key": "faction",
+   "label": "세력"
+  },
+  {
+   "key": "stratagem",
+   "label": "계략"
+  },
+  {
+   "key": "records",
+   "label": "기록"
+  }
+ ],
+ "system": [
+  {
+   "key": "goal",
+   "label": "승리 조건"
+  },
+  {
+   "key": "save",
+   "label": "저장"
+  },
+  {
+   "key": "help",
+   "label": "규칙"
+  },
+  {
+   "key": "settings",
+   "label": "설정"
+  }
+ ],
+ "tasks": {
+  "title": "이번 차례 · 할 일 1",
+  "items": [
+   {
+    "text": "둔전 짓기 · 업 생산으로",
+    "target": "west"
+   }
+  ]
+ },
+ "units": {
+  "title": "부대 2 · 남은 2",
+  "rows": [
+   {
+    "id": "U-F01-G07",
+    "officerId": "G07",
+    "name": "조조",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+    "head": {
+     "w": 522,
+     "h": 888,
+     "cx": 318,
+     "cy": 103,
+     "side": 114
+    },
+    "troop": "cavalry",
+    "troopName": "기병",
+    "countText": "2,500",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": false
+   },
+   {
+    "id": "U-F01-G24",
+    "officerId": "G06",
+    "name": "황충",
+    "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+    "head": {
+     "w": 616,
+     "h": 845,
+     "cx": 281,
+     "cy": 98,
+     "side": 154
+    },
+    "troop": "bow",
+    "troopName": "궁병",
+    "countText": "2,500",
+    "status": "이동 가능 · 주 행동 가능",
+    "ended": false,
+    "selected": true
+   }
+  ]
+ },
+ "selected": {
+  "id": "U-F01-G24",
+  "officerId": "G06",
+  "name": "황충",
+  "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+  "head": {
+   "w": 616,
+   "h": 845,
+   "cx": 281,
+   "cy": 98,
+   "side": 154
+  },
+  "troop": "bow",
+  "troopName": "궁병",
+  "countText": "2,500",
+  "maxText": "2,500",
+  "countRatio": 1,
+  "ratings": [
+   {
+    "key": "attack",
+    "label": "공격",
+    "value": 54
+   },
+   {
+    "key": "defense",
+    "label": "방어",
+    "value": 86
+   },
+   {
+    "key": "mobility",
+    "label": "이동",
+    "value": 4
+   },
+   {
+    "key": "range",
+    "label": "사거리",
+    "value": 2
+   }
+  ],
+  "engine": {
+   "name": "맹장(연사)",
+   "resourceName": "기세",
+   "resource": 2,
+   "max": 3
+  },
+  "traits": {
+   "core": {
+    "name": "노당익장",
+    "full": "노당익장",
+    "text": "이동하지 않은 차례의 사격은 거리 2 에서 도병 직사 차단과 엄폐를 무시하고 전열 손상 +1단계.",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png"
+   },
+   "equipped": [],
+   "slots": 3
+  },
+  "klass": {
+   "engine": "맹장(연사)",
+   "branch": "기본",
+   "merit": "실적 0/3",
+   "merits": "광장 0/3 · 용장 0/3",
+   "aptitude": "적성 높음",
+   "troopName": "궁병"
+  },
+  "gauge": 5,
+  "gaugeMax": 100,
+  "qwer": [
+   {
+    "key": "Q",
+    "name": "화살비",
+    "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+    "cost": null,
+    "state": "disabled",
+    "reason": "적과 붙어 사격 불가"
+   },
+   {
+    "key": "W",
+    "name": "맹장(연사)",
+    "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+    "cost": null,
+    "state": "ready",
+    "reason": "기세 2 / 3"
+   },
+   {
+    "key": "E",
+    "name": "정조준",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+    "cost": 40,
+    "state": "disabled",
+    "reason": "게이지 5/40"
+   },
+   {
+    "key": "R",
+    "name": "백보천양",
+    "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+    "cost": 100,
+    "state": "disabled",
+    "reason": "게이지 5/100"
+   }
+  ],
+  "orders": [
+   {
+    "key": "move",
+    "label": "이동",
+    "hotkey": "M"
+   },
+   {
+    "key": "attack",
+    "label": "공격",
+    "hotkey": "A",
+    "primary": true
+   },
+   {
+    "key": "brace",
+    "label": "방어",
+    "hotkey": "B"
+   },
+   {
+    "key": "wait",
+    "label": "대기",
+    "hotkey": "S"
+   },
+   {
+    "key": "hold",
+    "label": "주둔",
+    "hotkey": "H"
+   }
+  ]
+ },
+ "docks": [
+  {
+   "id": "U-F01-G07",
+   "officerId": "G07",
+   "name": "조조",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "head": {
+    "w": 522,
+    "h": 888,
+    "cx": 318,
+    "cy": 103,
+    "side": 114
+   },
+   "troop": "cavalry",
+   "troopName": "기병",
+   "countText": "2,500",
+   "maxText": "2,500",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 48
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 106
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 9
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 1
+    }
+   ],
+   "engine": {
+    "name": "책사",
+    "resourceName": "계책",
+    "resource": 2,
+    "max": 3
+   },
+   "traits": {
+    "core": {
+     "name": "난세간웅",
+     "full": "난세간웅",
+     "text": "조조 시야 안 적이 E 전법을 쓰면 그것을 기억한다(최근 하나, 다음 내 차례 끝까지). 조조는 E 칸 대신 기억한 전법을 쓸 수 있다(게이지 비용은 원래 값 · 고유 R 은 기억하지 않음).",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png"
+    },
+    "equipped": [],
+    "slots": 3
+   },
+   "klass": {
+    "engine": "책사",
+    "branch": "기본",
+    "merit": "실적 0/3",
+    "merits": "궤계 0/3 · 군사 0/3",
+    "aptitude": "적성 일정",
+    "troopName": "기병"
+   },
+   "gauge": 5,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "name": "돌파",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-cavalry.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "대상 없음"
+    },
+    {
+     "key": "W",
+     "name": "책사",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "계책 2 / 3"
+    },
+    {
+     "key": "E",
+     "name": "기싸움",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 40,
+     "state": "disabled",
+     "reason": "게이지 5/40"
+    },
+    {
+     "key": "R",
+     "name": "호령천하",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 5/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "move",
+     "label": "이동",
+     "hotkey": "M"
+    },
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "S"
+    },
+    {
+     "key": "hold",
+     "label": "주둔",
+     "hotkey": "H"
+    }
+   ]
+  },
+  {
+   "id": "U-F01-G24",
+   "officerId": "G06",
+   "name": "황충",
+   "art": "assets/officer-art/cutout/G06-decided-hA.webp",
+   "head": {
+    "w": 616,
+    "h": 845,
+    "cx": 281,
+    "cy": 98,
+    "side": 154
+   },
+   "troop": "bow",
+   "troopName": "궁병",
+   "countText": "2,500",
+   "maxText": "2,500",
+   "countRatio": 1,
+   "ratings": [
+    {
+     "key": "attack",
+     "label": "공격",
+     "value": 54
+    },
+    {
+     "key": "defense",
+     "label": "방어",
+     "value": 86
+    },
+    {
+     "key": "mobility",
+     "label": "이동",
+     "value": 4
+    },
+    {
+     "key": "range",
+     "label": "사거리",
+     "value": 2
+    }
+   ],
+   "engine": {
+    "name": "맹장(연사)",
+    "resourceName": "기세",
+    "resource": 2,
+    "max": 3
+   },
+   "traits": {
+    "core": {
+     "name": "노당익장",
+     "full": "노당익장",
+     "text": "이동하지 않은 차례의 사격은 거리 2 에서 도병 직사 차단과 엄폐를 무시하고 전열 손상 +1단계.",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png"
+    },
+    "equipped": [],
+    "slots": 3
+   },
+   "klass": {
+    "engine": "맹장(연사)",
+    "branch": "기본",
+    "merit": "실적 0/3",
+    "merits": "광장 0/3 · 용장 0/3",
+    "aptitude": "적성 높음",
+    "troopName": "궁병"
+   },
+   "gauge": 5,
+   "gaugeMax": 100,
+   "qwer": [
+    {
+     "key": "Q",
+     "name": "화살비",
+     "icon": "assets/ui-kit/own/emblem-v1/72/q-bow.png",
+     "cost": null,
+     "state": "disabled",
+     "reason": "적과 붙어 사격 불가"
+    },
+    {
+     "key": "W",
+     "name": "맹장(연사)",
+     "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+     "cost": null,
+     "state": "ready",
+     "reason": "기세 2 / 3"
+    },
+    {
+     "key": "E",
+     "name": "정조준",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+     "cost": 40,
+     "state": "disabled",
+     "reason": "게이지 5/40"
+    },
+    {
+     "key": "R",
+     "name": "백보천양",
+     "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+     "cost": 100,
+     "state": "disabled",
+     "reason": "게이지 5/100"
+    }
+   ],
+   "orders": [
+    {
+     "key": "move",
+     "label": "이동",
+     "hotkey": "M"
+    },
+    {
+     "key": "attack",
+     "label": "공격",
+     "hotkey": "A",
+     "primary": true
+    },
+    {
+     "key": "brace",
+     "label": "방어",
+     "hotkey": "B"
+    },
+    {
+     "key": "wait",
+     "label": "대기",
+     "hotkey": "S"
+    },
+    {
+     "key": "hold",
+     "label": "주둔",
+     "hotkey": "H"
+    }
+   ]
+  }
+ ],
+ "end": {
+  "label": "다음 차례",
+  "remaining": 2,
+  "ready": false
+ },
+ "minimap": {
+  "image": "assets/ui-v3/map/v15-world.webp",
+  "land": {
+   "u0": 0.1631372549019608,
+   "v0": 0.17993079584775087,
+   "u1": 0.8368627450980393,
+   "v1": 0.8200692041522492
+  },
+  "cities": [
+   {
+    "id": "west",
+    "name": "업",
+    "u": 0.2635,
+    "v": 0.7607,
+    "own": true,
+    "capital": true
+   },
+   {
+    "id": "xindu",
+    "name": "신도",
+    "u": 0.4103,
+    "v": 0.5869,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "julu",
+    "name": "거록",
+    "u": 0.3124,
+    "v": 0.6641,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "east",
+    "name": "계",
+    "u": 0.5897,
+    "v": 0.2586,
+    "own": false,
+    "capital": false
+   },
+   {
+    "id": "yijing",
+    "name": "역경",
+    "u": 0.5082,
+    "v": 0.3938,
+    "own": false,
+    "capital": false
+   }
+  ],
+  "units": [
+   {
+    "id": "U-F02-G02",
+    "u": 0.4592,
+    "v": 0.2586,
+    "own": false
+   },
+   {
+    "id": "U-F03-G08",
+    "u": 0.5897,
+    "v": 0.2586,
+    "own": false
+   },
+   {
+    "id": "U-F01-G07",
+    "u": 0.4429,
+    "v": 0.2779,
+    "own": true
+   },
+   {
+    "id": "U-F01-G24",
+    "u": 0.4266,
+    "v": 0.2586,
+    "own": true
+   }
+  ]
+ },
+ "diplomacy": {
+  "screen": "diplomacy",
+  "me": {
+   "name": "조조",
+   "art": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "head": {
+    "w": 522,
+    "h": 888,
+    "cx": 318,
+    "cy": 103,
+    "side": 114
+   },
+   "trust": 50,
+   "threat": 0
+  },
+  "rows": [
+   {
+    "id": "F02",
+    "name": "유비",
+    "contact": true,
+    "state": "WAR",
+    "stateText": "전쟁 중",
+    "icon": "hostile",
+    "art": "assets/officer-art/cutout/G05-decided-hA.webp",
+    "head": {
+     "w": 404,
+     "h": 829,
+     "cx": 252,
+     "cy": 87,
+     "side": 121
+    },
+    "selected": false
+   },
+   {
+    "id": "F03",
+    "name": "손권",
+    "contact": true,
+    "state": "WAR",
+    "stateText": "전쟁 중",
+    "icon": "hostile",
+    "art": "assets/officer-art/cutout/G08-full-hA.webp",
+    "head": {
+     "w": 777,
+     "h": 1173,
+     "cx": 399,
+     "cy": 105,
+     "side": 107
+    },
+    "selected": true
+   }
+  ],
+  "pick": {
+   "id": "F03",
+   "name": "손권",
+   "contact": true,
+   "stateText": "전쟁 중",
+   "icon": "hostile",
+   "warLine": "지금 우리 세력 · 유비와 싸우는 중",
+   "art": "assets/officer-art/cutout/G08-full-hA.webp",
+   "attitude": {
+    "label": "보통",
+    "tone": "neutral",
+    "value": 15
+   },
+   "reasons": [
+    {
+     "text": "공동의 적이 있다",
+     "value": 15,
+     "turnsLeft": null
+    }
+   ],
+   "offers": [
+    {
+     "key": "gift",
+     "label": "선물",
+     "symbol": "friendly",
+     "ok": true,
+     "effect": "인망 −10",
+     "right": "인망 −10",
+     "detail": "인망 −10 · 우리를 보는 마음 +8(차례마다 1씩 줄어듦, 최대 +16)"
+    },
+    {
+     "key": "truce",
+     "label": "휴전 제안",
+     "symbol": "neutral",
+     "ok": true,
+     "effect": "휴전 기본 -15",
+     "right": "수락 받아들일 가능성 높음 · 현재 판정 수락",
+     "detail": "휴전 기본 -15 · 호감 +3.75(우리를 보는 마음 15) · 신용 +0(제안자 신용 50) · 군주 감화 +8 · 군주 중재 +3 · 상대가 밀리고 있음 +20 · 3차례만 전선을 쉼 +10 · 휴전 기본 -15 · 호감 +3.75(우리를 보는 마음 15) · 신용 +0(제안자 신용 50) · 군주 감화 +8 · 군주 중재 +3 · 상대가 밀리고 있음 +20 · 3차례만 전선을 쉼 +10"
+    },
+    {
+     "key": "alliance",
+     "label": "동맹 제안",
+     "symbol": "alliance",
+     "ok": true,
+     "effect": "동맹 기본 -30",
+     "right": "수락 받아들일 가능성 높음 · 현재 판정 수락",
+     "detail": "동맹 기본 -30 · 호감 +3.75(우리를 보는 마음 15) · 신용 +0(제안자 신용 50) · 군주 감화 +8 · 군주 중재 +3 · 상대가 밀리고 있음 +20 · 동맹 기본 -30 · 호감 +3.75(우리를 보는 마음 15) · 신용 +0(제안자 신용 50) · 군주 감화 +8 · 군주 중재 +3 · 상대가 밀리고 있음 +20"
+    }
+   ]
+  }
+ }
+}

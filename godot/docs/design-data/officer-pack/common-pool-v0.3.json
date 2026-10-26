@@ -1,0 +1,2121 @@
+{
+  "schema": "common-pool-v0.3",
+  "status": "TRIAL — Claude 2026-10-04. 사용자 \"특기는 삼국지 특기만 할 게 아니고 알피지·디아블로·오버워치·롤·문명 등 다른 게임 레퍼런스 찾아서 우리 게임 시스템에 접목\", \"전법도 그렇고\", \"이름도 좀 바꿔줘\". 기존 common-traits-v0.2(89, 이름 정리)·common-tactics-v0.1(19)·career-titles-v0.3 공용 내정 6 에 더하는 카드. origin = 삼국지 시리즈 근거(정체성), ref = 다른 장르 작동 방식. 수치 시험값. 효과 RULE 은 엔진 구현 전 '효과 준비 중'(C27 이후 위임). 2026-10-04 보정: 공용 특기 30(고유 핵심 복제 2장 제외), 일기토 문구 제거.",
+  "naming": "이름 = 하는 일이 보이는 쉬운 우리말. 한자·사자성어는 origin.",
+  "dropped": {
+    "계략이 번진다(삼국지11 連環)": "방통 고유 특기 '번지는 계책'과 같은 작동이라 공용에서 뺌",
+    "팔문금쇄진": "조인 고유 전법 '철통 방어진'",
+    "둔전·안력·징수(내정)": "칭호 카드 '병사가 밭을 간다'·'인재의 그물'·'징발령'과 겹침",
+    "미도(내정)": "장로 고유 특기 '쌀을 나누는 교단'",
+    "꺾이지 않는다(삼국지11 不屈)": "방덕 고유 특기 핵심(물러서지 않는다)과 같은 문법 — 공용이 고유 핵심을 복제하면 안 됨(52 문법)",
+    "가시 방패(디아블로 가시)": "하후돈 고유 특기 핵심(맞은 만큼 되갚는다)과 같은 문법"
+  },
+  "traits": [
+    {
+      "id": "CT-V01",
+      "kind": "trait",
+      "name": "보병 강행군",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "text": "보병(방패·창)일 때 이동 +1칸.",
+      "effects": [
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TROOP:BT01"
+        },
+        {
+          "op": "MOVE_MOD",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 1,
+          "duration": 0,
+          "condition": "TROOP:BT02"
+        }
+      ],
+      "origin": "삼국지11 強行",
+      "ref": "문명 기동 진급"
+    },
+    {
+      "id": "CT-V02",
+      "kind": "trait",
+      "name": "험지 행군",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "숲·언덕 이동 비용 −1칸, 매복 첫 공격으로 받는 피해 절반.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ROUGH_MARCH",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 踏破 · 14 慎重",
+      "ref": "문명 '숲 속 이동' 진급"
+    },
+    {
+      "id": "CT-V03",
+      "kind": "trait",
+      "name": "약한 장수를 노린다",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "무용이 자기보다 낮은 장수 부대를 공격하면 주는 피해 +15%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "LOWER_MIGHT_BONUS",
+          "params": {
+            "bonus": 15
+          }
+        }
+      ],
+      "origin": "삼국지11 槍将·弓将·騎将",
+      "ref": "디아블로 '약한 적 추가 피해'"
+    },
+    {
+      "id": "CT-V04",
+      "kind": "trait",
+      "name": "창끝 먼저",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "창병일 때 측면으로 공격받아도 반격을 먼저 한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FLANK_FIRST_STRIKE",
+          "params": {
+            "troop": "BT02"
+          }
+        }
+      ],
+      "origin": "삼국지11 槍神",
+      "ref": "XCOM 경계 사격"
+    },
+    {
+      "id": "CT-V05",
+      "kind": "trait",
+      "name": "붙어서도 쏜다",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "궁병일 때 적이 맞닿아 있어도 2칸 사격을 할 수 있다(피해 ×0.7).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "POINT_BLANK",
+          "params": {
+            "ratio": 70
+          }
+        }
+      ],
+      "origin": "삼국지11 弓神 · 白馬",
+      "ref": "롤 원거리 견제(카이팅)"
+    },
+    {
+      "id": "CT-V06",
+      "kind": "trait",
+      "name": "숲 너머 조준",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "궁병 사격이 숲 속 숨은 적도 맞힌다(매복 해제).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SHOOT_INTO_FOREST",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 射手",
+      "ref": "XCOM 조준경"
+    },
+    {
+      "id": "CT-V07",
+      "kind": "trait",
+      "name": "옆에서 거든다",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "맞닿은 아군이 공격하면 이 부대가 20% 추가 타격(차례 1회, 행동 소모 없음).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ASSIST_STRIKE",
+          "params": {
+            "ratio": 20
+          }
+        }
+      ],
+      "origin": "삼국지11 補佐",
+      "ref": "마블 라이벌즈 팀업 · 롤 보조 공격"
+    },
+    {
+      "id": "CT-V08",
+      "kind": "trait",
+      "name": "피를 마신다",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "준 피해의 10%만큼 부상병이 돌아온다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "LIFESTEAL",
+          "params": {
+            "ratio": 10
+          }
+        }
+      ],
+      "origin": "삼국지11 攻心",
+      "ref": "디아블로 생명력 흡수"
+    },
+    {
+      "id": "CT-V09",
+      "kind": "trait",
+      "name": "연달아 싸운다",
+      "rarity": "LEGENDARY",
+      "classTag": "무용",
+      "text": "적 부대를 패주시키면 이번 차례 행동 한 번 더(차례 1회). 대가: 다음 차례 이동 −2칸.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_KILL",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "CHAIN_ACTION",
+          "params": {
+            "cost": 2
+          }
+        }
+      ],
+      "origin": "삼국지11 連戦",
+      "ref": "XCOM 냉혹함(처치 시 행동 회복)"
+    },
+    {
+      "id": "CT-V10",
+      "kind": "trait",
+      "name": "앞만 보고 친다",
+      "rarity": "LEGENDARY",
+      "classTag": "무용",
+      "text": "주는 피해 +20%. 대가: 받는 피해 +15%.",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": -15,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "origin": "삼국지11 覇王 · 전략판 鋒矢陣",
+      "ref": "슬레이 더 스파이어 '분노'"
+    },
+    {
+      "id": "CT-V11",
+      "kind": "trait",
+      "name": "성벽 깨기",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "text": "성 내구도 피해 +20%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SIEGE_BONUS",
+          "params": {
+            "bonus": 20
+          }
+        }
+      ],
+      "origin": "삼국지11 攻城 · 14 崩壁",
+      "ref": "문명 공성 진급"
+    },
+    {
+      "id": "CT-V12",
+      "kind": "trait",
+      "name": "멀리 던지는 투석",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "투석기 사거리 +1칸.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SIEGE_RANGE",
+          "params": {
+            "extra": 1
+          }
+        }
+      ],
+      "origin": "삼국지11 射程",
+      "ref": "에이지 오브 엠파이어 화학 연구"
+    },
+    {
+      "id": "CT-V13",
+      "kind": "trait",
+      "name": "타고난 운",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "부대가 소멸해도 이 장수는 다치거나 사로잡히지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "LUCKY_ESCAPE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11·14 強運",
+      "ref": "다키스트 던전 죽음의 문턱"
+    },
+    {
+      "id": "CT-V14",
+      "kind": "trait",
+      "name": "피로 뚫는 퇴로",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "text": "패주할 때 사로잡히지 않고 통제 구역 1칸을 무시하고 물러난다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BLOODY_PATH",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11·14 血路",
+      "ref": "롤 점멸"
+    },
+    {
+      "id": "CT-V15",
+      "kind": "trait",
+      "name": "작은 상처 무시",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "text": "정면으로 받은 피해가 병력의 8%를 넘지 못한다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_DEFEND",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DAMAGE_CAP",
+          "params": {
+            "cap": 8
+          }
+        }
+      ],
+      "origin": "삼국지11 金剛",
+      "ref": "패스 오브 엑자일 피해 상한"
+    },
+    {
+      "id": "CT-V17",
+      "kind": "trait",
+      "name": "등나무 갑옷",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "text": "불 말고 받는 피해 −30%. 대가: 불 피해 2배.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RATTAN_ARMOR",
+          "params": {
+            "reduce": 30,
+            "fire": 2
+          }
+        }
+      ],
+      "origin": "삼국지11·14 藤甲 · 전략판 藤甲兵",
+      "ref": "디아블로 저항·약점"
+    },
+    {
+      "id": "CT-V18",
+      "kind": "trait",
+      "name": "동료가 쓰러지면",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "text": "2칸 안 아군이 패주하면 이 부대 사기 한 단계 회복.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "AVENGE_ALLY",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11·14 怒髪",
+      "ref": "오버워치 '복수'"
+    },
+    {
+      "id": "CT-V19",
+      "kind": "trait",
+      "name": "뒤를 막는다",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "교전 이탈 추격 피해가 ×0.5 → ×0.25.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "REARGUARD",
+          "params": {
+            "ratio": 25
+          }
+        }
+      ],
+      "origin": "삼국지14 殿軍",
+      "ref": "XCOM 엄호"
+    },
+    {
+      "id": "CT-V20",
+      "kind": "trait",
+      "name": "멀리 닿는 계략",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "text": "지략 전법(혼란·둔화·사기·불) 사거리 +1칸.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SCHEME_RANGE",
+          "params": {
+            "extra": 1
+          }
+        }
+      ],
+      "origin": "삼국지11 鬼謀",
+      "ref": "도타 '시전 거리'"
+    },
+    {
+      "id": "CT-V21",
+      "kind": "trait",
+      "name": "계략이 빨라진다",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "text": "지략 전법 재사용 대기 −1. 대가: 무용 전법 재사용 대기 +1.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SCHEME_HASTE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 百出",
+      "ref": "롤 스킬 가속"
+    },
+    {
+      "id": "CT-V22",
+      "kind": "trait",
+      "name": "속지 않는다",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "text": "지략이 자기보다 낮은 적의 혼란·거짓 소문·도발에 걸리지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SEE_THROUGH",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 看破 · 規律·沈着",
+      "ref": "도타 마법 저항"
+    },
+    {
+      "id": "CT-V23",
+      "kind": "trait",
+      "name": "꿰뚫어 본다",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "text": "자기와 맞닿은 아군이 상태이상(혼란·둔화·속박)에 걸리지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "INSIGHT_AURA",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 洞察",
+      "ref": "오버워치 정화 · 도타 BKB"
+    },
+    {
+      "id": "CT-V24",
+      "kind": "trait",
+      "name": "모든 계략을 안다",
+      "rarity": "MYTHIC",
+      "classTag": "지략",
+      "text": "지략 전법이 실패하지 않고, 적 지략 전법을 미리 알아 50% 무효. 대가: 무용 전법을 장착할 수 없다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DIVINE_CALC",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 神算",
+      "ref": "도타 링컨 · 하데스 신의 축복"
+    },
+    {
+      "id": "CT-V25",
+      "kind": "trait",
+      "name": "군악대",
+      "rarity": "COMMON",
+      "classTag": "감화",
+      "text": "사기 판정 가중 −5(덜 흔들린다).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MORALE_WARD",
+          "params": {
+            "weight": 5
+          }
+        }
+      ],
+      "origin": "삼국지11 奏楽",
+      "ref": "토탈워 '지휘관 오라'"
+    },
+    {
+      "id": "CT-V26",
+      "kind": "trait",
+      "name": "끝장내기",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "text": "병력 15% 아래 적 부대를 공격하면 그 부대는 반드시 패주.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "EXECUTE",
+          "params": {
+            "at": 15
+          }
+        }
+      ],
+      "origin": "고사 '궁구막추' 반대(몰린 적 끝내기)",
+      "ref": "롤 처형 · 디아블로 결정타"
+    },
+    {
+      "id": "CT-V27",
+      "kind": "trait",
+      "name": "첫 화살 막는 방패",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "text": "출진한 뒤 처음 받는 피해 50까지 막는다(성에 들어가면 다시 채움).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BARRIER",
+          "params": {
+            "amount": 50
+          }
+        }
+      ],
+      "origin": "삼국지14 堅守",
+      "ref": "오버워치 보호막"
+    },
+    {
+      "id": "CT-V28",
+      "kind": "trait",
+      "name": "표적 지정",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "공격한 적에 표식 — 다음 내 차례까지 다른 아군이 그 적을 치면 +10%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_ATTACK",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MARK_TARGET",
+          "params": {
+            "bonus": 10
+          }
+        }
+      ],
+      "origin": "병법 '집중'",
+      "ref": "롤 표식 · 데스티니 약화"
+    },
+    {
+      "id": "CT-V29",
+      "kind": "trait",
+      "name": "쌓이는 기세",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "공격할 때마다 주는 피해 +3%(최대 +15%), 공격하지 않은 차례에 초기화.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "STACKING_FURY",
+          "params": {
+            "per": 3,
+            "max": 15
+          }
+        }
+      ],
+      "origin": "삼국지14 昂揚",
+      "ref": "롤 정복자 · 슬레이 더 스파이어 힘"
+    },
+    {
+      "id": "CT-V31",
+      "kind": "trait",
+      "name": "패배에서 배운다",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "패주한 적이 있으면 경험치 +30%(다음 승리까지).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "LOSS_STREAK_XP",
+          "params": {
+            "bonus": 30
+          }
+        }
+      ],
+      "origin": "고사 '실패는 성공의 어머니'",
+      "ref": "TFT 연패 보너스"
+    },
+    {
+      "id": "CT-V32",
+      "kind": "trait",
+      "name": "가짜 깃발",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "text": "적 시야에 이 부대 병력이 실제의 2배로 보인다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FAKE_BANNERS",
+          "params": {
+            "ratio": 2
+          }
+        }
+      ],
+      "origin": "고사 의병지계(疑兵之計)",
+      "ref": "도타 환영 · XCOM 위장"
+    }
+  ],
+  "tactics": [
+    {
+      "id": "CTA-20",
+      "kind": "tactic",
+      "name": "힘껏 베기",
+      "rarity": "COMMON",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 1,
+      "text": "맞닿은 적 1부대에 강타(피해 ×1.3).",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 30,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "origin": "삼국지13·14 奮戦",
+      "ref": "롤 Q 기본기",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-21",
+      "kind": "tactic",
+      "name": "돌격",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 2,
+      "text": "피해 +20% 공격 + 대상 사기 판정(가중 10).",
+      "effects": [
+        {
+          "op": "DAMAGE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 20,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": -10,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "origin": "삼국지 突撃",
+      "ref": "토탈워 돌격 보너스",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-22",
+      "kind": "tactic",
+      "name": "옆구리 급습",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 2,
+      "text": "측면·후방에서만 — 공격 + 대상 전열 흐트러짐.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FLANK_RAID",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 急襲",
+      "ref": "XCOM 측면",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-23",
+      "kind": "tactic",
+      "name": "일제 사격",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "range": 2,
+      "cooldown": 2,
+      "text": "궁병: 대상과 그 옆 적 1부대에 ×0.7 사격.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "VOLLEY",
+          "params": {
+            "ratio": 70
+          }
+        }
+      ],
+      "origin": "삼국지 斉射",
+      "ref": "디아블로 다중 사격",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-24",
+      "kind": "tactic",
+      "name": "불화살",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "궁병: 대상 칸에 불 + 대상 1차례 이동 불가.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FIRE_ARROW",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지 火矢",
+      "ref": "롤 점화",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-25",
+      "kind": "tactic",
+      "name": "연발 쇠뇌",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "range": 2,
+      "cooldown": 2,
+      "text": "궁병: 두 번 쏜다(각 ×0.6) + 대상 둔화.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "REPEATER",
+          "params": {
+            "ratio": 60
+          }
+        }
+      ],
+      "origin": "제갈량 연노 · 삼국지 連弩",
+      "ref": "롤 연속 공격",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-26",
+      "kind": "tactic",
+      "name": "북 치며 독려",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "range": 0,
+      "cooldown": 3,
+      "text": "맞닿은 아군 모두 사기 한 단계 회복.",
+      "effects": [
+        {
+          "op": "MORALE_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 1,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "origin": "삼국지 鼓舞",
+      "ref": "오버워치 음악(루시우)",
+      "weightTags": [
+        "감화"
+      ]
+    },
+    {
+      "id": "CTA-27",
+      "kind": "tactic",
+      "name": "방패 세우기",
+      "rarity": "COMMON",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 2,
+      "text": "다음 내 차례까지 받는 피해 −25%. 대가: 이동 불가.",
+      "effects": [
+        {
+          "op": "DEFENSE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 25,
+          "duration": 1,
+          "condition": null
+        },
+        {
+          "op": "MOVE_MOD",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": -99,
+          "duration": 1,
+          "condition": null
+        }
+      ],
+      "origin": "삼국지14 鉄壁",
+      "ref": "오버워치 방벽",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-28",
+      "kind": "tactic",
+      "name": "함성",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "range": 0,
+      "cooldown": 2,
+      "text": "맞닿은 적 모두 다음 차례 주는 피해 −15%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "WARCRY",
+          "params": {
+            "reduce": 15
+          }
+        }
+      ],
+      "origin": "삼국지 吶喊",
+      "ref": "디아블로 전투의 함성",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-29",
+      "kind": "tactic",
+      "name": "호통",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 2,
+      "text": "대상 다음 차례 받는 피해 +20%(방어가 무너짐).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SHATTER",
+          "params": {
+            "bonus": 20
+          }
+        }
+      ],
+      "origin": "삼국지 大喝",
+      "ref": "롤 방어력 감소",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-30",
+      "kind": "tactic",
+      "name": "욕설 퍼붓기",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 2,
+      "text": "지략 대결 — 이기면 대상 사기 판정(가중 15) + 주는 피해 −10%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TAUNT_INSULT",
+          "params": {}
+        }
+      ],
+      "origin": "제갈량 왕랑 꾸짖기 · 삼국지 罵声",
+      "ref": "다키스트 던전 스트레스 공격",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-31",
+      "kind": "tactic",
+      "name": "진군 방해",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 2,
+      "text": "대상 다음 차례 이동 −2칸.",
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "SLOWED"
+        }
+      ],
+      "origin": "삼국지 攪乱",
+      "ref": "도타 둔화",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-32",
+      "kind": "tactic",
+      "name": "발목 묶기",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "대상 1차례 이동·교전 이탈 불가.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ROOT",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지 足止 · 조조전 束縛",
+      "ref": "롤 속박",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-33",
+      "kind": "tactic",
+      "name": "혼란 퍼뜨리기",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "지략 대결 — 대상과 그 옆 적 1부대 혼란(다음 차례 공격 불가).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MASS_CONFUSE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지 混乱",
+      "ref": "도타 범위 제어",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-34",
+      "kind": "tactic",
+      "name": "바위 굴리기",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "range": 2,
+      "cooldown": 3,
+      "text": "언덕에 있을 때만 — 아래쪽 적에게 피해 + 전열 흐트러짐.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ROCKSLIDE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지13PK 落石",
+      "ref": "인투 더 브리치 지형 공격",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-35",
+      "kind": "tactic",
+      "name": "부상병 치료",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "range": 1,
+      "cooldown": 3,
+      "text": "맞닿은 아군 1부대 부상병 40 복귀.",
+      "effects": [
+        {
+          "op": "HEAL_TROOPS",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 40,
+          "duration": 0,
+          "condition": null
+        }
+      ],
+      "origin": "삼국지 治療",
+      "ref": "오버워치 치유",
+      "weightTags": [
+        "감화"
+      ]
+    },
+    {
+      "id": "CTA-36",
+      "kind": "tactic",
+      "name": "진정시키기",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "range": 1,
+      "cooldown": 2,
+      "text": "맞닿은 아군 1부대 상태이상 해제 + 전열 한 단계 회복.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "CLEANSE",
+          "params": {
+            "formation": 1
+          }
+        }
+      ],
+      "origin": "삼국지 鎮静",
+      "ref": "도타 정화",
+      "weightTags": [
+        "감화"
+      ]
+    },
+    {
+      "id": "CTA-37",
+      "kind": "tactic",
+      "name": "독 빼는 치료",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "range": 1,
+      "cooldown": 3,
+      "text": "상태이상 해제 + 부상병 30 복귀 + 2차례 사기 고정.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DEEP_CURE",
+          "params": {
+            "heal": 30
+          }
+        }
+      ],
+      "origin": "관우 괄골요독 · 전략판 刮骨療毒",
+      "ref": "오버워치 불사 장치",
+      "weightTags": [
+        "감화"
+      ]
+    },
+    {
+      "id": "CTA-38",
+      "kind": "tactic",
+      "name": "기세로 누르기",
+      "rarity": "EPIC",
+      "classTag": "무용",
+      "range": 0,
+      "cooldown": 3,
+      "text": "맞닿은 적 최대 2부대 다음 차례 통상 공격 불가.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "DISARM_AREA",
+          "params": {
+            "max": 2
+          }
+        }
+      ],
+      "origin": "전략판 盛気凌敵",
+      "ref": "롤 무장 해제",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-39",
+      "kind": "tactic",
+      "name": "칼끝 피하기",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "이 부대와 맞닿은 아군 1부대 받는 피해 −30%(1차례). 대가: 이번 차례 공격 불가.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "EVADE",
+          "params": {
+            "reduce": 30
+          }
+        }
+      ],
+      "origin": "전략판 暫避其鋒",
+      "ref": "다크 소울 구르기",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-40",
+      "kind": "tactic",
+      "name": "칼을 갈며 기다린다",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "range": 0,
+      "cooldown": 3,
+      "text": "2차례 공격 불가·받는 피해 −40% → 3차례째 다음 전법 효과 2배.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BIDE",
+          "params": {}
+        }
+      ],
+      "origin": "여몽 괄목상대 · 전략판 士別三日",
+      "ref": "포켓몬 '참기' · 롤 충전 스킬",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-41",
+      "kind": "tactic",
+      "name": "끌어들여 막기",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "2칸 안 적 모두 이쪽을 보게(도발) + 이 부대 받는 피해 −20%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MASS_TAUNT",
+          "params": {
+            "range": 2,
+            "reduce": 20
+          }
+        }
+      ],
+      "origin": "전략판 守而必固",
+      "ref": "오버워치 탱커 · 와우 도발",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-42",
+      "kind": "tactic",
+      "name": "주변 모두 베기",
+      "rarity": "LEGENDARY",
+      "classTag": "무용",
+      "range": 0,
+      "cooldown": 3,
+      "text": "맞닿은 적 모두 피해. 대가: 이 부대 전열 흐트러짐.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "WHIRLWIND",
+          "params": {}
+        }
+      ],
+      "origin": "전략판 一騎当千",
+      "ref": "디아블로 소용돌이",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-43",
+      "kind": "tactic",
+      "name": "충차로 성문 치기",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "range": 1,
+      "cooldown": 2,
+      "text": "성 내구도 피해 ×2(병력 피해 없음).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RAM",
+          "params": {
+            "mult": 2
+          }
+        }
+      ],
+      "origin": "삼국지14 衝車",
+      "ref": "에이지 오브 엠파이어 충차",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-44",
+      "kind": "tactic",
+      "name": "뇌물",
+      "rarity": "LEGENDARY",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "지략 대결 — 이기면 적 1부대 1차례 행동 안 함. 대가: 인망 −10.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BRIBE",
+          "params": {
+            "fame": 10
+          }
+        }
+      ],
+      "origin": "삼국지13PK 賄賂",
+      "ref": "문명 첩보 · 크루세이더 킹즈 뇌물",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-45",
+      "kind": "tactic",
+      "name": "큰 불",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "range": 2,
+      "cooldown": 3,
+      "text": "불 지르기 상위 — 2칸 번지고 불 칸 부대 사기 판정.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "INFERNO",
+          "params": {
+            "spread": 2
+          }
+        }
+      ],
+      "origin": "삼국지14 業火",
+      "ref": "디아블로 화염 폭풍",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-46",
+      "kind": "tactic",
+      "name": "비늘 진",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 2,
+      "text": "정면 받는 피해 −20%. 대가: 다음 전법 대기 +1.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_SCALE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 魚鱗",
+      "ref": "토탈워 진형",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-47",
+      "kind": "tactic",
+      "name": "화살촉 진",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "range": 0,
+      "cooldown": 2,
+      "text": "주는 피해·돌격 +25%. 대가: 받는 피해 +15%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_ARROW",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14·전략판 鋒矢",
+      "ref": "토탈워 쐐기 진형",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-48",
+      "kind": "tactic",
+      "name": "둥근 진",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "측면·후방 보정 무효, 기병 돌격 보너스를 받지 않는다. 대가: 이동 불가.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_RING",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 方円",
+      "ref": "토탈워 방진",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-49",
+      "kind": "tactic",
+      "name": "학 날개 진",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "아군과 협공하면 대상 전열 판정 가중 +10, 점령 처리 병력 −20%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_CRANE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 鶴翼",
+      "ref": "토탈워 포위",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-50",
+      "kind": "tactic",
+      "name": "긴 뱀 진",
+      "rarity": "UNCOMMON",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 2,
+      "text": "숲·언덕 이동 비용 −1, 그 지형에서 공격 +10%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_SNAKE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 長蛇",
+      "ref": "문명 지형 보너스",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-51",
+      "kind": "tactic",
+      "name": "송곳 진",
+      "rarity": "LEGENDARY",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "이동 +2·통제 구역 1칸 돌파. 대가: 이번 차례 전법 불가·받는 피해 +20%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_DRILL",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 錐行",
+      "ref": "토탈워 질주",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-52",
+      "kind": "tactic",
+      "name": "기러기 진",
+      "rarity": "RARE",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 2,
+      "text": "궁병: 사거리 +1. 대가: 근접으로 받는 피해 +15%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_GEESE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 雁行",
+      "ref": "XCOM 고지대 사격",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-53",
+      "kind": "tactic",
+      "name": "삼태기 진",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "range": 0,
+      "cooldown": 3,
+      "text": "다음 차례 맞닿은 적 지휘관(능력 합 최고) 부대 주는 피해 −30%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "FORMATION_BASKET",
+          "params": {}
+        }
+      ],
+      "origin": "전략판 箕形陣",
+      "ref": "토탈워 지휘관 표적",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-54",
+      "kind": "tactic",
+      "name": "갈고리로 끌어오기",
+      "rarity": "RARE",
+      "classTag": "무용",
+      "range": 2,
+      "cooldown": 3,
+      "text": "2칸 떨어진 적을 맞닿은 칸으로 끌어온다(빈칸일 때) + 전열 판정(가중 10).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "HOOK_PULL",
+          "params": {}
+        }
+      ],
+      "origin": "구겸창(鉤鎌槍)",
+      "ref": "오버워치 로드호그 갈고리 · 도타 퍼지",
+      "weightTags": [
+        "무용"
+      ]
+    },
+    {
+      "id": "CTA-55",
+      "kind": "tactic",
+      "name": "연막",
+      "rarity": "UNCOMMON",
+      "classTag": "지략",
+      "range": 0,
+      "cooldown": 3,
+      "text": "이 부대와 맞닿은 칸 아군이 1차례 사격·성 사격 피해 −40%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ALLIES",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SMOKE",
+          "params": {
+            "reduce": 40
+          }
+        }
+      ],
+      "origin": "봉화·연기 신호",
+      "ref": "XCOM 연막탄",
+      "weightTags": [
+        "지략"
+      ]
+    },
+    {
+      "id": "CTA-56",
+      "kind": "tactic",
+      "name": "한 장수 몰아주기",
+      "rarity": "EPIC",
+      "classTag": "지휘",
+      "range": 2,
+      "cooldown": 3,
+      "text": "아군 1부대 1차례 주는 피해 +30%·받는 피해 −20%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "TARGET",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "EMPOWER",
+          "params": {
+            "atk": 30,
+            "def_": 20
+          }
+        }
+      ],
+      "origin": "고사 '장수에게 힘을 실어 준다'",
+      "ref": "오버워치 나노 강화제",
+      "weightTags": [
+        "지휘"
+      ]
+    },
+    {
+      "id": "CTA-57",
+      "kind": "tactic",
+      "name": "덫 놓기",
+      "rarity": "RARE",
+      "classTag": "지략",
+      "range": 1,
+      "cooldown": 3,
+      "text": "빈 칸 하나에 덫 — 처음 들어온 적은 이동이 끝나고 병력 피해.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "PLACE_TRAP",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지 伏兵 · 함정",
+      "ref": "인투 더 브리치 지뢰 · 롤 티모 버섯",
+      "weightTags": [
+        "지략"
+      ]
+    }
+  ],
+  "domestic": [
+    {
+      "id": "CD-07",
+      "kind": "trait",
+      "name": "장사 수완",
+      "rarity": "COMMON",
+      "classTag": "정무",
+      "text": "태수일 때 도시 생산 +15%.",
+      "effects": [
+        {
+          "op": "CITY_OUTPUT_MOD",
+          "when": "PASSIVE",
+          "target": "CITY",
+          "value": 15,
+          "duration": 0,
+          "condition": null,
+          "resource": "PRODUCTION"
+        }
+      ],
+      "origin": "삼국지11 富豪",
+      "ref": "문명 상업 구역",
+      "domestic": true
+    },
+    {
+      "id": "CD-08",
+      "kind": "trait",
+      "name": "세금 앞당겨 걷기",
+      "rarity": "LEGENDARY",
+      "classTag": "정무",
+      "text": "명령: 다음 3턴 생산을 지금 한 번에 받는다. 대가: 그 3턴 생산 0 + 치안 한 단계 악화.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TAX_ADVANCE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11·14 徴税",
+      "ref": "크루세이더 킹즈 강제 징수 · 프로스트펑크 법령",
+      "domestic": true
+    },
+    {
+      "id": "CD-09",
+      "kind": "trait",
+      "name": "빠른 인수인계",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "새 태수로 앉은 첫 턴에도 산출이 줄지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "SMOOTH_HANDOVER",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지14 能吏",
+      "ref": "올드 월드 총독",
+      "domestic": true
+    },
+    {
+      "id": "CD-10",
+      "kind": "trait",
+      "name": "말 기르기",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "태수일 때 그 성 기병 출진 생산 −50%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "HORSE_BREEDING",
+          "params": {
+            "ratio": 50
+          }
+        }
+      ],
+      "origin": "삼국지11 繁殖",
+      "ref": "문명 말 자원",
+      "domestic": true
+    },
+    {
+      "id": "CD-11",
+      "kind": "trait",
+      "name": "공성 병기 발명",
+      "rarity": "EPIC",
+      "classTag": "지략",
+      "text": "태수일 때 투석기 출진 생산 −30%, 연구 단계가 오를 때마다 공성 피해 +5%(세력).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "INVENTOR",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 発明",
+      "ref": "문명 위대한 기술자",
+      "domestic": true
+    },
+    {
+      "id": "CD-12",
+      "kind": "trait",
+      "name": "이름난 장수",
+      "rarity": "EPIC",
+      "classTag": "감화",
+      "text": "이 장수가 관여한 점령 처리 −1턴, 석방한 포로 인망 +50%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RENOWN",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 名声 · 14 英名",
+      "ref": "크루세이더 킹즈 명성",
+      "domestic": true
+    },
+    {
+      "id": "CD-13",
+      "kind": "trait",
+      "name": "의병 모집",
+      "rarity": "UNCOMMON",
+      "classTag": "감화",
+      "text": "치안이 안정이면 그 성 예비병 증가 +30%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "VOLUNTEERS",
+          "params": {
+            "bonus": 30
+          }
+        }
+      ],
+      "origin": "삼국지14 召募",
+      "ref": "문명 징병",
+      "domestic": true
+    },
+    {
+      "id": "CD-14",
+      "kind": "trait",
+      "name": "어진 정치",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "그 성 치안이 저절로 나빠지지 않는다(사건·전법 제외).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BENEVOLENT_RULE",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지 仁政",
+      "ref": "림월드 기분 보정",
+      "domestic": true
+    },
+    {
+      "id": "CD-15",
+      "kind": "trait",
+      "name": "도적 소탕",
+      "rarity": "UNCOMMON",
+      "classTag": "무용",
+      "text": "그 성과 3칸 안에 도적 사건이 일어나지 않는다.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "BANDIT_SWEEP",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지 威圧·慰撫",
+      "ref": "스텔라리스 치안 부대",
+      "domestic": true
+    },
+    {
+      "id": "CD-16",
+      "kind": "trait",
+      "name": "하늘에 비는 제사",
+      "rarity": "LEGENDARY",
+      "classTag": "감화",
+      "text": "그 성은 재해 사건을 받지 않는다. 대가: 세력 과학 −15%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "RITUAL",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지 祈願·風水",
+      "ref": "문명 신앙 · 프로스트펑크 신앙",
+      "domestic": true
+    },
+    {
+      "id": "CD-17",
+      "kind": "trait",
+      "name": "이민족과 친교",
+      "rarity": "MYTHIC",
+      "classTag": "감화",
+      "text": "그 성 이웃 이민족 사건이 모두 우호로 바뀌고 용병(기병 100)을 부를 수 있다. 대가: 그 성 인망 산출 −30%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "TRIBAL_FRIEND",
+          "params": {}
+        }
+      ],
+      "origin": "삼국지11 親羌·親烏·親越·親蛮",
+      "ref": "문명 도시국가 종주국",
+      "domestic": true
+    },
+    {
+      "id": "CD-18",
+      "kind": "trait",
+      "name": "성벽 보수",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "성 내구도 회복 ×1.5.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "REPAIR_BONUS",
+          "params": {
+            "mult": 1.5
+          }
+        }
+      ],
+      "origin": "삼국지 築城·改修",
+      "ref": "에이지 오브 엠파이어 석공술",
+      "domestic": true
+    },
+    {
+      "id": "CD-19",
+      "kind": "trait",
+      "name": "의술",
+      "rarity": "UNCOMMON",
+      "classTag": "정무",
+      "text": "그 성 부상병 회복 +30%.",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "MEDICINE",
+          "params": {
+            "bonus": 30
+          }
+        }
+      ],
+      "origin": "화타 · 삼국지 醫術",
+      "ref": "문명 병원(급수 시설)",
+      "domestic": true
+    },
+    {
+      "id": "CD-20",
+      "kind": "trait",
+      "name": "이웃 시설 덕",
+      "rarity": "RARE",
+      "classTag": "정무",
+      "text": "그 성에 시설이 2개 이상이면 산출 +10%(시설 3개면 +15%).",
+      "effects": [
+        {
+          "op": "RULE",
+          "when": "PASSIVE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "rule": "ADJACENCY_BONUS",
+          "params": {}
+        }
+      ],
+      "origin": "고사 '상부상조'",
+      "ref": "문명 특화 구역 인접 보너스",
+      "domestic": true
+    }
+  ]
+}

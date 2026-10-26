@@ -1,0 +1,142 @@
+[
+  {
+    "eventSeedId": "EVT-F03-P01-01",
+    "policyId": "POL-F03-CORE-01",
+    "factionId": "F03",
+    "scale": "EVENT",
+    "title": "두 장수, 하나의 전선",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "출신 또는 연공이 다른 장수들이 동일 전선에 배치된다",
+      "총지휘권 또는 선봉권이 불명확하다",
+      "출정이 임박해 있다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "집결 후 출정 전이며 중재 회합과 명령 전달 시간이 남아 있을 때",
+    "playerChoices": [
+      "총지휘관 한 명을 정한다",
+      "수군과 육군의 지휘를 분리한다",
+      "목표별 독립 전역을 허용한다",
+      "군의를 열어 공동 계획을 세운다",
+      "출정을 연기하고 관계를 조정한다"
+    ],
+    "costInputs": [
+      "회의 시간",
+      "명령 전달 시간",
+      "부대 재편성 시간",
+      "출정 지연"
+    ],
+    "risks": [
+      "명령 충돌과 지원 지연",
+      "공적 다툼과 독자 행동",
+      "권한을 잃은 장수와 추종 병력의 반발",
+      "적의 각개 대응"
+    ],
+    "counterplay": [
+      "적이 분리되거나 지원이 늦은 부대를 각개 대응한다"
+    ],
+    "failureTraces": [
+      "공동지휘 경험",
+      "연공 갈등",
+      "양보의 기억",
+      "모욕의 기억",
+      "향후 대화와 선택지에 남는 관계 반응"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "각 장수의 담당 영역",
+      "지휘권 충돌",
+      "출정 시점",
+      "예상 지연"
+    ],
+    "forbiddenAutoResolve": [
+      "손권의 매력 수치만으로 갈등을 제거할 수 없다",
+      "팝업 선택만으로 지휘관 임명·부대 배치·충성·관계 해결을 확정할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "decisionAuthority": null,
+    "commitmentScope": null,
+    "branchConsequences": [],
+    "persistentPoliticalTrace": null,
+    "missingFields": [
+      "주유·정보의 긴장과 공동 군사행동 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "손권·주유·손책과 상대 장수의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "강변 군영·항구도시의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "EVENT 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  },
+  {
+    "eventSeedId": "SIT-F03-P01-02",
+    "policyId": "POL-F03-CORE-01",
+    "factionId": "F03",
+    "scale": "SITUATION",
+    "title": "객장에게 맡길 강 어귀",
+    "sourceRefs": [],
+    "projectLockRefs": [],
+    "worldConditions": [
+      "새 강변·호수·산악 접경지를 확보했다",
+      "중앙의 직접 통치가 어렵다",
+      "토착세력과 외래 장수의 관계가 불안하다",
+      "후보 장수가 도착한 뒤 주민·병력·수로를 파악해야 한다",
+      "전임자가 급사하거나 포로가 되면 지휘 혼란이 지속된다"
+    ],
+    "castSelectors": [],
+    "locationSelectors": [],
+    "triggerWindow": "후보 장수의 현지 도착부터 주민·병력·수로 파악과 권한 인계가 끝나기 전까지",
+    "playerChoices": [
+      "객장에게 군정권을 위임한다",
+      "현지 장수와 객장을 공동 배치한다",
+      "군사권과 민정권을 분리한다",
+      "토착 대표와 제한 자치협약을 맺는다",
+      "중앙 직할로 두고 지휘관을 순환시킨다"
+    ],
+    "costInputs": [
+      "담당 장수의 이동",
+      "현지 파악 시간",
+      "권한 인계 시간",
+      "현지 관계 조정"
+    ],
+    "risks": [
+      "토착세력이 반발한다",
+      "중앙 명령이 약화된다",
+      "전임자의 병력과 빈객이 새 지휘관을 인정하지 않는다",
+      "적 사절이 현지 세력과 접촉한다"
+    ],
+    "counterplay": [
+      "적 사절이 토착세력 또는 전임자 계열과 접촉한다"
+    ],
+    "failureTraces": [
+      "지역 지휘 전통",
+      "지역 파벌",
+      "전임자의 유산 부대",
+      "개인에게 충성하는 병력"
+    ],
+    "followupRefs": [],
+    "uiMinimum": [
+      "담당 지역"
+    ],
+    "forbiddenAutoResolve": [
+      "팝업 선택만으로 객장 임명·현지 배치·보급·충성·관계 조정을 완료할 수 없다"
+    ],
+    "runtimeStatus": "PROPOSAL_INTERNAL",
+    "phaseState": null,
+    "sustainConditions": [],
+    "escalationConditions": [],
+    "deescalationConditions": [],
+    "endConditions": [],
+    "missingFields": [
+      "객장 초빙·지역 위임·주유에서 노숙으로 이어지는 승계 앵커의 canonical source ID가 없어 sourceRefs를 비웠다",
+      "canonical project lock ID가 없어 projectLockRefs를 비웠다",
+      "손권·주유·노숙·제갈근과 현지 장수의 canonical officer ID가 없어 castSelectors를 비웠다",
+      "강어귀·나루터·산지 진입로·관할 도시의 canonical map ID가 없어 locationSelectors를 비웠다",
+      "후속 결과의 canonical event ID가 없어 followupRefs를 비웠다",
+      "uiMinimum 원문의 나머지 항목을 회수하지 못했다",
+      "SITUATION 추가 필드가 기존 카드에서 별도 값으로 정의되지 않았다"
+    ]
+  }
+]
+

@@ -1,0 +1,1205 @@
+{
+  "note": "C398: 100 visually measured head anchors. head = [center x / width, center y / height, head width / image width]; skull and hair included; crowns and long beards excluded. Reviewed in c398/head-*.jpg. Color retains cutout/heads.json.",
+  "files": {
+    "G01": {
+      "src": "/assets/officer-art/stone/G01.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5446,
+        0.3374,
+        0.3556
+      ]
+    },
+    "G02": {
+      "src": "/assets/officer-art/stone/G02.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4911,
+        0.2597,
+        0.3797
+      ]
+    },
+    "G03": {
+      "src": "/assets/officer-art/stone/G03.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5804,
+        0.1803,
+        0.3496
+      ]
+    },
+    "G04": {
+      "src": "/assets/officer-art/stone/G04.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6295,
+        0.1737,
+        0.3857
+      ]
+    },
+    "G05": {
+      "src": "/assets/officer-art/stone/G05.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.625,
+        0.1899,
+        0.3857
+      ]
+    },
+    "G06": {
+      "src": "/assets/officer-art/stone/G06.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6027,
+        0.1999,
+        0.4158
+      ]
+    },
+    "G07": {
+      "src": "/assets/officer-art/stone/G07.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6384,
+        0.2441,
+        0.3254
+      ]
+    },
+    "G08": {
+      "src": "/assets/officer-art/stone/G08.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5045,
+        0.1809,
+        0.3375
+      ]
+    },
+    "G09": {
+      "src": "/assets/officer-art/stone/G09.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5982,
+        0.1978,
+        0.3676
+      ]
+    },
+    "G10": {
+      "src": "/assets/officer-art/stone/G10.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4866,
+        0.2236,
+        0.3616
+      ]
+    },
+    "G11": {
+      "src": "/assets/officer-art/stone/G11.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.442,
+        0.1952,
+        0.3737
+      ]
+    },
+    "G12": {
+      "src": "/assets/officer-art/stone/G12.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6071,
+        0.1826,
+        0.3496
+      ]
+    },
+    "G13": {
+      "src": "/assets/officer-art/stone/G13.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5982,
+        0.2219,
+        0.3074
+      ]
+    },
+    "G14": {
+      "src": "/assets/officer-art/stone/G14.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4554,
+        0.2074,
+        0.3616
+      ]
+    },
+    "G15": {
+      "src": "/assets/officer-art/stone/G15.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6027,
+        0.1975,
+        0.4158
+      ]
+    },
+    "G16": {
+      "src": "/assets/officer-art/stone/G16.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5804,
+        0.2068,
+        0.3737
+      ]
+    },
+    "G17": {
+      "src": "/assets/officer-art/stone/G17.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5491,
+        0.164,
+        0.3074
+      ]
+    },
+    "G18": {
+      "src": "/assets/officer-art/stone/G18.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5759,
+        0.2182,
+        0.2893
+      ]
+    },
+    "G19": {
+      "src": "/assets/officer-art/stone/G19.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5536,
+        0.2477,
+        0.3435
+      ]
+    },
+    "G20": {
+      "src": "/assets/officer-art/stone/G20.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6384,
+        0.216,
+        0.3737
+      ]
+    },
+    "G21": {
+      "src": "/assets/officer-art/stone/G21.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4598,
+        0.1862,
+        0.3676
+      ]
+    },
+    "G22": {
+      "src": "/assets/officer-art/stone/G22.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6205,
+        0.2084,
+        0.3435
+      ]
+    },
+    "G23": {
+      "src": "/assets/officer-art/stone/G23.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6027,
+        0.2835,
+        0.4098
+      ]
+    },
+    "G24": {
+      "src": "/assets/officer-art/stone/G24.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4509,
+        0.2474,
+        0.3496
+      ]
+    },
+    "G25": {
+      "src": "/assets/officer-art/stone/G25.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5312,
+        0.1761,
+        0.4279
+      ]
+    },
+    "G26": {
+      "src": "/assets/officer-art/stone/G26.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4375,
+        0.2127,
+        0.3917
+      ]
+    },
+    "G27": {
+      "src": "/assets/officer-art/stone/G27.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6027,
+        0.1978,
+        0.3254
+      ]
+    },
+    "G28": {
+      "src": "/assets/officer-art/stone/G28.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5446,
+        0.215,
+        0.3496
+      ]
+    },
+    "G29": {
+      "src": "/assets/officer-art/stone/G29.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6027,
+        0.1875,
+        0.3013
+      ]
+    },
+    "G30": {
+      "src": "/assets/officer-art/stone/G30.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5536,
+        0.2269,
+        0.3857
+      ]
+    },
+    "G31": {
+      "src": "/assets/officer-art/stone/G31.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5402,
+        0.178,
+        0.3496
+      ]
+    },
+    "G32": {
+      "src": "/assets/officer-art/stone/G32.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5134,
+        0.207,
+        0.3254
+      ]
+    },
+    "G33": {
+      "src": "/assets/officer-art/stone/G33.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5223,
+        0.2098,
+        0.4038
+      ]
+    },
+    "G34": {
+      "src": "/assets/officer-art/stone/G34.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6786,
+        0.1851,
+        0.2592
+      ]
+    },
+    "G35": {
+      "src": "/assets/officer-art/stone/G35.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4464,
+        0.178,
+        0.3917
+      ]
+    },
+    "G36": {
+      "src": "/assets/officer-art/stone/G36.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4777,
+        0.1882,
+        0.3315
+      ]
+    },
+    "G37": {
+      "src": "/assets/officer-art/stone/G37.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5848,
+        0.2005,
+        0.3616
+      ]
+    },
+    "G38": {
+      "src": "/assets/officer-art/stone/G38.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5134,
+        0.22,
+        0.3857
+      ]
+    },
+    "G39": {
+      "src": "/assets/officer-art/stone/G39.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5402,
+        0.227,
+        0.4279
+      ]
+    },
+    "G40": {
+      "src": "/assets/officer-art/stone/G40.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.558,
+        0.2309,
+        0.3556
+      ]
+    },
+    "G41": {
+      "src": "/assets/officer-art/stone/G41.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4955,
+        0.2349,
+        0.4098
+      ]
+    },
+    "G42": {
+      "src": "/assets/officer-art/stone/G42.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6205,
+        0.254,
+        0.3556
+      ]
+    },
+    "G43": {
+      "src": "/assets/officer-art/stone/G43.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4732,
+        0.184,
+        0.4098
+      ]
+    },
+    "G44": {
+      "src": "/assets/officer-art/stone/G44.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5536,
+        0.1436,
+        0.3435
+      ]
+    },
+    "G45": {
+      "src": "/assets/officer-art/stone/G45.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5223,
+        0.1826,
+        0.3496
+      ]
+    },
+    "G46": {
+      "src": "/assets/officer-art/stone/G46.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5089,
+        0.2375,
+        0.4038
+      ]
+    },
+    "G47": {
+      "src": "/assets/officer-art/stone/G47.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4732,
+        0.2394,
+        0.3254
+      ]
+    },
+    "G48": {
+      "src": "/assets/officer-art/stone/G48.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4598,
+        0.2338,
+        0.3435
+      ]
+    },
+    "G49": {
+      "src": "/assets/officer-art/stone/G49.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5402,
+        0.2134,
+        0.3797
+      ]
+    },
+    "G50": {
+      "src": "/assets/officer-art/stone/G50.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5625,
+        0.164,
+        0.3074
+      ]
+    },
+    "G51": {
+      "src": "/assets/officer-art/stone/G51.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6384,
+        0.1727,
+        0.3616
+      ]
+    },
+    "G52": {
+      "src": "/assets/officer-art/stone/G52.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6161,
+        0.1941,
+        0.3074
+      ]
+    },
+    "G53": {
+      "src": "/assets/officer-art/stone/G53.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5446,
+        0.2043,
+        0.5062
+      ]
+    },
+    "G54": {
+      "src": "/assets/officer-art/stone/G54.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5536,
+        0.1993,
+        0.4701
+      ]
+    },
+    "G55": {
+      "src": "/assets/officer-art/stone/G55.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6295,
+        0.1812,
+        0.3315
+      ]
+    },
+    "G56": {
+      "src": "/assets/officer-art/stone/G56.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5268,
+        0.1919,
+        0.3496
+      ]
+    },
+    "G57": {
+      "src": "/assets/officer-art/stone/G57.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5759,
+        0.1296,
+        0.3013
+      ]
+    },
+    "G58": {
+      "src": "/assets/officer-art/stone/G58.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5491,
+        0.2137,
+        0.3737
+      ]
+    },
+    "G59": {
+      "src": "/assets/officer-art/stone/G59.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5357,
+        0.2372,
+        0.4098
+      ]
+    },
+    "G60": {
+      "src": "/assets/officer-art/stone/G60.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5179,
+        0.2019,
+        0.4219
+      ]
+    },
+    "G61": {
+      "src": "/assets/officer-art/stone/G61.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6071,
+        0.1962,
+        0.3978
+      ]
+    },
+    "G62": {
+      "src": "/assets/officer-art/stone/G62.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4688,
+        0.2233,
+        0.4098
+      ]
+    },
+    "G63": {
+      "src": "/assets/officer-art/stone/G63.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.558,
+        0.2489,
+        0.4942
+      ]
+    },
+    "G64": {
+      "src": "/assets/officer-art/stone/G64.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4732,
+        0.1716,
+        0.2953
+      ]
+    },
+    "G65": {
+      "src": "/assets/officer-art/stone/G65.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5848,
+        0.2072,
+        0.452
+      ]
+    },
+    "G66": {
+      "src": "/assets/officer-art/stone/G66.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5402,
+        0.171,
+        0.3074
+      ]
+    },
+    "G67": {
+      "src": "/assets/officer-art/stone/G67.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5134,
+        0.2233,
+        0.3676
+      ]
+    },
+    "G68": {
+      "src": "/assets/officer-art/stone/G68.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4911,
+        0.2379,
+        0.3978
+      ]
+    },
+    "G69": {
+      "src": "/assets/officer-art/stone/G69.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5938,
+        0.1915,
+        0.3556
+      ]
+    },
+    "G70": {
+      "src": "/assets/officer-art/stone/G70.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5982,
+        0.1819,
+        0.3616
+      ]
+    },
+    "G71": {
+      "src": "/assets/officer-art/stone/G71.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.567,
+        0.2158,
+        0.4641
+      ]
+    },
+    "G72": {
+      "src": "/assets/officer-art/stone/G72.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5804,
+        0.2261,
+        0.4882
+      ]
+    },
+    "G73": {
+      "src": "/assets/officer-art/stone/G73.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6116,
+        0.2274,
+        0.4641
+      ]
+    },
+    "G74": {
+      "src": "/assets/officer-art/stone/G74.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6384,
+        0.1922,
+        0.3435
+      ]
+    },
+    "G75": {
+      "src": "/assets/officer-art/stone/G75.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5536,
+        0.3782,
+        0.5424
+      ]
+    },
+    "G76": {
+      "src": "/assets/officer-art/stone/G76.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4777,
+        0.2393,
+        0.458
+      ]
+    },
+    "G77": {
+      "src": "/assets/officer-art/stone/G77.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.558,
+        0.1971,
+        0.3375
+      ]
+    },
+    "G78": {
+      "src": "/assets/officer-art/stone/G78.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6071,
+        0.1935,
+        0.3194
+      ]
+    },
+    "G79": {
+      "src": "/assets/officer-art/stone/G79.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5625,
+        0.2432,
+        0.4701
+      ]
+    },
+    "G80": {
+      "src": "/assets/officer-art/stone/G80.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4866,
+        0.2382,
+        0.3917
+      ]
+    },
+    "G81": {
+      "src": "/assets/officer-art/stone/G81.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5312,
+        0.2266,
+        0.3917
+      ]
+    },
+    "G82": {
+      "src": "/assets/officer-art/stone/G82.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5134,
+        0.2346,
+        0.458
+      ]
+    },
+    "G83": {
+      "src": "/assets/officer-art/stone/G83.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5893,
+        0.2132,
+        0.5123
+      ]
+    },
+    "G84": {
+      "src": "/assets/officer-art/stone/G84.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5759,
+        0.2631,
+        0.4882
+      ]
+    },
+    "G85": {
+      "src": "/assets/officer-art/stone/G85.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4866,
+        0.1909,
+        0.3676
+      ]
+    },
+    "G86": {
+      "src": "/assets/officer-art/stone/G86.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4866,
+        0.237,
+        0.5002
+      ]
+    },
+    "G87": {
+      "src": "/assets/officer-art/stone/G87.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5446,
+        0.2527,
+        0.3797
+      ]
+    },
+    "G88": {
+      "src": "/assets/officer-art/stone/G88.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4955,
+        0.2178,
+        0.4701
+      ]
+    },
+    "G89": {
+      "src": "/assets/officer-art/stone/G89.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5848,
+        0.2163,
+        0.3676
+      ]
+    },
+    "G90": {
+      "src": "/assets/officer-art/stone/G90.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5714,
+        0.2786,
+        0.458
+      ]
+    },
+    "G91": {
+      "src": "/assets/officer-art/stone/G91.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5312,
+        0.2326,
+        0.4098
+      ]
+    },
+    "G92": {
+      "src": "/assets/officer-art/stone/G92.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5045,
+        0.2389,
+        0.4641
+      ]
+    },
+    "G93": {
+      "src": "/assets/officer-art/stone/G93.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5714,
+        0.2984,
+        0.4339
+      ]
+    },
+    "G94": {
+      "src": "/assets/officer-art/stone/G94.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.6384,
+        0.2313,
+        0.3917
+      ]
+    },
+    "G95": {
+      "src": "/assets/officer-art/stone/G95.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4241,
+        0.2487,
+        0.3676
+      ]
+    },
+    "G96": {
+      "src": "/assets/officer-art/stone/G96.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5045,
+        0.2433,
+        0.5123
+      ]
+    },
+    "G97": {
+      "src": "/assets/officer-art/stone/G97.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.4554,
+        0.2482,
+        0.5062
+      ]
+    },
+    "G98": {
+      "src": "/assets/officer-art/stone/G98.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5848,
+        0.228,
+        0.452
+      ]
+    },
+    "G99": {
+      "src": "/assets/officer-art/stone/G99.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5848,
+        0.2438,
+        0.4158
+      ]
+    },
+    "G100": {
+      "src": "/assets/officer-art/stone/G100.webp",
+      "size": [
+        448,
+        864
+      ],
+      "head": [
+        0.5357,
+        0.2313,
+        0.4761
+      ]
+    }
+  }
+}

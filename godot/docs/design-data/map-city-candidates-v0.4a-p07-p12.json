@@ -1,0 +1,525 @@
+{
+  "schemaVersion": "GEO-DB-v0.4A-2",
+  "mapBoundary": {
+    "mainMap": "64x40",
+    "majorCityCount": 24,
+    "factionStartMode": "RANDOM_ONE_CITY_EACH",
+    "coordinateStatus": "TEST_VALUE",
+    "first3Map": "SEPARATE_18x14_TEST_MAP"
+  },
+  "records": [
+    {
+      "id": "CITY-P07",
+      "historicalName": {
+        "ko": "강주",
+        "hanzi": "江州",
+        "aliases": [
+          "巴郡中心"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "YANGTZE_JIALING_CONFLUENCE",
+          "BASHU_EAST",
+          "RIVER_CLIFF"
+        ],
+        "coordinate": "TEST_VALUE",
+        "confidence": "HIGH"
+      },
+      "regionId": "MR-05",
+      "borderRegionIds": [
+        "MR-06",
+        "MR-12"
+      ],
+      "waterwayTags": [
+        "UPPER_YANGTZE",
+        "JIALING_RIVER",
+        "MAJOR_CONFLUENCE"
+      ],
+      "roadPassTags": [
+        "CHENGDU_EAST_ROUTE",
+        "YANGTZE_GORGE_ROUTE",
+        "NANZHONG_APPROACH"
+      ],
+      "terrainVerbs": [
+        "CONVERGE",
+        "BRANCH",
+        "HOLD_RIVER_CLIFFS"
+      ],
+      "strategicFunctions": [
+        "BASHU_EAST_GATE",
+        "RIVER_NETWORK_HUB",
+        "THREE_REGION_RELAY"
+      ],
+      "amplifiedClimateLayer": {
+        "status": "PROJECT_LOCK",
+        "tags": [
+          "GIANT_TREE_SEA_EDGE",
+          "AMPLIFIED_CLIFFS",
+          "MISTED_GORGES"
+        ]
+      },
+      "randomStartTags": {
+        "profile": "RIVER_CONFLUENCE",
+        "development": "TEST_VALUE",
+        "initialInfluence": "TEST_VALUE",
+        "connectivity": "TEST_VALUE",
+        "chokeDependency": "MEDIUM_TEST",
+        "exposure": "MEDIUM_TEST",
+        "climateBurden": "MEDIUM_TEST",
+        "startEligibility": "PENDING_TEST"
+      },
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F08",
+          "relation": "LIUZHANG_BAJUN",
+          "startBinding": false
+        },
+        {
+          "factionId": "F02",
+          "relation": "SHUHAN_EASTERN_HUB",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "SRC-HHS-JUNGUOZHI",
+        "SRC-SGZ",
+        "SRC-HYZG",
+        "SRC-SJZ",
+        "REF-CHGIS",
+        "REF-SRTM",
+        "REF-HYDROSHEDS"
+      ],
+      "status": {
+        "record": "PROJECT_PROPOSAL",
+        "coordinate": "TEST_VALUE",
+        "metrics": "TEST_VALUE",
+        "masterApproved": false
+      }
+    },
+    {
+      "id": "CITY-P08",
+      "historicalName": {
+        "ko": "건녕",
+        "hanzi": "建寧",
+        "aliases": [
+          "建寧郡",
+          "味縣圈"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "NANZHONG_EAST",
+          "HIGHLAND_BASIN",
+          "VALLEY_NETWORK"
+        ],
+        "coordinate": "TEST_VALUE",
+        "confidence": "MEDIUM"
+      },
+      "regionId": "MR-06",
+      "borderRegionIds": [],
+      "waterwayTags": [
+        "HIGHLAND_RIVERS",
+        "VALLEY_WATER"
+      ],
+      "roadPassTags": [
+        "NANZHONG_INTERNAL_ROUTE",
+        "ZANGKE_LINK",
+        "YUEXI_LINK",
+        "YUNNAN_ROUTE"
+      ],
+      "terrainVerbs": [
+        "ASCEND",
+        "MEDIATE",
+        "FOLLOW_VALLEYS"
+      ],
+      "strategicFunctions": [
+        "NANZHONG_EAST_HUB",
+        "HIGHLAND_JUNCTION",
+        "ADMINISTRATION_CANDIDATE"
+      ],
+      "amplifiedClimateLayer": {
+        "status": "PROJECT_PROPOSAL",
+        "tags": [
+          "MIST_HIGHLAND",
+          "BAMBOO_FOREST",
+          "DRY_VALLEY",
+          "PLATEAU_BASIN"
+        ]
+      },
+      "randomStartTags": {
+        "profile": "HIGHLAND_NODE",
+        "development": "TEST_VALUE",
+        "initialInfluence": "TEST_VALUE",
+        "connectivity": "TEST_VALUE",
+        "chokeDependency": "MEDIUM_HIGH_TEST",
+        "exposure": "LOW_MEDIUM_TEST",
+        "climateBurden": "MEDIUM_HIGH_TEST",
+        "startEligibility": "PENDING_TEST"
+      },
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F10",
+          "relation": "NANZHONG_CULTURAL_ANCHOR",
+          "startBinding": false
+        },
+        {
+          "factionId": "F02",
+          "relation": "SHUHAN_NANZHONG_RELATION",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "SRC-SGZ",
+        "SRC-HYZG",
+        "SRC-HHS-XINANYI",
+        "REF-CHGIS",
+        "REF-NANZHONG-HERMAN-2009",
+        "REF-SRTM",
+        "REF-HYDROSHEDS"
+      ],
+      "status": {
+        "record": "PROJECT_PROPOSAL",
+        "coordinate": "TEST_VALUE",
+        "metrics": "TEST_VALUE",
+        "masterApproved": false
+      }
+    },
+    {
+      "id": "CITY-P09",
+      "historicalName": {
+        "ko": "진양",
+        "hanzi": "晉陽",
+        "aliases": [
+          "太原郡中心"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "FEN_BASIN",
+          "TAIHANG_WEST",
+          "BINGZHOU_CORE"
+        ],
+        "coordinate": "TEST_VALUE",
+        "confidence": "HIGH"
+      },
+      "regionId": "MR-07",
+      "borderRegionIds": [
+        "MR-09"
+      ],
+      "waterwayTags": [
+        "FEN_RIVER",
+        "SHANXI_BASIN_WATER"
+      ],
+      "roadPassTags": [
+        "FEN_VALLEY_AXIS",
+        "TAIHANG_PASSES",
+        "NORTHERN_FRONTIER_ROUTE"
+      ],
+      "terrainVerbs": [
+        "DESCEND_VALLEY",
+        "HOLD_PASSES",
+        "WATCH_HIGHLANDS"
+      ],
+      "strategicFunctions": [
+        "BINGZHOU_CORE",
+        "VALLEY_HUB",
+        "TAIHANG_WEST_GATE"
+      ],
+      "amplifiedClimateLayer": {
+        "status": "PROJECT_LOCK",
+        "tags": [
+          "AMPLIFIED_COLD",
+          "SNOW_BASIN",
+          "FROZEN_HIGHLAND_EDGE"
+        ]
+      },
+      "randomStartTags": {
+        "profile": "COLD_BASIN_CORE",
+        "development": "TEST_VALUE",
+        "initialInfluence": "TEST_VALUE",
+        "connectivity": "TEST_VALUE",
+        "chokeDependency": "MEDIUM_TEST",
+        "exposure": "LOW_MEDIUM_TEST",
+        "climateBurden": "MEDIUM_HIGH_TEST",
+        "startEligibility": "PENDING_TEST"
+      },
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F05",
+          "relation": "BINGZHOU_ORIGIN",
+          "startBinding": false
+        },
+        {
+          "factionId": "F04",
+          "relation": "BINGZHOU_SPHERE_LINK",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "SRC-HHS-JUNGUOZHI",
+        "SRC-SGZ",
+        "SRC-SJZ",
+        "REF-CHGIS",
+        "REF-SRTM",
+        "REF-HYDROSHEDS"
+      ],
+      "status": {
+        "record": "PROJECT_PROPOSAL",
+        "coordinate": "TEST_VALUE",
+        "metrics": "TEST_VALUE",
+        "masterApproved": false
+      }
+    },
+    {
+      "id": "CITY-P10",
+      "historicalName": {
+        "ko": "계",
+        "hanzi": "薊",
+        "aliases": [
+          "幽州中心"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "YANSHAN_SOUTH",
+          "HEBEI_NORTH",
+          "YOUZHOU_CORE"
+        ],
+        "coordinate": "TEST_VALUE",
+        "confidence": "HIGH"
+      },
+      "regionId": "MR-08",
+      "borderRegionIds": [
+        "MR-09"
+      ],
+      "waterwayTags": [
+        "NORTHERN_PLAIN_RIVERS",
+        "YANSHAN_FOOTHILL_WATER"
+      ],
+      "roadPassTags": [
+        "YANSHAN_PASSES",
+        "LIAOXI_APPROACH",
+        "HEBEI_PLAIN_ROUTE"
+      ],
+      "terrainVerbs": [
+        "WATCH",
+        "MOVE_NORTH",
+        "GUARD_CORRIDOR"
+      ],
+      "strategicFunctions": [
+        "YOUZHOU_CORE",
+        "NORTHERN_GATE",
+        "LIAOXI_HEBEI_JUNCTION"
+      ],
+      "amplifiedClimateLayer": {
+        "status": "PROJECT_LOCK",
+        "tags": [
+          "AMPLIFIED_COLD",
+          "SNOWY_WALLS",
+          "WINDSWEPT_PLAIN"
+        ]
+      },
+      "randomStartTags": {
+        "profile": "NORTHERN_GATE",
+        "development": "TEST_VALUE",
+        "initialInfluence": "TEST_VALUE",
+        "connectivity": "TEST_VALUE",
+        "chokeDependency": "MEDIUM_TEST",
+        "exposure": "MEDIUM_TEST",
+        "climateBurden": "MEDIUM_HIGH_TEST",
+        "startEligibility": "PENDING_TEST"
+      },
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F11",
+          "relation": "GONGSUNZAN_YOUZHOU",
+          "startBinding": false
+        },
+        {
+          "factionId": "F04",
+          "relation": "HEBEI_YOUZHOU_CONFLICT",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "SRC-HHS-JUNGUOZHI",
+        "SRC-SGZ",
+        "REF-CHGIS",
+        "REF-SRTM",
+        "REF-HYDROSHEDS"
+      ],
+      "status": {
+        "record": "PROJECT_PROPOSAL",
+        "coordinate": "TEST_VALUE",
+        "metrics": "TEST_VALUE",
+        "masterApproved": false
+      }
+    },
+    {
+      "id": "CITY-P11",
+      "historicalName": {
+        "ko": "양평",
+        "hanzi": "襄平",
+        "aliases": [
+          "遼東郡中心"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "LIAO_PLAIN",
+          "LIAODONG",
+          "REMOTE_FRONTIER"
+        ],
+        "coordinate": "TEST_VALUE",
+        "confidence": "HIGH"
+      },
+      "regionId": "MR-08",
+      "borderRegionIds": [],
+      "waterwayTags": [
+        "LIAO_RIVER_SYSTEM",
+        "NORTHEAST_PLAIN_WATER"
+      ],
+      "roadPassTags": [
+        "LIAOXI_CORRIDOR",
+        "LIAODONG_MOUNTAIN_ROUTE",
+        "NORTHEAST_FRONTIER_ROUTE"
+      ],
+      "terrainVerbs": [
+        "ISOLATE",
+        "ENDURE",
+        "CROSS_FROZEN_PLAIN"
+      ],
+      "strategicFunctions": [
+        "LIAODONG_CORE",
+        "REMOTE_FRONTIER_BASE",
+        "CORRIDOR_TERMINUS"
+      ],
+      "amplifiedClimateLayer": {
+        "status": "PROJECT_LOCK",
+        "tags": [
+          "AMPLIFIED_COLD",
+          "DEEP_SNOW",
+          "FROZEN_RIVER",
+          "LONG_WINTER"
+        ]
+      },
+      "randomStartTags": {
+        "profile": "REMOTE_COLD_FRONTIER",
+        "development": "TEST_VALUE",
+        "initialInfluence": "TEST_VALUE",
+        "connectivity": "TEST_VALUE",
+        "chokeDependency": "HIGH_TEST",
+        "exposure": "LOW_TEST",
+        "climateBurden": "HIGH_TEST",
+        "startEligibility": "PENDING_TEST"
+      },
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F11",
+          "relation": "BROAD_NORTHERN_FRONTIER",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "SRC-HHS-JUNGUOZHI",
+        "SRC-SGZ",
+        "REF-CHGIS",
+        "REF-SRTM",
+        "REF-HYDROSHEDS"
+      ],
+      "status": {
+        "record": "PROJECT_PROPOSAL",
+        "coordinate": "TEST_VALUE",
+        "metrics": "TEST_VALUE",
+        "masterApproved": false
+      }
+    },
+    {
+      "id": "CITY-P12",
+      "historicalName": {
+        "ko": "업",
+        "hanzi": "鄴",
+        "aliases": [
+          "魏郡中心"
+        ]
+      },
+      "sourceLocation": {
+        "tags": [
+          "SOUTH_HEBEI",
+          "TAIHANG_EAST",
+          "ZHANG_RIVER"
+        ],
+        "coordinate": "TEST_VALUE",
+        "confidence": "HIGH"
+      },
+      "regionId": "MR-09",
+      "borderRegionIds": [
+        "MR-10"
+      ],
+      "waterwayTags": [
+        "ZHANG_RIVER_SYSTEM",
+        "SOUTH_HEBEI_PLAIN_WATER"
+      ],
+      "roadPassTags": [
+        "TAIHANG_EAST_EXITS",
+        "HEBEI_PLAIN_ROUTE",
+        "YELLOW_RIVER_APPROACH"
+      ],
+      "terrainVerbs": [
+        "ASSEMBLE",
+        "MOVE_SOUTH",
+        "CONTROL_EXITS"
+      ],
+      "strategicFunctions": [
+        "SOUTH_HEBEI_CORE",
+        "CENTRAL_PLAINS_APPROACH",
+        "TAIHANG_PLAIN_JUNCTION"
+      ],
+      "amplifiedClimateLayer": {
+        "status": "PROJECT_LOCK",
+        "tags": [
+          "AMPLIFIED_COLD",
+          "WINTER_PLAIN",
+          "SNOWY_FORTIFIED_CITY"
+        ]
+      },
+      "randomStartTags": {
+        "profile": "NORTHERN_PLAIN_CORE",
+        "development": "TEST_VALUE",
+        "initialInfluence": "TEST_VALUE",
+        "connectivity": "TEST_VALUE",
+        "chokeDependency": "LOW_MEDIUM_TEST",
+        "exposure": "HIGH_TEST",
+        "climateBurden": "MEDIUM_TEST",
+        "startEligibility": "PENDING_TEST"
+      },
+      "historicalFactionAnchors": [
+        {
+          "factionId": "F04",
+          "relation": "YUANSHAO_CORE",
+          "startBinding": false
+        },
+        {
+          "factionId": "F01",
+          "relation": "CAOCAO_LATER_CORE",
+          "startBinding": false
+        }
+      ],
+      "sourceRefs": [
+        "SRC-HHS-JUNGUOZHI",
+        "SRC-SGZ",
+        "SRC-SJZ",
+        "REF-CHGIS",
+        "REF-SRTM",
+        "REF-HYDROSHEDS"
+      ],
+      "status": {
+        "record": "PROJECT_PROPOSAL",
+        "coordinate": "TEST_VALUE",
+        "metrics": "TEST_VALUE",
+        "masterApproved": false
+      }
+    }
+  ]
+}

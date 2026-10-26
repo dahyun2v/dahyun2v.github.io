@@ -1,0 +1,297 @@
+[
+  {
+    "officerId": "G01",
+    "highestOverlapOfficerIds": [
+      "G13",
+      "G20",
+      "G24"
+    ],
+    "overlappingCoreVerbs": [
+      "돌파한다",
+      "위협한다",
+      "선제한다",
+      "이탈한다"
+    ],
+    "preservedExclusivePlay": "정면에서 부대 전체를 압도하는 위협을 만들되 봉쇄·고립·보급 차단·외교 분리로 우회 대응하게 하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G01은 인간형 부대 지휘관이자 정면 압박의 극점으로 한정하고, G13의 균열 추격·G20의 연쇄 확장·G24의 선제 충격과 구출을 대신하지 않으며 개인 결투와 무조건 승리를 배제한다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G02",
+    "highestOverlapOfficerIds": [
+      "G24",
+      "G25"
+    ],
+    "overlappingCoreVerbs": [
+      "보호한다",
+      "회수한다",
+      "호위한다",
+      "수습한다",
+      "구출한다"
+    ],
+    "preservedExclusivePlay": "전황이 무너지는 순간 반드시 지켜야 할 인물이나 대상을 회수해 질서 있게 귀환시키는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G02는 붕괴 이후의 보호·회수·귀환에 집중하고, G24의 붕괴 전 선제 충격과 재진입 및 G25의 통로·접근 통제를 대체하지 않으며 《운별전》 의존 일화는 본전과 구분한다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G03",
+    "highestOverlapOfficerIds": [
+      "G04",
+      "G21",
+      "G27"
+    ],
+    "overlappingCoreVerbs": [
+      "구조화한다",
+      "연결한다",
+      "준비한다",
+      "유지한다",
+      "조율한다"
+    ],
+    "preservedExclusivePlay": "전투 한 번이 아니라 여러 턴 동안 작전·병참·정비가 계속 굴러가도록 장기 체계를 세우는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G03은 선택 이후의 장기 작전 체계와 준비 유지에 한정하고, G04의 정통성·조정·인재망 보전, G21의 선택 전 우회로와 뒤집음, G27의 결정적 전장 조율과 화계를 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G04",
+    "highestOverlapOfficerIds": [
+      "G03",
+      "G07",
+      "G09"
+    ],
+    "overlappingCoreVerbs": [
+      "예견한다",
+      "보전한다",
+      "연결한다",
+      "배치한다",
+      "바로잡는다"
+    ],
+    "preservedExclusivePlay": "정통성·조정·인재망을 보전하고 간언하여 전쟁을 지속할 국가 기반을 떠받치는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G04는 조정·명분·인재 관계망의 보전과 간언에 한정하고, G03의 전선 운영 체계, G07의 상황별 자원 재배치, G09의 문벌 연합과 복수 군단 조정을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G05",
+    "highestOverlapOfficerIds": [
+      "G07",
+      "G08"
+    ],
+    "overlappingCoreVerbs": [
+      "모은다",
+      "받아들인다",
+      "버틴다",
+      "다시 잇는다",
+      "맡긴다"
+    ],
+    "preservedExclusivePlay": "패전 뒤 흩어진 사람·약속·피난민·동맹을 다시 공동체로 묶어 재출발시키는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G05는 상실 이후의 관계 복원과 재집결에 한정하고, G07의 사전 포석·배치·전용 및 G08의 기존 경쟁 세력에 대한 권한 배분·재동맹을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G06",
+    "highestOverlapOfficerIds": [
+      "G28",
+      "G30"
+    ],
+    "overlappingCoreVerbs": [
+      "겨눈다",
+      "기다린다",
+      "증명한다"
+    ],
+    "preservedExclusivePlay": "낮게 평가된 인물에게 제한된 기회를 맡겨 기존 서열과 평가를 뒤집는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G06의 기다림과 조준은 제한된 기회에서 역량을 증명하는 서사로 한정하고, G28의 전선 조건 축적이나 G30의 사격 통로·약속·귀환 연결을 대신하지 않으며 자동 명중과 개인 결투를 배제한다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G07",
+    "highestOverlapOfficerIds": [
+      "G05",
+      "G08",
+      "G09"
+    ],
+    "overlappingCoreVerbs": [
+      "배치한다",
+      "시험한다",
+      "전용한다",
+      "규율한다",
+      "선점한다"
+    ],
+    "preservedExclusivePlay": "전투 전에 인재·군량·명분·퇴로를 배치하여 서로 다른 결과를 다음 수로 전용하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G07은 사전 배치와 상황별 전용·책임 명령에 한정하고, G05의 패전 후 관계 복원, G08의 자율적인 전문가 위임, G09의 문벌·파벌 합의를 통한 다층 군단 운영을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G08",
+    "highestOverlapOfficerIds": [
+      "G05",
+      "G07",
+      "G09"
+    ],
+    "overlappingCoreVerbs": [
+      "잇는다",
+      "맡긴다",
+      "저울질한다",
+      "버틴다",
+      "재동맹한다"
+    ],
+    "preservedExclusivePlay": "서로 경쟁하는 명장·가문·동맹을 제거하지 않고 권한 배분과 양보로 같은 전선에 남기는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G08은 경쟁하는 기존 세력의 잔류와 위임 균형에 한정하고, G05의 상실 후 재집결, G07의 중앙 지휘형 재배치, G09의 명문 서열과 복수 군단 합의를 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G09",
+    "highestOverlapOfficerIds": [
+      "G07",
+      "G08",
+      "G10"
+    ],
+    "overlappingCoreVerbs": [
+      "모은다",
+      "겹친다",
+      "포괄한다",
+      "세운다",
+      "재단한다"
+    ],
+    "preservedExclusivePlay": "명문·참모·지역 기반·복수 군단을 겹쳐 하나의 결단으로 만들면서 내부 파벌과 후계 갈등을 감당하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G09는 문벌 서열과 다층 군단의 합의·조정에 한정하고, G07의 적재적소 재배치, G08의 지역 연합 위임, G10의 의례적 권위 선포와 물자 소모를 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G10",
+    "highestOverlapOfficerIds": [
+      "G01",
+      "G09",
+      "G11"
+    ],
+    "overlappingCoreVerbs": [
+      "모은다",
+      "봉헌한다",
+      "선포한다",
+      "소모한다",
+      "위압한다"
+    ],
+    "preservedExclusivePlay": "기존 물자를 의례·보호·외교적 권위에 배분하면서 실제 기반을 얼마나 희생할지 선택하는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G10은 물자 소비와 의례적 권위 선포의 대가에 한정하고, G01의 전장 위압, G09의 문벌 연합, G11의 물리적 징발·점거·강제 집중을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G11",
+    "highestOverlapOfficerIds": [
+      "G01",
+      "G10"
+    ],
+    "overlappingCoreVerbs": [
+      "흡수한다",
+      "징발한다",
+      "위압한다",
+      "내리친다",
+      "틀어박힌다"
+    ],
+    "preservedExclusivePlay": "병력·무기·비축을 강제로 집중해 위세를 만들면서 징발과 민간 피해의 정치적 대가를 감당하는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G11은 강제 징발·물리적 집중·점거와 그 피해에 한정하고, G01의 이동형 정면 전투 위협이나 G10의 의례·선포 중심 권위 소비를 대신하지 않으며 초인적 거인 묘사를 배제한다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G12",
+    "highestOverlapOfficerIds": [
+      "G13",
+      "G14",
+      "G20"
+    ],
+    "overlappingCoreVerbs": [
+      "모은다",
+      "먹인다",
+      "이동시킨다",
+      "버틴다",
+      "이어간다"
+    ],
+    "preservedExclusivePlay": "변경 부대와 군량을 다음 집결지까지 이어 빠른 원정을 보급·연합 붕괴 없이 지속하는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G12는 원정군의 집결·보급·교대·철수 경로 유지에 한정하고, G13의 균열 돌파와 추격, G14의 선행 관측과 방어 재배치, G20의 승리 후 연쇄 확장을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G13",
+    "highestOverlapOfficerIds": [
+      "G01",
+      "G12",
+      "G20",
+      "G24"
+    ],
+    "overlappingCoreVerbs": [
+      "쐐기 박는다",
+      "돌파한다",
+      "추격한다",
+      "뒤흔든다",
+      "재기한다"
+    ],
+    "preservedExclusivePlay": "이미 생긴 균열에 부대를 투입해 적이 재정비하기 전 연속 추격 선택지를 만드는 플레이.",
+    "collisionRisk": "HIGH",
+    "recommendedBoundaryClarification": "G13은 형성된 균열의 확대와 추격에 한정하고, G01의 정면 압도, G12의 원정 지속, G20의 지역 장악과 인재 흡수, G24의 붕괴 전 선제 충격과 구출을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G14",
+    "highestOverlapOfficerIds": [
+      "G12",
+      "G24",
+      "G30"
+    ],
+    "overlappingCoreVerbs": [
+      "발견한다",
+      "달려간다",
+      "가로막는다",
+      "되돈다",
+      "고립시킨다"
+    ],
+    "preservedExclusivePlay": "먼저 확인한 위협에 기동 부대를 보내 길목을 막고 전열을 되돌려 재배치하면서 오정보와 외곽 고립을 감당하는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G14는 선행 관측 이후의 차단·회진·방어 반격에 한정하고, G12의 장거리 원정 보급, G24의 직접 선제돌파와 구출, G30의 사격 통로와 약속·귀환 연결을 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  },
+  {
+    "officerId": "G15",
+    "highestOverlapOfficerIds": [
+      "G05",
+      "G08",
+      "G16"
+    ],
+    "overlappingCoreVerbs": [
+      "보존한다",
+      "달랜다",
+      "맡긴다",
+      "기다린다",
+      "멈춘다"
+    ],
+    "preservedExclusivePlay": "전쟁 지속 능력이 남아 있어도 도시와 주민을 위해 휴전·피난·권한 양도 같은 비파괴 해법을 선택하는 플레이.",
+    "collisionRisk": "MEDIUM",
+    "recommendedBoundaryClarification": "G15는 분쟁 중단과 민간 보존을 위한 양보·피난·비파괴적 이양에 한정하고, G05의 패전 후 공동체 재건, G08의 장기 권한 배분, G16의 도로·숙식·구휼 네트워크를 대신하지 않는다.",
+    "fixedTraitTacticChange": false,
+    "status": "OVERLAP_AUDIT_NOT_RUNTIME"
+  }
+]
+

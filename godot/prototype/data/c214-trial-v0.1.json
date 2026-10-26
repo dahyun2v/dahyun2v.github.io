@@ -1,0 +1,14 @@
+{
+  "schema": "sangoku.c214-trial.v0.1",
+  "status": "WORK_TRIAL",
+  "reserveUnit": 100,
+  "transferOneTurnDistance": 8,
+  "transferTurns": [1, 2],
+  "emptyFrontReserve": 200,
+  "titleTroops": 100,
+  "secondaryStrength": 0.5,
+  "secondaryDiscretePeriod": 2,
+  "historyPoints": 50,
+  "poolKeepFraction": 0.75,
+  "poolMinimum": 5
+}

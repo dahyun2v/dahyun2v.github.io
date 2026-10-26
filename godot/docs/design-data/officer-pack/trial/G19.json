@@ -1,0 +1,129 @@
+{
+  "id": "G19",
+  "name": "장비",
+  "faction": "F02",
+  "status": "CLAUDE_TRIAL — 능력치 v0.3 채택값 + Claude 50명 재설계(특기·전법·적성)",
+  "source": {
+    "abilities": "docs/design-data/officer-pack/officer-abilities-v0.2.json",
+    "redesign": "docs/design-data/officer-pack/redesign-50-v0.1.json",
+    "method": "make-roster-packs.py",
+    "date": "2026-10-04"
+  },
+  "startLocation": {
+    "kind": "CITY",
+    "cityId": "capital"
+  },
+  "stats": {
+    "지휘": 88,
+    "무용": 96,
+    "지략": 78,
+    "정무": 43,
+    "감화": 56
+  },
+  "sub": {
+    "전열 유지": 94,
+    "기동": 80,
+    "전환": 85,
+    "수습": 73,
+    "힘": 98,
+    "기술": 95,
+    "막아내기": 96,
+    "되받기": 90,
+    "군재": 86,
+    "응변": 87,
+    "속이기": 76,
+    "통찰": 58,
+    "행정": 47,
+    "병참": 55,
+    "인사": 43,
+    "제도": 41,
+    "민정": 34,
+    "설득": 59,
+    "포섭": 72,
+    "결집": 61,
+    "중재": 37
+  },
+  "troopAptitude": {
+    "BT01": "HIGH",
+    "BT02": "HIGH",
+    "BT03": "LOW",
+    "BT04": "MEDIUM"
+  },
+  "role": "맹장",
+  "style": "장군",
+  "primaryClass": "TRIAL:맹장",
+  "secondaryClass": "TRIAL:장군",
+  "archetype": null,
+  "uniqueTrait": {
+    "name": "막는 동안 빠져라",
+    "text": "적이 더 많을 때 받는 피해 −25%. 장비와 맞닿은 아군은 이동 +1칸(그가 막는 동안 뒤가 빠진다).",
+    "rarity": "LEGENDARY",
+    "classTag": [
+      "무용",
+      "지휘"
+    ],
+    "effects": [
+      {
+        "op": "DEFENSE_MOD",
+        "when": "ON_DEFEND",
+        "target": "SELF",
+        "value": 25,
+        "duration": 0,
+        "condition": "OUTNUMBERED"
+      },
+      {
+        "op": "MOVE_MOD",
+        "when": "PASSIVE",
+        "target": "ADJACENT_ALLIES",
+        "value": 1,
+        "duration": 0,
+        "condition": null
+      }
+    ],
+    "note": "Claude 재설계 2026-10-04 · 접점에서 적 추격 판정 −12와 Brace를 '맞닿은 적 피해 약화(추격 포함)+자리 고정'으로 옮김. 아군 이탈 후 막아내기 보정은 '곁 아군 이동 +1·수적 열세 방어'로. 호령으로 광역 공포(사기)를 만들지 않는다는 원 제약 유지.",
+    "formerName": "뒤가 움직일 때"
+  },
+  "draftPool": [
+    {
+      "kind": "tactic",
+      "name": "장판교의 고함",
+      "text": "다리 위에서 고함친다: 맞닿은 적 모두 즉시 동요하고 전열 판정(가중 15). 대가로 장비는 다음 차례 움직이지 못한다.",
+      "rarity": "LEGENDARY",
+      "classTag": "고유",
+      "cooldown": 3,
+      "range": 0,
+      "effects": [
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": 0,
+          "duration": 0,
+          "condition": null,
+          "status": "DEMORALIZED"
+        },
+        {
+          "op": "FORMATION_DELTA",
+          "when": "ON_TACTIC_USE",
+          "target": "ADJACENT_ENEMIES",
+          "value": -15,
+          "duration": 0,
+          "condition": null
+        },
+        {
+          "op": "STATUS_APPLY",
+          "when": "ON_TACTIC_USE",
+          "target": "SELF",
+          "value": 0,
+          "duration": 1,
+          "condition": null,
+          "status": "ROOTED"
+        }
+      ],
+      "formerName": "장판의 고함"
+    }
+  ],
+  "pendingConcepts": [
+    "FORMATION"
+  ]
+}
