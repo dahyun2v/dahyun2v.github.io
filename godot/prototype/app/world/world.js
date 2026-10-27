@@ -8,6 +8,7 @@ import {engineSelection462,engineCandidates462,pickEngineTarget462,backEngineSel
 import {naturalRecruitment,manpowerV2,emergencyConscriptionPreview} from '/src/campaign-economy.mjs';
 import './detail-d3.mjs';
 import {headOf} from './hud-ink.mjs';
+import {cityProductionIdle} from './hud-ink.mjs';
 import {cutinTiming444,playCutin444} from './tactic-cutin.mjs';
 import {abilityName356,abilityGloss356,mountDraftNames356} from './hud-ink.mjs';
 import {TROOP_Q_RULES} from '/src/campaign-combat.mjs';
@@ -3282,7 +3283,7 @@ function placeTip(tip,e,w=320){
 function cityProductionBadge(c){
  const sc=state.cities[c.cityId];if(!sc||!c.jobs)return null;
  const stage=state.occupations?.[c.cityId]?.stage;if(stage&&stage!=='NORMAL')return null;
- if(!c.currentProduction)return {idle:true};
+ if(!c.currentProduction)return cityProductionIdle(c)?{idle:true}:null;   // 고를 작업이 없는 성 = 쉼(다음 차례를 막지 않음 — P0 10-26)
  const kind=c.currentProduction.kind,job=c.jobs.find(j=>j.kind===kind)??{};
  return {kind,name:job.name??CITY_JOBS[kind]?.name??kind,turns:productionReadout(job.estimate).turns,progress:job.estimate?.progress,cost:job.estimate?.cost};
 }
