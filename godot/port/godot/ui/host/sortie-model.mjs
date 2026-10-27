@@ -8,10 +8,10 @@ import {pathToFileURL} from '../../../../tools/port/web/shims/node-url.mjs';
 import {ROOT, officerArt, artHead, selectedDock} from './hud-model.mjs';
 
 const load = (p) => import(pathToFileURL(resolve(ROOT, p)).href);
-const [R, Roster, Stage, Display, Hud, Special, Combat, Engines] = await Promise.all([
+const [R, Roster, Stage, Display, Hud, Special, Combat, Engines, Effects] = await Promise.all([
   load('prototype/src/campaign-runtime.mjs'), load('prototype/src/campaign-roster.mjs'), load('prototype/app/world/city-stage.mjs'),
   load('prototype/src/troop-display.mjs'), load('prototype/app/world/hud-ink.mjs'), load('prototype/src/campaign-special-troops.mjs'),
-  load('prototype/src/campaign-combat.mjs'), load('prototype/src/campaign-engines.mjs'),
+  load('prototype/src/campaign-combat.mjs'), load('prototype/src/campaign-engines.mjs'), load('prototype/src/campaign-effects.mjs'),
 ]);
 /** 계통(엔진) 이름 · 기호(v4 명단 줄 — 총괄 '출진 가능 대신 계통 · 병종 기호'): 엔진 officerEngine → 정의 이름 · class-v1 그림 */
 function engineOf(state, id) {
@@ -39,17 +39,35 @@ function formationSpecs(state, cityId, rows) {
     [a.troopCount, a.maxTroopCount] = save;
     const titles = copy.campaignGrowth?.officers?.[r.officerId]?.titles ?? [];
     const q = (k) => d.qwer.find((x) => x.key === k);
+    const tc = Effects.campaignTactics(copy, id) ?? [];
+    const text = (k) => String(tc.find((c) => c.slot === k)?.text ?? '');
     out[r.officerId] = {
       title: titles.at(-1)?.name ? `「${titles.at(-1).name}」` : '',
       byCount, klass: [d.klass?.engine, d.klass?.branch].filter(Boolean).join(' · '),
       core: d.traits?.core?.name ?? null, equipped: (d.traits?.equipped ?? []).map((t) => t.name), slots: d.traits?.slots ?? 3,
-      tactics: ['E', 'R'].map((k) => ({key: k, name: q(k)?.name || '—', icon: q(k)?.icon ?? null, cost: q(k)?.cost ?? null, empty: !q(k)?.traitId})),
+      tactics: ['E', 'R'].map((k) => ({key: k, name: q(k)?.name || '—', icon: q(k)?.icon ?? null, cost: q(k)?.cost ?? null, empty: !q(k)?.traitId,
+        text: text(k), summary: plainSummary(text(k))})),   // v12 요약 한 줄 = 효과 글 첫 문장을 말로(% 없이 — 사용자 원칙) · 툴팁 = 전체 글(수치 그대로)
       // v4: 특기 칩 = 지도 독과 같은 아이콘 + 전체 이름(줄이지 않음) · 고유 먼저
       traits: [...(d.traits?.core ? [{...d.traits.core, core: true}] : []), ...(d.traits?.equipped ?? []).map((x) => ({...x, core: false}))].map((x) => ({name: x.full ?? x.name, icon: x.icon ?? null, text: x.text ?? '', core: x.core})),
       troopIcon: TROOP_KEY[a.troopType] ?? 'dao',
+      // v12(사용자 10-27): 장수 칸 = 계통(전직했을 때만 전직 이름) · 교전에 쓰는 능력 셋 · W 그림 / 부대 칸 = 병종 · 이동 · 사거리 · Q(병종 기호 툴팁)
+      klassName: d.klass?.branch && d.klass.branch !== '기본' ? d.klass.branch : (d.klass?.engine ?? ''),
+      w: q('W') ? {name: q('W').name, icon: q('W').icon ?? null} : null,
+      q: q('Q')?.name ?? '',
+      move: (d.ratings ?? []).find((x) => x.key === 'mobility')?.value ?? null,
+      range: (d.ratings ?? []).find((x) => x.key === 'range')?.value ?? null,
     };
   }
   return out;
+}
+/** 요약 줄: 첫 문장 · '+40%' 같은 수치는 말로('크게 늘어남') · '30% 확률'은 '낮은/일정/높은 확률'(사용자 10-23 '개발 용어 · % 쓰지 않기') */
+function plainSummary(txt) {
+  const first = String(txt ?? '').split(/[.。]/)[0].trim();
+  const batchim = (w) => { const c = w.charCodeAt(w.length - 1) - 0xac00; return c >= 0 && c <= 11171 && c % 28 !== 0; };
+  return first
+    .replace(/(\d+(?:\.\d+)?)\s*%\s*확률/g, (_, n) => `${Number(n) <= 30 ? '낮은' : Number(n) <= 60 ? '일정' : '높은'} 확률`)
+    .replace(/([가-힣]+)\s*([+−-])\s*(\d+(?:\.\d+)?)\s*%p?/g, (_, w, sg, n) => `${w}${batchim(w) ? '이' : '가'} ${Number(n) >= 30 ? '크게 ' : Number(n) <= 10 ? '조금 ' : ''}${sg === '+' ? '늘어남' : '줄어듦'}`)
+    .replace(/\s*\d+(?:\.\d+)?\s*%p?/g, '');
 }
 const TROOP_KEY = {BT01: 'dao', BT02: 'spear', BT03: 'bow', BT04: 'cavalry', militia: 'dao', sword: 'dao', spear: 'spear', bow: 'bow', cavalry: 'cavalry'};
 const t = (n) => Display.troopText(n);
@@ -122,12 +140,17 @@ export function webSortie(state, cityId, selections, viewId = null) {
   const ids = [...new Set([...(c.freeOfficers ?? []).map((o) => o.officerId), ...(c.governorId ? [c.governorId] : [])])];
   const plan = Stage.planSorties(state, cityId, selections);
   const roster = ids.map((id) => {
-    const o = v.officers[id], type = o.troopType, r = Roster.sortieTroopRange(state, state.cities[cityId], type);
+    const o = v.officers[id], type = o.troopType, r = Roster.sortieTroopRange(state, state.cities[cityId], type, id);   // 장수 ID = 칭호 상한 보너스(리뷰 v12-1)
+    const b = o.baseStats ?? {};
     const reason = Roster.sortieReason(state, {cityId, officerId: id, troopType: type, troopCount: r.min})?.message ?? null;
     const on = plan.rows.some((p) => p.officerId === id);
     const eng = engineOf(state, id);
     return {id, name: o.name, face: officerArt(id), head: artHead(officerArt(id)), troopName: Special.troopInfo(state, type)?.troopDisplayName ?? '', on, disabled: !!reason && !on,
+      squad: Stage.sortieSquadPath(type, TONE[c.ownerFactionId] ?? 'grey').replace(/^\//, ''),
       troop: TROOP_KEY[type] ?? 'dao', klass: eng?.name ?? '', klassIcon: eng?.icon ?? null, order: on ? plan.rows.findIndex((p) => p.officerId === id) + 1 : null,
+      // v12: 장수 능력 다섯 그대로(사용자 10-27 '정치 · 매력도 하위 스탯은 전투랑 연동' — 정본 20 §10: 하위 능력치가 교전식에 들어감, 예 사기 판정 = 지휘 + 감화-결집)
+      stats: [['leadership', '통솔'], ['might', '무력'], ['intelligence', '지력'], ['politics', '정치'], ['charisma', '매력']].map(([key, label]) => ({key, label, value: b[key] ?? null})),
+      range: {min: r.min, max: r.max, step: r.step ?? 50},
       warn: reason ?? (Hud.fatigueLineText(o.fatigue) || ''),   // v4: 못 나갈 때(이유) · 피로가 있을 때만 셋째 줄
       line: reason ?? `${id === c.governorId ? '태수 · ' : ''}${Hud.fatigueLineText(o.fatigue) || '출진 가능'}`, refusal: !!reason,
       trait: o.growth ? {ok: !o.growth.traitLoadoutReason, tip: o.growth.traitLoadoutReason ?? '보유 일반특기에서 장착할 특기를 고릅니다'} : null};
@@ -135,6 +158,37 @@ export function webSortie(state, cityId, selections, viewId = null) {
   const last = selections.length ? selections[selections.length - 1].officerId : null;
   const view = viewId ?? last ?? roster.find((r) => !r.disabled)?.id ?? roster[0]?.id;
   const specs = formationSpecs(state, cityId, plan.rows);
+  // v12: 아직 안 넣은 장수도 줄 끝 부대 칸 · 왼쪽 카드에 값이 필요 — 남는 예비병 안에서 낼 수 있는 최대 병력으로 버리는 사본 출진
+  const extra = [];
+  for (const row of roster) {
+    if (row.on || row.disabled) continue;
+    const mx = row.range.max;   // 줄 값 = 지휘 상한(원래 판 기준) · 남는 예비병이 모자라면 막지 않고 알림만(앞 부대 병력을 줄이면 넣을 수 있음)
+    row.short = (plan.remaining ?? mx) < row.range.min;
+    const st = Math.max(1, row.range.step ?? 50), now = Math.min(mx, plan.remaining ?? mx);
+    row.maxNow = row.short ? mx : row.range.min + Math.floor((now - row.range.min) / st) * st;   // 넣으면 실제로 받는 병력(남는 예비병 안 · 단계 맞춤)
+    row.maxText = t(row.maxNow);
+    if (row.short) row.warn = '남는 예비병이 모자람 — 앞 부대 병력을 줄이세요';
+    extra.push({officerId: row.id, count: mx, reason: null, range: {min: row.range.min, max: mx, step: row.range.step},
+      request: {cityId, officerId: row.id, troopType: v.officers[row.id].troopType, troopCount: mx}});
+  }
+  Object.assign(specs, formationSpecs(state, cityId, extra));
+  for (const row of roster) {
+    if (!row.disabled || specs[row.id]) continue;
+    try {   // 쉬는 중(restUntilTurn) · 태수만 지움 — 부상 · 피로 장부는 건드리지 않음(엔진 불변식) · 실패하면 계통만
+      const copy = structuredClone(state), o = copy.officers[row.id], c2 = copy.cities[cityId];
+      delete o.restUntilTurn;
+      if (c2.governorId === row.id) c2.governorId = null;
+      const rr = Roster.sortieTroopRange(copy, c2, o.troopType, row.id);
+      // 예비병이 모자라도 보기는 되게(리뷰 v12-2): 사본에만 최소 병력만큼 예비병을 더함(엔진 병력 보존 장부도 같이 — sortieScene 과 같은 법)
+      const lots = copy.personnel?.lots?.filter((l) => l.nodeId === cityId && l.kind !== 'WOUNDED' && !l.identity?.specialTroopId) ?? [];
+      if (lots.length) { lots[0].count += rr.min; copy.personnel.initialPersonnel += rr.min; c2.reserveTroops = (c2.reserveTroops ?? 0) + rr.min; }
+      Object.assign(specs, formationSpecs(copy, cityId, [{officerId: row.id, count: rr.min, reason: null, range: {min: rr.min, max: rr.min, step: rr.step ?? 50},
+        request: {cityId, officerId: row.id, troopType: o.troopType, troopCount: rr.min}}]));
+    } catch { /* 보기용 — 계통만 아래에서 */ }
+    if (!specs[row.id]) { const eng = engineOf(state, row.id); specs[row.id] = {klassName: eng?.name ?? '', tactics: [], traits: [], byCount: {}, w: null, q: '', move: null, range: null}; }
+    specs[row.id].previewOnly = true;   // 못 나가는 장수 — 카드는 보이되 부대 값은 안 씀
+  }
+  for (const row of roster) { row.spec = specs[row.id] ?? null; if (row.on) { const p = plan.rows.find((x) => x.officerId === row.id); row.countText = t(p.count); row.maxText = t(p.range.max); } }
   const formations = plan.rows.map((r) => {
     const troops = musterTroopChoices(v, c, r.officerId);
     return {id: r.officerId, name: v.officers[r.officerId]?.name ?? r.officerId, face: officerArt(r.officerId), head: artHead(officerArt(r.officerId)), troopType: r.troopType,

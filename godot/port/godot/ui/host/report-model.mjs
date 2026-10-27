@@ -59,7 +59,7 @@ export function reportModel(before, after, rows, {replay = true} = {}) {
     const event = String(first.detail ?? '').split(' · ')[0];
     const title = g.kind === 'built' ? `${first.name} ${event}` : ({'city-lost': `${first.name} 잃음`, 'city-taken': `${first.name} 획득`}[g.kind] ?? `${first.name} ${event}`).trim();
     const city = Object.values(after.ownCities ?? {}).find((c) => c.name === first.name);
-    const idle = g.kind === 'built' && city && !city.currentProduction;
+    const idle = g.kind === 'built' && city && (Hud.cityProductionIdle ? Hud.cityProductionIdle(city) : !city.currentProduction);   // 웹과 한 규칙(P0 10-26)
     const result = resultOf(g.kind, first, before, after);
     const more = g.items.slice(1).map((it) => ({name: `${it.name} ${String(it.detail ?? '').split(' · ')[0]}`.trim(), result: resultOf(g.kind, it, before, after)?.value ?? ''}));
     const cityAction = ['city-lost', 'city-taken'].includes(g.kind) ? `${first.name} 보기` : null;

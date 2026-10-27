@@ -1,9 +1,7 @@
 {
  "screen": "map-hud",
  "protocol": 1,
- "source": "prototype/src/campaign-runtime.mjs view(플레이어 공개)",
- "turn": 1,
- "turnLimit": 26,
+ "troopScale": 10,
  "ruler": {
   "id": "G07",
   "name": "조조",
@@ -136,6 +134,473 @@
   "ready": false
  },
  "tacticReady": {},
+ "advisor": {
+  "scope": "F01",
+  "turn": 1,
+  "interval": 7,
+  "lines": []
+ },
+ "crisis": null,
+ "choice": null,
+ "dejaVu": {
+  "scope": "F01",
+  "turn": 1,
+  "busy": false,
+  "recent": []
+ },
+ "run": {
+  "status": "",
+  "blessing": null,
+  "rewind": {
+   "charges": 2,
+   "available": true,
+   "reason": null
+  },
+  "memory": null
+ },
+ "ambition": {
+  "scope": "F01",
+  "turn": 1,
+  "canChoose": true,
+  "chooseUntil": 3,
+  "bands": [],
+  "offer": {
+   "kind": "ambition",
+   "key": "F01:ambition",
+   "title": "이번 생의 뜻",
+   "choices": [
+    {
+     "id": "AMB-F01-LAND",
+     "faction": "F01",
+     "kind": "LAND",
+     "title": "하북의 깃발 하나",
+     "goalText": "26차례 끝에 업과 큰 성 하나를 더(계 또는 남피) 가진다",
+     "goal": {
+      "type": "HOLD_AT_END",
+      "cities": [
+       "west"
+      ],
+      "plusMajor": 1
+     },
+     "relativeGoal": {
+      "rule": "NEAREST_OTHER_MAJOR",
+      "goalText": "{cities} 차지 후 판 끝까지 지킨다"
+     },
+     "endingLine": "관도라는 이름은 끝내 오지 않았다. 그래도 하북의 깃발은 하나였다.",
+     "images": [
+      "assets/ui-v3/u3/levelup/art-banner.png"
+     ],
+     "rewardText": ""
+    },
+    {
+     "id": "AMB-F01-PERSON",
+     "faction": "F01",
+     "kind": "PERSON",
+     "title": "순욱과 끝까지",
+     "goalText": "순욱이 끝까지 살아 곁에 있고, 조조와 결의에 이른다",
+     "goal": {
+      "type": "PERSON_BOUND",
+      "lord": "G07",
+      "officer": "G04",
+      "tier": "BOUND"
+     },
+     "endingLine": "이번 생에는 빈 그릇을 보내지 않았다. 문약은 끝까지 등불 곁에 있었다.",
+     "images": [
+      "assets/officer-art/cutout/G04-decided-hA.webp"
+     ],
+     "rewardText": ""
+    },
+    {
+     "id": "AMB-F01-RECONCILE",
+     "faction": "F01",
+     "kind": "RECONCILE",
+     "title": "원소를 품다",
+     "goalText": "원소를 등용해 끝까지 살아 곁에 둔다",
+     "goal": {
+      "type": "RECRUIT_KEEP",
+      "officer": "G09"
+     },
+     "endingLine": "옛 벗이자 옛 적이 같은 깃발 아래서 늙어 갔다.",
+     "images": [
+      "assets/ui-v3/u3/levelup/art-seal.png"
+     ],
+     "rewardText": ""
+    }
+   ],
+   "skipLabel": "뜻을 정하지 않는다",
+   "rulerArt": "assets/officer-art/cutout/G07-decided-hA.webp",
+   "background": "assets/ui-v3/u3/levelup/bg.jpg",
+   "intro": "이번 생에는 무엇을 다르게 할 것인가 · 3차례까지 고를 수 있습니다"
+  }
+ },
+ "council": null,
+ "achievementRecords": {
+  "title": "업적 기록",
+  "rows": []
+ },
+ "captives": {
+  "title": "포로",
+  "locked": false,
+  "rows": []
+ },
+ "occupations": {
+  "title": "점령 처리",
+  "locked": false,
+  "rows": []
+ },
+ "visit": {
+  "scope": "F01:190919",
+  "turn": 1,
+  "lordId": "G07",
+  "lordArt": "assets/officer-art/cutout/G07-decided-hA.webp",
+  "lordHead": {
+   "w": 522,
+   "h": 888,
+   "cx": 318.15900000000005,
+   "cy": 103.45200000000001,
+   "side": 114.057
+  },
+  "background": "assets/ui-v3/scenes/plate-visit.webp",
+  "officers": [
+   {
+    "id": "G04",
+    "name": "순욱",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp",
+    "head": {
+     "w": 471,
+     "h": 945,
+     "cx": 291.36060000000003,
+     "cy": 90.6255,
+     "side": 138.7566
+    },
+    "value": 85,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "명공께서 천하를 바로잡으신다면, 이 문약은 끝까지 곁을 지키겠습니다.",
+    "scene": "깊은 밤, 순욱이 직접 차를 따른다.",
+    "line": "명공을 처음 뵈었을 때, 이분이라면 난세를 끝내리라 생각했습니다.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "네가 고른 사람이 틀리지 않았음을 보여 주마.",
+      "gain": 2,
+      "reply": "이미 보여 주고 계십니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G04",
+       "choice": 2
+      }
+     },
+     {
+      "text": "지금도 그렇게 생각하느냐?",
+      "gain": 1,
+      "reply": "……예. 다만 가끔 걱정도 합니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G04",
+       "choice": 1
+      }
+     },
+     {
+      "text": "난세가 끝나면 너는 무엇을 하겠느냐?",
+      "gain": 0,
+      "reply": "글을 읽고 향을 피우겠지요. 그날이 온다면.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G04",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G24",
+    "name": "장료",
+    "art": "assets/officer-art/cutout/G24-20261012-hA.webp",
+    "head": {
+     "w": 808,
+     "h": 1153,
+     "cx": 302.83840000000004,
+     "cy": 116.22240000000001,
+     "side": 144.47039999999998
+    },
+    "value": 70,
+    "tier": "TRUST",
+    "tierName": "신뢰",
+    "bound": "명공의 깃발 아래라면, 저는 열 배의 적도 두렵지 않습니다.",
+    "scene": "장료가 지도 위 적의 본진에 손가락을 올린다.",
+    "line": "적이 많을수록 대장의 자리가 드러납니다. 저는 늘 그 자리만 봅니다.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "그 담력이 우리 군의 창끝일세.",
+      "gain": 2,
+      "reply": "창끝은 부러지지 않도록 단련하겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G24",
+       "choice": 2
+      }
+     },
+     {
+      "text": "위험하지 않은가?",
+      "gain": 1,
+      "reply": "위험한 곳에 답이 있습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G24",
+       "choice": 1
+      }
+     },
+     {
+      "text": "너무 앞서 나가지 말게.",
+      "gain": 0,
+      "reply": "……명을 따르겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G24",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G33",
+    "name": "하후돈",
+    "art": "assets/officer-art/cutout/G33-decided-hA.webp",
+    "head": {
+     "w": 531,
+     "h": 950,
+     "cx": 310.9536,
+     "cy": 113.62,
+     "side": 140.715
+    },
+    "value": 85,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "맹덕, 네가 가는 곳이면 지옥이라도 따라간다.",
+    "scene": "술자리 끝, 하후돈이 조조의 어깨를 친다.",
+    "line": "어릴 때 너랑 사냥 다니던 때가 생각나는군. 그땐 이렇게 될 줄 몰랐지.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "그때나 지금이나 내 곁엔 네가 있다.",
+      "gain": 2,
+      "reply": "당연하지. 그게 내 일이니까.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G33",
+       "choice": 2
+      }
+     },
+     {
+      "text": "사냥이나 한번 가자.",
+      "gain": 1,
+      "reply": "좋지! 누가 더 잡나 내기하자고.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G33",
+       "choice": 1
+      }
+     },
+     {
+      "text": "지금은 천하를 사냥하는 중이다.",
+      "gain": 0,
+      "reply": "…거창하긴. 그래도 따라가 준다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G33",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G34",
+    "name": "조인",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp",
+    "head": {
+     "w": 591,
+     "h": 857,
+     "cx": 298.5732,
+     "cy": 85.1001,
+     "side": 104.0751
+    },
+    "value": 82,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "형님이 등을 맡기신다면, 이 자효가 성벽이 되겠습니다.",
+    "scene": "술자리. 조인이 어린 시절 말 타고 놀던 이야기를 꺼낸다.",
+    "line": "형님, 어릴 적 형님이 사고를 치면 수습은 늘 제 몫이었지요.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "그래서 지금도 네게 뒤를 맡기는 거다.",
+      "gain": 2,
+      "reply": "하하, 평생 이러다 끝나겠습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G34",
+       "choice": 2
+      }
+     },
+     {
+      "text": "기억 안 나는데.",
+      "gain": 1,
+      "reply": "형님은 늘 그러셨습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G34",
+       "choice": 1
+      }
+     },
+     {
+      "text": "그 얘기를 아직도 하냐.",
+      "gain": 0,
+      "reply": "할 때마다 형님 얼굴이 재미있어서요.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G34",
+       "choice": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "G25",
+    "name": "허저",
+    "art": "assets/officer-art/cutout/G25-decided-hA.webp",
+    "head": {
+     "w": 546,
+     "h": 865,
+     "cx": 277.0404,
+     "cy": 66.5185,
+     "side": 107.6166
+    },
+    "value": 85,
+    "tier": "CLOSE",
+    "tierName": "친우",
+    "bound": "명공 곁에는 이 허저가 있습니다. 누구도 한 발짝 못 들어옵니다.",
+    "scene": "밤이 깊었다. 허저가 졸음을 참으며 여전히 곁에 서 있다.",
+    "line": "명공, 주무십시오. 저는 안 졸립니다.",
+    "reason": "",
+    "choices": [
+     {
+      "text": "너도 앉아라. 오늘은 같이 마시자.",
+      "gain": 2,
+      "reply": "……한 잔만입니다. 지키는 건 그대로 합니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G25",
+       "choice": 2
+      }
+     },
+     {
+      "text": "졸린 얼굴인데.",
+      "gain": 1,
+      "reply": "얼굴만 그렇습니다.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G25",
+       "choice": 1
+      }
+     },
+     {
+      "text": "그래, 수고해라.",
+      "gain": 0,
+      "reply": "예.",
+      "command": {
+       "type": "VISIT",
+       "officerId": "G25",
+       "choice": 0
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "ritual": {
+  "scope": "F01:190919",
+  "enabled": true,
+  "busy": false,
+  "factionId": "F01",
+  "rulerId": "G07",
+  "officers": [
+   {
+    "officerId": "G07",
+    "name": "조조",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G07-decided-hA.webp"
+   },
+   {
+    "officerId": "G04",
+    "name": "순욱",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G04-decided-hA.webp"
+   },
+   {
+    "officerId": "G24",
+    "name": "장료",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G24-20261012-hA.webp"
+   },
+   {
+    "officerId": "G33",
+    "name": "하후돈",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G33-decided-hA.webp"
+   },
+   {
+    "officerId": "G34",
+    "name": "조인",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G34-decided-hA.webp"
+   },
+   {
+    "officerId": "G25",
+    "name": "허저",
+    "lifeState": "ALIVE",
+    "allegianceFactionId": "F01",
+    "art": "assets/officer-art/cutout/G25-decided-hA.webp"
+   }
+  ],
+  "enemies": [
+   "F02",
+   "F03"
+  ],
+  "scene": null,
+  "generic": {
+   "bond": [
+    "이 어지러운 천하를 그대와 함께 끝까지 헤쳐 나가겠소.",
+    "보여 주신 믿음에 내 한 목숨과 칼끝으로 답하겠소."
+   ],
+   "bound": [
+    "태어난 날은 달라도 마지막 숨은 같은 자리에서 거둡시다.",
+    "어느 전장에 서더라도 그대의 등 뒤는 내가 지키겠소."
+   ],
+   "rival": [
+    "이 시대의 끝에서 마침내 그대와 승부를 가리게 되었소.",
+    "내 칼끝이 증명할 대의를 그대 눈앞에 똑똑히 보이겠소."
+   ],
+   "death": [
+    "그대가 흘린 붉은 피를 헛된 기억으로 남기지 않겠소.",
+    "남겨진 대업을 그대 손에 맡기고 먼저 눈을 감겠소."
+   ],
+   "betrayal": [
+    "함께 나눈 지난날의 맹세를 오늘 이 자리에서 거두겠소.",
+    "뜻이 갈라진 이상 다음 전장에선 적으로 마주할 것이오."
+   ],
+   "departure": [
+    "함께 걸은 세월을 뒤로하고 그대의 앞날을 빌어 주겠소.",
+    "나누었던 정은 가슴에 묻고 이제 각자의 길을 가겠소."
+   ]
+  }
+ },
  "minimap": {
   "image": "assets/ui-v3/map/v15-world.webp",
   "land": {
@@ -446,7 +911,89 @@
      "max": 500,
      "step": 50,
      "note": "최대 5,000명 · 500명 단위 조절",
-     "squad": "assets/ui-v3/units-ink/squad-cavalry-red.webp"
+     "squad": "assets/ui-v3/units-ink/squad-cavalry-red.webp",
+     "troopName": "기병",
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 39,
+        "defense": 106,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 48,
+        "defense": 106,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 58,
+        "defense": 106,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 68,
+        "defense": 106,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 78,
+        "defense": 106,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 87,
+        "defense": 106,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 97,
+        "defense": 106,
+        "text": "5,000"
+       }
+      },
+      "klass": "책사 · 기본",
+      "core": "난세간웅",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "기싸움",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 40,
+        "empty": false,
+        "text": "맞닿은 적 1부대와 지휘 비교 — 이기면 대상 사기 한 단계 하락, 지면 이 부대 사기 판정(가중 10).",
+        "summary": "맞닿은 적 1부대와 지휘 비교 — 이기면 대상 사기 한 단계 하락, 지면 이 부대 사기 판정(가중 10)"
+       },
+       {
+        "key": "R",
+        "name": "호령천하",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "사거리 3 적 장수 하나의 전법 게이지 40 을 빼앗아 2칸 안 아군 하나에게 준다. 그 적은 다음 자기 차례 전법 불가.",
+        "summary": "사거리 3 적 장수 하나의 전법 게이지 40 을 빼앗아 2칸 안 아군 하나에게 준다"
+       }
+      ],
+      "traits": [
+       {
+        "name": "난세간웅",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+        "text": "조조 시야 안 적이 E 전법을 쓰면 그것을 기억한다(최근 하나, 다음 내 차례 끝까지). 조조는 E 칸 대신 기억한 전법을 쓸 수 있다(게이지 비용은 원래 값 · 고유 R 은 기억하지 않음).",
+        "core": true
+       }
+      ],
+      "troopIcon": "cavalry",
+      "klassName": "책사",
+      "w": {
+       "name": "책사",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png"
+      },
+      "q": "돌파",
+      "move": 9,
+      "range": 1
+     }
     },
     {
      "id": "G25",
@@ -488,7 +1035,89 @@
      "max": 500,
      "step": 50,
      "note": "최대 5,000명 · 500명 단위 조절",
-     "squad": "assets/ui-v3/units-ink/squad-spear-red.webp"
+     "squad": "assets/ui-v3/units-ink/squad-spear-red.webp",
+     "troopName": "창병",
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 30,
+        "defense": 86,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 38,
+        "defense": 86,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 45,
+        "defense": 86,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 53,
+        "defense": 86,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 60,
+        "defense": 86,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 68,
+        "defense": 86,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 75,
+        "defense": 86,
+        "text": "5,000"
+       }
+      },
+      "klass": "호위 · 기본",
+      "core": "호치호위",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "나체투마",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 40,
+        "empty": false,
+        "text": "이번 차례 주는 피해 +40%. 대가: 다음 적 구간 받는 피해 +25%.",
+        "summary": "이번 차례 주는 피해가 크게 늘어남"
+       },
+       {
+        "key": "R",
+        "name": "호위결사",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "다음 적 구간 동안 허저 2칸 안 아군을 노린 공격은 모두 허저가 받는다(허저가 그 적의 사거리 안일 때). 그동안 허저는 패주하지 않는다.",
+        "summary": "다음 적 구간 동안 허저 2칸 안 아군을 노린 공격은 모두 허저가 받는다(허저가 그 적의 사거리 안일 때)"
+       }
+      ],
+      "traits": [
+       {
+        "name": "호치호위",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-guardian.png",
+        "text": "연결 아군(군주면 우선)이 공격받을 때 허저가 그 아군과 붙어 있으면 그 공격의 교전자가 허저로 바뀐다(반격 · 방향도 허저 기준) — 차례에 한 번.",
+        "core": true
+       }
+      ],
+      "troopIcon": "spear",
+      "klassName": "호위",
+      "w": {
+       "name": "호위",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-guardian.png"
+      },
+      "q": "관통 찌르기",
+      "move": 5,
+      "range": 1
+     }
     },
     {
      "id": "G24",
@@ -545,7 +1174,89 @@
      "max": 500,
      "step": 50,
      "note": "최대 5,000명 · 500명 단위 조절",
-     "squad": "assets/ui-v3/units-ink/squad-cavalry-red.webp"
+     "squad": "assets/ui-v3/units-ink/squad-cavalry-red.webp",
+     "troopName": "기병",
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 42,
+        "defense": 109,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 53,
+        "defense": 109,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 63,
+        "defense": 109,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 74,
+        "defense": 109,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 84,
+        "defense": 109,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 95,
+        "defense": 109,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 105,
+        "defense": 109,
+        "text": "5,000"
+       }
+      },
+      "klass": "맹장 · 기본",
+      "core": "만부막적",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "적장돌입",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 60,
+        "empty": false,
+        "text": "시야 안 적 지휘관(능력 합 최고) 부대 쪽으로 직선 5칸까지 돌진(지나친 적 전열 판정), 붙으면 친다.",
+        "summary": "시야 안 적 지휘관(능력 합 최고) 부대 쪽으로 직선 5칸까지 돌진(지나친 적 전열 판정), 붙으면 친다"
+       },
+       {
+        "key": "R",
+        "name": "위진소요",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "직선 6칸 돌진하고 도착 칸 2칸 안 적 모두 공포 — 돌진 3칸마다 공포 1차례(최대 2): 다음 자기 차례에 장료에게서 1칸 멀어지고 공격 불가.",
+        "summary": "직선 6칸 돌진하고 도착 칸 2칸 안 적 모두 공포 — 돌진 3칸마다 공포 1차례(최대 2): 다음 자기 차례에 장료에게서 1칸 멀어지고 공격 불가"
+       }
+      ],
+      "traits": [
+       {
+        "name": "만부막적",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+        "text": "장료가 2칸 이상 이동한 뒤 공격하면 대상과 그 2칸 안 적 모두 사기 판정(가중 10, 적 지휘관 부대면 20).",
+        "core": true
+       }
+      ],
+      "troopIcon": "cavalry",
+      "klassName": "맹장",
+      "w": {
+       "name": "맹장",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png"
+      },
+      "q": "돌파",
+      "move": 9,
+      "range": 1
+     }
     }
    ],
    "roster": [
@@ -563,12 +1274,133 @@
      "troopName": "기병",
      "on": true,
      "disabled": false,
+     "squad": "assets/ui-v3/units-ink/squad-cavalry-red.webp",
+     "troop": "cavalry",
+     "klass": "책사",
+     "klassIcon": "assets/ui-kit/own/class-v1/chaek.png",
+     "order": 1,
+     "stats": [
+      {
+       "key": "leadership",
+       "label": "통솔",
+       "value": 93
+      },
+      {
+       "key": "might",
+       "label": "무력",
+       "value": 72
+      },
+      {
+       "key": "intelligence",
+       "label": "지력",
+       "value": 95
+      },
+      {
+       "key": "politics",
+       "label": "정치",
+       "value": 91
+      },
+      {
+       "key": "charisma",
+       "label": "매력",
+       "value": 87
+      }
+     ],
+     "range": {
+      "min": 200,
+      "max": 500,
+      "step": 50
+     },
+     "warn": "",
      "line": "출진 가능",
      "refusal": false,
      "trait": {
       "ok": true,
       "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
-     }
+     },
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 39,
+        "defense": 106,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 48,
+        "defense": 106,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 58,
+        "defense": 106,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 68,
+        "defense": 106,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 78,
+        "defense": 106,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 87,
+        "defense": 106,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 97,
+        "defense": 106,
+        "text": "5,000"
+       }
+      },
+      "klass": "책사 · 기본",
+      "core": "난세간웅",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "기싸움",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 40,
+        "empty": false,
+        "text": "맞닿은 적 1부대와 지휘 비교 — 이기면 대상 사기 한 단계 하락, 지면 이 부대 사기 판정(가중 10).",
+        "summary": "맞닿은 적 1부대와 지휘 비교 — 이기면 대상 사기 한 단계 하락, 지면 이 부대 사기 판정(가중 10)"
+       },
+       {
+        "key": "R",
+        "name": "호령천하",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "사거리 3 적 장수 하나의 전법 게이지 40 을 빼앗아 2칸 안 아군 하나에게 준다. 그 적은 다음 자기 차례 전법 불가.",
+        "summary": "사거리 3 적 장수 하나의 전법 게이지 40 을 빼앗아 2칸 안 아군 하나에게 준다"
+       }
+      ],
+      "traits": [
+       {
+        "name": "난세간웅",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png",
+        "text": "조조 시야 안 적이 E 전법을 쓰면 그것을 기억한다(최근 하나, 다음 내 차례 끝까지). 조조는 E 칸 대신 기억한 전법을 쓸 수 있다(게이지 비용은 원래 값 · 고유 R 은 기억하지 않음).",
+        "core": true
+       }
+      ],
+      "troopIcon": "cavalry",
+      "klassName": "책사",
+      "w": {
+       "name": "책사",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-strategist.png"
+      },
+      "q": "돌파",
+      "move": 9,
+      "range": 1
+     },
+     "countText": "2,000",
+     "maxText": "5,000"
     },
     {
      "id": "G24",
@@ -584,12 +1416,133 @@
      "troopName": "기병",
      "on": true,
      "disabled": false,
+     "squad": "assets/ui-v3/units-ink/squad-cavalry-red.webp",
+     "troop": "cavalry",
+     "klass": "맹장",
+     "klassIcon": "assets/ui-kit/own/class-v1/maeng.png",
+     "order": 3,
+     "stats": [
+      {
+       "key": "leadership",
+       "label": "통솔",
+       "value": 94
+      },
+      {
+       "key": "might",
+       "label": "무력",
+       "value": 90
+      },
+      {
+       "key": "intelligence",
+       "label": "지력",
+       "value": 84
+      },
+      {
+       "key": "politics",
+       "label": "정치",
+       "value": 57
+      },
+      {
+       "key": "charisma",
+       "label": "매력",
+       "value": 83
+      }
+     ],
+     "range": {
+      "min": 200,
+      "max": 500,
+      "step": 50
+     },
+     "warn": "",
      "line": "출진 가능",
      "refusal": false,
      "trait": {
       "ok": true,
       "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
-     }
+     },
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 42,
+        "defense": 109,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 53,
+        "defense": 109,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 63,
+        "defense": 109,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 74,
+        "defense": 109,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 84,
+        "defense": 109,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 95,
+        "defense": 109,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 105,
+        "defense": 109,
+        "text": "5,000"
+       }
+      },
+      "klass": "맹장 · 기본",
+      "core": "만부막적",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "적장돌입",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 60,
+        "empty": false,
+        "text": "시야 안 적 지휘관(능력 합 최고) 부대 쪽으로 직선 5칸까지 돌진(지나친 적 전열 판정), 붙으면 친다.",
+        "summary": "시야 안 적 지휘관(능력 합 최고) 부대 쪽으로 직선 5칸까지 돌진(지나친 적 전열 판정), 붙으면 친다"
+       },
+       {
+        "key": "R",
+        "name": "위진소요",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "직선 6칸 돌진하고 도착 칸 2칸 안 적 모두 공포 — 돌진 3칸마다 공포 1차례(최대 2): 다음 자기 차례에 장료에게서 1칸 멀어지고 공격 불가.",
+        "summary": "직선 6칸 돌진하고 도착 칸 2칸 안 적 모두 공포 — 돌진 3칸마다 공포 1차례(최대 2): 다음 자기 차례에 장료에게서 1칸 멀어지고 공격 불가"
+       }
+      ],
+      "traits": [
+       {
+        "name": "만부막적",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png",
+        "text": "장료가 2칸 이상 이동한 뒤 공격하면 대상과 그 2칸 안 적 모두 사기 판정(가중 10, 적 지휘관 부대면 20).",
+        "core": true
+       }
+      ],
+      "troopIcon": "cavalry",
+      "klassName": "맹장",
+      "w": {
+       "name": "맹장",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-fierce.png"
+      },
+      "q": "돌파",
+      "move": 9,
+      "range": 1
+     },
+     "countText": "5,000",
+     "maxText": "5,000"
     },
     {
      "id": "G25",
@@ -605,12 +1558,133 @@
      "troopName": "창병",
      "on": true,
      "disabled": false,
+     "squad": "assets/ui-v3/units-ink/squad-spear-red.webp",
+     "troop": "spear",
+     "klass": "호위",
+     "klassIcon": "assets/ui-kit/own/class-v1/howi.png",
+     "order": 2,
+     "stats": [
+      {
+       "key": "leadership",
+       "label": "통솔",
+       "value": 77
+      },
+      {
+       "key": "might",
+       "label": "무력",
+       "value": 94
+      },
+      {
+       "key": "intelligence",
+       "label": "지력",
+       "value": 71
+      },
+      {
+       "key": "politics",
+       "label": "정치",
+       "value": 64
+      },
+      {
+       "key": "charisma",
+       "label": "매력",
+       "value": 73
+      }
+     ],
+     "range": {
+      "min": 200,
+      "max": 500,
+      "step": 50
+     },
+     "warn": "",
      "line": "출진 가능",
      "refusal": false,
      "trait": {
       "ok": true,
       "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
-     }
+     },
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 30,
+        "defense": 86,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 38,
+        "defense": 86,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 45,
+        "defense": 86,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 53,
+        "defense": 86,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 60,
+        "defense": 86,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 68,
+        "defense": 86,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 75,
+        "defense": 86,
+        "text": "5,000"
+       }
+      },
+      "klass": "호위 · 기본",
+      "core": "호치호위",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "나체투마",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 40,
+        "empty": false,
+        "text": "이번 차례 주는 피해 +40%. 대가: 다음 적 구간 받는 피해 +25%.",
+        "summary": "이번 차례 주는 피해가 크게 늘어남"
+       },
+       {
+        "key": "R",
+        "name": "호위결사",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "다음 적 구간 동안 허저 2칸 안 아군을 노린 공격은 모두 허저가 받는다(허저가 그 적의 사거리 안일 때). 그동안 허저는 패주하지 않는다.",
+        "summary": "다음 적 구간 동안 허저 2칸 안 아군을 노린 공격은 모두 허저가 받는다(허저가 그 적의 사거리 안일 때)"
+       }
+      ],
+      "traits": [
+       {
+        "name": "호치호위",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-guardian.png",
+        "text": "연결 아군(군주면 우선)이 공격받을 때 허저가 그 아군과 붙어 있으면 그 공격의 교전자가 허저로 바뀐다(반격 · 방향도 허저 기준) — 차례에 한 번.",
+        "core": true
+       }
+      ],
+      "troopIcon": "spear",
+      "klassName": "호위",
+      "w": {
+       "name": "호위",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-guardian.png"
+      },
+      "q": "관통 찌르기",
+      "move": 5,
+      "range": 1
+     },
+     "countText": "5,000",
+     "maxText": "5,000"
     },
     {
      "id": "G33",
@@ -626,11 +1700,133 @@
      "troopName": "기병",
      "on": false,
      "disabled": false,
+     "squad": "assets/ui-v3/units-ink/squad-cavalry-red.webp",
+     "troop": "cavalry",
+     "klass": "강장",
+     "klassIcon": "assets/ui-kit/own/class-v1/gang.png",
+     "order": null,
+     "stats": [
+      {
+       "key": "leadership",
+       "label": "통솔",
+       "value": 77
+      },
+      {
+       "key": "might",
+       "label": "무력",
+       "value": 82
+      },
+      {
+       "key": "intelligence",
+       "label": "지력",
+       "value": 62
+      },
+      {
+       "key": "politics",
+       "label": "정치",
+       "value": 76
+      },
+      {
+       "key": "charisma",
+       "label": "매력",
+       "value": 73
+      }
+     ],
+     "range": {
+      "min": 200,
+      "max": 500,
+      "step": 50
+     },
+     "warn": "",
      "line": "출진 가능",
      "refusal": false,
      "trait": {
       "ok": true,
       "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     },
+     "short": false,
+     "maxNow": 500,
+     "maxText": "5,000",
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 39,
+        "defense": 128,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 48,
+        "defense": 128,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 58,
+        "defense": 128,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 68,
+        "defense": 128,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 77,
+        "defense": 128,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 87,
+        "defense": 128,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 97,
+        "defense": 128,
+        "text": "5,000"
+       }
+      },
+      "klass": "강장 · 기본",
+      "core": "발시담정",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "기세충천",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 60,
+        "empty": false,
+        "text": "분노를 모두 써 2칸 안 아군 하나의 부상병을 그만큼 복귀시키고 그 아군 사기 한 단계 회복.",
+        "summary": "분노를 모두 써 2칸 안 아군 하나의 부상병을 그만큼 복귀시키고 그 아군 사기 한 단계 회복"
+       },
+       {
+        "key": "R",
+        "name": "맹하후",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "다음 적 구간 동안 받은 피해의 50% 를 저장했다가, 다음 내 차례 시작에 붙은 적 모두에게 되돌린다(각자 전열 판정).",
+        "summary": "다음 적 구간 동안 받은 피해의 를 저장했다가, 다음 내 차례 시작에 붙은 적 모두에게 되돌린다(각자 전열 판정)"
+       }
+      ],
+      "traits": [
+       {
+        "name": "발시담정",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+        "text": "하후돈이 이번 구간 받은 병력 피해의 30% 를 \"분노\"로 저장(상한 = 기본 공격 1) — 다음 내 공격 피해에 더한다. 공격하지 않으면 다음 차례 끝에 사라진다.",
+        "core": true
+       }
+      ],
+      "troopIcon": "cavalry",
+      "klassName": "강장",
+      "w": {
+       "name": "강장",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png"
+      },
+      "q": "돌파",
+      "move": 9,
+      "range": 1
      }
     },
     {
@@ -647,11 +1843,101 @@
      "troopName": "창병",
      "on": false,
      "disabled": true,
+     "squad": "assets/ui-v3/units-ink/squad-spear-red.webp",
+     "troop": "spear",
+     "klass": "강장",
+     "klassIcon": "assets/ui-kit/own/class-v1/gang.png",
+     "order": null,
+     "stats": [
+      {
+       "key": "leadership",
+       "label": "통솔",
+       "value": 89
+      },
+      {
+       "key": "might",
+       "label": "무력",
+       "value": 88
+      },
+      {
+       "key": "intelligence",
+       "label": "지력",
+       "value": 78
+      },
+      {
+       "key": "politics",
+       "label": "정치",
+       "value": 64
+      },
+      {
+       "key": "charisma",
+       "label": "매력",
+       "value": 74
+      }
+     ],
+     "range": {
+      "min": 200,
+      "max": 500,
+      "step": 50
+     },
+     "warn": "쉬는 중 · 2차례 뒤 출진",
      "line": "쉬는 중 · 2차례 뒤 출진",
      "refusal": true,
      "trait": {
       "ok": true,
       "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     },
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 31,
+        "defense": 112,
+        "text": "2,000"
+       }
+      },
+      "klass": "강장 · 기본",
+      "core": "천인장군",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "팔문금쇄",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-momentum.png",
+        "cost": 60,
+        "empty": false,
+        "text": "2칸 안 아군 각각 철갑 1장(다음 적 구간). 진을 깨는 방법: 한 부대가 두 번 친다.",
+        "summary": "2칸 안 아군 각각 철갑 1장(다음 적 구간)"
+       },
+       {
+        "key": "R",
+        "name": "번성사수",
+        "icon": "assets/ui-kit/own/emblem-v1/72/t-wind.png",
+        "cost": 100,
+        "empty": false,
+        "text": "다음 두 적 구간 동안 조인과 붙은 아군 모두 구간마다 철갑 2장 + 조인은 패주하지 않는다.",
+        "summary": "다음 두 적 구간 동안 조인과 붙은 아군 모두 구간마다 철갑 2장 + 조인은 패주하지 않는다"
+       }
+      ],
+      "traits": [
+       {
+        "name": "천인장군",
+        "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png",
+        "text": "조인이 성 · 진지에서 차례를 시작하면 \"철갑\" 2장 — 다음 공격 2회 각각 피해 절반(피해량과 무관하게 공격 하나에 한 장).",
+        "core": true
+       }
+      ],
+      "troopIcon": "spear",
+      "klassName": "강장",
+      "w": {
+       "name": "강장",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-stalwart.png"
+      },
+      "q": "관통 찌르기",
+      "move": 5,
+      "range": 1,
+      "previewOnly": true
      }
     },
     {
@@ -668,11 +1954,133 @@
      "troopName": "창병",
      "on": false,
      "disabled": false,
+     "squad": "assets/ui-v3/units-ink/squad-spear-red.webp",
+     "troop": "spear",
+     "klass": "국사",
+     "klassIcon": "assets/ui-kit/own/class-v1/guksa.png",
+     "order": null,
+     "stats": [
+      {
+       "key": "leadership",
+       "label": "통솔",
+       "value": 68
+      },
+      {
+       "key": "might",
+       "label": "무력",
+       "value": 29
+      },
+      {
+       "key": "intelligence",
+       "label": "지력",
+       "value": 90
+      },
+      {
+       "key": "politics",
+       "label": "정치",
+       "value": 93
+      },
+      {
+       "key": "charisma",
+       "label": "매력",
+       "value": 87
+      }
+     ],
+     "range": {
+      "min": 200,
+      "max": 500,
+      "step": 50
+     },
+     "warn": "",
      "line": "태수 · 출진 가능",
      "refusal": false,
      "trait": {
       "ok": true,
       "tip": "보유 일반특기에서 장착할 특기를 고릅니다"
+     },
+     "short": false,
+     "maxNow": 500,
+     "maxText": "5,000",
+     "spec": {
+      "title": "",
+      "byCount": {
+       "200": {
+        "attack": 21,
+        "defense": 71,
+        "text": "2,000"
+       },
+       "250": {
+        "attack": 27,
+        "defense": 71,
+        "text": "2,500"
+       },
+       "300": {
+        "attack": 32,
+        "defense": 71,
+        "text": "3,000"
+       },
+       "350": {
+        "attack": 38,
+        "defense": 71,
+        "text": "3,500"
+       },
+       "400": {
+        "attack": 43,
+        "defense": 71,
+        "text": "4,000"
+       },
+       "450": {
+        "attack": 48,
+        "defense": 71,
+        "text": "4,500"
+       },
+       "500": {
+        "attack": 54,
+        "defense": 71,
+        "text": "5,000"
+       }
+      },
+      "klass": "국사 · 기본",
+      "core": "왕좌지재",
+      "equipped": [],
+      "slots": 3,
+      "tactics": [
+       {
+        "key": "E",
+        "name": "이호경식",
+        "icon": "assets/ui-kit/own/emblem-v1/72/unique-xun-yu.png",
+        "cost": 60,
+        "empty": false,
+        "text": "지략 비교. 사거리 3 · 시야 안, 서로 붙은 적 둘이 다음 적 구간 끝까지 서로에게서 오는 효과(영 · 오라 · 대신 맞기 · 협공)를 받지 못한다. 둘이 떨어지면 끝",
+        "summary": "지략 비교"
+       },
+       {
+        "key": "R",
+        "name": "구호탄랑",
+        "icon": "assets/ui-kit/own/emblem-v1/72/unique-xun-yu.png",
+        "cost": 80,
+        "empty": false,
+        "text": "지략 비교. 사거리 2 · 시야 안 적 하나가 붙어 있는 다른 적을 한 번 친다",
+        "summary": "지략 비교"
+       }
+      ],
+      "traits": [
+       {
+        "name": "왕좌지재",
+        "icon": "assets/ui-kit/own/emblem-v1/72/unique-xun-yu.png",
+        "text": "순욱이 그 차례 주 행동을 쓰지 않고 끝내면, 2칸 안에서 이미 행동한 아군 장수 하나가 주 행동(일반공격 · Q · W, E · R 불가) 한 번을 더 한다. 같은 아군 연속 두 구간 불가, 순욱에게 적이 붙었거나 순욱이 동요 이하면 꺼짐",
+        "core": true
+       }
+      ],
+      "troopIcon": "spear",
+      "klassName": "국사",
+      "w": {
+       "name": "국사",
+       "icon": "assets/ui-kit/own/emblem-v1/72/w-statesman.png"
+      },
+      "q": "관통 찌르기",
+      "move": 4,
+      "range": 1
      }
     }
    ],

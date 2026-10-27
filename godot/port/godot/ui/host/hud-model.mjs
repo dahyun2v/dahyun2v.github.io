@@ -69,7 +69,7 @@ export function hudModel(state, {selectedArmyId = null} = {}) {
   }));
   const sel = v.ownArmies[selectedArmyId ?? ''] ?? v.ownArmies[units.at(-1)?.id ?? ''] ?? null;
   const todo = Hud.factionFacilityTodo?.(v);
-  const idle = cities.filter((c) => !c.currentProduction);
+  const idle = cities.filter((c) => Hud.cityProductionIdle ? Hud.cityProductionIdle(c) : !c.currentProduction);   // 고를 생산 0개인 성은 '쉼'(웹과 한 규칙 — 이식 방 P0 10-26 · hud-ink cityProductionIdle 이 아직 없으면 예전 규칙)
   const remaining = units.filter((u) => !u.ended).length;
   const tasks = [
     ...(todo ? [{text: todo.text, target: todo.cityId ?? null}] : []),
