@@ -2,15 +2,20 @@
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title>삼국지 테스트 쪽지 — 바뀐 것 · 확인해 줄 것</title>
 <style>body{margin:0;padding:20px 16px 48px;background:#f4efe4;color:#1c1a17;font:16px/1.7 system-ui,sans-serif}main{max-width:760px;margin:0 auto}h1{font-size:20px;margin:0 0 4px}.ver{font:600 15px ui-monospace,monospace;background:#1c1a17;color:#f4efe4;display:inline-block;padding:4px 10px;border-radius:4px}pre{white-space:pre-wrap;word-break:keep-all;font:inherit;margin:18px 0 0}</style></head>
-<body><main><h1>삼국지 테스트 쪽지 — 바뀐 것 · 확인해 줄 것</h1><p class="ver" id="version">판 3f8976cf · 2026-10-27 10:00</p>
+<body><main><h1>삼국지 테스트 쪽지 — 바뀐 것 · 확인해 줄 것</h1><p class="ver" id="version">판 db532a8a · 2026-10-27 11:23</p>
 <pre># 테스트 쪽지 — 이번 판에서 바뀐 것 · 확인해 줄 것
 
 공개 주소에 판을 올릴 때마다 Claude 가 고친다(https://dahyun2v.github.io/TEST-NOTES.txt 로 함께 올라간다). 플레이테스터는 판을 시작할 때 이것을 읽는다.
 
+## 10-27 — 판 정리 (가장 먼저 읽을 것)
+- **진짜 게임은 PC 판(고도) 하나**: https://dahyun2v.github.io/godot/ — 앞으로 화면 · 손맛 · 속도 의견은 여기서. 닷토리 클라우드 브라우저에서는 3D 화면 클릭이 &#x27;브라우저 제어 시간 초과&#x27;로 멈출 수 있으니, **연결된 PC(ChatGPT 앱)로 할 수 있을 때 PC 판을 먼저** 한다.
+- **옛 웹판(https://dahyun2v.github.io/)은 &#x27;규칙 시험판&#x27;으로만 남긴다** — 화면은 더 고치지 않는다(진행 막힘만 고침). PC 판을 못 할 때 규칙 · 전투 · 상대 · 재미를 빠르게 보는 용도. `?trial=v3` 주소도 그대로.
+- 판 3f8976cf 부터 고친 것: ① 생산할 게 없는 작은 성이 다음 차례를 막던 것 ② PC 판 &#x27;부대 선택 → M → 칸 클릭&#x27;이 &#x27;이번 생의 뜻&#x27; 창에 막히던 것. 판 c501139a: PC 판 출진 편성 새 화면.
+
 ## PC 판(고도) 웹 — 10-26 밤 새로 (가장 먼저)
 - **주소: https://dahyun2v.github.io/godot/** — 앞으로 나올 진짜 게임 화면(3D 지도 · 새 병사 · 새 UI)이다. 처음 열 때 약 140MB 를 받아 1분 안팎 걸릴 수 있다(다음부터 빠름). 화면이 하얗거나 멈추면 그 상태와 걸린 시간을 적어 달라 — 브라우저의 3D 그리기(WebGL2)가 안 되는 환경일 수도 있다.
 - 시작 메뉴에서 **&#x27;새 판 — 중국 12세력(시험)&#x27;** 을 고른다: 12군주 고르기 → 드래프트 → 중국 전역 지도 · 구디헛 · 이민족 진지 · 황건 · 판 단계(P1~P4) · 위기. 웹판(아래)에 없던 것들이 여기 있다.
-- **판마다 번갈아**: 1판 = PC 판(고도) 중국 12세력 · 2판 = 웹판 기본 · 3판 = PC 판 · 4판 = 웹판 ?trial=v3 … 리포트 맨 위에 어느 판인지.
+- (10-27 바뀜 — 위 절 참고: 옛 웹판은 없어짐)
 - PC 판에서 특히 볼 것: ① 처음 열기 · 새 판 · 상대 차례에 걸리는 시간(초) ② 지도에서 부대 고르기 · 이동 · 공격 예고 · 교전이 손에 붙는가 ③ 구디헛 · 이민족 진지를 찾아 치는 재미 ④ 12세력 상대가 멈추거나 이상한 짓을 하는가 ⑤ 글자 깨짐 · 화면 밖으로 나간 판 · 안 눌리는 단추.
 - 알고 있는 것: 출진 편성 · 성장 화면은 새 디자인을 만드는 중(지금 것은 옛 판) · 성 모형은 새 것으로 바꾸는 중 · 시설은 임시 모형.
 
