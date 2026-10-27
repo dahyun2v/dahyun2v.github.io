@@ -211,6 +211,12 @@ export function mountHelpPanel(panel,entries,close){
  panel.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close();}if(e.key==='Tab'){const controls=[...panel.querySelectorAll('button,input')];if(e.shiftKey&&document.activeElement===controls[0]){e.preventDefault();controls.at(-1)?.focus();}else if(!e.shiftKey&&document.activeElement===controls.at(-1)){e.preventDefault();controls[0]?.focus();}}},true);
 }
 export function factionOpeningLine(factionId){return [Object.values(C20_FACILITIES).find(f=>f.factionId===factionId)?.name,C20_POLICIES[factionId]?.name,Object.values(SPECIAL_TROOPS).filter(t=>t.factionId===factionId).map(t=>t.name).join('/')].filter(Boolean).join(' · ');}
+// 생산을 정해야 하는 성인가(웹 cityProductionBadge · 고도 hud-model 공통 — 한 규칙): 지금 생산이 없고, 지금 고를 수 있는 작업이 하나라도 있을 때만.
+// 고를 작업이 0개인 작은 성(시설칸 없음 · 작은 성 불가 · 다른 세력 고유 …)은 '쉼' — 다음 차례를 막지 않는다(닷토리 플레이테스트 P0 10-26 · 거록 T6 · 평원 T4).
+// 징병 · 재편은 성 창에서 장수 · 병종을 골라야 하는 작업이라 빠른 선택 후보로 치지 않는다(웹 생산 팝업과 같음).
+export const CITY_WINDOW_JOBS=['muster','reorganize'];
+export function cityPickableJobs(c){return (c?.jobs??[]).filter(j=>!j.blockedReason&&!CITY_WINDOW_JOBS.includes(j.kind));}
+export function cityProductionIdle(c){return !!c?.jobs&&!c.currentProduction&&cityPickableJobs(c).length>0;}
 export function factionFacilityTodo(v){
  if(v.turn<1||v.turn>3||v.gameResult||!v.policy)return null;
  const entry=Object.entries(C20_FACILITIES).find(([,f])=>f.factionId===v.factionId);if(!entry)return null;const [kind,facility]=entry,cities=Object.values(v.ownCities??{});
