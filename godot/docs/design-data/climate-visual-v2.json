@@ -1,0 +1,654 @@
+{
+ "version": "climate-visual-v2",
+ "status": "DRAFT — 정본 지역 아홉(사용자 10-27 배치 2판). v1(기후 13갈래)은 그대로 두고 지역 단위로 새로 · 10-28 닷토리 지역 원화 아홉 · 소품 20 반영(lookArt · groundFromArt · propArt) · 10-28 닷토리 지역 원화 아홉 · 소품 20 반영(lookArt · groundFromArt · propArt) · 10-28 지역 바닥 질감 후보 9(groundTexture) · 10-28 지역 바닥 질감 후보 9(groundTexture) · 10-28 지역 바닥 질감 후보 9(groundTexture) · 10-28 지역 바닥 질감 후보 9(groundTexture)",
+ "palette": {
+  "ink": "#0a0e0d",
+  "inkRaised": "#14201e",
+  "paper": "#eee0bd",
+  "goldLine": "#a3845a",
+  "goldName": "#c9b27c",
+  "mapText": "#E9E5DC",
+  "move": "#78A9AB",
+  "danger": "#B64F45"
+ },
+ "levels": {
+  "1": {
+   "form": 0.35,
+   "props": 0.6,
+   "weather": 0,
+   "note": "약하게 — 바탕만 바뀜, 날씨 없음"
+  },
+  "2": {
+   "form": 0.7,
+   "props": 1.0,
+   "weather": 0.5,
+   "note": "보통 — 소품 · 형태 뚜렷, 날씨 가끔"
+  },
+  "3": {
+   "form": 1.0,
+   "props": 1.4,
+   "weather": 1.0,
+   "note": "극단(PROJECT_LOCK) — 형태 과장 최대 · 지역 표식"
+  }
+ },
+ "readMin": {
+  "goldLine": 1.6,
+  "move": 1.5
+ },
+ "regions": {
+  "R01": {
+   "name": "설풍북경",
+   "hanja": "雪風北境",
+   "read3s": "검은 돌 · 얼어붙은 갈색 땅 · 옆으로 달리는 눈",
+   "mergedFromV1": [
+    "snow",
+    "wind"
+   ],
+   "textures": [
+    "tex-snow",
+    "tex-rock",
+    "tex-plain",
+    "tex-ice"
+   ],
+   "ground": [
+    "#2a2e33",
+    "#5a5650",
+    "#c9c6be"
+   ],
+   "props": [
+    {
+     "id": "snowRock",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "snowConifer",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "windbreakWall",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "hayRack",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "수평 눈가루",
+    "건물 사이 눈 줄기"
+   ],
+   "canonPoints": [
+    "흰색보다 검은 지면이 더 많이",
+    "낮은 고원 · 평지 55~65% · 검은 암반 능선 15~25% · 얕은 강 · 얼음습지 10~20%",
+    "바람 맞는 쪽은 눈이 벗겨져 검은 땅, 바람 그늘에 칼날 모양 눈더미",
+    "전체 푸른 필터 금지"
+   ],
+   "tactic": "눈보라",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-1/region-r01.png",
+   "groundFromArt": [
+    "#423d3b",
+    "#6d625c",
+    "#a09a9a"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r01-ground.png",
+    "seamPercentile": [
+     98.83,
+     96.48
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R02": {
+   "name": "적사해",
+   "hanja": "赤砂海",
+   "read3s": "붉은 암벽 · 검은 틈 · 물 있는 곳만 초록",
+   "mergedFromV1": [
+    "desert",
+    "oasis"
+   ],
+   "textures": [
+    "tex-desert-rock",
+    "tex-desert-sand",
+    "tex-oasis",
+    "tex-cliff-face"
+   ],
+   "ground": [
+    "#3a1e16",
+    "#9a4a32",
+    "#d39a72"
+   ],
+   "props": [
+    {
+     "id": "desertRock",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "dryShrub",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "poplar",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "cisternMouth",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "얕은 모래바람"
+   ],
+   "canonPoints": [
+    "붉은 사암 · 협곡 · 마른 와디 · 검은 사막 칠",
+    "바위를 판 집 40~60% + 세운 집 40~60%",
+    "물은 집수로 · 저수조 입구 · 관리 구멍으로 읽힘",
+    "초록은 물이 있는 곳에서만"
+   ],
+   "tactic": "마른 보급",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-1/region-r02.png",
+   "groundFromArt": [
+    "#553a32",
+    "#8d5f4b",
+    "#c3886b"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r02-ground.png",
+    "seamPercentile": [
+     98.24,
+     81.6
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R03": {
+   "name": "황토열곡",
+   "hanja": "黃土裂谷",
+   "read3s": "노란 절벽 단면 · 굴집 문 · 단면을 가로지르는 길",
+   "mergedFromV1": [
+    "loess",
+    "cliffs(황토)"
+   ],
+   "textures": [
+    "tex-loess",
+    "tex-cliff-face",
+    "tex-hill",
+    "tex-farm"
+   ],
+   "ground": [
+    "#5e4526",
+    "#b8914e",
+    "#e0c58a"
+   ],
+   "props": [
+    {
+     "id": "loessPillar",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "caveDoor",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "terraceStep",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "먼지 안개"
+   ],
+   "canonPoints": [
+    "황토 벽 · 골짜기 · 무너진 계단밭",
+    "골 바닥 · 중턱 · 능선 세 층 길",
+    "집은 문 · 창 · 짧은 처마 · 연기 · 계단만 보임(굴집 · 지하 마당)"
+   ],
+   "tactic": "협곡 매복",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-2/region-r03.png",
+   "groundFromArt": [
+    "#5b534a",
+    "#877563",
+    "#b9a086"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r03-ground.png",
+    "seamPercentile": [
+     49.71,
+     17.42
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R04": {
+   "name": "황하변천지",
+   "hanja": "黃河變天地",
+   "read3s": "제방 위 긴 도시 · 지난 홍수 선",
+   "mergedFromV1": [
+    "fertile",
+    "wind(해안)"
+   ],
+   "textures": [
+    "tex-fertile-field",
+    "tex-farm",
+    "tex-shore",
+    "tex-road"
+   ],
+   "ground": [
+    "#4e4232",
+    "#9a8463",
+    "#cdb894"
+   ],
+   "props": [
+    {
+     "id": "farmPlot",
+     "sheet": null,
+     "new": false
+    },
+    {
+     "id": "leveeSegment",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "sluiceGate",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "floodGauge",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "범람(지역 규칙 FLOOD) 때 물 띠"
+   ],
+   "canonPoints": [
+    "누런 흙탕물 · 갈라진 물길 · 진흙 섬 · 옛 제방",
+    "집 바닥 +0.5~1m · 곡창 +1.5~2m",
+    "제방 = 나라 길",
+    "작은 수문 · 넘침 물길 · 물자"
+   ],
+   "tactic": "범람",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-2/region-r04.png",
+   "groundFromArt": [
+    "#63604e",
+    "#998b75",
+    "#b7aa9b"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r04-ground.png",
+    "seamPercentile": [
+     28.18,
+     52.25
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R05": {
+   "name": "운몽대택",
+   "hanja": "雲夢大澤",
+   "read3s": "가는 기둥 위 집 · 골목이 계절마다 뱃길",
+   "mergedFromV1": [
+    "waterland(형주)"
+   ],
+   "textures": [
+    "tex-marsh",
+    "tex-water",
+    "tex-shore",
+    "tex-fertile-field"
+   ],
+   "ground": [
+    "#25332a",
+    "#566b55",
+    "#a6b29a"
+   ],
+   "props": [
+    {
+     "id": "reedBush",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "drownedTree",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "stiltHouse",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "fishTrap",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "물안개"
+   ],
+   "canonPoints": [
+    "집 바닥 +2~4m 가는 기둥(20~30cm)",
+    "마른 철 진흙 골목 · 보통 널길 · 홍수 뱃길",
+    "젖은 논 · 어장 · 떠 있는 밭",
+    "물때 자국"
+   ],
+   "tactic": "뻘 · 물길",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-3/region-r05.png",
+   "groundFromArt": [
+    "#4b4f47",
+    "#70736b",
+    "#8c9290"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r05-ground.png",
+    "seamPercentile": [
+     79.84,
+     11.55
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R06": {
+   "name": "천호내해",
+   "hanja": "千湖內海",
+   "read3s": "낮은 섬 수십 · 물속으로 들어갔다 나오는 돌길",
+   "mergedFromV1": [
+    "waterland(양주 · 주강)"
+   ],
+   "textures": [
+    "tex-water",
+    "tex-shore",
+    "tex-marsh",
+    "tex-road"
+   ],
+   "ground": [
+    "#22303a",
+    "#4f6a7a",
+    "#a9bcc4"
+   ],
+   "props": [
+    {
+     "id": "reedBush",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "stoneCauseway",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "islandPlatform",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "ferryBoat",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "호수 물안개"
+   ],
+   "canonPoints": [
+    "깊은 호수 · 맑은 청회색",
+    "낮은 섬 · 마른 돌 단 · 둑길 · 나루 · 돌 부두",
+    "섬 하나 = 기능 하나(집 · 시장 · 곡창)",
+    "가장 큰 섬도 전체 15% 이하"
+   ],
+   "tactic": "호수 둑길",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-3/region-r06.png",
+   "groundFromArt": [
+    "#445359",
+    "#566c78",
+    "#808887"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r06-ground.png",
+    "seamPercentile": [
+     21.72,
+     56.95
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R07": {
+   "name": "운폐산국",
+   "hanja": "雲閉山國",
+   "read3s": "안개 속 고도별 숲 · 마을 · 계단논",
+   "mergedFromV1": [
+    "mist",
+    "giantForest",
+    "jungle",
+    "cliffs(촉)"
+   ],
+   "textures": [
+    "tex-mist-highland",
+    "tex-giant-forest-floor",
+    "tex-jungle-floor",
+    "tex-forest-floor"
+   ],
+   "ground": [
+    "#1f2b22",
+    "#4a5e48",
+    "#9caa8a"
+   ],
+   "props": [
+    {
+     "id": "giantTree",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "bambooClump",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "jungleClump",
+     "sheet": "sheet-climate-props",
+     "new": false
+    },
+    {
+     "id": "riceTerrace",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "산안개(지역 규칙 MOUNTAIN_FOG)"
+   ],
+   "canonPoints": [
+    "숲 → 샘 → 마을 → 계단논 → 물레방아 → 강(세로 물 사슬)",
+    "한 도시 높이차 100~300m",
+    "아래 돌 1~2m · 위 나무 + 옅은 황토 회벽",
+    "등고선 길 · 계단 · 물길"
+   ],
+   "tactic": "산안개",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-4/region-r07.png",
+   "groundFromArt": [
+    "#353a35",
+    "#616459",
+    "#9a9787"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r07-ground.png",
+    "seamPercentile": [
+     18.79,
+     84.15
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R08": {
+   "name": "염천",
+   "hanja": "鹽泉",
+   "read3s": "흰 광물층 · 검은 길 · 청록 얕은 물 · 증기",
+   "mergedFromV1": [],
+   "textures": [
+    "tex-ice",
+    "tex-shore",
+    "tex-water",
+    "tex-road"
+   ],
+   "ground": [
+    "#1c1c1e",
+    "#bfbcb2",
+    "#f2f0ea"
+   ],
+   "props": [
+    {
+     "id": "saltTerrace",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "evaporationBasin",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "brineChannel",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "steamVent",
+     "sheet": null,
+     "new": true
+    }
+   ],
+   "weatherLook": [
+    "증기"
+   ],
+   "canonPoints": [
+    "흰 광물 껍질 · 황토 바위 · 얕은 광물 · 뜨거운 물",
+    "증기는 안개와 따로",
+    "검은 돌 기초 · 높인 나무 길 · 금속에 흰 광물 때",
+    "큰길은 검은 선 하나 · 양옆 흰 계단 + 얕은 못"
+   ],
+   "tactic": "소금",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-4/region-r08.png",
+   "groundFromArt": [
+    "#79746c",
+    "#b5bab1",
+    "#e3dcd4"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r08-ground.png",
+    "seamPercentile": [
+     99.22,
+     13.11
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  },
+  "R09": {
+   "name": "화산천층계",
+   "hanja": "火山千層界",
+   "read3s": "검은 현무암 계단 · 붉은 화산토 · 증기 틈",
+   "mergedFromV1": [],
+   "textures": [
+    "tex-cliff-face",
+    "tex-rock",
+    "tex-desert-rock",
+    "tex-road"
+   ],
+   "ground": [
+    "#141212",
+    "#3a2a26",
+    "#8a4a34"
+   ],
+   "props": [
+    {
+     "id": "basaltColumn",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "steamVent",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "lavaTubeMouth",
+     "sheet": null,
+     "new": true
+    },
+    {
+     "id": "rockPillar",
+     "sheet": "sheet-cliffs-canyon",
+     "new": false
+    }
+   ],
+   "weatherLook": [
+    "증기 틈 연기 · 가끔 불 칸(지역 규칙 GEOTHERMAL)"
+   ],
+   "canonPoints": [
+    "현무암 계단 · 화산 능선 · 용암 굴 · 증기 틈",
+    "찬 물 + 온천 웅덩이",
+    "아래 현무암 + 위 나무 · 흙",
+    "검은 계단 + 지그재그 비탈 + 굴 지름길",
+    "상시 용암 강 금지"
+   ],
+   "tactic": "지열",
+   "lookArt": "docs/work-integration/20261028/dots-region/region-art-5/region-r09.png",
+   "groundFromArt": [
+    "#2a2524",
+    "#503f39",
+    "#8c6152"
+   ],
+   "groundTexture": {
+    "png": "docs/work-integration/20261023/map-china/region-tex/tex-r09-ground.png",
+    "seamPercentile": [
+     10.18,
+     99.22
+    ],
+    "note": "원화에서 평평한 땅을 잘라 이음 처리한 지역 바닥 후보(10-28) — tex-* 질감 위에 지역 세기로 섞어 깔 것"
+   }
+  }
+ },
+ "needsOrder": {
+  "textures": [],
+  "props": []
+ },
+ "propArt": {
+  "sheet": "docs/work-integration/20261028/dots-region/region-art-5/region-props.png",
+  "cells": {
+   "windbreakWall": "docs/work-integration/20261023/map-china/region-art/prop-windbreakWall.png",
+   "hayRack": "docs/work-integration/20261023/map-china/region-art/prop-hayRack.png",
+   "cisternMouth": "docs/work-integration/20261023/map-china/region-art/prop-cisternMouth.png",
+   "caveDoor": "docs/work-integration/20261023/map-china/region-art/prop-caveDoor.png",
+   "terraceStep": "docs/work-integration/20261023/map-china/region-art/prop-terraceStep.png",
+   "leveeSegment": "docs/work-integration/20261023/map-china/region-art/prop-leveeSegment.png",
+   "sluiceGate": "docs/work-integration/20261023/map-china/region-art/prop-sluiceGate.png",
+   "floodGauge": "docs/work-integration/20261023/map-china/region-art/prop-floodGauge.png",
+   "stiltHouse": "docs/work-integration/20261023/map-china/region-art/prop-stiltHouse.png",
+   "fishTrap": "docs/work-integration/20261023/map-china/region-art/prop-fishTrap.png",
+   "stoneCauseway": "docs/work-integration/20261023/map-china/region-art/prop-stoneCauseway.png",
+   "islandPlatform": "docs/work-integration/20261023/map-china/region-art/prop-islandPlatform.png",
+   "ferryBoat": "docs/work-integration/20261023/map-china/region-art/prop-ferryBoat.png",
+   "riceTerrace": "docs/work-integration/20261023/map-china/region-art/prop-riceTerrace.png",
+   "saltTerrace": "docs/work-integration/20261023/map-china/region-art/prop-saltTerrace.png",
+   "evaporationBasin": "docs/work-integration/20261023/map-china/region-art/prop-evaporationBasin.png",
+   "brineChannel": "docs/work-integration/20261023/map-china/region-art/prop-brineChannel.png",
+   "steamVent": "docs/work-integration/20261023/map-china/region-art/prop-steamVent.png",
+   "basaltColumn": "docs/work-integration/20261023/map-china/region-art/prop-basaltColumn.png",
+   "lavaTubeMouth": "docs/work-integration/20261023/map-china/region-art/prop-lavaTubeMouth.png"
+  },
+  "note": "닷토리 소품 20(10-28) — 칸마다 잘라 둠(글자 줄 뺌). 회색 바탕 그대로 = 바로 쓰는 스프라이트가 아니라 3D 모형(아스트라) · 배치 기준"
+ }
+}

@@ -48,6 +48,7 @@ import {campaignMovementWorld} from './campaign-city-footprint.mjs';
 import {edgeTicks} from './movement.mjs';
 import {movementEffect,officerEffectCards} from './campaign-effects.mjs';
 import {canObserveTile} from './knowledge.mjs';
+import {regionDownhillMul} from './campaign-regions.mjs'; // C514 R03 구릉 → 아래 길 ×1.10(정본 20 v3.8 §5.3)
 
 // C299: trial tuning; Q never pays a tactic cost or learns a tactic card.
 export const TROOP_Q_RULES={
@@ -270,7 +271,7 @@ function attackFormula(s,attackerId,targetId,troopCount=s.armies[attackerId].tro
   options=engineAttackOptions(pilotEngineState(s),attackerId,targetId,uniqueAttackOptions(s,attackerId,targetId,options));if(c33Formation(s,targetId,'FORMATION_RING'))options={...options,noFlank:true};
   const a=s.armies[attackerId],t=s.armies[targetId];
   const at=troopToCampaign(a.troopType),dt=troopToCampaign(t.troopType);
-  const terrainAttack=C182.terrainAttack[at]?.[s.tiles[a.tileId].terrainType]??1;
+  const terrainAttack=(C182.terrainAttack[at]?.[s.tiles[a.tileId].terrainType]??1)*regionDownhillMul(s,a.tileId,t.tileId);
   const terrain=options.ignoreCover?1:({forest:1.15,hill:1.25})[s.tiles[t.tileId].terrainType]??1;
   const castleRaw=engineWallDisabled(s,t)?1:campaignCastleDefense(s,t,attackerId),castle=1+(castleRaw-1)*(c28Rule(s,attackerId,'BREACH_GUARD')?C28.breachRatio:1);
   const river=s.mapRules.riverEdges.includes([a.tileId,t.tileId].sort().join('|'))?.75:1;
@@ -378,6 +379,13 @@ function previewDisengageRead(s,armyId) {
   }
   return best;
 }
+// 플레이어에게 보여 줄 이동 예고(웹 · 고도 공통 — C516 닷토리 '추격 예고보다 실제가 20~35% 큼' 7건):
+// 실제 결과(resolvePursuit · resolveApproachFire)와 같은 함수 · 같은 판(진짜 판)으로 — 일반 공격 예고(previewAttack(state, …))와 같은 방침.
+// 공개 판(campaignTacticsWorld)은 적 장수를 능력치 50 가상 장수로 바꿔 예고가 늘 낮았다. 다만 그 세력에게 안 보이는 부대(시야 밖 · 매복)가
+// 추격 · 사격하는 경우는 드러내지 않고 공개 판 값(probe — 없으면 예고 없음)을 그대로 쓴다.
+const seenBy=(s,f,armyId)=>{const b=s.armies[armyId];return !!b&&s.knowledge?.[f]?.tiles?.[b.tileId]==='VISIBLE'&&!ambushHidden(s,armyId,f);};
+export function previewDisengageFor(s,armyId,probe){const f=s.armies[armyId]?.factionId,real=previewDisengage(s,armyId);if(real&&seenBy(s,f,real.pursuerId))return real;return probe?previewDisengage(probe,armyId):null;}
+export function previewApproachFireFor(s,armyId,destinationTileId,probe){const f=s.armies[armyId]?.factionId,real=previewApproachFire(s,armyId,destinationTileId);if(real&&seenBy(s,f,real.archerId))return real;return probe?previewApproachFire(probe,armyId,destinationTileId):null;}
 export function resolvePursuit(state,armyId) {
   const p=previewDisengage(state,armyId);if(!p)return state;
   armyId=p.targetId??armyId;

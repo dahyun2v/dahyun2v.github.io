@@ -15,6 +15,10 @@ const [R, Combat, Effects, MapModel, Display, Hud, Morale, Roster, Rel, Registry
   load('prototype/src/campaign-map-model.mjs'), load('prototype/src/troop-display.mjs'), load('prototype/app/world/hud-ink.mjs'),
   load('prototype/src/campaign-morale.mjs'), load('prototype/src/campaign-roster.mjs'), load('prototype/src/campaign-relations.mjs'), load('prototype/src/campaign-rule-registry.mjs'),
 ]);
+const Regions = await load('prototype/src/campaign-regions.mjs');
+const [DV3, DV3T] = await Promise.all([load('prototype/app/world/domestic-v3-ui.mjs'), load('prototype/app/world/domestic-v3-text.mjs')]);   // C514 지역 전술 규칙(china 새 판만) — 지도 HUD 예보 · 칸 정보
+const CHINA_MAP = (() => { try { return JSON.parse(readFileSync(resolve(ROOT, 'docs/design-data/map-layout-china-v1.json'), 'utf8')); } catch { return null; } })();
+const CHINA_ROAD = new Set((CHINA_MAP?.roads ?? []).flatMap((e) => e.map((p) => p.join(','))));
 const OFFICER_LABELS = Object.fromEntries((Registry.UNIQUE_OFFICERS ?? []).map((o) => [o.id, o.name]));   // 웹 world.js:260 — 판에 없는 장수 이름
 // 인연 · 세트 자료(웹 world.js:361 bondsData — 같은 파일)
 const BONDS = (() => { try { return JSON.parse(readFileSync(resolve(ROOT, 'docs/design-data/officer-pack/bonds-v0.1.json'), 'utf8')); } catch { return {sets: [], teamUps: []}; } })();
@@ -61,6 +65,8 @@ export function hudModel(state, {selectedArmyId = null} = {}) {
     {key: 'troops', label: '병력', value: Display.troopText(own.reduce((n, a) => n + a.troopCount, 0)), max: null, delta: '', tip: '부대 병력 합'},
     {key: 'reserve', label: '예비', value: Display.troopText(sum('reserveTroops')), max: null, delta: '', tip: '도시 예비병 합'},
   ];
+  // 내정 v3 판(지금 새 판 기본 — view.granary · treasury): 웹 윗줄 resourceChipsV3 와 같은 값 · 같은 말로(10-27 총괄 '식량 +12113' — 예전 도시 식량에 v3 도시 산출 원값을 붙이던 어긋남)
+  if (DV3.v3View(v)) resources.splice(0, resources.length, ...resourcesV3(v));
   const ended = (id) => Combat.armyActionEnded(s, id), moved = (id) => (s.movedArmyIds ?? []).includes(id);
   const units = own.map((a) => ({
     id: a.armyId, officerId: a.commanderId, name: v.officers[a.commanderId]?.name ?? a.commanderId, art: officerArt(a.commanderId), head: artHead(officerArt(a.commanderId)),
@@ -90,6 +96,7 @@ export function hudModel(state, {selectedArmyId = null} = {}) {
     end: {label: '다음 차례', remaining, ready: remaining === 0 && idle.length === 0},
     // 전법 준비(웹 world.js updateTacticReady): 내 차례일 때만 · 부대:전법 → waiting 0 이고 효과가 있음 — 고도 독이 '막 준비됨'을 붓 쓸기로 알림
     tacticReady: s.phase === 'PLAYER' ? Object.fromEntries(own.flatMap((a) => Effects.campaignTactics(s, a.armyId).map((c) => [`${a.armyId}:${c.traitId}`, c.waiting === 0 && !!c.effects?.length]))) : null,
+    regions: regionsModel(s, v),   // C514 지역 날씨 예보 · 칸 정보(엔진 값 그대로 — 화면은 다시 계산하지 않음)
     advisor: advisorModel(v, officerArt, artHead),
     crisis: crisisModel(s, v, officerArt, artHead),
     choice: choiceModel(s, v),
@@ -230,4 +237,85 @@ function minimap(v) {
   return {image: 'assets/ui-v3/map/v15-world.webp', land: landBox, tileToUv,
     cities: m.cities.map((x) => ({id: x.id, name: x.name, ...uv(x.center), own: x.factionId === v.factionId, capital: x.id === v.faction.capitalCityId})),
     units: m.units.map((u) => ({id: u.id, ...uv(u.tileId), own: !!v.ownArmies[u.id]}))};
+}
+
+
+// ── C514 지역 전술 규칙(10-27 총괄 — 정본 20 v3.8) ──
+// 예보 = view().regions 의 active · upcoming(2차례 앞) + 효과 한 줄(지도 데이터 regions[].tactic.params — 엔진이 쓰는 같은 값).
+// 칸 정보 = 칸을 '지역 + 성질(숨는 땅 · 구릉 · 길 · 범람 · 오아시스 · 증기 불)'로 묶고, 묶음마다 엔진 함수(regionMoveTicks · regionVisionDelta ·
+//   floodedTile · regionSupplyDrainMul · regionOasisRefill · regionRecoveryMul)를 대표 칸에 불러 효과 문장을 만든다. 칸 목록은 묶음별 'q,r;q,r' 한 줄.
+const KIND = {BLIZZARD: '눈보라', FLOOD: '범람', FOG: '산안개', VENT_FIRE: '증기 불'};
+const times = (m) => `${Number.isInteger(m) ? m : m.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')}배`;
+function regionsModel(s, v) {
+  if (!v.regions || !CHINA_MAP) return null;
+  const P = (r) => CHINA_MAP.regions?.[r]?.tactic?.params ?? {};
+  const forecastLine = (e) => {
+    if (e.kind === 'BLIZZARD') return `이동 비용 ${times(P('R01').moveMul ?? 1.5)} · 시야 ${Math.abs(P('R01').visionDelta ?? -2)}칸 줄어듦`;
+    if (e.kind === 'FLOOD') return '강가 칸 이동 비용 1.5배 · 제방 길은 그대로';
+    if (e.kind === 'FOG') return `시야 ${Math.abs(P('R07').fogVisionDelta ?? -2)}칸 줄어듦 · 숲 · 구릉에 숨음`;
+    if (e.kind === 'VENT_FIRE') return '증기 틈 한 칸에 불(이번 차례)';
+    return '';
+  };
+  const turn = v.turn;
+  const forecast = [
+    ...(v.regions.active ?? []).map((e) => ({region: e.region, name: e.name ?? '', kind: KIND[e.kind] ?? e.kind, when: e.until > turn ? `이번 차례 · ${e.until}차례까지` : '이번 차례', now: true, effect: forecastLine(e)})),
+    ...(v.regions.upcoming ?? []).map((e) => ({region: e.region, name: e.name ?? '', kind: KIND[e.kind] ?? e.kind, when: e.startTurn === turn + 1 ? '다음 차례' : `${e.startTurn - turn}차례 뒤`, now: false, effect: forecastLine(e)})),
+  ];
+  // 칸 묶음
+  const vent = new Set((s.regionRules?.events ?? []).filter((e) => e.kind === 'VENT_FIRE' && e.startTurn <= turn && turn <= e.until).map((e) => e.tileId));
+  const groups = {}, sample = {};
+  for (const id of Object.keys(s.tiles ?? {})) {
+    const r = Regions.tileRegion(s, id);
+    if (!r) continue;
+    const terr = s.tiles[id]?.terrainType;
+    const road = CHINA_ROAD.has(id);
+    let key = r;
+    if ((r === 'R03' || r === 'R07') && ['forest', 'hill'].includes(terr)) key += terr === 'hill' && r === 'R03' ? ':hill' : ':hide';
+    if ((r === 'R04' || r === 'R06') && road) key += ':road';
+    if (r === 'R04' && Regions.floodedTile(s, id)) key += ':flood';
+    if (r === 'R02' && Regions.regionOasisRefill(s, {tileId: id})) key += ':oasis';
+    if (r === 'R09' && vent.has(id)) key += ':fire';
+    (groups[key] ??= []).push(id);
+    sample[key] ??= {id, road};
+  }
+  const lines = {};
+  for (const [key, {id, road}] of Object.entries(sample)) {
+    const r = key.split(':')[0], meta = CHINA_MAP.regions?.[r];
+    const L = [];
+    const inf = Regions.regionMoveTicks(s, 'infantry', id, id, 100, road) / 100, cav = Regions.regionMoveTicks(s, 'cavalry', id, id, 100, road) / 100;
+    if (inf > 1 && cav > inf) L.push(`이동 비용 ${times(inf)} · 기병 ${times(cav)}`);
+    else if (inf > 1) L.push(`이동 비용 ${times(inf)}`);
+    else if (cav > 1) L.push(`기병 이동 비용 ${times(cav)}`);
+    const vd = Regions.regionVisionDelta(s, id);
+    if (vd < 0) L.push(`시야 ${Math.abs(vd)}칸 줄어듦`);
+    if (key.endsWith(':hide') || key.endsWith(':hill')) L.push('적 부대가 2칸 안에 없으면 숨음');
+    if (key.endsWith(':hill')) L.push('아래 길 칸을 치면 피해가 조금 늘어남');
+    if (key.includes(':road') && r === 'R04') L.push('제방 길 — 범람에도 이동 그대로');
+    if (key.includes(':road') && r === 'R06') L.push('둑길 — 기병도 보통 이동');
+    if (r === 'R02') L.push(key.endsWith(':oasis') ? '오아시스 — 서 있으면 보급이 가득 참' : `성 밖 보급이 ${times(Regions.regionSupplyDrainMul(s, {tileId: id}))} 빨리 줄어듦`);
+    if (r === 'R08') L.push('소금 산지 — 영역에 둔 성이 소금을 얻음');
+    if (r === 'R09') L.push(`이 지역 성의 부상병 회복 ${times(Regions.regionRecoveryMul(s, {tileId: id}))}`);
+    if (key.endsWith(':fire')) L.push('증기 불 — 이번 차례 불 칸');
+    lines[key] = {title: `${meta?.name ?? r} · ${meta?.tactic?.name ?? ''}`.replace(/ · $/, ''), lines: L};
+  }
+  return {forecast, tiles: Object.fromEntries(Object.entries(groups).map(([k, ids]) => [k, ids.join(';')])), lines};
+}
+
+
+/** 내정 v3 윗줄(웹 domestic-v3-ui resourceChipsV3 그대로): 곡식(세력 창고 · 순증 · 바닥 차례) · 금 · 학문 · 인망 · 병사(성 + 부상 + 부대) · 무기고(가장 적은 것). */
+function resourcesV3(v) {
+  const T = DV3T.default.topBar, n = DV3.numberV3, sg = (x) => `${(x ?? 0) >= 0 ? '+' : '−'}${n(Math.abs(x ?? 0))}`;
+  const cities = Object.values(v.ownCities ?? {}), l = v.learning, arms = Object.entries(v.armory ?? {}).sort((a, b) => a[1] - b[1])[0];
+  const danger = v.granary === 0 || (v.granaryTurnsLeft !== null && v.granaryTurnsLeft !== undefined && v.granaryTurnsLeft <= 3);
+  const soldiers = cities.reduce((k, c) => k + (c.reserveTroops ?? 0) + (c.woundedTroops ?? 0), 0) + Object.values(v.ownArmies ?? {}).reduce((k, a) => k + a.troopCount, 0);
+  const AK = DV3T.default.armory;
+  return [
+    {key: 'food', label: T.grain.label, value: `${n(v.granary)}석`, max: null, delta: `${sg(v.granaryNet)}${v.granaryNet < 0 && v.granaryTurnsLeft != null ? ' · ' + v.granaryTurnsLeft + '차례' : ''}`,
+      tip: danger ? `곡식이 ${v.granaryTurnsLeft ?? 0}차례 뒤 바닥` : T.grain.tooltip.split(' 지금')[0], warn: danger},
+    {key: 'gold', glyph: '金', label: T.gold.label, value: `${n(v.treasury)}금`, max: null, delta: sg(v.treasuryNet), tip: T.gold.tooltip, warn: (v.unpaidTurns ?? 0) > 0},
+    ...(l ? [{key: 'science', label: T.learning.label, value: n(l.science), max: null, delta: '', sub: `${l.learningChoice ? '● ' : ''}${l.nextThreshold === null ? '모든 카드 문턱 도달' : '다음 카드 ' + n(l.nextThreshold)}`, tip: T.learning.tooltip}] : []),
+    {key: 'fame', label: '인망', value: n(v.faction?.prestige), max: null, delta: '', tip: T.prestige.tooltip},
+    {key: 'troops', label: T.soldiers.label, value: `${n(soldiers)}명`, max: null, delta: '', tip: T.soldiers.tooltip},
+    ...(arms ? [{key: 'armory', glyph: '武', label: '무기고', value: `${AK.kinds[arms[0]]?.label ?? arms[0]} ${n(arms[1])}`, max: null, delta: '', tip: AK.tooltip}] : []),
+  ];
 }

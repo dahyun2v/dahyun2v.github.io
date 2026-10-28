@@ -1369,9 +1369,11 @@ function dockTroop464(d,a,many){
 // C482 reads the selected unit's public view only. No equipment commands here.
 function dockProfile482(d,a,o,core,equipped){
  const enemy=!!d.enemy,e=enemy?null:a.engine,type=({BT01:'militia',BT02:'spear',BT03:'bow',BT04:'cavalry',dao:'militia',sword:'militia'})[a.troopType]??a.troopType;
- const symbol=({militia:'sword',spear:'spear',bow:'bow',cavalry:'cavalry'})[type];
- const aptitude=enemy?null:({S:'아주 높음',A:'높음',B:'일정',C:'낮음',D:'낮음'})[o.aptitude?.[type]];
- const troopName=({militia:'도병',spear:'창병',bow:'궁병',cavalry:'기병'})[type]??'병종 미확인';
+ // C516: 특수 병종(투석기 등)은 공개 보기의 상위 병종(parentTroopType)으로 그림 · 적성, 이름은 병종 표시 이름(troopDisplayName — 예: 투석기). 전에는 '병종 미확인'
+ const base=({militia:1,spear:1,bow:1,cavalry:1})[type]?type:(({BT01:'militia',BT02:'spear',BT03:'bow',BT04:'cavalry'})[a.parentBaseTroopId]??a.parentTroopType??type);
+ const symbol=({militia:'sword',spear:'spear',bow:'bow',cavalry:'cavalry'})[base];
+ const aptitude=enemy?null:({S:'아주 높음',A:'높음',B:'일정',C:'낮음',D:'낮음'})[o.aptitude?.[base]];
+ const troopName=({militia:'도병',spear:'창병',bow:'궁병',cavalry:'기병'})[type]??a.troopDisplayName??'병종 미확인';
  const merits=(e?.merits??[]).filter(m=>Number.isFinite(m.count)&&Number.isFinite(m.goal));
  const progress=merits.length?Math.max(...merits.map(m=>m.count)):null;
  const branch=enemy?'미정찰':e?.branchName??(e?.path?'전직 미확인':'기본');
@@ -2259,7 +2261,10 @@ export function traitLoadoutPanelHtml(o,selected=[]){
 }
 
 // C418: map-only projections. Never reveal hidden army state or change pilot rules.
-export const tileTactic418=card=>card?.pilot&&['P417_G01_E','P417_G03_R'].includes(card.rule);
+// 칸을 대상으로 받는 전법: 정한 두 규칙 + 엔진 대상 목록이 모두 칸 id('q,r')인 전법(C516 닷토리 '장료 R 위진소요 — 태사자를 고르면 INVALID ·
+// 빈 도착 칸을 누르면 아무 일 없음': 직선 돌진 R 은 대상이 도착 칸인데 두 규칙만 칸 대상으로 알아봐서 웹에선 쓸 길이 없었음 — 고도 호스트는 칸 대상을 그대로 받음)
+const TILE_ID418=/^-?\d+,-?\d+$/;
+export const tileTactic418=card=>!!card&&(card.pilot&&['P417_G01_E','P417_G03_R'].includes(card.rule)||(card.targets?.length>0&&card.targets.every(t=>typeof t==='string'&&TILE_ID418.test(t))));
 export function mechanicMap418(s,v,armyId,card,target){
  if(s.trialRules?.mechanics!=='v2')return null;
  const seen={...Object.fromEntries(Object.entries(v.knowledge.observedArmies??{}).filter(([,a])=>v.knowledge.tiles[a.tileId]==='VISIBLE')),...v.ownArmies};

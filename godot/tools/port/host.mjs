@@ -262,6 +262,7 @@ export class PortSession {
     const r = this.aiReplay;
     if (!r) return;
     r.steps++;
+    const actor = aiHeadFaction(prev);
     const me = prev.playerFactionId, seen = (st, tile) => st.knowledge?.[me]?.tiles?.[tile] === 'VISIBLE';
     for (const [id, a] of Object.entries(next.armies)) {
       const b = prev.armies[id];
@@ -273,6 +274,14 @@ export class PortSession {
       const at = next.armies[c.attackerId]?.tileId ?? prev.armies[c.attackerId]?.tileId, tt = next.armies[c.targetId]?.tileId ?? prev.armies[c.targetId]?.tileId;
       if ((at && seen(prev, at)) || (tt && seen(prev, tt)) || next.armies[c.targetId]?.factionId === me || prev.armies[c.targetId]?.factionId === me)
         r.events.push({kind: 'attack', attackerId: c.attackerId, targetId: c.targetId, from: at && seen(prev, at) ? at : null, to: tt && seen(prev, tt) ? tt : null});
+    }
+    // C518 세력별로 바로: 움직이던 세력이 바뀌거나 상대 차례가 끝나면 그 세력이 낸 보인 움직임을 알림 한 줄(aiReplayChunk)로 — 다음 세력은 그동안 계산.
+    // 엔진 걸음 · 순서는 그대로(결과 · 판 해시 같음). 끝 응답의 aiReplay.events 는 전체 그대로(from = 그 묶음이 전체에서 시작하는 자리 — 고도가 이미 본 것을 건너뜀).
+    const nextActor = next.phase === 'AI' && !next.gameResult ? aiHeadFaction(next) : null;
+    if (actor !== nextActor) {
+      const from = r.sent ?? 0, events = r.events.slice(from);
+      r.sent = r.events.length;
+      if (events.length) emitHostEvent({event: 'aiReplayChunk', factionId: actor, from, events, steps: r.steps});
     }
   }
 
@@ -439,10 +448,14 @@ export class PortSession {
     const probe = (() => { try { return AiTactics.campaignTacticsWorld(s, AiTactics.campaignTacticsView(s, s.playerFactionId)); } catch { return null; } })();
     const nameOf = (id) => { const cid = v.ownArmies[id]?.commanderId ?? v.knowledge.observedArmies[id]?.commanderId; return (cid && (s.officers?.[cid]?.name ?? s.wanderers?.[cid]?.name)) ?? '적 부대'; };
     let disengage = null;
-    try { const d = probe && move.length ? Combat.previewDisengage(probe, armyId) : null; if (d) disengage = {pursuerId: d.pursuerId, pursuerName: nameOf(d.pursuerId), dealt: d.dealt, dealtText: Display.troopText(d.dealt), effectLines: d.effectLines ?? []}; } catch { /* 예고 실패는 이동을 막지 않음 */ }
+    // C516: 예고 = 실제(엔진 previewDisengageFor · previewApproachFireFor — 진짜 판 · 실제 결과와 같은 함수, 안 보이는 추격 · 사격자만 공개 판 값)
+    try { const d = move.length ? Combat.previewDisengageFor(s, armyId, probe) : null; if (d) disengage = {pursuerId: d.pursuerId, pursuerName: nameOf(d.pursuerId), pursuers: 1, dealt: d.dealt, dealtText: Display.troopText(d.dealt), effectLines: d.effectLines ?? []}; } catch { /* 예고 실패는 이동을 막지 않음 */ }
     for (const m of move) {
       m.approachFire = null;
-      try { const f = probe ? Combat.previewApproachFire(probe, armyId, m.tileId) : null; if (f) m.approachFire = {shooterId: f.attackerId ?? f.shooterId ?? null, shooterName: nameOf(f.attackerId ?? f.shooterId), damage: f.damage, damageText: Display.troopText(f.damage), effectLines: f.effectLines ?? []}; } catch { /* 같음 */ }
+      try { const f = Combat.previewApproachFireFor(s, armyId, m.tileId, probe); if (f) m.approachFire = {shooterId: f.archerId ?? f.attackerId ?? null, shooterName: nameOf(f.archerId ?? f.attackerId), damage: f.damage, damageText: Display.troopText(f.damage), effectLines: f.effectLines ?? []}; } catch { /* 같음 */ }
+      // 이 칸으로 가면 받는 것 모두(추격자 · 사격자 수와 합계 — 고도 예고 판 · 이동 경고 한 줄)
+      const parts = [disengage ? {kind: '추격', name: disengage.pursuerName, loss: disengage.dealt} : null, m.approachFire ? {kind: '접근 사격', name: m.approachFire.shooterName, loss: m.approachFire.damage} : null].filter(Boolean);
+      m.risk = parts.length ? {count: parts.length, parts: parts.map((p) => ({...p, lossText: Display.troopText(p.loss)})), total: parts.reduce((n, p) => n + p.loss, 0), totalText: Display.troopText(parts.reduce((n, p) => n + p.loss, 0))} : null;
     }
     return {armyId, revision: this.revision, move, attackUnits: units, attackCities: cities, flowAttack, flowClaim, disengage};
   }
@@ -625,6 +638,15 @@ function forecastDetail(s, v, attId, tgtId, p0) {
   return {terrain: {type: terrainType ?? null, defense: m.terrain ?? 1}, side: p.side ?? null, sideName: SIDE_NAME[p.side] ?? null, result,
     resultHelp: `적 ${Math.round(ef * 100)}% · 아군 ${Math.round(af * 100)}% 잃음${destroyed ? ' · 격파 뒤 퇴로가 없으면 사로잡을 확률 ' + captureChance + '%' : ''} · ${result}가 예상됩니다`,
     mods: cleanMods, risks, captureChance: destroyed ? captureChance : null, tactics};
+}
+// 상대 차례 지금 움직이는 세력(hud-host 진행 띠 headFaction 과 같은 읽기)
+function aiHeadFaction(st) { const e = st?.aiQueue?.[0]; return e?.factionId ?? e?.faction ?? e?.tacticsFaction ?? null; }
+// 호스트 알림 한 줄(id 없음): 고도가 띄운 호스트(node hud-host · host 직접 · 웹 워커 — process.argv[1] 로 앎)일 때만 표준 출력에. 시험에서 불러 쓸 때는 조용히(onHostEvent 로 받을 수 있음)
+export const hostEvents = {sink: null};
+const LAUNCHED = /(?:hud-host|host)\.mjs$/.test(String(process.argv?.[1] ?? '').split('\\').join('/'));
+function emitHostEvent(body) {
+  if (hostEvents.sink) { hostEvents.sink(body); return; }
+  if (LAUNCHED) out(JSON.stringify({id: null, ...body}) + '\n');
 }
 function forecast(p) {
   if (!p) return null;

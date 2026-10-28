@@ -84,7 +84,12 @@ if (args.includes('--export')) {
     result = (await import('./result-model.mjs')).resultScene(await fixtureState('c464-result'));
     state = result.after;
   } else if (opt('--fixture')) state = await fixtureState(opt('--fixture'));
-  else { const ps = new Host.PortSession(); ps.newGame({seed: Number(opt('--seed') ?? 190919), factionId: opt('--faction') ?? 'F01', map: opt('--map-id') ?? 'v3'}); state = ps.state; }
+  else {
+    const ps = new Host.PortSession(); ps.newGame({seed: Number(opt('--seed') ?? 190919), factionId: opt('--faction') ?? 'F01', map: opt('--map-id') ?? 'v3'});
+    // --end-turns N: 새 판을 N 차례 넘긴 장면(견본 — 예: 중국 판 시드 190919 6차례 = 눈보라 · 산안개, C514 지역 날씨)
+    for (let i = 0; i < Number(opt('--end-turns') ?? 0); i++) ps.step({type: 'END_TURN'}, ps.revision);
+    state = ps.state;
+  }
   if (args.includes('--sets-sample')) {
     // 장수 세트 진행판 견본(사용자 10-25 'TFT 처럼'): c464 판의 세트 기록에 '조조의 책사들 3/4 · 3단계' · '다섯 범 장군 2/5 · 2단계' 를 넣고 황충(다섯 범 장군 소속) 부대에 세트 칩(시험 그림용 — 실제 판은 엔진 c30 그대로)
     state = structuredClone(state); const snap = state.c30?.factions?.[state.playerFactionId];

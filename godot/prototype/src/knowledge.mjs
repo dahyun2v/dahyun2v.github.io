@@ -58,10 +58,12 @@ function knownEdges(s,knowledge){
 // Geometry only. Validate coordinates even when fixtures edit tiles in place;
 // observers, ownership, disposition and last-seen timestamps remain live.
 const visionGeometry=new WeakMap();
+let sharedGeometry=null;
 function visibilityGeometry(tiles){
  const entries=Object.entries(tiles),signature=entries.map(([id,t])=>`${id}:${t.q}:${t.r}:${t.terrainType}`).join('|');
  let g=visionGeometry.get(tiles);if(g?.signature===signature)return g;
- g={signature,entries,byCoordinate:new Map(entries.map(([id,t])=>[`${t.q},${t.r}`,id])),footprints:new Map(),integer:entries.every(([,t])=>Number.isInteger(t.q)&&Number.isInteger(t.r))};visionGeometry.set(tiles,g);return g;
+ if(sharedGeometry?.signature===signature){visionGeometry.set(tiles,sharedGeometry);return sharedGeometry;}
+ g={signature,entries:entries.map(([id,t])=>[id,{q:t.q,r:t.r,terrainType:t.terrainType}]),byCoordinate:new Map(entries.map(([id,t])=>[`${t.q},${t.r}`,id])),footprints:new Map(),integer:entries.every(([,t])=>Number.isInteger(t.q)&&Number.isInteger(t.r))};visionGeometry.set(tiles,g);sharedGeometry=g;return g;
 }
 function visibleFootprint(g,origin,range,occlusion){
  const key=`${origin.q},${origin.r}:${range}:${occlusion}`;if(g.footprints.has(key))return g.footprints.get(key);
@@ -75,13 +77,59 @@ function visibleFootprint(g,origin,range,occlusion){
  if(occlusion){const tiles=new Map(g.entries);ids=ids.filter(id=>terrainVisible(origin,tiles.get(id),(q,r)=>tiles.get(g.byCoordinate.get(`${q},${r}`))));}
  g.footprints.set(key,ids);return ids;
 }
-export function updateKnowledge(s){
-  const geometry=visibilityGeometry(s.tiles);
+// The cache belongs to the live knowledge object, never the serialized board.
+// A cloned/deserialized board starts cold. Only observer positions may differ;
+// ownership, aliases/ranges and geometry changes conservatively rebuild all.
+const partialVision=new WeakMap();
+function partialVisibility(s,geometry,factionId,observers,guard){
+ let factions=partialVision.get(s.knowledge);if(!factions){factions=new Map();partialVision.set(s.knowledge,factions);}
+ let previous=factions.get(factionId);
+ if(previous?.guard!==guard||previous?.geometry!==geometry)previous=null;
+ const footprints=observers.map((o,i)=>{
+  const origin=s.tiles[o.tileId],range=o.range+(origin.terrainType==='hill'?s.mapRules.vision.hillBonus:0),key=JSON.stringify([o.tileId,range]);
+  const old=previous?.footprints[i];
+  return old?.key===key?old:{key,ids:visibleFootprint(geometry,origin,range,s.mapRules.vision.profile==='CAMPAIGN_V1')};
+ });
+ const counts=previous?.counts??new Map();
+ if(previous){for(let i=0;i<previous.footprints.length;i++)if(previous.footprints[i]!==footprints[i])for(const id of previous.footprints[i].ids){const n=counts.get(id)-1;if(n)counts.set(id,n);else counts.delete(id);}}
+ for(let i=0;i<footprints.length;i++)if(previous?.footprints[i]!==footprints[i])for(const id of footprints[i].ids)counts.set(id,(counts.get(id)??0)+1);
+ factions.set(factionId,{guard,geometry,footprints,counts});
+ // H13 receives the exact original observer/tile order, including overlaps.
+ // Without a hook only membership is consumed below.
+ return hasCampaignMechQuery('H13')?new Set(footprints.flatMap(f=>f.ids)):new Set(counts.keys());
+}
+// Independent original geometry cache for the full-reference implementation.
+const fullVisionGeometry=new WeakMap();
+function visibilityGeometryFull(tiles){
+ const entries=Object.entries(tiles),signature=entries.map(([id,t])=>`${id}:${t.q}:${t.r}:${t.terrainType}`).join('|');
+ let g=fullVisionGeometry.get(tiles);if(g?.signature===signature)return g;
+ g={signature,entries,byCoordinate:new Map(entries.map(([id,t])=>[`${t.q},${t.r}`,id])),footprints:new Map(),integer:entries.every(([,t])=>Number.isInteger(t.q)&&Number.isInteger(t.r))};fullVisionGeometry.set(tiles,g);return g;
+}
+export function updateKnowledgeFull(s){
+  const geometry=visibilityGeometryFull(s.tiles);
   for(const factionId of Object.keys(s.factions).sort()){
     const k=s.knowledge[factionId]??={tiles:{},observedArmies:{},lastSeenArmies:{},cities:{}};
     const observers=[...Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).map(c=>({tileId:c.tileId,range:s.mapRules.vision.city})),...Object.values(s.armies).filter(a=>a.factionId===factionId&&activeArmy(s,a)).map(a=>({tileId:a.tileId,range:s.mapRules.vision.byTroop?.[a.troopType]??s.mapRules.vision.field}))];
     const visible=new Set();
     for(const o of observers){const origin=s.tiles[o.tileId],range=o.range+(origin.terrainType==='hill'?s.mapRules.vision.hillBonus:0);for(const id of visibleFootprint(geometry,origin,range,s.mapRules.vision.profile==='CAMPAIGN_V1'))visible.add(id);}
+    if(hasCampaignMechQuery('H13')){const ids=campaignMechQuery(s,'H13','visibleTiles',{viewerFactionId:factionId},[...visible]);if(!Array.isArray(ids)||ids.some(id=>typeof id!=='string'||!s.tiles[id]))throw new Error('INVALID_MECH_VISIBILITY');visible.clear();for(const id of ids)visible.add(id);}
+    for(const [id]of geometry.entries)k.tiles[id]=visible.has(id)?'VISIBLE':k.tiles[id] && k.tiles[id]!=='UNEXPLORED'?'REMEMBERED':'UNEXPLORED';
+    k.observedArmies={};
+    for(const a of Object.values(s.armies))if(activeArmy(s,a)&&a.factionId!==factionId && k.tiles[a.tileId]==='VISIBLE'&&campaignMechAllowed(s,'H13','observationAllowed',{targetId:a.armyId,viewerFactionId:factionId})){
+      const record=minimumArmy(a);k.observedArmies[a.armyId]=record;
+      k.lastSeenArmies[a.armyId]={...record,lastSeen:{tileId:a.tileId,turn:s.turnNumber,tick:s.time.tick}};
+    }
+    for(const c of Object.values(s.cities))if(k.tiles[c.tileId]==='VISIBLE')k.cities[c.cityId]={cityId:c.cityId,name:c.name,tileId:c.tileId,ownerFactionId:c.ownerFactionId};
+  }
+}
+export function updateKnowledge(s,{incremental=false}={}){
+  if(!incremental)return updateKnowledgeFull(s);
+  const geometry=visibilityGeometry(s.tiles);
+  const guard=JSON.stringify([s.mapRules.vision,Object.keys(s.factions),Object.values(s.cities).map(c=>[c.cityId,c.ownerFactionId,c.tileId]),Object.values(s.armies).map(a=>[a.armyId,a.factionId,a.troopType,activeArmy(s,a),a.c27?.ambush,a.c32?.hiddenUntil,a.c50?.hidden,a.mechV2?.c505?.conceal,a.mechV2?.c507?.conceal,a.c234?.concealUntil])]);
+  for(const factionId of Object.keys(s.factions).sort()){
+    const k=s.knowledge[factionId]??={tiles:{},observedArmies:{},lastSeenArmies:{},cities:{}};
+    const observers=[...Object.values(s.cities).filter(c=>c.ownerFactionId===factionId).map(c=>({tileId:c.tileId,range:s.mapRules.vision.city})),...Object.values(s.armies).filter(a=>a.factionId===factionId&&activeArmy(s,a)).map(a=>({tileId:a.tileId,range:s.mapRules.vision.byTroop?.[a.troopType]??s.mapRules.vision.field}))];
+    const visible=partialVisibility(s,geometry,factionId,observers,guard);
     if(hasCampaignMechQuery('H13')){const ids=campaignMechQuery(s,'H13','visibleTiles',{viewerFactionId:factionId},[...visible]);if(!Array.isArray(ids)||ids.some(id=>typeof id!=='string'||!s.tiles[id]))throw new Error('INVALID_MECH_VISIBILITY');visible.clear();for(const id of ids)visible.add(id);}
     for(const [id]of geometry.entries)k.tiles[id]=visible.has(id)?'VISIBLE':k.tiles[id] && k.tiles[id]!=='UNEXPLORED'?'REMEMBERED':'UNEXPLORED';
     k.observedArmies={};

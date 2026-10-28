@@ -1,3 +1,4 @@
+import {regionSupplyDrainMul,regionOasisRefill} from './campaign-regions.mjs'; // C514 R02 마른 보급 · 오아시스
 import {isSliceMap} from './map-primitives.mjs';
 import {captureV3Loot} from './campaign-occupation.mjs';
 import {DOMESTIC_V3,domesticV3Enabled,settleDomesticV3Supply,takeGrain,learningModifier,v3CarryTurns} from './domestic-v3.mjs';
@@ -201,8 +202,8 @@ export function settleSupply(s){
  for(const a of Object.values(s.armies).filter(a=>active(s,a)).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
   const link=supplyLink(s,a),need=armyFieldConsumption(s,a,link),max=supplyMax(s,a); a.supplyFood=Math.min(a.supplyFood,max);
   if(clockFood(s)&&!link.source?.city?.besieged){
-   const required=link.state==='SAFE'?0:link.state==='DISRUPTED'?need/2:need;
-   const starving=a.supplyFood+1e-6<required;a.supplyFood=link.state==='SAFE'?max:round(Math.max(0,a.supplyFood-required));
+   const oasis=regionOasisRefill(s,a),required=link.state==='SAFE'||oasis?0:(link.state==='DISRUPTED'?need/2:need)*regionSupplyDrainMul(s,a);
+   const starving=a.supplyFood+1e-6<required;a.supplyFood=link.state==='SAFE'||oasis?max:round(Math.max(0,a.supplyFood-required));
    a.supplyState=link.state;a.supplyStarving=starving;
    if(link.state==='CUT'&&!s.supply.cutArmies.includes(a.armyId))s.supply.cutArmies.push(a.armyId);
    if(starving){if(!s.supply.starvingArmies.includes(a.armyId))s.supply.starvingArmies.push(a.armyId);starvation(s,a);}continue;

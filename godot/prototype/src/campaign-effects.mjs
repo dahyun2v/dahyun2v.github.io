@@ -1,3 +1,4 @@
+import {regionHidden} from './campaign-regions.mjs'; // C514 R03 · R07 숲 · 구릉 숨기
 import {campaignMechStartFaction, campaignMechQuery, campaignMechAllowed, campaignMechCommit, hasCampaignMechCommit, campaignMechApply, campaignMechRemoveStatuses, campaignMechPowerWorld, campaignMechPowerFactor, campaignMechStatus} from './campaign-mech-contracts.mjs';
 import {cloneCampaign} from './campaign-clone.mjs';
 import {c450Reveal} from './campaign-c450.mjs';
@@ -476,7 +477,7 @@ export function ruleLine(s,id,rule,detail=''){
 export function ambushHidden(s,id,factionId){return memoCampaignQuery(s,'hidden:'+id+':'+factionId,()=>ambushHiddenUncached(s,id,factionId));}
 function ambushHiddenUncached(s,id,factionId){const hidden=campaignMechQuery(s,'H13','hidden',{targetId:id,viewerFactionId:factionId},null);if(hidden!==null)return hidden===true;if(c450Reveal(s,id,factionId))return false;if(c34Reveal(s,id,factionId))return false;
  if(c33Enabled(s)&&Object.values(s.armies).some(a=>a.factionId===factionId&&castleArmyActive(s,a)&&troopToCampaign(a.troopType)==='BT03'&&c33Owned(s,a.armyId,'SHOOT_INTO_FOREST')&&hexDistance(s.tiles[a.tileId],s.tiles[s.armies[id].tileId])<=2))return false;
- const a=s.armies[id];if(a.c50?.hidden&&a.factionId!==factionId)return true;if(Object.values(s.armies).some(b=>b.factionId===factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=C28.scoutRange&&c28Rule(s,b.armyId,'SCOUT_EYE')))return false;return a.factionId!==factionId&&(a.c32?.hiddenUntil>=s.turn||!!a.c27?.ambush||['forest','hill'].includes(s.tiles[a.tileId].terrainType)&&hasCampaignRule(s,id,'AMBUSH')&&!Object.values(s.armies).some(b=>b.factionId===factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=1));
+ const a=s.armies[id];if(a.c50?.hidden&&a.factionId!==factionId)return true;if(Object.values(s.armies).some(b=>b.factionId===factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=C28.scoutRange&&c28Rule(s,b.armyId,'SCOUT_EYE')))return false;if(regionHidden(s,id,factionId,hexDistance))return true;return a.factionId!==factionId&&(a.c32?.hiddenUntil>=s.turn||!!a.c27?.ambush||['forest','hill'].includes(s.tiles[a.tileId].terrainType)&&hasCampaignRule(s,id,'AMBUSH')&&!Object.values(s.armies).some(b=>b.factionId===factionId&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=1));
 }
 export function recallDestination(s,id){
  const a=s.armies[id];if(!a)return null;
