@@ -9,7 +9,7 @@ import {castleArmyActive,campaignDestinationAllowed} from './campaign-city-footp
 import {diplomacyArmyHostile} from './campaign-diplomacy.mjs';
 import {changeFormation,checkFormation,directionToward,C12} from './campaign-abilities.mjs';
 import {changeMorale,checkMorale} from './campaign-morale.mjs';
-import {uniqueBuff,uniqueStatus} from './campaign-rule-registry.mjs';
+import {uniqueBuff,uniqueStatus,memoCampaignQuery} from './campaign-rule-registry.mjs';
 import {ambushHidden,healCampaignTroops} from './campaign-effects.mjs';
 import {engineDamageRows,engineBaseDamage,resolveAttack,forceArmyTo,attackRange} from './campaign-combat.mjs';
 
@@ -194,7 +194,8 @@ export function c450BeforeTactic(s,id,target,card){
  if(!enabled(s)||card.signature||!s.armies[target]||s.armies[target].factionId===s.armies[id].factionId)return false;
  const guard=live(s).find(a=>owns(s,a,'G38')&&a.mechV2?.advice===target);if(!guard)return false;delete x(guard).advice;drop(s,guard.armyId);return true;
 }
-export function c450Reveal(s,id,fid){return enabled(s)&&live(s).some(a=>owns(s,a,'G55')&&a.factionId===fid&&d(s,a,s.armies[id])<=2);}
+// Read-only: inside an open read scope the live list is built once per board.
+export function c450Reveal(s,id,fid){return enabled(s)&&memoCampaignQuery(s,'c450:live',()=>live(s)).some(a=>owns(s,a,'G55')&&a.factionId===fid&&d(s,a,s.armies[id])<=2);}
 export function c450MoveAllowed(s,id,from,to){
  if(!c467MoveAllowed(s,id,to))return false;
  if(!c461MoveAllowed(s,id,from,to))return false;

@@ -1,7 +1,7 @@
 import {isSliceMap} from './map-primitives.mjs';
 import {campaignMechLossKind, campaignMechShieldPlan, campaignMechLossPlan, campaignMechSpendShields, campaignMechQuery, campaignMechAllowed, campaignMechLoss, hasCampaignMechQuery, campaignMechPlan, campaignMechCombatants, campaignMechApply, campaignMechPowerWorld, campaignMechPowerFactor, campaignMechRemoveStatuses, campaignMechBudget} from './campaign-mech-contracts.mjs';
 import {withCampaignQueries,memoCampaignQuery} from './campaign-rule-registry.mjs';
-import {cloneCampaign,cloneOwnedCampaign,writableCampaign,withCampaignOwnership,withCampaignPreview,assertCampaignQueryState} from './campaign-clone.mjs';
+import {cloneCampaign,cloneOwnedCampaign,writableCampaign,campaignCopyVerificationEnabled,verifyCampaignCopies,withCampaignOwnership,withCampaignPreview,assertCampaignQueryState} from './campaign-clone.mjs';
 import {c450DuelCounter,c450EffectRows,c450AfterLoss,c450AttackAllowed,c450BeforeAttack,c450CounterFactor,c450BeforeTactic,c450MoveAllowed} from './campaign-c450.mjs';
 import {pilotMovement,pilotEngineState,pilotPay,pilotRemember,pilotPreparedOptions,pilotPierces,pilotRescueApproach,mechanicsV2Enabled,pilotIntercept,pilotShareRows,pilotAfterAttack,pilotDamageFactor,resolvePilotTactic,pilotBeforeTactic} from './campaign-c34.mjs';
 import {reclassCityMods,reclassScale,reclassAfterAttack,reclassHas} from './campaign-trait-reclass.mjs';
@@ -48,6 +48,7 @@ import {campaignMovementWorld} from './campaign-city-footprint.mjs';
 import {edgeTicks} from './movement.mjs';
 import {movementEffect,officerEffectCards} from './campaign-effects.mjs';
 import {canObserveTile} from './knowledge.mjs';
+import {regionDownhillMul} from './campaign-regions.mjs'; // C514 R03 구릉 → 아래 길 ×1.10(정본 20 v3.8 §5.3)
 
 // C299: trial tuning; Q never pays a tactic cost or learns a tactic card.
 export const TROOP_Q_RULES={
@@ -119,6 +120,10 @@ export function troopQTargets(s,id){
  return candidates.filter(to=>!troopQPlan(s,id,to).reason).sort();
 }
 function troopQNumbers(s,id,to){
+ if(!campaignCopyVerificationEnabled())return troopQNumbersRead(s,id,to);
+ return verifyCampaignCopies(s,()=>troopQNumbersRead(s,id,to),source=>troopQNumbersRead(source,id,to));
+}
+function troopQNumbersRead(s,id,to){
  const plan=troopQPlan(s,id,to);if(plan.reason)throw new Error(plan.reason);
  const r=qRule(s,id),rows=[];let allyLoss=0;
  const planning=s.mechContracts?.shields?{...s,mechContracts:{...s.mechContracts,shields:cloneCampaign(s.mechContracts.shields)}}:s;
@@ -126,7 +131,7 @@ function troopQNumbers(s,id,to){
   if(r.kind==='SHOVE')continue;
   const adjacent=hexDistance(s.tiles[s.armies[id].tileId],s.tiles[s.armies[targetId].tileId])===1;
   const ratio=r.ratio*(r.kind==='PIERCE_THRUST'&&troopToCampaign(s.armies[targetId].troopType)==='BT04'?r.cavalry:1);
-  const p=attackNumbers(prepareAttackEffects(planning,id,targetId),id,targetId,{troopQ:true,troopQRatio:ratio,noCounter:r.kind!=='PIERCE_THRUST'||!adjacent});
+  const p=attackNumbers(prepareAttackPreviewEffects(planning,id,targetId),id,targetId,{troopQ:true,troopQRatio:ratio,noCounter:r.kind!=='PIERCE_THRUST'||!adjacent});
   rows.push({targetId,loss:p.enemyLoss,c31Applied:true,shieldPlans:p.shieldPlans});allyLoss+=p.allyLoss;if(planning!==s)campaignMechSpendShields(planning,p.shieldPlans);
  }
  if(r.kind==='SHOVE'&&!combatEmptyStep(s,plan.targets[0],plan.landing)){
@@ -270,7 +275,7 @@ function attackFormula(s,attackerId,targetId,troopCount=s.armies[attackerId].tro
   options=engineAttackOptions(pilotEngineState(s),attackerId,targetId,uniqueAttackOptions(s,attackerId,targetId,options));if(c33Formation(s,targetId,'FORMATION_RING'))options={...options,noFlank:true};
   const a=s.armies[attackerId],t=s.armies[targetId];
   const at=troopToCampaign(a.troopType),dt=troopToCampaign(t.troopType);
-  const terrainAttack=C182.terrainAttack[at]?.[s.tiles[a.tileId].terrainType]??1;
+  const terrainAttack=(C182.terrainAttack[at]?.[s.tiles[a.tileId].terrainType]??1)*regionDownhillMul(s,a.tileId,t.tileId);
   const terrain=options.ignoreCover?1:({forest:1.15,hill:1.25})[s.tiles[t.tileId].terrainType]??1;
   const castleRaw=engineWallDisabled(s,t)?1:campaignCastleDefense(s,t,attackerId),castle=1+(castleRaw-1)*(c28Rule(s,attackerId,'BREACH_GUARD')?C28.breachRatio:1);
   const river=s.mapRules.riverEdges.includes([a.tileId,t.tileId].sort().join('|'))?.75:1;
@@ -378,6 +383,13 @@ function previewDisengageRead(s,armyId) {
   }
   return best;
 }
+// 플레이어에게 보여 줄 이동 예고(웹 · 고도 공통 — C516 닷토리 '추격 예고보다 실제가 20~35% 큼' 7건):
+// 실제 결과(resolvePursuit · resolveApproachFire)와 같은 함수 · 같은 판(진짜 판)으로 — 일반 공격 예고(previewAttack(state, …))와 같은 방침.
+// 공개 판(campaignTacticsWorld)은 적 장수를 능력치 50 가상 장수로 바꿔 예고가 늘 낮았다. 다만 그 세력에게 안 보이는 부대(시야 밖 · 매복)가
+// 추격 · 사격하는 경우는 드러내지 않고 공개 판 값(probe — 없으면 예고 없음)을 그대로 쓴다.
+const seenBy=(s,f,armyId)=>{const b=s.armies[armyId];return !!b&&s.knowledge?.[f]?.tiles?.[b.tileId]==='VISIBLE'&&!ambushHidden(s,armyId,f);};
+export function previewDisengageFor(s,armyId,probe){const f=s.armies[armyId]?.factionId,real=previewDisengage(s,armyId);if(real&&seenBy(s,f,real.pursuerId))return real;return probe?previewDisengage(probe,armyId):null;}
+export function previewApproachFireFor(s,armyId,destinationTileId,probe){const f=s.armies[armyId]?.factionId,real=previewApproachFire(s,armyId,destinationTileId);if(real&&seenBy(s,f,real.archerId))return real;return probe?previewApproachFire(probe,armyId,destinationTileId):null;}
 export function resolvePursuit(state,armyId) {
   const p=previewDisengage(state,armyId);if(!p)return state;
   armyId=p.targetId??armyId;
@@ -641,6 +653,10 @@ function captureAttackedCity(s,id,cityId,log){
  supplyCityLoot(s,id,cityId,log);relationVictory(s,id);return s;
 }
 export function strikeCampaignCities(state,factionId) {
+  if(!campaignCopyVerificationEnabled())return strikeCampaignCitiesRead(state,factionId);
+  return verifyCampaignCopies(state,()=>strikeCampaignCitiesRead(state,factionId),source=>strikeCampaignCitiesRead(source,factionId));
+}
+function strikeCampaignCitiesRead(state,factionId) {
   let s=cloneCampaign(state);
   s.cityStrikeTurns??={};
   if(s.cityStrikeTurns[factionId]===s.turn)return s;
@@ -675,7 +691,8 @@ export function armyActionEnded(s,id) {
 export const allPlayerActionsEnded=s=>Object.values(s.armies).filter(a=>a.factionId===s.playerFactionId&&castleArmyActive(s,a)).every(a=>armyActionEnded(s,a.armyId));
 
 function shownPrediction(s,id,targetId,p){if(!s.armies[targetId]||campaignShownScale(s,targetId,s.armies[id].factionId)!==2)return p;const shownTargetCount=campaignShownCount(s,targetId,s.armies[id].factionId);return {...p,shownTargetCount,shownTargetAfter:Math.max(0,shownTargetCount-(p.enemyLoss??0))};}
-export function previewTactic(s,id,traitId,targetId){return withCampaignPreview(s,source=>{assertCampaignQueryState(source);return combatPreview(source,['tactic',id,traitId,targetId],()=>previewTacticRead(source,id,traitId,targetId));});}
+export function previewTactic(s,id,traitId,targetId){if(!campaignCopyVerificationEnabled())return previewTacticFrom(s,id,traitId,targetId);return verifyCampaignCopies(s,()=>previewTacticFrom(s,id,traitId,targetId),source=>previewTacticFrom(source,id,traitId,targetId));}
+function previewTacticFrom(s,id,traitId,targetId){return withCampaignPreview(s,source=>{assertCampaignQueryState(source);return combatPreview(source,['tactic',id,traitId,targetId],()=>previewTacticRead(source,id,traitId,targetId));});}
 function previewTacticRead(s,id,traitId,targetId) {
  if(hasCampaignMechQuery('H04')||hasCampaignMechQuery('H12'))return resolveTactic(s,id,traitId,targetId,{skipPreview:true}).lastCombat;
  const p=previewTacticNumbers(s,id,traitId,targetId),resolved=p.units?p:resolveTactic(s,id,traitId,targetId,{skipPreview:true}).lastCombat;
@@ -700,13 +717,13 @@ function previewTacticNumbers(s,id,traitId,targetId){
   return tacticIsDamage(card)?attackPreviewNumbers(prepareAttackPreviewEffects(s,id,targetId,{tactic:card}),id,targetId,{tactic:card}):{effectOnly:true,effectLines:[card.name]};
 }
 export function resolveTactic(state,id,traitId,targetId,{skipPreview=false}={}){
- return withCampaignOwnership(()=>resolveOwnedTactic(state,id,traitId,targetId,{skipPreview}));
+ if(!campaignCopyVerificationEnabled())return withCampaignOwnership(()=>resolveOwnedTactic(state,id,traitId,targetId,{skipPreview}));
+ return verifyCampaignCopies(state,()=>withCampaignOwnership(()=>resolveOwnedTactic(state,id,traitId,targetId,{skipPreview})),source=>withCampaignOwnership(()=>resolveOwnedTactic(source,id,traitId,targetId,{skipPreview})));
 }
 function resolveOwnedTactic(state,id,traitId,targetId,{skipPreview=false}={}){
   if(!campaignMechAllowed(state,'H04','attackAllowed',{sourceId:id,targetId,traitId,kind:'TACTIC'}))throw new Error('MECH_ATTACK_RESTRICTED');
   const reason=diplomacyAttackReason(state,id,targetId);if(reason)throw new Error(reason);
-  // Keep the caller's snapshot as a before-state. Only the detached preparation
-  // state may be reused; execution below still forks its own before/after pair.
+  // Extensible before/after hooks retain the full detached transaction.
   if(state.c50){state=cloneOwnedCampaign(state);state.c50.context={attackerId:id,origin:`tactic:${state.turn}:${state.battleSequence+1}`};}
   if(!skipPreview)previewTactic(state,id,traitId,targetId);
   const card=campaignTactics(state,id).find(c=>c.traitId===traitId);

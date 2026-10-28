@@ -147,7 +147,7 @@ import {campaignTactics,officerEffectCards,tacticIsDamage,cardEffectPending,card
 import {C31_DATA} from '/src/campaign-events.mjs';
 import {crisisRewardText,diplomacyTimingText,taxAdvanceLines} from '/app/world/hud-ink.mjs';
 import {regroupReason,campaignPath} from '/src/campaign-morale.mjs';
-import {previewAttackThreat,cityAttackTargets,previewCityAttack,previewTactic,tacticFailureReason,attackTargets,previewAttack,previewDisengage,previewApproachFire,armyActionEnded,attackRange,campaignUnitRatings,campaignDangerTiles} from '/src/campaign-combat.mjs';
+import {previewAttackThreat,cityAttackTargets,previewCityAttack,previewTactic,tacticFailureReason,attackTargets,previewAttack,previewDisengage,previewApproachFire,previewDisengageFor,previewApproachFireFor,armyActionEnded,attackRange,campaignUnitRatings,campaignDangerTiles} from '/src/campaign-combat.mjs';
 import {createCampaignCombatAudio} from '/src/campaign-combat-audio.mjs';
 import {createCampaign, view, serialize, deserialize, CAMPAIGN_SAVE_KEY,addCampaignOfficer,campaignMoveOptions,CAMPAIGN_TURN_LIMIT} from '/src/campaign-runtime.mjs';
 import {getFactionView} from '/src/knowledge.mjs';
@@ -1750,7 +1750,7 @@ function renderSituationAdvice(v){
  if(who)who.textContent=`${o?.name??officerName(bark.speakerId)} · 군사`;
  if(host){host.innerHTML=face?`<img src="${esc(face)}" alt="${esc(o?.name??'군사')}">`:faceFallback(o?.name??'군사');host.dataset.id='c207:'+bark.speakerId;}
  // Presentation acknowledgement bypasses action/animation handling and repaint recursion.
- c207Tracker.displayed(request=>{state=step(state,request);});
+ c207Tracker.displayed(request=>{const old=state;state=step(state,request);restampPicks516(old,state);});   // C516: '봤음' 표시는 판 상황이 아님 — Q · W 대상 고르기를 풀지 않음
  if(c207Tracker.pending&&!c207BarkTimer){const tracker=c207Tracker;c207BarkTimer=setTimeout(()=>{
   c207BarkTimer=null;if(state&&c207Tracker===tracker&&c207BarkActive===bark){tracker.advance();renderSituationAdvice(view(state));renderHud(view(state));}
  },7000);}
@@ -3417,7 +3417,7 @@ function commandJudgments(mainAvailable=true){
   const before=campaignUnitRatings(state,id),after=campaignUnitRatings(next,id);
   lines[key]=key==='brace'?`표준 방어 ${before.defense} → ${after.defense}`:`${MORALE_NAME[a.morale]} → ${MORALE_NAME[b.morale]} · 전열 ${FORMATION_NAME[a.formation]} → ${FORMATION_NAME[b.formation]}`;
  }catch(e){lines[key]=errorText(e);}}
- const probe=campaignTacticsWorld(state,campaignTacticsView(state,v.factionId)),risk=probe&&previewDisengage(probe,id);
+ const probe=campaignTacticsWorld(state,campaignTacticsView(state,v.factionId)),risk=previewDisengageFor(state,id,probe);   // C516: 예고 = 실제(진짜 판 · 안 보이는 추격자만 공개 판)
  lines.move=!campaignMoveOptions(state,id).length?'이동할 수 있는 칸 없음':risk?`후퇴 시 추격 −${troopText(risk.dealt)}`:'후퇴 시 공개된 추격 위험 없음';
  c279JudgmentCache={state,id,lines};return lines;
 }
@@ -3467,6 +3467,9 @@ function platformRangeTiles(v,armyId){
  return Object.keys(v.tiles).filter(id=>v.knowledge.tiles[id]!=='UNEXPLORED'&&hexDistance(v.tiles[a.tileId],v.tiles[id])<=C193.catapult.range);
 }
 let c300QPick=null;
+// C516(닷토리 'Q 성공 0회 · W 한 번 클릭으로 확정 안 됨'): Q · W 대상 고르기는 '판이 바뀌면 풀림'(stamp===state)인데, 군사 조언 줄이 뜰 때의
+// '봤음' 기록(MARK_SITUATION_LINE — 화면 표시만)도 판 객체를 바꿔 고르기가 조용히 풀렸다 → 그 기록 때는 고르기를 새 판으로 옮겨 붙인다.
+function restampPicks516(old,next){if(c300QPick?.stamp===old)c300QPick.stamp=next;if(enginePicker462?.stamp===old)enginePicker462.stamp=next;}
 function c300QCard(){
  if(!c300QPick||c300QPick.armyId!==selectedArmyId||c300QPick.stamp!==state||selectedArmyIds.length>1){c300QPick=null;return null;}
  return view(state).ownArmies[selectedArmyId]?.troopQ??null;
@@ -3565,7 +3568,7 @@ $('#unit-menu').addEventListener('click',e=>{
  if(action==='hub'){command({type:'BUILD_HUB',armyId:selectedArmyId});return;}
  if(action==='officer'){selectedOfficerId=state.armies[selectedArmyId]?.commanderId??null;closeUnitMenu();renderOfficerCard();return;}
  if(action==='wait'){if(openSample4Pass(selectedArmyId))return;command({type:'WAIT_UNIT',armyId:selectedArmyId});return;}
- if(action==='move'){menuOpen=false;moveMode=true;render();const publicProbe=campaignTacticsWorld(state,campaignTacticsView(state,state.playerFactionId)),chase=publicProbe?previewDisengage(publicProbe,selectedArmyId):null,shot=destination&&publicProbe?previewApproachFire(publicProbe,selectedArmyId,destination):null;$('#status').textContent='이동할 칸을 누르세요'+(chase?` · 교전 이탈 시 추격 −${troopText(chase.dealt)}`:'')+(shot?` · 붙으면 접근사격 — ${(view(state).officers[view(state).knowledge.observedArmies[shot.archerId]?.commanderId]?.name??'보이는 궁병')}, 예상 −${troopText(shot.damage)}`:'');}
+ if(action==='move'){menuOpen=false;moveMode=true;render();const publicProbe=campaignTacticsWorld(state,campaignTacticsView(state,state.playerFactionId)),chase=previewDisengageFor(state,selectedArmyId,publicProbe),shot=destination?previewApproachFireFor(state,selectedArmyId,destination,publicProbe):null;$('#status').textContent='이동할 칸을 누르세요'+(chase?` · 교전 이탈 시 추격 −${troopText(chase.dealt)}`:'')+(shot?` · 붙으면 접근사격 — ${(view(state).officers[view(state).knowledge.observedArmies[shot.archerId]?.commanderId]?.name??'보이는 궁병')}, 예상 −${troopText(shot.damage)}`:'');}
  if(action==='face'){menuOpen=false;moveMode=false;faceMode=true;render();$('#status').textContent='바라볼 쪽의 칸을 누르세요(Esc 취소)';return;}
  if(action==='attack'){attackMode=true;menuOpen=false;$('#unit-menu').hidden=true;$('#status').textContent='빨간 점선 공격 대상을 누르세요';renderHint();render();if(document.body?.classList?.contains('hud-band'))frameBandAttack(selectedArmyId);} // C158: wide 06 composition once on Attack; hover never reframes the map.
  if(action==='close')closeUnitMenu();
@@ -3675,7 +3678,7 @@ function sizeRouteWarnings(svg){
 function routeRisks(route){
  if(!route?.ok||route.pathTileIds?.length<2)return [];
  const probe=campaignTacticsWorld(state,campaignTacticsView(state,state.playerFactionId));if(!probe)return [];
- const chase=previewDisengage(probe,selectedArmyId),shot=previewApproachFire(probe,selectedArmyId,route.pathTileIds.at(-1));
+ const chase=previewDisengageFor(state,selectedArmyId,probe),shot=previewApproachFireFor(state,selectedArmyId,route.pathTileIds.at(-1),probe);   // C516: 예고 = 실제
  return [...(chase?[{kind:'추격',loss:chase.dealt,tileId:route.pathTileIds[0]}]:[]),...(shot?[{kind:'접근사격',loss:shot.damage,tileId:route.pathTileIds.at(-1)}]:[])];
 }
 function routeExplanation(armyId,to,route){
@@ -3964,7 +3967,7 @@ $('#map').addEventListener('pointerover',function mapPointerOver(e){
   if(!cached||cached.state!==state||cached.armyId!==selectedArmyId||cached.tileId!==id){
    const route=orderEligible(state,selectedArmyId)?orderRoute(state,selectedArmyId,id):null;
    const publicProbe=campaignTacticsWorld(state,campaignTacticsView(state,state.playerFactionId));
-   cached=mapPointerOver.movePreview={state,armyId:selectedArmyId,tileId:id,route,chase:publicProbe?previewDisengage(publicProbe,selectedArmyId):null,shot:route&&publicProbe?previewApproachFire(publicProbe,selectedArmyId,id):null};
+   cached=mapPointerOver.movePreview={state,armyId:selectedArmyId,tileId:id,route,chase:previewDisengageFor(state,selectedArmyId,publicProbe),shot:route?previewApproachFireFor(state,selectedArmyId,id,publicProbe):null};
   }
   // C169b: 병력은 보이는 숫자(troopText), C171: 까닭 글은 routeExplanation 하나가 만듦
   const {route,chase,shot}=cached,warning=shot?` · 붙으면 접근사격 — ${(view(state).officers[view(state).knowledge.observedArmies[shot.archerId]?.commanderId]?.name??'보이는 궁병')}, 예상 −${troopText(shot.damage)}`:'';$('#status').textContent='이동할 칸을 누르세요'+(chase?` · 교전 이탈 시 추격 −${troopText(chase.dealt)}`:'')+warning;tip.textContent=routeExplanation(selectedArmyId,id,route)+warning;tip.hidden=document.body.classList.contains('hud-band')&&!route;if(!tip.hidden)placeTip(tip,e);}

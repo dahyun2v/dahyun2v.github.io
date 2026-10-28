@@ -1,5 +1,5 @@
 import {isSliceMap} from './map-primitives.mjs';
-import {campaignMechQuery,campaignMechAllowed} from './campaign-mech-contracts.mjs';
+import {campaignMechQuery,campaignMechAllowed,campaignMechQueriesForRead,hasCampaignMechQuery} from './campaign-mech-contracts.mjs';
 import {engineMovementWorld} from './campaign-engines.mjs';
 import {diplomacyEnabled,diplomacyState,diplomacyTerritory,withdrawalProtection,diplomacyHostile} from './campaign-diplomacy.mjs';
 import {c33Owned,c33Formation,memoCampaignQuery,withCampaignQueries} from './campaign-rule-registry.mjs';
@@ -98,8 +98,10 @@ function campaignMovementWorldRead(s,armyId,ctx) {
   const unit=s.armies[armyId];
   if(diplomacyEnabled(s))for(const f of Object.keys(s.factions))if(f!==unit.factionId&&diplomacyState(s,unit.factionId,f)==='TRUCE'&&!diplomacyTerritory(s,f,unit.tileId))for(const t of Object.values(s.tiles))if(diplomacyTerritory(s,f,t.tileId))for(const n of neighbors(t))if(s.tiles[tileId(n)])blocked.add([t.tileId,tileId(n)].sort().join('|'));
   // Allies are passable. Only the final destination has field occupancy limits.
+  // One read-only membrane for every city: the loop never writes the board.
+  const centerQuery=hasCampaignMechQuery('H16')?campaignMechQueriesForRead(s):null;
   for (const c of Object.values(s.cities)) {
-    if (campaignCenterEntryAllowed(s,armyId,c)) continue;
+    if (centerQuery?centerQuery('H16','centerEntry',{sourceId:armyId,cityId:c.cityId},c.ownerFactionId===unit.factionId)===true:campaignCenterEntryAllowed(s,armyId,c)) continue;
     // Enemy centers are reached only by a city attack capture.
     for (const n of neighbors(s.tiles[c.tileId])) if (s.tiles[tileId(n)]) blocked.add([c.tileId,tileId(n)].sort().join('|'));
   }

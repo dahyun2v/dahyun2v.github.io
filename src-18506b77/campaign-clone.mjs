@@ -28,6 +28,25 @@ export function withCampaignPreview(state,read){
 export function assertCampaignQueryState(state){
   if(campaignStateOwned(state))throw new Error('OWNED_CAMPAIGN_QUERY');
 }
+let copyVerification=false,legacyCopyDepth=0;
+export function configureCampaignCopyVerification(enabled){copyVerification=!!enabled;}
+export function campaignCopyVerificationEnabled(){return copyVerification&&!legacyCopyDepth;}
+export function campaignLegacyCopies(){return legacyCopyDepth>0;}
+export function verifyCampaignCopies(state,run,reference){
+  if(!copyVerification||legacyCopyDepth)return run();
+  const source=cloneCampaign(state);
+  let expected,expectedError;
+  legacyCopyDepth++;
+  try{expected=reference(source);}catch(error){expectedError=error;}finally{legacyCopyDepth--;}
+  let actual;
+  try{actual=run();}catch(error){
+    if(!expectedError||error.name!==expectedError.name||error.message!==expectedError.message)throw new Error('C519_EXCEPTION_PARITY',{cause:error});
+    throw error;
+  }
+  if(expectedError||JSON.stringify(actual)!==JSON.stringify(expected))throw new Error('C519_COPY_PARITY');
+  if(campaignStateOwned(actual)!==campaignStateOwned(expected))throw new Error('C519_OWNERSHIP_PARITY');
+  return actual;
+}
 export function cloneCampaign(value){
   const seen=new Map();
   function copy(v){

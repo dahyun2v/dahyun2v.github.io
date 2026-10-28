@@ -3,6 +3,7 @@ import {cloneCampaign} from './campaign-clone.mjs';
 import {weatherKind,weatherEdgeReason,RUN_MODIFIERS} from './campaign-run-modifiers.mjs';
 import {boardNeighbors,tileId,movementTicks} from './map-primitives.mjs';
 import {parentTroop} from './campaign-special-troops.mjs'; // 특수 병종(투석기 등)은 부모 병종의 이동 규칙으로 — 원래 부대를 그대로 넘기는 호출(예약 이동 등)에서 '알 수 없는 병종'으로 판 전체가 멈췄다(2026-10-12)
+import {regionMoveFactory} from './campaign-regions.mjs'; // C514 지역 이동 배율(china 새 판만)
 export const edgeKey=(a,b)=>[a,b].sort().join('|');
 // Only detached, frozen read-world arrays get an index. Mutable canonical
 // arrays keep includes(), so same-length in-place edits remain observable.
@@ -33,7 +34,7 @@ function edgeTicksQuery(s,a,fromId,toId,query){
   if(weatherEdgeReason(s,fromId,toId))return null;
   let tuning=r.tuning;
   if(weatherKind(s)==='RAIN'&&to.terrainType==='plain'){const type=parentTroop(a.troopType),base=tuning.byTroop?.[type]??tuning[type==='cavalry'?'cavalry':type==='engineer'?'engineer':'normal'],plus=RUN_MODIFIERS.weather.kinds.find(k=>k.id==='RAIN').effect.plainMoveCostPlus;tuning={...tuning,byTroop:{...tuning.byTroop,[type]:{...base,plain:base.plain+plus,rough:base.rough+plus,road:base.road+plus}}};}
-  const baseline=movementTicks({from,to,troopType:parentTroop(a.troopType),maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:edgeContains(r.roads,key),river:edgeContains(r.riverEdges,key),crossing:r.crossings[key]??'none',blocked:edgeContains(r.blockedEdges,key)},tuning,tickDays:s.time.tickDays});
+  const region=regionMoveFactory(s,parentTroop(a.troopType)),raw=movementTicks({from,to,troopType:parentTroop(a.troopType),maneuver:s.officers[a.commanderId].subStats.기동지휘,edge:{road:edgeContains(r.roads,key),river:edgeContains(r.riverEdges,key),crossing:r.crossings[key]??'none',blocked:edgeContains(r.blockedEdges,key)},tuning,tickDays:s.time.tickDays});const baseline=region?region(fromId,toId,raw,edgeContains(r.roads,key)):raw;
   if(query('H05','moveAllowed',{sourceId:a.armyId,from:fromId,to:toId,kind:'EDGE'},true)!==true)return null;
   const cost=query('H07','edgeCost',{sourceId:a.armyId,from:fromId,to:toId},baseline);
   if(cost!==null&&(!Number.isSafeInteger(cost)||cost<1))throw new Error('INVALID_MECH_EDGE_COST');
@@ -55,11 +56,13 @@ export function edgeTicksForSearch(s,a){
     const plus=RUN_MODIFIERS.weather.kinds.find(k=>k.id==='RAIN').effect.plainMoveCostPlus;
     rainTuning={...r.tuning,byTroop:{...r.tuning.byTroop,[troopType]:{...base,plain:base.plain+plus,rough:base.rough+plus,road:base.road+plus}}};
   }
+  const region=regionMoveFactory(s,troopType);
   return (fromId,toId)=>{
     const from=s.tiles[fromId],to=s.tiles[toId];if(!from||!to)return null;
     const key=edgeKey(fromId,toId),crossing=r.crossings[key]??'none';
     if(weather==='RAIN'&&crossing==='ford')return null;
-    return movementTicks({from,to,troopType,maneuver,edge:{road:roads.has(key),river:rivers.has(key),crossing,blocked:blocked.has(key)},tuning:weather==='RAIN'&&to.terrainType==='plain'?rainTuning:r.tuning,tickDays:s.time.tickDays});
+    const ticks=movementTicks({from,to,troopType,maneuver,edge:{road:roads.has(key),river:rivers.has(key),crossing,blocked:blocked.has(key)},tuning:weather==='RAIN'&&to.terrainType==='plain'?rainTuning:r.tuning,tickDays:s.time.tickDays});
+    return region?region(fromId,toId,ticks,roads.has(key)):ticks;
   };
 }
 // Static geometry only: no enemy or friendly occupancy is used for path search.

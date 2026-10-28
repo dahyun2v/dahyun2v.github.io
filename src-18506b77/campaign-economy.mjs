@@ -1,3 +1,4 @@
+import {regionRecoveryMul} from './campaign-regions.mjs'; // C514 R09 지열 회복
 import {isSliceMap} from './map-primitives.mjs';
 import {configureDomesticCrises,crisisEffects,v3Terrain} from './domestic-v3.mjs';
 import {DOMESTIC_V3,domesticV3Enabled,initializeDomesticV3,domesticV3Base,domesticV3Rates,domesticV3FoodNeed,settleDomesticV3,configureDomesticV3Production,idleProductionGold,autoFillV3Seats,settleV3Specialists,v3Output,v3RecruitView,v3StandardOrder,settleV3Security,learningModifier,v3ArmCapacity,transferV3Arms,v3ArmsChoice,v3Policy,v3HasResource,v3ResourceModifier,v3ResourceEffects,v3ResourcePrestige,v3ImprovementTiles,DOMESTIC_RESOURCES} from './domestic-v3.mjs';
@@ -472,7 +473,7 @@ function recover(s,c,paid) {
   if (!paid || c.besieged || s.economy.combatCities?.[c.cityId]===s.turn-1 ||
     Object.values(s.armies).some(a=>castleArmyActive(s,a)&&a.factionId!==c.ownerFactionId&&nearby(s,c,a))) return;
   let recoveryBudget=c20Enabled(s)?reclassScale(1,reclassCityMods(s,c).WOUNDED_RECOVERY_MOD)*(c33Governor(s,c,'MEDICINE')?1.3:1)*C20.recoveryPerTurn*(activeUnique(s,c,'clinic')?C20.clinicMultiplier:1):Infinity;
-  if(domesticV3Enabled(s)){const mult=v3ResourceEffects(s,c,'CITY_WOUNDED_RECOVERY_MULT').reduce((n,e)=>n*e.value,1);recoveryBudget*=mult;}
+  if(domesticV3Enabled(s)){const mult=v3ResourceEffects(s,c,'CITY_WOUNDED_RECOVERY_MULT').reduce((n,e)=>n*e.value,1);recoveryBudget*=mult;}recoveryBudget*=regionRecoveryMul(s,c);
   const fieldUsed={};
   for (const l of s.personnel.lots.filter(l=>l.kind==='WOUNDED'&&l.nodeId===c.cityId&&lotFaction(s,l)===c.ownerFactionId&&l.count>0)) {
     const a=s.armies[l.originFormationId];

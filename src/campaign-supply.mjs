@@ -1,3 +1,4 @@
+import {regionSupplyDrainMul,regionOasisRefill} from './campaign-regions.mjs'; // C514 R02 마른 보급 · 오아시스
 import {isSliceMap} from './map-primitives.mjs';
 import {captureV3Loot} from './campaign-occupation.mjs';
 import {DOMESTIC_V3,domesticV3Enabled,settleDomesticV3Supply,takeGrain,learningModifier,v3CarryTurns} from './domestic-v3.mjs';
@@ -8,7 +9,7 @@ import models from '../../docs/design-data/supply-v0.2.json' with {type:'json'};
 import {C184,domesticEngineEnabled} from './campaign-domestic.mjs';
 import {TROOP_DISPLAY_SCALE} from './troop-display.mjs';
 import {boardNeighbors,tileId,hexDistance} from './map-primitives.mjs';
-import {edgeTicks,findPath} from './movement.mjs';
+import {edgeTicks,edgeTicksForSearch,findPath} from './movement.mjs';
 import {diplomacyHostile} from './campaign-diplomacy.mjs';
 import {classifyBattleCasualties} from './military-personnel-ledger.mjs';
 
@@ -90,12 +91,12 @@ export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2
  for(const source of candidates)for(const t of source.tiles){if(!targets.has(t))targets.set(t,[]);targets.get(t).push(source);}
  const blocked=new Set(Object.values(s.armies).filter(b=>active(s,b)&&diplomacyHostile(s,a.factionId,b.factionId)).map(b=>b.tileId));
  for(const c of Object.values(s.cities))if(c.cityId!==ignoreCityId&&diplomacyHostile(s,a.factionId,c.ownerFactionId))cityTiles(c).forEach(t=>blocked.add(t));
- const world=services.movement(s,a.armyId),queue=[[at,0]],seen=new Set([at]);let best=null;
+ const world=services.movement(s,a.armyId),ticks=edgeTicksForSearch(world,world.armies[a.armyId]),queue=[[at,0]],seen=new Set([at]);let best=null;
  for(let i=0;i<queue.length;i++){
   const [current,d]=queue[i];if(d>limit||best&&d>best.distance)break;
   if(!blocked.has(current))for(const source of targets.get(current)??[])if(!best||(source.stock??0)>(best.source.stock??0)||(source.stock??0)===(best.source.stock??0)&&source.id.localeCompare(best.source.id)<0)best={distance:d,source};
   if(best||d===limit||blocked.has(current))continue;
-  for(const p of boardNeighbors(s.tiles[current],s.tiles)){const to=tileId(p);if(seen.has(to)||blocked.has(to)||edgeTicks(world,world.armies[a.armyId],current,to)===null)continue;seen.add(to);queue.push([to,d+1]);}
+  for(const p of boardNeighbors(s.tiles[current],s.tiles)){const to=tileId(p);if(seen.has(to)||blocked.has(to)||ticks(current,to)===null)continue;seen.add(to);queue.push([to,d+1]);}
  }
  return best?{state:best.distance<=data.link.range+learningModifier(s,a.factionId,'SUPPLY_SAFE_RANGE_ADD')?'SAFE':'DISRUPTED',sourceCityId:best.source.city?.cityId??null,sourceHubId:best.source.hub?.hubId??null,...best}:{state:'CUT',sourceCityId:null,sourceHubId:null,distance:null,source:null};
 }
@@ -201,8 +202,8 @@ export function settleSupply(s){
  for(const a of Object.values(s.armies).filter(a=>active(s,a)).sort((a,b)=>a.armyId.localeCompare(b.armyId))){
   const link=supplyLink(s,a),need=armyFieldConsumption(s,a,link),max=supplyMax(s,a); a.supplyFood=Math.min(a.supplyFood,max);
   if(clockFood(s)&&!link.source?.city?.besieged){
-   const required=link.state==='SAFE'?0:link.state==='DISRUPTED'?need/2:need;
-   const starving=a.supplyFood+1e-6<required;a.supplyFood=link.state==='SAFE'?max:round(Math.max(0,a.supplyFood-required));
+   const oasis=regionOasisRefill(s,a),required=link.state==='SAFE'||oasis?0:(link.state==='DISRUPTED'?need/2:need)*regionSupplyDrainMul(s,a);
+   const starving=a.supplyFood+1e-6<required;a.supplyFood=link.state==='SAFE'||oasis?max:round(Math.max(0,a.supplyFood-required));
    a.supplyState=link.state;a.supplyStarving=starving;
    if(link.state==='CUT'&&!s.supply.cutArmies.includes(a.armyId))s.supply.cutArmies.push(a.armyId);
    if(starving){if(!s.supply.starvingArmies.includes(a.armyId))s.supply.starvingArmies.push(a.armyId);starvation(s,a);}continue;
