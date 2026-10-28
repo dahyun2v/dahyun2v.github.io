@@ -49,7 +49,7 @@ function formationSpecs(state, cityId, rows) {
         text: text(k), summary: plainSummary(text(k))})),   // v12 요약 한 줄 = 효과 글 첫 문장을 말로(% 없이 — 사용자 원칙) · 툴팁 = 전체 글(수치 그대로)
       // v4: 특기 칩 = 지도 독과 같은 아이콘 + 전체 이름(줄이지 않음) · 고유 먼저
       traits: [...(d.traits?.core ? [{...d.traits.core, core: true}] : []), ...(d.traits?.equipped ?? []).map((x) => ({...x, core: false}))].map((x) => ({name: x.full ?? x.name, icon: x.icon ?? null, text: x.text ?? '', core: x.core})),
-      troopIcon: TROOP_KEY[a.troopType] ?? 'dao',
+      troopIcon: TROOP_KEY[a.troopType] ?? TROOP_KEY[Special.parentTroop(a.troopType)] ?? 'dao',   // 특수 병종 = 부모 병종 기호(C516)
       // v12(사용자 10-27): 장수 칸 = 계통(전직했을 때만 전직 이름) · 교전에 쓰는 능력 셋 · W 그림 / 부대 칸 = 병종 · 이동 · 사거리 · Q(병종 기호 툴팁)
       klassName: d.klass?.branch && d.klass.branch !== '기본' ? d.klass.branch : (d.klass?.engine ?? ''),
       w: q('W') ? {name: q('W').name, icon: q('W').icon ?? null} : null,
@@ -104,7 +104,7 @@ export function sortieModel(state, cityId, selections, viewId = null) {
     const status = [id === c.governorId ? '태수' : '', Hud.fatigueLineText(o.fatigue)].filter(Boolean).join(' · ');
     const p = picked.get(id);
     const troopName = Special.troopInfo(state, type)?.troopDisplayName ?? '';
-    return {id, name: o.name, art: officerArt(id), head: artHead(officerArt(id)), troop: TROOP_KEY[type] ?? 'dao', troopName,
+    return {id, name: o.name, art: officerArt(id), head: artHead(officerArt(id)), troop: TROOP_KEY[type] ?? TROOP_KEY[Special.parentTroop(type)] ?? 'dao', troopName,
       selected: !!p, order: p?.order ?? null, countText: p ? t(p.count) : null, count: p?.count ?? null,
       range: p ? {min: p.range.min, max: p.range.max, step: p.range.step, minText: t(p.range.min), maxText: t(p.range.max)} : null,
       troopLabel: `기본 · ${troopName}`, rowReason: p?.reason ?? null,
@@ -147,7 +147,7 @@ export function webSortie(state, cityId, selections, viewId = null) {
     const eng = engineOf(state, id);
     return {id, name: o.name, face: officerArt(id), head: artHead(officerArt(id)), troopName: Special.troopInfo(state, type)?.troopDisplayName ?? '', on, disabled: !!reason && !on,
       squad: Stage.sortieSquadPath(type, TONE[c.ownerFactionId] ?? 'grey').replace(/^\//, ''),
-      troop: TROOP_KEY[type] ?? 'dao', klass: eng?.name ?? '', klassIcon: eng?.icon ?? null, order: on ? plan.rows.findIndex((p) => p.officerId === id) + 1 : null,
+      troop: TROOP_KEY[type] ?? TROOP_KEY[Special.parentTroop(type)] ?? 'dao', klass: eng?.name ?? '', klassIcon: eng?.icon ?? null, order: on ? plan.rows.findIndex((p) => p.officerId === id) + 1 : null,
       // v12: 장수 능력 다섯 그대로(사용자 10-27 '정치 · 매력도 하위 스탯은 전투랑 연동' — 정본 20 §10: 하위 능력치가 교전식에 들어감, 예 사기 판정 = 지휘 + 감화-결집)
       stats: [['leadership', '통솔'], ['might', '무력'], ['intelligence', '지력'], ['politics', '정치'], ['charisma', '매력']].map(([key, label]) => ({key, label, value: b[key] ?? null})),
       range: {min: r.min, max: r.max, step: r.step ?? 50},

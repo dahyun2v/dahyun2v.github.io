@@ -134,6 +134,7 @@
   "ready": false
  },
  "tacticReady": {},
+ "regions": null,
  "advisor": {
   "scope": "F01",
   "turn": 1,

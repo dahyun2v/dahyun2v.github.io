@@ -70,7 +70,7 @@ export function hudModel(state, {selectedArmyId = null} = {}) {
   const ended = (id) => Combat.armyActionEnded(s, id), moved = (id) => (s.movedArmyIds ?? []).includes(id);
   const units = own.map((a) => ({
     id: a.armyId, officerId: a.commanderId, name: v.officers[a.commanderId]?.name ?? a.commanderId, art: officerArt(a.commanderId), head: artHead(officerArt(a.commanderId)),
-    troop: TROOP_KEY[a.troopType] ?? 'dao', troopName: a.troopDisplayName ?? a.troopType, countText: Display.troopText(a.troopCount),
+    troop: TROOP_KEY[a.troopType] ?? TROOP_KEY[a.parentTroopType] ?? 'dao', troopName: a.troopDisplayName ?? a.troopType, countText: Display.troopText(a.troopCount),
     status: `${moved(a.armyId) ? '이동함' : '이동 가능'} · ${ended(a.armyId) ? '행동 끝' : '주 행동 가능'}`, ended: ended(a.armyId),
   }));
   const sel = v.ownArmies[selectedArmyId ?? ''] ?? v.ownArmies[units.at(-1)?.id ?? ''] ?? null;
@@ -167,7 +167,7 @@ export function selectedDock(s, v, a) {
   };
   const q = a.troopQ;
   return {
-    id: a.armyId, officerId: a.commanderId, name: o?.name ?? a.commanderId, art: officerArt(a.commanderId), head: artHead(officerArt(a.commanderId)), troop: TROOP_KEY[a.troopType] ?? 'dao', troopName: a.troopDisplayName ?? a.troopType ?? "부대",
+    id: a.armyId, officerId: a.commanderId, name: o?.name ?? a.commanderId, art: officerArt(a.commanderId), head: artHead(officerArt(a.commanderId)), troop: TROOP_KEY[a.troopType] ?? TROOP_KEY[a.parentTroopType] ?? 'dao', troopName: a.troopDisplayName ?? a.troopType ?? "부대",
     countText: Display.troopText(a.troopCount), maxText: Display.troopText(Math.max(a.troopCount, a.maxTroopCount ?? a.troopCount)), countRatio: a.maxTroopCount ? a.troopCount / a.maxTroopCount : 1,
     ratings: [{key: 'attack', label: '공격', value: ratings.attack ?? null}, {key: 'defense', label: '방어', value: ratings.defense ?? null}, {key: 'mobility', label: '이동', value: ratings.mobility ?? null}, {key: 'range', label: '사거리', value: range}],
     engine: a.engine ? {name: a.engine.name, resourceName: a.engine.resourceName, resource: a.engine.resource, max: a.engine.max} : {},
