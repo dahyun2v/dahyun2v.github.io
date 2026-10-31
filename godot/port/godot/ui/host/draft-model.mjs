@@ -9,9 +9,9 @@ import {existsSync, readFileSync} from '../../../../tools/port/web/shims/node-fs
 import {ROOT, officerArt, artHead} from './hud-model.mjs';
 
 const load = (p) => import(pathToFileURL(resolve(ROOT, p)).href);
-const [R, G, Eng, Hud, Draft] = await Promise.all([
+const [R, G, Eng, Hud, Draft, China] = await Promise.all([
   load('prototype/src/campaign-runtime.mjs'), load('prototype/src/campaign-growth.mjs'), load('prototype/src/campaign-engines.mjs'),
-  load('prototype/app/world/hud-ink.mjs'), load('prototype/src/campaign-officer-draft.mjs'),
+  load('prototype/app/world/hud-ink.mjs'), load('prototype/src/campaign-officer-draft.mjs'), load('prototype/src/campaign-china12.mjs'),
 ]);
 const readJson = (rel) => { try { return JSON.parse(readFileSync(resolve(ROOT, rel), 'utf8')); } catch { return {}; } };
 const PITCH = readJson('prototype/data/officer-pitch-v0.1.json');
@@ -34,21 +34,43 @@ const src = (html) => { const h = String(html ?? ''); return (/srcset="\/?([^"]+
 // officer-draft-ui draftOfficerBriefs — 실제 출정과 같은 초기화에서 지금 가진 카드만 읽음
 const PREVIEW_CACHE = new Map();
 let previewScope = '';
+let PREVIEW_BASE = null;   // C575: China preview world for the current scope
+function useScope(factionId, seed, map, ch) {
+  const scope = JSON.stringify([factionId, seed, map, ch]);
+  if (scope !== previewScope) { PREVIEW_CACHE.clear(); PREVIEW_BASE = null; RULER = null; previewScope = scope; }
+}
+const makePreview = (factionId, seed, companions, map, ch) => R.createCampaign({factionId, seed, companions, map, fieldArmies: false, trialRules: {domesticV3: true, ...(ch ? {china12: true, flow: 'v1'} : {})}});
+const chinaPreviewBase = (factionId, seed) => makePreview(factionId, seed, Draft.officerDraftPool({factionId, mapId: 'china', china12: true, seed}).sort((a, b) => a.cost - b.cost || a.officerId.localeCompare(b.officerId)).slice(0, 2).map((c) => c.officerId), 'china', true);
+/** C575: build the China draft preview ahead (the host calls this while the guide screen is open). */
+export function warmDraftPreview({factionId, seed, map = 'china', china12 = map === 'china'} = {}) {
+  if (map !== 'china' || !china12) return;
+  useScope(factionId, seed, map, true);
+  PREVIEW_BASE ??= chinaPreviewBase(factionId, seed);
+}
 function briefs(factionId, seed, cards, map = 'v3', china12 = false) {
   // 중국 12세력 판(10-31 사용자 '중국판 드래프트가 안 나오네')은 같은 지도로 미리보기 — v3 로 만들면 중국 장수가 INVALID_COMPANIONS,
   // 다섯을 한 번에 넣으면 그릇(DRAFT_BUDGET)을 넘으므로 장수마다 '그 장수 + 가장 싼 다른 카드' 둘로 만든 판에서 읽는다(같은 세력 · 시드 · 캐시).
   const ch = map === 'china' && china12;
   const ids = cards.map(c => c.officerId);
   if (!ids.length) throw new Error('DRAFT_EMPTY');
-  const scope = JSON.stringify([factionId, seed, map, ch]);
-  if (scope !== previewScope) { PREVIEW_CACHE.clear(); RULER = null; previewScope = scope; }
-  const make = (companions) => R.createCampaign({factionId, seed, companions, map, fieldArmies: false, trialRules: {domesticV3: true, ...(ch ? {china12: true, flow: 'v1'} : {})}});
+  useScope(factionId, seed, map, ch);
+  const make = (companions) => makePreview(factionId, seed, companions, map, ch);
   const costOf = Object.fromEntries(cards.map((c) => [c.officerId, c.cost ?? 0]));
+  // C575: one China preview per (faction · seed) — the two cheapest pool cards — then each card officer is moved from the
+  // preview's wanderers into the faction and given its growth record and engine, as applyChinaDraft does. A card used to
+  // build a whole China world (about 3 seconds each); now about 20 ms. The real campaign is still made from the confirmed picks.
   const previewFor = ch
     ? (id) => {
-      const partner = ids.filter((x) => x !== id).sort((a, b) => costOf[a] - costOf[b])[0];
-      if (!partner) throw new Error('DRAFT_TOO_FEW');
-      return make([id, partner]);
+      const p = PREVIEW_BASE ??= chinaPreviewBase(factionId, seed);
+      if (!p.officers[id]) {
+        const o = p.wanderers?.[id];
+        if (!o) throw new Error('DRAFT_PREVIEW_OFFICER');
+        delete p.wanderers[id];
+        Object.assign(o, {allegianceFactionId: factionId, locationRef: {kind: 'CITY', id: p.factions[factionId].capitalCityId}});
+        p.officers[id] = o;
+        G.initializeCampaignGrowth(p, China.chinaDraftPacks()); Eng.initializeEngines(p);
+      }
+      return p;
     }
     : (() => { let p; return () => p ??= make(ids); })();
   return Object.fromEntries(ids.map((id) => {

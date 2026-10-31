@@ -219,6 +219,12 @@ async function handleLine(line) {
   if (req.cmd === 'quit') { send({id: req.id ?? null, ok: true}); rl.close(); return; }
   try {
     if (req.cmd === 'fixture') { session.commit(await fixtureState(req.name)); send({id: req.id ?? null, ok: true, revision: session.revision}); return; }
+    if (req.cmd === 'draftWarm') {
+      // C575: 군주를 고른 뒤 안내자 화면 동안 동료 고르기 미리보기 판(중국 판 약 3초)을 쉬는 틈에 만들어 둠 — 바로 답하고, 다른 요청이 있으면 비킴
+      send({id: req.id ?? null, ok: true});
+      const warm = async () => { if (pending > 0) { setTimeout(warm, 50); return; } try { (await import('./draft-model.mjs')).warmDraftPreview({factionId: req.factionId, seed: req.seed, map: req.map ?? 'china', china12: req.china12}); } catch (e) { console.error('[hud-host] draftWarm', e instanceof Error ? e.message : e); } };
+      setTimeout(warm, 0); return;
+    }
     if (req.cmd === 'faction') {
       // 군주 고르기 모델(판 없이도 됨 — 군주마다 새 판 미리보기): {factionId?} — 고도 이식 방 요청 10-24
       const faction = (await import('./faction-model.mjs')).factionModel(req.factionId ?? 'F01', {china12: req.china12 ?? (req.map ?? 'china') === 'china'});
