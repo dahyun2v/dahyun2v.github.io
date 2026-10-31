@@ -85,7 +85,7 @@ if (args.includes('--export')) {
     state = result.after;
   } else if (opt('--fixture')) state = await fixtureState(opt('--fixture'));
   else {
-    const ps = new Host.PortSession(); ps.newGame({seed: Number(opt('--seed') ?? 190919), factionId: opt('--faction') ?? 'F01', map: opt('--map-id') ?? 'v3'});
+    const ps = new Host.PortSession(); ps.newGame({seed: Number(opt('--seed') ?? 190919), factionId: opt('--faction') ?? 'F01', map: opt('--map-id') ?? 'china'});
     // --end-turns N: 새 판을 N 차례 넘긴 장면(견본 — 예: 중국 판 시드 190919 6차례 = 눈보라 · 산안개, C514 지역 날씨)
     for (let i = 0; i < Number(opt('--end-turns') ?? 0); i++) ps.step({type: 'END_TURN'}, ps.revision);
     state = ps.state;
@@ -190,13 +190,13 @@ try { /** @type {any} */ (process.stdout)._handle?.setBlocking?.(true); } catch 
   session.advanceAi = (s) => {
     if (s.phase !== 'AI' || s.gameResult) return s;
     const order = [...new Set((s.aiQueue ?? []).map((e) => e.factionId ?? e.faction ?? e.tacticsFaction).filter((f) => f && s.factions[f]?.alive !== false))];
-    const names = order.map((f) => AM.factionLabel(s, f));
+    const names = order.map((f) => AM.factionLabel(session.labelState ?? s, f));   // 이름 = 차례 넘기기 전 판 view(캐시) — AI 중간 판 view 를 새로 만들지 않게
     let n = 0, last = null;
     while (s.phase === 'AI' && !s.gameResult) {
       const f = headFaction(s);
       if (f && f !== last && order.includes(f)) { last = f; send({id: null, event: 'aiProgress', factionId: f, name: names[order.indexOf(f)], index: order.indexOf(f), total: order.length, names}); }
       if (++n > 500) throw Error('AI_STEP_LIMIT');
-      const prev = s; s = R.step(s, {type: 'ADVANCE_AI'});
+      const prev = s; s = R.step(s, {type: 'ADVANCE_AI'}, session.aiStepOptions?.());
       session.aiReplayStep?.(prev, s);   // 상대 차례 연출 기록(이식 방 host.mjs aiReplay — 걸음마다 내게 보인 이동 · 공격)
     }
     if (last) send({id: null, event: 'aiProgress', done: true, total: order.length, names});
@@ -210,7 +210,8 @@ let queue = Promise.resolve();
 let lastTurn = null, lastAttack = null;
 const runMemory = (await import('./ending-model.mjs')).runEndMemory();   // 판도 재생 · 명부(웹 world.js c286Memory): 명령마다 상태를 보여 줌 — 차례마다 성 주인 · 함락 · 잃은 장수, 새 판이면 비움
 let draftMemo = {factionId: null, seed: null, locked: []};   // 'draftUi' 용(마지막 드래프트의 세력 · 시드 · 깨운 차례)   // 'report' · 'result' 용 전후 상태
-rl.on('line', (line) => { queue = queue.then(() => handleLine(line)); });
+let pending = 0;   // 받았지만 아직 끝내지 않은 줄 수(미리 계산이 비켜 줄 때 봄 — C521)
+rl.on('line', (line) => { pending++; queue = queue.then(() => handleLine(line)).finally(() => { pending--; session.touch?.(); }); });   // C534: 이 호스트 자기 명령(hud · city · report …) 뒤에도 '한가하면 미룬 적 의도 채우기'를 다시 검(Host.handle 은 스스로 부름)
 async function handleLine(line) {
   if (!line.trim()) return;
   let req;
@@ -220,7 +221,7 @@ async function handleLine(line) {
     if (req.cmd === 'fixture') { session.commit(await fixtureState(req.name)); send({id: req.id ?? null, ok: true, revision: session.revision}); return; }
     if (req.cmd === 'faction') {
       // 군주 고르기 모델(판 없이도 됨 — 군주마다 새 판 미리보기): {factionId?} — 고도 이식 방 요청 10-24
-      const faction = (await import('./faction-model.mjs')).factionModel(req.factionId ?? 'F01', {china12: !!req.china12 || req.map === 'china'});   // 12세력 판 = {map:'china', china12:true}
+      const faction = (await import('./faction-model.mjs')).factionModel(req.factionId ?? 'F01', {china12: req.china12 ?? (req.map ?? 'china') === 'china'});
       faction.backdrop = 'res://ui/art/faction-bg.webp';
       send({id: req.id ?? null, ok: true, faction}); return;
     }
@@ -243,9 +244,14 @@ async function handleLine(line) {
     }
     if (req.cmd === 'city') {
       // 성 / 내정 모델(지금 판 · 내 성): {cityId?} — 내 성 클릭 → CityView(출진은 그 화면 안 단추 · 총괄 10-25 사용자 지적) · city_changed 뒤 다시 받기
-      const city = (await import('./city-model.mjs')).cityModel(session.require(), req.cityId ?? null);
+      if (req.forecasts !== false) session.forecasts(req.expectedRevision);
+      const city = (await import('./city-model.mjs')).cityModel(session.require(), req.cityId ?? null, session.pview());
       if (!city) throw Error('NO_CITY');
-      send({id: req.id ?? null, ok: true, revision: session.revision, city}); return;
+      send({id: req.id ?? null, ok: true, revision: session.revision, city});
+      // 출진 창 미리 계산(C521 — 첫 열기 1.5초): 성 화면이 뜬 뒤 쉬는 틈에 그 성 장수 줄 스펙을 한 줄씩. 다른 요청이 오면 비키고 판이 바뀌면 멈춤
+      const st = session.require(), cid = city.cityId ?? req.cityId;
+      if (cid) (await import('./sortie-model.mjs')).warmSortie(st, cid, {busy: () => pending > 0, alive: () => session.state === st}).catch(() => {});
+      return;
     }
     if (req.cmd === 'growth') {
       // 성장 모델(지금 판 · 걸린 레벨업): {pick?: traitId} — GrowthView.card_picked 뒤 다시 받기 · 확정 = 모델 cards[i].command 를 step 으로
@@ -314,24 +320,29 @@ async function handleLine(line) {
     }
     if (req.cmd === 'hud') {
       // map:true = 지도 모델(이동 범위 · 경로 · attacks[i] 교전 예고 값 — ForecastCard 가 쓰는 모양)을 같이(고도 이식 방 요청 10-24)
-      const st = session.require(), hud = hudModel(st, {selectedArmyId: req.armyId ?? null});
+      const st = session.require(), hud = hudModel(st, {selectedArmyId: req.armyId ?? null, publicView: session.pview(st)});
       if (req.map) { const {mapModel} = await import('./map-model.mjs'); hud.map = mapModel(st, {selectedArmyId: req.armyId ?? hud.selected?.id ?? null}); }
       send({id: req.id ?? null, ok: true, revision: session.revision, hud}); return;
     }
     // 차례 넘김 · 공격 전 상태를 잡아 두기('report' · 'result' 가 전후를 견줌 — 고도 이식 방 요청 10-24)
     const kind = req.cmd === 'step' ? req.command?.type : null;
-    const before = kind && session.state ? structuredClone(session.state) : null;
+    const before = kind && session.state ? session.state : null;   // 엔진 판은 step 마다 새 객체 — 복사 없이 참조(view 캐시 그대로)
+    session.labelState = session.state;
     if (kind === 'END_TURN') req.command = {...req.command, incremental: true};   // 상대 세력을 한 칸씩(웹과 같은 incremental) — advanceAi 가 세력마다 진행 소식을 냄
     const res = Host.handle(session, req);
     // 드래프트(고도 이식 방 호스트 명령 draft · draftLock · draftReroll · draftConfirm) 응답에 웹 화면 모델을 붙임(draftUi) — 세력 · 시드 · 깨운 차례는 여기서 기억
     if (['draft', 'draftLock', 'draftUnlock', 'draftReroll', 'draftConfirm'].includes(req.cmd) && res?.draft) {
-      if (req.cmd === 'draft') draftMemo = {factionId: res.factionId ?? req.factionId, seed: res.seed ?? req.seed, locked: []};
+      if (req.cmd === 'draft') draftMemo = {factionId: res.factionId, seed: res.seed, locked: [], map: res.mapId, china12: res.china12};
       if (req.cmd === 'draftLock' && !draftMemo.locked.includes(req.officerId)) draftMemo.locked.push(req.officerId);
       if (req.cmd === 'draftUnlock') draftMemo.locked = draftMemo.locked.filter((id) => id !== req.officerId);   // 고르기 취소(이식 방 unlockDraftOfficer · 응답 fixed = 고정 목록)
-      try { res.draftUi = (await import('./draft-model.mjs')).draftModel({factionId: draftMemo.factionId, seed: draftMemo.seed, locked: res.locked ?? draftMemo.locked, ...res}); }
-      catch (e) { console.error('[hud-host] draftUi', e instanceof Error ? e.message : e); }
+      try { res.draftUi = (await import('./draft-model.mjs')).draftModel({factionId: draftMemo.factionId, seed: draftMemo.seed, locked: res.locked ?? draftMemo.locked, map: draftMemo.map, china12: draftMemo.china12, ...res}); }
+      catch (e) {
+        console.error('[hud-host] draftUi', e instanceof Error ? e.stack : e);
+        send({id: req.id ?? null, ok: false, error: {code: 'DRAFT_UI_FAILED', message: `동료 고르기를 준비하지 못했습니다: ${e instanceof Error ? e.message : e}`}});
+        return;
+      }
     }
-    if (before && kind === 'END_TURN') lastTurn = {before, after: structuredClone(session.state)};
+    if (before && kind === 'END_TURN') lastTurn = {before, after: session.state};
     if (session.state) { try { runMemory.observe(session.state); } catch (e) { console.error('[hud-host] runMemory', e instanceof Error ? e.message : e); } }
     if (before && ['ATTACK_UNIT', 'ATTACK_CITY'].includes(kind)) lastAttack = {before, after: structuredClone(session.state)};
     // 소리(10-25 사용자 "소리가 안 난다"): 명령 = 낼 소리 목록 + 지도 곡 · 새 판 · 불러오기 · 보기 = 지도 곡만 — 고도 UiAudio 가 응답에서 읽음

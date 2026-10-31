@@ -1,15 +1,17 @@
-import {regionSupplyDrainMul,regionOasisRefill} from './campaign-regions.mjs'; // C514 R02 마른 보급 · 오아시스
+import {regionSupplyDrainMul,regionOasisRefill} from './campaign-regions.mjs';
+import {supplyLandingBlocked,citySupplyWaterStep} from './campaign-water.mjs'; // C529 물 칸 보급 · 강 건너 보급은 항구를 쥔 쪽만 // C514 R02 마른 보급 · 오아시스
 import {isSliceMap} from './map-primitives.mjs';
 import {captureV3Loot} from './campaign-occupation.mjs';
-import {DOMESTIC_V3,domesticV3Enabled,settleDomesticV3Supply,takeGrain,learningModifier,v3CarryTurns} from './domestic-v3.mjs';
+import {DOMESTIC_V3,domesticV3Enabled,settleDomesticV3Supply,takeGrain,learningModifier,v3CarryTurns,v3FieldFoodServices} from './domestic-v3.mjs';
 import {engineFoodFactor,engineMovementWorld} from './campaign-engines.mjs';
+v3FieldFoodServices.factor=engineFoodFactor; // C536 전농 패시브를 내정 v3 군량 소모에도
 import {blessingEffect,weatherKind,weatherEdgeReason,RUN_MODIFIERS} from './campaign-run-modifiers.mjs';
 import data from '../../docs/design-data/supply-v0.1.json' with {type:'json'};
 import models from '../../docs/design-data/supply-v0.2.json' with {type:'json'};
 import {C184,domesticEngineEnabled} from './campaign-domestic.mjs';
 import {TROOP_DISPLAY_SCALE} from './troop-display.mjs';
 import {boardNeighbors,tileId,hexDistance} from './map-primitives.mjs';
-import {edgeTicks,findPath} from './movement.mjs';
+import {edgeTicks,edgeTicksForSearch,findPath} from './movement.mjs';
 import {diplomacyHostile} from './campaign-diplomacy.mjs';
 import {classifyBattleCasualties} from './military-personnel-ledger.mjs';
 
@@ -25,20 +27,20 @@ export const troopFoodRate=s=>foodModel(s)==='cheap'?models.cheap.troopFoodPerTh
 export const supplyStockTurns=(s,a=null)=>domesticV3Enabled(s)?v3CarryTurns(s,a?.factionId??s.playerFactionId):((a?.factionId??s.playerFactionId)===s.playerFactionId?blessingEffect(s,'CARRIED_FOOD_MAX')?.value:null)??(clockFood(s)?models.clock.fieldStockTurns:data.fieldStock.turns);
 export const armyFoodPerTurn=(a,s=null)=>s&&domesticV3Enabled(s)?a.troopCount*DOMESTIC_V3.foodPerTroop:Math.round(a.troopCount*troopFoodRate(s))/1000;
 export function fieldDrainTurns(s,a){if(domesticV3Enabled(s))return 1;if(!domesticEngineEnabled(s))return 1;const shown=a.troopCount*TROOP_DISPLAY_SCALE;return C184.fieldDrainTurns[shown<=C184.fieldShownThresholds[0]?0:shown<=C184.fieldShownThresholds[1]?1:2];}
-export function armyFieldConsumption(s,a,link=supplyLink(s,a)){if(domesticV3Enabled(s))return armyFoodPerTurn(a,s);return armyFoodPerTurn(a,s)*engineFoodFactor(s,a)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(weatherKind(s)==='COLD'?RUN_MODIFIERS.weather.kinds.find(k=>k.id==='COLD').effect.outOfSupplyFoodMultiplier:1));}
+export function armyFieldConsumption(s,a,link=supplyLink(s,a)){if(domesticV3Enabled(s))return armyFoodPerTurn(a,s)*engineFoodFactor(s,a);return armyFoodPerTurn(a,s)*engineFoodFactor(s,a)*(link.state==='SAFE'?1:fieldDrainTurns(s,a)*(weatherKind(s)==='COLD'?RUN_MODIFIERS.weather.kinds.find(k=>k.id==='COLD').effect.outOfSupplyFoodMultiplier:1));}
 // City stocks use the same passable land edges, without a last-mile range cap.
 export function citySupplyRoute(s,from,to){
  s=engineMovementWorld(s,null,s);
  if(!from||!to||!from.ownerFactionId||from.ownerFactionId!==to.ownerFactionId||from.besieged||to.besieged)return null;
  const blocked=new Set(Object.values(s.armies).filter(a=>active(s,a)&&diplomacyHostile(s,from.ownerFactionId,a.factionId)).map(a=>a.tileId));
  for(const c of Object.values(s.cities))if(c!==from&&c!==to&&diplomacyHostile(s,from.ownerFactionId,c.ownerFactionId))cityTiles(c).forEach(id=>blocked.add(id));
- const starts=cityTiles(from).filter(id=>s.tiles[id]&&!blocked.has(id)&&!['mountain','water'].includes(s.tiles[id].terrainType));
+ const starts=cityTiles(from).filter(id=>s.tiles[id]&&!blocked.has(id)&&!['mountain','water'].includes(s.tiles[id].terrainType)),boat=id=>s.tiles[id].terrainType==='water'&&s.tiles[id].boat===true;
  const goals=new Set(cityTiles(to)),queue=starts.map(id=>[id]),seen=new Set(starts);
  for(let i=0;i<queue.length;i++){
   const path=queue[i],id=path.at(-1);if(goals.has(id))return path;
   for(const p of boardNeighbors(s.tiles[id],s.tiles)){
    const next=tileId(p),key=[id,next].sort().join('|');
-   if(seen.has(next)||blocked.has(next)||['mountain','water'].includes(s.tiles[next].terrainType)||s.mapRules.blockedEdges.includes(key)||weatherEdgeReason(s,id,next)||s.mapRules.riverEdges.includes(key)&&!s.mapRules.crossings[key])continue;
+   if(seen.has(next)||blocked.has(next)||s.tiles[next].terrainType==='mountain'||s.tiles[next].terrainType==='water'&&!boat(next)||(boat(id)||boat(next))&&!citySupplyWaterStep(s,from.ownerFactionId,id,next)||s.mapRules.blockedEdges.includes(key)||weatherEdgeReason(s,id,next)||s.mapRules.riverEdges.includes(key)&&!s.mapRules.crossings[key])continue;
    seen.add(next);queue.push([...path,next]);
   }
  }
@@ -91,12 +93,12 @@ export function supplyLink(s,a,at=a.tileId,{exclude=null,limit=data.link.range*2
  for(const source of candidates)for(const t of source.tiles){if(!targets.has(t))targets.set(t,[]);targets.get(t).push(source);}
  const blocked=new Set(Object.values(s.armies).filter(b=>active(s,b)&&diplomacyHostile(s,a.factionId,b.factionId)).map(b=>b.tileId));
  for(const c of Object.values(s.cities))if(c.cityId!==ignoreCityId&&diplomacyHostile(s,a.factionId,c.ownerFactionId))cityTiles(c).forEach(t=>blocked.add(t));
- const world=services.movement(s,a.armyId),queue=[[at,0]],seen=new Set([at]);let best=null;
+ const world=services.movement(s,a.armyId),ticks=edgeTicksForSearch(world,world.armies[a.armyId]),queue=[[at,0]],seen=new Set([at]);let best=null;
  for(let i=0;i<queue.length;i++){
   const [current,d]=queue[i];if(d>limit||best&&d>best.distance)break;
   if(!blocked.has(current))for(const source of targets.get(current)??[])if(!best||(source.stock??0)>(best.source.stock??0)||(source.stock??0)===(best.source.stock??0)&&source.id.localeCompare(best.source.id)<0)best={distance:d,source};
   if(best||d===limit||blocked.has(current))continue;
-  for(const p of boardNeighbors(s.tiles[current],s.tiles)){const to=tileId(p);if(seen.has(to)||blocked.has(to)||edgeTicks(world,world.armies[a.armyId],current,to)===null)continue;seen.add(to);queue.push([to,d+1]);}
+  for(const p of boardNeighbors(s.tiles[current],s.tiles)){const to=tileId(p);if(seen.has(to)||blocked.has(to)||ticks(current,to)===null||supplyLandingBlocked(s,a.factionId,current,to))continue;seen.add(to);queue.push([to,d+1]);}
  }
  return best?{state:best.distance<=data.link.range+learningModifier(s,a.factionId,'SUPPLY_SAFE_RANGE_ADD')?'SAFE':'DISRUPTED',sourceCityId:best.source.city?.cityId??null,sourceHubId:best.source.hub?.hubId??null,...best}:{state:'CUT',sourceCityId:null,sourceHubId:null,distance:null,source:null};
 }

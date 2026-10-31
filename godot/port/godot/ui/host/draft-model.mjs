@@ -5,7 +5,7 @@
 // 입력 = 고도 이식 방 호스트 드래프트 응답({draft: officerDraftView, factionId, seed, locked?}) — 규칙은 엔진(campaign-officer-draft)만.
 import {resolve} from '../../../../tools/port/web/shims/node-path.mjs';
 import {pathToFileURL} from '../../../../tools/port/web/shims/node-url.mjs';
-import {readFileSync} from '../../../../tools/port/web/shims/node-fs.mjs';
+import {existsSync, readFileSync} from '../../../../tools/port/web/shims/node-fs.mjs';
 import {ROOT, officerArt, artHead} from './hud-model.mjs';
 
 const load = (p) => import(pathToFileURL(resolve(ROOT, p)).href);
@@ -32,17 +32,36 @@ let RULER = null;   // 고른 군주(briefs 가 채움 — 부르는 장면 · �
 const src = (html) => { const h = String(html ?? ''); return (/srcset="\/?([^"]+\.(?:png|webp))/.exec(h) ?? /(?:src="|url\(['"]?)\/?([^"')]+\.(?:png|webp))/.exec(h))?.[1] ?? ''; };
 
 // officer-draft-ui draftOfficerBriefs — 실제 출정과 같은 초기화에서 지금 가진 카드만 읽음
-function briefs(factionId, seed, ids) {
-  const preview = R.createCampaign({factionId, seed, companions: ids, map: 'v3', fieldArmies: false});
-  const rid = preview.factions[factionId]?.rulerId;
-  RULER = rid ? {id: rid, name: preview.officers[rid]?.name ?? rid, art: officerArt(rid), head: artHead(officerArt(rid))} : null;
+const PREVIEW_CACHE = new Map();
+let previewScope = '';
+function briefs(factionId, seed, cards, map = 'v3', china12 = false) {
+  // 중국 12세력 판(10-31 사용자 '중국판 드래프트가 안 나오네')은 같은 지도로 미리보기 — v3 로 만들면 중국 장수가 INVALID_COMPANIONS,
+  // 다섯을 한 번에 넣으면 그릇(DRAFT_BUDGET)을 넘으므로 장수마다 '그 장수 + 가장 싼 다른 카드' 둘로 만든 판에서 읽는다(같은 세력 · 시드 · 캐시).
+  const ch = map === 'china' && china12;
+  const ids = cards.map(c => c.officerId);
+  if (!ids.length) throw new Error('DRAFT_EMPTY');
+  const scope = JSON.stringify([factionId, seed, map, ch]);
+  if (scope !== previewScope) { PREVIEW_CACHE.clear(); RULER = null; previewScope = scope; }
+  const make = (companions) => R.createCampaign({factionId, seed, companions, map, fieldArmies: false, trialRules: {domesticV3: true, ...(ch ? {china12: true, flow: 'v1'} : {})}});
+  const costOf = Object.fromEntries(cards.map((c) => [c.officerId, c.cost ?? 0]));
+  const previewFor = ch
+    ? (id) => {
+      const partner = ids.filter((x) => x !== id).sort((a, b) => costOf[a] - costOf[b])[0];
+      if (!partner) throw new Error('DRAFT_TOO_FEW');
+      return make([id, partner]);
+    }
+    : (() => { let p; return () => p ??= make(ids); })();
   return Object.fromEntries(ids.map((id) => {
+    if (PREVIEW_CACHE.has(id)) return [id, PREVIEW_CACHE.get(id)];
+    const preview = previewFor(id);
+    const rid = preview.factions[factionId]?.rulerId;
+    RULER = rid ? {id: rid, name: preview.officers[rid]?.name ?? rid, art: officerArt(rid) ?? '', head: artHead(officerArt(rid)) ?? {}} : null;
     const growth = G.campaignOfficerGrowth(preview, id);
     const core = growth?.cards.find((c) => c.traitId === `${id}.unique`);
     const sig = growth?.cards.find((c) => c.traitId === growth.signature?.traitId) ?? growth?.cards.find((c) => c.kind === 'tactic');
     const o = preview.officers[id], engine = Eng.engineView(preview, id);
     const d = {name: o?.name, officer: {officerId: id, name: o?.name}, army: {commanderId: id, troopType: o?.troopType, engine}};
-    return [id, {
+    const brief = {
       engine: engine ? {id: engine.engineId, name: engine.name, icon: `assets/ui-kit/own/class-v1/${String(engine.engineId).toLowerCase()}.png`} : null,
       pitch: PITCH.pitches?.[id] ?? '',
       troops: (o?.multiTroopTrait?.troopTypes ?? [o?.troopType]).map((t) => TROOP[t]).filter(Boolean).map(([icon, short]) => ({icon: `assets/ui-kit/own/sym/troops/${icon}.webp`, short})),
@@ -50,7 +69,10 @@ function briefs(factionId, seed, ids) {
       trait: {name: core ? Hud.abilityName356(core) : '준비 중', text: core?.text || '효과 설명 준비 중', icon: src(Hud.dockIcon327(d, 'passive', core ? {name: core.name, text: core.text} : {}))},
       tactic: {name: sig?.name ?? '준비 중', text: sig?.text || '효과 설명 준비 중', icon: src(Hud.dockIcon327(d, 'R', sig ? {name: sig.name, text: sig.text} : {}))},
       tacticE: (() => { const e = growth?.cards.find((c) => c.pilot && c.slot === 'E'); return e ? {name: e.name, text: e.text ?? ''} : null; })(),
-    }];
+    };
+    // Keep only presentation data for this draft, never five entire China worlds.
+    PREVIEW_CACHE.set(id, brief);
+    return [id, brief];
   }));
 }
 
@@ -58,13 +80,14 @@ function briefs(factionId, seed, ids) {
 export function draftModel(res) {
   const v = res.draft, factionId = res.factionId ?? v.gimmick?.factionId, seed = res.seed;
   const ids = v.cards.map((c) => c.officerId);
-  const b = briefs(factionId, seed, ids);
+  const b = briefs(factionId, seed, v.cards, res.mapId ?? res.map ?? 'v3', !!res.china12);
   const locked = (res.locked ?? v.cards.filter((c) => c.locked).map((c) => c.officerId)).filter((id) => ids.includes(id));
   const cards = v.cards.map((c) => {
-    const art = officerArt(c.officerId), stone = STONE[c.officerId];
+    const art = officerArt(c.officerId) ?? '', stone = STONE[c.officerId];
+    const bust = `assets/officer-art/bust/${c.officerId}.webp`;
     return {
       id: c.officerId, name: c.name, cost: c.cost, locked: !!c.locked, lockBlocked: c.lockBlocked ?? null, home: !!c.home, reason: REASON[c.reasonCode] ?? REASON.WANDER,
-      art, head: artHead(art), bust: `assets/officer-art/bust/${c.officerId}.webp`,
+      art, head: artHead(art) ?? {}, bust: existsSync(resolve(ROOT, 'prototype', bust)) ? bust : art,
       stone: stone ? {src: String(stone.src).replace(/^\//, ''), size: stone.size, head: stone.head} : null,
       stats: STATS.map((k) => ({k, v: c.stats?.[k] ?? null})),
       ...b[c.officerId],

@@ -66,9 +66,9 @@ export function cityV3(state, v, c) {
   const danger = v.granary === 0 || (v.granaryTurnsLeft !== null && v.granaryTurnsLeft <= 3);
   const soldiers = cities.reduce((n, x) => n + (x.reserveTroops ?? 0) + (x.woundedTroops ?? 0), 0) + Object.values(v.ownArmies ?? {}).reduce((n, a) => n + a.troopCount, 0);
   const chips = [
-    {key: 'food', label: text.topBar.grain.label, value: `${num(v.granary)} 석`, sub: `${signed(v.granaryNet)}${v.granaryNet < 0 && v.granaryTurnsLeft !== null ? ' · ' + v.granaryTurnsLeft + '차례' : ''}`,
+    {key: 'food', label: text.topBar.grain.label, value: `${num(v.granary)} 석`, sub: v.forecastsPending ? '계산 중' : `${signed(v.granaryNet)}${v.granaryNet < 0 && v.granaryTurnsLeft !== null ? ' · ' + v.granaryTurnsLeft + '차례' : ''}`,
       tip: danger ? `곡식이 ${v.granaryTurnsLeft ?? 0}차례 뒤 바닥` : text.topBar.grain.tooltip.split(' 지금')[0], warn: danger, down: (v.granaryNet ?? 0) < 0},
-    {key: 'gold', label: text.topBar.gold.label, value: `${num(v.treasury)} 금`, sub: signed(v.treasuryNet), tip: text.topBar.gold.tooltip, warn: (v.unpaidTurns ?? 0) > 0, down: (v.treasuryNet ?? 0) < 0},
+    {key: 'gold', label: text.topBar.gold.label, value: `${num(v.treasury)} 금`, sub: v.forecastsPending ? '계산 중' : signed(v.treasuryNet), tip: text.topBar.gold.tooltip, warn: (v.unpaidTurns ?? 0) > 0, down: (v.treasuryNet ?? 0) < 0},
     ...(l ? [{key: 'science', label: text.topBar.learning.label, value: num(l.science), sub: `${l.learningChoice ? '● ' : ''}${l.nextThreshold === null ? '모든 카드 문턱 도달' : '다음 카드 ' + num(l.nextThreshold)}`, tip: text.topBar.learning.tooltip, warn: !!l.learningChoice, down: false}] : []),
     {key: 'fame', label: '인망', value: num(v.faction?.prestige), sub: null, tip: text.topBar.prestige.tooltip, warn: false, down: false},
     {key: 'troops', label: '병사', value: `${num(soldiers)} 명`, sub: null, tip: text.topBar.soldiers.tooltip, warn: false, down: false},
@@ -79,11 +79,11 @@ export function cityV3(state, v, c) {
   const ledger = {
     title: '세력 창고 · 내역',
     lines: [
-      `곡식 ${num(v.granary)} 석 · ${signed(v.granaryNet)} / 차례`,
+      `곡식 ${num(v.granary)} 석 · ${v.forecastsPending ? '계산 중' : signed(v.granaryNet) + ' / 차례'}`,
       ...cities.flatMap((x) => [`${x.name} · ${UI.breakdownV3(x, 'food')}`,
         ...['incoming', 'outgoing'].flatMap((k) => (x.foodLedger?.[k] ?? []).map((r) => `${k === 'incoming' ? '들어옴' : '나감'} · ${r.label ?? r.kind} ${num(r.amount)} 석`))]),
       '나감: 성 안 병사 · 야전 · 성장 · 비축 채움 포함 · 순증은 다음 정산 예상',
-      `금 ${num(v.treasury)} 금 · ${signed(v.treasuryNet)} / 차례 · 봉록 ${num(v.goldUpkeep?.total)} 금`,
+      `금 ${num(v.treasury)} 금 · ${v.forecastsPending ? '계산 중' : signed(v.treasuryNet) + ' / 차례'} · 봉록 ${num(v.goldUpkeep?.total)} 금`,
     ],
     actions: [
       ...(v.grainBuy ? [{line: `군량 사기 · 남은 한도 ${num(v.grainBuy.remaining)} 석 · 석당 ${v.grainBuy.price} 금`, label: '군량 사기 · 100금', command: {type: 'DV3_BUY_GRAIN', gold: 100},
@@ -132,8 +132,8 @@ export function cityV3(state, v, c) {
     title: `${c.name} · ${c.gradeName ?? c.grade}`, titleTip: text.cityView.title.tooltip,
     characters: (c.characters ?? []).map(character),
     // 2 인구 + 등급 막대(문턱 = 엔진 grades — 15만 · 25만 · 40만, 막대 끝 = 마지막 문턱 × 1.25 라 '끝 = 가득'으로 읽히지 않게)
-    people: {value: c.people, cap: c.peopleCapacity, text: `${num(c.people)} / ${num(c.peopleCapacity)} 명`, growth: c.growthNext,
-      growthText: `다음 차례 ${signed(c.growthNext)}${c.people >= c.peopleCapacity ? ' · 땅이 넓어지면 열림' : ''}`, tip: text.cityView.people.tooltip},
+    people: {value: c.people, cap: c.peopleCapacity, text: `${num(c.people)} / ${num(c.peopleCapacity)} 명`, growth: c.growthNext ?? 0,
+      growthText: v.forecastsPending ? '다음 차례 계산 중' : `다음 차례 ${signed(c.growthNext)}${c.people >= c.peopleCapacity ? ' · 땅이 넓어지면 열림' : ''}`, tip: text.cityView.people.tooltip},
     grade: {id: c.grade, name: c.gradeName ?? c.grade, scaleMax: top * 1.25, marks: grades.filter((g) => g.minimum > 0).map((g) => ({name: g.name, at: g.minimum, label: num(g.minimum)})),
       next: grades.find((g) => g.minimum > c.people) ? (() => { const g = grades.find((x) => x.minimum > c.people); return `${g.name}까지 ${num(g.minimum - c.people)}명`; })() : '가장 높은 등급'},
     // 3 산출(웹 c490-output — 값 = outputBreakdown total · 툴팁 = breakdownV3)

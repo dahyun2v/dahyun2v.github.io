@@ -310,602 +310,602 @@
   {
    "source": "prototype/assets/officer-art/bust/G01.webp",
    "copy": "res://assets/bust/G01.webp",
-   "bytes": 34364,
-   "sha256": "607bcf57c52e52abf42f79e05b110ab201becb7507fb0f7641a4c9e32fe01da8"
+   "bytes": 149498,
+   "sha256": "bd1eaddfe8e0210723ffc4f28b46f30ad473456cee1ebce65fe2bef1a57ee148"
   },
   {
    "source": "prototype/assets/officer-art/bust/G02.webp",
    "copy": "res://assets/bust/G02.webp",
-   "bytes": 35792,
-   "sha256": "cab6ced20d790bef924eeaffd072c4fa7622eff966660626d9ddcf5c2f006077"
+   "bytes": 139200,
+   "sha256": "098df4f23a088d8ba3607373180a5dde3c0f7065c4238163ae887db82e64b273"
   },
   {
    "source": "prototype/assets/officer-art/bust/G03.webp",
    "copy": "res://assets/bust/G03.webp",
-   "bytes": 40744,
-   "sha256": "410491fb582fb7ccd6006d44e3eba9c9a3a91ee57fa64f341bc8db05a8186070"
+   "bytes": 154262,
+   "sha256": "6c007439ffc82c0d6424c0062d16dc95704c3bdbd478d3f70a507ca4564b7f4a"
   },
   {
    "source": "prototype/assets/officer-art/bust/G04.webp",
    "copy": "res://assets/bust/G04.webp",
-   "bytes": 36558,
-   "sha256": "bec301bc7ed863f06cc9f0fecd4fb1d5ede718ff45fe18570a3f54f4e0740e0d"
+   "bytes": 132458,
+   "sha256": "7ce780a5e0a8592243b8a3c7466da44b7f52bb5ac1dca1dd2d24b4fb5a9551f8"
   },
   {
    "source": "prototype/assets/officer-art/bust/G05.webp",
    "copy": "res://assets/bust/G05.webp",
-   "bytes": 40980,
-   "sha256": "85b5190440550ea2293e5b76d5a39296f9708dd773d5424bbd64f5d1ff9d66b4"
+   "bytes": 160664,
+   "sha256": "7af801bc7d55da7894cb7ebebfbb5a9bc2476fd69b92769d56833209d679f544"
   },
   {
    "source": "prototype/assets/officer-art/bust/G06.webp",
    "copy": "res://assets/bust/G06.webp",
-   "bytes": 39782,
-   "sha256": "9a22f2ff4b9424f6880071154278da02012742c67d2caeebe428ca1d76462751"
+   "bytes": 161864,
+   "sha256": "d6bb48837bc4428a2b8b08f62ccbb1733b7bfee6cff63c65bd3e477762cf1279"
   },
   {
    "source": "prototype/assets/officer-art/bust/G07.webp",
    "copy": "res://assets/bust/G07.webp",
-   "bytes": 33086,
-   "sha256": "887a875c280ba3ce534b4437fc82387012909bd3f3c0766849d742eee36ea225"
+   "bytes": 126108,
+   "sha256": "e7807efbb5e99499e583228034009464c0628dae05061adde811dac00cb21e63"
   },
   {
    "source": "prototype/assets/officer-art/bust/G08.webp",
    "copy": "res://assets/bust/G08.webp",
-   "bytes": 19096,
-   "sha256": "e828155a7210f2f06004210dc2414ac64ca54cf830b25b0ac468b83bcdba2af3"
+   "bytes": 117274,
+   "sha256": "cce15bcd90090a0d0fe8d3e760113a821b1b79bd52999de28574d0fc95393250"
   },
   {
    "source": "prototype/assets/officer-art/bust/G09.webp",
    "copy": "res://assets/bust/G09.webp",
-   "bytes": 25882,
-   "sha256": "f9a2bc37e54ec5261d32b9fa8ef5b2e09f0acf90fa772e4309fd2592180cdea1"
+   "bytes": 106366,
+   "sha256": "92b13e9f27d60057a1749cb528a28d96ae9e881a2ce6689781ef46984d02d94f"
   },
   {
    "source": "prototype/assets/officer-art/bust/G10.webp",
    "copy": "res://assets/bust/G10.webp",
-   "bytes": 25154,
-   "sha256": "63dba544c6a557ecee433c63ff6c9c623bd50c12e3ea3d7ed6be5f9aff49f851"
+   "bytes": 139598,
+   "sha256": "b8d738d2bef3c02835813db379ff3070469c2539b0a2bfda9618f10f85e7e95f"
   },
   {
    "source": "prototype/assets/officer-art/bust/G100.webp",
    "copy": "res://assets/bust/G100.webp",
-   "bytes": 38912,
-   "sha256": "474568dcd5ea562f07bc837503ad23a0ecc023948f8d811f3abbd338443207b4"
+   "bytes": 133460,
+   "sha256": "28dc45a6cd9bca337339473ebce09f80f62db600a76ad2d9dad6675b0763d5bb"
   },
   {
    "source": "prototype/assets/officer-art/bust/G11.webp",
    "copy": "res://assets/bust/G11.webp",
-   "bytes": 40394,
-   "sha256": "3d41b93d20b9408e2b6b0368d1934fcc3d9d56505731b7e1d403298d77f449ac"
+   "bytes": 139186,
+   "sha256": "4dcd695a299aa42f26661519549f1334c6d5b83ce8464cbb3a20bfef9adba4b4"
   },
   {
    "source": "prototype/assets/officer-art/bust/G12.webp",
    "copy": "res://assets/bust/G12.webp",
-   "bytes": 35358,
-   "sha256": "4c0cc0632087a8ad60ac0df930a5d21faa65aeeb0a95a15c932a03bbff200bfb"
+   "bytes": 154888,
+   "sha256": "d9907b5271dbec769f84d9934e21df67087796b587ede0d48365abc920732dd0"
   },
   {
    "source": "prototype/assets/officer-art/bust/G13.webp",
    "copy": "res://assets/bust/G13.webp",
-   "bytes": 38580,
-   "sha256": "7ed7508869dc29b5082fd1076cc79c139606f7adc150109d5f6d9869db12b47b"
+   "bytes": 147262,
+   "sha256": "7923d0271faf6d0b4476e7a02291f1ad89160ecabaa7c92664eecbe16b078a43"
   },
   {
    "source": "prototype/assets/officer-art/bust/G14.webp",
    "copy": "res://assets/bust/G14.webp",
-   "bytes": 36136,
-   "sha256": "0a68685745de773998f8dfea7f36fb7e6c2cc280975863b339d33ca8873039d8"
+   "bytes": 139624,
+   "sha256": "6d20edfee1392806a4bee9bd24e6e0f0a3f9b2bc5cc86a967b14fe6a1ae94569"
   },
   {
    "source": "prototype/assets/officer-art/bust/G15.webp",
    "copy": "res://assets/bust/G15.webp",
-   "bytes": 35846,
-   "sha256": "7f4d676a59d46505f68dca00afa3cb932fd1860fbaa922b804f4532ec73fafb1"
+   "bytes": 137018,
+   "sha256": "766abbf5021683604bef00ba1234f6ae8b7f4fcfe57552cc653daaeb019dcf1d"
   },
   {
    "source": "prototype/assets/officer-art/bust/G16.webp",
    "copy": "res://assets/bust/G16.webp",
-   "bytes": 37486,
-   "sha256": "e5db97c8fe91999255e01cdc927f244f16afcc92ded70551fb4791e1f90f3957"
+   "bytes": 146630,
+   "sha256": "a1ac6d452c7ece36416bb5b44faa184c60859246207160f32129306ab19c57af"
   },
   {
    "source": "prototype/assets/officer-art/bust/G17.webp",
    "copy": "res://assets/bust/G17.webp",
-   "bytes": 29458,
-   "sha256": "1dfaeeddad8f2efc9fe0268243868cda0e5983c1c6b386a95c36f48a88324dbc"
+   "bytes": 139656,
+   "sha256": "f8e1fd2fabc4dfb67b53423c7b06b2093a176de057f1a4cae70617e91a2ef425"
   },
   {
    "source": "prototype/assets/officer-art/bust/G18.webp",
    "copy": "res://assets/bust/G18.webp",
-   "bytes": 29382,
-   "sha256": "b9b50c4bf3551cce1f79ce7287befaff29c77615eee947386f53e04f680324b8"
+   "bytes": 131446,
+   "sha256": "4df9feb40a855861b231277a846cf89eff7a0f5fd48d925e01c9f7151c705fc8"
   },
   {
    "source": "prototype/assets/officer-art/bust/G19.webp",
    "copy": "res://assets/bust/G19.webp",
-   "bytes": 34308,
-   "sha256": "9d3faec3a0ad759c77abed0b78055b45f8712ddabb8cc45f5bbfb542a495d94b"
+   "bytes": 151556,
+   "sha256": "565f707ffbc9f0a71f2d9f013ce366b97a4ce72c161d309d47db73b468df82ac"
   },
   {
    "source": "prototype/assets/officer-art/bust/G20.webp",
    "copy": "res://assets/bust/G20.webp",
-   "bytes": 36278,
-   "sha256": "3f9f8828e467d69144ead796b52c84d788ee42ae0d775438917233192150e477"
+   "bytes": 137400,
+   "sha256": "dab2cd4875211e0d47452e2225f9fbcee1d0272c48a9dd3b6c0abe80cb04b01d"
   },
   {
    "source": "prototype/assets/officer-art/bust/G21.webp",
    "copy": "res://assets/bust/G21.webp",
-   "bytes": 34660,
-   "sha256": "91eb97065970f0333865bcbca26d66a24d3ee22b1b88d92808de83c8b8471b26"
+   "bytes": 144850,
+   "sha256": "6b38d0e8d27e3442e3782b452c8b24052ce7daee11bb701a0325a26323468c3a"
   },
   {
    "source": "prototype/assets/officer-art/bust/G22.webp",
    "copy": "res://assets/bust/G22.webp",
-   "bytes": 35386,
-   "sha256": "be0db61af4e331c721e6ab14cb584614d1b3513591733e751709313537e40d56"
+   "bytes": 130958,
+   "sha256": "3dfc5194dc9aca9127827230f759f35806073d35307cd8f6bb78c9f377c80e96"
   },
   {
    "source": "prototype/assets/officer-art/bust/G23.webp",
    "copy": "res://assets/bust/G23.webp",
-   "bytes": 30036,
-   "sha256": "0dfa6e4a75efc959e60d74ca895838542563be1f75ef6f6b13b45591d5bdf2fc"
+   "bytes": 143784,
+   "sha256": "17b82225e197712d17ba1bc51bfe2b37c5b39e614950a651b2b0bfb1df3eb2c7"
   },
   {
    "source": "prototype/assets/officer-art/bust/G24.webp",
    "copy": "res://assets/bust/G24.webp",
-   "bytes": 30640,
-   "sha256": "cdb5b51a012673ebad3cc0d00eb54a55f3f6b3f2da2c4617a46c1eec4878e803"
+   "bytes": 143902,
+   "sha256": "3c4aeba5a10ebe166d7c94611e966e63d94cfd484c5b55cce792de25d7ad7a16"
   },
   {
    "source": "prototype/assets/officer-art/bust/G25.webp",
    "copy": "res://assets/bust/G25.webp",
-   "bytes": 30300,
-   "sha256": "cdf5f513facb83faa34b30cac594ac92deb56917a6b525ac87fc8b87bc59a305"
+   "bytes": 128260,
+   "sha256": "1d440062af31e897e6bef858600fd21b51e6096cea7515b9224e524625115bc5"
   },
   {
    "source": "prototype/assets/officer-art/bust/G26.webp",
    "copy": "res://assets/bust/G26.webp",
-   "bytes": 29578,
-   "sha256": "862097ad480319a5309242155d80e1b72b4aed9cf68bbf9f3b29811a46db28da"
+   "bytes": 127580,
+   "sha256": "8c4fccd5c29ae478b5fa286cf594e12e309e52279b43629c014aa613195266fc"
   },
   {
    "source": "prototype/assets/officer-art/bust/G27.webp",
    "copy": "res://assets/bust/G27.webp",
-   "bytes": 41248,
-   "sha256": "70cf595a29ba6dbb51ad4d6a0066549b1841ac2ede9f4f7a67061e01576276c2"
+   "bytes": 150678,
+   "sha256": "a45cade04132171119951fd83faa9f5064b7a773e900aa7ae70a94678f57ab1d"
   },
   {
    "source": "prototype/assets/officer-art/bust/G28.webp",
    "copy": "res://assets/bust/G28.webp",
-   "bytes": 36004,
-   "sha256": "6ba68836190d04b507baa2ebb733e01340456db15111654f5804827790c895fd"
+   "bytes": 121662,
+   "sha256": "970d528c9bc917ade265130ef73329e9509d883a4a638c1267c2593b4309c7f9"
   },
   {
    "source": "prototype/assets/officer-art/bust/G29.webp",
    "copy": "res://assets/bust/G29.webp",
-   "bytes": 31128,
-   "sha256": "ad01b29ceaec5b8b11c15e7c832a3864f2ace0316b5dbb667b0730f02213186c"
+   "bytes": 157680,
+   "sha256": "ff12b0f8c7ae8ac09c270170bd26567d8903e1e05c445f026a1fde1ba44ecc01"
   },
   {
    "source": "prototype/assets/officer-art/bust/G30.webp",
    "copy": "res://assets/bust/G30.webp",
-   "bytes": 42094,
-   "sha256": "ada6c1c850e47dfdecc38ac3f7c1bd3f5e3f6563b57508910e65e2c314e39424"
+   "bytes": 147080,
+   "sha256": "4b3fdce8be54204f9a5d74375a0e150b209298001040ef8217ba34b5770e33f8"
   },
   {
    "source": "prototype/assets/officer-art/bust/G31.webp",
    "copy": "res://assets/bust/G31.webp",
-   "bytes": 47218,
-   "sha256": "df3ee7b2f544b34bd3d1ee2f7b632400037a6c0673e3bbfaeccff301b80cbe63"
+   "bytes": 160372,
+   "sha256": "12b222d093186e3ee0fb754f77649e91ad076af8793689b540dbdc7ab7f072b3"
   },
   {
    "source": "prototype/assets/officer-art/bust/G32.webp",
    "copy": "res://assets/bust/G32.webp",
-   "bytes": 29536,
-   "sha256": "9ee0e3c138b2e1d5e5948d4030258575ab42de0b80d6b55621560c36bdfecdcf"
+   "bytes": 118978,
+   "sha256": "87e0a968e7b1c491c76a4f37a70adbecbfd04a0f06e60661acaf7de7432e64fb"
   },
   {
    "source": "prototype/assets/officer-art/bust/G33.webp",
    "copy": "res://assets/bust/G33.webp",
-   "bytes": 45784,
-   "sha256": "573bf8c17a348fb7598cb43636c4a72fbb578f3ced439ae6a0d33c8c838d1428"
+   "bytes": 167098,
+   "sha256": "351312e7da694f12091e795dfaee822a274005d75285ac8b58d8bb403421071b"
   },
   {
    "source": "prototype/assets/officer-art/bust/G34.webp",
    "copy": "res://assets/bust/G34.webp",
-   "bytes": 30844,
-   "sha256": "8797369fafe1e843ff090b708551fd31b14422c51fe48e30ae02ca4c659aad98"
+   "bytes": 148454,
+   "sha256": "efe4ef906d9d3cc59f8b64d931964c688350978a2b8d17c88de9fc63600b15bc"
   },
   {
    "source": "prototype/assets/officer-art/bust/G35.webp",
    "copy": "res://assets/bust/G35.webp",
-   "bytes": 40602,
-   "sha256": "8fbe7b489ecad37fc85b96a7de855b8193a40d53515474a13bf885b3aa787aec"
+   "bytes": 162110,
+   "sha256": "d17500b31ff2df9b237e85f949cd0af615131feea3fdffc6acc8d90db619e510"
   },
   {
    "source": "prototype/assets/officer-art/bust/G36.webp",
    "copy": "res://assets/bust/G36.webp",
-   "bytes": 29532,
-   "sha256": "27fdacfe4297d41cb3d5b498a94b591d79787f37a90cb6beaf87829a7def689c"
+   "bytes": 129730,
+   "sha256": "8e6384a9f447c426b5d0f965c682de709a1e8a2c9f9d7489eaa8f1124187ceeb"
   },
   {
    "source": "prototype/assets/officer-art/bust/G37.webp",
    "copy": "res://assets/bust/G37.webp",
-   "bytes": 37208,
-   "sha256": "6aed39870a02a15162892a66f6e5afa65e7ad683fc9d5ca1057372ba7a82544b"
+   "bytes": 137726,
+   "sha256": "67a887d3867bd9af6c3d78caeceb53a4f7c774cb696c98b09a68778e5c463867"
   },
   {
    "source": "prototype/assets/officer-art/bust/G38.webp",
    "copy": "res://assets/bust/G38.webp",
-   "bytes": 37806,
-   "sha256": "0055232fd3c60d0f4da304cdc518647ca28cd9374e8e0f3321100a2d1b32f42b"
+   "bytes": 155236,
+   "sha256": "731929a980309d7074caea51dde03387c07acc0aa0a0331dae927afd46a7d46b"
   },
   {
    "source": "prototype/assets/officer-art/bust/G39.webp",
    "copy": "res://assets/bust/G39.webp",
-   "bytes": 37072,
-   "sha256": "4f8d11ec2d542f06e3d0a44bb21798fc9f5bd275aa088bcee68cbe5694ea59a4"
+   "bytes": 140528,
+   "sha256": "8434f90ac286ab8e6a1b4829c0bf6a0e5ea74578abce673a888c943e0a075c07"
   },
   {
    "source": "prototype/assets/officer-art/bust/G40.webp",
    "copy": "res://assets/bust/G40.webp",
-   "bytes": 45700,
-   "sha256": "a264740a045a7b41b9ab12f31a15cff042b19d3e8fe963e1cedaa2829500339c"
+   "bytes": 159810,
+   "sha256": "7763f993dde0d7a802b40158e55e414a6bbb4662219bcd890bb06a2563279338"
   },
   {
    "source": "prototype/assets/officer-art/bust/G41.webp",
    "copy": "res://assets/bust/G41.webp",
-   "bytes": 40036,
-   "sha256": "3492490feb22b4a948e1d18f05c03128014ba67e052db779e63029a2967b53e5"
+   "bytes": 157084,
+   "sha256": "c680c940487ab3f2cfb1a3f4e1f3092a1d5810d6eec843858721f281f1311594"
   },
   {
    "source": "prototype/assets/officer-art/bust/G42.webp",
    "copy": "res://assets/bust/G42.webp",
-   "bytes": 32102,
-   "sha256": "828791875f6618963ad4b46b81e1825eb0ae6deaffbabe2cf8ab2e866b58e733"
+   "bytes": 147600,
+   "sha256": "4eddf15ee53152f51809e49173d677d987460f38a66aad62803a2957838b95e9"
   },
   {
    "source": "prototype/assets/officer-art/bust/G43.webp",
    "copy": "res://assets/bust/G43.webp",
-   "bytes": 38252,
-   "sha256": "e01c79b644b8d8706ba01074f62eeada27ea39cf943c94965b191966daab2ee1"
+   "bytes": 136130,
+   "sha256": "3fbec31fb007c0df038aa43257e83b8016b160ff97d07986583c086fd6801624"
   },
   {
    "source": "prototype/assets/officer-art/bust/G44.webp",
    "copy": "res://assets/bust/G44.webp",
-   "bytes": 38192,
-   "sha256": "786ce57e085a26471ea7c6898bfce773a75372d587d000c18b2c0bd82ba4865c"
+   "bytes": 162682,
+   "sha256": "ed230bd25655fb213c58345aeea026b3b31db2067e9f8375e73655a18d9b2ce8"
   },
   {
    "source": "prototype/assets/officer-art/bust/G45.webp",
    "copy": "res://assets/bust/G45.webp",
-   "bytes": 33918,
-   "sha256": "a26468fca0a43cd427a7ad851cbdfd5bd214f86a57ba0c689b9d5bfb54205756"
+   "bytes": 144458,
+   "sha256": "df1dc77e443effa5c73d0eb07206341138bf0a4f4d3f23e715b742947ee1a0e4"
   },
   {
    "source": "prototype/assets/officer-art/bust/G46.webp",
    "copy": "res://assets/bust/G46.webp",
-   "bytes": 41712,
-   "sha256": "f78d01774ccf23c31dd2ef33ca4b5fa0e88045c100a182d9c5ec1b24f49ce9ff"
+   "bytes": 161134,
+   "sha256": "8e0903e1486f0812f5d46057e557e42e2f374b0d54fd4eab0c329ddf94b54376"
   },
   {
    "source": "prototype/assets/officer-art/bust/G47.webp",
    "copy": "res://assets/bust/G47.webp",
-   "bytes": 42328,
-   "sha256": "a9e958310c07e742a51c915a7a258f301237e99c1626fe9cb6426bb2ac1f8549"
+   "bytes": 150762,
+   "sha256": "a04282f1aebc733289cf37c95b2622bbb88d82ea0fdd4ed779d61c2e72316da2"
   },
   {
    "source": "prototype/assets/officer-art/bust/G48.webp",
    "copy": "res://assets/bust/G48.webp",
-   "bytes": 36340,
-   "sha256": "ec12befe68417fc0fa88e1191b7421df0a5c3d02c16059bd8a8debdc51bd3e28"
+   "bytes": 137066,
+   "sha256": "8fc0c36ba6736fa223b85ed8f1bd3fb68fdd0b04a53f1061d61139dcb2d5b18e"
   },
   {
    "source": "prototype/assets/officer-art/bust/G49.webp",
    "copy": "res://assets/bust/G49.webp",
-   "bytes": 28150,
-   "sha256": "4b38d7e28684881ebda6cd093102b5c77b3ce5f982e372fcd1a5d40769408c1c"
+   "bytes": 119190,
+   "sha256": "6deffd5952a1ce54b1897c947bc91f3cf50ab15eabb83d8badf1686a2112d098"
   },
   {
    "source": "prototype/assets/officer-art/bust/G50.webp",
    "copy": "res://assets/bust/G50.webp",
-   "bytes": 37812,
-   "sha256": "136ee4e22114c796882ca15e7ac303a4c175b343c9de23c91f74fe2ffeba2e82"
+   "bytes": 162294,
+   "sha256": "93bc0e898c90d64b9aa2a4d0e74a96723dde40d27b40f6a7d97158dd3994f683"
   },
   {
    "source": "prototype/assets/officer-art/bust/G51.webp",
    "copy": "res://assets/bust/G51.webp",
-   "bytes": 40166,
-   "sha256": "58f2b7ba64839288413863ddb475f07033506f360204720771993508ac4d51a2"
+   "bytes": 143288,
+   "sha256": "86244b09c1e3712fa27a82dd54fb0cd62d2727fc8f4116c3b200bf6de07b6b0b"
   },
   {
    "source": "prototype/assets/officer-art/bust/G52.webp",
    "copy": "res://assets/bust/G52.webp",
-   "bytes": 27950,
-   "sha256": "99c0f0b0fce002db7d1c17d6cecd2913e98c53ae3ef568322f310c4f5bca012e"
+   "bytes": 125082,
+   "sha256": "d60d8b84560edc6e6e00f83ecaf6977406cb0b99e90fedfefcd1ddf970c0f0f3"
   },
   {
    "source": "prototype/assets/officer-art/bust/G53.webp",
    "copy": "res://assets/bust/G53.webp",
-   "bytes": 29532,
-   "sha256": "fb231b0b09f2598e658f03ef410c3e2d312d20c894c9adee0dfdbec26785c43f"
+   "bytes": 108166,
+   "sha256": "05740f066319b55041456540c8014ff66672685f9beca730714ccf896fee760d"
   },
   {
    "source": "prototype/assets/officer-art/bust/G54.webp",
    "copy": "res://assets/bust/G54.webp",
-   "bytes": 38386,
-   "sha256": "19dc4cee22009cd1f44ae4e3a926949906995c83c40c4b769d43022f339a9be6"
+   "bytes": 134064,
+   "sha256": "d5a4dba92ff619fd0feeea188468e7a4f1c5ce71ab86f3685261e9ec243af4fb"
   },
   {
    "source": "prototype/assets/officer-art/bust/G55.webp",
    "copy": "res://assets/bust/G55.webp",
-   "bytes": 32882,
-   "sha256": "ccd24f09fe6077716f9d183b5d1dd287a022da09c55a282351e73c77a28dcd59"
+   "bytes": 113948,
+   "sha256": "97665bda7a7e775c79ef8c821e812c163c0b34ec48724aa43a907ec1f71b06ea"
   },
   {
    "source": "prototype/assets/officer-art/bust/G56.webp",
    "copy": "res://assets/bust/G56.webp",
-   "bytes": 32608,
-   "sha256": "8a75b4eff1cd85a6b4262bde95b1b3b3fa43c18c8e0b4d683fe7a493eed02a52"
+   "bytes": 132386,
+   "sha256": "a087284fc4735215e56bb30615ca2e1fe0e2a83aa319e712590ec0f5e89a89e7"
   },
   {
    "source": "prototype/assets/officer-art/bust/G57.webp",
    "copy": "res://assets/bust/G57.webp",
-   "bytes": 30026,
-   "sha256": "0379edbc1c80c727c2e7ab80c16358773603b28f4502e478141d31b1e0564326"
+   "bytes": 113036,
+   "sha256": "f0c7f1b9fba924ae8a4b47f974842bd0987ab6d12af0fac1210b275f456694cf"
   },
   {
    "source": "prototype/assets/officer-art/bust/G58.webp",
    "copy": "res://assets/bust/G58.webp",
-   "bytes": 35256,
-   "sha256": "faac6598a92dd4949fa977134fb2214213eb84ff9d19a44e2b1a76ba6b1a3caa"
+   "bytes": 118692,
+   "sha256": "628201d37f9bfbb0fda5286065f342449760393ce2e32940bbd2528b9934dfdc"
   },
   {
    "source": "prototype/assets/officer-art/bust/G59.webp",
    "copy": "res://assets/bust/G59.webp",
-   "bytes": 32186,
-   "sha256": "0e2110a062f63b9600f3da0052e1c5708c169a479b46c9dbe62f67ca56ee80a9"
+   "bytes": 122522,
+   "sha256": "c189814dd1ba9a3285b0e3ec7244cbb8be52cdadadc6d636dc38cad4fe6a465b"
   },
   {
    "source": "prototype/assets/officer-art/bust/G60.webp",
    "copy": "res://assets/bust/G60.webp",
-   "bytes": 33276,
-   "sha256": "7d85ce320e54c25597de74ff4a0c75526ee5513e8ecf5386b0733e445cdda967"
+   "bytes": 102232,
+   "sha256": "8b7ec565e213f09fb6b66e78404dec2440c14276ce74664d56d390a7eb2fd163"
   },
   {
    "source": "prototype/assets/officer-art/bust/G61.webp",
    "copy": "res://assets/bust/G61.webp",
-   "bytes": 41750,
-   "sha256": "7314a61add3d6ac60611652d47bf59178dd7a56f56b33010e5dc8e555bfe9a07"
+   "bytes": 134118,
+   "sha256": "b70f06d221fbea0d7c908bd691aa7a85409c1da4be3ecd9cdcadb5ff1a0857fc"
   },
   {
    "source": "prototype/assets/officer-art/bust/G62.webp",
    "copy": "res://assets/bust/G62.webp",
-   "bytes": 37280,
-   "sha256": "2bf96faf30eea888b9b5f93ed7145593896cb3886d98ac7a4ccdbcb7f477daea"
+   "bytes": 126708,
+   "sha256": "99ed6c07ae0162a351721ad2403852e67b01eb1f3bc12e95f934d2eb686d0c64"
   },
   {
    "source": "prototype/assets/officer-art/bust/G63.webp",
    "copy": "res://assets/bust/G63.webp",
-   "bytes": 46126,
-   "sha256": "197aa15f715a918ca6d49895ed581258f4638fe0aeaaddf71a108c1d8f8679b2"
+   "bytes": 159702,
+   "sha256": "55fd87a4d2a99d4718d0a620cc52326ac41f8535f997a9e7de06332c01e17182"
   },
   {
    "source": "prototype/assets/officer-art/bust/G64.webp",
    "copy": "res://assets/bust/G64.webp",
-   "bytes": 36464,
-   "sha256": "195c1f95064b6537f511f882eddbc50ef40f9730b9159b5f6578af511c41e32b"
+   "bytes": 138126,
+   "sha256": "50b8f887b4ca4e3df482e5319527206c7be66fb9a9fefee1fd663e1299c6e92e"
   },
   {
    "source": "prototype/assets/officer-art/bust/G65.webp",
    "copy": "res://assets/bust/G65.webp",
-   "bytes": 36288,
-   "sha256": "82bd7ca5393984aed3cd118b0fc704f12aa2bb46412081452edfa210dbb2a253"
+   "bytes": 148366,
+   "sha256": "e4fcdec2947aa75e02f65e4838e940bf96e3f0855e6ecbd688b342d3101fb1e2"
   },
   {
    "source": "prototype/assets/officer-art/bust/G66.webp",
    "copy": "res://assets/bust/G66.webp",
-   "bytes": 38348,
-   "sha256": "95927a9ac8baeb41f4de2470003877bae3faaf340ea41038f1fa4df41641b5f6"
+   "bytes": 152068,
+   "sha256": "c5f58c204db7f1760020106b82339d21b4c82125dc197d0aea8dbf39e4c6be00"
   },
   {
    "source": "prototype/assets/officer-art/bust/G67.webp",
    "copy": "res://assets/bust/G67.webp",
-   "bytes": 33520,
-   "sha256": "ae242bd67eaa7511a59269881eab516e1c4a7c0fbe02ef0d6810475dfdf2c1e0"
+   "bytes": 139428,
+   "sha256": "f5d1c52541eaa05fd22c38539915d0716ece6e26a7e27d3802c4996c4792da4a"
   },
   {
    "source": "prototype/assets/officer-art/bust/G68.webp",
    "copy": "res://assets/bust/G68.webp",
-   "bytes": 40374,
-   "sha256": "a66fefbecc531ce377c7d5ce946856a6044a595125782e999c71fa9eb37d47e5"
+   "bytes": 134226,
+   "sha256": "e4ff74c420044b1aacdd9c647037b8d69d0db2b17d95c580f1beb39dcbe5376c"
   },
   {
    "source": "prototype/assets/officer-art/bust/G69.webp",
    "copy": "res://assets/bust/G69.webp",
-   "bytes": 36972,
-   "sha256": "f93800f4540cceababf468f0a8d9cbd4bab85f5fc6a621b7fef0d5b32a7713fa"
+   "bytes": 161478,
+   "sha256": "be60630409d8af54d6079ec26b688ac1cc3071f4479bf123484dbadc56c6328d"
   },
   {
    "source": "prototype/assets/officer-art/bust/G70.webp",
    "copy": "res://assets/bust/G70.webp",
-   "bytes": 34682,
-   "sha256": "66a90fb214f054c3948ce000aaade624a8750d22f59b118c5d56f2db8a91cb77"
+   "bytes": 167858,
+   "sha256": "d6587e4e96f01efe2b6dae4bf9c4285f44d817b0d8c3a744f8cf0b0a5fd91215"
   },
   {
    "source": "prototype/assets/officer-art/bust/G71.webp",
    "copy": "res://assets/bust/G71.webp",
-   "bytes": 40598,
-   "sha256": "80ee0635d207a34a35ec507009eada78360f97e2ef8537848975eb2a5d94a317"
+   "bytes": 139956,
+   "sha256": "c017eb8f218ae2d19240a3cd8f54e3a04cad4c7b80d584a229e2b0d9c6ec9a33"
   },
   {
    "source": "prototype/assets/officer-art/bust/G72.webp",
    "copy": "res://assets/bust/G72.webp",
-   "bytes": 34986,
-   "sha256": "1f41abafd7916041482cf488036da35dd28e3943a9102ba17b0bcc85b4abd797"
+   "bytes": 148386,
+   "sha256": "87da16bb00f6e807854e69523702d8b89b3d2768109d548e562e9bd145fb9b67"
   },
   {
    "source": "prototype/assets/officer-art/bust/G73.webp",
    "copy": "res://assets/bust/G73.webp",
-   "bytes": 37594,
-   "sha256": "2354cf559088a31e27999949b9c4f54883e76e15fd080dfa733cbcdb93eef2b2"
+   "bytes": 136926,
+   "sha256": "2f7916f10b6b7c1464fd7287414e30714e3c6d3e774b1141d223e330c81631c2"
   },
   {
    "source": "prototype/assets/officer-art/bust/G74.webp",
    "copy": "res://assets/bust/G74.webp",
-   "bytes": 33224,
-   "sha256": "51c72af4b0216b00f42c86a14c0c405af8cf2455388a8cdbd04f2392fa711ee8"
+   "bytes": 128020,
+   "sha256": "1417d85c77170803308ba7eb3b559a5e3d9b844bed52f42580b5e7f7a44653ef"
   },
   {
    "source": "prototype/assets/officer-art/bust/G75.webp",
    "copy": "res://assets/bust/G75.webp",
-   "bytes": 25122,
-   "sha256": "ae17a0d7ae2098d5ac43e759c28a91cc247008d742e58dfaeeece410ac9f92b8"
+   "bytes": 158342,
+   "sha256": "54393b847374292df3e27c16383ea3519c21fc792dbb0133a9bfd4bb5eaad8d7"
   },
   {
    "source": "prototype/assets/officer-art/bust/G76.webp",
    "copy": "res://assets/bust/G76.webp",
-   "bytes": 32682,
-   "sha256": "135c7ecdb9bf6078b57f90296a053be87a72ec99da29f9ec394556d68d1db942"
+   "bytes": 119544,
+   "sha256": "8dd718cc4c23dbe09172d91a557ab0d60a1aeae742ad8716c9f82090434e4698"
   },
   {
    "source": "prototype/assets/officer-art/bust/G77.webp",
    "copy": "res://assets/bust/G77.webp",
-   "bytes": 37796,
-   "sha256": "080c01fd6ee930beaa7cf9638951a41a623bfdc47dce1c546d7c2cfa9b5d06be"
+   "bytes": 129560,
+   "sha256": "8ac132b3b9481f29daa11e03948ef88b1f2119d48cda672bb41a74297ea7cb38"
   },
   {
    "source": "prototype/assets/officer-art/bust/G78.webp",
    "copy": "res://assets/bust/G78.webp",
-   "bytes": 32822,
-   "sha256": "726801cf0fde5811eae99738627f66e25943e2fbc43b5925e6eed45adf1c08ef"
+   "bytes": 137484,
+   "sha256": "37a8290d448d859b4a4c27a53e8caf37da2d2846e55915625f3238ed3ee8da21"
   },
   {
    "source": "prototype/assets/officer-art/bust/G79.webp",
    "copy": "res://assets/bust/G79.webp",
-   "bytes": 45192,
-   "sha256": "c215813c83f8972b634728c502cd4f7d3390761bf47d028bee99bcd0ed83e94c"
+   "bytes": 147784,
+   "sha256": "45ac342304847d4d83d383147b07a75714004fbccf4e149afd8586ef305d7fae"
   },
   {
    "source": "prototype/assets/officer-art/bust/G80.webp",
    "copy": "res://assets/bust/G80.webp",
-   "bytes": 40310,
-   "sha256": "71a914a8a58a47e3ecfe28bedd5c2cea8149d3cce7ba9e1eaf92727a5b688eec"
+   "bytes": 153852,
+   "sha256": "64f866e269520f95440e98491f6cd6f53d7eeebb52c71778618154c67e17d14e"
   },
   {
    "source": "prototype/assets/officer-art/bust/G81.webp",
    "copy": "res://assets/bust/G81.webp",
-   "bytes": 45542,
-   "sha256": "995e3cf837ae8a198f1b167ec9ad51b6523f11d25f6002d98427cfe4b2981009"
+   "bytes": 157764,
+   "sha256": "1eb2168856eabb977cb87e4a32864952d88694ad75df6949f37e3fef4d66b43f"
   },
   {
    "source": "prototype/assets/officer-art/bust/G82.webp",
    "copy": "res://assets/bust/G82.webp",
-   "bytes": 46546,
-   "sha256": "cbe9b8ebcdc7e9c4199e483b3f7a4e35766b0b1b878b300373320c9e3c1f45e4"
+   "bytes": 146170,
+   "sha256": "9c99c4073d0201abd926c95e8fef53d290fe2cffa94859bea6f501d5c1e7bc05"
   },
   {
    "source": "prototype/assets/officer-art/bust/G83.webp",
    "copy": "res://assets/bust/G83.webp",
-   "bytes": 41124,
-   "sha256": "bda1c1fa00d4887027303ad000f23f4e8a3d58e65725217ea0ed8744eb6cc51a"
+   "bytes": 139094,
+   "sha256": "d2a2f63794cfe989663b0a98ddb19af93f7e27c261fe925ee6225ccf9a7e121e"
   },
   {
    "source": "prototype/assets/officer-art/bust/G84.webp",
    "copy": "res://assets/bust/G84.webp",
-   "bytes": 32352,
-   "sha256": "d9d0481db509355519be9e2fde02a8e9c16adb589982ef8b22a76c077f2f3104"
+   "bytes": 118646,
+   "sha256": "48329c47e1349ef539af2866f89e41a6112d6143ab6bbc8882ac8ecdbbf57584"
   },
   {
    "source": "prototype/assets/officer-art/bust/G85.webp",
    "copy": "res://assets/bust/G85.webp",
-   "bytes": 40008,
-   "sha256": "5aaa7ba7f09a708f9add1239b79e38a81c8eaf54da03109bbacd0dcfd7a9ebc9"
+   "bytes": 146818,
+   "sha256": "6e737a74480add06794ab4b3d6d0828f6f1a54059f1369c3608cd8b8d8d3f753"
   },
   {
    "source": "prototype/assets/officer-art/bust/G86.webp",
    "copy": "res://assets/bust/G86.webp",
-   "bytes": 44922,
-   "sha256": "44c003e8355efc26e30b5ef5f93757016f4023983ee8c2866cb3d798f3abb0a3"
+   "bytes": 161182,
+   "sha256": "f59b791f49de6b0bc84ca4b130faf2bc1d11d096053c52393cf0ce43a4288793"
   },
   {
    "source": "prototype/assets/officer-art/bust/G87.webp",
    "copy": "res://assets/bust/G87.webp",
-   "bytes": 27760,
-   "sha256": "c1686a69084a1e14f10ff057180815164e5188d346c311ac32811f40be332c3e"
+   "bytes": 110164,
+   "sha256": "91449253378bf49b45c7f8cd6a5d90aca4c38743b81b9a5ccd9d9597185b3d4f"
   },
   {
    "source": "prototype/assets/officer-art/bust/G88.webp",
    "copy": "res://assets/bust/G88.webp",
-   "bytes": 41610,
-   "sha256": "03296f1ac94359e5e519168297ce34e71113f488a53e65600b12df7e571ade7d"
+   "bytes": 158322,
+   "sha256": "a0a48b151201492711333df636749db871ef7525e796a71d1afebf96cd5dc4f9"
   },
   {
    "source": "prototype/assets/officer-art/bust/G89.webp",
    "copy": "res://assets/bust/G89.webp",
-   "bytes": 39084,
-   "sha256": "84fae40fe56ccc82cfe4474f476d4c4fffca54391032ecb24a50d94a4a3b1137"
+   "bytes": 131576,
+   "sha256": "2fbe6ea98e3257eeb2579bd40ab4d3766a18a421f1d8f76aa15c8d5145bec616"
   },
   {
    "source": "prototype/assets/officer-art/bust/G90.webp",
    "copy": "res://assets/bust/G90.webp",
-   "bytes": 39642,
-   "sha256": "69837347a0d4c4c7a042cc443ec6745cb014b667f62b595ee9c727237dc1840d"
+   "bytes": 131094,
+   "sha256": "0ed0a39407dc8bb6dfd26c2d95a82148b3c8a7d86f117ea3d41943920f152c98"
   },
   {
    "source": "prototype/assets/officer-art/bust/G91.webp",
    "copy": "res://assets/bust/G91.webp",
-   "bytes": 47204,
-   "sha256": "c37c58a52971a36c71d55e10dce2f70cf5634ee05c28e7da21e88cbbe408e02a"
+   "bytes": 151574,
+   "sha256": "778e14a0dca7045e96123b91f1c0f21e513013f91d1a51035b48bbb82bea0ad9"
   },
   {
    "source": "prototype/assets/officer-art/bust/G92.webp",
    "copy": "res://assets/bust/G92.webp",
-   "bytes": 38018,
-   "sha256": "816455a278c820d3d90496ed6436f9b98026b3ef3ba4130a6bceefb70c715de4"
+   "bytes": 138166,
+   "sha256": "906206621838649058e5b9c556580aebce93b8921a4dde29055eeadd30a62b98"
   },
   {
    "source": "prototype/assets/officer-art/bust/G93.webp",
    "copy": "res://assets/bust/G93.webp",
-   "bytes": 47560,
-   "sha256": "e859319bb8dc0829a7e52204c5305ed5874002e1b91e3326a0c2a9645dab376f"
+   "bytes": 167440,
+   "sha256": "b3dfe5f79e895a38fd41df7238ae32baf0466eb8223f5cb6a0404d640e593ff8"
   },
   {
    "source": "prototype/assets/officer-art/bust/G94.webp",
    "copy": "res://assets/bust/G94.webp",
-   "bytes": 34918,
-   "sha256": "a2bbbcf8bdfa6255286d365ff5f8de66814820d7cdb4e6f7a05bb4c5f5e9dba6"
+   "bytes": 156934,
+   "sha256": "68aeee3c93a09e626f83d72e4f1966975728a56485b1d8df95562afa1f6931aa"
   },
   {
    "source": "prototype/assets/officer-art/bust/G95.webp",
    "copy": "res://assets/bust/G95.webp",
-   "bytes": 40302,
-   "sha256": "659f5ca847b1a74e40738dc0245861bb7d5fc9145ffc73391a47b38adda96c97"
+   "bytes": 150570,
+   "sha256": "e0749d312899e9b65102e6d9e7ff1461a6959cf0abf9ae14562ff3a9a2b8d170"
   },
   {
    "source": "prototype/assets/officer-art/bust/G96.webp",
    "copy": "res://assets/bust/G96.webp",
-   "bytes": 43492,
-   "sha256": "71ea32c65b02e8f5caf111a5b80e5367200b5730b610237113d7c50ed9a4a5a1"
+   "bytes": 157432,
+   "sha256": "fdd3482f42089f68b547dd836aaed166e08f1bc92f83345be8080ffeeddf0a82"
   },
   {
    "source": "prototype/assets/officer-art/bust/G97.webp",
    "copy": "res://assets/bust/G97.webp",
-   "bytes": 43004,
-   "sha256": "5194f59cf6ea0f3cf2dbd7115f27502aa77f19b74d5ebf7a508540a0fccc4272"
+   "bytes": 162992,
+   "sha256": "5f639747b1332ee713876102f4f3392f188a449b3b5ac927bbb02ce2b6861c4e"
   },
   {
    "source": "prototype/assets/officer-art/bust/G98.webp",
    "copy": "res://assets/bust/G98.webp",
-   "bytes": 35120,
-   "sha256": "e147b4c7c335dd1a0292f1a756e299879f60e22c3841f62fc1328981f5d412fd"
+   "bytes": 137090,
+   "sha256": "16ddcaa96df8ac7d7e5a32127a8b5c0aecc17cf080d006285418100221448e77"
   },
   {
    "source": "prototype/assets/officer-art/bust/G99.webp",
    "copy": "res://assets/bust/G99.webp",
-   "bytes": 32964,
-   "sha256": "d68e4207527034a62bb458d05f48cf801d564aaf7a1ae12be6accf3d0b6b6f98"
+   "bytes": 138694,
+   "sha256": "e98dadf732897efa482a7635be9a4bd8eb12105d4efa2e4bfc9b7b07a71d0f86"
   },
   {
    "source": "docs/work-integration/20261023/uiux/godot-skirmish/assets/infantry.glb",

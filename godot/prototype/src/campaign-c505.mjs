@@ -18,7 +18,7 @@ const enabled=s=>s?.trialRules?.mechanics==='v2'&&s.trialRules.mechanicsBatch===
 const read=a=>a?.mechV2?.c505??{};
 const book=a=>(a.mechV2??={}).c505??={};
 const owns=(s,a,g)=>enabled(s)&&a?.commanderId===g&&s.campaignGrowth?.officers[g]?.mechanicsV2===true;
-const live=s=>Object.values(s.armies).filter(a=>a.troopCount>0&&castleArmyActive(s,a));
+const live=s=>memoCampaignMechRead(s,'c505:live',()=>Object.values(s.armies).filter(a=>a.troopCount>0&&castleArmyActive(s,a)));
 const dist=(s,a,b)=>hexDistance(s.tiles[a.tileId??a],s.tiles[b.tileId??b]);
 const visible=(s,a,b)=>s.knowledge[a.factionId]?.tiles[b.tileId??b]==='VISIBLE'&&(!b.armyId||!ambushHidden(s,b.armyId,a.factionId));
 const friends=(s,a,n=2)=>live(s).filter(b=>b.factionId===a.factionId&&dist(s,a,b)<=n).sort((a,b)=>a.armyId.localeCompare(b.armyId));

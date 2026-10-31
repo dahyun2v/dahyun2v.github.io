@@ -52,8 +52,8 @@ const signed = (n) => { const r = Math.round(n); return r > 0 ? `+${r}` : r < 0 
 const num = (n) => Math.round(n).toLocaleString('en-US');
 
 /** HUD 한 장. selectedArmyId 가 없으면 마지막 내 부대(웹 fixture 의 기본 선택과 같음). */
-export function hudModel(state, {selectedArmyId = null} = {}) {
-  const s = state, v = R.view(s), own = Object.values(v.ownArmies), cities = Object.values(v.ownCities);
+export function hudModel(state, {selectedArmyId = null, publicView = null} = {}) {
+  const s = state, v = publicView ?? R.view(s, s.playerFactionId, {pendingPlans: 'skip'}), own = Object.values(v.ownArmies), cities = Object.values(v.ownCities);
   const sum = (k) => cities.reduce((n, c) => n + (Number(c[k]) || 0), 0), fc = (k) => cities.reduce((n, c) => n + (Number(c.economyForecast?.[k]) || 0), 0);
   const ruler = v.officers[v.faction.rulerId];
   const research = v.research && Number.isFinite(v.research.nextThreshold) ? v.research : null;
@@ -85,7 +85,9 @@ export function hudModel(state, {selectedArmyId = null} = {}) {
     screen: 'map-hud', protocol: 1, troopScale: Display.TROOP_DISPLAY_SCALE ?? 10,   // 병력 표시 배율(MapHud.set_army_troops 가 내부 단위를 글로) source: 'prototype/src/campaign-runtime.mjs view(플레이어 공개)', turn: v.turn, turnLimit: R.CAMPAIGN_TURN_LIMIT,
     ruler: {id: ruler?.officerId ?? null, name: ruler?.name ?? v.faction.name, art: officerArt(ruler?.officerId), head: artHead(officerArt(ruler?.officerId)), factionId: v.factionId, factionName: v.faction.name,
       date: `${dateText(v.turn)} · ${v.turn}차례 / ${R.CAMPAIGN_TURN_LIMIT}`},
-    resources,
+    forecastsPending: !!v.forecastsPending,
+    resources: resources.map((r) => v.forecastsPending && ['food', 'gold'].includes(r.key)
+      ? {...r, delta: '계산 중', tip: '내정 예보 계산 중 · 성 화면을 열면 채웁니다', warn: false} : r),
     menu: [{key: 'officers', label: '장수'}, {key: 'council', label: '평정', badge: idle.length > 0 || !!todo}, {key: 'diplomacy', label: '외교'}, {key: 'faction', label: '세력'}, {key: 'stratagem', label: '계략'}, {key: 'records', label: '기록'}],
     system: [{key: 'goal', label: '승리 조건'}, {key: 'save', label: '저장'}, {key: 'help', label: '규칙'}, {key: 'settings', label: '설정'}],
     tasks: {title: `이번 차례 · 할 일 ${tasks.length}`, items: tasks.slice(0, 3)},
@@ -152,7 +154,7 @@ function setTracker(s, v) {
   return rows.length || groups.length ? {rows, groups} : null;
 }
 
-export function selectedDock(s, v, a) {
+export function selectedDock(s, v, a, {withOrders = true} = {}) {   // withOrders false = 명령 단추 빼고(출진 줄 스펙 — 안 쓰는데 중국 판에서 한 번에 ~100ms, C521)
   const o = v.officers[a.commanderId], ratings = Combat.campaignUnitRatings(s, a.armyId) ?? {};
   const range = Combat.attackRange(s.armies[a.armyId], s);
   const tactics = Effects.campaignTactics(s, a.armyId);
@@ -180,7 +182,7 @@ export function selectedDock(s, v, a) {
       slot('W', null, {name: a.engine?.name ?? '계통', state: (a.engine?.resource ?? 0) > 0 ? 'ready' : 'disabled', reason: a.engine ? `${a.engine.resourceName} ${a.engine.resource} / ${a.engine.max}` : null}),
       slot('E', card('E')), slot('R', card('R')),
     ],
-    orders: orders(s, a),
+    ...(withOrders ? {orders: orders(s, a)} : {}),
   };
 }
 

@@ -1,11 +1,12 @@
+import {engineDamageRows} from './campaign-combat.mjs';
 import {regionHidden} from './campaign-regions.mjs'; // C514 R03 · R07 숲 · 구릉 숨기
-import {campaignMechStartFaction, campaignMechQuery, campaignMechAllowed, campaignMechCommit, hasCampaignMechCommit, campaignMechApply, campaignMechRemoveStatuses, campaignMechPowerWorld, campaignMechPowerFactor, campaignMechStatus} from './campaign-mech-contracts.mjs';
-import {cloneCampaign} from './campaign-clone.mjs';
+import {registerCampaignMech, campaignMechStartFaction, campaignMechQuery, campaignMechAllowed, campaignMechCommit, hasCampaignMechCommit, campaignMechApply, campaignMechRemoveStatuses, campaignMechPowerWorld, campaignMechPowerFactor, campaignMechStatus} from './campaign-mech-contracts.mjs';
+import {cloneCampaign,campaignLegacyCopies,campaignCopyVerificationEnabled,verifyCampaignCopies} from './campaign-clone.mjs';
 import {c450Reveal} from './campaign-c450.mjs';
 import {mechanicsV2Enabled,pilotTargets,pilotLocked,pilotFloor,pilotStart,pilotFinish} from './campaign-c34.mjs';
 import RECLASS from '../data/c319-trait-reclass-v0.1.json' with {type:'json'};
 import {reclassCondition,reclassHasOp} from './campaign-trait-reclass.mjs';
-import {sample4Survive,sample4Finish,sample4Start,sample4Separated,sample4AiValue} from './campaign-rule-registry.mjs';
+import {sample4FireImmune,sample4Survive,sample4Finish,sample4Start,sample4Separated,sample4AiValue} from './campaign-rule-registry.mjs';
 import {engineAttackBlocked,initializeEngines,engineEvent,finishEngineFaction} from './campaign-engines.mjs';
 import {repairCityReason} from './campaign-special-troops.mjs';
 import {troopText} from './troop-display.mjs';
@@ -16,7 +17,7 @@ import {c33Enabled,c33Card,c33Eligible,c33Mods,c33Movement,c33Targets,c33AiUsefu
 import {c31Move,c31Tactic} from './campaign-events.mjs';
 import {configureC30,c30Start,c30Finish,c30Joint,c30Move,c30Damage,c30TacticCard,c30Strategy} from './campaign-c29.mjs';
 import {creditCampaignGrowth} from './campaign-growth.mjs';
-import {c29Record,c29Enabled,c29Cost,c29TacticCard,c29Start,c29CoreCard,c29CoreFactor,c29Aw,c29TraitTriggered,c29Recovery} from './campaign-c29.mjs';
+import {c549E,c549ECard,c29Record,c29Enabled,c29Cost,c29TacticCard,c29Start,c29CoreCard,c29CoreFactor,c29Aw,c29TraitTriggered,c29Recovery} from './campaign-c29.mjs';
 import {C28,c28Enabled,c28Rule,c28Suppressed,c28DamageBonus,c28Expose,c28ControlGuard,c28RecoveryFactor} from './campaign-career.mjs';
 import {DOMESTIC_RULES,POOL_DOMESTIC_RULES,domesticStartFaction,COMBAT_TITLE_RULES,COMMON_TACTIC_RULES,combatTacticRule,combatTraitActive,combatMovement,combatStartFaction,combatCanPostMove,combatSurvive,combatRuleLine,combatArmyAt,combatAlly,oppositeCombatTile,combatEmptyStep} from './campaign-rule-registry.mjs';
 import {campaignRuleAllowed,campaignRuleRegistered,executeCampaignRule} from './campaign-rule-registry.mjs';
@@ -34,10 +35,14 @@ import {createTransportCapacity,reserveTransportCapacity} from './military-capac
 
 // EFFECT-OPS v0.2 trial interpreter. Pure queries and committed events share
 // selection, ranks, conditions and targets. No renderer or pack writes.
+registerCampaignMech('H01','c538-poison-dot',{
+  operations:['lossKind'],
+  query:({kind})=>typeof kind==='string'&&kind.startsWith('C538_')&&kind.endsWith('_DOT')?'DOT':undefined,
+});
 const C319_NUMERIC_OPS=[...new Set(Object.values(RECLASS.cards).flatMap(c=>c.effects.map(e=>e.op)))].filter(op=>op!=='FORMATION_DELTA');
 const RECLASS_CONDITIONS=[...new Set(Object.values(RECLASS.cards).flatMap(c=>c.effects.flatMap(e=>e.condition?.split('&')??[])))];
-export const EFFECT_OPS=[...new Set([...C319_NUMERIC_OPS,'DAMAGE_MOD','DEFENSE_MOD','MORALE_DELTA','MOVE_MOD','INITIATIVE_MOD','STATUS_APPLY','COUNTER_MOD','HEAL_TROOPS','CASUALTY_SHIFT','XP_MOD','CITY_OUTPUT_MOD','OCCUPATION_SPEED','RULE','FORMATION_DELTA'])];
-const EMPTY_MODIFIERS=Object.fromEntries(EFFECT_OPS.map(op=>[op,0]));
+export const EFFECT_OPS=[...new Set([...C319_NUMERIC_OPS,'DAMAGE_MOD','DEFENSE_MOD','MORALE_DELTA','MOVE_MOD','INITIATIVE_MOD','STATUS_APPLY','COUNTER_MOD','HEAL_TROOPS','CASUALTY_SHIFT','XP_MOD','CITY_OUTPUT_MOD','OCCUPATION_SPEED','RULE','FORMATION_DELTA','POISON','CRIT_CHANCE','SILENCE_AURA'])];
+const EMPTY_MODIFIERS=Object.fromEntries(EFFECT_OPS.filter(op=>!['POISON','CRIT_CHANCE','SILENCE_AURA'].includes(op)).map(op=>[op,0]));
 const combatModifiers=new Set(['DAMAGE_MOD','DEFENSE_MOD','INITIATIVE_MOD','COUNTER_MOD','CASUALTY_SHIFT',...C319_NUMERIC_OPS.filter(op=>!['MOVE_MOD','DAMAGE_MOD'].includes(op))]);
 const numeric=new Set([...C319_NUMERIC_OPS,'DAMAGE_MOD','DEFENSE_MOD','MOVE_MOD','INITIATIVE_MOD','COUNTER_MOD','CASUALTY_SHIFT','XP_MOD','CITY_OUTPUT_MOD','OCCUPATION_SPEED']);
 const statuses=new Set(['DEMORALIZED','INSPIRED','SLOWED','ROOTED','CONFUSED']);
@@ -148,6 +153,34 @@ function hasCampaignRuleUncached(s,id,rule,whens,ctx){
   }
   return false;
 }
+// Index only equipped traits; never scan the full draft catalogue on a query.
+const newRuleCatalogs=new WeakMap();
+function catalogHasOp(r,op){
+ if(!r)return false;
+ const keys=[r.coreId,...(r.equippedTraitIds??Object.keys(r.track.growthStates[r.pack.id].ownedTraitRanks))];
+ let cached=newRuleCatalogs.get(r.cards);
+ if(!cached||keys.length!==cached.keys.length||keys.some((k,i)=>k!==cached.keys[i]||r.cards[k]!==cached.cards[i]||r.cards[k]?.effects!==cached.effects[i]||(r.cards[k]?.effects?.length??0)!==cached.lengths[i]||(r.cards[k]?.effects??[]).some((e,j)=>e.op!==cached.opNames[i][j]))){
+  const cards=keys.map(k=>r.cards[k]),effects=cards.map(c=>c?.effects);
+  cached={keys,cards,effects,lengths:effects.map(e=>e?.length??0),opNames:effects.map(e=>(e??[]).map(e=>e.op)),ops:new Set(cards.filter(c=>c?.kind==='trait').flatMap(c=>(c.effects??[]).map(e=>e.op)))};
+  newRuleCatalogs.set(r.cards,cached);
+ }
+ return cached.ops.has(op);
+}
+export function criticalChance(s,id,targetId,tactic=null){
+ const r=s.campaignGrowth?.officers[s.armies[id]?.commanderId];
+ const stored=(s.armies[id]?.effectStates??[]).filter(e=>e.op==='CRIT_CHANCE'&&activeState(s,e)&&e.startsTurn<=s.turn&&!c28Suppressed(s,e.source));
+ if(!stored.length&&!catalogHasOp(r,'CRIT_CHANCE')&&!tactic?.effects?.some(e=>e.op==='CRIT_CHANCE'))return 0;
+ const ctx={targetId,tactic},fresh=selected(s,id,['PASSIVE','ON_ATTACK',...(tactic?['ON_TACTIC_USE']:[])],ctx).filter(e=>e.op==='CRIT_CHANCE'&&e.targets.includes(id));
+ if(tactic)fresh.push(...selected(s,id,['ON_TACTIC_USE'],ctx,tactic).filter(e=>e.op==='CRIT_CHANCE'&&e.targets.includes(id)));
+ const effects=[...fresh.filter(e=>!stored.some(b=>b.source===e.source&&b.traitId===e.traitId&&b.when===e.when&&numericStackKey(b,id)===numericStackKey(e,id))),...stored];
+ return Math.max(0,Math.min(100,effects.reduce((sum,e)=>sum+e.value,0)));
+}
+function silenced(s,id){
+ // Scan definitions once per catalogue, then do geometry only for aura owners.
+ const a=s.armies[id];
+ return Object.values(s.armies).some(b=>catalogHasOp(s.campaignGrowth?.officers[b.commanderId],'SILENCE_AURA')&&castleArmyActive(s,b)&&diplomacyArmyHostile(s,id,b.armyId)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1&&selected(s,b.armyId,['PASSIVE']).some(e=>e.op==='SILENCE_AURA'&&e.targets.includes(b.armyId)&&e.value>0));
+}
+function poisonImmune(s,id,source){return c33Immune(s,id,'POISON',source)||uniqueImmune(s,id,'POISON')||uniqueImmune(s,id,'FIRE')||uniqueOwned(s,id,'U_FIRE_GOD')||sample4FireImmune(s,id);}
 export function mainActionCount(s,id){const a=s.armies[id];return a?.mainActionTurn===s.turn?a.mainActionCount??0:(s.attackedArmyIds??[]).includes(id)?1:0;}
 function mainActionLimit(s,id){return campaignMechQuery(s,'H14','mainActionLimit',{sourceId:id},(s.armies[id]?.c234?.extraTurn===s.turn?1:(hasCampaignRule(s,id,'DOUBLE_ACTION')?2:1)+(s.armies[id]?.c27?.extraTurn===s.turn?1:0)));}
 export function canMainAction(s,id){if(pilotLocked(s,id))return false;if(s.armies[id]?.disengageTurn===s.turn)return false;return !(s.mapId!=='v1'&&s.c46Disabled!==true&&s.officers[s.armies[id]?.commanderId]?.injury)&&!(s.endedArmyIds??[]).includes(id)&&mainActionCount(s,id)<mainActionLimit(s,id);}
@@ -208,7 +241,7 @@ function selected(s,source,whens,ctx={},card=null){
     .map(e=>({...e,value:strengthenedValue(e.value,c.rank),name:c.name,traitId:c.traitId,source,targets:(()=>{const own=e.traitId;let targets=effectTargets(s,source,e.target??'SELF',ctx);const r=c29Record(s,source);if(c.traitId===r?.coreId&&s.armies[source]&&(c29Aw(s,source,'SHARE_ADJ')||c29Aw(s,source,'RANGE_UP'))){const a=s.armies[source],allies=Object.values(s.armies).filter(b=>b.armyId!==source&&(e.target==='ADJACENT_ENEMIES'?diplomacyArmyHostile(s,a.armyId,b.armyId):b.factionId===a.factionId)&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=(e.target==='SELF'?1:e.target==='ALL_ALLIES_IN_BATTLE'?3:2)).sort((a,b)=>a.armyId.localeCompare(b.armyId));if(e.target==='SELF'&&allies[0])targets=[...targets,allies[0].armyId];else if(c29Aw(s,source,'RANGE_UP')&&['ADJACENT_ALLIES','ADJACENT_ENEMIES','ALL_ALLIES_IN_BATTLE'].includes(e.target))targets=[...new Set([...targets,...allies.map(a=>a.armyId)])];}return targets;})()})));
 }
 function activeState(s,e){return e.expiresTurn>=s.turn;}
-export function unitStatuses(s,id){return [...new Set((s.armies[id]?.effectStates??[]).filter(e=>e.op==='STATUS_APPLY'&&activeState(s,e)).map(e=>e.status))];}
+export function unitStatuses(s,id){return [...new Set((s.armies[id]?.effectStates??[]).filter(e=>activeState(s,e)).flatMap(e=>e.op==='STATUS_APPLY'?[e.status]:e.op==='POISON'?[`독 ${e.value}%(${e.expiresTurn-Math.max(s.turn,e.startsTurn)+1}차례)`]:[]))];}
 // Canon 51 section 0.2 / 50 section 2-3. Card, layer, source and
 // trigger do not create another kind. Targets resolve to the recipient.
 export const NUMERIC_STACK_KEY=Object.freeze(['op','recipient','condition','resource']);
@@ -296,7 +329,17 @@ export function triggerEffects(s,source,when,ctx={},card=null){
         if(ctx.deferFormation){if(e.value<0)a.formationWeight=(a.formationWeight??0)+Math.abs(e.value);else if(e.value>0)a.formationRecovery=(a.formationRecovery??0)+1;}
         else {const changes=ctx.formationChanges??[];const start=changes.length;if(e.value<0)checkFormation(s,id,Math.abs(e.value),changes);else if(e.value>0)changeFormation(s,id,-1,changes);if(changes.slice(start).some(f=>f.to==='BROKEN'))checkMorale(s,id,'전열 붕괴',C12.collapseMorale,ctx.moraleChanges);}
       }else if(e.op==='HEAL_TROOPS'&&a)healCampaignTroops(s,id,e.value*(id!==source&&e.target==='SELF'&&c29Aw(s,source,'SHARE_ADJ')?.params.ratio/100||1));
-      else if(e.op==='STATUS_APPLY'&&a&&statuses.has(e.status)){
+      else if(e.op==='POISON'&&a&&castleArmyActive(s,a)){
+        if(poisonImmune(s,id,source)||card&&c28ControlGuard(s,id,'POISON'))continue;
+        const {targets,...state}=e,start=s.turn+(s.campaignEffects.startedTurns[a.factionId]===s.turn?1:0);
+        const previous=a.effectStates.find(x=>x.op==='POISON'&&x.source===source&&x.traitId===e.traitId&&numericStackKey(x,id)===numericStackKey(e,id));
+        const next={...state,startsTurn:start,expiresTurn:effectExpiry(s,a,start,e.duration)};
+        if(previous){previous.startsTurn=next.startsTurn;previous.expiresTurn=next.expiresTurn;}else a.effectStates.push(next);
+      }else if(e.op==='CRIT_CHANCE'&&a&&when==='ON_TACTIC_USE'&&!ctx.immediateNumeric){
+        const {targets,...state}=e,previous=a.effectStates.find(x=>x.op===e.op&&x.source===source&&x.traitId===e.traitId&&numericStackKey(x,id)===numericStackKey(e,id));
+        const next={...state,startsTurn:s.turn,expiresTurn:effectExpiry(s,a,s.turn,e.duration)};
+        if(previous)Object.assign(previous,next);else a.effectStates.push(next);
+      }else if(e.op==='STATUS_APPLY'&&a&&statuses.has(e.status)){
         if(c33Immune(s,id,e.status,source)||uniqueImmune(s,id,e.status)||card&&c28ControlGuard(s,id,e.status))continue;
         if(e.status==='DEMORALIZED')changeMorale(s,id,'SHAKEN',e.name);
         const next=['SLOWED','ROOTED','CONFUSED'].includes(e.status),start=s.turn+(next&&s.campaignEffects.startedTurns[a.factionId]===s.turn?1:0);
@@ -326,6 +369,11 @@ export function prepareAttackEffects(state,id,target,{counter=false,tactic=null,
 // the effect log. Catalogue/track/pool data and board geometry are read-only.
 // Keep the full-copy transaction for effects with wider or extensible writes.
 export function prepareAttackPreviewEffects(state,id,target,options={}){
+  if(!campaignCopyVerificationEnabled())return prepareAttackPreviewEffectsRead(state,id,target,options);
+  return verifyCampaignCopies(state,()=>prepareAttackPreviewEffectsRead(state,id,target,options),source=>prepareAttackEffects(source,id,target,options));
+}
+function prepareAttackPreviewEffectsRead(state,id,target,options={}){
+  if(campaignLegacyCopies())return prepareAttackEffects(state,id,target,options);
   const {counter=false,tactic=null,first=true}=options;
   const pick=(value,keys)=>Object.fromEntries(keys.filter(key=>Object.hasOwn(value,key)).map(key=>[key,value[key]]));
   const mutable=cloneCampaign(pick(state,['armies','campaignEffects','c50']));
@@ -374,6 +422,10 @@ export function startFactionEffects(s,factionId){
     const removed=(a.effectStates??[]).filter(e=>!activeState(s,e)&&campaignMechAllowed(s,'H15','removeStatus',{targetId:a.armyId,effect:e,reason:'FACTION_START'}));
     c34RemoveStatuses(s,a.armyId,e=>removed.includes(e));
     if(removed.length)campaignMechApply(s,'H15','statusRemoved',{eventId:`EXPIRE.${s.turn}.${a.armyId}`,targetId:a.armyId,reason:'FACTION_START',removed:removed.map(effect=>({effect}))});
+    for(const e of a.effectStates??[])if(e.op==='POISON'&&activeState(s,e)&&e.startsTurn<=s.turn&&!poisonImmune(s,a.armyId,e.source)){
+      const current=s.armies[a.armyId],loss=Math.min(current.troopCount-1,Math.max(1,Math.floor(current.troopCount*e.value/100)));
+      if(loss>0)Object.assign(s,engineDamageRows(s,e.source,[{targetId:a.armyId,loss}],'C538_POISON_DOT',true));
+    }
     triggerEffects(s,a.armyId,'PASSIVE');triggerEffects(s,a.armyId,'ROUND_START');
     if(Object.values(s.armies).some(b=>diplomacyArmyHostile(s,a.armyId,b.armyId)&&castleArmyActive(s,b)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])===1&&hasCampaignRule(s,b.armyId,'TERROR')))checkMorale(s,a.armyId,'[악성전려]',10);
   }
@@ -407,7 +459,8 @@ const mechTacticCost=Symbol('campaign-mech-tactic-base-cost');
 export function tacticAvailability(s,id,card,targetId){
  const permission=campaignMechQuery(s,'H14','actionReason',{sourceId:id,targetId,kind:card.signature?'R':'E',traitId:card.traitId},null);
  const eligible=campaignMechAllowed(s,'H04','attackAllowed',{sourceId:id,targetId,kind:'TACTIC',traitId:card.traitId});
- const a=s.armies[id],gaugeMode=c29Enabled(s),costBase=card[mechTacticCost]??(gaugeMode?c29Cost(s,id,card):0),cost=gaugeMode?campaignMechQuery(s,'H14','tacticCost',{sourceId:id,traitId:card.traitId,kind:card.signature?'R':'E'},costBase):0,gauge=c29Record(s,id)?.c29?.gauge??0,waiting=gaugeMode?Math.max(0,cost-gauge):Math.max(0,(a?.tacticReadyTurns?.[card.traitId]??0)-s.turn);
+ const eCooldown=c549E(s,id,card),eCard=eCooldown?(card.cooldownTurns===undefined?c549ECard(s,id,card):card):null;
+ const a=s.armies[id],gaugeMode=c29Enabled(s),costBase=card[mechTacticCost]??(gaugeMode?c29Cost(s,id,card):0),cost=eCooldown?0:gaugeMode?campaignMechQuery(s,'H14','tacticCost',{sourceId:id,traitId:card.traitId,kind:card.signature?'R':'E'},costBase):0,gauge=c29Record(s,id)?.c29?.gauge??0,waiting=eCooldown?Math.max(0,(c29Record(s,id)?.c29?.eReadyTurn?.[card.traitId]??0)-s.turn):gaugeMode?Math.max(0,cost-gauge):Math.max(0,(a?.tacticReadyTurns?.[card.traitId]??0)-s.turn);
  const archery=engineAttackBlocked(s,id)?'ENGINE_PERSUADED':tacticIsDamage(card)&&a?(platformAttackReason(s,id)||archerAttackReason(s,id)):'';
  let targets=withdrawalProtection(s,id)||archery?[]:rawTacticTargets(s,id,cost===costBase?card:{...card,gaugeCost:cost}).filter(target=>!diplomacyAttackReason(s,id,target)&&campaignMechAllowed(s,'H04','attackAllowed',{sourceId:id,targetId:target,kind:'TACTIC',traitId:card.traitId}));
  if(card.effects.some(e=>e.rule==='U_STORM_CAMP'))targets=targets.filter(target=>cityAttackTargets(s,id).includes(target));
@@ -425,6 +478,7 @@ export function tacticAvailability(s,id,card,targetId){
  else if(a.c234?.extraTurn===s.turn){reasonCode='S4_EXTRA_NO_TACTIC';reason='왕좌지재 추가 행동은 일반공격 · Q · W만 가능합니다.';}
  else if(gaugeMode&&(a.tacticUsedTurn===s.turn||c29Record(s,id)?.c29?.tacticTurn===s.turn)){reasonCode='TACTIC_ALREADY_USED';reason='이번 차례 전법을 이미 사용했습니다.';}
  else if(!canMainAction(s,id)){reasonCode='MAIN_ACTION_USED';reason='이번 차례 주 행동을 이미 사용했습니다.';}
+ else if(eCooldown&&waiting){reasonCode='TACTIC_COOLDOWN';reason=`재사용 대기 ${waiting}차례`;}
  else if(gaugeMode&&gauge<cost){reasonCode='TACTIC_GAUGE_LOW';reason=`게이지 ${gauge}/${cost}`;}
  else if(waiting){reasonCode='TACTIC_NOT_READY';reason=card.signature?'고유 전법의 기세 또는 재사용 대기를 확인하십시오.':`전법 재사용까지 ${waiting}차례 남았습니다.`;}
  else if(archery){reasonCode=archery;reason=archery;}
@@ -435,11 +489,12 @@ export function tacticAvailability(s,id,card,targetId){
  }
  else if(!targets.length){reasonCode='NO_VALID_TACTIC_TARGET';reason='전법의 범위 안에 유효한 대상이 없습니다.';}
  else if(targetId!==undefined&&!targets.includes(targetId)){reasonCode='INVALID_CAMPAIGN_TACTIC';reason=diplomacyAttackReason(s,id,targetId)||'이 전법을 사용할 수 있는 대상을 지정하십시오.';}
- return {...(cost!==costBase?{[mechTacticCost]:costBase}:{}),targets,...(gaugeMode?{gaugeCost:cost,gauge,slot:card.signature?'R':'E'}:{}),waiting,reason,reasonCode,reasonText:reasonCode===archery&&archery?'적과 붙은 원거리보병은 공격 전법을 사용할 수 없습니다.':reason,canUse:!reason};
+ if(!reason&&silenced(s,id)){reasonCode='TACTIC_SILENCED';reason='침묵 — 맞닿은 적 장수 때문에 전법을 쓸 수 없습니다.';}
+ return {...(cost!==costBase?{[mechTacticCost]:costBase}:{}),targets,...(gaugeMode?{gaugeCost:cost,gauge,slot:card.signature?'R':'E'}:{}),...(eCooldown?{cooldownLeft:waiting,cooldownTurns:eCard.cooldownTurns}:{}),waiting,reason,reasonCode,reasonText:reasonCode===archery&&archery?'적과 붙은 원거리보병은 공격 전법을 사용할 수 없습니다.':reason,canUse:!reason};
 }
 export function tacticTargets(s,id,card){return tacticAvailability(s,id,card).targets;}
 function rawTacticTargets(s,id,card){
-  const a=s.armies[id];if(!a||a.c34?.noTacticUntil>=s.turn||a.c33?.bideUntil>=s.turn||a.c33?.drillTurn===s.turn||!castleArmyActive(s,a)||a.morale==='ROUTING'||attackConfused(s,id)||!canMainAction(s,id)||!cardEffectReady(card)||(!c29Enabled(s)&&(a.tacticReadyTurns?.[card.traitId]??0)>s.turn)||c29Enabled(s)&&(a.tacticUsedTurn===s.turn||c29Record(s,id)?.c29?.tacticTurn===s.turn||(c29Record(s,id)?.c29?.gauge??0)<c29Cost(s,id,card)))return [];
+  const a=s.armies[id];if(!a||a.c34?.noTacticUntil>=s.turn||a.c33?.bideUntil>=s.turn||a.c33?.drillTurn===s.turn||c549E(s,id,card)&&(c29Record(s,id)?.c29?.eReadyTurn?.[card.traitId]??0)>s.turn||!castleArmyActive(s,a)||a.morale==='ROUTING'||attackConfused(s,id)||!canMainAction(s,id)||!cardEffectReady(card)||(!c29Enabled(s)&&(a.tacticReadyTurns?.[card.traitId]??0)>s.turn)||c29Enabled(s)&&(a.tacticUsedTurn===s.turn||c29Record(s,id)?.c29?.tacticTurn===s.turn||(c29Record(s,id)?.c29?.gauge??0)<c29Cost(s,id,card)))return [];
 
   const pilot=pilotTargets(s,id,card);if(pilot!==null)return pilot;
   if(c33Card(card))return c33Targets(s,id,card,{hidden:target=>ambushHidden(s,target,a.factionId)});
@@ -449,7 +504,7 @@ function rawTacticTargets(s,id,card){
   const range=card.range??((card.effects??[]).some(e=>['TARGET','ADJACENT_ENEMIES'].includes(e.target))?1:0);
   if(range===0)return tacticIsDamage(card)?[]:[id];
   const visibility=s.knowledge[a.factionId].tiles;
-  const hostile=tacticIsDamage(card)||card.effects.some(e=>e.target==='TARGET'&&(e.value<0||e.op==='STATUS_APPLY'&&e.status!=='INSPIRED'));
+  const hostile=tacticIsDamage(card)||card.effects.some(e=>e.target==='TARGET'&&(e.op==='POISON'||e.value<0||e.op==='STATUS_APPLY'&&e.status!=='INSPIRED'));
   return Object.values(s.armies).filter(b=>castleArmyActive(s,b)&&visibility[b.tileId]==='VISIBLE'&&!ambushHidden(s,b.armyId,a.factionId)&&hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])<=range&&(!tacticIsDamage(card)||troopToCampaign(a.troopType)!=='BT03'||hexDistance(s.tiles[a.tileId],s.tiles[b.tileId])>1)&&
     (hostile?diplomacyArmyHostile(s,a.armyId,b.armyId):b.factionId===a.factionId)).map(b=>b.armyId).sort();
 }
@@ -459,9 +514,11 @@ export function campaignTactics(s,id){
   if(c29Enabled(s)){
    if(c.jointArmyIds)c={...c,gaugeCost:60};
    const base=3,reduced=c33Cooldown(s,id,{...c,cooldown:uniqueCooldownTurns(s,id,base)});
-   c={...c,gaugeCost:Math.max(0,(c.gaugeCost??c29Cost(s,id,c))-(base-reduced)*10),cooldown:0};
-   if(poolCoreRule(s,id,'SCHEME_HASTE')&&!Object.entries(r.c29.uses??{}).some(([key,n])=>n>0&&[r.cards[key]?.classTag].flat().includes('지략'))&&[c.classTag].flat().includes('지략'))c={...c,gaugeCost:Math.max(0,c.gaugeCost-10)};
-   return c31Tactic(s,id,c30TacticCard(s,id,c));
+   // C566: under 51 v1.8 an E card takes these cooldown changes in turns (c549ECard), not as 10 gauge each.
+   const eTurns=c549E(s,id,c);
+   c=eTurns?{...c,gaugeCost:c.gaugeCost??c29Cost(s,id,c),eCooldownDelta:(c.eCooldownDelta??0)+reduced-base,cooldown:0}:{...c,gaugeCost:Math.max(0,(c.gaugeCost??c29Cost(s,id,c))-(base-reduced)*10),cooldown:0};
+   if(poolCoreRule(s,id,'SCHEME_HASTE')&&!Object.entries(r.c29.uses??{}).some(([key,n])=>n>0&&[r.cards[key]?.classTag].flat().includes('지략'))&&[c.classTag].flat().includes('지략'))c=eTurns?{...c,eCooldownDelta:c.eCooldownDelta-1}:{...c,gaugeCost:Math.max(0,c.gaugeCost-10)};
+   return c549ECard(s,id,c31Tactic(s,id,c30TacticCard(s,id,c)));
   }
   return c31Tactic(s,id,c30TacticCard(s,id,{...c,cooldown:c.jointArmyIds?3:c33Cooldown(s,id,{...c,cooldown:uniqueCooldownTurns(s,id,tacticCooldown(c))})}));
  }).map(c=>({...c,...tacticAvailability(s,id,c)}));
@@ -523,7 +580,7 @@ export function commonTacticTargets(s,id,card){
  const near=tile=>k.tiles[tile]==='VISIBLE'&&hexDistance(s.tiles[a.tileId],s.tiles[tile])<=range;
  if(['OVERWATCH','PIERCE'].includes(rule)&&troopToCampaign(a.troopType)!=='BT03')return [];
  if(tacticIsDamage(card)&&archerAttackReason(s,id))return [];
- if(rule==='MIRROR'){const copy=mirroredCombatCard(s,id);return copy&&(c29Enabled(s)||(a.tacticReadyTurns[copy.traitId]??0)<=s.turn)?tacticTargets(s,id,{...copy,traitId:card.traitId}):[];}
+ if(rule==='MIRROR'){const copy=mirroredCombatCard(s,id);return copy&&(c29Enabled(s)||(a.tacticReadyTurns[copy.traitId]??0)<=s.turn)?tacticTargets(s,id,{...copy,traitId:card.traitId,...(c549E(s,id,card)?{signature:false}:{})}):[];}
  if(rule==='INSIDE_AGENT')return Object.values(s.cities).filter(c=>c.ownerFactionId!==a.factionId&&near(c.tileId)).map(c=>c.cityId).sort();
  if(rule==='FIRE_ATTACK')return Object.values(s.tiles).filter(t=>near(t.tileId)&&t.terrainType==='forest').map(t=>t.tileId).sort();
  if(rule==='FLOOD')return s.mapRules.riverEdges.filter(edge=>s.mapRules.riverEdges.some(other=>other!==edge&&other.split('|').some(t=>edge.split('|').includes(t)))&&edge.split('|').some(near)&&!(s.c27?.floods??[]).some(f=>f.until>=s.turn&&f.edges.includes(edge))).sort();

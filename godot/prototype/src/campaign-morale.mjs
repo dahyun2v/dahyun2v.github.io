@@ -32,7 +32,12 @@ export const inControlZone=(s,a,id=a.tileId)=>memoCampaignQuery(s,'zoc:'+a.armyI
 const inControlZoneUncached=(s,a,id)=>{
  // Every control rule has radius at most two. Reject distant tiles before
  // evaluating officer exceptions; this index lives only in the read scope.
- const nearby=memoCampaignQuery(s,'zoc-nearby:'+a.armyId,()=>{
+ const nearby=controlZoneNearby(s,a).get(id);
+ if(!nearby)return false;
+ return controlZoneByPolicy(s,a,id,nearby);
+};
+// Tiles within radius two of a hostile controller, keyed like inControlZone's id.
+const controlZoneNearby=(s,a)=>memoCampaignQuery(s,'zoc-nearby:'+a.armyId,()=>{
   const result=new Map();
   for(const b of enemies(s,a)){
    if(b.formation==='BROKEN'||!campaignMechAllowed(s,'H05','controlZone',{sourceId:b.armyId,targetId:a.armyId}))continue;
@@ -43,8 +48,8 @@ const inControlZoneUncached=(s,a,id)=>{
    }
   }
   return result;
- }).get(id);
- if(!nearby)return false;
+});
+const controlZoneByPolicy=(s,a,id,nearby)=>{
  const policy=memoCampaignQuery(s,'zoc-policy:'+a.armyId,()=>{
   if(c31IgnoreControlZone(s,a.armyId))return {all:true};
   const adjacent=(c33Owned(s,a.armyId,'BLOODY_PATH')&&a.morale==='ROUTING'||c33Formation(s,a.armyId,'FORMATION_DRILL'));
@@ -61,18 +66,21 @@ function campaignPathUncached(s,id,destination){
  if(!campaignMechAllowed(s,'H05','moveAllowed',{sourceId:id,from:s.armies[id]?.tileId,to:destination,kind:'VOLUNTARY'}))return null;
  if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return null;
  if(!combatDestinationAllowed(s,id,destination)||diplomacyMoveReason(s,id,destination))return null;
- if(Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id))return campaignReachable(s,id,Infinity).get(destination)??null;
+ if(Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id))return campaignReachableQuery(s,id,Infinity,false,destination).get(destination)??null;
  if(movementEffect(s,id).rooted||hasCampaignRule(s,id,'NO_RETREAT')&&enemies(s,s.armies[id]).some(b=>hexDistance(s.tiles[b.tileId],s.tiles[s.armies[id].tileId])===1))return null;
  const a=s.armies[id],world=combatFireMovementWorld(s,id,campaignMovementWorld(s,id,{destination})),blocked=new Set(world.mapRules.blockedEdges);
  // A zone can be a destination, but cannot be an intermediate path node.
- for(const t of Object.values(s.tiles))if(t.tileId!==a.tileId&&t.tileId!==destination&&inControlZone(s,a,t.tileId))
+ const near=controlZoneNearby(s,a);
+ for(const t of Object.values(s.tiles))if(t.tileId!==a.tileId&&t.tileId!==destination&&near.has(t.tileId)&&inControlZone(s,a,t.tileId))
   for(const n of boardNeighbors(t,s.tiles))blocked.add([t.tileId,tileId(n)].sort().join('|'));
  const path=findPath({...world,mapRules:{...world.mapRules,blockedEdges:[...blocked]}},id,destination);return path&&path.pathTileIds.length-1<=movementEffect(s,id).max&&!path.pathTileIds.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path.pathTileIds[i]))?path:null;
 }
 // 한 번의 탐색으로 이번 차례에 닿는 모든 칸(campaignPath 와 같은 경로·시간). 통제 구역 칸은 들어갈 수는 있지만 거쳐 갈 수 없다.
 // campaignPath 의 Dijkstra(거리 → 칸 id 순)를 그대로 따르므로 칸마다 따로 찾은 결과와 같다.
 export function campaignReachable(s,id,budget){return withCampaignQueries(s,()=>campaignReachableQuery(s,id,budget));}
-function campaignReachableQuery(s,id,budget,pathMode=false){
+// target: one destination only. Dijkstra settles it with final distance and
+// predecessors, so stopping there yields the same entry as the full map.
+function campaignReachableQuery(s,id,budget,pathMode=false,target=null){
  if(!s.armies[id]||!castleArmyActive(s,s.armies[id]))return new Map();
  const diplomatic=Object.keys(s.factions).some(f=>f!==s.armies[id].factionId&&diplomacyState(s,s.armies[id].factionId,f)==='TRUCE')||withdrawalProtection(s,id);
  if((!pathMode||diplomatic)&&combatCanPostMove(s,id))budget=Math.min(budget,s.armies[id].c27?.cantoTicks??budget);
@@ -80,13 +88,13 @@ function campaignReachableQuery(s,id,budget,pathMode=false){
  const a=s.armies[id],world=combatFireMovementWorld(s,id,campaignMovementWorld(s,id,{towardCity:true})),start=a.tileId,movementMax=movementEffect(s,id).max;
  const ticks=edgeTicksForSearch(world,world.armies[id]);
  const directional=reclassHas(s,id,'CT-M13');
- const zone=new Set(Object.values(s.tiles).filter(t=>t.tileId!==start&&inControlZone(s,a,t.tileId)).map(t=>t.tileId));
+ const near=controlZoneNearby(s,a),zone=new Set(Object.values(s.tiles).filter(t=>t.tileId!==start&&near.has(t.tileId)&&inControlZone(s,a,t.tileId)).map(t=>t.tileId));
  const dist=new Map([[start,0]]),previous=new Map(),done=new Set(),heap=[[0,start]];
  const less=(x,y)=>x[0]<y[0]||x[0]===y[0]&&x[1].localeCompare(y[1],'en')<0;
  const push=e=>{heap.push(e);let i=heap.length-1;while(i){const p=(i-1)>>1;if(!less(heap[i],heap[p]))break;[heap[i],heap[p]]=[heap[p],heap[i]];i=p;}};
  const pop=()=>{const top=heap[0],last=heap.pop();if(heap.length){heap[0]=last;let i=0;for(;;){const l=2*i+1,r=l+1;let m=i;if(l<heap.length&&less(heap[l],heap[m]))m=l;if(r<heap.length&&less(heap[r],heap[m]))m=r;if(m===i)break;[heap[i],heap[m]]=[heap[m],heap[i]];i=m;}}return top;};
  while(heap.length){
-  const [d,current]=pop();if(done.has(current)||d!==dist.get(current))continue;if(d>budget)break;done.add(current);
+  const [d,current]=pop();if(done.has(current)||d!==dist.get(current))continue;if(d>budget)break;done.add(current);if(current===target)break;
   if(current!==start&&zone.has(current))continue;
   for(const p of boardNeighbors(world.tiles[current],world.tiles)){
    const next=tileId(p);if((!pathMode||diplomatic)&&diplomacyMoveReason(s,id,next,current))continue;const cost=ticks(current,next);if(cost===null)continue;
@@ -94,7 +102,7 @@ function campaignReachableQuery(s,id,budget,pathMode=false){
   }
  }
  const out=new Map();
- for(const [t,d] of dist){if(!d||d>budget||!combatDestinationAllowed(s,id,t))continue;const path=[t];while(previous.has(path[0]))path.unshift(previous.get(path[0]));if(path.length-1>movementMax||pathMode&&!diplomatic&&path.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path[i])))continue;const exact=directional?campaignMovementWorld(s,id,{destination:t}):null,total=exact?path.slice(1).reduce((sum,to,i)=>sum+(edgeTicks(exact,exact.armies[id],path[i],to)??Infinity),0):d;if(total>budget)continue;out.set(t,{pathTileIds:path,totalTicks:total});}
+ for(const [t,d] of dist){if(target!==null&&t!==target)continue;if(!d||d>budget||!combatDestinationAllowed(s,id,t))continue;const path=[t];while(previous.has(path[0]))path.unshift(previous.get(path[0]));if(path.length-1>movementMax||pathMode&&!diplomatic&&path.slice(1).some((to,i)=>diplomacyMoveReason(s,id,to,path[i])))continue;const exact=directional?campaignMovementWorld(s,id,{destination:t}):null,total=exact?path.slice(1).reduce((sum,to,i)=>sum+(edgeTicks(exact,exact.armies[id],path[i],to)??Infinity),0):d;if(total>budget)continue;out.set(t,{pathTileIds:path,totalTicks:total});}
  return out;
 }
 // All destinations for one read-only snapshot; no persistent engine cache.

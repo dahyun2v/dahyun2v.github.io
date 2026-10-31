@@ -16,7 +16,9 @@ const definitions=new Map(ENGINES.map(e=>[e.id,e]));
 const assigned=new Map(assignments.assignments.map(o=>[o.id,o.engine]));
 // Historical c37 switch now disables the engine foundation, including migration.
 export const enginesEnabled=s=>isSliceMap(s.mapId)&&s.c37Disabled!==true;
-export const officerEngine=(s,id)=>enginesEnabled(s)?assigned.get(id)??(s.china12?s.officers[id]?.catalogEngineId:null)??null:null;
+// 10-30 아침 확인 34: five engine changes, new campaigns only (old saves keep v1.0).
+const overrides1030=new Map(Object.entries(assignments.overrides20261030?.engines??{}));
+export const officerEngine=(s,id)=>enginesEnabled(s)?(s.trialRules?.engineAssignment==='20261030'?overrides1030.get(id):undefined)??assigned.get(id)??(s.china12?s.officers[id]?.catalogEngineId:null)??null:null;
 const maxResource=(s,id)=>s.campaignGrowth?.officers[id]?.c50?.path==='BASE'?data.common.baseKeepMax:data.common.resourceMax;
 export function armyEngine(s,id){
  const a=s.armies[id];if(!a||!enginesEnabled(s))return null;

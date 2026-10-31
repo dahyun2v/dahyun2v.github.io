@@ -47,7 +47,7 @@ function resultOf(kind, item, before, after) {
 
 /** 실제 판: 차례 넘김 전후 상태 → 카드 목록(완공 줄 = 웹 facilityCompletionLines · 다시 읽기 아님). hud-host stdio 'report' 가 쓴다. */
 export function turnReport(beforeState, afterState) {
-  const before = R.view(beforeState), after = R.view(afterState);
+  const before = R.view(beforeState, beforeState.playerFactionId, {pendingPlans: 'skip', forecasts: 'skip'}), after = R.view(afterState, afterState.playerFactionId, {pendingPlans: 'skip', forecasts: 'skip'});
   return reportModel(before, after, Hud.facilityCompletionLines(before, after, FACILITY), {replay: false});
 }
 

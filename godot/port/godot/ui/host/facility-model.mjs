@@ -36,7 +36,7 @@ export function facilityModel(state, v, c) {
     const guest=person(v.officers[guestIds.find(id=>cutouts[id]?.seat?.file)??guestIds[0]]);
     const military={reserve:troopText(c.reserveTroops??0),wounded:troopText(c.woundedTroops??0),food:c.foodStock??null,
       nearby:Object.values(v.ownArmies).filter(a=>{const [q,r]=a.tileId.split(',').map(Number),[cq,cr]=c.tileId.split(',').map(Number);return a.troopCount>0 && Math.max(Math.abs(q-cq),Math.abs(r-cr),Math.abs(q-cq+r-cr))<=2;}).length,
-      reinforcement:cityReinforcementText(c),canTransfer:Object.keys(v.ownCities).length>1};
+      reinforcement:v.forecastsPending ? '다음 차례 충원 계산 중' : cityReinforcementText(c),canTransfer:Object.keys(v.ownCities).length>1};
     const who = people[id] ?? (['market','granary','workshop','gate'].includes(id)?people.office:null);
     const commands = [];
     if(id==='tavern') for(const w of c.wanderers??[]) {

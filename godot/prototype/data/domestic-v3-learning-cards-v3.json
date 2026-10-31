@@ -1,0 +1,531 @@
+{
+  "status": "3판 학문 카드 2판(S5) 데이터 — 내정 콘텐츠 방 2026-10-31. 옛 카드 45장 · 유레카 여덟은 baseFile 그대로(여기 되풀이하지 않음). 수치는 시험값. effect.existing = prototype/src 에 그 kind 이름이 이미 있는지",
+  "design": "docs/work-integration/20261030/domestic-v3/DOMESTIC-V3-CONTENT.md §2-10",
+  "catalog": "docs/work-integration/20261030/domestic-v3/DOMESTIC-V3-CONTENT-CATALOG.md",
+  "baseFile": "domestic-v3-learning-cards.json",
+  "switch": "dv3Cards2",
+  "thresholdsChina": [
+    200,
+    500,
+    900,
+    1400,
+    2000,
+    2800,
+    3800,
+    5000,
+    6500
+  ],
+  "thresholdsChinaSource": {
+    "id": "TH-CHINA80",
+    "text": "중국 판은 문턱 넷을 더해 판에 카드 일곱에서 아홉 장을 고른다.",
+    "added": [
+      2800,
+      3800,
+      5000,
+      6500
+    ],
+    "effect": {
+      "kind": "LEARNING_THRESHOLDS_OVERRIDE",
+      "value": "thresholdsChina",
+      "existing": false,
+      "note": "판 설정(china12)에 따라 baseFile thresholds 대신 thresholdsChina"
+    },
+    "catalogId": "LC-01",
+    "ledger": [
+      "NJ-0077",
+      "NJ-0170",
+      "NJ-0216",
+      "NJ-0327",
+      "NJ-0330",
+      "NJ-0331",
+      "NJ-0357",
+      "NJ-0407",
+      "NJ-0582",
+      "NJ-0615"
+    ],
+    "status": "채택",
+    "enabled": true,
+    "origin": "C475",
+    "trial": true
+  },
+  "degree": {
+    "조금": 0.1,
+    "꽤": 0.2,
+    "크게": 0.3
+  },
+  "draw": {
+    "inherits": "baseFile draw(3장 · 자리 셋 · tierOrder · unchosen · troopWeight · eurekaWindow · siegeTag) 그대로 — 아래만 더함",
+    "sideCards": "side:true 카드는 그 family 단계 사슬(tierOrder) 밖의 곁 카드 — requires 없음, 같은 family 무게(troopWeight · 전선 무게)만 따름",
+    "rules": [
+      {
+        "id": "DR-UNIQUE",
+        "name": "천하 유일",
+        "text": "천하에 하나뿐인 책은 한 세력이 고르면 다른 세력 더미에서 빠진다.",
+        "minThresholdIndex": 1,
+        "summaryLine": "천하에 하나뿐인 책을 얻었다",
+        "aiSameDraw": true,
+        "effect": {
+          "kind": "LEARNING_UNIQUE_IN_WORLD",
+          "value": true,
+          "existing": false,
+          "note": "판 상태에 고른 세력 기록 · 다른 세력 후보에서 뺌 · 두 번째 문턱부터"
+        },
+        "catalogId": "LC-24",
+        "ledger": [
+          "NJ-0332",
+          "NJ-0346",
+          "NJ-0475"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "DR-FRONT-WEIGHT",
+        "name": "전선 무게",
+        "text": "적 부대가 가까운 내 성이 셋 이상이면 군과 수비 계통 카드가 더 자주 뜬다.",
+        "radius": 6,
+        "minCities": 3,
+        "families": [
+          "spear",
+          "blade",
+          "cavalry",
+          "bow",
+          "drill",
+          "armory",
+          "siege",
+          "wall"
+        ],
+        "combine": "max",
+        "effect": {
+          "kind": "LEARNING_FRONT_WEIGHT",
+          "value": 2,
+          "existing": false,
+          "note": "병종 무게와 곱하지 않고 큰 쪽"
+        },
+        "catalogId": "LC-25",
+        "ledger": [
+          "NJ-0036",
+          "NJ-0329"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "DR-REROLL",
+        "name": "다시 뽑기",
+        "text": "세 장이 마음에 안 들면 금을 내고 한 번 다시 뽑는다.",
+        "perThreshold": 1,
+        "goldCost": 300,
+        "goldCostStep": 150,
+        "effect": {
+          "kind": "LEARNING_REROLL",
+          "value": 1,
+          "existing": false,
+          "note": "금 300 · 다음 문턱마다 +150(금 쓰임 — TUNING #4)"
+        },
+        "catalogId": "LC-26",
+        "ledger": [
+          "NJ-0015"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "DR-BAMBOO-SLIPS",
+        "name": "유적의 목간",
+        "text": "버려진 서고를 조사한 장수가 안전한 내 성으로 돌아오면 다음 문턱 후보 한 장이 그 계통으로 바뀐다.",
+        "hutKind": "library",
+        "needsReturn": true,
+        "deferIfNotReturned": true,
+        "finalChoice": "3장 중 1장 그대로",
+        "log": [
+          "hutFound",
+          "explorationDeed",
+          "learningChronicle"
+        ],
+        "effect": {
+          "kind": "LEARNING_CANDIDATE_REPLACE",
+          "value": 1,
+          "from": "hut:library",
+          "existing": false,
+          "note": "C506 구디헛 library 조사(campaign-flow-huts.mjs:67 investigation) 뒤 귀환 판정 · 추가 금 없음"
+        },
+        "catalogId": "LC-28",
+        "ledger": [
+          "NJ-0584",
+          "NJ-0190"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      }
+    ]
+  },
+  "cards": [
+    {
+      "id": "LC-HUNT",
+      "color": "내정",
+      "family": "farm",
+      "tier": 1,
+      "side": true,
+      "name": "수렵 제도",
+      "text": "산과 숲 칸이 곡식을 조금 낸다.",
+      "effect": {
+        "kind": "TILE_OUTPUT_ADD",
+        "resource": "grain",
+        "value": 500,
+        "condition": "TERRAIN:MOUNTAIN|FOREST",
+        "existing": false,
+        "note": "칸마다 곡식 +500석"
+      },
+      "requires": [],
+      "ref": "노스가드 사냥꾼 · 카탈로그 LC-17",
+      "catalogId": "LC-17",
+      "ledger": [
+        "NJ-0543",
+        "NJ-0571"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-FISH",
+      "color": "내정",
+      "family": "farm",
+      "tier": 1,
+      "side": true,
+      "name": "어량 정비",
+      "text": "물가 칸과 어장이 곡식을 조금 더 낸다.",
+      "effect": {
+        "kind": "TILE_OUTPUT_MOD",
+        "resource": "grain",
+        "value": 10,
+        "condition": "TERRAIN:WATERSIDE|RES:fishery",
+        "existing": true
+      },
+      "requires": [],
+      "ref": "노스가드 어부 · 카탈로그 LC-18",
+      "catalogId": "LC-18",
+      "ledger": [
+        "NJ-0544",
+        "NJ-0572"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-LUMBER",
+      "color": "내정",
+      "family": "land",
+      "tier": 1,
+      "side": true,
+      "name": "벌목법",
+      "text": "숲 칸이 많은 성의 공방이 조금 더 일한다.",
+      "effect": {
+        "kind": "FOREST_TILE_WORKSHOP_PRODUCTION_ADD",
+        "value": 0.5,
+        "capPerCity": 2,
+        "existing": false,
+        "note": "영역 숲 칸 1개당 공방 생산 +0.5(성마다 최대 +2)"
+      },
+      "requires": [],
+      "ref": "노스가드 벌목꾼 · 카탈로그 LC-19",
+      "catalogId": "LC-19",
+      "ledger": [
+        "NJ-0546",
+        "NJ-0574",
+        "NJ-0651"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-BUILD",
+      "color": "내정",
+      "family": "govern",
+      "tier": 1,
+      "side": true,
+      "name": "영조법식",
+      "text": "처음 짓는 시설이 꽤 싸게 든다.",
+      "effect": {
+        "kind": "FIRST_BUILD_COST_MOD",
+        "value": -20,
+        "existing": false,
+        "note": "첫 투자 시설(FA-02 졸업 전) 생산 비용"
+      },
+      "requires": [],
+      "ref": "북송 영조법식(이름) · 카탈로그 LC-20",
+      "catalogId": "LC-20",
+      "ledger": [
+        "NJ-0371",
+        "NJ-0464"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-LAW",
+      "color": "내정",
+      "family": "govern",
+      "tier": 1,
+      "side": true,
+      "name": "율령 정비",
+      "text": "불안한 성도 백성이 일을 더 한다.",
+      "effect": {
+        "kind": "UNREST_WORK_SHARE",
+        "value": 0.75,
+        "existing": false,
+        "note": "불안 성 백성 일 0.5 → 0.75(SC-01)"
+      },
+      "requires": [],
+      "ref": "카탈로그 LC-21",
+      "catalogId": "LC-21",
+      "ledger": [
+        "NJ-0461"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-REALM-WINTER",
+      "color": "천하",
+      "family": "realm",
+      "tier": 1,
+      "name": "방한 군복",
+      "text": "한파와 눈보라 피해가 절반이고 겨울에도 지닌 군량이 줄지 않는다.",
+      "effect": {
+        "kind": "CRISIS_DAMAGE_MOD",
+        "crisis": [
+          "COLD",
+          "blizzard"
+        ],
+        "value": -50,
+        "existing": true,
+        "note": "날씨 COLD(run-modifiers) · 위기 blizzard"
+      },
+      "extraEffects": [
+        {
+          "kind": "WINTER_CARRIED_FOOD_NO_LOSS",
+          "value": true,
+          "existing": false,
+          "note": "엔진에 새 효과 키 WINTER_CARRIED_FOOD_NO_LOSS 를 더해야 함"
+        }
+      ],
+      "requires": [],
+      "ref": "카탈로그 LC-22",
+      "catalogId": "LC-22",
+      "ledger": [
+        "NJ-0653",
+        "NJ-0655"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-REALM-SCOUT",
+      "color": "천하",
+      "family": "realm",
+      "tier": 1,
+      "name": "척후 제도",
+      "text": "유적에서 작은 보상을 하나 더 얻고 한 칸 더 멀리서 유적을 알아본다.",
+      "effect": {
+        "kind": "HUT_REWARD_ADD",
+        "value": 1,
+        "size": "small",
+        "existing": false,
+        "note": "C506 구디헛 보상에 작은 것 하나"
+      },
+      "extraEffects": [
+        {
+          "kind": "HUT_REVEAL_RANGE_ADD",
+          "value": 1,
+          "existing": false,
+          "note": "엔진에 새 효과 키 HUT_REVEAL_RANGE_ADD 를 더해야 함"
+        }
+      ],
+      "requires": [],
+      "ref": "문명 정찰병 · 카탈로그 LC-23",
+      "catalogId": "LC-23",
+      "ledger": [
+        "NJ-0463",
+        "NJ-0633"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-UNIQUE-MENGDE",
+      "color": "천하",
+      "family": "unique",
+      "tier": 1,
+      "uniqueInWorld": true,
+      "name": "맹덕신서",
+      "text": "싸움에서 살아남은 병사가 조금 더 많이 숙련병이 된다.",
+      "effect": {
+        "kind": "VETERAN_RATE_ADD",
+        "value": 0.05,
+        "existing": false,
+        "note": "엔진에 새 효과 키 VETERAN_RATE_ADD 를 더해야 함"
+      },
+      "requires": [],
+      "ref": "조조 손자약해 · 카탈로그 LC-24",
+      "tags": [
+        "천하유일"
+      ],
+      "catalogId": "LC-24",
+      "ledger": [
+        "NJ-0332",
+        "NJ-0346",
+        "NJ-0475"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-UNIQUE-TAIPING",
+      "color": "천하",
+      "family": "unique",
+      "tier": 1,
+      "uniqueInWorld": true,
+      "name": "태평요술",
+      "text": "세력 땅의 역병 피해가 절반이고 인망이 조금 오른다.",
+      "effect": {
+        "kind": "CRISIS_DAMAGE_MOD",
+        "crisis": [
+          "plague"
+        ],
+        "value": -50,
+        "existing": true
+      },
+      "extraEffects": [
+        {
+          "kind": "PRESTIGE_GAIN_MOD",
+          "value": 10,
+          "existing": true
+        }
+      ],
+      "requires": [],
+      "ref": "태평경 · 카탈로그 LC-24",
+      "tags": [
+        "천하유일"
+      ],
+      "catalogId": "LC-24",
+      "ledger": [
+        "NJ-0332",
+        "NJ-0346",
+        "NJ-0475"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "LC-UNIQUE-JIUZHANG",
+      "color": "천하",
+      "family": "unique",
+      "tier": 1,
+      "uniqueInWorld": true,
+      "name": "구장산술",
+      "text": "서두르기와 칸 사기 값이 조금 싸진다.",
+      "effect": {
+        "kind": "HURRY_COST_MOD",
+        "value": -10,
+        "existing": true
+      },
+      "extraEffects": [
+        {
+          "kind": "TILE_BUY_COST_MOD",
+          "value": -10,
+          "existing": true
+        }
+      ],
+      "requires": [],
+      "ref": "구장산술 · 카탈로그 LC-24",
+      "tags": [
+        "천하유일"
+      ],
+      "catalogId": "LC-24",
+      "ledger": [
+        "NJ-0332",
+        "NJ-0346",
+        "NJ-0475"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    }
+  ],
+  "eureka": [
+    {
+      "id": "EU-FIRST-HUT",
+      "when": "처음 구디헛 보상을 얻음",
+      "science": 20,
+      "catalogId": "LC-27",
+      "ledger": [],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "EU-FIRST-INSTITUTION",
+      "when": "처음 특별기관을 지음",
+      "science": 40,
+      "catalogId": "LC-27",
+      "ledger": [],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "EU-FIRST-FOCUS",
+      "when": "처음 집중 사업을 마침",
+      "science": 20,
+      "catalogId": "LC-27",
+      "ledger": [],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    {
+      "id": "EU-FIRST-TRADE",
+      "when": "처음 무역 약정을 맺음",
+      "science": 20,
+      "catalogId": "LC-27",
+      "ledger": [],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    }
+  ],
+  "eurekaNote": "baseFile eureka 여덟과 같은 장치에 줄만 더함(LC-27). 난대(SI-LANTAI)가 있으면 두 배",
+  "retired": []
+}

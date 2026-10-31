@@ -1,6 +1,7 @@
 import {regionRecoveryMul} from './campaign-regions.mjs'; // C514 R09 지열 회복
 import {isSliceMap} from './map-primitives.mjs';
-import {configureDomesticCrises,crisisEffects,v3Terrain} from './domestic-v3.mjs';
+import {configureDomesticCrises,crisisEffects,v3Terrain,v3CityModServices,forecastCloneServices} from './domestic-v3.mjs';
+import {cloneCampaign} from './campaign-clone.mjs';
 import {DOMESTIC_V3,domesticV3Enabled,initializeDomesticV3,domesticV3Base,domesticV3Rates,domesticV3FoodNeed,settleDomesticV3,configureDomesticV3Production,idleProductionGold,autoFillV3Seats,settleV3Specialists,v3Output,v3RecruitView,v3StandardOrder,settleV3Security,learningModifier,v3ArmCapacity,transferV3Arms,v3ArmsChoice,v3Policy,v3HasResource,v3ResourceModifier,v3ResourceEffects,v3ResourcePrestige,v3ImprovementTiles,DOMESTIC_RESOURCES} from './domestic-v3.mjs';
 import {reclassCityMods,reclassScale,reclassSecurityDelta} from './campaign-trait-reclass.mjs';
 import {rumorActive,STRATAGEMS} from './campaign-stratagems.mjs';
@@ -19,7 +20,7 @@ import {c31Production,c31Muster} from './campaign-events.mjs';
 import {c30CityOutput,c30Settle,c30MusterDiscount,c30MusterBonus} from './campaign-c29.mjs';
 import {c29Recovery,c29Aw} from './campaign-c29.mjs';
 import {c28RecoveryFactor,c28Enabled} from './campaign-career.mjs';
-import {domesticRule,domesticOutput,domesticFacilityCost,domesticBeforeSettlement,domesticAfterSettlement,domesticJobCompleted,domesticSecurityCauses,domesticSupport,domesticBeginGranaries,domesticFinishGranaries,runDomestic} from './campaign-rule-registry.mjs';
+import {domesticRule,domesticOutput,domesticFacilityCost,domesticBeforeSettlement,domesticAfterSettlement,domesticV3BeforeSettlement,domesticV3AfterSettlement,domesticJobCompleted,domesticSecurityCauses,domesticSupport,domesticBeginGranaries,domesticFinishGranaries,runDomestic} from './campaign-rule-registry.mjs';
 import {C24,specialTroop,SPECIAL_TROOPS,parentTroop} from './campaign-special-troops.mjs';
 import {C23} from './campaign-abilities.mjs';
 // C21 trial values: automatic city institutions, no allocation slots or cap.
@@ -592,6 +593,28 @@ export function completeJob(s,c,rates,paid) {
   startDomesticProduction(s,c);
 }
 
+const v3Governed=c=>!!(c.governorId??c.c26?.occupationGovernorId);
+v3CityModServices.growth=(s,c)=>v3Governed(c)?reclassCityMods(s,c).POPULATION_GROWTH_MOD??0:0; // C536 태수 인구 증가 배율을 v3 에도
+forecastCloneServices.clone=cloneCampaign; // C5xx 내정 예보 사본
+v3CityModServices.securityLoss=(s,c,delta)=>v3Governed(c)?reclassSecurityDelta(s,c,delta,'SETTLE'):delta; // C536 정산 치안 손실 배율을 v3 에도
+const activeGovernor=(s,c)=>{const g=s.officers[c.governorId];return g?.lifeState==='ALIVE'&&g.captivityState==='FREE'&&g.allegianceFactionId===c.ownerFactionId&&!injuryReason(s,g.officerId)?g:null;};
+function governorTurnCredit(s,c){
+  const governor=activeGovernor(s,c);if(!governor)return;
+  s.xpEvents.push({officerId:c.governorId,kind:'GOVERNOR_TURN',amount:5});
+  s.xpEvents=s.xpEvents.slice(-120);
+  creditCampaignGrowth(s,{eventId:`GOVERNOR.${s.turn}.${c.cityId}`,officerId:c.governorId,kind:'GOVERNOR_TURN',
+    amount:campaignGrowthTrial(s).governorXp*(1+governor.baseStats.politics/100)});
+}
+// C536 v3: governor turn xp (same as the legacy path) Â· occupation completed record. The GOVERNOR_OUTPUT record stays off:
+// its amounts (foodAdded Â· scienceAdded) are in legacy units and no title reads govTurns.
+const v3GovernorAfter=governorTurnCredit;
+function v3OccupationCompleted(s,c,before){
+  const o=s.occupations?.[c.cityId];if(before!=='OCCUPATION'||!['STABILIZING','NORMAL'].includes(o?.stage))return;
+  const officerId=c.governorId??o.officerId??Object.values(s.armies).filter(a=>a.factionId===c.ownerFactionId&&castleArmyActive(s,a)&&nearby(s,c,a)).sort((a,b)=>a.armyId.localeCompare(b.armyId,'en'))[0]?.commanderId;
+  const method=o.method==='pacify'?'conciliation':o.method??'military';
+  if(c25Enabled(s)&&officerId)creditCampaignDomestic(s,{officerId,eventId:`C25.OCCUPATION.${s.turn}.${c.cityId}`,kind:'OCCUPATION_COMPLETED',counts:{[`occupation:${method}`]:1}});
+  if(!c25Enabled(s)&&officerId){s.xpEvents.push({officerId,kind:'OCCUPATION_COMPLETED',amount:20});s.xpEvents=s.xpEvents.slice(-120);}
+}
 export function settleCampaignEconomy(s) {
   if(domesticV3Enabled(s)){
     initializeCampaignEconomy(s);
@@ -599,12 +622,12 @@ export function settleCampaignEconomy(s) {
       prepare:()=>{initializeCampaignOccupation(s);c30Settle(s);autoFillV3Seats(s);evacuateDestroyedWounded(s);},
       route:(a,b)=>citySupplyRoute(s,a,b),
       isolated:c=>c.besieged||Object.values(s.cities).some(x=>x!==c&&x.ownerFactionId===c.ownerFactionId)&&!Object.values(s.cities).some(x=>x!==c&&x.ownerFactionId===c.ownerFactionId&&citySupplyRoute(s,c,x)),
-      start:c=>startDomesticProduction(s,c),
+      start:c=>startDomesticProduction(s,c),before:c=>domesticV3BeforeSettlement(s,c),after:c=>{v3GovernorAfter(s,c);domesticV3AfterSettlement(s,c);},
       rates:(c,commit=false)=>cityEconomyRates(s,c,{commit}),supply:()=>settleSupply(s),
       recruit:(c,paid,security)=>{if(manpowerV2(s)){const gain=naturalRecruitment(s,c,{paid,security});addReadyPersonnel(s,c,gain.amount,'NATURAL');c.domesticRecruited=gain.amount;}},
       recover:(c,paid)=>recover(s,c,paid),replenish:c=>replenish(s,c),
       production:(c,rates,paid)=>{settleV3Specialists(s,c);startDomesticProduction(s,c);if(c.currentProduction)completeJob(s,c,rates,paid);else idleProductionGold(s,c);},
-      finish:(c,paid,security)=>{c.durabilityMax=cityDurabilityMaximum(s,c);c.durability=Math.min(c.durability,c.durabilityMax);settleOccupationCity(s,c,paid,security);const p=cityPersonnel(s,c);c.reserveTroops=p.ready;c.woundedTroops=p.wounded;},
+      finish:(c,paid,security)=>{c.durabilityMax=cityDurabilityMaximum(s,c);c.durability=Math.min(c.durability,c.durabilityMax);const stage=s.occupations?.[c.cityId]?.stage;settleOccupationCity(s,c,paid,security);v3OccupationCompleted(s,c,stage);const p=cityPersonnel(s,c);c.reserveTroops=p.ready;c.woundedTroops=p.wounded;},
       research:()=>{settleCampaignResearch(s);settleAchievements(s);validatePersonnelLedger(s.personnel);}
     });
   }
@@ -705,12 +728,7 @@ export function settleCampaignEconomy(s) {
       uniqueSettlement(s,c);
     }
     const governor=s.officers[c.governorId];
-    if (governor?.lifeState==='ALIVE'&&governor.captivityState==='FREE'&&governor.allegianceFactionId===c.ownerFactionId&&!injuryReason(s,governor.officerId)){
-      s.xpEvents.push({officerId:c.governorId,kind:'GOVERNOR_TURN',amount:5});
-      s.xpEvents=s.xpEvents.slice(-120);
-      creditCampaignGrowth(s,{eventId:`GOVERNOR.${s.turn}.${c.cityId}`,officerId:c.governorId,kind:'GOVERNOR_TURN',
-        amount:campaignGrowthTrial(s).governorXp*(1+governor.baseStats.politics/100)});
-    }
+    governorTurnCredit(s,c);
     settleOccupationCity(s,c,paid,openingSecurity);
     if(c25Enabled(s)&&governor?.lifeState==='ALIVE'&&governor.captivityState==='FREE'&&governor.allegianceFactionId===c.ownerFactionId&&!injuryReason(s,governor.officerId)){
       // Counterfactual output excludes only this governor; specialist output and carry stay identical.
@@ -861,7 +879,7 @@ export function settleAutomaticMigration(s,causes){
 // public supply world is simulated; unobserved foreign units cannot affect UI.
 export function campaignReinforcementForecast(s,factionId,publicWorld){
  if(!c19Enabled(s)||s.gameResult)return {};
- const copy=structuredClone(s);
+ const copy=cloneCampaign(s); // C5xx 판 복사 전용(같은 결과 · 긴 문자열 재사용)
  copy.armies=Object.fromEntries(Object.entries(copy.armies).filter(([id,a])=>a.factionId===factionId||publicWorld.knowledge.tiles[a.tileId]==='VISIBLE'&&publicWorld.knowledge.observedArmies[id]));
  copy.turn++;copy.turnNumber=copy.turn;copy.globalTick+=copy.time.ticksPerTurn;copy.currentDate+=10;
  settleCampaignEconomy(copy);

@@ -23,6 +23,7 @@ const [R, MapModel, Combat, Growth, Display, Roster, Strat, Draft, Adapters, Abi
 ]);
 // 이동 무르기 판정(웹 hud-ink movementUndoReason) · 경유 경로(엔진 waypointRoute) — 웹과 같은 함수
 const {movementUndoReason} = await import(pathToFileURL(resolve(ROOT, 'prototype/app/world/hud-ink.mjs')).href);
+const Water = await import(pathToFileURL(resolve(ROOT, 'prototype/src/campaign-water.mjs')).href);   // C533 거점 공격 대상(엔진 판정)
 const Orders = await import(pathToFileURL(resolve(ROOT, 'prototype/src/campaign-orders.mjs')).href);
 // 이동 예고(웹 C186 · world.js routeRisks): 추격(previewDisengage) · 접근사격(previewApproachFire) — 웹처럼 공개 보기로 만든 세계(campaignTacticsWorld)에서 계산(숨은 적이 새지 않게)
 const AiTactics = await import(pathToFileURL(resolve(ROOT, 'prototype/src/campaign-ai-tactics.mjs')).href);
@@ -56,6 +57,8 @@ const {listActions} = await import(pathToFileURL(resolve(ROOT, 'prototype/app/ha
 const PLAYER_COMMANDS = new Set(['MOVE_UNIT', 'ATTACK_UNIT', 'ATTACK_CITY', 'END_TURN', 'EVENT_CHOICE', 'DRAFT_PICK', 'DRAFT_REROLL', 'CLOSE_SUMMARY', 'SORTIE', 'STRATAGEM', 'DIPLO_GIFT', 'DIPLO_PROPOSE', 'DIPLO_RESPOND', 'DIPLO_END_ALLIANCE', 'QUEUE_MOVE', 'ADVANCE_ORDER', 'CANCEL_MOVE', 'USE_TACTIC',
   // 부대 행동(웹 #unit-menu): 방어 B · 재정비 S · 대기 H · 복귀 G · 정면 F
   'BRACE', 'REGROUP', 'WAIT_UNIT', 'GARRISON', 'FACE',
+  // C529 관문 · 항구 거점 치기(중국 판 — 정본 20 v3.10 §1.4)
+  'ATTACK_STRONGHOLD',
   // 친목(웹 명부 · 저택): 찾아간다 VISIT {officerId, choice}
   'VISIT',
   // 능력 Q · W(계통 엔진 · 구조물) — E · R 은 USE_TACTIC
@@ -108,6 +111,10 @@ function publicEntries(rows, field) {
   return entries.length ? Object.fromEntries(entries) : null;
 }
 const AI_STEP_LIMIT = 500;
+// C534-B1 · C543 적 의도 계산 미루기: 차례 넘김은 다음 차례 적 의도(중국 중반 약 4초)를 빼고 먼저 돌아오고, 응답 · 읽기 모델은 채우지 않는 view 로,
+// 요청이 FILL_IDLE_MS 동안 없으면 채워 'enemyPlans' 알림. 그 전에 명령 · 저장 · 보통 view 가 오면 엔진이 먼저 채워 결과는 늘 같다. 끄기 = SANGOKU_DEFER_PLANS=0.
+const DEFER_PLANS = (globalThis.process?.env?.SANGOKU_DEFER_PLANS ?? '1') !== '0';
+const FILL_IDLE_MS = 300;
 // 시험용 견본 판 — 규약 처리(handle)가 동기라 뒤에서 미리 읽어 둔다(없거나 실패해도 보통 판에는 영향 없음).
 const FIXTURES = {};
 import(pathToFileURL(resolve(ROOT, 'port/godot/ui/host/stratagem-model.mjs')).href).then((m) => { FIXTURES.stratagem = () => m.stratagemScene().state; }).catch(() => {});
@@ -116,7 +123,7 @@ import(pathToFileURL(resolve(ROOT, 'port/godot/ui/host/ending-model.mjs')).href)
 // 규칙은 그대로, 시험용 판 상태만(병종 · 자리). 공방 연출을 실제 명령(고르기 → 공격 → 결과)으로 보려는 용도.
 Promise.all([src('campaign-vision.mjs'), src('map-primitives.mjs')]).then(([V, Prim]) => {
   FIXTURES.duel = () => {
-    const ps = new PortSession(); ps.newGame({seed: 3, factionId: 'F02', field: true});
+    const ps = new PortSession(); ps.newGame({seed: 3, factionId: 'F02', field: true, map: 'v3'}); // 고정 전투 견본
     const s = ps.state, mine = s.armies['U-F02-G05'], foe = s.armies['U-F01-G24'];   // 장료 — 허용 병종에 검병(militia)이 있음
     // 성(성벽 임시 모형)에서 3칸 이상 떨어진 빈 들 두 칸에 나란히 — 공방이 성벽에 가리지 않게
     const dist = (a, b) => { const [q1, r1] = a.split(',').map(Number), [q2, r2] = b.split(',').map(Number); return (Math.abs(q1 - q2) + Math.abs(r1 - r2) + Math.abs(q1 + r1 - q2 - r2)) / 2; };
@@ -148,7 +155,7 @@ Promise.all([src('campaign-vision.mjs'), src('map-primitives.mjs')]).then(([V, P
 // 'china-contact' = 중국 전역 새 판(시드 3)에서 가장 가까운 적 부대 하나를 내 첫 부대 곁 빈 칸으로 옮긴 판(규칙은 그대로 — 자리만). 중국 판 공격 · 예고 · 결과 시험용.
 Promise.all([src('campaign-vision.mjs'), src('map-primitives.mjs')]).then(([V, Prim]) => {
   FIXTURES['china-contact'] = () => {
-    const ps = new PortSession(); ps.newGame({seed: 3, map: 'china', field: true});
+    const ps = new PortSession(); ps.newGame({seed: 3, map: 'china', china12: true, field: true});
     const s = ps.state, f = s.playerFactionId, mine = Object.values(s.armies).find((a) => a.factionId === f);
     const foes = Object.values(s.armies).filter((a) => a.factionId !== f && a.factionId);
     const [q, r] = mine.tileId.split(',').map(Number);
@@ -160,6 +167,30 @@ Promise.all([src('campaign-vision.mjs'), src('map-primitives.mjs')]).then(([V, P
     foe.tileId = spot;
     V.updateCampaignKnowledge(s);
     return R.deserialize(R.serialize(s));   // 새 객체로(엔진 view 가 같은 상태 객체의 앞 결과를 기억해 둠 — 자리 바꾼 뒤 그대로 넘기면 옛 시야)
+  };
+}).catch(() => {});
+// 'china-water' = C533 배 · 거점 시험 판: 중국 12세력 새 판(시드 3 · 조조 · 흐름 v1)에서 내 첫 부대를 주인 있는 적 관문 · 항구 곁 빈 땅에, 둘째 부대를 배 칸(항구 아닌 호수 · 큰 강)에.
+// 규칙은 그대로 — 자리만. 거점 공격 예고 · 명령 · 배 모형 · '배로 건넘' 이동 줄을 실제 클릭으로 보려는 용도.
+Promise.all([src('campaign-vision.mjs'), src('map-primitives.mjs')]).then(([V, Prim]) => {
+  FIXTURES['china-water'] = () => {
+    const ps = new PortSession(); ps.newGame({seed: 3, map: 'china', china12: true, flow: 'v1', field: true});   // 거점 주인은 12세력 판에서만(시작 성 12)
+    const s = ps.state, f = s.playerFactionId, mine = Object.values(s.armies).filter((a) => a.factionId === f && a.troopCount > 0);
+    const busy = (t) => Object.values(s.armies).some((x) => x.troopCount > 0 && x.tileId === t) || Object.values(s.cities).some((c) => c.tileId === t);
+    const nb = (t) => { const [q, r] = t.split(',').map(Number); return Prim.neighbors({q, r}).map((n) => `${n.q},${n.r}`).filter((n) => s.tiles[n]); };
+    const land = (t) => ['plain', 'hill', 'forest'].includes(s.tiles[t]?.terrainType);
+    const boat = (t) => s.tiles[t]?.terrainType === 'water' && s.tiles[t].boat === true;
+    const view = R.view(s);
+    let placed = null;
+    for (const x of view.water?.strongholds ?? []) {
+      if (!x.owner || x.owner === f || busy(x.tileId)) continue;
+      const spot = nb(x.tileId).find((t) => land(t) && !busy(t));
+      if (spot) { mine[0].tileId = spot; placed = x; break; }
+    }
+    const shore = Object.keys(s.tiles).filter((t) => boat(t) && !s.tiles[t].port && !busy(t) && nb(t).some((n) => land(n) && !busy(n) && !s.tiles[n].port)).sort();
+    if (!placed || !mine[1] || !shore.length) throw new PortError('BAD_REQUEST', 'china-water: 둘 자리 없음');
+    mine[1].tileId = shore[0];
+    V.updateCampaignKnowledge(s);
+    return R.deserialize(R.serialize(s));
   };
 }).catch(() => {});
 // 엔진 오류 코드 → 화면 문장(모르는 코드는 원문 그대로).
@@ -221,9 +252,52 @@ export class PortSession {
     return {revision: this.revision, parts: structuredClone(Object.fromEntries(parts.map((name) =>
       [name, Object.hasOwn(PUBLIC_PARTS, name) ? PUBLIC_PARTS[name](v) : null])))};
   }
-  commit(next) { this.state = next; this.revision++; }
+  commit(next) { this.state = next; this.revision++; this.plansPending = false; }   // 미룬 적 의도 표시는 새 판의 pview 가 다시 정함
+  /** 읽기 전용 공개 view(C543): 적 의도를 미뤄 둔 판이면 채우지 않고(enemyIntents [] · enemyIntentsPending) — 그 밖은 보통 view 와 같음. 명령 판정에는 R.view(채움)를 쓴다. */
+  pview(s = this.require()) {
+    const base = R.view(s, s.playerFactionId, {pendingPlans: DEFER_PLANS ? 'skip' : 'fill', forecasts: 'skip'});
+    if (this.forecastState === s && this.forecastBase !== base) {
+      this.forecastView = R.applyCampaignForecasts(base, this.forecastData);
+      this.forecastBase = base;
+      this.cache = null;
+    }
+    const v = this.forecastState === s ? this.forecastView : base;
+    if (v.enemyIntentsPending && s === this.state) { this.plansPending = true; }
+    return v;
+  }
+  /** C554: 내정 창에서만 정산 예보를 채운다. 판 객체가 바뀌면 이전 예보를 쓰지 않는다. */
+  forecasts(expectedRevision) {
+    const s = this.require();
+    if (expectedRevision !== undefined && expectedRevision !== this.revision) throw new PortError('STALE_REVISION');
+    if (this.forecastState !== s) {
+      this.forecastBase = this.pview(s);
+      this.forecastData = R.campaignForecasts(s, s.playerFactionId);
+      this.forecastView = R.applyCampaignForecasts(this.forecastBase, this.forecastData);
+      this.forecastState = s;
+      this.cache = null;
+    }
+    return {revision: this.revision, forecastsPending: false};
+  }
+  /** 요청이 끝날 때마다(handle · hud-host 자기 명령): 미뤄 둔 적 의도가 있으면 FILL_IDLE_MS 뒤 채우기를 다시 건다(그 사이 요청이 오면 미룸). */
+  touch() {
+    if (!this.plansPending) return;
+    if (this.fillTimer) clearTimeout(this.fillTimer);
+    this.fillTimer = setTimeout(() => this.fillPlans(), FILL_IDLE_MS);
+    this.fillTimer.unref?.();
+  }
+  /** 한가할 때: 엔진 campaignEnemyIntents(미뤄 둔 계산을 채우고 적 의도만) → 호스트 알림 enemyPlans {revision, intents, ms}(공개 view 의 enemyIntents 와 같은 값). */
+  fillPlans() {
+    this.fillTimer = null;
+    const s = this.state;
+    if (!s || !this.plansPending) return;
+    const t0 = performance.now();
+    const intents = R.campaignEnemyIntents(s);
+    this.plansPending = false;
+    this.lastFill = {revision: this.revision, ms: Math.round(performance.now() - t0)};
+    emitHostEvent({event: 'enemyPlans', revision: this.revision, intents, ms: this.lastFill.ms});
+  }
 
-  newGame({seed = 190919, factionId = 'F01', field = false, map = 'v3', companions = null, domesticV3 = true, china12 = false, flow = null} = {}) {
+  newGame({seed = 190919, factionId = 'F01', field = false, map = 'china', companions = null, domesticV3 = true, china12 = map === 'china', flow = china12 && map === 'china' ? 'v1' : null} = {}) {
     if (!Number.isSafeInteger(seed) || typeof factionId !== 'string' || typeof map !== 'string') throw new PortError('BAD_REQUEST', 'seed · factionId · map');
     // 웹 실제 판(world.js begin)과 같게(사용자 10-25 '웹 기준으로'): 새 판은 성에서 시작(fieldArmies:false — 사용자 10-11 '기본 2부대 출진 삭제'),
     // 드래프트로 고른 동료 = companions. field:true = 지도 위 두 부대로 시작(웹 ?field=1 — 자동 점검 · 대표 장면 · 시험용).
@@ -241,13 +315,16 @@ export class PortSession {
     return this.snapshot(true);
   }
 
+  /** 상대 진행 걸음(END_TURN · ADVANCE_AI)의 엔진 step 옵션 — advanceAi 를 덮어쓰는 쪽(hud-host 진행 띠)도 R.step 세 번째 인자로 이것을 넘긴다(C534-B1). */
+  aiStepOptions() { return DEFER_PLANS ? {deferEnemyPlans: true} : undefined; }
+
   /** 상대 세력 진행은 호스트가 끝까지 돌린다(Godot 는 결과만 그린다). */
   advanceAi(s) {
     let n = 0;
     while (s.phase === 'AI' && !s.gameResult) {
       if (++n > AI_STEP_LIMIT) throw new PortError('AI_STEP_LIMIT');
       const prev = s;
-      s = R.step(s, {type: 'ADVANCE_AI'});
+      s = R.step(s, {type: 'ADVANCE_AI'}, this.aiStepOptions());
       this.aiReplayStep(prev, s);
     }
     return s;
@@ -298,7 +375,7 @@ export class PortSession {
     const before = this.snapshot(), sequence = s.battleSequence ?? 0;
     this.aiReplay = {steps: 0, events: []};   // advanceAi(또는 그것을 덮어쓴 진행 띠 고리)가 걸음마다 aiReplayStep 으로 채움
     // 차례 넘김은 웹처럼 incremental(world.js:681 — 엔진이 상대 진행을 한 걸음씩 남김 → advanceAi 가 걸음마다 보인 이동 · 공격을 기록)
-    this.commit(this.advanceAi(R.step(s, clean.type === 'END_TURN' ? {...structuredClone(clean), incremental: true} : structuredClone(clean))));
+    this.commit(this.advanceAi(R.step(s, clean.type === 'END_TURN' ? {...structuredClone(clean), incremental: true} : structuredClone(clean), clean.type === 'END_TURN' ? this.aiStepOptions() : undefined)));
     // 이동 무르기(웹 world.js:599 moveUndo): 방금 MOVE_UNIT 이면 전 상태 · 무를 수 없는 까닭(새로 본 것 · 교전 · 무작위 …)을 기억, 다른 명령이면 지움
     this.moveUndo = clean.type === 'MOVE_UNIT' ? {before: s, after: this.state, armyId: clean.armyId, reason: movementUndoReason(s, this.state, clean, R.view(s), R.view(this.state)) || null} : null;
     const after = this.snapshot();
@@ -322,10 +399,10 @@ export class PortSession {
    * draftConfirm → officerDraftCompanions(모자라면 엔진 오류) — 돌려준 companions 를 'new' 에 그대로 넘기면 웹 begin(factionId, seed, companions) 과 같다.
    * 응답 = {draft: officerDraftView(draft)}(엔진 보기 그대로 — 화면은 UI 방). 드래프트 상태는 판(state)과 따로 이 프로세스에만.
    */
-  draftStart({factionId = 'F01', seed = 190919, map = 'v3', china12 = false} = {}) {
+  draftStart({factionId = 'F01', seed = 190919, map = 'china', china12 = map === 'china'} = {}) {
     if (!Number.isSafeInteger(seed) || typeof factionId !== 'string') throw new PortError('BAD_REQUEST', 'seed · factionId');
     this.draft = Draft.createOfficerDraft({factionId, seed, ...(map === 'china' && china12 ? {mapId: 'china', china12: true} : {})});
-    return {draft: Draft.officerDraftView(this.draft), locked: [...this.draft.locked], fixed: [], factionId, seed};
+    return {draft: Draft.officerDraftView(this.draft), locked: [...this.draft.locked], fixed: [], factionId, seed, mapId: map, china12: map === 'china' && china12};
   }
   draftStep(fn) {
     if (!this.draft) throw new PortError('NO_DRAFT');
@@ -457,7 +534,10 @@ export class PortSession {
       const parts = [disengage ? {kind: '추격', name: disengage.pursuerName, loss: disengage.dealt} : null, m.approachFire ? {kind: '접근 사격', name: m.approachFire.shooterName, loss: m.approachFire.damage} : null].filter(Boolean);
       m.risk = parts.length ? {count: parts.length, parts: parts.map((p) => ({...p, lossText: Display.troopText(p.loss)})), total: parts.reduce((n, p) => n + p.loss, 0), totalText: Display.troopText(parts.reduce((n, p) => n + p.loss, 0))} : null;
     }
-    return {armyId, revision: this.revision, move, attackUnits: units, attackCities: cities, flowAttack, flowClaim, disengage};
+    // C533 배 · 거점(중국 판 water — 엔진 view 가 null 이면 없음): 이동 칸마다 '배로 건넘' 한 줄 · 칠 수 있는 관문 · 항구 거점 + 예고
+    const water = v.water ? waterMoveLines(s, armyId, move) : null;
+    const attackStrongholds = v.water ? strongholdTargets(s, v, armyId) : [];
+    return {armyId, revision: this.revision, move, attackUnits: units, attackCities: cities, flowAttack, flowClaim, disengage, attackStrongholds, water};
   }
 
   /**
@@ -466,7 +546,7 @@ export class PortSession {
    * 판 만들기는 그 방 port/godot/ui/host/stratagem-model.mjs 를 읽기만 해서 씀. 응답은 보통 판처럼 공개 모델만.
    */
   fixture(name) {
-    if (!['stratagem', 'ending', 'china-contact', 'duel', 'fire'].includes(name)) throw new PortError('BAD_REQUEST', 'fixture ' + name);
+    if (!['stratagem', 'ending', 'china-contact', 'china-water', 'duel', 'fire'].includes(name)) throw new PortError('BAD_REQUEST', 'fixture ' + name);
     if (!FIXTURES[name]) throw new PortError('HOST_NOT_READY', 'fixture 아직 읽는 중');
     const state = FIXTURES[name]();
     this.newSession();
@@ -539,8 +619,9 @@ export class PortSession {
   }
 
   buildSnapshot() {
-    const s = this.require(), v = R.view(s), map = MapModel.campaignMapModel(v, {movedArmyIds: s.movedArmyIds ?? []});
+    const s = this.require(), v = this.pview(s), map = MapModel.campaignMapModel(v, {movedArmyIds: s.movedArmyIds ?? []});
     const own = new Set(Object.keys(v.ownArmies));
+    const boats = new Set(v.water?.boats ?? []);
     // 공개 이름표: 지도 모델은 명부 밖 장수(G 꾸러미)를 id 로 돌려줌 → 보이는 부대의 지휘관 이름(웹 화면과 같은 값), 모르면 '적 부대'
     const label = (u) => {
       const cid = own.has(u.id) ? v.ownArmies[u.id].commanderId : v.knowledge.observedArmies[u.id]?.commanderId;
@@ -553,6 +634,7 @@ export class PortSession {
       count: u.count, countText: Number.isFinite(u.count) ? Display.troopText(u.count) : '?', maxCount: u.maxCount ?? null, maxCountText: Number.isFinite(u.maxCount) ? Display.troopText(u.maxCount) : null, morale: u.morale, facing: u.facing ?? null,
       commanderId: own.has(u.id) ? v.ownArmies[u.id].commanderId : (v.knowledge.observedArmies[u.id]?.commanderId ?? null),
       own: own.has(u.id), moved: !!u.moved, ended: own.has(u.id) ? Combat.armyActionEnded(s, u.id) : false, remembered: !!u.remembered,
+      boat: boats.has(u.id),   // C533 배에 탄 부대(엔진 view water.boats) — 고도가 배 모형으로
     }));
     // 내 성의 지어진 시설 자리(facilityPlacements) · 짓는 중인 시설 자리(currentProduction.tileId) — 지도에 임시 모형으로(아스트라 시설 모형이 오면 교체)
     const facilitiesOf = (id) => {
@@ -571,7 +653,7 @@ export class PortSession {
     const result = v.gameResult ? {type: v.gameResult.type ?? null, winnerFactionId: v.gameResult.winnerFactionId ?? null, rank: v.gameResult.rank ?? null} : null;
     return {
       revision: this.revision, mapId: v.mapId, turn: v.turn, turnLimit: R.CAMPAIGN_TURN_LIMIT, date: dateText(v.turn), phase: s.phase,
-      playerFactionId: v.factionId, factions, diplomacy, result,
+      playerFactionId: v.factionId, factions, diplomacy, result, forecastsPending: !!v.forecastsPending,
       map: {tiles: map.tiles.map((t) => ({id: `${t.q},${t.r}`, q: t.q, r: t.r, terrain: t.terrain, vis: t.vis})), roads: map.roads, rivers: map.rivers, bridges: map.bridges ?? [], places: map.places ?? []},
       cities, units, pending: this.pending(s, v), combat: combatLines(v, units),
       // C30 세트 · 팀업 · 인연(사용자 10-25 'TFT 처럼 장수 모으면 효과'): 엔진 view 그대로 + 웹 bondLinks(지도 금색 끈)
@@ -581,6 +663,8 @@ export class PortSession {
       // 불(웹 fx-ink visibleFireTiles · hud-ink fireReadout — 보이는 칸만): 타는 칸 · 남은 차례 · 그을린 숲
       fire: (() => { const fr = fireReadout(v), left = new Map(fr.fires.map((f) => [f.id, f.turnsLeft])), known = v.knowledge?.tiles ?? {};
         return {tiles: FxInk.visibleFireTiles(s, known).map((id) => ({tileId: id, turnsLeft: left.get(id) ?? null})), scorches: (fr.scorches ?? []).filter((id) => known[id] && known[id] !== 'UNEXPLORED')}; })(),
+      // C533 관문 · 항구 거점(엔진 view water.strongholds 그대로 — 지도 정적 자리 · 주인 · 내구) · 배에 탄 부대는 units[].boat. 물 규칙 없는 판은 null
+      water: v.water ? {strongholds: (v.water.strongholds ?? []).map((x) => ({...x, durabilityText: `${x.durability} / ${x.max}`}))} : null,
       // 무르기 단추(웹 #c186-undo): 무를 이동이 있으면 {armyId, reason(null = 무를 수 있음)}
       undo: this.moveUndo && this.moveUndo.after === s ? {armyId: this.moveUndo.armyId, reason: this.moveUndo.reason} : null,
       // 예약 이동(웹 여러 부대 함께 이동 — QUEUE_MOVE → ADVANCE_ORDER 를 줄이 빌 때까지): 내 부대만
@@ -648,6 +732,51 @@ function emitHostEvent(body) {
   if (hostEvents.sink) { hostEvents.sink(body); return; }
   if (LAUNCHED) out(JSON.stringify({id: null, ...body}) + '\n');
 }
+/**
+ * C533 이동 예고 한 줄(정본 20 v3.10 §1.4 — 엔진 movementTicks 와 같은 규칙을 칸 정보로 읽기만): 길에 배 칸(호수 · 큰 강)이 있으면
+ * '배로 건넘 · 타고 내리기 +N일 · 항구 0'. 땅 ↔ 배 칸을 오갈 때마다 여울 비용(병종 crossingExtra, 기본 2일), 그 두 칸 중 하나가 항구면 0.
+ * 비용 자체는 엔진이 이미 move[].turns 에 넣었다 — 여기는 까닭을 말로만.
+ */
+function waterMoveLines(s, armyId, move) {
+  const a = s.armies[armyId], extra = s.mapRules?.tuning?.byTroop?.[a?.troopType]?.crossingExtra ?? 2;
+  const boat = (t) => t?.terrainType === 'water' && t.boat === true;
+  for (const m of move) {
+    const path = m.path ?? [];
+    let onBoat = false, paid = 0, port = 0;
+    for (let i = 0; i + 1 < path.length; i++) {
+      const x = s.tiles[path[i]], y = s.tiles[path[i + 1]], bx = boat(x), by = boat(y);
+      if (bx || by) onBoat = true;
+      if (bx !== by) { if (x?.port === true || y?.port === true) port++; else paid++; }
+    }
+    if (!onBoat) { m.water = null; continue; }
+    const parts = ['배로 건넘'];
+    if (paid) parts.push(`타고 내리기 +${paid * extra}일`);
+    if (port) parts.push(paid ? '항구 0' : '항구에서 타고 내리기 0일');
+    m.water = {boat: true, boardings: paid, portBoardings: port, extraDays: paid * extra, text: parts.join(' · ')};
+  }
+  return true;
+}
+
+/**
+ * C533 칠 수 있는 관문 · 항구 거점(엔진 strongholdAttackTargets) + 예고 = 실제(그 명령을 엔진 step 에 넣어 본 결과 — step 은 사본에서 돌아 판은 그대로).
+ * 넣어 보기가 실패하면(주 행동을 이미 씀 등) 대상에서 뺀다 — 고도가 누를 수 있는 것만 보이게.
+ */
+function strongholdTargets(s, v, armyId) {
+  const out = [];
+  for (const id of Water.strongholdAttackTargets(s, armyId)) {
+    const x = (v.water?.strongholds ?? []).find((y) => y.id === id);
+    if (!x) continue;
+    let after;
+    try { after = R.step(s, {type: 'ATTACK_STRONGHOLD', armyId, strongholdId: id}).water.strongholds[id].durability; } catch { continue; }
+    const dealt = x.durability - after, what = x.kind === 'port' ? '항구' : '관문';
+    const ownerName = s.factions?.[x.owner]?.name ?? x.owner;
+    out.push({strongholdId: id, tileId: x.tileId, name: x.name, kind: x.kind, owner: x.owner, ownerName, durability: x.durability, max: x.max, dealt, after, falls: after <= 0,
+      // lines[0] 전후 · [1] 예고 판 한 줄(짧게) · [2] 덧붙임
+      head: `${what} 공격`, lines: [`내구 ${x.durability} → ${after}`, after <= 0 ? `무너짐 — 들어가면 ${x.kind === 'port' ? '항구를' : '관문을'} 차지` : '0 이 되면 들어가 차지합니다', '곁에 적이 없으면 차례마다 조금씩 되살아납니다']});
+  }
+  return out;
+}
+
 function forecast(p) {
   if (!p) return null;
   return {side: p.side ?? null, allyLoss: p.allyLoss ?? 0, enemyLoss: p.enemyLoss ?? 0, allyLossText: Display.troopText(p.allyLoss ?? 0), enemyLossText: Display.troopText(p.enemyLoss ?? 0), counter: !!p.counter, lines: (p.effectLines ?? []).slice(0, 4)};
@@ -704,11 +833,15 @@ export function errorBody(e) {
 
 /** 요청 한 개 처리 — 실패해도 판은 바뀌지 않는다(step 은 새 state 를 돌려줄 때만 바꾼다). */
 export function handle(session, req) {
+  try { return handleOne(session, req); } finally { session.touch?.(); }   // C534-B1: 요청이 끝날 때마다 '한가하면 적 의도 채우기'를 다시 건다
+}
+function handleOne(session, req) {
   switch (req?.cmd) {
     case 'hello': return {protocol: PROTOCOL, protocolVersion: PROTOCOL_VERSION, node: process.version, runtime: 'prototype/src/campaign-runtime.mjs', turnLimit: R.CAMPAIGN_TURN_LIMIT, hasCampaign: !!session.state};
     case 'new': return session.newGame(req);
     case 'view': return session.snapshot(req.full !== false);
     case 'public': return session.publicParts(req.parts);
+    case 'forecasts': return session.forecasts(req.expectedRevision);
     case 'armyOptions': return session.armyOptions(req.armyId);
     case 'faceToward': return session.faceToward(req.armyId, req.tileId);
     case 'abilities': return session.abilities(req.armyId);

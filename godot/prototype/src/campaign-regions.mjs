@@ -108,7 +108,7 @@ export const regionRecoveryMul=(s,city)=>1+regionRecoveryPlus(s,city)/0.10;
 /** 차례 시작: 이번 차례 증기 틈 칸을 지금 전투 불 장부(c182 fires)에 1차례 불로(번지지 않음). initializeCombatFire 는 부르는 쪽이 넘김(가져오기 고리 피함). @param {any} s @param {(s:any)=>void} initFire */
 export function regionTurnStart(s,initFire){
  const tiles=regionVentFires(s).filter(id=>s.tiles[id]);if(!tiles.length)return;
- initFire(s);s.c182??={version:1,fires:[],burnedForest:[],log:[]};
+ initFire(s);if(!s.c182){s.c182={version:1,fires:[],burnedForest:[],log:[]};initFire(s,{recordWind:false});}   // C563: same wind fields as a loaded save
  for(const tileId of tiles)if(!s.c182.fires.some(/** @param {any} f */f=>f.tileId===tileId))s.c182.fires.push({tileId,until:s.turn,ignitedTurn:s.turn,spreadAttempted:true});
 }
 /** 이번 차례 불 칸(증기 틈). @param {any} s */

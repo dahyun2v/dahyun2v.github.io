@@ -1,0 +1,3253 @@
+{
+  "status": "3판 S0 데이터 — 내정 콘텐츠 방 2026-10-31. 아직 아무 코드도 읽지 않음(판 해시 그대로). 수치는 모두 시험값. effect.existing = prototype/src 에 그 kind 이름이 이미 있는지(글자 검색) — false 는 엔진이 새로 더할 키",
+  "design": "docs/work-integration/20261030/domestic-v3/DOMESTIC-V3-CONTENT.md",
+  "catalog": "docs/work-integration/20261030/domestic-v3/DOMESTIC-V3-CONTENT-CATALOG.md",
+  "ledger": "docs/design-data/detail-ledger/naejeong.json",
+  "basis": "고도 + 중국 12세력 판(trialRules.china12 + domesticV3) · 약 80차례",
+  "baseFiles": {
+    "cityIdentity": "docs/work-integration/20261024/naejeong-content/data/domestic-v3-city-identity.json",
+    "cityIdentityChina52": "docs/work-integration/20261024/naejeong-content/data/domestic-v3-city-identity-china52.json",
+    "crises": "prototype/data/domestic-v3-crises.json",
+    "learningCards": "prototype/data/domestic-v3-learning-cards-v3.json",
+    "officialRanks": "docs/work-integration/20261025/faction-policy-12/OFFICIAL-RANKS.md"
+  },
+  "degree": {
+    "조금": 0.1,
+    "꽤": 0.2,
+    "크게": 0.3,
+    "note": "플레이어 글은 이 세 낱말로 쓴다. 연륜은 카탈로그대로 조금 = 약 0.05 · 꽤 = 약 0.1(값은 effect 에)"
+  },
+  "statusMeaning": {
+    "채택": "카탈로그 판정 채택 — 스위치를 켜면 돎",
+    "수정": "이름 · 숫자 원문 확인 전(켜도 되지만 바뀔 수 있음)",
+    "보류": "데이터만 둠 · enabled:false · 켜지 않음"
+  },
+  "institutions": {
+    "note": "특별기관 23 = 규칙 SI-00 + 기관 22(10-24 설계 11 + 3판 새 11). 10-24 의 세력 고유 셋(둔전 관청 · 의원 · 장막부)은 세력 컨셉 v3 고유 시설로 넘어가 여기 없음. 기존 11 은 city-identity 의 id 를 그대로 씀",
+    "switch": "dv3Institutions",
+    "buildCost": {
+      "production": 60,
+      "hurry": true,
+      "note": "시험값 — 큰 사업 하나"
+    },
+    "rule": {
+      "id": "SI-RULE",
+      "name": "특별기관 규칙",
+      "text": "대군과 주도가 된 성은 관청에서 고유한 큰 사업 하나를 고른다. 조건을 갖춘 것만 후보가 되고 한 번 지으면 바꾸지 않는다.",
+      "slots": {
+        "greatCommandery": 1,
+        "capital": 2,
+        "separateFromTraitSlots": true
+      },
+      "perFactionSame": 1,
+      "permanent": true,
+      "pausedWhenBesieged": true,
+      "openPaths": [
+        "trait",
+        "resource",
+        "deed",
+        "tradePactTurns",
+        "learningCard"
+      ],
+      "deeds": [
+        "battleWin",
+        "cityCapture",
+        "siegeHeld"
+      ],
+      "tradePactTurns": 10,
+      "effect": {
+        "kind": "INSTITUTION_SLOT_SPLIT",
+        "traitSlots": {
+          "greatCommandery": 1,
+          "capitalExtra": 1
+        },
+        "institutionSlots": {
+          "greatCommandery": 1,
+          "capital": 2
+        },
+        "existing": false,
+        "note": "지금 grade.institutionSlots 를 성격 자리로 씀(domestic-v3.mjs:549) — 성격 자리와 기관 자리를 따로 두어야 함(S3)"
+      },
+      "catalogId": "SI-00",
+      "ledger": [
+        "NJ-0001",
+        "NJ-0002",
+        "NJ-0003",
+        "NJ-0004",
+        "NJ-0104",
+        "NJ-0132",
+        "NJ-0148",
+        "NJ-0157",
+        "NJ-0161",
+        "NJ-0201",
+        "NJ-0250",
+        "NJ-0278",
+        "NJ-0410",
+        "NJ-0474"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    "list": [
+      {
+        "id": "SI-TAICANG",
+        "name": "태창",
+        "hanja": "太倉",
+        "opens": {
+          "trait": "granary"
+        },
+        "text": "흉년과 메뚜기 떼가 세력 땅에 와도 피해가 절반이다.",
+        "effect": {
+          "kind": "CRISIS_DAMAGE_MOD",
+          "crisis": [
+            "drought",
+            "locust"
+          ],
+          "value": -50,
+          "scope": "faction",
+          "existing": true,
+          "note": "위기 코드에 태창 꼬리표 자리가 있음(domestic-v3.mjs:53 domesticCharacters taicang)"
+        },
+        "catalogId": "SI-01",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-WUKU",
+        "name": "무고",
+        "hanja": "武庫",
+        "opens": {
+          "trait": "barracks"
+        },
+        "text": "이 성에서 출진하는 부대는 훈련이 절반 찬 채로 나간다.",
+        "effect": {
+          "kind": "MUSTER_DRILL_MIN",
+          "value": 50,
+          "scope": "city",
+          "existing": false,
+          "note": "훈련도(C473 병사 질) 뒤"
+        },
+        "catalogId": "SI-02",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-MAZHENG",
+        "name": "마정",
+        "hanja": "馬政",
+        "opens": {
+          "resource": "horse_range",
+          "trait": "barracks"
+        },
+        "text": "세력 기병의 공격이 꽤 오른다.",
+        "effect": {
+          "kind": "DAMAGE_MOD",
+          "value": 20,
+          "condition": "TROOP:BT04",
+          "scope": "faction",
+          "existing": true
+        },
+        "catalogId": "SI-03",
+        "ledger": [],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관(엔진 방이 전투 정본에 넣을지 판단할 때까지 켜지 않음)",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-YANTIE",
+        "name": "염철관",
+        "hanja": "鹽鐵官",
+        "opens": {
+          "resource": [
+            "salt",
+            "iron_mine"
+          ],
+          "trait": "market"
+        },
+        "text": "세력이 거두는 금이 꽤 는다.",
+        "effect": {
+          "kind": "PEOPLE_YIELD_MOD",
+          "resource": "gold",
+          "value": 20,
+          "scope": "faction",
+          "existing": true
+        },
+        "catalogId": "SI-04",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-GUANSHI",
+        "name": "관시",
+        "hanja": "關市",
+        "opens": {
+          "trait": "market",
+          "tileKind": [
+            "pass",
+            "road"
+          ],
+          "orTradePactTurns": 10
+        },
+        "text": "군량을 거듭 사도 값이 오르지 않는다.",
+        "effect": {
+          "kind": "GRAIN_BUY_NO_STACK",
+          "value": true,
+          "scope": "faction",
+          "existing": false,
+          "note": "GR-03 거듭 사기 값 오름(+25)을 없앰"
+        },
+        "catalogId": "SI-05",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-TAIXUE",
+        "name": "태학",
+        "hanja": "太學",
+        "opens": {
+          "trait": "academy"
+        },
+        "text": "학문 문턱마다 카드 네 장 중 한 장을 고른다.",
+        "effect": {
+          "kind": "LEARNING_DRAW_ADD",
+          "value": 1,
+          "scope": "faction",
+          "existing": false,
+          "note": "엔진에 새 효과 키 LEARNING_DRAW_ADD 를 더해야 함"
+        },
+        "catalogId": "SI-06",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-LANTAI",
+        "name": "난대",
+        "hanja": "蘭臺",
+        "opens": {
+          "trait": "academy",
+          "resourceClass": "luxury"
+        },
+        "text": "유레카로 얻는 학문이 두 배다.",
+        "effect": {
+          "kind": "EUREKA_MOD",
+          "value": 100,
+          "scope": "faction",
+          "existing": false,
+          "note": "카탈로그의 여는 조건 종이(후보 자원)는 자원 목록에 없어 10-24 대로 학문 고을 + 명품 하나"
+        },
+        "catalogId": "SI-07",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-XIONGGUAN",
+        "name": "웅관",
+        "hanja": "雄關",
+        "opens": {
+          "trait": "bastion"
+        },
+        "text": "이 성이 포위되면 두 배 오래 버틴다.",
+        "effect": {
+          "kind": "SIEGE_RESERVE_MULT",
+          "value": 2,
+          "scope": "city",
+          "existing": false,
+          "note": "엔진에 새 효과 키 SIEGE_RESERVE_MULT 를 더해야 함"
+        },
+        "catalogId": "SI-08",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-FENGSUI",
+        "name": "측후대",
+        "hanja": "測候臺",
+        "renamedFrom": "봉수대 烽燧(총괄 10-31 결정 6 — 공손찬 고유 봉화대가 우선 · id 는 바꾸지 않음)",
+        "opens": {
+          "trait": "bastion",
+          "tileKind": [
+            "pass"
+          ]
+        },
+        "text": "예고된 위기를 한 차례 더 일찍 안다.",
+        "effect": {
+          "kind": "CRISIS_WARN_ADD",
+          "value": 1,
+          "scope": "faction",
+          "existing": false,
+          "note": "위기 코드에 꼬리표 자리가 있음 · 공손찬 봉화대(시야)와 다른 효과"
+        },
+        "catalogId": "SI-09",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-YAOPU",
+        "name": "약포",
+        "hanja": "藥圃",
+        "opens": {
+          "resource": "herb"
+        },
+        "text": "역병이 세력 땅에서 이웃 성으로 번지지 않는다.",
+        "effect": {
+          "kind": "CRISIS_NO_SPREAD",
+          "crisis": "plague",
+          "value": true,
+          "scope": "faction",
+          "existing": false,
+          "note": "엔진에 새 효과 키 CRISIS_NO_SPREAD 를 더해야 함"
+        },
+        "catalogId": "SI-10",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-GONGFANG",
+        "name": "대공방",
+        "hanja": "大工坊",
+        "opens": {
+          "resource": "iron_mine",
+          "facility": "workshop"
+        },
+        "text": "이 성에서 출진하는 투석기와 공병대가 성벽을 크게 부순다.",
+        "effect": {
+          "kind": "SIEGE_DAMAGE_MOD",
+          "value": 30,
+          "condition": "TROOP:CATAPULT|ENGINEER&MUSTERED_HERE",
+          "scope": "city",
+          "existing": true
+        },
+        "catalogId": "SI-11",
+        "ledger": [],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "SI-NUTAI",
+        "name": "노대",
+        "hanja": "弩臺",
+        "opens": {
+          "trait": "bastion"
+        },
+        "branch": "bastion-defense",
+        "text": "이 성의 사격이 한 칸 더 멀리 닿는다.",
+        "effect": {
+          "kind": "CITY_SHOT_RANGE_ADD",
+          "value": 1,
+          "scope": "city",
+          "existing": false,
+          "note": "성 사격 사거리 키가 없음 — 전투 쪽(엔진 방) · 요충 갈래 셋 중 하나만"
+        },
+        "catalogId": "SI-12",
+        "ledger": [
+          "NJ-0115",
+          "NJ-0308",
+          "NJ-0517"
+        ],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-JUMA",
+        "name": "거마책",
+        "hanja": "拒馬柵",
+        "opens": {
+          "trait": "bastion",
+          "facility": "workshop"
+        },
+        "branch": "bastion-defense",
+        "text": "성벽에 붙은 투석기와 충차와 공병대가 꽤 더 다친다.",
+        "effect": {
+          "kind": "WALL_ADJ_SIEGE_DAMAGE_TAKEN_MOD",
+          "value": 20,
+          "condition": "TROOP:CATAPULT|RAM|ENGINEER&ADJ_WALL",
+          "scope": "city",
+          "existing": false,
+          "note": "성벽 곁 공성 부대 받는 피해 — 전투 쪽(엔진 방)"
+        },
+        "catalogId": "SI-13",
+        "ledger": [
+          "NJ-0116"
+        ],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-LIANNU",
+        "name": "연노루",
+        "hanja": "連弩樓",
+        "opens": {
+          "trait": "bastion",
+          "learningCard": "LC-BOW-2"
+        },
+        "branch": "bastion-defense",
+        "text": "이 성의 사격이 한 번에 둘을 맞힌다. 둘째는 절반만 다친다.",
+        "effect": {
+          "kind": "CITY_SHOT_TARGETS",
+          "value": 2,
+          "secondShare": 0.5,
+          "scope": "city",
+          "existing": false,
+          "note": "성 사격 대상 수 — 전투 쪽(엔진 방)"
+        },
+        "catalogId": "SI-14",
+        "ledger": [
+          "NJ-0117"
+        ],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-CHUANCHANG",
+        "name": "선창",
+        "hanja": "船廠",
+        "opens": {
+          "riverside": true,
+          "tileKind": [
+            "port"
+          ]
+        },
+        "text": "이 성에서 출진한 부대는 배 위에서 덜 약하다.",
+        "effect": {
+          "kind": "WATER_TILE_COMBAT_MULT",
+          "value": 0.875,
+          "base": 0.75,
+          "condition": "MUSTERED_HERE",
+          "scope": "city",
+          "existing": false,
+          "note": "정본 20 물 칸 = 배(공방 ×0.75)를 ×0.875 로 — 전투 쪽(엔진 방)"
+        },
+        "catalogId": "SI-15",
+        "ledger": [
+          "NJ-0165",
+          "NJ-0246",
+          "NJ-0423",
+          "NJ-0516",
+          "NJ-0646"
+        ],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-LONGWANG",
+        "name": "용왕묘",
+        "hanja": "龍王廟",
+        "opens": {
+          "riverside": true,
+          "crisisSeen": "flood"
+        },
+        "text": "큰물이 들어도 이 성 강가 시설이 멈추지 않는다. 뒤에 땅이 기름지는 것은 그대로다.",
+        "effect": {
+          "kind": "CRISIS_EFFECT_CANCEL",
+          "crisis": "flood",
+          "value": "AREA_RIVER_FACILITY_STOP",
+          "scope": "city",
+          "existing": false,
+          "note": "위기 효과 하나만 지우는 키(큰물 비옥 1.5배는 남김)"
+        },
+        "catalogId": "SI-16",
+        "ledger": [
+          "NJ-0558"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-SHANSHEN",
+        "name": "산신 사당",
+        "hanja": "山神祠",
+        "opens": {
+          "minTiles": {
+            "mountain": 2
+          }
+        },
+        "text": "이 성 둘레 산과 관문 칸에서 지키는 내 부대가 조금 덜 다친다.",
+        "effect": {
+          "kind": "DEFENSE_MOD",
+          "value": 10,
+          "condition": "TERRAIN:MOUNTAIN|PASS&DEFENDING&NEAR_CITY:4",
+          "scope": "city",
+          "existing": true,
+          "note": "조건 NEAR_CITY · DEFENDING 은 새로 필요할 수 있음"
+        },
+        "catalogId": "SI-17",
+        "ledger": [
+          "NJ-0368",
+          "NJ-0557"
+        ],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-LINSHEN",
+        "name": "숲 신당",
+        "hanja": "林神堂",
+        "opens": {
+          "minTiles": {
+            "forest": 2
+          }
+        },
+        "text": "이 성 숲 칸이 곡식을 내고 메뚜기 떼가 번지지 않는다.",
+        "effect": {
+          "kind": "TILE_OUTPUT_ADD",
+          "resource": "grain",
+          "value": 500,
+          "condition": "TERRAIN:FOREST",
+          "scope": "city",
+          "existing": false,
+          "note": "10-24 둔전 관청 TILE_OUTPUT_ADD 와 같은 꼴(칸당 석)"
+        },
+        "extraEffects": [
+          {
+            "kind": "CRISIS_NO_SPREAD",
+            "crisis": "locust",
+            "value": true,
+            "scope": "city",
+            "existing": false,
+            "note": "엔진에 새 효과 키 CRISIS_NO_SPREAD 를 더해야 함"
+          }
+        ],
+        "catalogId": "SI-18",
+        "ledger": [
+          "NJ-0556"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-WUZE",
+        "name": "안개 못",
+        "hanja": "霧澤",
+        "opens": {
+          "riversideOrLake": true
+        },
+        "text": "차례가 시작될 때 이 성 둘레 강가에 안개가 끼어 적 궁병이 한 칸 덜 쏜다.",
+        "effect": {
+          "kind": "AREA_FOG_RANGE_MOD",
+          "value": -1,
+          "radius": 3,
+          "tiles": "riverside",
+          "target": "ENEMY_ARCHER",
+          "scope": "city",
+          "existing": false,
+          "note": "안개 규칙 C541 예약과 같이 — 전투 쪽(엔진 방)"
+        },
+        "catalogId": "SI-19",
+        "ledger": [
+          "NJ-0163"
+        ],
+        "holdBy": "총괄 10-31 결정 5 — 전투 수치를 바꾸는 특별기관",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-YICANG",
+        "name": "의창",
+        "hanja": "義倉",
+        "opens": {
+          "trait": "granary"
+        },
+        "text": "창고를 열어 구휼할 때 곡식이 절반만 들고 인망이 남는다.",
+        "effect": {
+          "kind": "CRISIS_RESPONSE_COST_MOD",
+          "response": "relief",
+          "crisis": [
+            "drought",
+            "rats",
+            "locust"
+          ],
+          "value": -50,
+          "scope": "faction",
+          "existing": false,
+          "note": "구휼 대응 값 줄이기(지금 구휼은 가뭄에만 있음 — 쥐떼 · 메뚜기는 구휼 대응이 생기면 적용)"
+        },
+        "extraEffects": [
+          {
+            "kind": "RESPONSE_PRESTIGE_GRANT",
+            "response": "relief",
+            "value": 5,
+            "existing": false,
+            "note": "구휼을 고르면 인망 +5"
+          }
+        ],
+        "catalogId": "SI-20",
+        "ledger": [
+          "NJ-0176",
+          "NJ-0191"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-ZHUANYUN",
+        "name": "전운사",
+        "hanja": "轉運使",
+        "opens": {
+          "trait": "bastion",
+          "tileKind": [
+            "pass",
+            "ford"
+          ]
+        },
+        "text": "이 성에서 나가는 보급 길이 두 배로 넓어진다.",
+        "effect": {
+          "kind": "SUPPLY_ROUTE_CAPACITY_MULT",
+          "value": 2,
+          "scope": "city",
+          "existing": false,
+          "note": "한 길에 군단이 몰릴 때 모자람(GR-02)을 덜어 줌 · S11 식량 지원(TC-V01c)과 같은 용량 값"
+        },
+        "catalogId": "SI-21",
+        "ledger": [
+          "NJ-0018"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "SI-JIANGWU",
+        "name": "강무당",
+        "hanja": "講武堂",
+        "opens": {
+          "trait": "barracks",
+          "facilityMaturity": {
+            "trainingGround": 3
+          }
+        },
+        "text": "이 성 장수가 싸움에서 이길 때마다 같은 병종 다른 장수들의 숙련이 조금씩 는다.",
+        "effect": {
+          "kind": "VETERAN_RATE_ADD_PER_WIN",
+          "value": 0.01,
+          "max": 0.05,
+          "condition": "SAME_TROOP",
+          "scope": "faction",
+          "existing": false,
+          "note": "숙련 몫(C473) 뒤 · 이긴 전투마다 +0.01(최대 +0.05)"
+        },
+        "catalogId": "SI-22",
+        "ledger": [
+          "NJ-0373",
+          "NJ-0477",
+          "NJ-0478"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      }
+    ]
+  },
+  "provinceAdvantages": {
+    "note": "후한 13주. 그 주 성의 과반을 쥐면 켜지고 잃으면 꺼짐. 성 주인이 바뀔 때만 다시 셈 · 하나만 더 잃으면 꺼질 때 지도 경고. id 는 city-identity 그대로",
+    "switch": "dv3Provinces",
+    "rule": {
+      "activate": "그 주 성 수의 절반 초과",
+      "minCities": 2,
+      "warnWhenAtRisk": true,
+      "recountWhen": "성 주인이 바뀔 때만"
+    },
+    "list": [
+      {
+        "id": "PA-SILI",
+        "province": "사례",
+        "name": "천자의 땅",
+        "text": "인망을 얻는 양이 꽤 는다.",
+        "effect": {
+          "kind": "PRESTIGE_GAIN_MOD",
+          "value": 20,
+          "existing": true
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-YU",
+        "province": "예주",
+        "name": "둔전의 들",
+        "text": "세력 인구가 조금 빨리 는다.",
+        "effect": {
+          "kind": "POPULATION_GROWTH_MOD",
+          "value": 10,
+          "existing": true
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-YAN",
+        "province": "연주",
+        "name": "청주병의 고장",
+        "text": "긴급 징병을 해도 치안이 나빠지지 않는다.",
+        "effect": {
+          "kind": "EMERGENCY_DRAFT_NO_SECURITY",
+          "value": true,
+          "existing": false,
+          "note": "엔진에 새 효과 키 EMERGENCY_DRAFT_NO_SECURITY 를 더해야 함"
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-XU",
+        "province": "서주",
+        "name": "물길 운송",
+        "text": "흔들린 보급선으로도 창고 군량이 다 닿는다.",
+        "effect": {
+          "kind": "SUPPLY_DISRUPTED_AS_SAFE",
+          "value": true,
+          "existing": false,
+          "note": "엔진에 새 효과 키 SUPPLY_DISRUPTED_AS_SAFE 를 더해야 함"
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-QING",
+        "province": "청주",
+        "name": "바닷소금",
+        "text": "청주의 내 성마다 소금을 가진 것으로 친다.",
+        "effect": {
+          "kind": "PROVINCE_CITY_RESOURCE_EFFECT",
+          "value": "salt",
+          "existing": false,
+          "note": "엔진에 새 효과 키 PROVINCE_CITY_RESOURCE_EFFECT 를 더해야 함"
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-JI",
+        "province": "기주",
+        "name": "하북 평원",
+        "text": "평지와 강가 칸이 사람을 꽤 더 먹여 살린다.",
+        "effect": {
+          "kind": "TILE_POP_CAP_MOD",
+          "value": 20,
+          "condition": "TERRAIN:PLAIN|RIVERSIDE",
+          "existing": true
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-YOU",
+        "province": "유주",
+        "name": "오환 돌기",
+        "text": "유주의 내 성마다 군마 산지를 가진 것으로 친다.",
+        "effect": {
+          "kind": "PROVINCE_CITY_RESOURCE_EFFECT",
+          "value": "horse_range",
+          "existing": false,
+          "note": "엔진에 새 효과 키 PROVINCE_CITY_RESOURCE_EFFECT 를 더해야 함"
+        },
+        "changedFrom": "10-24 city-identity 는 HORSES_PER_TURN 200 — 3판 카탈로그 CI-09 '명마로 침'을 따름",
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-BING",
+        "province": "병주",
+        "name": "변방 강병",
+        "text": "싸움에서 살아남은 병사가 조금 더 많이 숙련병이 된다.",
+        "effect": {
+          "kind": "VETERAN_RATE_ADD",
+          "value": 0.05,
+          "existing": false,
+          "note": "엔진에 새 효과 키 VETERAN_RATE_ADD 를 더해야 함"
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-LIANG",
+        "province": "량주",
+        "name": "서량 철기",
+        "text": "기병 부대는 훈련이 조금 찬 채로 출진한다.",
+        "effect": {
+          "kind": "MUSTER_DRILL_MIN",
+          "value": 30,
+          "condition": "TROOP:BT04",
+          "existing": false,
+          "note": "엔진에 새 효과 키 MUSTER_DRILL_MIN 를 더해야 함"
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-YI",
+        "province": "익주",
+        "name": "촉도",
+        "text": "익주의 내 성을 치러 온 적은 보급선이 한 단계 나빠진다.",
+        "effect": {
+          "kind": "ENEMY_SUPPLY_STEP",
+          "value": 1,
+          "condition": "TARGET_CITY_IN_PROVINCE",
+          "existing": false,
+          "note": "엔진에 새 효과 키 ENEMY_SUPPLY_STEP 를 더해야 함"
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-JING",
+        "province": "형주",
+        "name": "형주학",
+        "text": "학문이 꽤 빨리 쌓인다.",
+        "effect": {
+          "kind": "FACTION_SCIENCE_MOD",
+          "value": 20,
+          "existing": true
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-YANG",
+        "province": "양주",
+        "name": "장강 천험",
+        "text": "강가 칸에서 지키는 내 부대가 조금 덜 다친다.",
+        "effect": {
+          "kind": "DEFENSE_MOD",
+          "value": 10,
+          "condition": "TERRAIN:RIVERSIDE&DEFENDING",
+          "existing": true,
+          "note": "카탈로그 '강가 수비' — 지킬 때만(DEFENDING 조건 더함)"
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "PA-JIAO",
+        "province": "교주",
+        "name": "남해 교역",
+        "text": "세력이 거두는 금이 꽤 는다.",
+        "effect": {
+          "kind": "PEOPLE_YIELD_MOD",
+          "resource": "gold",
+          "value": 20,
+          "existing": true
+        },
+        "catalogId": "CI-09",
+        "ledger": [
+          "NJ-0281",
+          "NJ-0533"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      }
+    ]
+  },
+  "renown": {
+    "note": "명도 名都 여덟 — 천하가 아는 큰 도읍. 쥐는 동안 인망이 오르고 처음 얻으면 연대기에 한 줄. 잃으면 꺼짐. 성 주인이 바뀔 때만 셈. cityId 는 domestic-v3-city-identity-china52.json",
+    "switch": "dv3Provinces",
+    "list": [
+      {
+        "id": "RN-LUOYANG",
+        "cityId": "luoyang",
+        "name": "낙양",
+        "hanja": "洛陽",
+        "province": "사례",
+        "text": "낙양을 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "RN-CHANGAN",
+        "cityId": "changan",
+        "name": "장안",
+        "hanja": "長安",
+        "province": "사례",
+        "text": "장안을 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "RN-YE",
+        "cityId": "ye",
+        "name": "업",
+        "hanja": "鄴",
+        "province": "기주",
+        "text": "업을 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "RN-XUCHANG",
+        "cityId": "xuchang",
+        "name": "허창",
+        "hanja": "許昌",
+        "province": "예주",
+        "text": "허창을 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "RN-CHENGDU",
+        "cityId": "chengdu",
+        "name": "성도",
+        "hanja": "成都",
+        "province": "익주",
+        "text": "성도를 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "RN-JIANYE",
+        "cityId": "jianye",
+        "name": "건업",
+        "hanja": "建業",
+        "province": "양주",
+        "text": "건업을 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "RN-XIANGYANG",
+        "cityId": "xiangyang",
+        "name": "양양",
+        "hanja": "襄陽",
+        "province": "형주",
+        "text": "양양을 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "RN-WAN",
+        "cityId": "wan",
+        "name": "완",
+        "hanja": "宛",
+        "province": "형주",
+        "text": "완을 쥐는 동안 차례마다 인망이 오른다. 처음 얻으면 연대기에 남는다.",
+        "effect": {
+          "kind": "PRESTIGE_PER_TURN",
+          "value": 2,
+          "while": "HELD",
+          "existing": true,
+          "note": "쥐는 동안 인망 +2/차례"
+        },
+        "extraEffects": [
+          {
+            "kind": "CHRONICLE_ON_FIRST_TAKE",
+            "value": true,
+            "existing": false,
+            "note": "처음 얻을 때 연대기 한 줄(효과 없음)"
+          }
+        ],
+        "catalogId": "CI-10",
+        "ledger": [
+          "NJ-0322",
+          "NJ-0340",
+          "NJ-0341",
+          "NJ-0350",
+          "NJ-0393",
+          "NJ-0506",
+          "NJ-0528"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      }
+    ]
+  },
+  "maturity": {
+    "note": "시설 연륜 세 단계(FA-05). 지은 뒤 8 · 16차례가 지나면 이름이 바뀌고 효과가 커짐. 손상 중엔 멈춤 · 점령되면 연륜은 남고 이름은 새 주인 것(성의 기억 한 줄). values 는 단계 1 · 2 · 3 의 값(백분율 또는 더하는 수)",
+    "switch": "dv3Maturity",
+    "stages": [
+      {
+        "stage": 1,
+        "afterTurns": 0,
+        "degree": null
+      },
+      {
+        "stage": 2,
+        "afterTurns": 8,
+        "degree": "조금"
+      },
+      {
+        "stage": 3,
+        "afterTurns": 16,
+        "degree": "꽤"
+      }
+    ],
+    "pauseWhenDamaged": true,
+    "onCapture": "keepStageRenameToNewOwner",
+    "list": [
+      {
+        "id": "MT-FARM",
+        "facility": "farm",
+        "names": [
+          "밭",
+          "큰 들",
+          "만경 들"
+        ],
+        "name": "만경 들",
+        "text": "오래 일군 밭은 이름이 바뀌고 곡식이 조금, 더 지나면 꽤 더 난다.",
+        "effect": {
+          "kind": "MATURITY_OUTPUT_MOD",
+          "resource": "food",
+          "values": [
+            0,
+            5,
+            10
+          ],
+          "existing": false,
+          "note": "엔진에 새 효과 키 MATURITY_OUTPUT_MOD 를 더해야 함"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "MT-MARKET",
+        "facility": "market",
+        "names": [
+          "저자",
+          "큰 저자",
+          "도회"
+        ],
+        "name": "도회",
+        "text": "오래 선 저자는 이름이 바뀌고 금이 조금, 더 지나면 꽤 더 걷힌다.",
+        "effect": {
+          "kind": "MATURITY_OUTPUT_MOD",
+          "resource": "gold",
+          "values": [
+            0,
+            5,
+            10
+          ],
+          "existing": false,
+          "note": "엔진에 새 효과 키 MATURITY_OUTPUT_MOD 를 더해야 함"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "MT-WORKSHOP",
+        "facility": "workshop",
+        "names": [
+          "대장간",
+          "공방",
+          "관영 공방"
+        ],
+        "name": "관영 공방",
+        "text": "오래 돌린 공방은 이름이 바뀌고 무구를 조금, 더 지나면 꽤 더 만든다.",
+        "effect": {
+          "kind": "MATURITY_OUTPUT_MOD",
+          "resource": "arms",
+          "values": [
+            0,
+            5,
+            10
+          ],
+          "existing": false,
+          "note": "엔진에 새 효과 키 MATURITY_OUTPUT_MOD 를 더해야 함"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "MT-TRAINING",
+        "facility": "trainingGround",
+        "names": [
+          "연병장",
+          "교장",
+          "대교장"
+        ],
+        "name": "대교장",
+        "text": "오래 쓴 훈련소는 이름이 바뀌고 한 번에 훈련하는 병사가 는다.",
+        "effect": {
+          "kind": "MATURITY_DRILL_CAP_ADD",
+          "values": [
+            0,
+            500,
+            1000
+          ],
+          "existing": false,
+          "note": "훈련 정원 +500 · +1,000명(C473 훈련도 뒤)"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "MT-ACADEMY",
+        "facility": "academy",
+        "names": [
+          "서당",
+          "서원",
+          "학궁"
+        ],
+        "name": "학궁",
+        "text": "오래 연 서원은 이름이 바뀌고 학문이 조금, 더 지나면 꽤 더 쌓인다.",
+        "effect": {
+          "kind": "MATURITY_OUTPUT_MOD",
+          "resource": "science",
+          "values": [
+            0,
+            5,
+            10
+          ],
+          "existing": false,
+          "note": "엔진에 새 효과 키 MATURITY_OUTPUT_MOD 를 더해야 함"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "MT-GRANARY",
+        "facility": "granary",
+        "names": [
+          "창고",
+          "큰 창고",
+          "대창"
+        ],
+        "name": "대창",
+        "text": "오래 쓴 곡창은 이름이 바뀌고 포위되어도 한두 차례 더 버틴다.",
+        "effect": {
+          "kind": "MATURITY_SIEGE_RESERVE_ADD",
+          "values": [
+            0,
+            1,
+            2
+          ],
+          "existing": false,
+          "note": "포위 비축 +1 · +2차례(GR-05 위에)"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "MT-TAVERN",
+        "facility": "tavern",
+        "names": [
+          "주막",
+          "객잔",
+          "명루"
+        ],
+        "name": "명루",
+        "text": "오래 연 주점은 이름이 바뀌고 인재와 인망이 조금, 더 지나면 꽤 더 모인다.",
+        "effect": {
+          "kind": "MATURITY_OUTPUT_MOD",
+          "resource": "prestige",
+          "values": [
+            0,
+            5,
+            10
+          ],
+          "existing": false,
+          "note": "주점 자리 자원(trial.seats.tavern = prestige)에 곱함 · 인재 쪽은 주점 등용 확률이 생기면"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "MT-OFFICE",
+        "facility": "office",
+        "names": [
+          "현청",
+          "군청",
+          "부"
+        ],
+        "name": "부",
+        "text": "오래 다스린 관청은 이름이 바뀌고 생산이 조금, 더 지나면 꽤 는다.",
+        "effect": {
+          "kind": "MATURITY_OUTPUT_MOD",
+          "resource": "production",
+          "values": [
+            0,
+            5,
+            10
+          ],
+          "existing": false,
+          "note": "엔진에 새 효과 키 MATURITY_OUTPUT_MOD 를 더해야 함"
+        },
+        "catalogId": "FA-05",
+        "ledger": [
+          "NJ-0248",
+          "NJ-0309",
+          "NJ-0367",
+          "NJ-0372",
+          "NJ-0399",
+          "NJ-0401",
+          "NJ-0403",
+          "NJ-0449",
+          "NJ-0450",
+          "NJ-0453",
+          "NJ-0518",
+          "NJ-0552"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      }
+    ]
+  },
+  "traits": {
+    "note": "성격(이정표) 다섯은 city-identity · C472 그대로. 여기는 3판에서 새로 붙는 것 — 이름이 땅을 따름(CI-03) · 성 기울기(CI-04) · 새 성격 둘(CI-05 · CI-06)",
+    "switch": "dv3Institutions",
+    "names": [
+      {
+        "id": "TN-GRANARY",
+        "trait": "granary",
+        "name": "곡창 고을",
+        "nameByTerrain": {
+          "riverside": "물가 곡창",
+          "plain": "들녘 곡창"
+        },
+        "text": "같은 곡창 고을도 땅에 따라 이름이 다르다.",
+        "effect": {
+          "kind": "TRAIT_NAME_BY_TERRAIN",
+          "pick": "tileShare",
+          "existing": false,
+          "note": "이름은 칸 비율로 고름(효과 같음) · city-identity 의 nameByTerrain 를 3판 이름으로 바꿈"
+        },
+        "catalogId": "CI-03",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "TN-BARRACKS",
+        "trait": "barracks",
+        "name": "병사 고장",
+        "nameByTerrain": {
+          "hill": "산골 병영",
+          "border": "변방 병영"
+        },
+        "text": "같은 병사 고장도 땅에 따라 이름이 다르다.",
+        "effect": {
+          "kind": "TRAIT_NAME_BY_TERRAIN",
+          "pick": "tileShare",
+          "existing": false,
+          "note": "border = 다른 세력 땅과 맞닿은 성(칸 비율이 아니라 국경 여부)"
+        },
+        "catalogId": "CI-03",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "TN-MARKET",
+        "trait": "market",
+        "name": "저잣거리",
+        "nameByTerrain": {
+          "riverside": "나루 저자",
+          "road": "길목 저자"
+        },
+        "text": "같은 저잣거리도 땅에 따라 이름이 다르다.",
+        "effect": {
+          "kind": "TRAIT_NAME_BY_TERRAIN",
+          "pick": "tileShare",
+          "existing": false,
+          "note": "엔진에 새 효과 키 TRAIT_NAME_BY_TERRAIN 를 더해야 함"
+        },
+        "catalogId": "CI-03",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "TN-ACADEMY",
+        "trait": "academy",
+        "name": "학문 고을",
+        "nameByTerrain": {
+          "plain": "강학 고을",
+          "hill": "산사 학당"
+        },
+        "text": "같은 학문 고을도 땅에 따라 이름이 다르다.",
+        "effect": {
+          "kind": "TRAIT_NAME_BY_TERRAIN",
+          "pick": "tileShare",
+          "existing": false,
+          "note": "엔진에 새 효과 키 TRAIT_NAME_BY_TERRAIN 를 더해야 함"
+        },
+        "catalogId": "CI-03",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      },
+      {
+        "id": "TN-BASTION",
+        "trait": "bastion",
+        "name": "요충",
+        "nameByTerrain": {
+          "pass": "관문 요새",
+          "riverside": "강변 요새"
+        },
+        "text": "같은 요충도 땅에 따라 이름이 다르다.",
+        "effect": {
+          "kind": "TRAIT_NAME_BY_TERRAIN",
+          "pick": "tileShare",
+          "existing": false,
+          "note": "엔진에 새 효과 키 TRAIT_NAME_BY_TERRAIN 를 더해야 함"
+        },
+        "catalogId": "CI-03",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-24 설계)",
+        "trial": true
+      }
+    ],
+    "lean": {
+      "id": "TL-LEAN",
+      "name": "성 기울기",
+      "text": "땅이 하기 쉬운 쪽 성격 기록에 처음부터 조금 얹어 둔다. 다르게 키우면 다른 성격이 붙는다.",
+      "dataFile": "docs/work-integration/20261024/naejeong-content/data/domestic-v3-city-identity-china52.json",
+      "effect": {
+        "kind": "TRAIT_LEAN_START",
+        "value": 0.1,
+        "of": "firstGradeThresholdEvidence",
+        "existing": false,
+        "note": "첫 등급 문턱 기록의 0.1 을 lean 성격 기록에 시작값으로"
+      },
+      "catalogId": "CI-04",
+      "ledger": [],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새(10-24 설계)",
+      "trial": true
+    },
+    "list": [
+      {
+        "id": "craftsman",
+        "name": "장인 고을",
+        "text": "이 성의 무구 제작이 꽤 빨라진다.",
+        "evidence": "이 성 무구 제작량",
+        "effect": {
+          "kind": "ARMS_PROD_MOD",
+          "value": 20,
+          "scope": "city",
+          "existing": true
+        },
+        "catalogId": "CI-05",
+        "ledger": [
+          "NJ-0027"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "woodland",
+        "name": "산림 고을",
+        "text": "숲과 산 칸에서 곡식을 꽤 더 얻고, 수비에 성공한 차례에는 적이 지닌 군량 일부를 거둔다.",
+        "evidence": "숲 · 산 칸 수 + 이 성이 수비에 성공한 차례",
+        "effect": {
+          "kind": "TILE_OUTPUT_MOD",
+          "resource": "grain",
+          "value": 20,
+          "condition": "TERRAIN:FOREST|MOUNTAIN",
+          "scope": "city",
+          "existing": true
+        },
+        "extraEffects": [
+          {
+            "kind": "DEFENSE_WIN_FOOD_CAPTURE",
+            "value": 0.1,
+            "scope": "city",
+            "existing": false,
+            "note": "수비 성공한 차례 적 휴대 군량 0.1 을 성 비축으로"
+          }
+        ],
+        "catalogId": "CI-06",
+        "ledger": [
+          "NJ-0026"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      }
+    ]
+  },
+  "crises": {
+    "note": "위기 2판(S6). 위기 하나의 꼴은 prototype/data/domestic-v3-crises.json 과 같음(id · kind · good · name · text · weightBy · durationTurns · effects · responses · aiDefault). 새 위기 여섯 + 강적 무리(보류) · 중국 80차례 판 창 여섯 · 무게 규칙",
+    "switch": "dv3Crises2",
+    "framework": {
+      "id": "CRF-CHINA80",
+      "name": "중국 판 위기 창",
+      "text": "판 내내 여섯 시기에 한 번씩 위기가 예고된다. 둘 이상이면 하나는 좋은 소식이다.",
+      "windowsChina": [
+        [
+          6,
+          12
+        ],
+        [
+          18,
+          24
+        ],
+        [
+          30,
+          36
+        ],
+        [
+          42,
+          48
+        ],
+        [
+          54,
+          60
+        ],
+        [
+          66,
+          72
+        ]
+      ],
+      "perRunChina": {
+        "min": 5,
+        "max": 6
+      },
+      "warnTurns": 2,
+      "replaces": "domestic-v3-crises.json framework.windows(26차례 기준 [[4,8],[11,15],[18,23]]) — 중국 12세력 판에서만",
+      "effect": {
+        "kind": "CRISIS_WINDOWS_OVERRIDE",
+        "value": "windowsChina",
+        "existing": false,
+        "note": "framework.windows 를 판 설정에 따라 고르는 자리"
+      },
+      "catalogId": "CR-01",
+      "ledger": [
+        "NJ-0006",
+        "NJ-0067",
+        "NJ-0108",
+        "NJ-0125",
+        "NJ-0304",
+        "NJ-0484"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "C476",
+      "trial": true
+    },
+    "weightRules": [
+      {
+        "id": "CRW-ONE-PER-PROVINCE",
+        "text": "한 주에는 한 번에 위기 하나만 온다.",
+        "effect": {
+          "kind": "CRISIS_ONE_PER_PROVINCE",
+          "value": 1,
+          "existing": false,
+          "note": "엔진에 새 효과 키 CRISIS_ONE_PER_PROVINCE 를 더해야 함"
+        },
+        "catalogId": "CR-13",
+        "ledger": [
+          "NJ-0007",
+          "NJ-0009",
+          "NJ-0227",
+          "NJ-0228"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CRW-RECENT-LOSS",
+        "text": "방금 함락되거나 크게 진 성은 네 차례 동안 위기에서 빠진다.",
+        "effect": {
+          "kind": "CRISIS_EXCLUDE_RECENT_LOSS",
+          "turns": 4,
+          "existing": false,
+          "note": "엔진에 새 효과 키 CRISIS_EXCLUDE_RECENT_LOSS 를 더해야 함"
+        },
+        "catalogId": "CR-13",
+        "ledger": [
+          "NJ-0007",
+          "NJ-0009",
+          "NJ-0227",
+          "NJ-0228"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CRW-PLUNDER",
+        "text": "수탈한 성 둘레에 위기가 두 배 잘 생긴다.",
+        "effect": {
+          "kind": "CRISIS_WEIGHT_NEAR_PLUNDER",
+          "value": 2,
+          "existing": false,
+          "note": "엔진에 새 효과 키 CRISIS_WEIGHT_NEAR_PLUNDER 를 더해야 함"
+        },
+        "catalogId": "CR-13",
+        "ledger": [
+          "NJ-0007",
+          "NJ-0009",
+          "NJ-0227",
+          "NJ-0228"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CRW-RAID-RICH",
+        "text": "금과 시장이 큰 성에는 습격형 위기가 잘 생긴다.",
+        "effect": {
+          "kind": "CRISIS_RAID_WEIGHT_BY_WEALTH",
+          "value": 1.5,
+          "by": [
+            "treasury",
+            "markets"
+          ],
+          "existing": false,
+          "note": "습격형 = 강적 무리 같은 무리 위기 · 무게 1.5 는 시험값(카탈로그는 '↑'만)"
+        },
+        "catalogId": "CR-13",
+        "ledger": [
+          "NJ-0007",
+          "NJ-0009",
+          "NJ-0227",
+          "NJ-0228"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CRW-SAME-CITY-REST",
+        "text": "같은 성에는 같은 위기가 여섯 차례 동안 다시 오지 않는다.",
+        "effect": {
+          "kind": "CRISIS_SAME_CITY_REST",
+          "turns": 6,
+          "existing": false,
+          "note": "엔진에 새 효과 키 CRISIS_SAME_CITY_REST 를 더해야 함 — 해결 뒤 같은 성 · 같은 위기 6차례 쉼(VOL-3 §3-10)"
+        },
+        "catalogId": "CR-13",
+        "ledger": [
+          "NJ-0009"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "VOL-3",
+        "trial": true
+      },
+      {
+        "id": "CRW-ROUGH-LAND",
+        "text": "땅을 서둘러 넓히거나 숲 시설이 상한 성에는 위기가 조금 더 잘 온다.",
+        "effect": {
+          "kind": "CRISIS_WEIGHT_ROUGH_LAND",
+          "value": 1.5,
+          "by": [
+            "tileBuyStreak2",
+            "forestFacilityDamaged"
+          ],
+          "existing": false,
+          "note": "무게만 — 따로 손실 사건 없음(무작위 손실 아님 · 정본 31 §7) · 1.5 는 CRW-RAID-RICH 와 같은 시험값 · 엔진에 새 효과 키를 더해야 함"
+        },
+        "catalogId": "CR-13",
+        "ledger": [
+          "NJ-0007"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "VOL-3 D3-005(수정 채택)",
+        "trial": true
+      }
+    ],
+    "list": [
+      {
+        "id": "CR-RATS",
+        "kind": "rats",
+        "good": false,
+        "name": "쥐떼",
+        "text": "{area} 곡창에 쥐떼가 들끓는다. 손쓰지 않으면 성마다 곡식을 잃는다.",
+        "weightBy": {
+          "granaries": 2,
+          "inWindowOnly": true
+        },
+        "durationTurns": 1,
+        "checkOnce": "지역 위기 정산 때 한 번",
+        "effects": [
+          {
+            "kind": "AREA_CITY_GRAIN_LOSS",
+            "value": 1000,
+            "perCity": true,
+            "existing": false,
+            "note": "곡창이 없거나 대응하지 않은 성마다 곡식 1,000석 손실"
+          }
+        ],
+        "responses": [
+          {
+            "id": "inspect",
+            "label": "곡창을 단속한다",
+            "cost": "곡식",
+            "costValue": {
+              "perCity": 400
+            },
+            "requires": "granary",
+            "effects": [
+              {
+                "kind": "CANCEL",
+                "value": "AREA_CITY_GRAIN_LOSS",
+                "existing": true
+              }
+            ],
+            "preview": "성마다 곡식 조금을 써서 쥐를 막는다"
+          },
+          {
+            "id": "none",
+            "label": "그대로 둔다",
+            "cost": "없음",
+            "effects": [],
+            "preview": "성마다 곡식을 잃는다"
+          }
+        ],
+        "aiDefault": "곡식이 가장 모자란 위기 성부터 inspect",
+        "catalogId": "CR-07",
+        "ledger": [
+          "NJ-0098",
+          "NJ-0623",
+          "NJ-0662"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CR-BLIZZARD",
+        "kind": "blizzard",
+        "good": false,
+        "name": "눈보라",
+        "text": "{area}에 눈보라가 몰아친다. 두 차례 동안 보급이 끊기기 쉽고 군량이 빨리 준다.",
+        "weightBy": {
+          "season": [
+            "겨울"
+          ],
+          "provinces": [
+            "유주",
+            "병주",
+            "량주",
+            "기주"
+          ],
+          "notWithWeather": "COLD"
+        },
+        "durationTurns": 2,
+        "effects": [
+          {
+            "kind": "AREA_SUPPLY_STEP_WORSE",
+            "value": 1,
+            "existing": false,
+            "note": "그 지역 보급선 한 단계 나쁨"
+          },
+          {
+            "kind": "AREA_CARRIED_FOOD_USE_MULT",
+            "value": 1.5,
+            "existing": false,
+            "note": "그 지역 부대 휴대 군량 소모 1.5배"
+          }
+        ],
+        "responses": [
+          {
+            "id": "winterize",
+            "label": "방한 준비를 한다",
+            "cost": "금",
+            "costValue": {
+              "perCity": 200
+            },
+            "effects": [
+              {
+                "kind": "CANCEL",
+                "value": "AREA_CARRIED_FOOD_USE_MULT",
+                "existing": true
+              },
+              {
+                "kind": "CANCEL",
+                "value": "AREA_SUPPLY_STEP_WORSE",
+                "existing": true
+              }
+            ],
+            "preview": "성마다 금을 써서 보급과 군량을 지킨다"
+          },
+          {
+            "id": "hold",
+            "label": "출진을 멈추고 버틴다",
+            "cost": "없음",
+            "effects": [],
+            "preview": "그 지역 부대가 군량을 빨리 쓰고 보급이 흔들린다"
+          }
+        ],
+        "aiDefault": "그 지역에 출진 부대가 있으면 winterize, 아니면 hold",
+        "catalogId": "CR-08",
+        "ledger": [
+          "NJ-0175",
+          "NJ-0619",
+          "NJ-0620",
+          "NJ-0663"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CR-QUAKE",
+        "kind": "earthquake",
+        "good": false,
+        "name": "지진",
+        "text": "{area}의 땅이 흔들린다. 성벽이 깎이고 시설 하나가 상한다.",
+        "weightBy": {
+          "terrain": {
+            "mountain": 2,
+            "hill": 2
+          }
+        },
+        "durationTurns": 1,
+        "effects": [
+          {
+            "kind": "AREA_WALL_DAMAGE",
+            "value": 20,
+            "existing": false,
+            "note": "그 지역 성 성벽 −20"
+          },
+          {
+            "kind": "AREA_FACILITY_DAMAGE",
+            "value": 1,
+            "perCity": true,
+            "existing": false,
+            "note": "성마다 시설 하나 손상(FA-06 으로 2차례 뒤 저절로 고침)"
+          }
+        ],
+        "responses": [
+          {
+            "id": "brace",
+            "label": "받침목을 댄다",
+            "cost": "생산",
+            "costValue": {
+              "perCity": 4
+            },
+            "effects": [
+              {
+                "kind": "CANCEL",
+                "value": "AREA_FACILITY_DAMAGE",
+                "existing": true
+              }
+            ],
+            "preview": "그 차례 생산을 써서 시설이 상하지 않는다"
+          },
+          {
+            "id": "none",
+            "label": "그대로 둔다",
+            "cost": "없음",
+            "effects": [],
+            "preview": "성벽이 깎이고 시설 하나가 상한다"
+          }
+        ],
+        "aiDefault": "그 지역이 전선이면 brace",
+        "catalogId": "CR-09",
+        "ledger": [
+          "NJ-0668"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CR-LANDSLIDE",
+        "kind": "landslide",
+        "good": false,
+        "name": "산사태",
+        "text": "{area} 산길이 무너진다. 두 차례 동안 길 하나를 지날 수 없다.",
+        "weightBy": {
+          "regions": [
+            "남만",
+            "익주",
+            "량주"
+          ],
+          "terrain": {
+            "mountain": 3,
+            "pass": 2
+          }
+        },
+        "durationTurns": 2,
+        "effects": [
+          {
+            "kind": "PATH_TILE_BLOCKED",
+            "value": 1,
+            "tileKinds": [
+              "pass",
+              "mountainRoad"
+            ],
+            "existing": false,
+            "note": "관문 · 산길 칸 하나 지날 수 없음"
+          }
+        ],
+        "responses": [
+          {
+            "id": "clear",
+            "label": "길을 치운다",
+            "cost": "생산",
+            "costValue": {
+              "perCity": 4
+            },
+            "effects": [
+              {
+                "kind": "DURATION_SET",
+                "value": 1,
+                "existing": false,
+                "note": "위기 남은 차례를 1로"
+              }
+            ],
+            "preview": "그 차례 생산을 써서 한 차례 만에 길을 연다"
+          },
+          {
+            "id": "none",
+            "label": "그대로 둔다",
+            "cost": "없음",
+            "effects": [],
+            "preview": "두 차례 동안 길이 막힌다"
+          }
+        ],
+        "aiDefault": "막힌 길이 자기 보급선이면 clear",
+        "catalogId": "CR-10",
+        "ledger": [
+          "NJ-0131",
+          "NJ-0667"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CR-BOOM",
+        "kind": "marketBoom",
+        "good": true,
+        "name": "시장 호황",
+        "text": "{area}에 큰 장이 서고 상인이 몰린다. 두 차례 동안 시장이 금을 넉넉히 낸다.",
+        "weightBy": {
+          "markets": 2
+        },
+        "durationTurns": 2,
+        "effects": [
+          {
+            "kind": "AREA_MARKET_GOLD_MULT",
+            "value": 1.5,
+            "existing": false,
+            "note": "그 지역 시장 금 1.5배"
+          }
+        ],
+        "responses": [
+          {
+            "id": "stockpile",
+            "label": "군량을 사 둔다",
+            "cost": "금",
+            "effects": [
+              {
+                "kind": "AREA_GRAIN_BUY_PRICE_MULT",
+                "value": 0.8,
+                "existing": false,
+                "note": "그 지역 군량 값 0.8배"
+              }
+            ],
+            "preview": "그 지역에서 군량을 싸게 산다"
+          },
+          {
+            "id": "horses",
+            "label": "말을 사들인다",
+            "cost": "금",
+            "effects": [
+              {
+                "kind": "HORSE_BUY_CAP_MULT",
+                "value": 2,
+                "existing": false,
+                "note": "말 사기 한도 두 배(AR-03)"
+              }
+            ],
+            "preview": "한 차례에 살 수 있는 말이 두 배다"
+          },
+          {
+            "id": "none",
+            "label": "그대로 둔다",
+            "cost": "없음",
+            "effects": [],
+            "preview": "늘어난 금을 그대로 거둔다"
+          }
+        ],
+        "aiDefault": "기병이 많으면 horses, 창고가 5차례분보다 적으면 stockpile, 아니면 none",
+        "catalogId": "CR-11",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CR-HORSES",
+        "kind": "wildHorses",
+        "good": true,
+        "name": "말 떼",
+        "text": "{area}로 들말이 많이 내려온다. 세 차례 동안 말이 두 배로 난다.",
+        "weightBy": {
+          "provinces": [
+            "유주",
+            "병주",
+            "량주"
+          ],
+          "resources": [
+            "horse_range"
+          ],
+          "facilities": [
+            "ranch"
+          ]
+        },
+        "durationTurns": 3,
+        "effects": [
+          {
+            "kind": "AREA_HORSE_OUTPUT_MULT",
+            "value": 2,
+            "existing": false,
+            "note": "그 지역 군마 산지 · 목장 말 산출 두 배"
+          }
+        ],
+        "responses": [
+          {
+            "id": "ranch",
+            "label": "목장을 늘린다",
+            "cost": "없음",
+            "effects": [
+              {
+                "kind": "DURATION_ADD",
+                "value": 3,
+                "target": "ranch",
+                "existing": false,
+                "note": "그 성 목장 산출 3차례 더"
+              }
+            ],
+            "preview": "목장이 세 차례 더 말을 많이 낸다"
+          },
+          {
+            "id": "sell",
+            "label": "내다 판다",
+            "cost": "말",
+            "effects": [
+              {
+                "kind": "SELL_SURPLUS_HORSES_FOR_GOLD",
+                "rate": 2,
+                "existing": false,
+                "note": "늘어난 말 1필 = 금 2"
+              }
+            ],
+            "preview": "늘어난 말을 금으로 바꾼다"
+          },
+          {
+            "id": "none",
+            "label": "그대로 둔다",
+            "cost": "없음",
+            "effects": [],
+            "preview": "늘어난 말이 무기고로 간다"
+          }
+        ],
+        "aiDefault": "기병이 많으면 ranch, 금이 모자라면 sell",
+        "catalogId": "CR-12",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "CR-RIVER-PIRATES",
+        "kind": "riverPirates",
+        "good": false,
+        "name": "강적 무리",
+        "text": "{area} 큰 강에 수적이 배를 타고 나타난다. 강가 성 시장을 털어 간다.",
+        "weightBy": {
+          "ports": 2,
+          "riverMarkets": 2
+        },
+        "phase": [
+          "P1",
+          "P2"
+        ],
+        "perRun": 1,
+        "warnTurns": 2,
+        "durationTurns": 2,
+        "effects": [
+          {
+            "kind": "SPAWN_NEUTRAL_BAND",
+            "band": "riverPirates",
+            "units": 2,
+            "unitKind": "boat",
+            "existing": false,
+            "note": "C506 무리에 새 갈래(엔진 방)"
+          },
+          {
+            "kind": "AREA_MARKET_GOLD_ZERO",
+            "turns": 2,
+            "condition": "RIVERSIDE",
+            "existing": false,
+            "note": "강가 성 시장 금 2차례 0"
+          }
+        ],
+        "responses": [],
+        "onDefeat": {
+          "gold": true,
+          "boatVeterancy": true,
+          "tribute": false
+        },
+        "aiDefault": "배 부대가 있으면 소탕, 없으면 그대로",
+        "catalogId": "CR-17",
+        "ledger": [
+          "NJ-0665"
+        ],
+        "holdBy": "총괄 10-31 결정 5 — 강적 무리(C506 새 무리 갈래 · 엔진 방)",
+        "status": "보류",
+        "enabled": false,
+        "origin": "새",
+        "trial": true
+      }
+    ]
+  },
+  "offices": {
+    "status": "초안 — 관직 숫자 · 이름은 지금 초안 유지(총괄 10-31 결정 3). 후한 관제 원문 확인 결과가 오면 고침",
+    "design": "docs/work-integration/20261025/faction-policy-12/OFFICIAL-RANKS.md",
+    "switch": "dv3Ranks",
+    "nobleRanks": [
+      {
+        "id": "NR-CISHI",
+        "rank": 1,
+        "name": "자사",
+        "hanja": "刺史",
+        "text": "모든 군주가 자사로 시작한다.",
+        "reach": {
+          "start": true
+        },
+        "maxGrade": 4,
+        "effect": {
+          "kind": "LORD_RANK",
+          "value": 1,
+          "maxGrade": 4,
+          "existing": false,
+          "note": "군주 작위 · 줄 수 있는 최고 관품 4품"
+        },
+        "catalogId": "OF-01",
+        "ledger": [
+          "NJ-0437",
+          "NJ-0457",
+          "NJ-0458"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "NR-ZHOUMU",
+        "rank": 2,
+        "name": "주목",
+        "hanja": "州牧",
+        "text": "한 주의 성을 절반 넘게 쥐면 오른다. 데려올 수 있는 장수가 하나 는다.",
+        "reach": {
+          "provincesMajority": 1
+        },
+        "maxGrade": 3,
+        "effect": {
+          "kind": "LORD_RANK",
+          "value": 2,
+          "maxGrade": 3,
+          "existing": false,
+          "note": "엔진에 새 효과 키 LORD_RANK 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "OFFICER_CAP_ADD",
+            "value": 1,
+            "existing": false,
+            "note": "장수 정원 +1(드래프트 · 등용)"
+          }
+        ],
+        "catalogId": "OF-01",
+        "ledger": [
+          "NJ-0437",
+          "NJ-0457",
+          "NJ-0458"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "NR-GONG",
+        "rank": 3,
+        "name": "공",
+        "hanja": "公",
+        "text": "두 주를 절반 넘게 쥐거나 큰 성 여섯을 쥐면 오른다. 견제 연합을 먼저 꺼낼 수 있다.",
+        "reach": {
+          "provincesMajority": 2,
+          "orMajorCities": 6
+        },
+        "maxGrade": 2,
+        "effect": {
+          "kind": "LORD_RANK",
+          "value": 3,
+          "maxGrade": 2,
+          "existing": false,
+          "note": "엔진에 새 효과 키 LORD_RANK 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "DIPLOMACY_UNLOCK",
+            "value": "coalitionPropose",
+            "existing": false,
+            "note": "외교 3판 견제 연합 먼저 제안"
+          }
+        ],
+        "catalogId": "OF-01",
+        "ledger": [
+          "NJ-0437",
+          "NJ-0457",
+          "NJ-0458"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "NR-WANG",
+        "rank": 4,
+        "name": "왕",
+        "hanja": "王",
+        "text": "세 주를 절반 넘게 쥐고 인망이 넉넉하면 오른다. 칭제를 고를 수 있다.",
+        "reach": {
+          "provincesMajority": 3,
+          "prestigeAtLeast": "trial"
+        },
+        "maxGrade": 1,
+        "maxGradeExcept": [
+          "대장군",
+          "승상"
+        ],
+        "effect": {
+          "kind": "LORD_RANK",
+          "value": 4,
+          "maxGrade": 1,
+          "existing": false,
+          "note": "엔진에 새 효과 키 LORD_RANK 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "DIPLOMACY_UNLOCK",
+            "value": "proclaimEmperor",
+            "existing": false,
+            "note": "엔진에 새 효과 키 DIPLOMACY_UNLOCK 를 더해야 함"
+          }
+        ],
+        "catalogId": "OF-01",
+        "ledger": [
+          "NJ-0437",
+          "NJ-0457",
+          "NJ-0458"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "NR-HUANGDI",
+        "rank": 5,
+        "name": "황제",
+        "hanja": "皇帝",
+        "text": "왕이 칭제를 고르면 황제가 된다. 1품 자리를 모두 줄 수 있다.",
+        "reach": {
+          "proclaim": true
+        },
+        "maxGrade": 1,
+        "effect": {
+          "kind": "LORD_RANK",
+          "value": 5,
+          "maxGrade": 1,
+          "existing": false,
+          "note": "엔진에 새 효과 키 LORD_RANK 를 더해야 함"
+        },
+        "catalogId": "OF-01",
+        "ledger": [
+          "NJ-0437",
+          "NJ-0457",
+          "NJ-0458"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      }
+    ],
+    "nobleRule": {
+      "neverDown": true,
+      "keepGivenOffices": true
+    },
+    "grades": [
+      {
+        "id": "OG-5",
+        "grade": 5,
+        "name": "5품",
+        "seats": null,
+        "text": "출진 병력 상한이 100 오르고 봉록이 조금 붙는다.",
+        "effect": {
+          "kind": "MUSTER_CAP_ADD",
+          "value": 100,
+          "existing": false,
+          "note": "출진 병력 상한(경력 칭호와 같은 단위 — campaign-roster.mjs:239-241)"
+        },
+        "extraEffects": [
+          {
+            "kind": "SALARY_GOLD_ADD",
+            "value": 1,
+            "existing": false,
+            "note": "봉록 금/차례 — 내정 v3 유지비 위에"
+          }
+        ],
+        "catalogId": "OF-02",
+        "ledger": [
+          "NJ-0071",
+          "NJ-0495"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "OG-4",
+        "grade": 4,
+        "name": "4품",
+        "seats": 6,
+        "text": "출진 병력 상한이 200 오른다.",
+        "effect": {
+          "kind": "MUSTER_CAP_ADD",
+          "value": 200,
+          "existing": false,
+          "note": "엔진에 새 효과 키 MUSTER_CAP_ADD 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "SALARY_GOLD_ADD",
+            "value": 2,
+            "existing": false,
+            "note": "엔진에 새 효과 키 SALARY_GOLD_ADD 를 더해야 함"
+          }
+        ],
+        "catalogId": "OF-02",
+        "ledger": [
+          "NJ-0071",
+          "NJ-0495"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "OG-3",
+        "grade": 3,
+        "name": "3품",
+        "seats": 4,
+        "text": "출진 병력 상한이 300 오른다.",
+        "effect": {
+          "kind": "MUSTER_CAP_ADD",
+          "value": 300,
+          "existing": false,
+          "note": "엔진에 새 효과 키 MUSTER_CAP_ADD 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "SALARY_GOLD_ADD",
+            "value": 4,
+            "existing": false,
+            "note": "엔진에 새 효과 키 SALARY_GOLD_ADD 를 더해야 함"
+          }
+        ],
+        "catalogId": "OF-02",
+        "ledger": [
+          "NJ-0071",
+          "NJ-0495"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "OG-2",
+        "grade": 2,
+        "name": "2품",
+        "seats": 3,
+        "text": "출진 병력 상한이 400 오른다.",
+        "effect": {
+          "kind": "MUSTER_CAP_ADD",
+          "value": 400,
+          "existing": false,
+          "note": "엔진에 새 효과 키 MUSTER_CAP_ADD 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "SALARY_GOLD_ADD",
+            "value": 6,
+            "existing": false,
+            "note": "엔진에 새 효과 키 SALARY_GOLD_ADD 를 더해야 함"
+          }
+        ],
+        "catalogId": "OF-02",
+        "ledger": [
+          "NJ-0071",
+          "NJ-0495"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "OG-1",
+        "grade": 1,
+        "name": "1품",
+        "seats": 2,
+        "text": "출진 병력 상한이 500 오르고 장수 하나를 부장으로 더 데리고 나간다.",
+        "effect": {
+          "kind": "MUSTER_CAP_ADD",
+          "value": 500,
+          "existing": false,
+          "note": "엔진에 새 효과 키 MUSTER_CAP_ADD 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "SALARY_GOLD_ADD",
+            "value": 10,
+            "existing": false,
+            "note": "엔진에 새 효과 키 SALARY_GOLD_ADD 를 더해야 함"
+          },
+          {
+            "kind": "MUSTER_DEPUTY_SLOT",
+            "value": 1,
+            "existing": false,
+            "note": "1품만 부장 한 자리"
+          }
+        ],
+        "catalogId": "OF-02",
+        "ledger": [
+          "NJ-0071",
+          "NJ-0495"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true,
+        "userCheck": "제안 · 사용자 확인 — VOL-3 은 '부장 한 자리'를 정본 20 §0(장수 1 = 부대 1)과 부딪혀 뺌. 안: '출진 때 따로 한 부대 더'(MUSTER_EXTRA_UNIT) — 출진 규칙(정본 50 출진 자원 2 · 전투 20)에 닿는 새 규칙이라 채택 아님(총괄 10-31). 지금 extraEffects 의 MUSTER_DEPUTY_SLOT 은 엔진이 읽지 않음"
+      }
+    ],
+    "gradeRule": {
+      "statBonus": false,
+      "note": "능력치 보너스 없음(정본 31 '관직은 능력치가 아님')"
+    },
+    "rules": [
+      {
+        "id": "OR-AUTO-RECOMMEND",
+        "name": "자동 추천 임명",
+        "text": "실적이 높은 장수부터 자리를 채운다. 바꾸고 싶을 때만 바꾼다.",
+        "merit": "careerTitles + level",
+        "titleCap": {
+          "0": 5,
+          "1": 4,
+          "2": 3,
+          "3": 2,
+          "4": 1
+        },
+        "recountWhen": [
+          "titleChanged",
+          "levelChanged"
+        ],
+        "effect": {
+          "kind": "OFFICE_AUTO_RECOMMEND",
+          "value": true,
+          "existing": false,
+          "note": "칭호 수 → 오를 수 있는 품 상한(0 → 5품 … 4 이상 → 1품)"
+        },
+        "catalogId": "OF-03",
+        "ledger": [
+          "NJ-0496"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      },
+      {
+        "id": "OR-DEMOTE-HURT",
+        "name": "관직을 빼면 서운함",
+        "text": "관직을 낮추거나 빼면 그 장수와 사이가 한 번 나빠진다. 자동 추천은 낮추지 않는다.",
+        "effect": {
+          "kind": "RELATION_STEP_ON_DEMOTE",
+          "value": -1,
+          "once": true,
+          "existing": false,
+          "note": "관계 3판 원망 순간은 아님 — 대사 한 줄 + 등용 · 사건 조건"
+        },
+        "catalogId": "OF-04",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "OR-APPOINT-LINES",
+        "name": "임명 반응 대사",
+        "text": "친우나 숙적이 같은 품에 오르거나 앞지르면 한마디 한다.",
+        "effect": {
+          "kind": "APPOINT_REACTION_LINE",
+          "value": true,
+          "existing": false,
+          "note": "대사만(성격 3판 묶음 말투) · 이탈 없음"
+        },
+        "catalogId": "OF-05",
+        "ledger": [
+          "NJ-0053",
+          "NJ-0056",
+          "NJ-0073",
+          "NJ-0415"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "OR-YUANSHU",
+        "name": "원술 — 처음부터 황제",
+        "faction": "yuanShu",
+        "text": "원술은 판 시작부터 황제라 1품까지 모든 자리를 준다. 봉록이 크고 이웃과 사이가 차례마다 조금 나빠지며 인망이 높게 시작한다.",
+        "startRank": "NR-HUANGDI",
+        "effect": {
+          "kind": "START_LORD_RANK",
+          "value": 5,
+          "existing": false,
+          "note": "세력 id 는 china12 원술 세력에 맞출 것"
+        },
+        "extraEffects": [
+          {
+            "kind": "NEIGHBOR_RELATION_DRIFT",
+            "value": -1,
+            "perTurn": true,
+            "existing": false,
+            "note": "이웃 관계가 차례마다 조금 나빠짐(시험값)"
+          },
+          {
+            "kind": "START_PRESTIGE_ADD",
+            "value": "trial",
+            "existing": false,
+            "note": "시작 인망 높음 — 값은 시험판에서"
+          }
+        ],
+        "catalogId": "OF-06",
+        "ledger": [
+          "NJ-0438"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 사용자)",
+        "trial": true
+      },
+      {
+        "id": "OR-PROCLAIM",
+        "name": "칭제",
+        "text": "왕이 된 뒤 판에 한 번 황제가 될 수 있다. 맞닿은 세력과 사이가 크게 나빠진다.",
+        "oncePerRun": true,
+        "requires": "NR-WANG",
+        "effect": {
+          "kind": "THREAT_AXIS_ADD",
+          "value": 25,
+          "target": "adjacentFactions",
+          "existing": false,
+          "note": "DIPLOMACY-V3 위협 축 +25 · 황제끼리는 참칭으로 더 나빠짐"
+        },
+        "catalogId": "OF-07",
+        "ledger": [],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새(10-25 초안)",
+        "trial": true
+      }
+    ],
+    "titleNames": {
+      "id": "OT-NAMES",
+      "name": "관직 이름 표",
+      "text": "같은 품이라도 출진 위주 장수는 무관 이름, 태수와 자리 위주 장수는 문관 이름이 붙는다. 효과는 같다.",
+      "byGrade": {
+        "1": {
+          "military": [
+            "대장군",
+            "거기장군",
+            "표기장군"
+          ],
+          "civil": [
+            "승상",
+            "태위"
+          ]
+        },
+        "2": {
+          "military": [
+            "전장군",
+            "후장군",
+            "좌장군",
+            "우장군"
+          ],
+          "civil": [
+            "상서"
+          ]
+        },
+        "3": {
+          "military": [
+            "편장군",
+            "비장군"
+          ],
+          "civil": [
+            "자사급"
+          ]
+        },
+        "4": {
+          "military": [
+            "중랑장"
+          ],
+          "civil": [
+            "태수급"
+          ]
+        },
+        "5": {
+          "military": [
+            "교위"
+          ],
+          "civil": [
+            "종사"
+          ]
+        }
+      },
+      "pickBy": "출진 차례 수 대 태수 · 자리 차례 수",
+      "effect": {
+        "kind": "OFFICE_TITLE_NAME",
+        "value": "byGrade",
+        "existing": false,
+        "note": "겉 이름만 — 후한 관제 원문 확인 전(OFFICIAL-RANKS §6)"
+      },
+      "catalogId": "OF-08",
+      "ledger": [],
+      "status": "수정",
+      "enabled": true,
+      "origin": "새(10-25 초안)",
+      "trial": true
+    }
+  },
+  "focusProjects": {
+    "note": "집중 사업 — 핵심 성 하나를 3차례 한 가지 일에 몰아줌. 총괄 10-31 결정 2: 켬(새 판 설정에서 끌 수 있게 스위치 따로)",
+    "switch": "dv3Focus",
+    "enabled": true,
+    "rule": {
+      "id": "FP-RULE",
+      "name": "집중 사업",
+      "text": "핵심 성 하나를 세 차례 한 가지 일에 몰아준다. 그동안 그 성 큰 사업이 늦어지고 끝나면 세 차례 쉰다. 원할 때 그만둘 수 있지만 남은 차례는 사라진다.",
+      "durationTurns": 3,
+      "perFaction": 1,
+      "restTurns": 3,
+      "stopAnytime": {
+        "allowed": true,
+        "remainingTurnsLost": true,
+        "restTurns": 3,
+        "confirmEachTurn": false,
+        "origin": "VOL-3 D3-166 · D3-359~364",
+        "note": "원할 때 그만두기 — 차례마다 확인 창 없음"
+      },
+      "ai": "얻는 이득(다음 카드 · 군량 · 병사)이 공사 지연보다 클 때만",
+      "log": [
+        "start",
+        "finish",
+        "stopReason"
+      ],
+      "effect": {
+        "kind": "BIG_PROJECT_PRODUCTION_ADD",
+        "value": -2,
+        "perTurn": true,
+        "existing": false,
+        "note": "대가 — 그 성 큰 사업(특별기관 · 성벽 · 무구 수리) 생산 −2/차례"
+      },
+      "catalogId": "PL-04",
+      "ledger": [
+        "NJ-0360"
+      ],
+      "status": "채택",
+      "enabled": true,
+      "origin": "새",
+      "trial": true
+    },
+    "list": [
+      {
+        "id": "FP-FARM",
+        "name": "농사 집중",
+        "requires": {},
+        "text": "그 성 곡식이 크게 는다.",
+        "effect": {
+          "kind": "CITY_YIELD_MOD",
+          "resource": "grain",
+          "value": 30,
+          "scope": "city",
+          "existing": false,
+          "note": "city-identity 성격 효과와 같은 키"
+        },
+        "catalogId": "PL-05",
+        "ledger": [
+          "NJ-0627"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "FP-HUNT",
+        "name": "수렵 집중",
+        "requires": {
+          "tiles": [
+            "forest",
+            "mountain"
+          ]
+        },
+        "text": "그 성 숲과 산 칸 곡식이 두 배가 된다.",
+        "effect": {
+          "kind": "TILE_OUTPUT_MULT",
+          "resource": "grain",
+          "value": 2,
+          "condition": "TERRAIN:FOREST|MOUNTAIN",
+          "scope": "city",
+          "existing": false,
+          "note": "엔진에 새 효과 키 TILE_OUTPUT_MULT 를 더해야 함"
+        },
+        "catalogId": "PL-06",
+        "ledger": [
+          "NJ-0628"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "FP-FISH",
+        "name": "어장 집중",
+        "requires": {
+          "tiles": [
+            "waterside"
+          ],
+          "orResource": "fishery"
+        },
+        "text": "그 성 물가와 어장 칸 곡식이 두 배가 된다.",
+        "effect": {
+          "kind": "TILE_OUTPUT_MULT",
+          "resource": "grain",
+          "value": 2,
+          "condition": "TERRAIN:WATERSIDE|RES:fishery",
+          "scope": "city",
+          "existing": false,
+          "note": "엔진에 새 효과 키 TILE_OUTPUT_MULT 를 더해야 함"
+        },
+        "catalogId": "PL-07",
+        "ledger": [
+          "NJ-0629"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "FP-MINE",
+        "name": "채굴 집중",
+        "requires": {
+          "improvement": "mine"
+        },
+        "text": "철광은 무구를, 금광은 금을 두 배로 낸다.",
+        "effect": {
+          "kind": "RESOURCE_OUTPUT_MULT",
+          "resource": "iron_mine",
+          "target": "arms",
+          "value": 2,
+          "scope": "city",
+          "existing": false,
+          "note": "엔진에 새 효과 키 RESOURCE_OUTPUT_MULT 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "RESOURCE_OUTPUT_MULT",
+            "resource": "gold_mine",
+            "target": "gold",
+            "value": 2,
+            "scope": "city",
+            "existing": false,
+            "note": "엔진에 새 효과 키 RESOURCE_OUTPUT_MULT 를 더해야 함"
+          }
+        ],
+        "catalogId": "PL-08",
+        "ledger": [
+          "NJ-0630"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "FP-MARKET",
+        "name": "시장 집중",
+        "requires": {
+          "facility": "market"
+        },
+        "text": "그 성 금이 크게 는다.",
+        "effect": {
+          "kind": "CITY_YIELD_MOD",
+          "resource": "gold",
+          "value": 30,
+          "scope": "city",
+          "existing": false,
+          "note": "엔진에 새 효과 키 CITY_YIELD_MOD 를 더해야 함"
+        },
+        "catalogId": "PL-09",
+        "ledger": [
+          "NJ-0631"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "FP-STUDY",
+        "name": "학문 집중",
+        "requires": {
+          "scienceToNextAtMost": 80,
+          "seat": "academy"
+        },
+        "who": "플레이어 군주 + 서원 장수가 있는 핵심 성",
+        "text": "그 성 서원이 학문을 더 내어 다음 카드를 앞당긴다. 서원이 멈추면 집중도 멈춘다.",
+        "effect": {
+          "kind": "FACILITY_SCIENCE_ADD",
+          "facility": "academy",
+          "value": 8,
+          "perTurn": true,
+          "stopIfFacilityInactive": true,
+          "existing": false,
+          "note": "엔진에 새 효과 키 FACILITY_SCIENCE_ADD 를 더해야 함"
+        },
+        "catalogId": "PL-10",
+        "ledger": [
+          "NJ-0149",
+          "NJ-0632"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      },
+      {
+        "id": "FP-LEVY",
+        "name": "전선 비상 징발",
+        "requires": {
+          "enemyWithin": 6
+        },
+        "text": "그 성 자연 징집이 두 배가 된다. 징발 때문에 치안이 한 단계 흔들린다.",
+        "effect": {
+          "kind": "CITY_RECRUIT_MULT",
+          "value": 2,
+          "scope": "city",
+          "existing": false,
+          "note": "엔진에 새 효과 키 CITY_RECRUIT_MULT 를 더해야 함"
+        },
+        "extraEffects": [
+          {
+            "kind": "AREA_SECURITY_CAUSE",
+            "value": "징발",
+            "scope": "city",
+            "existing": true,
+            "note": "치안 원인 '징발' 한 단계"
+          }
+        ],
+        "catalogId": "PL-11",
+        "ledger": [
+          "NJ-0320"
+        ],
+        "status": "채택",
+        "enabled": true,
+        "origin": "새",
+        "trial": true
+      }
+    ]
+  }
+}

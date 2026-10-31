@@ -20,6 +20,8 @@ export function initializeRunModifiers(s,{legacy=false}={}){
  return s;
 }
 export function rememberRewindStart(s){if(s.phase==='PLAYER'&&!s.gameResult&&s.runModifiers)starts.set(s,cloneCampaign(s));return s;}
+// C534: deferred enemy plans complete the stored start snapshot too.
+export function patchRewindStart(s,edit){const start=starts.get(s);if(start)edit(start);return s;}
 export function carryRewindStart(from,to){if(!starts.has(to)&&starts.has(from)&&from.turn===to.turn)starts.set(to,starts.get(from));return to;}
 export function rewindView(s,f=s.playerFactionId){
  const charges=s.runModifiers?.rewind.charges??data.rewind.chargesPerRun;
@@ -75,7 +77,7 @@ export function weatherView(s){
  return {upcoming:events.filter(e=>e.startTurn>s.turn&&e.startTurn-s.turn<=data.weather.warnTurnsAhead).map(e=>({...e})),active:e?{kind:e.kind,until:e.startTurn+duration-1}:null};
 }
 export const weatherKind=s=>(s.runModifiers?.weather??[]).find(e=>e.startTurn<=s.turn&&s.turn<e.startTurn+data.weather.durationTurns)?.kind;
-export function weatherEdgeReason(s,from,to){return weatherKind(s)==='RAIN'&&s.mapRules.crossings[[from,to].sort().join('|')]==='ford'?'장마':null;}
+export function weatherEdgeReason(s,from,to){const c=weatherKind(s)==='RAIN'&&s.mapRules.crossings[[from,to].sort().join('|')];return c==='ford'||c==='wide'?'장마':null;}
 export function heavenBonus(s,f){const awards=(s.runModifiers?.heaven??[]).filter(a=>a.factionId===f&&a.startTurn<=s.turn&&a.until>=s.turn);return {attackPct:awards.some(a=>a.kind==='favored')?data.heaven.favored.effect.attackPct:0,defensePct:awards.some(a=>a.kind==='underdog')?data.heaven.underdog.effect.defensePct:0};}
 export function heavenCombat(s,attackerFaction,targetFaction){const a=heavenBonus(s,attackerFaction),t=heavenBonus(s,targetFaction);return {factor:(1+a.attackPct/100)/(1+t.defensePct/100),lines:[...(a.attackPct?[`천시 +${a.attackPct}%`]:[]),...(t.defensePct?[`역전의 기세 방어 +${t.defensePct}%`]:[])]};}
 export function startRunModifierTurn(s){

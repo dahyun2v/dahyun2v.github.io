@@ -32,8 +32,8 @@ const SPOT_OF = {farm: 'granary', tuntian: 'residence', clinic: 'tavern', mufu: 
 
 const DOMESTIC_CMD_FX = {CITY_TAX_ADVANCE: '다음 3턴 생산을 지금 받음 · 대가: 그 3턴 생산 0, 치안 한 단계 악화'};   // 웹 world.js:3350
 
-export function cityModel(state, cityId = null) {
-  const v = R.view(state), c = v.ownCities[cityId ?? v.faction.capitalCityId] ?? Object.values(v.ownCities)[0];
+export function cityModel(state, cityId = null, publicView = null) {
+  const v = publicView ?? R.view(state), c = v.ownCities[cityId ?? v.faction.capitalCityId] ?? Object.values(v.ownCities)[0];
   if (!c) return null;
   const job = (kind) => c.jobs?.find((j) => j.kind === kind) ?? null;
   const cur = c.currentProduction ? job(c.currentProduction.kind) : null, curRead = cur?.estimate ? Hud.productionReadout(cur.estimate) : null;
@@ -55,6 +55,7 @@ export function cityModel(state, cityId = null) {
   const ids = Object.keys(v.ownCities).sort((a, b) => (a === v.faction.capitalCityId ? -1 : b === v.faction.capitalCityId ? 1 : String(v.ownCities[a].name).localeCompare(String(v.ownCities[b].name), 'ko')));
   const at = ids.indexOf(c.cityId), nav = ids.length > 1 ? {prevId: ids[(at - 1 + ids.length) % ids.length], nextId: ids[(at + 1) % ids.length]} : {prevId: null, nextId: null};
   return {
+    forecastsPending: !!v.forecastsPending,
     screen: 'city-domestic', cityId: c.cityId, name: c.name, ...nav, policy: `성 방침 · ${POLICY[c.domesticPolicy?.effective ?? c.domesticPolicy ?? 'balanced']} ▸`,
     facilities: facilityModel(state, v, c),
     stage: {spots: st.spots, art: st.art, w: st.w, h: st.h, light: box ? {x: box[0] + box[2] / 2, y: box[1] + box[3] / 2, rx: box[2] / 2 * 1.6, ry: box[3] / 2 * 1.6} : null},

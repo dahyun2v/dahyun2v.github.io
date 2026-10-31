@@ -11,7 +11,7 @@ const [R, S, MM] = await Promise.all([load('prototype/src/campaign-runtime.mjs')
 
 /** 세력 이름(플레이어가 만난 세력만 — 못 만난 세력은 '알 수 없는 세력'). 웹 factionName 과 같은 'OO군'. */
 export function factionLabel(state, fid) {
-  const v = R.view(state), me = state.playerFactionId;
+  const v = R.view(state, state.playerFactionId, {pendingPlans: 'skip', forecasts: 'skip'}), me = state.playerFactionId;
   if (fid === me) return `${state.factions[fid]?.name ?? fid}군`;
   const f = (v.diplomacy?.factions ?? []).find((x) => x.factionId === fid);
   return f && f.contact !== false ? `${f.name}군` : '알 수 없는 세력';
@@ -23,7 +23,7 @@ export function turnBanner(state) {
 }
 
 /** 지도 곡(웹 bgmScene 의 지도 부분 — 교전 8초 · 군의 · 성 · 창 여닫이는 고도 쪽이 고른다): 결말 > 위기 > 전시(보이는 적이 내 성 · 부대 5칸 안) > 평시, 지도 곡은 두 차례마다 둘째 곡. */
-export function mapScene(state, v = R.view(state)) {
+export function mapScene(state, v = R.view(state, state.playerFactionId, {pendingPlans: 'skip', forecasts: 'skip'})) {
   const g = state.gameResult;
   if (g) return ['UNIFICATION', 'TURN_LIMIT'].includes(g.type) && (g.winnerFactionId ?? state.playerFactionId) === state.playerFactionId ? 'victory' : 'defeat';
   const ev = v.pendingEvent;
@@ -39,7 +39,7 @@ export function mapScene(state, v = R.view(state)) {
 /** 명령 하나의 소리: {sfx: [[이름, 늦춤 ms, 크기 배율]], bgm: 지도 곡, combat: 교전이 있었나}. 웹 worldSfx.command 와 같은 목록(새 차례 = settlement 소리 · 성 함락 · 결말 징 포함). */
 export function commandAudio(request, before, after) {
   const combat = after.lastCombat && after.lastCombat !== before?.lastCombat ? after.lastCombat : null;
-  const av = R.view(after), bv = before ? R.view(before) : null;
+  const av = R.view(after, after.playerFactionId, {pendingPlans: 'skip', forecasts: 'skip'}), bv = before ? R.view(before, before.playerFactionId, {pendingPlans: 'skip', forecasts: 'skip'}) : null;
   const all = S.commandSounds({request, before, state: after, combat, deferImpact: false, managedFx: false, feel: false});
   const contactNames = new Set(['clash', 'arrows', 'charge', 'rout']);
   const combatFallback = combat ? all.filter(([n]) => contactNames.has(n)) : [];
