@@ -3,7 +3,7 @@ import {campaignScenarioRules} from './campaign-scenario-data.mjs';
 import {isSliceMap} from './map-primitives.mjs';
 import {domesticV3Enabled,startDomesticCrises} from './domestic-v3.mjs';
 import {settleV3EventOaths} from './campaign-event-deck.mjs';
-import {c29Enabled,c29Cost} from './campaign-c29.mjs';
+import {c29Enabled,c29Cost,c549E} from './campaign-c29.mjs';
 import {recordSituationEvent} from './campaign-situations.mjs';
 import {C182} from './campaign-rule-registry.mjs';
 import {supplyEnabled} from './campaign-supply.mjs';
@@ -185,7 +185,8 @@ const crisisAdvice='통제 구역에 멈추지 않음 · 대응: 빈 길을 부�
 export const c31Production=(s,fid)=>c31Faction(s,fid,'PROSPERITY')?1+data.types[4].params.production/100:1;
 export const c31Muster=(s,fid)=>c31Faction(s,fid,'PROSPERITY')?data.types[4].params.muster:1;
 export const c31RecruitCost=(s,fid,cost)=>c31Faction(s,fid,'TALENT')?Math.ceil(cost*(1-data.types[5].params.recruitCost/100)):cost;
-export function c31Tactic(s,id,card){if(!c31Actor(s,id,'WEB'))return card;const p=data.types[3].params,c=structuredClone(card);if(c29Enabled(s))c.gaugeCost=Math.max(0,(c.gaugeCost??c29Cost(s,id,c))-p.cooldown*10);else c.cooldown=Math.max(c.signature?0:1,(c.cooldown??2)-p.cooldown);if([c.classTag,c.tags].flat().includes('지략'))c.range=(c.range??0)+p.range;for(const e of c.effects??[])if(e.op==='STATUS_APPLY'){e.duration=(e.duration??1)+p.duration;e.c31Extension=p.duration;}return c;}
+// C566: WEB '전법 재사용 대기 −1' — under 51 v1.8 an E card waits one turn less and the R gauge cost is untouched; older saves keep −10 gauge.
+export function c31Tactic(s,id,card){if(!c31Actor(s,id,'WEB'))return card;const p=data.types[3].params,c=structuredClone(card);if(c549E(s,id,c))c.eCooldownDelta=(c.eCooldownDelta??0)-p.cooldown;else if(c29Enabled(s)){if(!s.trialRules?.gaugeROnly)c.gaugeCost=Math.max(0,(c.gaugeCost??c29Cost(s,id,c))-p.cooldown*10);}else c.cooldown=Math.max(c.signature?0:1,(c.cooldown??2)-p.cooldown);if([c.classTag,c.tags].flat().includes('지략'))c.range=(c.range??0)+p.range;for(const e of c.effects??[])if(e.op==='STATUS_APPLY'){e.duration=(e.duration??1)+p.duration;e.c31Extension=p.duration;}return c;}
 export function finishC31(s,reason,winnerId=null,winnerArmyId=null){const x=s.c31;if(!x||x.resolved)return;x.resolved=reason;x.turnsLeft=0;x.endTurn=s.turn;
  if(['ROUTED','ELIMINATED','CAPTURED'].includes(reason)&&s.officers[winnerId]?.allegianceFactionId===s.playerFactionId)recordSituationEvent(s,'CRISIS_DEFEATED',s.playerFactionId);
  if(winnerArmyId&&s.officers[winnerId]?.allegianceFactionId===s.playerFactionId)x.resolverArmyId=winnerArmyId;

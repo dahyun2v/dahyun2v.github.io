@@ -746,5 +746,15 @@
    "from": "TMP-CLASS-B01-013",
    "override": false
   }
- ]
+ ],
+ "overrides20261030": {
+  "note": "아침 확인 34 승인(10-30, ADOPTION.md 10-30 저녁 적용 표) — 새 판(trialRules.engineAssignment=\"20261030\")에만 적용",
+  "engines": {
+   "G23": "CHAEK",
+   "G08": "GANG",
+   "G14": "JANGGUN",
+   "G80": "CHEOK",
+   "G72": "HOWI"
+  }
+ }
 }

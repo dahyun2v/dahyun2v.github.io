@@ -189,10 +189,10 @@ export function validateState(s,{allowCitylessAlive=false}={}){
   need(object(s.implementation) && s.implementation.stage==='I1' && s.implementation.turnExecution==='MOVEMENT_ONLY' && Array.isArray(s.implementation.pendingData));
   return s;
 }
-export function createWorldState({map,initialData,movementData,seed=190919}){
+export function createWorldState({map,initialData,movementData,seed=190919,fingerprint}){
   need(initialData?.schema==='first3-initial-state-v1' && initialData.version===1,'초기 배치 자료의 버전이 맞지 않습니다.');need(integer(seed,0,0xffffffff),'시작 번호가 올바르지 않습니다.');
-  const tiles=Object.fromEntries(map.tiles.map(t=>[t.at.join(','),{tileId:t.at.join(','),q:t.at[0],r:t.at[1],terrainType:t.type}]));
-  const s={schemaVersion:SAVE_VERSION,scenarioId:initialData.scenarioId,contentFingerprint:contentFingerprint(map,initialData,movementData),campaignSeed:seed,rng:{algorithm:'lcg32-v1',value:createRng(seed).state(),draws:0},turnNumber:1,currentDate:0,turnPhase:'PLANNING',gameResult:null,time:{...clone(initialData.time),tick:0},...clone(initialData.world),tiles,mapRules:buildMapRules(map,movementData),orderSequence:0,playerFactionId:null,ui:null,knowledge:{},pendingChoices:[],history:[],implementation:{stage:'I1',turnExecution:'MOVEMENT_ONLY',pendingData:clone(initialData.pendingData)}};
+  const tiles=Object.fromEntries(map.tiles.map(t=>[t.at.join(','),{tileId:t.at.join(','),q:t.at[0],r:t.at[1],terrainType:t.type,...(t.boat?{boat:true}:{}),...(t.port?{port:true}:{})}]));
+  const s={schemaVersion:SAVE_VERSION,scenarioId:initialData.scenarioId,contentFingerprint:fingerprint??contentFingerprint(map,initialData,movementData),campaignSeed:seed,rng:{algorithm:'lcg32-v1',value:createRng(seed).state(),draws:0},turnNumber:1,currentDate:0,turnPhase:'PLANNING',gameResult:null,time:{...clone(initialData.time),tick:0},...clone(initialData.world),tiles,mapRules:buildMapRules(map,movementData),orderSequence:0,playerFactionId:null,ui:null,knowledge:{},pendingChoices:[],history:[],implementation:{stage:'I1',turnExecution:'MOVEMENT_ONLY',pendingData:clone(initialData.pendingData)}};
   need(Object.keys(s.armies).length===6,'FIRST3 초기 부대는 6개여야 합니다.');
   for(const a of Object.values(s.armies)){delete a.movementProgress;a.movementState=null;}
   updateKnowledge(s);

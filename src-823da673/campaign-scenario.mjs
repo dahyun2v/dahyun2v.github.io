@@ -38,14 +38,27 @@ function inputsSlice(layout,id){
 }
 // 중국 전역 시험 지도(성 52): 놀이판 밖 칸은 빼고, first3 세력 수도 id(west · east · south)를 허창 · 하비 · 회계에 준다(v3 와 같은 방식). 나머지 성은 중립(엔진 규칙: 중립 = 작은 성).
 const CHINA_CAPITALS={xuchang:'west',xiapi:'east',kuaiji:'south'};
-const chinaPlay=layout=>({...layout,tiles:layout.tiles.filter(t=>!t.out).map(({at,type})=>({at,type})),
+// C529(정본 20 v3.10 §1.4): 호수 · 큰 강 칸 = boat, 항구 칸 = port, 다리 아닌 강 변 = 여울(중간 강은 넓은 여울)
+const CHINA_PORTS=new Set((china.strongholds??[]).filter(x=>x.kind==='port').map(x=>x.at.join(',')));
+const chinaPlay=layout=>({...layout,tiles:layout.tiles.filter(t=>!t.out).map(({at,type,waterKind})=>({at,type,...(type==='water'&&(waterKind==='lake'||waterKind==='river')?{boat:true}:{}),...(CHINA_PORTS.has(at.join(','))?{port:true}:{})})),
+ fords:layout.riverEdges.filter(e=>!layout.bridges.includes(e)&&!(layout.wideRiverEdges??[]).includes(e)),wideFords:layout.wideRiverEdges??[],
  cities:layout.cities.map(c=>({...c,id:CHINA_CAPITALS[c.id]??c.id,kind:CHINA_CAPITALS[c.id]?'major':'minor',ownerFactionId:CHINA_CAPITALS[c.id]?c.ownerFactionId:null}))});
 const scenarios={v1:{map:v1,initialData:initial,movementData:movement},v2:inputsSlice(v2,'v2'),v3:inputsSlice(v3,'v3'),china:inputsSlice(chinaPlay(china),'china')};
 export function campaignScenario(id='v3'){
  const data=scenarios[id];if(!data)throw new Error('INVALID_CAMPAIGN_MAP');return data;
 }
 export const campaignMapData=(id='v1')=>campaignScenario(id).map;
-const fingerprints=Object.fromEntries(Object.entries(scenarios).map(([id,d])=>[id,contentFingerprint(d.map,d.initialData,d.movementData)]));
+// C535: china 지문은 규칙에 쓰는 키만 — 그림 · 설명 키(이름표 · 강 곡선 · 기후 · 출처 글 …)가 바뀌어도 저장이 깨지지 않게. 옛 판(v1 · v2 · v3)은 지도 통째 그대로.
+const pick=(o,keys)=>Object.fromEntries(keys.filter(k=>o[k]!==undefined).map(k=>[k,o[k]]));
+const CHINA_RULE_KEYS=['id','width','height','projection','factions','startCandidates','cities','tiles','roads','links','distances','riverEdges','bridges','fords','wideFords','crossings','strongholds','strongholdDurabilityRatio','regions','places'];
+const chinaRuleView=m=>({...pick(m,CHINA_RULE_KEYS),
+ cities:m.cities.map(c=>pick(c,['id','label','kind','ownerFactionId','at','region','skeleton'])),
+ passes:(m.passes??[]).map(p=>pick(p,['name','at','tiles'])),
+ landmarks:(m.landmarks??[]).map(l=>pick(l,['id','kind','footprint'])),
+ regionPockets:(m.regionPockets??[]).map(p=>pick(p,['region','lonLat','radius'])),
+ regions:Object.fromEntries(Object.entries(m.regions??{}).map(([k,v])=>[k,{tactic:{id:v.tactic?.id,params:v.tactic?.params}}]))});
+export const fingerprintMap=(id,map)=>id==='china'?chinaRuleView(map):map;
+const fingerprints=Object.fromEntries(Object.entries(scenarios).map(([id,d])=>[id,contentFingerprint(fingerprintMap(id,d.map),d.initialData,d.movementData)]));
 export const campaignFingerprint=id=>{campaignScenario(id);return fingerprints[id];};
 
 // C312: geometry and people are separate; placement RNG never consumes gameplay RNG.

@@ -224,6 +224,10 @@ function applyChinaDraft(s,companions,unlocks){
  for(const a of Object.values(s.armies))triggerEffects(s,a.armyId,'PASSIVE');
  for(const fid of order){domesticStartFaction(s,fid);combatStartFaction(s,fid);c33Start(s,fid);}
  s.officerDraft={version:2,companions:[...results[s.playerFactionId].companions],order,factions:results};
+ // Creation-only sightings still refer to placeholder commanders removed above.
+ // Discard those records before city-start builds the terminal bridge; the normal
+ // creation/administrative knowledge update observes the final roster again.
+ for(const k of Object.values(s.knowledge)){k.observedArmies={};k.lastSeenArmies={};}
 }
 
 // Called only for the opt-in start, after the stock roster has been installed.

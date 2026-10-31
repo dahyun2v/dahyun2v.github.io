@@ -223,7 +223,7 @@ function applyDeckEffectsUnchecked(s,effects,p,source='PREVIEW'){
    case 'food':before=c.foodStock;if(v.delta<0)domesticSpendFood(s,c,Math.min(domesticFoodAvailable(s,c),-v.delta));else c.foodStock=Math.min(c.foodCapacity,c.foodStock+v.delta);change(`${p.names[v.city]} 식량`,before,c.foodStock);break;
    case 'prestige':before=s.factions[fid].prestige;s.factions[fid].prestige=Math.max(s.captiveRecruitment?.factions[fid]?.reservedPrestige??0,before+v);change('인망',before,s.factions[fid].prestige);break;
    case 'reserves':before=c.reserveTroops;domesticReserve(s,c,Math.max(-before,v.delta));change(`${p.names[v.city]} 예비병`,before,c.reserveTroops,10);break;
-   case 'population':before=c.population;c.population=Math.max(0,Math.min(cityPopulationCapacity(s,c),before+v.delta));change(`${p.names[v.city]} 인구`,before,c.population);break;
+   case 'population':before=c.population;c.population=Math.max(0,Math.min(cityPopulationCapacity(s,c),before+v.delta));if(Array.isArray(c.workedTiles)&&c.workedTiles.length>c.population)c.workedTiles=c.workedTiles.slice(0,c.population);change(`${p.names[v.city]} 인구`,before,c.population);break;
    case 'security':before=c.securityLevel;domesticSecurity(s,c,-v.step,'EVENT');change(`${p.names[v.city]} 치안 회복 단계`,-before,-c.securityLevel);break;
    case 'durability':before=c.durability;c.durability=Math.max(0,Math.min(c.durabilityMax,before+v.delta));change(`${p.names[v.city]} 내구`,before,c.durability);break;
    case 'morale':{const stages=['STEADY','SHAKEN','ROUTING'];before=stages.indexOf(a.morale);changeMorale(s,a.armyId,stages[Math.max(0,Math.min(2,before-v.step))],'사건');change(`${p.names[v.army]} 사기 회복 단계`,-before,-stages.indexOf(a.morale));break;}

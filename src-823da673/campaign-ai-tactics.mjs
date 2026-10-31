@@ -25,8 +25,14 @@ export const AI_EXPOSURE_COST=.35;
 export const AI_TACTIC_RESERVE_COST=12;
 export const AI_BAD_EXCHANGE_TURNS=2;
 export const AI_PUBLIC_STAT=50;
+// C534-B2 safety ceiling: previews one tactical decision (one army) may run.
+// Set well above the most any current board needs (measured), so results are
+// unchanged; it only stops a future card/rule pile-up from exploding enemy turns.
+// Counted per call, so it is deterministic and independent of saves or rewinds.
+export let AI_PREVIEW_CAP=80; // 2026-10-29 measured max 33 (v3 seeds 2·3, 26 turns; china 25)
+export function setAiPreviewCap(n){AI_PREVIEW_CAP=n;}
 let api;
-const previewDiagnostics={skipped:0,reasons:{},ruleRejected:0,ruleRejectedReasons:{}};
+const previewDiagnostics={skipped:0,reasons:{},ruleRejected:0,ruleRejectedReasons:{},maxPreviews:0,capHits:0};
 export const campaignTacticsDiagnostics=()=>structuredClone(previewDiagnostics);
 function recordPreviewFailure(error){
  const reason=String(error.message);
@@ -251,9 +257,10 @@ function campaignTacticalActionsRead(w,id){
  if(!w.armies[id]||!api.canAct(w,id)||w.endedArmyIds.includes(id))return [];
  const probe=campaignCombatProbe(w);
  return withCampaignQueries(probe,()=>{
- const rows=api.attackTargets(probe,id).map(targetId=>({armyId:id,type:'ATTACK',targetId,p:api.previewAttack(probe,id,targetId)}));
- for(const targetId of api.cityTargets(probe,id))rows.push({armyId:id,type:'CITY',targetId,p:api.previewCity(probe,id,targetId)});
- for(const targetId of api.troopQTargets(probe,id)){const p=api.previewTroopQ(probe,id,targetId);rows.push({armyId:id,type:'TROOP_Q',targetId,p,strategicValue:campaignQPositionValue(probe,id,p)});}
+ let previews=0;const spend=()=>{if(previews>=AI_PREVIEW_CAP){previewDiagnostics.capHits++;return false;}previews++;if(previews>previewDiagnostics.maxPreviews)previewDiagnostics.maxPreviews=previews;return true;};
+ const rows=[];for(const targetId of api.attackTargets(probe,id)){if(!spend())break;rows.push({armyId:id,type:'ATTACK',targetId,p:api.previewAttack(probe,id,targetId)});}
+ for(const targetId of api.cityTargets(probe,id))if(spend())rows.push({armyId:id,type:'CITY',targetId,p:api.previewCity(probe,id,targetId)});
+ for(const targetId of api.troopQTargets(probe,id)){if(!spend())break;const p=api.previewTroopQ(probe,id,targetId);rows.push({armyId:id,type:'TROOP_Q',targetId,p,strategicValue:campaignQPositionValue(probe,id,p)});}
  const timing=campaignTacticsPart(w,w.armies[id].factionId,'tacticTiming');
  // Plan two periods of visible contact income, without assuming a kill/rout.
  // These are forecasts only; the real C29 resolver still awards every point.
@@ -272,6 +279,7 @@ function campaignTacticalActionsRead(w,id){
   return [...new Set([ordered[0],escape,...ordered.slice(1)])].slice(0,AI_FOCUS_UNITS);
  };
  for(const c of cards.filter(c=>c.canUse))for(const targetId of targets(c)){
+  if(!spend())break;
   let p;
   try{p=api.previewTactic(w,id,c.traitId,targetId);}
   catch(error){
@@ -301,14 +309,14 @@ function campaignTacticalActionsRead(w,id){
  const f=w.armies[id].factionId,unit=w.armies[id];
  let futureR=Math.max(0,...rows.filter(x=>x.signature).map(x=>scoreAction(w,x)));
  const nearR=signature&&(signature.gauge??0)+2*gain>=signature.gaugeCost;
- if(timing&&nearR&&(signature.gauge??0)<signature.gaugeCost&&rows.some(x=>x.type==='TACTIC'&&!x.signature&&!x.decisive)){
+ if(!w.trialRules?.gaugeROnly&&timing&&nearR&&(signature.gauge??0)<signature.gaugeCost&&rows.some(x=>x.type==='TACTIC'&&!x.signature&&!x.decisive)){
   const r=w.campaignGrowth.officers[unit.commanderId];
   const charged={...w,campaignGrowth:{...w.campaignGrowth,officers:{...w.campaignGrowth.officers,[unit.commanderId]:{...r,c29:{...r.c29,gauge:signature.gaugeCost}}}}};
   // This is an isolated forecast of the actor's own future resource, not a grant.
   futureR=Math.max(0,...campaignTacticalActions(charged,id).filter(x=>x.signature).map(x=>x.score));
  }
  const basic=Math.max(0,...rows.filter(x=>x.type==='ATTACK').map(x=>scoreAction(w,x)));
- if(timing&&nearR&&futureR>basic)for(let n=rows.length-1;n>=0;n--)if(rows[n].type==='TACTIC'&&!rows[n].signature&&!rows[n].decisive)rows.splice(n,1);
+ if(!w.trialRules?.gaugeROnly&&timing&&nearR&&futureR>basic)for(let n=rows.length-1;n>=0;n--)if(rows[n].type==='TACTIC'&&!rows[n].signature&&!rows[n].decisive)rows.splice(n,1);
  const top=Math.max(0,...rows.filter(x=>x.type!=='TACTIC').map(x=>scoreAction(w,x)));
  // Preserve C305's existing useful E-support policy. R competes by the
  // measured public value; reserve only an R worth its future main action.

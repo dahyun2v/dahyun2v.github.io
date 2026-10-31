@@ -127,7 +127,7 @@ export function syncPoolFingerprint(r){
  const content=JSON.stringify(r.pool);
  if(poolFingerprints.has(content)){r.track.poolFingerprint=poolFingerprints.get(content);return;}
  const stable=v=>Array.isArray(v)?`[${v.map(stable).join(',')}]`:v&&typeof v==='object'?`{${Object.keys(v).sort().map(k=>`${JSON.stringify(k)}:${stable(v[k])}`).join(',')}}`:JSON.stringify(v);r.track.poolFingerprint=stable(r.pool);
- if(poolFingerprints.size>=256)poolFingerprints.clear();
+ if(poolFingerprints.size>=2048)poolFingerprints.clear(); // C5xx: 중국 판 장수 수(300+)보다 커야 매 정산 다시 계산하지 않음 — 지문 값은 같음
  poolFingerprints.set(content,r.track.poolFingerprint);
 }
 export function autoEquipCampaignTactics(s,id){const r=s.campaignGrowth.officers[id];if(c29Enabled(s)&&r.equippedTacticIds?.length&&Object.values(s.armies).some(a=>a.commanderId===id&&castleArmyActive(s,a)&&!Object.values(s.cities).some(c=>c.tileId===a.tileId)))return;r.equippedTacticIds=officerEffectCards(s,id,{tactics:true}).filter(c=>!r.c29||c.traitId!==r.representativeId).sort((a,b)=>Number(tacticIsDamage(b))-Number(tacticIsDamage(a))||Number(b.traitId===r.representativeId)-Number(a.traitId===r.representativeId)||a.traitId.localeCompare(b.traitId)).slice(0,c29Enabled(s)?1:CAMPAIGN_TACTIC_SLOTS).map(c=>c.traitId);}

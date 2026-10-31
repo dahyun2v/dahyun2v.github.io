@@ -310,10 +310,19 @@ export function domesticBeforeSettlement(s,c){
  for(const rule of ['HARVEST_PULSE','CAPTIVE_DEBT','EMERGENCY_LEVY'])runDomestic(s,c,rule,'settle');
  if(!c.besieged)c.c26.levied=false;
 }
+// C536: domestic v3 settlement runs only the unit-free governor rules. Rules that add legacy
+// food / reserve units (HARVEST_PULSE · EMERGENCY_LEVY · TRIBAL_FRIEND) and the production /
+// science pool rules (ALT_PAYMENT · TAX_ADVANCE) wait for a v3 unit decision.
+export function domesticV3BeforeSettlement(s,c){
+ if(!c26Enabled(s))return;c.c26??={};c.c26.settlements=(c.c26.settlements??0)+1;
+ poolDomesticSettlement(s,c,['REMOTE_RECRUIT']);
+ runDomestic(s,c,'CAPTIVE_DEBT','settle');
+}
+export function domesticV3AfterSettlement(s,c){if(c26Enabled(s)&&c.c26)domesticAfterSettlement(s,c);}
 // Conditional pool variants use an existing committed settlement, never a view/cost query.
 // Use officer records for per-run limits so moving governors cannot reset them.
 import {cityJobCost,cityEconomyRates,completeJob,cityJobReason} from './campaign-economy.mjs';
-function poolDomesticSettlement(s,c){
+function poolDomesticSettlement(s,c,allowed=['ALT_PAYMENT','REMOTE_RECRUIT','TAX_ADVANCE','TRIBAL_FRIEND']){
  if(c.besieged||(s.occupations[c.cityId]?.stage??'NORMAL')!=='NORMAL')return;
  const id=domesticGovernorId(c),r=s.campaignGrowth?.officers[id];
  if(!r||!governorValid(s,c))return;
@@ -321,7 +330,7 @@ function poolDomesticSettlement(s,c){
  if(card?.kind!=='trait'||card.core!==true)return;
  for(const e of card.effects??[]){
   if(!e.params?.automatic)continue;
-  const rule=e.rule;if(!['ALT_PAYMENT','REMOTE_RECRUIT','TAX_ADVANCE','TRIBAL_FRIEND'].includes(rule))continue;
+  const rule=e.rule;if(!allowed.includes(rule))continue;
   if(c28Suppressed(s,id))continue;
   r.c338??={};if(r.c338[rule])continue;
   const x={id,rule,params:e.params,card},f=s.factions[c.ownerFactionId],job=c.currentProduction;
@@ -1029,7 +1038,9 @@ export function recordCombatWind(s){
  if(s.mapId==='v1'||s.history?.some(e=>e.type==='WIND'&&e.turn===s.turn))return;
  (s.history??=[]).push({type:'WIND',turn:s.turn,direction:combatWind(s),text:`지도 바람: ${C182.fire.windNames[combatWind(s)]}`});
 }
-export function combatFireLog(s,kind,text,tiles=[]){s.c182??={version:1,fires:[],burnedForest:[],log:[]};s.c182.log.push({turn:s.turn,kind,text,tiles:[...tiles]});}
+// C563: a fire book made mid-turn carries this turn's wind like initializeCombatFire, so save → load → save is identical.
+const newCombatFireBook=s=>({version:1,fires:[],burnedForest:[],log:[],windTurn:s.turn,windDirection:combatWind(s)});
+export function combatFireLog(s,kind,text,tiles=[]){s.c182??=newCombatFireBook(s);s.c182.log.push({turn:s.turn,kind,text,tiles:[...tiles]});}
 export function initializeCombatFire(s,{recordWind=true}={}){
  if(recordWind)recordCombatWind(s);
  const legacy=[...(s.c27?.fires??[]).flatMap(f=>(f.tiles??[]).map(tileId=>({...f,tileId}))),...(s.c32?.fires??[])];
@@ -1108,7 +1119,7 @@ export function sample4Landing(s,id,target){
  return boardNeighbors(s.tiles[t.tileId],s.tiles).map(tileId).filter(to=>!combatArmyAt(s,to)&&!Object.values(s.cities).some(c=>c.tileId===to)&&!['mountain','water'].includes(s.tiles[to].terrainType)&&sample4EntryAllowed(s,id,to)&&(!combatFireAt(s,to)||sample4FireImmune(s,id))).sort((x,y)=>hexDistance(s.tiles[a.tileId],s.tiles[x])-hexDistance(s.tiles[a.tileId],s.tiles[y])||x.localeCompare(y))[0]??null;
 }
 function s4ignite(s,id,tiles,turns=2){
- initializeCombatFire(s);s.c182??={version:1,fires:[],burnedForest:[],log:[]};
+ initializeCombatFire(s);s.c182??=newCombatFireBook(s);
  for(const tileId of tiles){const old=s.c182.fires.find(f=>f.tileId===tileId);if(old){old.until=Math.max(old.until,s.turn+turns-1);continue;}s.c182.fires.push({tileId,source:id,until:s.turn+turns-1,ignitedTurn:s.turn,spreadAttempted:false});}
 }
 function runSample4Tactic({s,id,target,card,attack,damage,heal}){

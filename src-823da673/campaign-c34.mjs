@@ -305,7 +305,7 @@ function gainException(s,id,n,event){
 }
 function syncCosts(s,id){
  const a=s.armies[id],r=record(s,id);if(!a||!r)return;
- if(owns(s,a,'G10'))for(const c of Object.values(r.cards).filter(c=>c.pilot)){c.baseGaugeCost??=c.gaugeCost;c.gaugeCost=Math.max(0,c.baseGaugeCost-20*(a.mechV2?.awe??3));}
+ if(owns(s,a,'G10'))for(const c of Object.values(r.cards).filter(c=>c.pilot)){c.baseGaugeCost??=c.gaugeCost;c.gaugeCost=s.trialRules?.gaugeROnly&&!c.signature?c.baseGaugeCost:Math.max(0,c.baseGaugeCost-20*(a.mechV2?.awe??3));}
  if(owns(s,a,'G59')){const c=r.cards['G59.pilot.E'];if(c)c.gaugeCost=a.mechV2?.bladeTurn===s.turn-1?20:40;}
 }
 function spendAwe(s,id,n){
@@ -420,7 +420,7 @@ function pilotPay(s,id,card){
  c466Pay(s,id,card);
  c461Pay(s,id,card);
  if(!mechanicsV2Enabled(s))return;const a=s.armies[id],x=state(a);
- if(owns(s,a,'G10')){const n=Math.min(x.awe??3,Math.floor((card.baseGaugeCost??card.gaugeCost)/20));if(card.signature)x.aweRelease=x.awe??3;spendAwe(s,id,n);}
+ if(owns(s,a,'G10')&&(!s.trialRules?.gaugeROnly||card.signature)){const n=Math.min(x.awe??3,Math.floor((card.baseGaugeCost??card.gaugeCost)/20));if(card.signature)x.aweRelease=x.awe??3;spendAwe(s,id,n);}
  if(owns(s,a,'G59')&&!card.signature){x.planTurn=s.turn;delete x.bladeTurn;syncCosts(s,id);}
 }
 function pilotRemember(s,id,card){
@@ -579,7 +579,7 @@ function installPilot(s,id){
  if(o.uniqueE&&id!=='G07')r.equippedTacticIds=[`${id}.pilot.E`];
  else {const fallback=Object.values(r.cards).find(c=>c.id===(o.commonE?.id??'CTA-09'));if(fallback){r.track.growthStates[id].ownedTraitRanks[fallback.traitId]=1;r.equippedTacticIds=[fallback.traitId];}else r.equippedTacticIds=[];}
  r.mechanicsV2=true;c505Adopt(s,id);r.track.poolFingerprint=c34Fingerprint(r.pool);
- if(id==='G10')for(const c of Object.values(r.cards).filter(c=>c.pilot)){c.baseGaugeCost=c.gaugeCost;c.gaugeCost=Math.max(0,c.baseGaugeCost-60);}
+ if(id==='G10')for(const c of Object.values(r.cards).filter(c=>c.pilot)){c.baseGaugeCost=c.gaugeCost;c.gaugeCost=s.trialRules?.gaugeROnly&&!c.signature?c.baseGaugeCost:Math.max(0,c.baseGaugeCost-60);}
 }
 
 // Target grammar is shared by previews, AI, and committed commands. E aims at

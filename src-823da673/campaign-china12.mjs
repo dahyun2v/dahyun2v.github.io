@@ -5,7 +5,6 @@ import {domesticTalentPacks,officerFromPack} from './campaign-roster.mjs';
 import {CAMPAIGN_OFFICERS_51_100,campaignOfficerPack} from './campaign-officers-51-100.mjs';
 import {createRng} from './rng.mjs';
 import {boardNeighbors,tileId} from './map-primitives.mjs';
-import {edgeKey} from './movement.mjs';
 import {castleFootprint} from './campaign-city-footprint.mjs';
 import {contentFingerprint} from './first3.mjs';
 import {updateKnowledge} from './knowledge.mjs';
@@ -32,10 +31,10 @@ function startGeometry(){
  // Fairness describes the original map, never weather, a commander's crossing
  // permission, or loaded campaign state. Loading in a fresh process is identical.
  const ids=rawMap.startCandidates.map(alias),distances={},cityTiles=Object.fromEntries(rawMap.cities.map(c=>[alias(c.id),c.at.join(',')]));
- const tiles=Object.fromEntries(rawMap.tiles.filter(t=>!t.out).map(t=>[t.at.join(','),{q:t.at[0],r:t.at[1],terrainType:t.type}]));
- const blocked=new Set(rawMap.riverEdges.filter(e=>!rawMap.bridges.includes(e)));
+ // C529: 강 변은 모두 여울(건널 수 있음) · 호수 · 큰 강 칸은 배로 지나감 · 바다 · 산은 막힘(정본 20 v3.10 §1.4)
+ const tiles=Object.fromEntries(rawMap.tiles.filter(t=>!t.out).map(t=>[t.at.join(','),{q:t.at[0],r:t.at[1],terrainType:t.type,boat:t.type==='water'&&(t.waterKind==='lake'||t.waterKind==='river')}]));
  for(const id of ids){const start=cityTiles[id],d={[start]:0},q=[start];
-  for(let i=0;i<q.length;i++)for(const n of boardNeighbors(tiles[q[i]],tiles)){const to=tileId(n);if(d[to]!==undefined||['mountain','water'].includes(tiles[to].terrainType)||blocked.has(edgeKey(q[i],to)))continue;d[to]=d[q[i]]+1;q.push(to);}
+  for(let i=0;i<q.length;i++)for(const n of boardNeighbors(tiles[q[i]],tiles)){const to=tileId(n);if(d[to]!==undefined||tiles[to].terrainType==='mountain'||tiles[to].terrainType==='water'&&!tiles[to].boat)continue;d[to]=d[q[i]]+1;q.push(to);}
   distances[id]=d;
  }
  return geometry={ids,distances,cityTiles};

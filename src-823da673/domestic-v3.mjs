@@ -77,7 +77,7 @@ export const crisisGrainPrice=s=>!domesticV3Enabled(s)?1:(s.domesticCrises??[]).
 function crisisBuyCap(s,id){return (s.domesticCrises??[]).some(x=>s.turn<x.turn&&s.turn>=x.turn-crises.framework.warnTurns&&x.responses?.[id]?.choiceId==='stockpile')?2:1;}
 export function grainTurns(s,id){
  const own=cities(s).filter(c=>c.ownerFactionId===id),income=own.reduce((n,c)=>n+(crisisServices.income?.(s,c)??domesticV3Base(s,c).food),0);
- const need=own.reduce((n,c)=>n+domesticV3FoodNeed(s,c),0)+Object.values(s.armies??{}).filter(a=>a.factionId===id&&fieldActive(s,a)).reduce((n,a)=>n+a.troopCount*trial.foodPerTroop,0);
+ const need=own.reduce((n,c)=>n+domesticV3FoodNeed(s,c),0)+Object.values(s.armies??{}).filter(a=>a.factionId===id&&fieldActive(s,a)).reduce((n,a)=>n+v3FieldFood(s,a),0);
  return need>income?(s.factions[id]?.granary??0)/(need-income):Infinity;
 }
 export function crisisView(s){
@@ -296,7 +296,8 @@ export function settleV3GoldUpkeep(s){
  }
 }
 const cities=s=>Object.values(s.cities).sort((a,b)=>a.cityId.localeCompare(b.cityId,'en'));
-export const syncPeople=c=>c.population=Math.max(1,Math.floor(c.people/trial.populationUnit));
+// C563: population can fall here (people lost); worked tiles must not outnumber it (validateState).
+export const syncPeople=c=>{c.population=Math.max(1,Math.floor(c.people/trial.populationUnit));if(Array.isArray(c.workedTiles)&&c.workedTiles.length>c.population)c.workedTiles=c.workedTiles.slice(0,c.population);return c.population;};
 const normal=(s,c)=>(s.occupations?.[c.cityId]?.state??(c.occupationState==='TEMPORARY_OCCUPATION'?'OCCUPIED':'NORMAL'))==='NORMAL';
 let riverTerrainIndex=null;
 export function v3Terrain(s,t){
@@ -365,8 +366,10 @@ export function takeGrain(s,factionId,wanted){const f=s.factions[factionId],amou
 export function v3GrowthTarget(s,c,policy=v3Policy(s,c)){
  if(c.growthStopUntil>=s.turn)return 0;
  const capacity=domesticV3Influence(s,c).capacity;
- return !normal(s,c)||c.besieged?0:Math.min(Math.max(0,capacity-c.people),Math.floor(c.people*trial.growthRate*(1+learningModifier(s,c.ownerFactionId,'POPULATION_GROWTH_MOD')/100)*trial.policyGrowth[policy]*v3SecurityFactor(c)*crisisFactor(s,c,'AREA_GROWTH_MULT')));
+ return !normal(s,c)||c.besieged?0:Math.min(Math.max(0,capacity-c.people),Math.floor(c.people*trial.growthRate*(1+learningModifier(s,c.ownerFactionId,'POPULATION_GROWTH_MOD')/100)*Math.max(0,1+(v3CityModServices.growth?.(s,c)??0)/100)*trial.policyGrowth[policy]*v3SecurityFactor(c)*crisisFactor(s,c,'AREA_GROWTH_MULT')));
 }
+// C536: governor POPULATION_GROWTH_MOD (reclassCityMods, legacy reclassScale) also scales v3 growth; registered by campaign-economy.
+export const v3CityModServices={growth:null,securityLoss:null};
 export function growPeople(s,c){
  if(c.growthStopUntil>=s.turn)return 0;
  const target=v3GrowthTarget(s,c);
@@ -385,6 +388,7 @@ export function settleDomesticV3(s,hooks){
  migrateV3People(s,hooks.route);
  for(const c of cities(s).filter(c=>c.ownerFactionId))settleV3Standards(s,c);
  for(const c of cities(s).filter(c=>c.ownerFactionId))hooks.start?.(c);
+ for(const c of cities(s).filter(c=>c.ownerFactionId))hooks.before?.(c); // C536 태수 정산 규칙(단위 없는 것)
  s.economy.reinforcements=[];
  const entries=cities(s).filter(c=>c.ownerFactionId!==null).map(c=>{const rates=hooks.rates(c,true);for(const x of s.domesticCrises??[])if(crisisActive(s,x)&&crisisAffected(s,x,c)){const sell=responseEffects(s,x,c).find(e=>e.kind==='SELL_SURPLUS_FOR_GOLD');if(sell){const surplus=Math.max(0,rates.food-rates.food/crisisFactor(s,c,'AREA_GRAIN_YIELD_MULT')),sold=surplus*sell.share;rates.food-=sold;rates.gold+=sold*sell.rate;}}c.supplyIsolated=hooks.isolated?.(c)??!!c.besieged;if(c.supplyIsolated)c.siegeStock=(c.siegeStock??0)+rates.food;else s.factions[c.ownerFactionId].granary+=rates.food;s.factions[c.ownerFactionId].treasury+=rates.gold;return {c,rates};});
  settleV3GoldUpkeep(s);settleV3Pastures(s);
@@ -401,15 +405,22 @@ export function settleDomesticV3(s,hooks){
   recordV3Milestones(s,c,rates);
   if(normal(s,c)&&!c.besieged)c.durability=Math.min(c.durabilityMax??c.durability,c.durability+v3ResourceModifier(s,c,'WALL_REPAIR_ADD'));
   hooks.finish(c,paid,security);
+  hooks.after?.(c);
  }
  hooks.research();s.economy.lastSettledTurn=s.turn;return s;
 }
+function grainBuyLimit(s,factionId){
+ const rule=trial.grainPurchase,markets=cities(s).filter(c=>c.ownerFactionId===factionId).reduce((n,c)=>n+(c.facilities??[]).filter(x=>x.kind==='market'&&!x.damaged&&!blocked(s,c,x.tileId)).length,0);
+ return (rule.limit+markets*rule.marketLimit)*(1+learningModifier(s,factionId,'GRAIN_BUY_CAP_MOD')/100)*crisisBuyCap(s,factionId);
+}
+// C5xx: forecasts copy with cloneCampaign (same plain-data contract as structuredClone, reuses large strings); registered by campaign-economy.
+export const forecastCloneServices={clone:null};
+const forecastClone=s=>(forecastCloneServices.clone??structuredClone)(s);
 export function buyGrain(s,factionId,gold){
  if(!domesticV3Enabled(s))throw new Error('DOMESTIC_V3_DISABLED');initializeDomesticV3(s);
  if(!Number.isFinite(gold)||gold<=0||!s.factions[factionId])throw new Error('INVALID_GRAIN_PURCHASE');
  const f=s.factions[factionId],rule=trial.grainPurchase;
- const markets=cities(s).filter(c=>c.ownerFactionId===factionId).reduce((n,c)=>n+(c.facilities??[]).filter(x=>x.kind==='market'&&!x.damaged&&!blocked(s,c,x.tileId)).length,0);
- const limit=(rule.limit+markets*rule.marketLimit)*(1+learningModifier(s,factionId,'GRAIN_BUY_CAP_MOD')/100)*crisisBuyCap(s,factionId),ledger=f.grainPurchases?.turn===s.turn?f.grainPurchases:{turn:s.turn,count:0,bought:0};
+ const limit=grainBuyLimit(s,factionId),ledger=f.grainPurchases?.turn===s.turn?f.grainPurchases:{turn:s.turn,count:0,bought:0};
  const price=(1+ledger.count*rule.repeatIncrease)/rule.grainPerGold*crisisGrainPrice(s),quantity=Math.floor(Math.min(Math.max(0,limit-ledger.bought),Math.min(gold,f.treasury)/price)),spent=quantity*price;
  if(quantity){f.treasury-=spent;f.granary+=quantity;ledger.count++;ledger.bought+=quantity;f.grainPurchases=ledger;}
  return {bought:quantity,spent,remaining:Math.max(0,limit-ledger.bought)};
@@ -433,8 +444,12 @@ export function hurryProduction(s,cityId){
  return {spent:price,production:left,completed:c.currentProduction!==job};
 }
 export function idleProductionGold(s,c){const amount=c.production*trial.idleGold;s.factions[c.ownerFactionId].treasury+=amount;return amount;}
+// C536: field food uses the same per-army factor as the legacy path (전농 패시브 — engineFoodFactor).
+// campaign-supply registers the factor so this module does not import the engine layer.
+export const v3FieldFoodServices={factor:null};
+export const v3FieldFood=(s,a)=>a.troopCount*trial.foodPerTroop*(v3FieldFoodServices.factor?.(s,a)??1);
 export function settleDomesticV3Supply(s,{armies,link,starvation}){
- for(const a of armies){const route=link(a),need=a.troopCount*trial.foodPerTroop;a.supplyFood=Math.min(a.supplyFood,need*(v3CarryTurns(s,a.factionId)+(a.eventCarryTurns??0)));
+ for(const a of armies){const route=link(a),need=v3FieldFood(s,a);a.supplyFood=Math.min(a.supplyFood,a.troopCount*trial.foodPerTroop*(v3CarryTurns(s,a.factionId)+(a.eventCarryTurns??0)));
   const stored=takeGrain(s,a.factionId,route.state==='SAFE'?need:route.state==='DISRUPTED'?need/2:0),carried=Math.min(a.supplyFood,need-stored);a.supplyFood-=carried;a.supplyState=route.state;a.supplyStarving=stored+carried+1e-6<need;
   a.domesticV3Supply={need,stored,carried};if(route.state==='CUT'&&!s.supply.cutArmies.includes(a.armyId))s.supply.cutArmies.push(a.armyId);
   if(a.supplyStarving){if(!s.supply.starvingArmies.includes(a.armyId))s.supply.starvingArmies.push(a.armyId);starvation(a);}
@@ -551,7 +566,7 @@ export function settleV3Security(s,c){
  if((c.durability??0)<previous.durability||damaged.some(id=>!previous.damaged.includes(id))||c.facilityDamageTurn===s.turn||c.wallDamageTurn===s.turn)causes.push('시설·성벽 피해');
  for(const event of c.securityCauseEvents??[])causes.push(typeof event==='string'?event:event.label??event.kind??'사건');c.securityCauseEvents=[];
  const recovery=(v3CityTroops(s,c)*trial.security.garrisonDisplayScale>=c.people*trial.security.recoveryGarrisonRatio?2:1)+learningModifier(s,c.ownerFactionId,'SECURITY_RECOVERY_STEP')+v3ResourceModifier(s,c,'CITY_SECURITY_RECOVERY_STEP');
- c.securityLevel=Math.max(0,Math.min(2,(c.securityLevel??0)+(c.taxExemptRecoveryPending?-1:causes.length?1:-recovery)));
+ c.securityLevel=Math.max(0,Math.min(2,(c.securityLevel??0)+(c.taxExemptRecoveryPending?-1:causes.length?(v3CityModServices.securityLoss?.(s,c,1)??1):-recovery))); // C536 태수 SECURITY_LOSS_MOD(옛 reclassSecurityDelta 'SETTLE')
  c.taxExemptRecoveryPending=false;c.securityCauses=causes;c.securitySettledTurn=s.turn;c.domesticV3Turn=s.turn;
  c.chaosTurns=c.securityLevel===2?(c.chaosTurns??0)+1:0;c.v3SecuritySnapshot={durability:c.durability??0,damaged};
 }
@@ -741,9 +756,10 @@ export function v3CharacterCandidates(s,c){
  return Array.from({length:v3Grade(c).institutionSlots},(_,i)=>ranked.filter(k=>!(c.domesticCharacters??[]).some((v,j)=>j!==i&&v===k)).slice(0,2));
 }
 export function grainBuyView(s,id){
- const copy=structuredClone(s),f=copy.factions[id],rule=trial.grainPurchase,ledger=f.grainPurchases?.turn===s.turn?f.grainPurchases:{count:0};
+ // C5xx: no state copy — the remaining cap is exactly buyGrain's limit minus this turn's purchases.
+ const f=s.factions[id],rule=trial.grainPurchase,ledger=f.grainPurchases?.turn===s.turn?f.grainPurchases:{count:0};
  const price=(1+ledger.count*rule.repeatIncrease)/rule.grainPerGold*crisisGrainPrice(s);
- const remaining=buyGrain(copy,id,Number.MIN_VALUE).remaining;
+ const remaining=Math.max(0,grainBuyLimit(s,id)-(f.grainPurchases?.turn===s.turn?f.grainPurchases.bought:0));
  return {remaining,price,units:{remaining:trial.units.food,price:'금/석'}};
 }
 export function v3HurryCost(s,c){
@@ -771,20 +787,27 @@ export function v3PolicyPreview(s,c){
  const d=v3DelegatedPolicy(s,c);out.delegated={...row(d,'delegated'),resolvesTo:d};
  return out;
 }
-export function attachDomesticV3View(s,result,id,{settle}={}){
- if(!domesticV3Enabled(s))return result;
+// C5xx: the settlement forecast alone (view fields granaryNet · granaryOneTime · granaryTurnsLeft · treasuryNet · ownCities[].growthNext).
+export function domesticV3Forecast(s,id,{settle}){
+ if(!domesticV3Enabled(s))return null;
  // Run the real settlement on an isolated snapshot, including stock reserves,
  // field upkeep and growth. This is an estimate with the present world held still.
- const forecast=structuredClone(s);forecast.turn++;forecast.turnNumber=forecast.turn;forecast.globalTick+=200;forecast.currentDate+=10;
+ const forecast=forecastClone(s);forecast.turn++;forecast.turnNumber=forecast.turn;forecast.globalTick+=200;forecast.currentDate+=10;
  settle(forecast);
  const f=s.factions[id],next=forecast.factions[id];
  // 플레이 점검 03: the first settlement tops up city siege stocks once; show that as a one-time draw, not as the per-turn trend.
  const stock=w=>cities(w).filter(c=>c.ownerFactionId===id).reduce((n,c)=>n+(c.siegeStock??0),0);
  const granaryOneTime=Math.max(0,stock(forecast)-stock(s)),granaryNet=next.granary-f.granary+granaryOneTime;
+ return {granaryNet,granaryOneTime,granaryTurnsLeft:granaryNet<0?Math.floor(Math.max(0,f.granary-granaryOneTime)/-granaryNet):null,treasuryNet:next.treasury-f.treasury,
+  growthNext:Object.fromEntries(cities(s).filter(c=>c.ownerFactionId===id).map(c=>[c.cityId,forecast.cities[c.cityId].people-c.people]))};
+}
+export function attachDomesticV3View(s,result,id,{settle,forecast=true}={}){
+ if(!domesticV3Enabled(s))return result;
+ const fc=forecast?domesticV3Forecast(s,id,{settle}):null,f=s.factions[id];
  result.domesticCrises=crisisView(s);
  // UI-SPEC-V3 [붙일 것] fields: learning, armory, gold upkeep / arrears.
  Object.assign(result,{learning:learningView(s,id),armory:{...(f.armory??{})},goldUpkeep:v3GoldUpkeep(s,id),unpaidTurns:f.unpaidTurns??0});
- Object.assign(result,{granary:f.granary,granaryNet,granaryOneTime,granaryTurnsLeft:granaryNet<0?Math.floor(Math.max(0,f.granary-granaryOneTime)/-granaryNet):null,treasury:f.treasury,treasuryNet:next.treasury-f.treasury,grainBuy:grainBuyView(s,id),domesticStandards:[...f.domesticStandards],domesticPolicyDefault:f.domesticPolicyDefault,domesticUnits:{...trial.units}});
+ Object.assign(result,{granary:f.granary,...(fc?{granaryNet:fc.granaryNet,granaryOneTime:fc.granaryOneTime,granaryTurnsLeft:fc.granaryTurnsLeft}:{}),treasury:f.treasury,...(fc?{treasuryNet:fc.treasuryNet}:{}),grainBuy:grainBuyView(s,id),domesticStandards:[...f.domesticStandards],domesticPolicyDefault:f.domesticPolicyDefault,domesticUnits:{...trial.units}});
  for(const c of cities(s).filter(c=>c.ownerFactionId===id)){
   const projected=result.ownCities[c.cityId];if(!projected)continue;
   const land=domesticV3Influence(s,c);
@@ -795,7 +818,7 @@ export function attachDomesticV3View(s,result,id,{settle}={}){
    const paused=seat.officerId&&!seat.active||seat.kind!=='office'&&!activeFacilities(s,c).some(f=>v3FacilityKind(f)===seat.kind);
    return {seat:seat.kind,turnsLeft:paused?null:Math.max(0,period-(c.domesticTraining[seat.kind]??0))};
   })}]));
-  Object.assign(projected,{people:c.people,peopleCapacity:land.capacity,growthNext:forecast.cities[c.cityId].people-c.people,territory:[...c.territory],buyableTiles:expansionCandidates(s,c).map(t=>({tileId:t.tileId,price:tilePrice})),grade:v3Grade(c).id,characters:[...c.domesticCharacters],characterCandidates:v3CharacterCandidates(s,c),seats:v3Seats(s,c).map(x=>({...x,accelerationPercent:x.bonus*100})),specialists,hurryCost:v3HurryCost(s,c),domesticPolicy:{effective:v3Policy(s,c),overridden:c.domesticPolicyOverride!=null||c.domesticPolicy!=null},outputBreakdown:v3OutputBreakdown(s,c,projected.economyForecast),policyPreview:v3PolicyPreview(s,c),resources:resourceView(s,c.cityId),recruit:v3RecruitView(s,c)});
+  Object.assign(projected,{people:c.people,peopleCapacity:land.capacity,...(fc?{growthNext:fc.growthNext[c.cityId]}:{}),territory:[...c.territory],buyableTiles:expansionCandidates(s,c).map(t=>({tileId:t.tileId,price:tilePrice})),grade:v3Grade(c).id,characters:[...c.domesticCharacters],characterCandidates:v3CharacterCandidates(s,c),seats:v3Seats(s,c).map(x=>({...x,accelerationPercent:x.bonus*100})),specialists,hurryCost:v3HurryCost(s,c),domesticPolicy:{effective:v3Policy(s,c),overridden:c.domesticPolicyOverride!=null||c.domesticPolicy!=null},outputBreakdown:v3OutputBreakdown(s,c,projected.economyForecast),policyPreview:v3PolicyPreview(s,c),resources:resourceView(s,c.cityId),recruit:v3RecruitView(s,c)});
  }
  return result;
 }

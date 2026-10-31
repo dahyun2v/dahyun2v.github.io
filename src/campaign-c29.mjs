@@ -16,6 +16,30 @@ import {xpToNextLevel} from './growth-progress.mjs';
 export const C29_DATA=mods, C29_AWAKENING=awakening;
 export const c29Enabled=s=>isSliceMap(s.mapId);
 export const c29Record=(s,id)=>s.campaignGrowth?.officers[s.armies[id]?.commanderId??id];
+export const c549E=(s,id,c)=>s.trialRules?.gaugeROnly===true&&c29Enabled(s)&&!c.signature&&c.traitId!==c29Record(s,id)?.representativeId;
+// Opaque pilot rules encode geometry in their rule ID instead of effect params.
+const eMovementRules=new Set(['SHOVE','SWAP','FEIGNED_RETREAT','WOODPECKER','HOOK_PULL','U_DRIVE_DEEP','U_S4_SOLO_ENTRY',
+ ...['01','02','08','11','12','14','17','20','21','22','24','29','31','36','37','42'].map(g=>`P417_G${g}_E`)]);
+const eAreaRules=new Set(['MASS_RALLY','MASS_TAUNT','INFERNO','U_KING_ROAR','U_CHANGBAN_SHOUT',
+ ...['16','19','23','34','51','61'].map(g=>`P417_G${g}_E`)]);
+const eTileRules=new Set(['FIRE_ATTACK','FLOOD','PLACE_TRAP','TRAP','MAZE',...['01','09','13','28','37','42','57'].map(g=>`P417_G${g}_E`)]);
+export function c549ECooldown(c){
+ return c.id==='CTA-05'||[c,...(c.effects??[])].some(e=>e.targetType==='tile'||String(e.target??'').toUpperCase()==='TILE'||eMovementRules.has(e.rule)||eAreaRules.has(e.rule)||eTileRules.has(e.rule)||Number(e.radius??e.params?.radius)>=2)?4:3;
+}
+export function c549ECard(s,id,c){
+ if(!c549E(s,id,c))return c;
+ const raw=c29Record(s,id)?.cards[c.traitId]??c;
+ const mirror=raw.effects?.some(e=>e.rule==='MIRROR');
+ const base=mirror?c29GaugeCost(s,id,raw):raw.baseGaugeCost??raw.gauge??raw.gaugeCost??c29GaugeCost(s,id,raw);
+ // C566 (51 v1.8 '읽는 법'): effects that were cooldown turns (stored as 10 gauge each — costAdjustments, eCooldownDelta)
+ // move the E cooldown one turn each; true gauge discounts (강유 E −20) keep 20 per turn.
+ const adjustment=c29Record(s,id)?.c29?.costAdjustments?.[c.traitId]??0;
+ const reduction=Math.max(0,base-((c.gaugeCost??base)-adjustment),base-(raw.gaugeCost??base));
+ const copy=c.effects?.some(e=>e.rule==='MIRROR')?s.armies[id]?.c27?.lastHitTactic:null;
+ const turns=Math.max(0,c549ECooldown(copy&&!copy.effects?.some(e=>e.rule==='MIRROR')?copy:c)-Math.floor(reduction/20)+(c.eCooldownDelta??0)+Math.round(adjustment/10));
+ const {eCooldownDelta,...card}=c;
+ return {...card,gaugeCost:0,cooldownTurns:turns,cooldownLeft:Math.max(0,(c29Record(s,id)?.c29?.eReadyTurn?.[c.traitId]??0)-s.turn)};
+}
 const ranks=r=>r.track.growthStates[r.pack.id].ownedTraitRanks;
 const error=m=>{throw new Error(m);};
 export function c29Add(r,c){
@@ -130,19 +154,23 @@ export function c29Combat(s,c){
  for(const id of results)if(hostile(id))c29Gain(s,source,gauge.result,`result.${id}`);
  if(c.captureLine&&c.cityId)c29Gain(s,source,gauge.result,`result.${c.cityId}`);
 }
-export function c29TacticUsed(s,id,c,{gaugePaid=false}={}){const r=c29Record(s,id);if(!r?.c29)return;r.c29.uses[c.traitId]=(r.c29.uses[c.traitId]??0)+1;if(!gaugePaid)r.c29.gauge=Math.max(0,r.c29.gauge-c29Cost(s,id,c));r.c29.spentPeriod=true;r.c29.tacticTurn=s.turn;}
-export function c29Cost(s,id,c){if(c29Enabled(s)&&!c.mirrorCostResolved&&c.effects?.some(e=>e.rule==='MIRROR')){const copy=s.armies[id]?.c27?.lastHitTactic;if(copy&&!copy.effects?.some(e=>e.rule==='MIRROR'))c=copy;}const r=c29Record(s,id),signature=c.signature||c.traitId===r?.representativeId;return Math.max(0,(c.gaugeCost??(signature?gauge.cost.R[1]:c.jointArmyIds?gauge.cost.E[1]:gauge.cost.E[Number(['EPIC','LEGENDARY','MYTHIC'].includes(c.rarity))])));}
+export function c549Pay(s,id,c,cost){const x=c29Record(s,id).c29;if(c549E(s,id,c)){(x.eReadyTurn??={})[c.traitId]=s.turn+(c.cooldownTurns??c549ECard(s,id,c).cooldownTurns)+1;}else{x.gauge=Math.max(0,x.gauge-cost);x.spentPeriod=true;}delete x.costAdjustments?.[c.traitId];x.tacticTurn=s.turn;}
+export function c29TacticUsed(s,id,c,{gaugePaid=false}={}){const r=c29Record(s,id);if(!r?.c29)return;r.c29.uses[c.traitId]=(r.c29.uses[c.traitId]??0)+1;if(!gaugePaid){if(s.trialRules?.gaugeROnly)c549Pay(s,id,c,c29Cost(s,id,c));else r.c29.gauge=Math.max(0,r.c29.gauge-c29Cost(s,id,c));}if(!c549E(s,id,c))r.c29.spentPeriod=true;r.c29.tacticTurn=s.turn;}
+export function c29Cost(s,id,c){return c549E(s,id,c)?0:c29GaugeCost(s,id,c);}
+function c29GaugeCost(s,id,c){if(c29Enabled(s)&&!c.mirrorCostResolved&&c.effects?.some(e=>e.rule==='MIRROR')){const copy=s.armies[id]?.c27?.lastHitTactic;if(copy&&!copy.effects?.some(e=>e.rule==='MIRROR'))c=copy;}const r=c29Record(s,id),signature=c.signature||c.traitId===r?.representativeId;return Math.max(0,(c.gaugeCost??(signature?gauge.cost.R[1]:c.jointArmyIds?gauge.cost.E[1]:gauge.cost.E[Number(['EPIC','LEGENDARY','MYTHIC'].includes(c.rarity))])));}
 // Cooldown effects become costs for allies and gauge loss for hostile targets (trial).
-export function c29Cooldown(s,id,n){const r=c29Record(s,id);if(!r?.c29)return false;if(n>0)r.c29.gauge=Math.max(0,r.c29.gauge-10*n);else {r.c29.costAdjustments??={};for(const key of [...(r.equippedTacticIds??[]),r.representativeId].filter(Boolean))r.c29.costAdjustments[key]=(r.c29.costAdjustments[key]??0)+10*n;}return true;}
+// C569 (51 v1.8): under the R-only gauge a cooldown +n also keeps a waiting E n turns longer; the R gauge still loses 10 per turn.
+export function c29Cooldown(s,id,n){const r=c29Record(s,id);if(!r?.c29)return false;if(n>0){r.c29.gauge=Math.max(0,r.c29.gauge-10*n);if(s.trialRules?.gaugeROnly)for(const [key,turn] of Object.entries(r.c29.eReadyTurn??{}))if(turn>s.turn)r.c29.eReadyTurn[key]=turn+n;}else {r.c29.costAdjustments??={};for(const key of [...(r.equippedTacticIds??[]),r.representativeId].filter(Boolean))r.c29.costAdjustments[key]=(r.c29.costAdjustments[key]??0)+10*n;}return true;}
 export function c29Text(text=''){
  return String(text??'').replace(/재사용 대기(?:시간)? 초기화|대기 초기화/g,'게이지 +20').replace(/전법 하나의 재사용 대기 \+1/g,'전법 게이지 −10').replace(/재사용 대기(?:시간)?\s*([+−-])\s*(\d+)/g,(_,sign,n)=>`게이지 비용 ${sign}${Number(n)*10}`).replace(/\+1 대기/g,'비용 +10').replace(/재사용 대기(?:시간)?/g,'게이지 비용');
 }
 export function c29TacticCard(s,id,card){
- if(mechanicsV2Enabled(s)&&card.pilot)return {...structuredClone(card),cooldown:0};
+ if(mechanicsV2Enabled(s)&&card.pilot)return {...structuredClone(card),cooldown:0,...(c549E(s,id,card)?{gaugeCost:Math.max(0,(card.gaugeCost??0)+(c29Record(s,id)?.c29?.costAdjustments?.[card.traitId]??0))}:{})};
  const r=c29Record(s,id);if(!r?.c29)return card;const c=structuredClone(card),m=(!r.equippedTraitIds||r.equippedTraitIds.includes(r.c29.bindings[c.traitId]))?r.cards[r.c29.bindings[c.traitId]]:null,branch=r.c29.forks[c.traitId];c.text=c29Text(c.text);c.modifier=m?{...m,text:c29Text(m.text)}:null;c.modifierSlot=m?{id:m.id,name:m.name,text:m.text}:null;c.fork=branch??null;const fork=mods.forks.list.find(f=>f.tactic===c.id);if(branch&&fork)c.forkInfo={branch,...fork[branch]};
- c.gaugeCost=Math.max(0,c29Cost(s,id,c)+(r.c29.costAdjustments?.[c.traitId]??0)+(m?10*(1+(m.params.extraCooldown??0)):0));c.cooldown=0;if(c.effects?.some(e=>e.rule==='MIRROR'))c.mirrorCostResolved=true;
+ const surcharge=m?1+(m.params.extraCooldown??0):0,eTurns=c549E(s,id,c);if(eTurns&&surcharge)c.eCooldownDelta=(c.eCooldownDelta??0)+surcharge; // C569: the modifier's '대기 +1' price stays a turn on a new-campaign E
+ c.gaugeCost=Math.max(0,c29GaugeCost(s,id,c)+(r.c29.costAdjustments?.[c.traitId]??0)+(eTurns?0:10*surcharge));c.cooldown=0;if(c.effects?.some(e=>e.rule==='MIRROR'))c.mirrorCostResolved=true;
  if(m?.rule==='RANGE_PLUS')c.range=(c.range??0)+m.params.extra;
- if(c29Tag(s,id,c,'FIRE')&&Object.entries(ranks(r)).some(([k,n])=>n&&(!r.equippedTraitIds||r.equippedTraitIds.includes(k))&&r.cards[k]?.id==='TR-WIND'))c.gaugeCost=Math.max(0,c.gaugeCost-10);
+ if(c29Tag(s,id,c,'FIRE')&&Object.entries(ranks(r)).some(([k,n])=>n&&(!r.equippedTraitIds||r.equippedTraitIds.includes(k))&&r.cards[k]?.id==='TR-WIND')){if(c549E(s,id,c))c.eCooldownDelta=(c.eCooldownDelta??0)-1;else c.gaugeCost=Math.max(0,c.gaugeCost-10);}
  if(c.id==='CTA-12')for(const e of c.effects)if(e.rule==='FIRE_ATTACK'){e.params.spread+=(m?.rule==='FIRE_SPREAD'?m.params.extra:0)+(branch==='a'?1:0);e.params.turns=branch==='b'?2:1;}
  if(c.id==='CTA-01'&&branch==='a')for(const e of c.effects)if(e.rule==='SHOVE')e.params.push=2;
  if(c.id==='CTA-09'&&branch==='b')for(const e of c.effects)if(e.rule==='MORALE_CONTEST')e.params.loseWeight=0;
@@ -172,7 +200,7 @@ export function c29PostCombat(s,c,{morale,formation}={}){
   if(card){const key=c29Add(winner,{...card,id:`stolen.${other.pack.id}.${card.id??card.traitId}`,core:false});winner.c28.pending.push({traitId:key,slot:'배움',sourceText:`${s.officers[other.pack.id].name}에게서 배움`});}
  }
 }
-export function validateC29(s,id){const r=c29Record(s,id),x=r?.c29;if(!x)return;if(!Number.isFinite(x.periodGain??0)||(x.periodGain??0)<0||(x.periodGain??0)>gauge.periodCap||x.spentPeriod!==undefined&&typeof x.spentPeriod!=='boolean'||!c29Enabled(s)||!Number.isFinite(x.gauge)||x.gauge<0||x.gauge>100||!Number.isFinite(x.crisisMultiplier)||x.crisisMultiplier<0||x.awakenings.length>3||new Set(x.awakenings.filter(a=>a.branch==='wild').map(a=>a.id)).size!==x.awakenings.filter(a=>a.branch==='wild').length||Object.entries(x.bindings).some(([k,v])=>r.cards[k]?.kind!=='tactic'||!r.cards[v]?.modifier||!ranks(r)[v])||Object.values(x.forks).some(v=>!['a','b'].includes(v))||!Number.isSafeInteger(x.xpDebt??0)||(x.xpDebt??0)<0)error('INVALID_C29_RECORD');}
+export function validateC29(s,id){const r=c29Record(s,id),x=r?.c29;if(!x)return;if(x.eReadyTurn!==undefined&&(!s.trialRules?.gaugeROnly||!x.eReadyTurn||Array.isArray(x.eReadyTurn)||typeof x.eReadyTurn!=='object'||Object.entries(x.eReadyTurn).some(([key,n])=>(key!=='JT-01'&&r.cards[key]?.kind!=='tactic')||!Number.isSafeInteger(n)||n<0)))error('INVALID_C549_COOLDOWN');if(!Number.isFinite(x.periodGain??0)||(x.periodGain??0)<0||(x.periodGain??0)>gauge.periodCap||x.spentPeriod!==undefined&&typeof x.spentPeriod!=='boolean'||!c29Enabled(s)||!Number.isFinite(x.gauge)||x.gauge<0||x.gauge>100||!Number.isFinite(x.crisisMultiplier)||x.crisisMultiplier<0||x.awakenings.length>3||new Set(x.awakenings.filter(a=>a.branch==='wild').map(a=>a.id)).size!==x.awakenings.filter(a=>a.branch==='wild').length||Object.entries(x.bindings).some(([k,v])=>r.cards[k]?.kind!=='tactic'||!r.cards[v]?.modifier||!ranks(r)[v])||Object.values(x.forks).some(v=>!['a','b'].includes(v))||!Number.isSafeInteger(x.xpDebt??0)||(x.xpDebt??0)<0)error('INVALID_C29_RECORD');}
 export function c29CoreFactor(s,id,ctx={}){
  const r=c29Record(s,id);if(!r?.c29?.awakenings.length)return 1;const a=s.armies[id]??Object.values(s.armies).find(a=>a.commanderId===id),target=s.armies[ctx.targetId];
  const strength=a?.deploymentStrength??s.personnel?.formations.find(f=>f.formationId===a?.armyId)?.targetStrength??a?.troopCount??1,percent=100*(a?.troopCount??strength)/strength;
@@ -269,7 +297,7 @@ export function c30Damage(s,id,target,ctx={}){
  return {damage,defense,lines};
 }
 export function c30ElementDamage(s,id,target,value,kind='FIRE'){const b=c30Damage(s,id,target);return value*Math.max(0,1+(b.damage+c30Element(s,id,kind))/100)*Math.max(0,1-b.defense/100);}
-export function c30TacticCard(s,id,card){const c=structuredClone(card),x=c30State(s,id);if(x&&!x.firstTacticUsed&&!c.signature&&!c.jointArmyIds&&(c30Bond(s,id,'BD-07')||c30ArmyTier(s,id,'ST-02')>=3))c.gaugeCost=Math.max(0,(c.gaugeCost??c29Cost(s,id,c))-10);if(c30Spread(s,id))for(const e of c.effects??[])if(e.rule==='FIRE_ATTACK')e.params.spread+=1;return c;}
+export function c30TacticCard(s,id,card){const c=structuredClone(card),x=c30State(s,id);if(x&&!x.firstTacticUsed&&!c.signature&&!c.jointArmyIds&&(c30Bond(s,id,'BD-07')||c30ArmyTier(s,id,'ST-02')>=3)){if(c549E(s,id,c))c.eCooldownDelta=(c.eCooldownDelta??0)-1;else c.gaugeCost=Math.max(0,(c.gaugeCost??c29Cost(s,id,c))-10);}if(c30Spread(s,id))for(const e of c.effects??[])if(e.rule==='FIRE_ATTACK')e.params.spread+=1;return c;}
 export function c30TacticUsed(s,id,card){const x=c30State(s,id);if(x)x.firstTacticUsed=true;if(c30Bond(s,id,'BD-02'))for(const b of armies(s,s.armies[id].factionId))if(b.armyId!==id&&['G20','G27'].includes(b.commanderId)&&c30Bond(s,b.armyId,'BD-02')){if(c29Cooldown(s,b.armyId,-1))continue;for(const [key,ready] of Object.entries(b.tacticReadyTurns))b.tacticReadyTurns[key]=Math.max(s.turn,ready-1);}}
 export function c30Combat(s,c,{morale}={}){
  if(!c30Enabled(s))return;for(const u of c.units??[])if(u.casualties>0&&s.armies[u.unitId])s.armies[u.unitId].c30DamagedTurn=s.turn;

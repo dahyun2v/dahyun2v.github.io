@@ -35,7 +35,7 @@ export function occupationGarrison(s,c) {
 }
 export function occupationMethodReason(s,c,method) {
   const o=s.occupations?.[c.cityId];
-  if(domesticV3Enabled(s))return !o||o.selectedTurn!==s.turn||o.v3Processed?'점령 처리 시작 전 같은 차례에만 변경 가능':!['pacify','conciliation','military','plunder'].includes(method)?'알 수 없는 방식':null;
+  if(domesticV3Enabled(s))return !o||o.selectedTurn!==s.turn||o.v3Processed?'점령 처리 시작 전 같은 차례에만 변경 가능':!['pacify','conciliation','military','plunder'].includes(method)?'알 수 없는 방식':method==='plunder'?domesticPlunderReason(s,c):null; // C536 수탈 금지(특기 대가 · 천하귀심 · 청렴)도 v3 에서
   if (!o || !['CAPTURED','OCCUPATION'].includes(o.stage)) return '점령 처리 단계가 아닙니다.';
   if(method==='plunder'){const blocked=domesticPlunderReason(s,c);if(blocked)return blocked;}
   if(method==='plunder'&&o.fromNeutral)return '중립 성은 회유 또는 군정만 가능합니다.';
@@ -154,7 +154,8 @@ export function startV3Occupation(s,c){
  const o=s.occupations[c.cityId];if(o.v3Started)return;
  initializeDomesticV3(s);o.formerOwnerFactionId=formerV3Owner(s,c);o.capturePeople=c.people;
  o.v3Started=true;o.selectedTurn=s.turn;o.lastSettledTurn=s.turn;
- applyV3Method(s,c,v3Method(s.factions[c.ownerFactionId].occupationPolicyDefault??'pacify'));
+ const method=v3Method(s.factions[c.ownerFactionId].occupationPolicyDefault??'pacify');
+ applyV3Method(s,c,method==='plunder'&&domesticPlunderReason(s,c)?'military':method); // C536 수탈 금지면 기본 방침이 약탈이어도 군정
 }
 function applyV3Method(s,c,method){
  const o=s.occupations[c.cityId],f=s.factions[c.ownerFactionId],rules=V3.occupation;
@@ -168,6 +169,14 @@ function applyV3Method(s,c,method){
  c.securityLevel=r.security;
  if(method==='plunder'){f.prestige=Math.max(0,(f.prestige??0)-rules.plunderPrestige);const facility=c.facilities.find(x=>!x.damaged);if(facility)facility.damaged=true;c.plunderTurn=s.turn;c.gradePenaltyUntil=s.turn+rules.gradePenaltyTurns;}
  Object.assign(o,{stage:'OCCUPATION',state:'PACIFICATION',method,turnsLeft:r.turns,productionEnabled:false,recruitmentEnabled:false,replenishmentEnabled:false});
+ // C536: the legacy occupation effects (OCCUPATION_SPEED · AW_TT-V04 · PROCLAMATION · PLUNDER_ARCHIVES · LOCAL_PRIVILEGE · INSTANT_ALLEGIANCE)
+ // also apply on the v3 path. Values unchanged; v3 'pacify' is the legacy 'conciliation'.
+ const legacy=method==='pacify'?'conciliation':method,cityId=c.cityId,science=f.science??0;
+ o.turnsLeft=Math.max(1,o.turnsLeft-(effectModifiers(s,cityId,['ON_CAPTURE_CITY','TURN_SETTLE'],{cityId,sources:[{id:occupationGarrison(s,c)?.armyId??c.governorId,whens:['ON_CAPTURE_CITY','TURN_SETTLE']}]}).OCCUPATION_SPEED??0));
+ o.turnsLeft=Math.max(1,o.turnsLeft-(c29Aw(s,c.governorId??occupationGarrison(s,c)?.commanderId,'AW_TT-V04')?1:0));
+ domesticOccupation(s,c,legacy);
+ o.v3Undo.science=(f.science??0)-science;
+ if(o.stage==='OCCUPATION'&&o.turnsLeft<=0){o.stage='STABILIZING';o.state='STABILIZING';o.turnsLeft=1;}
  initializeDomesticV3(s);
 }
 export function overrideOccupation(s,cityId,method){
@@ -175,7 +184,7 @@ export function overrideOccupation(s,cityId,method){
  const c=s.cities[cityId],o=s.occupations?.[cityId];if(!c||!o)throw new Error('INVALID_OCCUPATION_CITY');
  const reason=occupationMethodReason(s,c,method);if(reason)throw new Error(reason);method=v3Method(method);const u=o.v3Undo,f=s.factions[c.ownerFactionId];
  // Reverse only this selection's deltas; other cities' transfers stay intact.
- undoV3Loot(s,c);f.granary+=u.grain;f.prestige=(f.prestige??0)+u.prestige;
+ undoV3Loot(s,c);f.granary+=u.grain;f.prestige=(f.prestige??0)+u.prestige;f.science=(f.science??0)-(u.science??0);
  c.people=u.people;c.domesticSpecialists={...u.specialists};c.securityLevel=u.security;c.plunderTurn=u.plunderTurn;c.gradePenaltyUntil=u.gradePenaltyUntil;c.facilities.forEach((x,i)=>{x.damaged=u.damaged[i];});syncPeople(c);
  applyV3Method(s,c,method);if(o.v3LootSource)transferV3Loot(s,c);return s;
 }

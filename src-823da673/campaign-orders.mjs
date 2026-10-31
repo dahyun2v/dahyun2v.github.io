@@ -1,4 +1,4 @@
-import {combatFireAt} from './campaign-rule-registry.mjs';
+import {combatFireAt,sample4FireImmune} from './campaign-rule-registry.mjs';
 import {weatherEdgeReason} from './campaign-run-modifiers.mjs';
 import {diplomacyMoveReason} from './campaign-diplomacy.mjs';
 import {campaignPath,campaignPaths,campaignReachable,inControlZone} from './campaign-morale.mjs';
@@ -74,7 +74,8 @@ export function inspectOrderPath(s,id,path,{budget=200}={}){
  for(let i=1;i<path.length;i++){
   const from=path[i-1],to=path[i];
   if(!s.tiles[to]||!known?.tiles[to]||known.tiles[to]==='UNEXPLORED')return fail(to,'아직 살펴보지 않은 칸입니다');
-  if(combatFireAt(s,to))return fail(to,'불');
+  // C537: fire-immune armies (G27 order) may enter and pass burning tiles.
+  if(combatFireAt(s,to)&&!sample4FireImmune(s,id))return fail(to,'불');
   if(seen.has(to))return fail(to,'경로는 같은 칸을 반복할 수 없습니다');seen.add(to);
   if(hexDistance(s.tiles[from],s.tiles[to])!==1)return fail(to,'서로 이웃한 칸으로 경로를 정하세요');
   if(i>1&&inControlZone(s,a,from))return fail(from,'적 통제 구역에 들어가 멈춤');
